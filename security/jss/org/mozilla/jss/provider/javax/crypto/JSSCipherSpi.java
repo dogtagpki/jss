@@ -45,6 +45,9 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.RC2ParameterSpec;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.SecretKey;
 import org.mozilla.jss.crypto.KeyWrapper;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
@@ -54,6 +57,7 @@ import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.CryptoManager;
@@ -94,6 +98,31 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         this.algPadding = padding;
     }
 
+    static private SecretKey importKey(Key key)
+         throws InvalidKeyException
+    {
+        if (key instanceof SecretKey) {
+            SecretKey sKey = (SecretKey) key;
+            SecretKeyFactory fact = null;
+            try {
+                fact = SecretKeyFactory.getInstance(sKey.getAlgorithm(),
+                                                "Mozilla-JSS");
+            } catch (NoSuchAlgorithmException e) {
+                throw new InvalidKeyException(
+                                  "Unable to translate key with Algorithm"
+                                    + key.getAlgorithm());
+            } catch (NoSuchProviderException ex) {
+                throw new InvalidKeyException(
+                    "Unable to find provider, this should not happen");
+            }
+
+            return fact.translateKey(sKey);
+        }else {
+            throw new InvalidKeyException("Invalid key type: " +
+                                       key.getClass().getName());
+        }
+    }
+
     public void engineInit(int opmode, Key key,
         AlgorithmParameterSpec givenParams, SecureRandom random)
         throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -127,8 +156,8 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
 
         if( opmode == Cipher.ENCRYPT_MODE || opmode == Cipher.DECRYPT_MODE ) {
-            if( ! (key instanceof SecretKeyFacade) ) {
-                throw new InvalidKeyException("key must be JSS key");
+            if( ! (key instanceof SecretKeyFacade) )  {
+                key = importKey(key);
             }
             SymmetricKey symkey = ((SecretKeyFacade)key).key;
 
@@ -251,8 +280,13 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
     }
 
     public byte[] engineGetIV() {
-        if( params != null && params instanceof IvParameterSpec) {
+        if( params == null ) {
+            return null;
+        }
+        if( params instanceof IvParameterSpec) {
             return ((IvParameterSpec)params).getIV();
+        } else if( params instanceof RC2ParameterSpec ) {
+            return ((RC2ParameterSpec)params).getIV();
         } else {
             return null;
         }
@@ -461,9 +495,9 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
             SymmetricKey symkey = ((SecretKeyFacade)key).key;
             return symkey.getLength();
         } else {
-            throw new InvalidKeyException(
-                "Unsupported key type: " + key.getClass().getName() +
-                ". Only JSS keys are supported.");
+            key = importKey(key);
+            SymmetricKey symkey = ((SecretKeyFacade)key).key;
+            return symkey.getLength();
         }
     }
 
@@ -490,6 +524,11 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
     static public class RSA extends JSSCipherSpi {
         public RSA() {
             super("RSA");
+        }
+    }
+    static public class RC2 extends JSSCipherSpi {
+        public RC2() {
+            super("RC2");
         }
     }
 
