@@ -24,13 +24,13 @@ endif
 PROTO = \
 	$(ROOT) \
 	$(ROOT)/usr \
+	$(ROOT)/usr/share \
+	$(ROOT)/usr/share/lib \
+	$(ROOT)/usr/share/lib/mps \
+	$(ROOT)/usr/share/lib/mps/sparcv9 \
 	$(ROOT)/usr/lib \
-	$(ROOT)/usr/lib/mps
-
-ifdef USE_64
-PROTO += \
+	$(ROOT)/usr/lib/mps \
 	$(ROOT)/usr/lib/mps/sparcv9
-endif
 
 include Makefile.com
 
