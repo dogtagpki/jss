@@ -20,8 +20,8 @@ FILES = $(DATAFILES) pkginfo prototype
 
 PACKAGE = $(shell basename `pwd`)
 
-PRODUCT_VERSION = 3.5.1
-PRODUCT_NAME = JSS_3_5_1_RTM
+PRODUCT_VERSION = 3.6
+PRODUCT_NAME = JSS_3_6_BETA1
 
 LN = /usr/bin/ln
 
