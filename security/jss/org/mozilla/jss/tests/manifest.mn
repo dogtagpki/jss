@@ -63,6 +63,7 @@ CLASSES =                                                   \
                     AddCert                                  \
                     ModifyTrust                              \
                     VerifyCert                               \
+                    JSSversion                               \
                     $(NULL)
 
 JSRCS =                                                                                         \
@@ -84,4 +85,5 @@ JSRCS =                                                                         
                     AddCert.java                             \
                     ModifyTrust.java                         \
                     VerifyCert.java                              \
+                    JSSversion.java                              \
                                 $(NULL)
