@@ -747,7 +747,9 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * This function sets the global password callback.  It is
-     * not thread-safe to change this.
+     * not thread-safe to change this. A better strategy than using
+     * callbacks is to explicitly login to the tokens you need to use.
+     * Password callbacks are then only used as a last resort.
      * <p>The callback may be NULL, in which case password callbacks will
      * fail gracefully.
      */
@@ -1300,11 +1302,11 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_3";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_3_1";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_6_1_RTM";
+    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_7_3_RTM";
     public static final String
     JAR_DBM_VERSION     = "DBM_VERSION = N/A";
     public static final String

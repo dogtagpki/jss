@@ -187,18 +187,12 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
     numBytes = (*env)->GetArrayLength(env, bArray);
     PR_ASSERT(numBytes > 0);
 
-    if( offset < 0 || offset >= numBytes || length < 0 ||
-            (offset+length) > numBytes || (offset+length) < 0 )
-    {
-        JSS_throw(env, ARRAY_INDEX_OUT_OF_BOUNDS_EXCEPTION);
-        goto finish;
-    }
 
     /* Update the context */
     if(type == SGN_CONTEXT) {
         if( SGN_Update( (SGNContext*)ctxt,
-                        (unsigned char*)bytes + offset,
-                        (unsigned)length ) != SECSuccess)
+                        (unsigned char*)bytes,
+                        (unsigned)numBytes ) != SECSuccess)
         {
             JSS_throwMsg(env, SIGNATURE_EXCEPTION, "update failed");
             goto finish;
@@ -206,8 +200,8 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
     } else {
         PR_ASSERT( type == VFY_CONTEXT );
         if( VFY_Update( (VFYContext*)ctxt,
-                        (unsigned char*)bytes + offset,
-                        (unsigned) length ) != SECSuccess)
+                        (unsigned char*)bytes,
+                        (unsigned) numBytes ) != SECSuccess)
         {
             JSS_throwMsg(env, SIGNATURE_EXCEPTION, "update failed");
             goto finish;

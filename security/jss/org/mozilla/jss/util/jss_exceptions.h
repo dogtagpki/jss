@@ -44,8 +44,6 @@ PR_BEGIN_EXTERN_C
 
 #define ALREADY_INITIALIZED_EXCEPTION "org/mozilla/jss/crypto/AlreadyInitializedException"
 
-#define ARRAY_INDEX_OUT_OF_BOUNDS_EXCEPTION "java/lang/ArrayIndexOutOfBoundsException"
-
 #define INDEX_OUT_OF_BOUNDS_EXCEPTION "java/lang/IndexOutOfBoundsException"
 
 #define BAD_PADDING_EXCEPTION "org/mozilla/jss/crypto/BadPaddingException"
