@@ -456,6 +456,10 @@ finish:
     if( hostnameStr != NULL ) {
         (*env)->ReleaseStringUTFChars(env, hostname, hostnameStr);
     }
+    if( addrBAelems != NULL ) {
+        (*env)->ReleaseByteArrayElements(env, addrBA, addrBAelems, JNI_ABORT);
+    }
+
 }
 
 JNIEXPORT jobject JNICALL
@@ -693,7 +697,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     buf = (*env)->GetByteArrayElements(env, bufBA, NULL);
     if( buf == NULL ) {
         goto finish;
-    }               
+    }
 
     ivtimeout = (timeout > 0) ? PR_MillisecondsToInterval(timeout)
                               : PR_INTERVAL_NO_TIMEOUT;
@@ -723,7 +727,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
                  * will always return PR_IO_PENDING_ERROR on subsequent
                  * calls
                  */
-                    PR_NT_CancelIo(sock->fd);   
+                    PR_NT_CancelIo(sock->fd);
                     JSSL_throwSSLSocketException(env, "Operation timed out");
                     goto finish;
                 }
@@ -823,7 +827,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
                  * will always return PR_IO_PENDING_ERROR on subsequent
                  * calls
                  */
-                PR_NT_CancelIo(sock->fd);   
+                PR_NT_CancelIo(sock->fd);
 #endif
                 JSSL_throwSSLSocketException(env, "Operation timed out");
                 goto finish;
