@@ -1,5 +1,5 @@
 #
-# Copyright 2002 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
 #ident	"$Id$"
@@ -8,7 +8,7 @@
 CORE_DEPTH = ../../..
 
 NAME        = sun-jss
-RELEASE     = 2
+RELEASE     = 1
 VERSION     = `grep JSS_VERSION $(CORE_DEPTH)/jss/org/mozilla/jss/util/jssver.h \
 		| sed -e 's/"$$//' -e 's/.*"//' -e 's/ .*//'`
 PWD         = `pwd`
@@ -23,15 +23,22 @@ publish:
 	find $(CORE_DEPTH)/../dist/$(OBJDIR)/lib -type l \
 		\( -name "*jss*.so" \) \
 	-exec cp {} opt/sun/private/lib \;
-#	(cd $(CORE_DEPTH)/../dist/public && tar cphf - .) \
-#		| (mkdir -p opt/sun/private/include && cd opt/sun/private/include && tar xvfBp -)
+ifdef JSS3_LOCATION
+	cp $(JSS3_LOCATION)/$(OBJDIR)/lib/libjss3.so opt/sun/private/lib
+endif
 	mkdir -p opt/sun/private/share/lib 
 ifeq ($(BUILD_OPT), 1)
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/xpclass.jar \
 		opt/sun/private/share/lib/jss4.jar
+ifdef JSS3_LOCATION
+	cp $(JSS3_LOCATION)/xpclass.jar opt/sun/private/share/lib/jss3.jar
+endif
 else
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes_DBG/xpclass_dbg.jar \
 		opt/sun/private/share/lib/jss4.jar
+ifdef JSS3_LOCATION
+	cp $(JSS3_LOCATION)/xpclass_dbg.jar opt/sun/private/share/lib/jss3.jar
+endif
 endif
 	tar czvf $(NAME)-$(VERSION).tar.gz opt 
 	echo "AutoReq: 0" > temp.spec
