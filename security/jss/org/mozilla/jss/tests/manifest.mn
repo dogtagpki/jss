@@ -39,7 +39,11 @@ NS_USE_JDK = 1
 
 REQUIRES =      nspr20 security
 
-PRIVATE_CLASSES = 											\
+PACKAGE = org/mozilla/jss/tests
+
+CLASSES =                                                   \
+                    SetupDBs                                \
+                    socketTest                              \
                     DigestTest                              \
                     SelfTest								\
                     SymKeyGen                               \
@@ -49,6 +53,8 @@ PRIVATE_CLASSES = 											\
                     KeyWrapping                             \
                     ListCerts                               \
                     socketTest                             \
+                    TestKeyGen                              \
+                    SigTest                                 \
 			        $(NULL)
 
 JSRCS = 											\
@@ -61,4 +67,7 @@ JSRCS = 											\
                     KeyWrapping.java                        \
                     ListCerts.java                           \
                     socketTest.java                           \
+                    TestKeyGen.java                         \
+                    SigTest.java                            \
+                    SetupDBs.java                           \
 			        $(NULL)
