@@ -30,6 +30,9 @@
  * may use your version of this file under either the MPL or the
  * GPL.
  */
+
+package org.mozilla.jss.tests;
+
 import java.io.*;
 import org.mozilla.jss.ssl.*;
 import org.mozilla.jss.*;
@@ -37,18 +40,19 @@ import org.mozilla.jss.*;
 public class socketTest {
 
     public static void main(String []args) {
-        try {
+      try {
 
         // initialize CryptoManager.
-        CryptoManager.initialize(".");
-        //SSLSocket.setCipherPolicy(SSLSocket.CipherPolicy.DOMESTIC);
+        CryptoManager.initialize(args[0]);
 
-        SSLSocket sslSocket = new SSLSocket("www.amazon.com", 443);
+        SSLSocket sslSocket = new SSLSocket(args[1], 443);
         sslSocket.forceHandshake();
 
         System.out.println("Test, forced handshake");
-        } catch( Exception e ) {
+        System.exit(0);
+      } catch( Exception e ) {
             e.printStackTrace();
-        }
+            System.exit(1);
+      }
     }
 }

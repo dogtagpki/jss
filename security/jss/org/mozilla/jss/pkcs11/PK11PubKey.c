@@ -497,6 +497,8 @@ pubkFromRaw(JNIEnv *env, CK_KEY_TYPE type, jbyteArray rawBA)
         JSS_throw(env, INVALID_KEY_FORMAT_EXCEPTION);
         goto finish;
     }
+    /* work around NSS bug 95666 */
+    pubk->keyType = (type == CKK_RSA) ? rsaKey : dsaKey;
 
     /* this clears pubk */
     pubkObj = JSS_PK11_wrapPubKey(env, &pubk);

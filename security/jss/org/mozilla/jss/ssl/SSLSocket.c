@@ -402,7 +402,6 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
      */
     hostnameStr = (*env)->GetStringUTFChars(env, hostname, NULL);
     if( hostnameStr == NULL ) goto finish;
-    printf("*** Hostname: %s\n", hostnameStr);
     stat = SSL_SetURL(sock->fd, (char*)hostnameStr);
     if( stat != 0 ) {
         JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to set the SSL URL");
@@ -539,11 +538,6 @@ finish:
     return statusObj;
 }
 
-#ifdef _WINDOWS
-#define SNPRINTF _snprintf
-#else
-#define SNPRINTF snprintf
-#endif
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreference(
@@ -555,7 +549,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreference(
     status = SSL_CipherPrefSetDefault(cipher, enable);
     if(status != SECSuccess) {
         char buf[128];
-        SNPRINTF(buf, 128, "Failed to %s cipher 0x%lx\n",
+        PR_snprintf(buf, 128, "Failed to %s cipher 0x%lx\n",
             (enable ? "enable" : "disable"), cipher);
         JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, buf);
         goto finish;
@@ -624,7 +618,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
 
 finish:
     (*env)->ReleaseByteArrayElements(env, bufBA, buf,
-        (nread>0) ? JNI_COMMIT : JNI_ABORT);
+        (nread>0) ? 0 /*copy and free*/ : JNI_ABORT /*free, no copy*/);
     return nread;
 }
 
