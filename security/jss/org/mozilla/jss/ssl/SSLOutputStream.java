@@ -54,7 +54,7 @@ class SSLOutputStream extends java.io.OutputStream {
     }       
 
     public void close() throws IOException {
-        sock.close();
+        //sock.close();
     }
 
     private SSLSocket sock;

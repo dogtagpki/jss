@@ -683,8 +683,11 @@ public class SSLSocket extends java.net.Socket {
      *  If false, only the session key will be regenerated.
      */
     public native void redoHandshake(boolean flushCache) throws SocketException;
-
-    protected void finalize() throws Throwable { }
+    
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
+    }
 
     public static class CipherPolicy {
         private int enum;

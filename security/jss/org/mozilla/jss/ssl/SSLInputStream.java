@@ -46,7 +46,7 @@ class SSLInputStream extends java.io.InputStream {
     }
 
     public void close() throws IOException {
-        sock.close();
+        //sock.close();
     }
 
     public int read() throws IOException {
