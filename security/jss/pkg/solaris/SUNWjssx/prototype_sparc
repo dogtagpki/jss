@@ -27,8 +27,8 @@
 #
 #
 # SUNWjssx
-s none usr/lib/mps/64=sparcv9
-d none usr/lib/mps/sparcv9 755 root bin
-d none usr/share/lib/mps/sparcv9 755 root bin
-f none usr/lib/mps/sparcv9/libjss3.so 755 root bin
-f none usr/share/lib/mps/sparcv9/jss3.jar 644 root bin
+s none usr/lib/mps/secv1/64=sparcv9
+d none usr/lib/mps/secv1/sparcv9 755 root bin
+d none usr/share/lib/mps/secv1/sparcv9 755 root bin
+f none usr/lib/mps/secv1/sparcv9/libjss3.so 755 root bin
+f none usr/share/lib/mps/secv1/sparcv9/jss3.jar 644 root bin
