@@ -1240,15 +1240,15 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_0";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_1_2";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = JDK 1.2.2";
     public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_2_RTM";
+    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_3_1_RTM";
     public static final String
-    JAR_DBM_VERSION     = "DBM_VERSION = NSS_3_1_1_RTM";
+    JAR_DBM_VERSION     = "DBM_VERSION = NSS_3_3_1_RTM";
     public static final String
-    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_1";
+    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_1_2";
 
     /**
      * Loads the JSS dynamic library if necessary.
@@ -1269,7 +1269,8 @@ public final class CryptoManager implements TokenSupplier
                 Debug.trace(Debug.VERBOSE, "jss library loaded");
             } catch( UnsatisfiedLinkError e) {
                 Debug.trace(Debug.ERROR, "ERROR: Unable to load jss library");
-                throw e;
+                throw new UnsatisfiedLinkError(
+                    "Unable to load jss library or one of its dependencies");
             }
             mNativeLibrariesLoaded = true;
         }
