@@ -39,7 +39,6 @@
 #include <key.h>
 #include <ocsp.h>
 #include <pk11func.h>
-#include <secrng.h>
 #include <nspr.h>
 #include <plstr.h>
 #include <pkcs11.h>
@@ -49,6 +48,7 @@
 #include <jssutil.h>
 #include <java_ids.h>
 #include <jss_exceptions.h>
+#include <jssver.h>
 
 #include "pk11util.h"
 
@@ -161,6 +161,30 @@ int ConfigureOCSP(
      * and enable it
      */
     if (ocspResponderURL) {
+        /* if ocspResponderURL is set they must specify the
+           ocspResponderCertNickname */
+                if (ocspResponderCertNickname == NULL ) {
+                JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
+                "if OCSP responderURL is set, the Responder Cert nickname must be set");
+                        result = SECFailure;
+                        goto loser;
+                } else {
+                        CERTCertificate *cert;
+                        /* if the nickname is set */
+       cert = CERT_FindCertByNickname(certdb, ocspResponderCertNickname_string);
+                        if (cert == NULL) {
+                          /*
+                           * look for the cert on an external token.
+                        */
+       cert = PK11_FindCertFromNickname(ocspResponderCertNickname_string, NULL);
+                       }
+                        if (cert == NULL) {
+                                JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
+                    "Unable to find the OCSP Responder Certificate nickname.");
+                        result = SECFailure;
+                        goto loser;
+                   }
+    }
         status =
             CERT_SetOCSPDefaultResponder(   certdb,
                                             ocspResponderURL_string,
@@ -179,16 +203,16 @@ int ConfigureOCSP(
         /* if no defaultresponder is set, disable it */
         CERT_DisableOCSPDefaultResponder(certdb);
     }
-        
+
 
     /* enable OCSP checking if requested */
 
     if (ocspCheckingEnabled) {
         CERT_EnableOCSPChecking(certdb);
     }
-    
+
 loser:
-        
+
     if (ocspResponderURL_string)  {
         (*env)->ReleaseStringUTFChars(env,
             ocspResponderURL, ocspResponderURL_string);
@@ -235,6 +259,52 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative
         jboolean ocspCheckingEnabled,
         jstring ocspResponderURL,
         jstring ocspResponderCertNickname )
+{
+    Java_org_mozilla_jss_CryptoManager_initializeAllNative2(
+        env,
+        clazz,
+        configDir,
+        certPrefix,
+        keyPrefix,
+        secmodName,
+        readOnly,
+        manuString,
+        libraryString,
+        tokString,
+        keyTokString,
+        slotString,
+        keySlotString,
+        fipsString,
+        fipsKeyString,
+        ocspCheckingEnabled,
+        ocspResponderURL,
+        ocspResponderCertNickname,
+        JNI_FALSE /*initializeJavaOnly*/
+        );
+}
+
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_initializeAllNative2
+    (JNIEnv *env, jclass clazz,
+        jstring configDir,
+        jstring certPrefix,
+        jstring keyPrefix,
+        jstring secmodName,
+        jboolean readOnly,
+        jstring manuString,
+        jstring libraryString,
+        jstring tokString,
+        jstring keyTokString,
+        jstring slotString,
+        jstring keySlotString,
+        jstring fipsString,
+        jstring fipsKeyString,
+        jboolean ocspCheckingEnabled,
+        jstring ocspResponderURL,
+        jstring ocspResponderCertNickname,
+        jboolean initializeJavaOnly
+        )
 {
     SECStatus rv = SECFailure;
     JavaVM *VMs[5];
@@ -291,6 +361,16 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative
      * Initialize the errcode translation table.
      */
     JSS_initErrcodeTranslationTable();
+
+    /*
+     * The rest of the initialization (the NSS stuff) is skipped if
+     * the initializeJavaOnly flag is set.
+     */
+    if( initializeJavaOnly) {
+        initialized = PR_TRUE;
+        goto finish;
+    }
+
 
     /*
      * Set the PKCS #11 strings
@@ -378,25 +458,6 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative
     if (rv != SECSuccess) {
         goto finish;
     }
-
-    /*
-     * Save the JavaVM pointer so we can retrieve the JNI environment
-     * later. This only works if there is only one Java VM.
-     */
-    if( JNI_GetCreatedJavaVMs(VMs, 5, &numVMs) != 0) {
-        JSS_trace(env, JSS_TRACE_ERROR,
-                    "Unable to to access Java virtual machine");
-        PR_ASSERT(PR_FALSE);
-        goto finish;
-    }
-    if(numVMs != 1) {
-        char *str;
-        PR_smprintf(str, "Invalid number of Java VMs: %d", numVMs);
-        JSS_trace(env, JSS_TRACE_ERROR, str);
-        PR_smprintf_free(str);
-        PR_ASSERT(PR_FALSE);
-    }
-    JSS_javaVM = VMs[0];
 
     /*
      * Set up policy. We're always domestic now. Thanks to the US Government!
