@@ -170,7 +170,9 @@ public class CMCStatusInfo implements ASN1Value {
 	}
 
 	public String getStatusString() {
-		return statusString.toString();
+		if (statusString != null)
+			return statusString.toString();
+		return null;
 	}
 
 	public OtherInfo getOtherInfo() {
