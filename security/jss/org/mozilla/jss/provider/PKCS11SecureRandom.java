@@ -40,6 +40,7 @@ public class PKCS11SecureRandom extends java.security.SecureRandomSpi {
 
     public PKCS11SecureRandom() {
         super();
+        System.out.println("In PKCS11SecureRandom constructor");
         engine = TokenSupplierManager.getTokenSupplier().getSecureRNG();
     }
 

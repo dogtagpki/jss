@@ -402,6 +402,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
      */
     hostnameStr = (*env)->GetStringUTFChars(env, hostname, NULL);
     if( hostnameStr == NULL ) goto finish;
+    printf("*** Hostname: %s\n", hostnameStr);
     stat = SSL_SetURL(sock->fd, (char*)hostnameStr);
     if( stat != 0 ) {
         JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to set the SSL URL");
@@ -549,7 +550,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreference(
     status = SSL_CipherPrefSetDefault(cipher, enable);
     if(status != SECSuccess) {
         char buf[128];
-        PR_snprintf(buf, 128, "Failed to %s cipher 0x%lx\n",
+        SNPRINTF(buf, 128, "Failed to %s cipher 0x%lx\n",
             (enable ? "enable" : "disable"), cipher);
         JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, buf);
         goto finish;

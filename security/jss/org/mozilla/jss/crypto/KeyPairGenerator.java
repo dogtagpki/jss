@@ -87,11 +87,9 @@ public class KeyPairGenerator {
 
     /**
      * Initializes the generator with algorithm-specific parameters.
-     *  The <tt>SecureRandom</tt> parameters is ignored.
      *
      * @param params Algorithm-specific parameters for the key pair generation.
-     * @param random <b>This parameter is ignored.</b> NSS does not accept
-     *      an external source of random numbers.
+     * @param random This parameter is ignored.
      * @exception InvalidAlgorithmParameterException If the parameters are
      *      inappropriate for the type of key pair that is being generated,
      *      or they are not supported by this generator.
@@ -122,12 +120,10 @@ public class KeyPairGenerator {
 
     /**
      * Initializes the generator with the strength of the keys.
-     *      The <tt>SecureRandom</tt> parameter is ignored.
      *
      * @param strength The strength of the keys that will be generated.
      *      Usually this is the length of the key in bits.
-     * @param random <b>This parameter is ignored.</b> NSS does not accept
-     *      an exterrnal source of random numbers.
+     * @param random This parameter is ignored.
      */
 	public void initialize(int strength, SecureRandom random) {
 		engine.initialize(strength, random);

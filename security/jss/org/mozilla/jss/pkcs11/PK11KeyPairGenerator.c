@@ -34,7 +34,6 @@
 #include "_jni/org_mozilla_jss_pkcs11_PK11KeyPairGenerator.h"
 
 #include <pk11func.h>
-#include <pk11pqg.h>
 #include <nspr.h>
 #include <key.h>
 #include <secitem.h>
