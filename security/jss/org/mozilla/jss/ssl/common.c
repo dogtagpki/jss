@@ -309,37 +309,63 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketProxy_releaseNativeResources
     (JNIEnv *env, jobject this)
 {
-    
+    JSSL_SocketData *sock = NULL;
+
+    /* get the FD */
+    if( JSS_getPtrFromProxy(env, this, (void**)&sock) != PR_SUCCESS) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    JSSL_DestroySocketData(env, sock);
+
+finish:
+    return;     
 }
 
-void
-JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
+void JSSL_DestroySocketResources(JNIEnv *env, JSSL_SocketData *sd) 
 {
-    PR_ASSERT(sd != NULL);
-
     if( !sd->closed ) {
         PR_Close(sd->fd);
+        sd->fd = NULL;
         sd->closed = PR_TRUE;
-        /* this may have thrown an exception */
     }
 
     if( sd->socketObject != NULL ) {
         DELETE_WEAK_GLOBAL_REF(env, sd->socketObject );
+        sd->socketObject = NULL;
     }
     if( sd->certApprovalCallback != NULL ) {
         (*env)->DeleteGlobalRef(env, sd->certApprovalCallback);
+        sd->certApprovalCallback = NULL;
     }
     if( sd->clientCertSelectionCallback != NULL ) {
         (*env)->DeleteGlobalRef(env, sd->clientCertSelectionCallback);
+        sd ->clientCertSelectionCallback = NULL;
     }
     if( sd->clientCert != NULL ) {
         CERT_DestroyCertificate(sd->clientCert);
+        sd->clientCert = NULL;
     }
-    PR_Free(sd);
-    sd=NULL;
+    if (sd->jsockPriv != NULL) {
+        /*jsockPriv should always be null in common.c layer which operates */
+        /*on socket created by PR_NewTCPSocket() in socketCreate or */
+        /*socketAccept; */
+        PR_ASSERT(sd->jsockPriv != NULL );
+        sd->jsockPriv == NULL;
+    }
 }
 
-/*
+void JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
+{
+    PR_ASSERT(sd != NULL);
+    /* if user did not call Socket.Close need to releaseResources */  
+    JSSL_DestroySocketResources(env, sd); 
+    PR_Free(sd);
+}
+
+
+/*                          
  * These must match up with the constants defined in SSLSocket.java.
  */
 PRInt32 JSSL_enums[] = {
@@ -414,22 +440,19 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
 {
     JSSL_SocketData *sock = NULL;
-
     /* get the FD */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
         /* exception was thrown */
         goto finish;
     }
 
-
-    /*clean up the sock structure, but don't delete the sock since it was past to the SocketProxy */
-    /*and the SocketProxy will releaseNativeresources */
-if (sock != NULL) {
-    JSSL_DestroySocketData(env, sock);
-}
-        
-
-        /* this may have thrown an exception */
+    if(!sock->closed ) {
+        /*user is closing socket. Destroy all related memory structures*/ 
+        /* related to the socket because in high load the Garbage */
+        /* Collection may not releaseNativeResources soon enough */
+        /* releaseNativeResource will free the actual structure */
+        JSSL_DestroySocketResources(env, sock);
+    }
 
 finish:
     EXCEPTION_CHECK(env, sock)

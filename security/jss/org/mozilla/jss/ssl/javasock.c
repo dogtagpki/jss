@@ -64,6 +64,9 @@ struct PRFilePrivate {
 void
 setException(JNIEnv *env, PRFilePrivate *priv, jthrowable excep)
 {
+    if (priv == NULL) {
+        return;       
+    }
     PR_ASSERT(priv->exception == NULL);
     if( priv->exception != NULL) {
         (*env)->DeleteGlobalRef(env, priv->exception);
@@ -74,8 +77,11 @@ setException(JNIEnv *env, PRFilePrivate *priv, jthrowable excep)
 jthrowable
 JSS_SSL_getException(PRFilePrivate *priv)
 {
-    jobject retval = priv->exception;
-    priv->exception = NULL;
+    jobject retval = NULL;
+    if (priv != NULL && priv->exception != NULL) {
+        retval = priv->exception;
+        priv->exception = NULL;
+    }
     return retval;
 }
 
