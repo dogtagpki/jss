@@ -1299,11 +1299,12 @@ public final class CryptoManager implements TokenSupplier
     /*                                                                  */
     /*     jss.jar:  ns/ninja/org/mozilla/jss/manage/CryptoManager.java */
     /*     jss.dll:  ns/ninja/org/mozilla/jss/manage/CryptoManager.c    */
+    /*                        org/mozilla/jss/util/jssver.h             */
     /*                                                                  */
     /********************************************************************/
 
     public static final String
-     JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_1_4";
+     JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_1_5";
      public static final String
      JAR_JDK_VERSION     = "JDK_VERSION = JDK 1.4.0";
      public static final String
