@@ -20,8 +20,7 @@ FILES = $(DATAFILES) pkginfo prototype
 
 PACKAGE = $(shell basename `pwd`)
 
-PRODUCT_VERSION = "3.1.2.3"    
-PRODUCT_NAME = JSS_3_1_2_3_RTM
+PRODUCT_VERSION =  $(shell grep JSS_VERSION $(CORE_DEPTH)/jss/org/mozilla/jss/util/jssver.h | sed -e 's/"$$//' -e 's/.*"//' -e 's/ .*//')
 
 LN = /usr/bin/ln
 
