@@ -861,10 +861,13 @@ public final class CryptoManager implements TokenSupplier
 
             int position = java.security.Security.insertProviderAt(
                             new JSSProvider(), 1);
-            if(position==-1) {
-                Debug.trace(Debug.ERROR,
-                    "Unable to install default provider");
-            }
+            // This returns -1 if the provider was already installed, in which
+            // case it is not installed again.  Is this
+            // an error? I don't think so, although it might be confusing
+            // if the provider is not in the position they expected.
+            // However, this will only happen if they are installing the
+            // provider themselves, so presumably they know what they're
+            // doing.
         }
         if( values.removeSunProvider ) {
             java.security.Security.removeProvider("SUN");
