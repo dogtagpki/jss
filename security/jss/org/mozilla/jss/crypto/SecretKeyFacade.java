@@ -11,11 +11,11 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Network Security Services for Java.
+ * The Original Code is Netscape Security Services for Java.
  *
  * The Initial Developer of the Original Code is
  * Netscape Communications Corporation.
- * Portions created by the Initial Developer are Copyright (C) 2001
+ * Portions created by the Initial Developer are Copyright (C) 2002
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,18 +34,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.mozilla.jss.provider.java.security;
+package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.crypto.*;
-import java.security.KeyPair;
-import java.security.SecureRandom;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.InvalidAlgorithmParameterException;
+public class SecretKeyFacade implements javax.crypto.SecretKey {
 
+    public SymmetricKey key;
 
-public class RSAKeyPairGeneratorSpi extends GenericKeyPairGeneratorSpi
-{
-    public RSAKeyPairGeneratorSpi() {
-        super(KeyPairAlgorithm.RSA);
+    public SecretKeyFacade(SymmetricKey symk) {
+        key = symk;
+    }
+
+    public String getAlgorithm() {
+        return key.getAlgorithm();
+    }
+
+    public byte[] getEncoded() {
+        return key.getEncoded();
+    }
+
+    public String getFormat() {
+        return key.getFormat();
     }
 }
