@@ -1,4 +1,4 @@
-# 
+#
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,25 +29,8 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-# 
+#
+# Config stuff for FreeBSD2
+#
 
-CORE_DEPTH = ../../../..
-
-MODULE = jss
-
-DIRS =	hclhacks\
-	policy	\
-	util	\
-	asn1	\
-	crypto	\
-	pkcs11	\
-	provider	\
-	manage	\
-	pkix/primitive    \
-	pkcs10	\
-	pkix	\
-	pkcs7	\
-	pkcs12	\
-    ssl     \
-	tests	\
-	$(NULL)
+include $(CORE_DEPTH)/coreconf/FreeBSD.mk

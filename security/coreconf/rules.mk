@@ -57,7 +57,7 @@ USE_NT_C_SYNTAX=1
 endif
 
 ifdef XP_OS2_VACPP
-USE_NT_C_SYTNAX=1
+USE_NT_C_SYNTAX=1
 endif
 
 #
@@ -88,7 +88,7 @@ import::
 		"$(MDHEADER_JAR)=$(IMPORT_MD_DIR)|$(SOURCE_MD_DIR)/include|"        \
 		"$(MDBINARY_JAR)=$(IMPORT_MD_DIR)|$(SOURCE_MD_DIR)|"
 
-export:: 
+export::
 	+$(LOOP_OVER_DIRS)
 
 private_export::
@@ -239,8 +239,28 @@ endif
 
 endif
 
+ifneq ($(POLICY),)
+release_policy::
+ifdef LIBRARY
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $(LIBRARY)
+endif
+ifdef SHARED_LIBRARY
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $(SHARED_LIBRARY)
+endif
+ifdef IMPORT_LIBRARY
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $(IMPORT_LIBRARY)
+endif
+ifdef PROGRAM
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $(PROGRAM)
+endif
+ifdef PROGRAMS
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $(PROGRAMS)
+endif
+	+$(LOOP_OVER_DIRS)
+else
 release_policy::
 	+$(LOOP_OVER_DIRS)
+endif
 
 release_md::
 ifdef LIBRARY
@@ -266,10 +286,33 @@ alltags:
 	find . -name dist -prune -o \( -name '*.[hc]' -o -name '*.cp' -o -name '*.cpp' \) -print | xargs etags -a
 	find . -name dist -prune -o \( -name '*.[hc]' -o -name '*.cp' -o -name '*.cpp' \) -print | xargs ctags -a
 
-$(PROGRAM): $(BUILT_SRCS) $(OBJS) $(EXTRA_LIBS)
+ifdef XP_OS2_VACPP
+# list of libs (such as -lnspr4) do not work for our compiler
+# change it to be $(DIST)/lib/nspr4.lib
+EXTRA_SHARED_LIBS := $(filter-out -L%,$(EXTRA_SHARED_LIBS))
+EXTRA_SHARED_LIBS := $(patsubst -l%,$(DIST)/lib/%.$(LIB_SUFFIX),$(EXTRA_SHARED_LIBS))
+endif
+
+$(PROGRAM): $(OBJS) $(EXTRA_LIBS)
 	@$(MAKE_OBJDIR)
 ifeq ($(OS_ARCH),WINNT)
+ifeq ($(OS_TARGET),WIN16)
+	echo system windows >w16link
+	echo option map >>w16link
+	echo option oneautodata >>w16link
+	echo option heapsize=32K >>w16link
+	echo debug watcom all >>w16link
+	echo name $@ >>w16link
+	echo file >>w16link
+	echo $(W16OBJS) , >>w16link
+	echo $(W16LDFLAGS) >> w16link
+	echo library >>w16link
+	echo winsock.lib >>w16link
+	$(LINK) @w16link.
+	rm w16link
+else
 	$(MKPROG) $(subst /,\\,$(OBJS)) -Fe$@ -link $(LDFLAGS) $(subst /,\\,$(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS))
+endif
 else
 ifdef XP_OS2_VACPP
 	$(MKPROG) -Fe$@ $(CFLAGS) $(OBJS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
@@ -277,11 +320,14 @@ else
 	$(MKPROG) -o $@ $(CFLAGS) $(OBJS) $(LDFLAGS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
 endif
 endif
+ifneq ($(POLICY),)
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $@
+endif
 
 get_objs:
 	@echo $(OBJS)
 
-$(LIBRARY): $(BUILT_SRCS) $(OBJS)
+$(LIBRARY): $(OBJS)
 	@$(MAKE_OBJDIR)
 	rm -f $@
 ifeq ($(OS_ARCH), WINNT)
@@ -290,11 +336,14 @@ else
 	$(AR) $(OBJS)
 endif
 	$(RANLIB) $@
-	echo $(BUILT_SRCS) $(OBJS)
 
+ifeq ($(OS_TARGET), WIN16)
+$(IMPORT_LIBRARY): $(SHARED_LIBRARY)
+	wlib +$(SHARED_LIBRARY)
+endif
 
 ifeq ($(OS_ARCH),OS2)
-$(IMPORT_LIBRARY): $(BUILT_SRCS) $(OBJS)
+$(IMPORT_LIBRARY): $(SHARED_LIBRARY)
 	rm -f $@
 	$(IMPLIB) $@ $(patsubst %.lib,%.dll.def,$@)
 	$(RANLIB) $@
@@ -308,7 +357,7 @@ SUB_SHLOBJS = $(foreach dir,$(SHARED_LIBRARY_DIRS),$(addprefix $(dir)/,$(shell $
 endif
 endif
 
-$(SHARED_LIBRARY): $(BUILT_SRCS) $(OBJS) $(MAPFILE)
+$(SHARED_LIBRARY): $(OBJS) $(MAPFILE)
 	@$(MAKE_OBJDIR)
 	rm -f $@
 ifeq ($(OS_ARCH)$(OS_RELEASE), AIX4.1)
@@ -321,7 +370,22 @@ ifeq ($(OS_ARCH)$(OS_RELEASE), AIX4.1)
 	-bM:SRE -bnoentry $(OS_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
 else
 ifeq ($(OS_ARCH), WINNT)
+ifeq ($(OS_TARGET), WIN16)
+	echo system windows dll initinstance >w16link
+	echo option map >>w16link
+	echo option oneautodata >>w16link
+	echo option heapsize=32K >>w16link
+	echo debug watcom all >>w16link
+	echo name $@ >>w16link
+	echo file >>w16link
+	echo $(W16OBJS) >>w16link
+	echo $(W16LIBS) >>w16link
+	echo libfile libentry >>w16link
+	$(LINK) @w16link.
+	rm w16link
+else
 	$(LINK_DLL) -MAP $(DLLBASE) $(subst /,\\,$(OBJS) $(SUB_SHLOBJS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS) $(LD_LIBS))
+endif
 else
 ifeq ($(OS_ARCH),OS2)
 	@cmd /C "echo LIBRARY $(notdir $(basename $(SHARED_LIBRARY))) INITINSTANCE TERMINSTANCE >$@.def"
@@ -329,7 +393,16 @@ ifeq ($(OS_ARCH),OS2)
 	@cmd /C "echo CODE    LOADONCALL MOVEABLE DISCARDABLE >>$@.def"
 	@cmd /C "echo DATA    PRELOAD MOVEABLE MULTIPLE NONSHARED >>$@.def"	
 	@cmd /C "echo EXPORTS >>$@.def"
-	@cmd /C "$(FILTER) $(OBJS) >>$@.def"
+	$(FILTER) $(OBJS) >>$@.def
+ifdef SUB_SHLOBJS
+	@echo Number of words in OBJ list = $(words $(SUB_SHLOBJS))
+	@echo If above number is over 100, need to reedit coreconf/rules.mk
+	-$(FILTER) $(wordlist 1,20,$(SUB_SHLOBJS)) >>$@.def
+	-$(FILTER) $(wordlist 21,40,$(SUB_SHLOBJS)) >>$@.def
+	-$(FILTER) $(wordlist 41,60,$(SUB_SHLOBJS)) >>$@.def
+	-$(FILTER) $(wordlist 61,80,$(SUB_SHLOBJS)) >>$@.def
+	-$(FILTER) $(wordlist 81,100,$(SUB_SHLOBJS)) >>$@.def
+endif
 endif #OS2
 ifdef XP_OS2_VACPP
 	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $@.def
@@ -341,6 +414,9 @@ ifeq ($(OS_ARCH),OpenVMS)
 	@echo "`translate $@`" > $(@:$(DLL_SUFFIX)=vms)
 endif
 endif
+endif
+ifneq ($(POLICY),)
+	-$(PLCYPATCH) $(PLCYPATCH_ARGS) $@
 endif
 
 ifeq ($(OS_ARCH), WINNT)
@@ -442,13 +518,25 @@ endif
 endif #STRICT_CPLUSPLUS_SUFFIX
 
 %.i: %.cpp
+ifeq ($(OS_TARGET), WIN16)
+	echo $(WCCFLAGS3) >w16wccf
+	$(CCC) -pl -fo=$* @w16wccf $*.cpp
+	rm w16wccf
+else
 	$(CCC) -C -E $(CFLAGS) $< > $*.i
+endif
 
 %.i: %.c
+ifeq ($(OS_TARGET), WIN16)
+	echo $(WCCFLAGS3) >w16wccf
+	$(CC) -pl -fo=$* @w16wccf $*.c
+	rm w16wccf
+else
 ifeq ($(OS_ARCH),WINNT)
 	$(CC) -C /P $(CFLAGS) $< 
 else
 	$(CC) -C -E $(CFLAGS) $< > $*.i
+endif
 endif
 
 ifneq ($(OS_ARCH), WINNT)
@@ -737,6 +825,11 @@ endif
 # Copy each element of EXPORTS to $(SOURCE_XP_DIR)/public/$(MODULE)/
 #
 PUBLIC_EXPORT_DIR = $(SOURCE_XP_DIR)/public/$(MODULE)
+ifeq ($(OS_ARCH),WINNT)
+ifeq ($(OS_TARGET),WIN16)
+PUBLIC_EXPORT_DIR = $(SOURCE_XP_DIR)/public/win16
+endif
+endif
 
 ifneq ($(EXPORTS),)
 $(PUBLIC_EXPORT_DIR)::
@@ -752,6 +845,11 @@ endif
 # Duplicate export rule for private exports, with different directories
 
 PRIVATE_EXPORT_DIR = $(SOURCE_XP_DIR)/private/$(MODULE)
+ifeq ($(OS_ARCH),WINNT)
+ifeq ($(OS_TARGET),WIN16)
+PRIVATE_EXPORT_DIR = $(SOURCE_XP_DIR)/public/win16
+endif
+endif
 
 ifneq ($(PRIVATE_EXPORTS),)
 $(PRIVATE_EXPORT_DIR)::
