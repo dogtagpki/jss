@@ -80,15 +80,17 @@ CLASSES =									\
             ConsolePasswordCallback         \
 			Debug              				\
             IncorrectPasswordException      \
+	    InvalidDERException             \
 			InvalidNicknameException		\
 			NativeProxy        				\
 			NotImplementedException			\
             NullPasswordCallback            \
+	    ObjectNotFoundException          \
 			Password                        \
 			PasswordCallback                \
 			PasswordCallbackInfo            \
             Tunnel                          \
-			UTF8Converter					\
+			UTF8Converter	      				\
 			$(NULL)
 
 CSRCS =     jssutil.c                    \

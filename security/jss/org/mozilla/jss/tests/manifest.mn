@@ -58,6 +58,9 @@ CLASSES =                                                   \
                     SigTest                                 \
                     socketTest                              \
                     TestKeyGen                              \
+                    AddCert                                  \
+                    ModifyTrust                              \
+                    VerifyCert                               \
                     $(NULL)
 
 JSRCS =                                                                                         \
@@ -73,5 +76,8 @@ JSRCS =                                                                         
                     TestKeyGen.java                         \
                     SigTest.java                            \
                     SetupDBs.java                           \
-		    SSLClientAuth.java                      \
+                    SSLClientAuth.java                      \
+                    AddCert.java                             \
+                    ModifyTrust.java                         \
+                    VerifyCert.java                              \
                                 $(NULL)
