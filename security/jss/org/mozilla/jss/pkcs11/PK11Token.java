@@ -461,12 +461,10 @@ public final class PK11Token implements CryptoToken {
 
 			if (keyType.equalsIgnoreCase("dsa")) {
 				if ((P == null) && (Q == null) && (G == null)) {
-					System.out.println("no pqg supplied, self-generating...");
 					PQGParams pqg;
 					try {
 						 pqg = PQGParams.generate(keysize);
 					} catch (PQGParamGenException e) {
-						System.out.println(e.toString());
 						throw e;
 					}
 					byte[] p = PQGParams.BigIntegerToUnsignedByteArray(pqg.getP());
