@@ -27,14 +27,14 @@
 #
 #
 # SUNWjss
-s none usr/lib/mps/64=sparcv9
-s none usr/lib/mps/secv1/64=sparcv9
-d none usr/lib/mps/sparcv9 755 root bin
-d none usr/share/lib/mps/sparcv9 755 root bin
-d none usr/lib/mps/secv1/sparcv9 755 root bin
-d none usr/share/lib/mps/secv1/sparcv9 755 root bin
-f none usr/lib/mps/sparcv9/libjss4.so 755 root bin
-f none usr/share/lib/mps/sparcv9/jss4.jar 644 root bin
-s none usr/lib/mps/secv1/sparcv9/libjss4.so=../../sparcv9/libjss4.so
-s none usr/share/lib/mps/secv1/sparcv9/jss4.jar=../../sparcv9/jss4.jar
+#64#s none usr/lib/mps/64=sparcv9
+#64#s none usr/lib/mps/secv1/64=sparcv9
+#64#d none usr/lib/mps/sparcv9 755 root bin
+#64#d none usr/share/lib/mps/sparcv9 755 root bin
+#64#d none usr/lib/mps/secv1/sparcv9 755 root bin
+#64#d none usr/share/lib/mps/secv1/sparcv9 755 root bin
+#64#f none usr/lib/mps/sparcv9/libjss4.so 755 root bin
+#64#f none usr/share/lib/mps/sparcv9/jss4.jar 644 root bin
+#64#s none usr/lib/mps/secv1/sparcv9/libjss4.so=../../sparcv9/libjss4.so
+#64#s none usr/share/lib/mps/secv1/sparcv9/jss4.jar=../../sparcv9/jss4.jar
 
