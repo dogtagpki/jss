@@ -685,6 +685,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
     }
+
     if (sock->closed == PR_TRUE) {
         JSSL_throwSSLSocketException(env,
         "Socket is marked as closed aborting read");
