@@ -84,6 +84,7 @@ CLASSES =       SSLHandshakeCompletedEvent    \
         SocketBase \
         SocketProxy \
         SSLInputStream \
+        SSLSocketException \
                 $(NULL)
 
 PRIVATE_CLASSES = \
@@ -91,10 +92,6 @@ PRIVATE_CLASSES = \
             SSLClient \
             $(NULL)
 
-                        #SSLClient         \
-                        #ServerHandshakeCB \
-                        #ClientHandshakeCB \
-                        #$(NULL)
 
 CSRCS = SSLSocket.c \
         callbacks.c \
