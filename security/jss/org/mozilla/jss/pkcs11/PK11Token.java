@@ -69,7 +69,7 @@ public final class PK11Token implements CryptoToken {
     ////////////////////////////////////////////////////
 	public org.mozilla.jss.crypto.Signature
 	getSignatureContext(SignatureAlgorithm algorithm) 
-		throws java.security.NoSuchAlgorithmException, TokenException
+		throws NoSuchAlgorithmException, TokenException
 	{
         Assert.assert(algorithm!=null);
 		return Tunnel.constructSignature( algorithm,
@@ -78,11 +78,11 @@ public final class PK11Token implements CryptoToken {
 
 	public JSSMessageDigest
 	getDigestContext(DigestAlgorithm algorithm)
-		throws java.security.NoSuchAlgorithmException,
+		throws NoSuchAlgorithmException,
                 java.security.DigestException
 	{
         if( ! doesAlgorithm(algorithm) ) {
-            throw new java.security.NoSuchAlgorithmException();
+            throw new NoSuchAlgorithmException();
         }
 
         return new PK11MessageDigest(this, algorithm);
@@ -90,10 +90,10 @@ public final class PK11Token implements CryptoToken {
 
 	public Cipher
 	getCipherContext(EncryptionAlgorithm algorithm)
-		throws java.security.NoSuchAlgorithmException, TokenException
+		throws NoSuchAlgorithmException, TokenException
 	{
         if( ! doesAlgorithm(algorithm) ) {
-            throw new java.security.NoSuchAlgorithmException(
+            throw new NoSuchAlgorithmException(
                 algorithm+" is not supported by this token");
         }
         return new PK11Cipher(this, algorithm);
@@ -101,10 +101,10 @@ public final class PK11Token implements CryptoToken {
 
     public KeyGenerator
     getKeyGenerator(KeyGenAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException
+        throws NoSuchAlgorithmException, TokenException
     {
         if( ! doesAlgorithm(algorithm) ) {
-            throw new java.security.NoSuchAlgorithmException(
+            throw new NoSuchAlgorithmException(
                 algorithm+" is not supported by this token");
         }
         return new PK11KeyGenerator(this, algorithm);
@@ -127,10 +127,10 @@ public final class PK11Token implements CryptoToken {
 
     public KeyWrapper
     getKeyWrapper(KeyWrapAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException
+        throws NoSuchAlgorithmException, TokenException
     {
         if( ! doesAlgorithm(algorithm) ) {
-            throw new java.security.NoSuchAlgorithmException(
+            throw new NoSuchAlgorithmException(
                 algorithm+" is not supported by this token");
         }
         return new PK11KeyWrapper(this, algorithm);
@@ -145,7 +145,7 @@ public final class PK11Token implements CryptoToken {
 
 	public org.mozilla.jss.crypto.KeyPairGenerator
 	getKeyPairGenerator(KeyPairAlgorithm algorithm)
-		throws java.security.NoSuchAlgorithmException, TokenException
+		throws NoSuchAlgorithmException, TokenException
 	{
         Assert.assert(algorithm!=null);
         return new KeyPairGenerator(algorithm,
@@ -547,7 +547,7 @@ public final class PK11Token implements CryptoToken {
 	}
 */
 
-	TokenProxy getProxy() {
+	public TokenProxy getProxy() {
 		return tokenProxy;
 	}
 
