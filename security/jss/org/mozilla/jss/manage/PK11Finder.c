@@ -47,6 +47,7 @@
 #include <jss_exceptions.h>
 #include "pk11util.h"
 #include <java_ids.h>
+
 /*
  * This is a semi-private NSS function, exposed only for JSS.
  */
@@ -69,17 +70,13 @@ Java_org_mozilla_jss_CryptoManager_findCertByNicknameNative
     PR_ASSERT(env!=NULL && this!=NULL && nickname!=NULL);
 
     nick = (char*) (*env)->GetStringUTFChars(env, nickname, NULL);
-    
     PR_ASSERT(nick!=NULL);
 
     cert = PK11_FindCertFromNickname(nick, NULL);
 
     if(cert == NULL) {
-
         cert = CERT_FindCertByNickname( CERT_GetDefaultCertDB(), nick );
-
         if( cert == NULL ) {
-
             JSS_nativeThrow(env, OBJECT_NOT_FOUND_EXCEPTION);
             goto finish;
         }
@@ -976,11 +973,8 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
                                     numCerts-userCertFound,
                                     certUsageUserCertImport);
         if(status != SECSuccess) {
-            JSS_trace(env, JSS_TRACE_ERROR,
-                "CERT_ImportCAChain returned an error in "
-                "CryptoManager.importCertPackage.");
-            JSS_throwMsg(env, CERTIFICATE_ENCODING_EXCEPTION,
-                "CERT_ImportCAChain returned an error");
+            JSS_throwMsgPrErr(env, CERTIFICATE_ENCODING_EXCEPTION,
+                "CERT_ImportCAChainTrusted returned an error");
             goto finish;
         }
       } else if (certi == numCerts) {
@@ -988,11 +982,8 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
                                     numCerts-userCertFound,
                                     certUsageUserCertImport);
         if(status != SECSuccess) {
-            JSS_trace(env, JSS_TRACE_ERROR,
-                "CERT_ImportCAChain returned an error in "
-                "CryptoManager.importCertPackage.");
-            JSS_throwMsg(env, CERTIFICATE_ENCODING_EXCEPTION,
-                "CERT_ImportCAChain returned an error");
+            JSS_throwMsgPrErr(env, CERTIFICATE_ENCODING_EXCEPTION,
+                "CERT_ImportCAChainTrusted returned an error");
             goto finish;
         }
       } else {
@@ -1000,11 +991,8 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
                    certi,
                    certUsageUserCertImport);
         if(status != SECSuccess) {
-            JSS_trace(env, JSS_TRACE_ERROR,
-                "CERT_ImportCAChain returned an error in "
-                "CryptoManager.importCertPackage.");
-            JSS_throwMsg(env, CERTIFICATE_ENCODING_EXCEPTION,
-                "CERT_ImportCAChain returned an error");
+            JSS_throwMsgPrErr(env, CERTIFICATE_ENCODING_EXCEPTION,
+                "CERT_ImportCAChainTrusted returned an error");
             goto finish;
         }
 
@@ -1012,11 +1000,8 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
                    numCerts-certi-1,
                    certUsageUserCertImport);
         if(status != SECSuccess) {
-            JSS_trace(env, JSS_TRACE_ERROR,
-                "CERT_ImportCAChain returned an error in "
-                "CryptoManager.importCertPackage.");
-            JSS_throwMsg(env, CERTIFICATE_ENCODING_EXCEPTION,
-                "CERT_ImportCAChain returned an error");
+            JSS_throwMsgPrErr(env, CERTIFICATE_ENCODING_EXCEPTION,
+                "CERT_ImportCAChainTrusted returned an error");
             goto finish;
         }
 
@@ -1039,11 +1024,10 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
     } else {
         leafCert = CERT_FindCertByIssuerAndSN(certdb, &issuerAndSN);
     }
-    
     if( leafCert == NULL ) {
-     JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
-         "Failed to find certificate that was just imported");
-     goto finish;
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+            "Failed to find certificate that was just imported");
+        goto finish;
     }
     leafObject = JSS_PK11_wrapCert(env, &leafCert);
 
@@ -1575,7 +1559,6 @@ finish:
         SEC_DestroyCrl(crl);
     }
 }
-
 
 /***********************************************************************
  * CryptoManager.verifyCertNowNative
