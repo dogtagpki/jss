@@ -52,7 +52,3 @@ endif
 #
 
 INCLUDES += -I$(SOURCE_XPPRIVATE_DIR)
-
-ifdef MOZILLA_CLIENT
-INCLUDES += -I$(SOURCE_XP_DIR)/include
-endif
