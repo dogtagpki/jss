@@ -58,7 +58,8 @@ endif
 #       one for each OS release.                                      #
 #######################################################################
 
-TARGET_OSES = FreeBSD BSD_OS NetBSD OpenUNIX OS2 QNX Darwin BeOS OpenBSD
+TARGET_OSES = FreeBSD BSD_OS NetBSD OpenUNIX OS2 QNX Darwin BeOS OpenBSD \
+              OpenVMS
 
 ifeq (,$(filter-out $(TARGET_OSES),$(OS_TARGET)))
 include $(CORE_DEPTH)/coreconf/$(OS_TARGET).mk
@@ -70,9 +71,7 @@ endif
 # [4.0] Master "Core Components" source and release <platform> tags   #
 #       (dependent upon <architecture> tags)                          #
 #######################################################################
-ifndef PLATFORM
 PLATFORM = $(OBJDIR_NAME)
-endif
 
 #######################################################################
 # [5.0] Master "Core Components" release <tree> tags                  #

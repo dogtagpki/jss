@@ -87,6 +87,10 @@ import::
 		"$(XPHEADER_JAR)=$(IMPORT_XP_DIR)|$(SOURCE_XP_DIR)/public/|v" \
 		"$(MDHEADER_JAR)=$(IMPORT_MD_DIR)|$(SOURCE_MD_DIR)/include|"        \
 		"$(MDBINARY_JAR)=$(IMPORT_MD_DIR)|$(SOURCE_MD_DIR)|"
+# On Mac OS X ranlib needs to be rerun after static libs are moved.
+ifeq ($(OS_TARGET),Darwin)
+	find $(SOURCE_MD_DIR)/lib -name "*.a" -exec $(RANLIB) {} \;
+endif
 
 export:: 
 	+$(LOOP_OVER_DIRS)
@@ -106,9 +110,6 @@ ifdef LIBRARY
 endif
 ifdef SHARED_LIBRARY
 	$(INSTALL) -m 775 $(SHARED_LIBRARY) $(SOURCE_LIB_DIR)
-ifeq ($(OS_TARGET),OpenVMS)
-	$(INSTALL) -m 775 $(SHARED_LIBRARY:$(DLL_SUFFIX)=vms) $(SOURCE_LIB_DIR)
-endif
 endif
 ifdef IMPORT_LIBRARY
 	$(INSTALL) -m 775 $(IMPORT_LIBRARY) $(SOURCE_LIB_DIR)
@@ -361,9 +362,6 @@ else
 	$(MKSHLIB) -o $@ $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
 endif
 	chmod +x $@
-ifeq ($(OS_TARGET),OpenVMS)
-	@echo "`translate $@`" > $(@:$(DLL_SUFFIX)=vms)
-endif
 ifeq ($(OS_TARGET),Darwin)
 ifdef MAPFILE
 	nmedit -s $(MAPFILE) $@
@@ -414,10 +412,12 @@ else
 	$(CC) -o $@ -c $(CFLAGS) $<
 endif
 
+ifndef XP_OS2_VACPP
 ifneq (,$(filter-out WIN%,$(OS_TARGET)))
 $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX): %.s
 	@$(MAKE_OBJDIR)
 	$(AS) -o $@ $(ASFLAGS) -c $<
+endif
 endif
 
 $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX): %.asm
@@ -849,7 +849,7 @@ endif
 
 -include $(DEPENDENCIES)
 
-ifneq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
+ifneq (,$(filter-out OpenVMS OS2 WIN%,$(OS_TARGET)))
 # Can't use sed because of its 4000-char line length limit, so resort to perl
 .DEFAULT:
 	@perl -e '                                                            \
