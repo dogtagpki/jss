@@ -57,7 +57,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketListen
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
     if( PR_Listen(sock->fd, backlog) != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Failed to set listen backlog on socket");
         goto finish;
     }
@@ -87,7 +87,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketAccept
     if( handshakeAsClient ) {
         status = SSL_OptionSet(sock->fd, SSL_HANDSHAKE_AS_CLIENT, PR_TRUE);
         if( status != SECSuccess ) {
-            JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+            JSSL_throwSSLSocketException(env,
                 "Failed to set option to handshake as client");
             goto finish;
         }
@@ -113,18 +113,17 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketAccept
                      * calls
                      */
                       PR_NT_CancelIo(sock->fd);
-               /* don't break here, let it fall through */
+                     /* don't break here, let it fall through */
 #endif 
-
               default:
-                JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+                JSSL_throwSSLSocketException(env,
                     "Failed to accept new connection");
                 goto finish;
             }
         }
     }
 
-    newSD = JSSL_CreateSocketData(env, newSock, newFD);
+    newSD = JSSL_CreateSocketData(env, newSock, newFD, NULL /* priv */);
     newFD = NULL;
     if( newSD == NULL ) {
         goto finish;
@@ -134,7 +133,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketAccept
     status = SSL_HandshakeCallback(newSD->fd, JSSL_HandshakeCallback,
                                     newSD);
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Unable to install handshake callback");
     }
 
@@ -179,7 +178,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_configServerSessionIDCache(
     status = SSL_ConfigServerSessionIDCache(
                 maxEntries, ssl2Timeout, ssl3Timeout, dirName);
     if (status != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
                        "Failed to configure server session ID cache");
         goto finish;
     }
@@ -190,52 +189,57 @@ finish:
     }
 }
 
+/*
+ * This is here for backwards binary compatibility: I didn't want to remove
+ * the symbol from the DLL. This would only get called if someone were using
+ * a pre-3.2 version of the JSS classes with this post-3.2 library. Using
+ * different versions of the classes and the C code is not supported.
+ */
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLServerSocket_setServerCertNickname(
-    JNIEnv *env, jobject self, jstring nicknameStr)
+    JNIEnv *env, jobject self, jstring nick)
+{
+    PR_ASSERT(0);
+    JSS_throwMsg(env, SOCKET_EXCEPTION, "JSS JAR/DLL version mismatch");
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_ssl_SSLServerSocket_setServerCert(
+    JNIEnv *env, jobject self, jobject certObj)
 {
     JSSL_SocketData *sock;
-    const char *nickname=NULL;
     CERTCertificate* cert=NULL;
     SECKEYPrivateKey* privKey=NULL;
     SECStatus status;
 
-    if(nicknameStr == NULL) {
+    if( certObj == NULL ) {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
         goto finish;
     }
+
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
-    nickname = (*env)->GetStringUTFChars(env, nicknameStr, NULL);
-    if( nickname == NULL ) goto finish;
+    if( JSS_PK11_getCertPtr(env, certObj, &cert) != PR_SUCCESS ) {
+        goto finish;
+    }
+    PR_ASSERT(cert!=NULL); /* shouldn't happen */
 
-    cert = PK11_FindCertFromNickname((char *)nickname, NULL);   /* CONST */
-    if (cert != NULL) {
-        privKey = PK11_FindKeyByAnyCert(cert, NULL);
-        if (privKey != NULL) {
-            status = SSL_ConfigSecureServer(sock->fd, cert, privKey, kt_rsa);
-            if( status != SECSuccess) {
-                JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
-                    "Failed to configure secure server certificate and key");
-                goto finish;
-            }
-        } else {
-            JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to locate private key");
+    privKey = PK11_FindKeyByAnyCert(cert, NULL);
+    if (privKey != NULL) {
+        status = SSL_ConfigSecureServer(sock->fd, cert, privKey, kt_rsa);
+        if( status != SECSuccess) {
+            JSSL_throwSSLSocketException(env,
+                "Failed to configure secure server certificate and key");
             goto finish;
         }
     } else {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to locate private key");
+        JSSL_throwSSLSocketException(env, "Failed to locate private key");
         goto finish;
     }
 
 finish:
     if(privKey!=NULL) {
         SECKEY_DestroyPrivateKey(privKey);
-    }
-    if(cert!=NULL) {
-        CERT_DestroyCertificate(cert);
-    }
-    if( nickname != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, nicknameStr, nickname);
     }
 }
 
@@ -254,7 +258,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_setReuseAddress(
 
     status = PR_SetSocketOption(sock->fd, &sockOptData);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 
@@ -276,7 +280,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_getReuseAddress(
 
     status = PR_GetSocketOption(sock->fd, &sockOptData);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 

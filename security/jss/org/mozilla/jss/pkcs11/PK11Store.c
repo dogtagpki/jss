@@ -1,27 +1,27 @@
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Security Services for Java.
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
+ * Communications Corporation.  Portions created by Netscape are
  * Copyright (C) 1998-2000 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -43,6 +43,7 @@
 #include <secasn1.h>
 
 #include <jssutil.h>
+#include <Algorithm.h>
 #include "pk11util.h"
 #include <java_ids.h>
 #include <jss_exceptions.h>
@@ -158,7 +159,7 @@ traversalCallback(void *keyCert, void *arg)
         PR_ASSERT( (*env)->ExceptionOccurred(env) );
         goto finish;
     }
-        
+
 
     /***************************************************
      * Insert the key into the vector
@@ -455,7 +456,6 @@ Java_org_mozilla_jss_pkcs11_PK11Store_deleteCert
 {
     CERTCertificate *cert;
     SECStatus status;
-
     PR_ASSERT(env!=NULL && this!=NULL);
     if(certObject == NULL) {
         JSS_throw(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION);
@@ -469,120 +469,12 @@ Java_org_mozilla_jss_pkcs11_PK11Store_deleteCert
 
     status = PK11_DeleteTokenCertAndKey(cert, NULL);
     status = SEC_DeletePermCertificate(cert);
-
-finish: 
-    return;
-}
-
-#define DER_DEFAULT_CHUNKSIZE (2048)
-
-/***********************************************************************
- * passwordToSecitem
- * 
- * Converts a Java Password object to a SECItem, first hashing with
- * global salt. The Java Password object will be cleared.
- * Returns NULL iff an exception was thrown.
- */
-static SECItem*
-passwordToSecitem(JNIEnv *env, jobject pwObject, jbyteArray globalSaltArray)
-{
-    jclass passwordClass;
-    jmethodID getByteCopyMethod;
-    jmethodID clearMethod;
-    jbyteArray pwArray;
-    SECItem *ret=NULL;
-    jbyte *pwChars;
-    jthrowable excep;
-    SECItem *salt = NULL;
-
-    PR_ASSERT(env!=NULL && pwObject!=NULL);
-
-    ret = (SECItem*) PR_NEW(SECItem);
-    if(ret == NULL) {
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
-        goto finish;
-    }
-
-    /*****************************************
-     * Get Password class and methods
-     *****************************************/
-    passwordClass = (*env)->GetObjectClass(env, pwObject);
-    if(passwordClass == NULL) {
-        goto finish;
-    }
-    getByteCopyMethod = (*env)->GetMethodID(
-                                            env,
-                                            passwordClass,
-                                            PW_GET_BYTE_COPY_NAME,
-                                            PW_GET_BYTE_COPY_SIG);
-    clearMethod = (*env)->GetMethodID(  env,
-                                        passwordClass,
-                                        PW_CLEAR_NAME,
-                                        PW_CLEAR_SIG);
-    if(getByteCopyMethod==NULL || clearMethod==NULL) {
-        goto finish;
-    }
-
-    /***************************************************
-     * Get the salt
-     ***************************************************/
-    salt = PR_NEW(SECItem);
-    if( salt == NULL ) {
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
-        goto finish;
-    }
-    salt->len = (*env)->GetArrayLength(env, globalSaltArray);
-    PR_ASSERT(salt->len > 0);
-    salt->data = (unsigned char*)
-                    (*env)->GetByteArrayElements(env, globalSaltArray, NULL);
-    if( salt->data == NULL ) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-
-    /************************************************
-     * Get the bytes from the password, then clear it
-     ***********************************************/
-    pwArray = (*env)->CallObjectMethod( env, pwObject, getByteCopyMethod);
-    (*env)->CallVoidMethod(env, pwObject, clearMethod);
-    if(pwArray == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-
-    /*************************************************************
-     * Copy the characters out of the byte array,
-     *************************************************************/
-    pwChars = (*env)->GetByteArrayElements(env, pwArray, NULL);
-    if(pwChars == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    /* hash the password into a SECItem */
-    ret = SECKEY_HashPassword( (char*) pwChars, salt);
-
-    /***************************************************
-     * Clear the array.
-     ***************************************************/
-    memset(pwChars, 0, ret->len);
-    (*env)->ReleaseByteArrayElements(env, pwArray, pwChars, 0);
-
+            
 finish:
-    if( (excep=(*env)->ExceptionOccurred(env)) ) {
-        (*env)->ExceptionClear(env);
-    }
-    if(salt) {
-        if(salt->data) {
-            (*env)->ReleaseByteArrayElements(env, globalSaltArray,
-                                             (jbyte*) salt->data, JNI_ABORT);
-        }
-        PR_Free(salt);
-    }
-    if( excep ) {
-        (*env)->Throw(env, excep);
-    }
-    return ret;
+    return;
+
 }
+#define DER_DEFAULT_CHUNKSIZE (2048)
 
 int PK11_NumberObjectsFor(PK11SlotInfo*, CK_ATTRIBUTE*, int);
 
@@ -675,6 +567,7 @@ finish:
     }
 }
 
+extern const SEC_ASN1Template SECKEY_EncryptedPrivateKeyInfoTemplate[];
 
 /***********************************************************************
  * PK11Store.importdPrivateKey
@@ -688,4 +581,107 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importPrivateKey
 {
     importPrivateKey(env, this, keyArray,
         keyTypeObj, PR_FALSE /* not temporary */);
+}
+
+
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo
+(JNIEnv *env, jobject this, jobject certObj, jobject algObj,
+    jobject pwObj, jint iteration)
+
+{
+    SECKEYEncryptedPrivateKeyInfo *epki = NULL;
+    jbyteArray encodedEpki = NULL;
+    PK11SlotInfo *slot = NULL;
+    SECOidTag algTag;
+    jclass passwordClass = NULL;
+    jmethodID getByteCopyMethod = NULL;
+    jbyteArray pwArray = NULL;
+    jbyte* pwchars = NULL;
+    SECItem pwItem;
+    CERTCertificate *cert = NULL;
+    SECItem epkiItem;
+
+    epkiItem.data = NULL;
+
+    /* get slot */
+    if( JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    PR_ASSERT(slot!=NULL);
+
+    /* get algorithm */
+    algTag = JSS_getOidTagFromAlg(env, algObj);
+    if( algTag == SEC_OID_UNKNOWN ) {
+        JSS_throwMsg(env, NO_SUCH_ALG_EXCEPTION, "Unrecognized PBE algorithm");
+        goto finish;
+    }
+
+    /*
+     * get password
+     */
+    passwordClass = (*env)->GetObjectClass(env, pwObj);
+    if(passwordClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    getByteCopyMethod = (*env)->GetMethodID(
+                                            env,
+                                            passwordClass,
+                                            PW_GET_BYTE_COPY_NAME,
+                                            PW_GET_BYTE_COPY_SIG);
+    if(getByteCopyMethod==NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    pwArray = (*env)->CallObjectMethod( env, pwObj, getByteCopyMethod);
+    pwchars = (*env)->GetByteArrayElements(env, pwArray, NULL);
+    /* !!! Include the NULL byte or not? */
+    pwItem.data = (unsigned char*) pwchars;
+    pwItem.len = strlen((const char*)pwchars) + 1;
+
+    /*
+     * get cert
+     */
+    if( JSS_PK11_getCertPtr(env, certObj, &cert) != PR_SUCCESS ) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    /*
+     * export the epki
+     */
+    epki = PK11_ExportEncryptedPrivateKeyInfo(slot, algTag, &pwItem,
+            cert, iteration, NULL /*wincx*/);
+
+
+    /*
+     * DER-encode the epki
+     */
+    epkiItem.data = NULL;
+    epkiItem.len = 0;
+    if( SEC_ASN1EncodeItem(NULL, &epkiItem, epki,
+        SEC_ASN1_GET(SECKEY_EncryptedPrivateKeyInfoTemplate) )  == NULL ) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to ASN1-encode "
+            "EncryptedPrivateKeyInfo");
+        goto finish;
+    }
+
+    /*
+     * convert to Java byte array
+     */
+    encodedEpki = JSS_SECItemToByteArray(env, &epkiItem);
+
+finish:
+    if( epki != NULL ) {
+        SECKEY_DestroyEncryptedPrivateKeyInfo(epki, PR_TRUE /*freeit*/);
+    }
+    if( pwchars != NULL ) {
+        (*env)->ReleaseByteArrayElements(env, pwArray, pwchars, JNI_ABORT);
+    }
+    if(epkiItem.data != NULL) {
+        PR_Free(epkiItem.data);
+    }
+    return encodedEpki;
 }

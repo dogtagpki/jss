@@ -44,9 +44,13 @@ PR_BEGIN_EXTERN_C
 
 #define ALREADY_INITIALIZED_EXCEPTION "org/mozilla/jss/crypto/AlreadyInitializedException"
 
+#define ARRAY_INDEX_OUT_OF_BOUNDS_EXCEPTION "java/lang/ArrayIndexOutOfBoundsException"
+
 #define INDEX_OUT_OF_BOUNDS_EXCEPTION "java/lang/IndexOutOfBoundsException"
 
 #define BAD_PADDING_EXCEPTION "org/mozilla/jss/crypto/BadPaddingException"
+
+#define BIND_EXCEPTION "java/net/BindException"
 
 #define CERT_DATABASE_EXCEPTION "org/mozilla/jss/CertDatabaseException"
 
@@ -70,6 +74,8 @@ PR_BEGIN_EXTERN_C
 
 #define INCORRECT_PASSWORD_EXCEPTION "org/mozilla/jss/util/IncorrectPasswordException"
 
+#define INTERRUPTED_IO_EXCEPTION "java/io/InterruptedIOException"
+
 #define INVALID_KEY_FORMAT_EXCEPTION "org/mozilla/jss/crypto/InvalidKeyFormatException"
 
 #define INVALID_PARAMETER_EXCEPTION "java/security/InvalidParameterException"
@@ -78,7 +84,11 @@ PR_BEGIN_EXTERN_C
 
 #define KEY_EXISTS_EXCEPTION "org/mozilla/jss/crypto/KeyAlreadyImportedException"
 
+#define KEYSTORE_EXCEPTION "java/security/KeyStoreException"
+
 #define NICKNAME_CONFLICT_EXCEPTION "org/mozilla/jss/CryptoManager$NicknameConflictException"
+
+#define NO_SUCH_ALG_EXCEPTION "java/security/NoSuchAlgorithmException"
 
 #define NO_SUCH_ITEM_ON_TOKEN_EXCEPTION "org/mozilla/jss/crypto/NoSuchItemOnTokenException"
 
@@ -100,6 +110,8 @@ PR_BEGIN_EXTERN_C
 #define SIGNATURE_EXCEPTION "java/security/SignatureException"
 
 #define SOCKET_EXCEPTION "java/net/SocketException"
+
+#define SSLSOCKET_EXCEPTION "org/mozilla/jss/ssl/SSLSocketException"
 
 #define TOKEN_EXCEPTION "org/mozilla/jss/crypto/TokenException"
 

@@ -37,6 +37,9 @@ import java.net.InetAddress;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.crypto.TokenException;
 
 /**
  * SSL server socket.
@@ -160,6 +163,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
 
     /**
      * Sets the SO_TIMEOUT socket option.
+     * @param timeout The timeout time in milliseconds.
      */
     public void setSoTimeout(int timeout) {
         base.setTimeout(timeout);
@@ -167,6 +171,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
 
     /**
      * Returns the current value of the SO_TIMEOUT socket option.
+     * @return The timeout time in milliseconds.
      */
     public int getSoTimeout() {
         return base.getTimeout();
@@ -183,18 +188,21 @@ public class SSLServerSocket extends java.net.ServerSocket {
      */
     public static native void clearSessionCache();
 
-    protected void finalize() throws Throwable {
-        close();
+    protected void finalize() throws Throwable { }
+
+
+    /**
+     * @return The local port.
+     */
+    public int getLocalPort() {
+        return base.getLocalPort();
     }
 
     /**
      * Closes this socket.
      */
     public void close() throws IOException {
-        if( sockProxy != null ) {
-            base.close();
-            sockProxy = null;
-        }
+        base.close();
     }
 
     // This directory is used as the default for the Session ID cache
@@ -218,13 +226,33 @@ public class SSLServerSocket extends java.net.ServerSocket {
      *  is used: <code>/tmp</code> on Unix and <code>\\temp</code> on Windows.
      */
     public static native void configServerSessionIDCache(int maxSidEntries,
-        int ssl2EntryTimeout, int ssl3EntryTimeout, String cacheFileDirectory);
+        int ssl2EntryTimeout, int ssl3EntryTimeout, String cacheFileDirectory)
+        throws SocketException;
 
     /**
      * Sets the certificate to use for server authentication.
      */
-    public native void setServerCertNickname(String nickname)
-            throws SocketException;
+    public void setServerCertNickname(String nick) throws SocketException
+    {
+      try {
+	System.out.println("Finding Cert" + nick);
+        setServerCert( CryptoManager.getInstance().findCertByNickname(nick) );
+	System.out.println("found Cert" + nick);
+      } catch(CryptoManager.NotInitializedException nie) {
+        throw new SocketException("CryptoManager not initialized");
+      } catch(ObjectNotFoundException onfe) {
+        throw new SocketException("Object not found: " + onfe);
+      } catch(TokenException te) {
+        throw new SocketException("Token Exception: " + te);
+      }
+    }
+
+    /**
+     * Sets the certificate to use for server authentication.
+     */
+    public native void setServerCert(
+        org.mozilla.jss.crypto.X509Certificate certnickname)
+        throws SocketException;
 
     /**
      * Enables/disables the request of client authentication. This is only
@@ -284,10 +312,10 @@ public class SSLServerSocket extends java.net.ServerSocket {
     }
 
     /**
-     * @return The remote peer's IP address.
+     * @return the local address of this server socket.
      */
     public InetAddress getInetAddress() {
-        return base.getInetAddress();
+        return base.getLocalAddress();
     }
 
     /**
@@ -310,6 +338,15 @@ public class SSLServerSocket extends java.net.ServerSocket {
     }
 
     /**
+     * Sets the certificate to use for client authentication.
+     */
+    public void setClientCert(org.mozilla.jss.crypto.X509Certificate cert)
+        throws SocketException
+    {
+        base.setClientCert(cert);
+    }
+
+    /**
      * Determines whether this end of the socket is the client or the server
      *  for purposes of the SSL protocol. By default, it is the server.
      * @param b true if this end of the socket is the SSL slient, false
@@ -325,5 +362,18 @@ public class SSLServerSocket extends java.net.ServerSocket {
      */
     public void useCache(boolean b) throws SocketException {
         base.useCache(b);
+    }
+
+    /**
+     * Returns the addresses and ports of this socket.
+     */
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append("SSLServerSocket[addr=");
+        buf.append(getInetAddress());
+        buf.append(",port=0,localport=");
+        buf.append(getLocalPort());
+        buf.append("]");
+        return buf.toString();
     }
 }

@@ -80,7 +80,7 @@ public class SSLServer
 	"2000",			// port
 	"1024",			// filesize
 	"false",	        // request client auth 
-	"SSLServer"             // nickname of cert to use
+	"server-cert"             // nickname of cert to use
     };
 
     private static String htmlHeader = "SSL Server Tester";
@@ -323,7 +323,7 @@ public class SSLServer
 	0
     };
 
-    public static void main(String argv[]) 
+    public static void main(String argv[]) throws Exception 
     {
 	int i;
 

@@ -33,7 +33,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-package org.mozilla.jss.tests;
+package org.mozilla.jss.tests; 
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.ssl.*;
@@ -43,7 +43,7 @@ import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.primitive.*;
 import org.mozilla.jss.pkix.cert.*;
 import org.mozilla.jss.pkix.cert.Certificate;
-import org.mozilla.jss.util.PasswordCallback;
+import org.mozilla.jss.util.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.security.*;
@@ -109,9 +109,14 @@ public class SSLClientAuth implements Runnable {
         CryptoManager cm = CryptoManager.getInstance();
 
         CryptoToken tok = cm.getInternalKeyStorageToken();
+        if(!tok.passwordIsInitialized()){
+           tok.initPassword( new NullPasswordCallback(),
+            new Password(args[1].toCharArray()));
+        }
 
-        PasswordCallback cb = new FilePasswordCallback(args[1]);
-        tok.login(cb);
+        Password pass = new Password(args[1].toCharArray());
+        tok.login(pass);
+        pass.clear();
 
         SecureRandom rng= SecureRandom.getInstance("pkcs11prng",
             "Mozilla-JSS");
@@ -127,7 +132,7 @@ public class SSLClientAuth implements Runnable {
         Certificate caCert = makeCert("CACert", "CACert", 1,
             caPair.getPrivate(), caPair.getPublic(), rand, extensions);
         X509Certificate nssCaCert = cm.importUserCACertPackage(
-            ASN1Util.encode(caCert), "cacertnick"+rand);
+            ASN1Util.encode(caCert), "ca cert nick"+rand);
         InternalCertificate intern = (InternalCertificate)nssCaCert;
         intern.setSSLTrust(
             InternalCertificate.TRUSTED_CA |

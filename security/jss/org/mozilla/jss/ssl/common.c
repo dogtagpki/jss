@@ -47,6 +47,94 @@
 #include <winsock.h>
 #endif
 
+void
+JSSL_throwSSLSocketException(JNIEnv *env, char *message)
+{
+    const char *errStr;
+    PRErrorCode nativeErrcode;
+    char *msg = NULL;
+    int msgLen;
+    jclass excepClass;
+    jmethodID excepCons;
+    jobject excepObj;
+    jstring msgString;
+    jint result;
+    const char *classname=NULL;
+
+    /*
+     * get the error code and error string
+     */
+    nativeErrcode = PR_GetError();
+    errStr = JSS_strerror(nativeErrcode);
+    if( errStr == NULL ) {
+        errStr = "Unknown error";
+    }
+
+    /*
+     * construct the message
+     */
+    msgLen = strlen(message) + strlen(errStr) + 40;
+    msg = PR_Malloc(msgLen);
+    if( msg == NULL ) {
+        JSS_throw(env, OUT_OF_MEMORY_ERROR);
+        goto finish;
+    }
+    PR_snprintf(msg, msgLen, "%s: (%ld) %s", message, nativeErrcode, errStr);
+
+    /*
+     * turn the message into a Java string
+     */
+    msgString = (*env)->NewStringUTF(env, msg);
+    if( msgString == NULL ) goto finish;
+
+        /*
+         * Create the exception object. Use java.io.InterrupedIOException
+         * for timeouts, org.mozilla.jss.ssl.SSLSocketException for everything
+         * else.
+         * NOTE: When we stop supporting JDK <1.4, we should change
+         * InterruptedIOException to java.net.SocketTimeoutException.
+         */
+    if( nativeErrcode == PR_IO_TIMEOUT_ERROR ) {
+        excepClass = (*env)->FindClass(env, INTERRUPTED_IO_EXCEPTION);
+        PR_ASSERT(excepClass != NULL);
+        if( excepClass == NULL ) goto finish;
+    
+        excepCons = (*env)->GetMethodID(env, excepClass, "<init>",
+            "(Ljava/lang/String;)V");
+        PR_ASSERT( excepCons != NULL );
+        if( excepCons == NULL ) goto finish;
+    
+        excepObj = (*env)->NewObject(env, excepClass, excepCons, msgString);
+        PR_ASSERT(excepObj != NULL);
+        if( excepObj == NULL ) goto finish;
+    } else {
+        excepClass = (*env)->FindClass(env, SSLSOCKET_EXCEPTION);
+        PR_ASSERT(excepClass != NULL);
+        if( excepClass == NULL ) goto finish;
+    
+        excepCons = (*env)->GetMethodID(env, excepClass, "<init>",
+            "(Ljava/lang/String;I)V");
+        PR_ASSERT( excepCons != NULL );
+        if( excepCons == NULL ) goto finish;
+    
+        excepObj = (*env)->NewObject(env, excepClass, excepCons, msgString,
+            JSS_ConvertNativeErrcodeToJava(nativeErrcode));
+        PR_ASSERT(excepObj != NULL);
+        if( excepObj == NULL ) goto finish;
+    }
+
+    /*
+     * throw the exception
+     */
+    result = (*env)->Throw(env, excepObj);
+    PR_ASSERT(result == 0);
+
+finish:
+    if( msg != NULL ) {
+        PR_Free(msg);
+    }
+}
+
 /*
  * This is done for regular sockets that we connect() and server sockets,
  * but not for sockets that come from accept.
@@ -54,35 +142,61 @@
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
     jobject sockObj, jobject certApprovalCallback,
-    jobject clientCertSelectionCallback)
+    jobject clientCertSelectionCallback, jobject javaSock, jstring host)
 {
     jbyteArray sdArray = NULL;
     JSSL_SocketData *sockdata;
     SECStatus status;
     PRFileDesc *newFD;
+    PRFilePrivate *priv = NULL;
 
-    /* create a TCP socket */
-    newFD = PR_NewTCPSocket();
+    if( javaSock == NULL ) {
+        /* create a TCP socket */
+        newFD = PR_NewTCPSocket();
+        if( newFD == NULL ) {
+            JSSL_throwSSLSocketException(env,
+                "PR_NewTCPSocket() returned NULL");
+            goto finish;
+        }
+    } else {
+        newFD = JSS_SSL_javasockToPRFD(env, javaSock);
+        if( newFD == NULL ) {
+            JSS_throwMsg(env, SOCKET_EXCEPTION,
+                "failed to construct NSPR wrapper around java socket");   
+            goto finish;
+        }
+        priv = newFD->secret;
+    }
+
+    /* enable SSL on the socket */
+    newFD = SSL_ImportFD(NULL, newFD);
     if( newFD == NULL ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_NewTCPSocket() returned NULL");
+        JSSL_throwSSLSocketException(env, "SSL_ImportFD() returned NULL");
         goto finish;
     }
 
-    sockdata = JSSL_CreateSocketData(env, sockObj, newFD);
+    sockdata = JSSL_CreateSocketData(env, sockObj, newFD, priv);
     if( sockdata == NULL ) {
         goto finish;
     }
 
-    /* enable SSL on the socket */
-    sockdata->fd = SSL_ImportFD(NULL, sockdata->fd);
-    if( sockdata->fd == NULL ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "SSL_ImportFD() returned NULL");
-        goto finish;
+    if( host != NULL ) {
+        const char *chars;
+        int retval;
+        PR_ASSERT( javaSock != NULL );
+        chars = (*env)->GetStringUTFChars(env, host, NULL);
+        retval = SSL_SetURL(sockdata->fd, chars);
+        (*env)->ReleaseStringUTFChars(env, host, chars);
+        if( retval ) {
+            JSSL_throwSSLSocketException(env,
+                "Failed to set SSL domain name");
+            goto finish;
+        }
     }
 
     status = SSL_OptionSet(sockdata->fd, SSL_SECURITY, PR_TRUE);
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Unable to enable SSL security on socket");
         goto finish;
     }
@@ -91,8 +205,9 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
     status = SSL_HandshakeCallback(sockdata->fd, JSSL_HandshakeCallback,
                                     sockdata);
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Unable to install handshake callback");
+        goto finish;
     }
 
     /* setup the cert authentication callback */
@@ -112,7 +227,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
                     sockdata->fd, JSSL_DefaultCertAuthCallback, NULL);
     }
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Unable to install certificate authentication callback");
         goto finish;
     }
@@ -129,7 +244,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
             sockdata->fd, JSSL_CallCertSelectionCallback,
             (void*) sockdata->clientCertSelectionCallback);
         if( status != SECSuccess ) {
-            JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+            JSSL_throwSSLSocketException(env,
                 "Unable to install client certificate selection callback");
             goto finish;
         }
@@ -154,19 +269,20 @@ finish:
 }
 
 JSSL_SocketData*
-JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD)
+JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD,
+        PRFilePrivate *priv)
 {
     JSSL_SocketData *sockdata = NULL;
 
     /* make a JSSL_SocketData structure */
     sockdata = PR_Malloc( sizeof(JSSL_SocketData) );
-    sockdata->fd = NULL;
+    sockdata->fd = newFD;
     sockdata->socketObject = NULL;
     sockdata->certApprovalCallback = NULL;
     sockdata->clientCertSelectionCallback = NULL;
-    sockdata->clientCertNickname = NULL;
-
-    sockdata->fd = newFD;
+    sockdata->clientCert = NULL;
+    sockdata->jsockPriv = priv;
+    sockdata->closed = PR_FALSE;
 
     /*
      * Make a global ref to the socket. Since it is a weak reference, it will
@@ -189,14 +305,35 @@ finish:
     return sockdata;
 }
 
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_ssl_SocketProxy_releaseNativeResources
+    (JNIEnv *env, jobject this)
+{
+    JSSL_SocketData *sock = NULL;
+
+    /* get the FD */
+    if( JSS_getPtrFromProxy(env, this, (void**)&sock) != PR_SUCCESS) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    JSSL_DestroySocketData(env, sock);
+
+finish:
+    return;
+}
+
 void
 JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
 {
     PR_ASSERT(sd != NULL);
 
-    if( sd->fd != NULL ) {
+    if( !sd->closed ) {
         PR_Close(sd->fd);
+        sd->closed = PR_TRUE;
+        /* this may have thrown an exception */
     }
+
     if( sd->socketObject != NULL ) {
         DELETE_WEAK_GLOBAL_REF(env, sd->socketObject );
     }
@@ -206,8 +343,8 @@ JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
     if( sd->clientCertSelectionCallback != NULL ) {
         (*env)->DeleteGlobalRef(env, sd->clientCertSelectionCallback);
     }
-    if( sd->clientCertNickname != NULL ) {
-        PR_Free(sd->clientCertNickname);
+    if( sd->clientCert != NULL ) {
+        CERT_DestroyCertificate(sd->clientCert);
     }
     PR_Free(sd);
 }
@@ -267,7 +404,8 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
     /* do the bind() call */
     status = PR_Bind(sock->fd, &addr);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to bind socket");
+        JSS_throwMsgPrErr(env, BIND_EXCEPTION,
+            "Could not bind to address");
         goto finish;
     }       
 
@@ -277,10 +415,15 @@ finish:
     }
 }
 
+/*
+ * This method is synchronized because of a potential race condition.
+ * We want to avoid two threads simultaneously calling this code, in case
+ * one sets sd->fd to NULL and then the other calls PR_Close on the NULL.
+ */
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     /* get the FD */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
@@ -288,10 +431,14 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
         goto finish;
     }
 
-    /* destroy the FD and any supporting data */
-    JSSL_DestroySocketData(env, sock);
+    if( ! sock->closed ) {
+        PR_Close(sock->fd);
+        sock->closed = PR_TRUE;
+        /* this may have thrown an exception */
+    }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -299,7 +446,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_requestClientAuthNoExpiryCheckNative
     (JNIEnv *env, jobject self, jboolean b)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     SECStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
@@ -309,7 +456,7 @@ Java_org_mozilla_jss_ssl_SocketBase_requestClientAuthNoExpiryCheckNative
      */
     status = SSL_OptionSet(sock->fd, SSL_REQUEST_CERTIFICATE, b);
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Failed to set REQUEST_CERTIFICATE option on socket");
         goto finish;
     }
@@ -321,13 +468,14 @@ Java_org_mozilla_jss_ssl_SocketBase_requestClientAuthNoExpiryCheckNative
         status = SSL_AuthCertificateHook(sock->fd,
                         JSSL_ConfirmExpiredPeerCert, NULL /*cx*/);
         if( status != SECSuccess ) {
-            JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+            JSSL_throwSSLSocketException(env,
                 "Failed to set certificate authentication callback");
             goto finish;
         }
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -336,7 +484,7 @@ Java_org_mozilla_jss_ssl_SocketBase_setSSLOption
     (JNIEnv *env, jobject self, jint option, jint on)
 {
     SECStatus status;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     /* get my fd */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -346,24 +494,25 @@ Java_org_mozilla_jss_ssl_SocketBase_setSSLOption
     /* set the option */
     status = SSL_OptionSet(sock->fd, JSSL_enums[option], on);
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "SSL_OptionSet failed");
+        JSSL_throwSSLSocketException(env, "SSL_OptionSet failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
-void
+PRStatus
 JSSL_getSockAddr
     (JNIEnv *env, jobject self, PRNetAddr *addr, LocalOrPeer localOrPeer)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     PRStatus status;
 
     /* get my fd */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
-        return;
+        goto finish;
     }
 
     /* get the port */
@@ -374,8 +523,12 @@ JSSL_getSockAddr
         status = PR_GetPeerName(sock->fd, addr);
     }
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_GetSockName failed");
+        JSSL_throwSSLSocketException(env, "PR_GetSockName failed");
     }
+
+finish:
+    EXCEPTION_CHECK(env, sock)
+    return status;
 }
 
 JNIEXPORT jint JNICALL
@@ -384,8 +537,24 @@ Java_org_mozilla_jss_ssl_SocketBase_getPeerAddressNative
 {
     PRNetAddr addr;
 
-    JSSL_getSockAddr(env, self, &addr, PEER_SOCK);
-    return ntohl(addr.inet.ip);
+    if( JSSL_getSockAddr(env, self, &addr, PEER_SOCK) == PR_SUCCESS) {
+        return ntohl(addr.inet.ip);
+    } else {
+        return 0;
+    }
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_ssl_SocketBase_getLocalAddressNative(JNIEnv *env,
+    jobject self)
+{
+    PRNetAddr addr;
+
+    if( JSSL_getSockAddr(env, self, &addr, LOCAL_SOCK) == PR_SUCCESS ) {
+        return ntohl(addr.inet.ip);
+    } else {
+        return 0;
+    }
 }
 
 JNIEXPORT jint JNICALL
@@ -394,29 +563,52 @@ Java_org_mozilla_jss_ssl_SocketBase_getLocalPortNative(JNIEnv *env,
 {
     PRNetAddr addr;
 
-    JSSL_getSockAddr(env, self, &addr, LOCAL_SOCK);
-    return addr.inet.port;
+    if( JSSL_getSockAddr(env, self, &addr, LOCAL_SOCK) == PR_SUCCESS ) {
+        return ntohs(addr.inet.port);
+    } else {
+        return 0;
+    }
+}
+
+/*
+ * This is here for backwards binary compatibility: I didn't want to remove
+ * the symbol from the DLL. This would only get called if someone were using
+ * a pre-3.2 version of the JSS classes with this post-3.2 library. Using
+ * different versions of the classes and the C code is not supported.
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_ssl_SocketBase_setClientCertNicknameNative(
+    JNIEnv *env, jobject self, jstring nick)
+{
+    PR_ASSERT(0);
+    JSS_throwMsg(env, SOCKET_EXCEPTION, "JSS JAR/DLL mismatch");
 }
 
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_ssl_SocketBase_setClientCertNicknameNative(
-    JNIEnv *env, jobject self, jstring nickStr)
+Java_org_mozilla_jss_ssl_SocketBase_setClientCert(
+    JNIEnv *env, jobject self, jobject certObj)
 {
-    JSSL_SocketData *sock;
-    const char *nick=NULL;
+    JSSL_SocketData *sock = NULL;
     SECStatus status;
+    CERTCertificate *cert = NULL;
+
+    if( certObj == NULL ) {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
+        goto finish;
+    }
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
     /*
-     * Store the nickname in the SocketData.
+     * Store the cert in the SocketData.
      */
-    nick = (*env)->GetStringUTFChars(env, nickStr, NULL);
-    if( nick == NULL )  goto finish;
-    if( sock->clientCertNickname != NULL ) {
-        PR_Free(sock->clientCertNickname);
+    if( JSS_PK11_getCertPtr(env, certObj, &cert) != PR_SUCCESS ) {
+        goto finish;
     }
-    sock->clientCertNickname = PL_strdup(nick);
+    if( sock->clientCert != NULL ) {
+        CERT_DestroyCertificate(sock->clientCert);
+    }
+    sock->clientCert = CERT_DupCertificate(cert);
 
     /*
      * Install the callback.
@@ -424,13 +616,63 @@ Java_org_mozilla_jss_ssl_SocketBase_setClientCertNicknameNative(
     status = SSL_GetClientAuthDataHook(sock->fd, JSSL_GetClientAuthData,
                     (void*)sock);
     if(status != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Unable to set client auth data hook");
         goto finish;
     }
 
 finish:
-    if( nick != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, nickStr, nick);
+    EXCEPTION_CHECK(env, sock)
+}
+
+void
+JSS_SSL_processExceptions(JNIEnv *env, PRFilePrivate *priv)
+{
+    jthrowable currentExcep;
+
+    if( priv == NULL ) {
+        return;
+    }
+
+    currentExcep = (*env)->ExceptionOccurred(env);
+    (*env)->ExceptionClear(env);
+
+    if( currentExcep != NULL ) {
+        jmethodID processExcepsID;
+        jclass socketBaseClass;
+        jthrowable newException;
+
+        socketBaseClass = (*env)->FindClass(env, SOCKET_BASE_NAME);
+        if( socketBaseClass == NULL ) {
+            ASSERT_OUTOFMEM(env);
+            goto finish;
+        }
+        processExcepsID = (*env)->GetStaticMethodID(env, socketBaseClass,
+            PROCESS_EXCEPTIONS_NAME, PROCESS_EXCEPTIONS_SIG);
+        if( processExcepsID == NULL ) {
+            ASSERT_OUTOFMEM(env);
+            goto finish;
+        }
+
+        newException = (*env)->CallStaticObjectMethod(env, socketBaseClass,
+            processExcepsID, currentExcep, JSS_SSL_getException(priv));
+
+        if( newException == NULL ) {
+            ASSERT_OUTOFMEM(env);
+            goto finish;
+        }
+        currentExcep = newException;
+    } else {
+        jthrowable excep = JSS_SSL_getException(priv);
+        PR_ASSERT( excep == NULL );
+        if( excep != NULL ) {
+            (*env)->DeleteGlobalRef(env, excep);
+        }
+    }
+
+finish:
+    if( currentExcep != NULL && (*env)->ExceptionOccurred(env) == NULL) {
+        int ret = (*env)->Throw(env, currentExcep);
+        PR_ASSERT(ret == 0);
     }
 }

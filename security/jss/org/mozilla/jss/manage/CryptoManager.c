@@ -277,6 +277,22 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative
     }
 
     /*
+     * Save the JavaVM pointer so we can retrieve the JNI environment
+     * later. This only works if there is only one Java VM.
+     */
+    if( (*env)->GetJavaVM(env, &JSS_javaVM) != 0 ) {
+        JSS_trace(env, JSS_TRACE_ERROR,
+                    "Unable to to access Java virtual machine");
+        PR_ASSERT(PR_FALSE);
+        goto finish;
+    }
+
+    /*
+     * Initialize the errcode translation table.
+     */
+    JSS_initErrcodeTranslationTable();
+
+    /*
      * Set the PKCS #11 strings
      */
     manuChars = (char*) (*env)->GetStringUTFChars(env, manuString, NULL);

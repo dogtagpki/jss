@@ -39,7 +39,9 @@ struct JSSL_SocketData {
     jobject socketObject; /* weak global ref */
     jobject certApprovalCallback; /* global ref */
     jobject clientCertSelectionCallback; /* global ref */
-    char *clientCertNickname;
+    CERTCertificate *clientCert;
+    PRFilePrivate *jsockPriv;
+    PRBool closed;
 };
 typedef struct JSSL_SocketData JSSL_SocketData;
 
@@ -103,7 +105,8 @@ JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd);
 extern PRInt32 JSSL_enums[];
 
 JSSL_SocketData*
-JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD);
+JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD,
+        PRFilePrivate *priv);
 
 #define SSL_POLICY_DOMESTIC 0
 #define SSL_POLICY_EXPORT 1
@@ -111,8 +114,25 @@ JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD);
 
 typedef enum {LOCAL_SOCK, PEER_SOCK} LocalOrPeer;
 
-void
+PRStatus
 JSSL_getSockAddr
     (JNIEnv *env, jobject self, PRNetAddr *addr, LocalOrPeer localOrPeer);
+
+PRFileDesc*
+JSS_SSL_javasockToPRFD(JNIEnv *env, jobject sockObj);
+
+jthrowable
+JSS_SSL_getException(PRFilePrivate *priv);
+
+void
+JSS_SSL_processExceptions(JNIEnv *env, PRFilePrivate *priv);
+
+#define EXCEPTION_CHECK(env, sock) \
+    if( sock != NULL && sock->jsockPriv!=NULL) { \
+        JSS_SSL_processExceptions(env, sock->jsockPriv); \
+    }
+
+
+void JSSL_throwSSLSocketException(JNIEnv *env, char *message);
 
 #endif

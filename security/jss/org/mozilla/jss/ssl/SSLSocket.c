@@ -1,27 +1,27 @@
-/* 
+ /*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Security Services for Java.
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
+ * Communications Corporation.  Portions created by Netscape are
  * Copyright (C) 2001 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -44,12 +44,13 @@
 #include "_jni/org_mozilla_jss_ssl_SSLSocket.h"
 #include "jssl.h"
 
-#ifdef WIN32
-#include <winsock.h>
-#endif
 
 #ifdef WINNT
 #include <private/pprio.h>
+#endif
+
+#ifdef WIN32
+#include <winsock.h>
 #endif
 
 JNIEXPORT void JNICALL
@@ -61,7 +62,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSSLDefaultOption(JNIEnv *env,
     /* set the option */
     status = SSL_OptionSetDefault(JSSL_enums[joption], on);
     if( status != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "SSL_OptionSet failed");
+        JSSL_throwSSLSocketException(env, "SSL_OptionSet failed");
         goto finish;
     }
 
@@ -69,10 +70,17 @@ finish:
     return;
 }
 
+#if 0
+#define EXCEPTION_CHECK(env, sock) \
+    if( sock != NULL && sock->jsockPriv!=NULL) { \
+        JSS_SSL_processExceptions(env, sock->jsockPriv); \
+    }
+#endif
+
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_forceHandshake(JNIEnv *env, jobject self)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     int rv;
 
     /* get my fd */
@@ -81,17 +89,18 @@ Java_org_mozilla_jss_ssl_SSLSocket_forceHandshake(JNIEnv *env, jobject self)
     /* do the work */
     rv = SSL_ForceHandshake(sock->fd);
     if( rv != SECSuccess ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "SSL_ForceHandshake failed");
+        JSSL_throwSSLSocketException(env, "SSL_ForceHandshake failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
 /*
  * linger
- *      The linger time, in hundredths of a second.
+ *      The linger time, in seconds.
  */
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_setSoLinger(JNIEnv *env, jobject self,
@@ -99,7 +108,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSoLinger(JNIEnv *env, jobject self,
 {
     PRSocketOptionData sockOptions;
     PRStatus status;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
@@ -108,18 +117,18 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSoLinger(JNIEnv *env, jobject self,
     sockOptions.option = PR_SockOpt_Linger;
     sockOptions.value.linger.polarity = on;
     if(on) {
-        sockOptions.value.linger.linger =
-            PR_MillisecondsToInterval(linger * 10);
+        sockOptions.value.linger.linger = PR_SecondsToInterval(linger);
     }
 
     status = PR_SetSocketOption(sock->fd, &sockOptions);
 
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -127,7 +136,7 @@ JNIEXPORT jboolean JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_getTcpNoDelay(JNIEnv *env, jobject self)
 {
     PRSocketOptionData sockOptions;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     PRStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -138,11 +147,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_getTcpNoDelay(JNIEnv *env, jobject self)
 
     status = PR_GetSocketOption(sock->fd, &sockOptions);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_GetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_GetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return sockOptions.value.no_delay;
 }
 
@@ -152,7 +162,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setTcpNoDelay(JNIEnv *env, jobject self,
 {
     PRSocketOptionData sockOptions;
     PRStatus status;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
@@ -164,11 +174,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_setTcpNoDelay(JNIEnv *env, jobject self,
     status = PR_SetSocketOption(sock->fd, &sockOptions);
 
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -176,7 +187,7 @@ JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_getSendBufferSize(JNIEnv *env, jobject self)
 {
     PRSocketOptionData sockOptions;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     PRStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -187,11 +198,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_getSendBufferSize(JNIEnv *env, jobject self)
 
     status = PR_GetSocketOption(sock->fd, &sockOptions);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_GetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_GetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return sockOptions.value.send_buffer_size;
 }
 
@@ -201,7 +213,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSendBufferSize(JNIEnv *env, jobject self,
 {
     PRSocketOptionData sockOptions;
     PRStatus status;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
@@ -213,11 +225,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSendBufferSize(JNIEnv *env, jobject self,
     status = PR_SetSocketOption(sock->fd, &sockOptions);
 
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -225,7 +238,7 @@ JNIEXPORT jboolean JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_getKeepAlive(JNIEnv *env, jobject self)
 {
     PRSocketOptionData sockOptions;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     PRStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -236,11 +249,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_getKeepAlive(JNIEnv *env, jobject self)
 
     status = PR_GetSocketOption(sock->fd, &sockOptions);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_GetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_GetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return sockOptions.value.keep_alive;
 }
 
@@ -249,7 +263,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getReceiveBufferSize(
     JNIEnv *env, jobject self)
 {
     PRSocketOptionData sockOptions;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     PRStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -260,11 +274,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_getReceiveBufferSize(
 
     status = PR_GetSocketOption(sock->fd, &sockOptions);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_GetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_GetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return sockOptions.value.recv_buffer_size;
 }
 
@@ -274,7 +289,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setReceiveBufferSize(
 {
     PRSocketOptionData sockOptions;
     PRStatus status;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
@@ -286,11 +301,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_setReceiveBufferSize(
     status = PR_SetSocketOption(sock->fd, &sockOptions);
 
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -300,7 +316,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setKeepAlive(JNIEnv *env, jobject self,
 {
     PRSocketOptionData sockOptions;
     PRStatus status;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
@@ -312,11 +328,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_setKeepAlive(JNIEnv *env, jobject self,
     status = PR_SetSocketOption(sock->fd, &sockOptions);
 
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_SetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_SetSocketOption failed");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -324,7 +341,7 @@ JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_getSoLinger(JNIEnv *env, jobject self)
 {
     PRSocketOptionData sockOptions;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     jint retval;
     PRStatus status;
 
@@ -336,28 +353,36 @@ Java_org_mozilla_jss_ssl_SSLSocket_getSoLinger(JNIEnv *env, jobject self)
 
     status = PR_GetSocketOption(sock->fd, &sockOptions);
     if( status != PR_SUCCESS ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "PR_GetSocketOption failed");
+        JSSL_throwSSLSocketException(env, "PR_GetSocketOption failed");
         goto finish;
     }
 
     if( sockOptions.value.linger.polarity == PR_TRUE ) {
-        retval = PR_IntervalToMilliseconds(sockOptions.value.linger.linger) /10;
+        retval = PR_IntervalToSeconds(sockOptions.value.linger.linger);
     } else {
         retval = -1;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return retval;
 }
 
+/*
+ * This function is only here for binary compatibility. See
+ * http://bugzilla.mozilla.org/show_bug.cgi?id=143254
+ */
 JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_getLocalAddressNative(JNIEnv *env,
     jobject self)
 {
     PRNetAddr addr;
 
-    JSSL_getSockAddr(env, self, &addr, LOCAL_SOCK);
-    return ntohl(addr.inet.ip);
+    if( JSSL_getSockAddr(env, self, &addr, LOCAL_SOCK) == PR_SUCCESS ) {
+        return ntohl(addr.inet.ip);
+    } else {
+        return 0;
+    }
 }
 
 JNIEXPORT jint JNICALL
@@ -366,8 +391,11 @@ Java_org_mozilla_jss_ssl_SSLSocket_getPort(JNIEnv *env,
 {
     PRNetAddr addr;
 
-    JSSL_getSockAddr(env, self, &addr, PEER_SOCK);
-    return addr.inet.port;
+    if( JSSL_getSockAddr(env, self, &addr, PEER_SOCK) == PR_SUCCESS ) {
+        return ntohs(addr.inet.port);
+    } else {
+        return 0;
+    }
 }
 
 JNIEXPORT void JNICALL
@@ -408,7 +436,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     if( hostnameStr == NULL ) goto finish;
     stat = SSL_SetURL(sock->fd, (char*)hostnameStr);
     if( stat != 0 ) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to set the SSL URL");
+        JSSL_throwSSLSocketException(env, "Failed to set the SSL URL");
         goto finish;
     }
 
@@ -417,11 +445,14 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
      */
     status = PR_Connect(sock->fd, &addr, PR_INTERVAL_NO_TIMEOUT);
     if( status != PR_SUCCESS) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Unable to connect");
+        JSSL_throwSSLSocketException(env, "Unable to connect");
         goto finish;
     }
 
 finish:
+    /* This method should never be called on a Java socket wrapper. */
+    PR_ASSERT( sock==NULL || sock->jsockPriv==NULL);
+
     if( hostnameStr != NULL ) {
         (*env)->ReleaseStringUTFChars(env, hostname, hostnameStr);
     }
@@ -467,7 +498,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getStatus
                                     &subject);
 
     if(secstatus != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+        JSSL_throwSSLSocketException(env,
             "Failed to retrieve socket security status");
         goto finish;
     }
@@ -522,7 +553,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getStatus
     statusObj = (*env)->NewObject(env, statusClass, statusCons,
             on, cipherString, keySize, secretKeySize, issuerString,
             subjectString, serialNumObj, peerCertObj);
-        
+
 
 finish:
     if( cipher != NULL ) {
@@ -539,13 +570,14 @@ finish:
         PR_Free(serialNum);
     }
 
+    EXCEPTION_CHECK(env, sock)
     return statusObj;
 }
 
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreference(
-    JNIEnv *env, jobject clazz, jint cipher, jboolean enable)
+    JNIEnv *env, jobject sockObj, jint cipher, jboolean enable)
 {
     SECStatus status;
 
@@ -555,7 +587,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreference(
         char buf[128];
         PR_snprintf(buf, 128, "Failed to %s cipher 0x%lx\n",
             (enable ? "enable" : "disable"), cipher);
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, buf);
+        JSSL_throwSSLSocketException(env, buf);
         goto finish;
     }
 
@@ -563,11 +595,80 @@ finish:
     return;
 }
 
-JNIEXPORT jint JNICALL 
-Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self, 
+JNIEXPORT jboolean JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreference(
+    JNIEnv *env, jobject sockObj, jint cipher)
+{
+    JSSL_SocketData *sock=NULL;
+    SECStatus status;
+    PRBool enabled;
+
+    /* get the fd */
+    if( JSSL_getSockData(env, sockObj, &sock) != PR_SUCCESS) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    status = SSL_CipherPrefGet(sock->fd, cipher, &enabled);
+    if( status != SECSuccess ) {
+        char buf[128];
+        PR_snprintf(buf, 128, "Failed to get preference for cipher 0x%lx\n",
+            cipher);
+        JSSL_throwSSLSocketException(env, buf);
+        goto finish;
+    }
+
+finish:
+    EXCEPTION_CHECK(env, sock);
+    return enabled;
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreferenceDefault(
+    JNIEnv *env, jclass clazz, jint cipher, jboolean enable)
+{
+    SECStatus status;
+
+    /* set the preference */
+    status = SSL_CipherPrefSetDefault(cipher, enable);
+    if(status != SECSuccess) {
+        char buf[128];
+        PR_snprintf(buf, 128, "Failed to %s cipher 0x%lx\n",
+            (enable ? "enable" : "disable"), cipher);
+        JSSL_throwSSLSocketException(env, buf);
+        goto finish;
+    }
+
+finish:
+    return;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreferenceDefault(
+    JNIEnv *env, jclass clazz, jint cipher)
+{
+    SECStatus status;
+    PRBool enabled;
+
+    /* get the preference */
+    status = SSL_CipherPrefGetDefault(cipher, &enabled);
+    if(status != SECSuccess) {
+        char buf[128];
+        PR_snprintf(buf, 128, "Failed to get default preference for "
+            "cipher 0x%lx\n", cipher);
+        JSSL_throwSSLSocketException(env, buf);
+        goto finish;
+    }
+
+finish:
+    return enabled;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     jbyteArray bufBA, jint off, jint len, jint timeout)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     jbyte *buf = NULL;
     jint size;
     PRIntervalTime ivtimeout;
@@ -602,6 +703,8 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
         } else {
             /* some error, but is it recoverable? */
             PRErrorCode err = PR_GetError();
+
+
             if( err == PR_PENDING_INTERRUPT_ERROR ||
                 err == PR_IO_PENDING_ERROR )
             {
@@ -615,15 +718,14 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
                  * will always return PR_IO_PENDING_ERROR on subsequent
                  * calls
                  */
-					PR_NT_CancelIo(sock->fd);
-                    JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
-							 "Socket Operation timed out");
+                    PR_NT_CancelIo(sock->fd);
+                    JSSL_throwSSLSocketException(env, "Operation timed out");
                     goto finish;
                 }
-#endif 
+#endif
                 /* unrecoverable error */
-                JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
-                    "Error reading from socket");
+                JSSL_throwSSLSocketException(env,
+                   "Error reading from socket");
                 goto finish;
             }
         }
@@ -635,6 +737,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     (*env)->ReleaseByteArrayElements(env, bufBA, buf,
         (nread>0) ? 0 /*copy and free*/ : JNI_ABORT /*free, no copy*/);
     return nread;
@@ -645,7 +748,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketAvailable(
     JNIEnv *env, jobject self)
 {
     jint available;
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
@@ -655,14 +758,15 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketAvailable(
     PR_ASSERT(available >= 0);
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return available;
 }
 
-JNIEXPORT void JNICALL 
-Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self, 
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
     jbyteArray bufBA, jint off, jint len, jint timeout)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     jbyte *buf = NULL;
     jint size;
     PRIntervalTime ivtimeout;
@@ -709,12 +813,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
                  * will always return PR_IO_PENDING_ERROR on subsequent
                  * calls
                  */
-					PR_NT_CancelIo(sock->fd);
-#endif 
-                JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Operation timed out");
+                PR_NT_CancelIo(sock->fd);
+#endif
+                JSSL_throwSSLSocketException(env, "Operation timed out");
                 goto finish;
             } else {
-                JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, 
+                JSSL_throwSSLSocketException(env,
                     "Failed to write to socket");
                 goto finish;
             }
@@ -729,42 +833,45 @@ finish:
     if( buf != NULL ) {
         (*env)->ReleaseByteArrayElements(env, bufBA, buf, JNI_ABORT);
     }
+    EXCEPTION_CHECK(env, sock)
 }
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_shutdownNative(
     JNIEnv *env, jobject self, jint how)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     PRStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
     status = PR_Shutdown(sock->fd, JSSL_enums[how]);
     if( status != PR_SUCCESS) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to shutdown socket");
+        JSSL_throwSSLSocketException(env, "Failed to shutdown socket");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_invalidateSession(JNIEnv *env, jobject self)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     SECStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
     status = SSL_InvalidateSession(sock->fd);
     if(status != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to invalidate session");
+        JSSL_throwSSLSocketException(env, "Failed to invalidate session");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -772,18 +879,19 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_redoHandshake(
     JNIEnv *env, jobject self, jboolean flushCache)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     SECStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
     status = SSL_ReHandshake(sock->fd, flushCache);
     if(status != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to redo handshake");
+        JSSL_throwSSLSocketException(env, "Failed to redo handshake");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -791,18 +899,19 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_resetHandshakeNative(
     JNIEnv *env, jobject self, jboolean asClient)
 {
-    JSSL_SocketData *sock;
+    JSSL_SocketData *sock = NULL;
     SECStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
 
     status = SSL_ResetHandshake(sock->fd, !asClient);
     if(status != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to redo handshake");
+        JSSL_throwSSLSocketException(env, "Failed to redo handshake");
         goto finish;
     }
 
 finish:
+    EXCEPTION_CHECK(env, sock)
     return;
 }
 
@@ -828,10 +937,41 @@ Java_org_mozilla_jss_ssl_SSLSocket_setCipherPolicyNative(
     }
 
     if(status != SECSuccess) {
-        JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Failed to set cipher policy");
+        JSSL_throwSSLSocketException(env, "Failed to set cipher policy");
         goto finish;
     }
 
 finish:
     return;
+}
+
+JNIEXPORT jintArray JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_getImplementedCipherSuites
+    (JNIEnv *env, jclass clazz)
+{
+    jintArray ciphArray = NULL;
+    jint* arrayRegion = NULL;
+    int i;
+
+    ciphArray = (*env)->NewIntArray(env, SSL_NumImplementedCiphers);
+    if( ciphArray == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    arrayRegion = (*env)->GetIntArrayElements(env, ciphArray, NULL/*isCopy*/);
+    if( arrayRegion == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    for( i=0; i < SSL_NumImplementedCiphers; ++i) {
+        arrayRegion[i] = SSL_ImplementedCiphers[i];
+    }
+
+finish:
+    if( arrayRegion != NULL ) {
+        (*env)->ReleaseIntArrayElements(env, ciphArray, arrayRegion, 0);
+    }
+    return ciphArray;
 }

@@ -1312,7 +1312,6 @@ public final class CryptoManager implements TokenSupplier
             try {
                 Debug.trace(Debug.VERBOSE, "about to load jss library");
                 System.loadLibrary("jss3");
-                Debug.trace(Debug.VERBOSE, "jss library loaded");
             } catch( UnsatisfiedLinkError e) {
                 Debug.trace(Debug.ERROR, "ERROR: Unable to load jss library");
                 throw new UnsatisfiedLinkError(
