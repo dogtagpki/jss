@@ -28,7 +28,8 @@ PROTO = \
 	$(ROOT)/usr/lib/mps
 
 ifdef USE_64
-PROTO += $(ROOT)/usr/lib/mps/sparcv9
+PROTO += \
+	$(ROOT)/usr/lib/mps/sparcv9
 endif
 
 include Makefile.com
@@ -49,13 +50,12 @@ $(ROOT) $(ROOT)/%:
 
 ifdef USE_64
 $(ROOT)/usr/lib/mps/sparcv9: $(ROOT)/usr/lib
-	$(LN) -sf ../../../../$(DIST)/lib $@
-../../../../$(DIST)/lib/jss312.jar: $(IMPORT_XPCLASS_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)
-	$(LN) -sf $(IMPORT_XPCLASS_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $@
+	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)"
+	$(LN) -sf ../../../../$(DIST)/lib $@ 
+	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/sparcv9/jss312.jar
 else
 $(ROOT)/usr/lib/mps: $(ROOT)/usr/lib
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)"
 	$(LN) -sf ../../../$(DIST)/lib $@
 	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/jss312.jar
-
 endif
