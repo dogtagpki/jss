@@ -56,7 +56,7 @@ endif
 	find opt -type f ! \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	cp $(NAME)-$(VERSION).tar.gz SOURCES
-	(export LD_LIBRARY_PATH=$(CORE_DEPTH)/../dist/$(OBJDIR)/lib;
+	(export LD_LIBRARY_PATH=$(CORE_DEPTH)/../dist/$(OBJDIR)/lib;\
 	rpm -ba temp.spec)
 
 clean::
