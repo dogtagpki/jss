@@ -47,7 +47,6 @@
 #include <jss_exceptions.h>
 #include "pk11util.h"
 #include <java_ids.h>
-
 /*
  * This is a semi-private NSS function, exposed only for JSS.
  */
@@ -70,13 +69,17 @@ Java_org_mozilla_jss_CryptoManager_findCertByNicknameNative
     PR_ASSERT(env!=NULL && this!=NULL && nickname!=NULL);
 
     nick = (char*) (*env)->GetStringUTFChars(env, nickname, NULL);
+    
     PR_ASSERT(nick!=NULL);
 
     cert = PK11_FindCertFromNickname(nick, NULL);
 
     if(cert == NULL) {
+
         cert = CERT_FindCertByNickname( CERT_GetDefaultCertDB(), nick );
+
         if( cert == NULL ) {
+
             JSS_nativeThrow(env, OBJECT_NOT_FOUND_EXCEPTION);
             goto finish;
         }
@@ -260,7 +263,7 @@ Java_org_mozilla_jss_CryptoManager_findPrivKeyByCertNative
     PRThread *pThread;
     CERTCertificate *cert;
     SECKEYPrivateKey *privKey=NULL;
-    jobject Key;
+    jobject Key = NULL;
 
     pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
     PR_ASSERT( pThread != NULL);
@@ -1036,7 +1039,12 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
     } else {
         leafCert = CERT_FindCertByIssuerAndSN(certdb, &issuerAndSN);
     }
-    PR_ASSERT( leafCert != NULL );
+    
+    if( leafCert == NULL ) {
+     JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+         "Failed to find certificate that was just imported");
+     goto finish;
+    }
     leafObject = JSS_PK11_wrapCert(env, &leafCert);
 
 finish:
