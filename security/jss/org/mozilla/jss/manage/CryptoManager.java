@@ -460,9 +460,9 @@ public final class CryptoManager implements TokenSupplier
         public boolean installJSSProvider = true;
 
         /**
-         * Remove the Sun crypto provider. Default is false.
+         * Remove the Sun crypto provider. Default is true.
          */
-        public boolean removeSunProvider = false;
+        public boolean removeSunProvider = true;
 
         /**
          * If <tt>true</tt>, none of the underlying NSS components will
