@@ -49,36 +49,6 @@ public class Assert {
      * throwing an AssertionException.
      *
      * @param cond The condition that is being tested.
-     * @deprecated "assert" is a keyword under JDK 1.4. Use "_assert"
-     *      instead.
-     */
-    public static void assert(boolean cond) {
-        if(Debug.DEBUG && !cond) {
-            throw new org.mozilla.jss.util.AssertionException(
-                "assertion failure!");
-        }
-    }
-
-    /**
-     * Assert that a condition is true. If it is not true, abort by throwing
-     * an AssertionException.
-     *
-     * @param cond The condition that is being tested.
-     * @param msg A message describing what is wrong if the condition is false.
-     * @deprecated "assert" is a keyword under JDK 1.4. Use "_assert"
-     *      instead.
-     */
-	public static void assert(boolean cond, String msg) {
-		if(Debug.DEBUG && !cond) {
-			throw new org.mozilla.jss.util.AssertionException(msg);
-		}
-	}
-
-    /**
-     * Assert that a condition is true.  If it is not true, abort by
-     * throwing an AssertionException.
-     *
-     * @param cond The condition that is being tested.
      */
     public static void _assert(boolean cond) {
         if(Debug.DEBUG && !cond) {
