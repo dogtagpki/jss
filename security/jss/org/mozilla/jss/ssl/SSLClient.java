@@ -406,8 +406,7 @@ public class SSLClient
 
       try {
 	CryptoManager.InitializationValues vals =
-		new CryptoManager.InitializationValues
-                    ("secmod.db", "key3.db", "cert7.db");
+		new CryptoManager.InitializationValues(".");
 	CryptoManager.initialize(vals);
 
         try {
