@@ -187,12 +187,18 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
     numBytes = (*env)->GetArrayLength(env, bArray);
     PR_ASSERT(numBytes > 0);
 
+    if( offset < 0 || offset >= numBytes || length < 0 ||
+            (offset+length) > numBytes || (offset+length) < 0 )
+    {
+        JSS_throw(env, ARRAY_INDEX_OUT_OF_BOUNDS_EXCEPTION);
+        goto finish;
+    }
 
     /* Update the context */
     if(type == SGN_CONTEXT) {
         if( SGN_Update( (SGNContext*)ctxt,
-                        (unsigned char*)bytes,
-                        (unsigned)numBytes ) != SECSuccess)
+                        (unsigned char*)bytes + offset,
+                        (unsigned)length ) != SECSuccess)
         {
             JSS_throwMsg(env, SIGNATURE_EXCEPTION, "update failed");
             goto finish;
@@ -200,8 +206,8 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
     } else {
         PR_ASSERT( type == VFY_CONTEXT );
         if( VFY_Update( (VFYContext*)ctxt,
-                        (unsigned char*)bytes,
-                        (unsigned) numBytes ) != SECSuccess)
+                        (unsigned char*)bytes + offset,
+                        (unsigned) length ) != SECSuccess)
         {
             JSS_throwMsg(env, SIGNATURE_EXCEPTION, "update failed");
             goto finish;
@@ -232,6 +238,8 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineSignNative
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
+    signature.data = NULL;
+
     /*
      * Extract the signature context from the Java wrapper
      */
@@ -245,7 +253,8 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineSignNative
      * Finish the signing operation.
      */
     if( SGN_End(ctxt, &signature) != SECSuccess) {
-        JSS_throw(env, SIGNATURE_EXCEPTION);
+        JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION,
+            "Signing operation failed");
         goto finish;
     }
 
@@ -263,12 +272,13 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineSignNative
         goto finish;
     }
     memcpy(sigBytes, signature.data, signature.len);
-    (*env)->ReleaseByteArrayElements(env, sigArray, sigBytes, 0);
-    sigBytes=NULL;
     
 finish:
     if(sigBytes != NULL) {
         (*env)->ReleaseByteArrayElements(env, sigArray, sigBytes, 0);
+    }
+    if( signature.data != NULL ) {
+        PR_Free(signature.data);
     }
     return sigArray;
 }
