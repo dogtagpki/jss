@@ -114,6 +114,14 @@ public final class CryptoManager implements TokenSupplier
             this.configDir = configDir;
         }
 
+        /**
+         * deprecated
+         */
+        public InitializationValues(String secmodName, String keydbName,
+            String certdbName)
+        {
+        }
+
         public InitializationValues(String configDir, String certPrefix,
             String keyPrefix, String secmodName)
         {
@@ -707,21 +715,6 @@ public final class CryptoManager implements TokenSupplier
     ////////////////////////////////////////////////////
 
     /**
-     * Initialize the security subsystem. Initializes NSPR and the 
-     * Random Number Generator, but does not open any databases or initialize
-     * PKCS #11.  The only cryptographic operation that can be performed
-     * after this call is PQG parameter generation. This method can
-     * be called repeatedly, before or after the call to
-     * <code>initialize(InitializationValues)</code>.
-     */
-    public static synchronized void initialize()
-    {
-        NSSInit.loadNativeLibraries();
-        initializeNative();
-    }
-    private static native void initializeNative();
-
-    /**
      * Initialize the security subsystem.  Opens the databases, loads all
      * PKCS #11 modules, initializes the internal random number generator.
      * The <code>initialize</code> methods that take arguments should be
@@ -742,6 +735,19 @@ public final class CryptoManager implements TokenSupplier
                 GeneralSecurityException
     {
         initialize( new InitializationValues(configDir) );
+    }
+
+    /**
+     * deprecated
+     */
+    public static synchronized void initialize( String secmodName,
+        String keydbName, String certdbName)
+        throws  KeyDatabaseException,
+                CertDatabaseException,
+                AlreadyInitializedException,
+                GeneralSecurityException
+    {
+        initialize( new InitializationValues() );
     }
 
     /**
@@ -768,7 +774,7 @@ public final class CryptoManager implements TokenSupplier
         if(instance != null) {
             throw new AlreadyInitializedException();
         }
-        NSSInit.loadNativeLibraries();
+        loadNativeLibraries();
 		if (values.ocspResponderURL != null) {
 			if (values.ocspResponderCertNickname == null) {
 				throw new GeneralSecurityException(
