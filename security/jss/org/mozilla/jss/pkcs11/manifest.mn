@@ -96,6 +96,7 @@ CLASSES =	                                        \
             PK11Module                            \
             PK11PrivKey                     \
             PK11PubKey                      \
+            PK11RSAPrivateKey                \
             PK11RSAPublicKey                \
             PK11Signature                  \
             PK11SymKey                              \
@@ -134,6 +135,7 @@ JSRCS =	                                        \
             PK11Module.java                       \
             PK11PrivKey.java                     \
             PK11PubKey.java                      \
+            PK11RSAPrivateKey.java               \
             PK11RSAPublicKey.java               \
             PK11SecureRandom.java               \
             PK11Signature.java                  \
