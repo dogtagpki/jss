@@ -1278,12 +1278,12 @@ public final class CryptoManager implements TokenSupplier
      * be used when JSS is called through the JCA interface, which has
      * no means of specifying which token to use.
      *
-     * <p>If no token is set, the InternalCryptoToken will be used. Setting
+     * <p>If no token is set, the InternalKeyStorageToken will be used. Setting
      * this thread's token to <tt>null</tt> will also cause the
-     * InternalCryptoToken to be used.
+     * InternalKeyStorageToken to be used.
      *
      * @param The token to use for crypto operations. Specifying <tt>null</tt>
-     * will cause the InternalCryptoToken to be used.
+     * will cause the InternalKeyStorageToken to be used.
      */
     public void setThreadToken(CryptoToken token) {
         if( token != null ) {
@@ -1298,18 +1298,18 @@ public final class CryptoManager implements TokenSupplier
      * be used when JSS is called through the JCA interface, which has
      * no means of specifying which token to use.
      *
-     * <p>If no token is set, the InternalCryptoToken will be used. Setting
+     * <p>If no token is set, the InternalKeyStorageToken will be used. Setting
      * this thread's token to <tt>null</tt> will also cause the
-     * InternalCryptoToken to be used.
+     * InternalKeyStorageToken to be used.
      *
      * @return The default token for this thread. If it has not been specified,
-     * it will be the InternalCryptoToken.
+     * it will be the InternalKeyStorageToken.
      */
     public CryptoToken getThreadToken() {
         CryptoToken tok =
             (CryptoToken) perThreadTokenTable.get(Thread.currentThread());
         if( tok == null ) {
-            tok = getInternalCryptoToken();
+            tok = getInternalKeyStorageToken();
         }
         return tok;
     }
