@@ -1047,9 +1047,6 @@ public final class CryptoManager implements TokenSupplier
             throw new InvalidNicknameException("Nickname must be non-null");
         }
 
-        if (cert instanceof InternalCertificate) {
-            return (InternalCertificate) cert;
-        }
         else {
             return importCertToPermNative(cert,nickname);
         }
