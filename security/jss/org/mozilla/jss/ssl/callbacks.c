@@ -454,8 +454,6 @@ JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
     PR_ASSERT(fd != NULL);
 
     /* initialize logging structures */
-    //log.arena = PR_Calloc(1, sizeof(PLArenaPool));
-    //PL_InitArenaPool(log.arena,"jss",DER_DEFAULT_CHUNKSIZE,sizeof(double));
     log.arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
     if (log.arena == NULL) return SECFailure;
     
@@ -606,8 +604,6 @@ finish:
     if( hostname != NULL) {
         PR_Free(hostname);
     }
-    //PL_FinishArenaPool(log.arena);
-    //PR_Free(log.arena);
     PORT_FreeArena(log.arena, PR_FALSE);
     return retval;
 }
