@@ -63,6 +63,7 @@ JSRCS =	                                    \
             InvalidDERException.java        \
 			InvalidNicknameException.java   \
             NativeProxy.java                \
+            NativeErrcodes.java                \
 			NotImplementedException.java	\
             NullPasswordCallback.java       \
             ObjectNotFoundException.java    \
@@ -83,6 +84,7 @@ CLASSES =									\
 	    InvalidDERException             \
 			InvalidNicknameException		\
 			NativeProxy        				\
+            NativeErrcodes                \
 			NotImplementedException			\
             NullPasswordCallback            \
 	    ObjectNotFoundException          \
