@@ -19,19 +19,19 @@ include $(CORE_DEPTH)/coreconf/config.mk
 publish:
 	$(MAKE) clean
 	mkdir -p SOURCES SRPMS RPMS BUILD
-	mkdir -p usr/lib/mps
+	mkdir -p usr/lib/mps/secv1
 	find $(CORE_DEPTH)/../dist/$(OBJDIR)/lib -type l \
 		\( -name "*jss*.so" \) \
-        -exec cp {} usr/lib/mps \;
+        -exec cp {} usr/lib/mps/secv1 \;
 #	(cd $(CORE_DEPTH)/../dist/public && tar cphf - .) \
 #		| (mkdir -p usr/include/mps && cd usr/include/mps && tar xvfBp -)
-	mkdir -p usr/share/lib/mps
+	mkdir -p usr/share/lib/mps/secv1
 ifeq ($(BUILD_OPT), 1)
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/xpclass.jar \
-		usr/share/lib/mps/jss3.jar
+		usr/share/lib/mps/secv1/jss3.jar
 else
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes_DBG/xpclass_dbg.jar \
-		usr/share/lib/mps/jss3.jar
+		usr/share/lib/mps/secv1/jss3.jar
 endif
 	tar czvf $(NAME)-$(VERSION).tar.gz usr
 	echo "%define _topdir `pwd`" >temp.spec
@@ -45,6 +45,7 @@ endif
 	echo "%dir /usr" >>temp.spec
 	echo "%dir /usr/lib" >>temp.spec
 	echo "%dir /usr/lib/mps" >>temp.spec
+	echo "%dir /usr/lib/mps/secv1" >>temp.spec
 	find usr \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	echo "" >>temp.spec
