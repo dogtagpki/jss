@@ -92,6 +92,7 @@ CLASSES =	                                        \
             SymmetricKey                        \
             TokenCertificate              \
             TokenException                 \
+            TokenRuntimeException                 \
             TokenSupplier			\
             TokenSupplierManager		\
             Tunnel                          \
@@ -142,6 +143,7 @@ JSRCS =	                                        \
             SymmetricKey.java                   \
             TokenCertificate.java             \
             TokenException.java                 \
+            TokenRuntimeException.java                 \
             Tunnel.java                         \
             TokenSupplier.java                   \
             TokenSupplierManager.java            \
