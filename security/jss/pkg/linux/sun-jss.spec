@@ -9,7 +9,7 @@ Source: %{name}-%{version}.tar.gz
 ExclusiveOS: Linux
 BuildRoot: %_topdir/%{name}-root
 
-Requires: sun-nspr >= 4.1.2
+Requires: sun-nspr >= 4.1.2, sun-nss >= 3.3.4
         
 %description
 Network Security Services for Java (JSS) is a set of libraries designed
