@@ -60,13 +60,11 @@ JSRCS =	                                    \
             ConsolePasswordCallback.java    \
             Debug.java                      \
             IncorrectPasswordException.java \
-            InvalidDERException.java        \
 			InvalidNicknameException.java   \
             NativeProxy.java                \
             NativeErrcodes.java                \
 			NotImplementedException.java	\
             NullPasswordCallback.java       \
-            ObjectNotFoundException.java    \
 			Password.java                   \
 			PasswordCallback.java           \
 			PasswordCallbackInfo.java       \
@@ -81,13 +79,11 @@ CLASSES =									\
             ConsolePasswordCallback         \
 			Debug              				\
             IncorrectPasswordException      \
-	    InvalidDERException             \
 			InvalidNicknameException		\
 			NativeProxy        				\
             NativeErrcodes                \
 			NotImplementedException			\
             NullPasswordCallback            \
-	    ObjectNotFoundException          \
 			Password                        \
 			PasswordCallback                \
 			PasswordCallbackInfo            \
