@@ -28,10 +28,10 @@ publish:
 	mkdir -p opt/sun/private/share/lib 
 ifeq ($(BUILD_OPT), 1)
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/xpclass.jar \
-		opt/sun/private/share/lib/jss3.jar
+		opt/sun/private/share/lib/jss4.jar
 else
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes_DBG/xpclass_dbg.jar \
-		opt/sun/private/share/lib/jss3.jar
+		opt/sun/private/share/lib/jss4.jar
 endif
 	tar czvf $(NAME)-$(VERSION).tar.gz opt 
 	echo "AutoReq: 0" > temp.spec
