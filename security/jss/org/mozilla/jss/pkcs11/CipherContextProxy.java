@@ -34,6 +34,7 @@
 package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.util.NativeProxy;
+import org.mozilla.jss.util.Debug;
 
 final class CipherContextProxy extends NativeProxy {
     public CipherContextProxy(byte[] pointer) {
@@ -41,4 +42,8 @@ final class CipherContextProxy extends NativeProxy {
     }
 
     protected native void releaseNativeResources();
+    protected void finalize() throws Throwable {
+      Debug.trace(Debug.OBNOXIOUS, "Finalizing a CipherContentProxy");
+      super.finalize();
+    }
 }
