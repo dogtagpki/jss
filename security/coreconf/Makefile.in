@@ -31,60 +31,14 @@
 # GPL.
 #
 
-#######################################################################
-# Master "Core Components" file system "release" prefixes             #
-#######################################################################
+CORE_DEPTH	= ..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
 
-#	RELEASE_TREE = $(CORE_DEPTH)/../coredist
+DIRS		= nsinstall
 
+include $(CORE_DEPTH)/coreconf/autoconf.mk
+include $(topsrcdir)/coreconf/config.mk
 
-ifndef RELEASE_TREE
-	ifdef BUILD_SHIP
-		ifdef USE_SHIPS 
-			RELEASE_TREE = $(BUILD_SHIP)
-		else
-			RELEASE_TREE = /share/builds/components
-		endif
-	else
-		RELEASE_TREE = /share/builds/components
-	endif
-		ifeq ($(OS_TARGET), WINNT)
-		ifdef BUILD_SHIP
-			ifdef USE_SHIPS
-				RELEASE_TREE = $(NTBUILD_SHIP)
-			else
-				RELEASE_TREE = //hs-sca15c/components
-			endif
-		else
-			RELEASE_TREE = //hs-sca15c/components
-		endif
-		endif
-	
-	ifeq ($(OS_TARGET), WIN95)
-		ifdef BUILD_SHIP
-			ifdef USE_SHIPS
-				RELEASE_TREE = $(NTBUILD_SHIP)
-			else
-				RELEASE_TREE = //hs-sca15c/components
-			endif
-		else
-			RELEASE_TREE = //hs-sca15c/components
-		endif
-	endif
-	ifeq ($(OS_TARGET), WIN16)
-	ifdef BUILD_SHIP
-		ifdef USE_SHIPS
-			RELEASE_TREE = $(NTBUILD_SHIP)
-		else
-			RELEASE_TREE = //hs-sca15c/components
-		endif
-	else
-		RELEASE_TREE = //hs-sca15c/components
-	endif
-	endif
-endif
-
-REPORTER_TREE = $(subst \,\\,$(RELEASE_TREE))
-
-IMPORT_XP_DIR = 
-IMPORT_MD_DIR = $(PLATFORM)
+include $(topsrcdir)/coreconf/rules.mk
