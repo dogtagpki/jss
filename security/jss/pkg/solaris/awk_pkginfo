@@ -5,12 +5,12 @@
    }
 /VERSION=[^=]*=.*$/ {
       sub(/\=[^=]*$/,"=2002.11.01.10.02\"")
-      sub(/NSPRVERS/,"3.2")
+      sub(/NSPRVERS/,"3.1.2")
       print
       next
    }
 /^SUNW_PRODVERS=/ { 
-      printf "SUNW_PRODVERS=\"%s\"\n", "3.2" 
+      printf "SUNW_PRODVERS=\"%s\"\n", "3.1.2" 
       next
    }
 /ARCH=\"ISA\"/ {
