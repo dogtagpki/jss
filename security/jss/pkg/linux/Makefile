@@ -45,7 +45,7 @@ endif
 	echo "%dir /usr" >>temp.spec
 	echo "%dir /usr/lib" >>temp.spec
 	echo "%dir /usr/lib/mps" >>temp.spec
-	find usr \( -name "*.so" -o -name "*.chk" \) \
+	find usr \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	echo "" >>temp.spec
 	echo "%files devel" >>temp.spec
