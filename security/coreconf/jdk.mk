@@ -82,6 +82,11 @@ endif
 
 # set [Microsoft Windows] platforms
 ifeq ($(OS_ARCH), WINNT)
+	# (1) specify "location" information
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = //iridium/components/jdk/1.2.2_01/WINNT
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/classes.zip
 
 	ifeq ($(JRE_HOME),)
@@ -119,6 +124,11 @@ endif
 
 # set [Sun Solaris] platforms
 ifeq ($(OS_ARCH), SunOS)
+	# (1) specify "location" information
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = /share/builds/components/jdk/1.2.2_01/SunOS
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/classes.zip
 
 	ifeq ($(JRE_HOME),)
@@ -161,6 +171,11 @@ endif
 
 # set [Hewlett Packard HP-UX] platforms
 ifeq ($(OS_ARCH), HP-UX)
+	# (1) specify "location" information  (currently ONLY on "orville")
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = /opt/java1.2
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/classes.zip
 
 	ifeq ($(JRE_HOME),)
@@ -200,6 +215,11 @@ endif
 
 # set [Redhat Linux] platforms
 ifeq ($(OS_ARCH), Linux)
+	# (1) specify "location" information
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = /share/builds/components/jdk/1.2.2/Linux
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/classes.zip
 
 	ifeq ($(JRE_HOME),)
@@ -239,6 +259,11 @@ endif
 
 # set [IBM AIX] platforms
 ifeq ($(OS_ARCH), AIX)
+	# (1) specify "location" information
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = /share/builds/components/jdk/1.2.2/AIX
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/classes.zip
 
 	ifeq ($(JRE_HOME),)
@@ -256,7 +281,6 @@ ifeq ($(OS_ARCH), AIX)
 	JAVA_ARCH = aix
 
 	INCLUDES += -I$(JAVA_HOME)/include
-	INCLUDES += -I$(JAVA_HOME)/include/$(JAVA_ARCH)
 
 	# (3) specify "linker" information
 	JAVA_CPU = aix
@@ -278,6 +302,11 @@ endif
 
 # set [Digital UNIX] platforms
 ifeq ($(OS_ARCH), OSF1)
+	# (1) specify "location" information
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = /share/builds/components/jdk/1.2.2_3/OSF1
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/classes.zip
 
 	ifeq ($(JRE_HOME),)
@@ -317,6 +346,11 @@ endif
 
 # set [Silicon Graphics IRIX] platforms
 ifeq ($(OS_ARCH), IRIX)
+	# (1) specify "location" information
+	ifeq ($(JAVA_HOME),)
+		JAVA_HOME = /share/builds/components/jdk/1.2.1/IRIX
+	endif
+
 	JAVA_CLASSES = $(JAVA_HOME)/lib/dev.jar:$(JAVA_HOME)/lib/rt.jar
 
 	ifeq ($(JRE_HOME),)
@@ -378,9 +412,14 @@ ifeq ($(JDK_CLASS_REPOSITORY_OPT),)
 	JDK_CLASS_REPOSITORY_OPT = -d $(JAVA_DESTPATH)
 endif
 
+# initialize the JDK heap size option to a default value
+ifeq ($(JDK_INIT_HEAP_OPT),)
+	JDK_INIT_HEAP_OPT = -ms8m
+endif
+
 # define a default JDK classpath
 ifeq ($(JDK_CLASSPATH),)
-	JDK_CLASSPATH = '$(JAVA_DESTPATH)$(PATH_SEPARATOR)$(JAVA_SOURCEPATH)$(PATH_SEPARATOR)$(JAVA_CLASSES)'
+	JDK_CLASSPATH = "$(JAVA_DESTPATH)$(PATH_SEPARATOR)$(JAVA_SOURCEPATH)$(PATH_SEPARATOR)$(JAVA_CLASSES)"
 endif
 
 # by default, override CLASSPATH environment variable using the JDK classpath option with $(JDK_CLASSPATH)
@@ -429,6 +468,7 @@ ifeq ($(JAVA),)
 	JAVA_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	JAVA_FLAGS += $(JDK_DEBUG_OPT)
 	JAVA_FLAGS += $(JDK_CLASSPATH_OPT)
+	JAVA_FLAGS += $(JDK_INIT_HEAP_OPT)
 	JAVA_FLAGS += $(JDK_JIT_OPT)
 	JAVA        = $(JAVA_PROG) $(JAVA_FLAGS) 
 endif
@@ -443,6 +483,7 @@ ifeq ($(JAVAC),)
 	JAVAC_FLAGS += $(JDK_OPTIMIZER_OPT)
 	JAVAC_FLAGS += $(JDK_DEBUG_OPT)
 	JAVAC_FLAGS += $(JDK_CLASSPATH_OPT)
+	JAVAC_FLAGS += -J$(JDK_INIT_HEAP_OPT)
 	JAVAC_FLAGS += $(JDK_CLASS_REPOSITORY_OPT)
 	JAVAC        = $(JAVAC_PROG) $(JAVAC_FLAGS)
 endif
@@ -455,6 +496,7 @@ ifeq ($(JAVADOC),)
 	JAVADOC_PROG   = $(JAVA_HOME)/bin/javadoc$(PROG_SUFFIX)
 	JAVADOC_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	JAVADOC_FLAGS += $(JDK_CLASSPATH_OPT)
+	JAVADOC_FLAGS += -J$(JDK_INIT_HEAP_OPT)
 	JAVADOC        = $(JAVADOC_PROG) $(JAVADOC_FLAGS)
 endif
 
@@ -487,6 +529,7 @@ ifeq ($(JAVAP),)
 	JAVAP_PROG   = $(JAVA_HOME)/bin/javap$(PROG_SUFFIX)
 	JAVAP_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	JAVAP_FLAGS += $(JDK_CLASSPATH_OPT)
+	JAVAP_FLAGS += -J$(JDK_INIT_HEAP_OPT)
 	JAVAP        = $(JAVAP_PROG) $(JAVAP_FLAGS)
 endif
 
@@ -519,6 +562,7 @@ ifeq ($(JAVAW),)
 	jJAVAW_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	jJAVAW_FLAGS += $(JDK_DEBUG_OPT)
 	jJAVAW_FLAGS += $(JDK_CLASSPATH_OPT)
+	jJAVAW_FLAGS += $(JDK_INIT_HEAP_OPT)
 	jJAVAW_FLAGS += $(JDK_JIT_OPT)
 	jJAVAW        = $(JAVAW_PROG) $(JAVAW_FLAGS)
 endif
@@ -532,6 +576,7 @@ ifeq ($(JDB),)
 	JDB_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	JDB_FLAGS += $(JDK_DEBUG_OPT)
 	JDB_FLAGS += $(JDK_CLASSPATH_OPT)
+	JDB_FLAGS += $(JDK_INIT_HEAP_OPT)
 	JDB_FLAGS += $(JDK_JIT_OPT)
 	JDB        = $(JDB_PROG) $(JDB_FLAGS)
 endif
@@ -544,6 +589,7 @@ ifeq ($(JRE),)
 	JRE_PROG   = $(JAVA_HOME)/bin/jre$(PROG_SUFFIX)
 	JRE_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	JRE_FLAGS += $(JDK_CLASSPATH_OPT)
+	JRE_FLAGS += $(JDK_INIT_HEAP_OPT)
 	JRE_FLAGS += $(JDK_JIT_OPT)
 	JRE        = $(JRE_PROG) $(JRE_FLAGS) 
 endif
@@ -556,6 +602,7 @@ ifeq ($(JREW),)
 	JREW_PROG   = $(JAVA_HOME)/bin/jrew$(PROG_SUFFIX)
 	JREW_FLAGS  = $(JDK_THREADING_MODEL_OPT)
 	JREW_FLAGS += $(JDK_CLASSPATH_OPT)
+	JREW_FLAGS += $(JDK_INIT_HEAP_OPT)
 	JREW_FLAGS += $(JDK_JIT_OPT)
 	JREW        = $(JREW_PROG) $(JREW_FLAGS) 
 endif

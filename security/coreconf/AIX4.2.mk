@@ -37,9 +37,8 @@
 include $(CORE_DEPTH)/coreconf/AIX.mk
 
 OS_CFLAGS	+= -DAIX4_2
-DSO_LDOPTS	= -brtl -bM:SRE -bnoentry $(EXPORT_RULES)
+DSO_LDOPTS	= -brtl -bM:SRE -bnoentry -bexpall
 MKSHLIB		= $(LD) $(DSO_LDOPTS) -lsvld -L/usr/lpp/xlC/lib -lc -lm
 
 OS_LIBS		+= -L/usr/lpp/xlC/lib -lc -lm
-EXPORT_RULES = -bexpall
 
