@@ -34,6 +34,7 @@
 package org.mozilla.jss.crypto;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
 
 /**
  * Algorithms that can be used for keypair generation.
@@ -69,9 +70,9 @@ public class KeyPairAlgorithm extends Algorithm {
      *  recognized as a supported algorithm.
      */
     public static KeyPairAlgorithm fromString(String algName)
-        throw NoSuchAlgorithmException
+        throws NoSuchAlgorithmException
     {
-        KeyPairAlgorithm alg = nameMap.get(algName);
+        KeyPairAlgorithm alg = (KeyPairAlgorithm)nameMap.get(algName);
         if( alg == null ) {
             throw new NoSuchAlgorithmException();
         }
