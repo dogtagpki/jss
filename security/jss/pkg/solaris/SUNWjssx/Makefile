@@ -5,10 +5,8 @@
 #ident	"$Id$"
 #
 
-CORE_DEPTH = ../../..
+CORE_DEPTH = ../../../..
 include ../Makefile.com
-
-DATAFILES += depend
 
 all:: $(FILES)
 publish:: all pkg

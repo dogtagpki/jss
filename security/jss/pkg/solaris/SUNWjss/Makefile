@@ -8,8 +8,6 @@
 CORE_DEPTH = ../../../..
 include ../Makefile.com
 
-DATAFILES += pkgdepend
-
 all:: $(FILES)
 publish:: all pkg
 
