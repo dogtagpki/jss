@@ -44,6 +44,7 @@ import org.mozilla.jss.pkcs11.PK11Module;
 import org.mozilla.jss.pkcs11.PK11SecureRandom;
 import java.security.cert.CertificateEncodingException;
 import org.mozilla.jss.CRLImportException;
+import org.mozilla.jss.provider.java.security.JSSMessageDigestSpi;
 
 /**
  * This class is the starting poing for the crypto package.
@@ -817,9 +818,13 @@ public final class CryptoManager implements TokenSupplier
 		    java.security.Security.removeProvider("SUN");
         }
         if( values.installJSSProvider ) {
+            // Force class load before we install the provider. Otherwise we get
+            // an infinite loop as the Security manager tries to instantiate the
+            // digest to verify its own JAR file.
+            JSSMessageDigestSpi mds = new JSSMessageDigestSpi.SHA1();
+
 		    int position = java.security.Security.insertProviderAt(
-							new JSSProvider(),
-							1);
+							new JSSProvider(), 1);
 		    if(position==-1) {
 			    Debug.trace(Debug.ERROR,
 				    "Unable to install default provider");
