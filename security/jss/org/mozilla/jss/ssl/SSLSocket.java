@@ -340,6 +340,7 @@ public class SSLSocket extends java.net.Socket {
         shutdownNative(SocketBase.PR_SHUTDOWN_SEND);
     }
 
+    private native void shutdownNativeLow(int how) throws IOException;   
     private native void shutdownNative(int how) throws IOException;
 
     /**
@@ -390,20 +391,15 @@ public class SSLSocket extends java.net.Socket {
      */
     public native int getReceiveBufferSize() throws SocketException;
 
-    /**
-     * Closes this socket. Waits tills the read and write i/o
-     * operations are completed, then any further i/o operation
-     * throws an exception that the socket is closed.      
-     */
     public void close() throws IOException {
         if (isClosed) {
             return;
         }
         if (ioRead) {
-            shutdownNative(SocketBase.PR_SHUTDOWN_RCV);
-        }
+            shutdownNativeLow(SocketBase.PR_SHUTDOWN_RCV);
+        } 
         if (ioWrite) {
-            shutdownNative(SocketBase.PR_SHUTDOWN_SEND);
+            shutdownNativeLow(SocketBase.PR_SHUTDOWN_SEND);
         }
         synchronized (readLock) {
             synchronized (writeLock) {
