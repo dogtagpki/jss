@@ -72,9 +72,9 @@ public class TestKeyGen {
         java.security.KeyPair keyPair;
         Base64OutputStream base64;
 
-        if(args.length != 1) {
+        if(args.length != 2) {
             System.err.println(
-                "Usage: java org.mozilla.jss.pkcs11.TestKeyGen <dbdir>");
+             "Usage: java org.mozilla.jss.tests.TestKeyGen <dbdir> <pwFile>");
             System.exit(1);
             return;
         }
@@ -84,7 +84,7 @@ public class TestKeyGen {
         CryptoManager.initialize(vals);
         manager = CryptoManager.getInstance();
         manager.setPasswordCallback(
-            new Password( "netscape".toCharArray() ));
+          new FilePasswordCallback(args[1]) ); 
 
         java.util.Enumeration tokens =
                 manager.getTokensSupportingAlgorithm(KeyPairAlgorithm.RSA);

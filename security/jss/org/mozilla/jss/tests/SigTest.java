@@ -57,7 +57,8 @@ public class SigTest {
 
     public static void usage() {
         System.out.println(
-            "Usage: java org.mozilla.jss.crypto.SigTest <dbdir> <tokenname>");
+            "Usage: java org.mozilla.jss.crypto.SigTest <dbdir> <tokenname>" +
+            " <pwfile>");
     }
 
     public static void main(String args[]) {
@@ -71,7 +72,7 @@ public class SigTest {
         KeyPairGenerator kpgen;
         KeyPair keyPair;
 
-        if(args.length != 2) {
+        if(args.length != 3) {
             usage();
             System.exit(1);
         }
@@ -82,8 +83,7 @@ public class SigTest {
                 CryptoManager.InitializationValues(args[0]);
         CryptoManager.initialize(vals);
         manager = CryptoManager.getInstance();
-        manager.setPasswordCallback(
-            new Password("netscape".toCharArray()));
+        manager.setPasswordCallback( new FilePasswordCallback(args[2]) );
 
         /* Print out list of available tokens */
         Enumeration en = manager.getAllTokens();
@@ -120,7 +120,7 @@ public class SigTest {
         if( signer.verify(signature) ) {
             System.out.println("Signature Verified Successfully!");
         } else {
-            System.out.println("ERROR: Signature failed to verify.");
+            throw new Exception("ERROR: Signature failed to verify.");
         }
 
         System.out.println("SigTest passed.");

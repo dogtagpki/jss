@@ -30,12 +30,12 @@
  * may use your version of this file under either the MPL or the
  * GPL.
  */
-package org.mozilla.jss.crypto;
+package org.mozilla.jss.tests;
 
 import java.io.*;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.util.Password;
-import org.mozilla.jss.util.Debug;
+import org.mozilla.jss.util.*;
+import org.mozilla.jss.crypto.*;
 import java.security.MessageDigest;
 
 public class DigestTest {
