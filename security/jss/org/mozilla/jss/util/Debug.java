@@ -34,13 +34,14 @@
 /**********************************************************************
  * --------------------------- W A R N I N G --------------------------
  *
- * This file is the same as Debug_ship.java, except the static final
- * constants have been set to enable debugging and tracing.  You must
- * double-edit any changes in this file into Debug_ship.java, and 
+ * This file is the same as Debug_debug.java, except the static final
+ * constants have been set to disable debugging and tracing.  You must
+ * double-edit any changes in this file into Debug_debug.java, and 
  * vice-versa.
  * See debug_tweak.mk for how one of these two files is copied into
  * Debug.java during the build.
  **********************************************************************/
+
 
 package org.mozilla.jss.util;
 
@@ -62,7 +63,7 @@ public class Debug
      *
      * @see org.mozilla.jss.util.Assert
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static final int OBNOXIOUS = 10;
     public static final int VERBOSE = 5;
@@ -76,7 +77,7 @@ public class Debug
      *
      * !!If you change this, change it in the native code too!!
      */
-	private static int mDebugLevel = VERBOSE;
+	private static int mDebugLevel = ERROR;
 
     /**
      * Print a trace statement to standard output.

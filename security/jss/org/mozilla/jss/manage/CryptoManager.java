@@ -1307,13 +1307,13 @@ public final class CryptoManager implements TokenSupplier
      public static final String
      JAR_JDK_VERSION     = "JDK_VERSION = JDK 1.4.0";
      public static final String
-     JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_3_10";
+     JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_3_11";
      public static final String
-     JAR_DBM_VERSION     = "DBM_VERSION = NSS_3_3_10";
+     JAR_DBM_VERSION     = "DBM_VERSION = NSS_3_3_11";
      public static final String
      JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_1_6_RTM";
      public static final String
-     JAR_SECURITY_VERSION= "SECURITY_VERSION = SECURITY_3_3_10_RTM";
+     JAR_SECURITY_VERSION= "SECURITY_VERSION = SECURITY_3_3_11_RTM";
                                                                             
      /**
      * Loads the JSS dynamic library if necessary.
