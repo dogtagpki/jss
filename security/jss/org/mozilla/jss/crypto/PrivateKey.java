@@ -88,7 +88,7 @@ public interface PrivateKey extends java.security.PrivateKey
             this.oid = oid;
             this.name = name;
             Object old = oidMap.put(oid, this);
-            Assert.assert( old == null );
+            Assert._assert( old == null );
         }
 
         private static Hashtable oidMap = new Hashtable();
