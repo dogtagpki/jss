@@ -184,6 +184,7 @@ int ConfigureOCSP(
                         result = SECFailure;
                         goto loser;
                    }
+       		CERT_DestroyCertificate(cert);
     }
         status =
             CERT_SetOCSPDefaultResponder(   certdb,
