@@ -475,7 +475,7 @@ public final class CryptoManager implements TokenSupplier
                     return token;
                 }
             } catch( TokenException e ) {
-                Assert.assert(false, "Got a token exception");
+                Assert._assert(false, "Got a token exception");
             }
         }
         throw new NoSuchTokenException();
@@ -588,16 +588,16 @@ public final class CryptoManager implements TokenSupplier
         while(tokens.hasMoreElements()) {
             PK11Token token = (PK11Token) tokens.nextElement();
             if( token.isInternalCryptoToken() ) {
-                Assert.assert(internalCryptoToken == null);
+                Assert._assert(internalCryptoToken == null);
                 internalCryptoToken = token;
             }
             if( token.isInternalKeyStorageToken() ) {
-                Assert.assert(internalKeyStorageToken == null);
+                Assert._assert(internalKeyStorageToken == null);
                 internalKeyStorageToken = token;
             }
         }
-        Assert.assert(internalKeyStorageToken != null);
-        Assert.assert(internalCryptoToken != null);
+        Assert._assert(internalKeyStorageToken != null);
+        Assert._assert(internalCryptoToken != null);
     }
 
     /**
@@ -1080,7 +1080,7 @@ public final class CryptoManager implements TokenSupplier
 	findCertByNickname(String nickname)
         throws ObjectNotFoundException, TokenException
 	{
-        Assert.assert(nickname!=null);
+        Assert._assert(nickname!=null);
 		return findCertByNicknameNative(nickname);
 	}
 
@@ -1096,7 +1096,7 @@ public final class CryptoManager implements TokenSupplier
     findCertsByNickname(String nickname)
         throws TokenException
 	{
-        Assert.assert(nickname!=null);
+        Assert._assert(nickname!=null);
 		return findCertsByNicknameNative(nickname);
 	}
 
@@ -1185,7 +1185,7 @@ public final class CryptoManager implements TokenSupplier
 	findPrivKeyByCert(org.mozilla.jss.crypto.X509Certificate cert)
         throws ObjectNotFoundException, TokenException
 	{
-        Assert.assert(cert!=null);
+        Assert._assert(cert!=null);
 		if(! (cert instanceof org.mozilla.jss.pkcs11.PK11Cert)) {
 			Assert.notReached("non-pkcs11 cert passed to PK11Finder");
 			throw new ObjectNotFoundException();
