@@ -43,6 +43,9 @@ package org.mozilla.jss.crypto;
  * to encrypt stuff your application wants to keep around for its own use:
  * for example, the list of web passwords stored in the web browser.
  *
+ * <p>The Internal Key Storage Token must have already had its password
+ *  set.
+ *
  * <p>A dedicated key is used to encrypt all SecretDecoderRing data.
  * The same key is used for all SDR data, and not for any other data.
  * This key will be generated the first time it is needed.
