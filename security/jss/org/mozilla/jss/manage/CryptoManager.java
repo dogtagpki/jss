@@ -114,14 +114,6 @@ public final class CryptoManager implements TokenSupplier
             this.configDir = configDir;
         }
 
-        /**
-         * deprecated
-         */
-        public InitializationValues(String secmodName, String keydbName,
-            String certdbName)
-        {
-        }
-
         public InitializationValues(String configDir, String certPrefix,
             String keyPrefix, String secmodName)
         {
@@ -735,19 +727,6 @@ public final class CryptoManager implements TokenSupplier
                 GeneralSecurityException
     {
         initialize( new InitializationValues(configDir) );
-    }
-
-    /**
-     * deprecated
-     */
-    public static synchronized void initialize( String secmodName,
-        String keydbName, String certdbName)
-        throws  KeyDatabaseException,
-                CertDatabaseException,
-                AlreadyInitializedException,
-                GeneralSecurityException
-    {
-        initialize( new InitializationValues() );
     }
 
     /**
