@@ -626,7 +626,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreference(
     }
 
 finish:
-    EXCEPTION_CHECK(env, sock);
+    EXCEPTION_CHECK(env, sock)
     return enabled;
 }
 
@@ -856,6 +856,31 @@ finish:
         (*env)->ReleaseByteArrayElements(env, bufBA, buf, JNI_ABORT);
     }
     EXCEPTION_CHECK(env, sock)
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_shutdownNativeLow(
+    JNIEnv *env, jobject self, jint how)
+{               
+    JSSL_SocketData *sock = NULL;
+    PRFileDesc *fd = NULL;
+    PRStatus status;
+
+    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+
+    /*find the lowest fileDescriptor */
+    fd = sock->fd;
+    while (fd->lower) {
+        fd = fd->lower;
+    }
+
+    status = PR_Shutdown(fd, PR_SHUTDOWN_RCV);
+    if (PR_FAILURE == status) {
+        PR_fprintf(PR_STDOUT, "PR_Shutdown (server) failed");
+    }
+
+finish:
+    return;
 }
 
 JNIEXPORT void JNICALL

@@ -427,7 +427,6 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
     }
 
 finish:
-    EXCEPTION_CHECK(env, sock)
     return;
 }
 
