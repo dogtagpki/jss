@@ -107,7 +107,7 @@ sub setup_vars {
     $java = $java . $ENV{NATIVE_FLAG};
 
     if ($ENV{USE_64}) {
-	$java = $java . " -d64";
+        $java = $java . " -d64";
     }
 
     $pwfile = "passwords";
@@ -137,9 +137,15 @@ if( ! -d $testdir ) {
 {
     chdir "testdir" or die;
     my @dbfiles = 
-        ("./cert7.db", "./key3.db", "./secmod.db", "./secmodule.db");
+        ("./cert8.db", "./key3.db", "./secmod.db");
     unlink @dbfiles;
     (grep{ -f } @dbfiles)  and die "Unable to delete old database files";
+    # if dbdir exists delete it
+    my $dbdir = "./cert8.dir";
+    if (-d $dbdir ) {
+      unlink(< $dbdir/* >);     # delete all files in cert8.dir
+      rmdir($dbdir) or die "Unable to delete cert8.dir";
+    }    
     chdir ".." or die;
     my $result = system("cp $nss_lib_dir/*nssckbi* testdir"); $result >>= 8;
     $result and die "Failed to copy builtins library";
