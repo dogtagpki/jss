@@ -1,4 +1,4 @@
-# 
+#
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,44 +29,21 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-# 
+#
+# Config stuff for Linux 2.6 (ELF)
+#
 
-CORE_DEPTH = ../../../../..
+include $(CORE_DEPTH)/coreconf/Linux.mk
 
-MODULE = jss
+OS_REL_CFLAGS   += -DLINUX2_1
+MKSHLIB         = $(CC) -shared -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so)
+ifdef BUILD_OPT
+            OPTIMIZER       = -O2
+endif
 
-NS_USE_JDK = 1
+ifdef MAPFILE
+	MKSHLIB += -Wl,--version-script,$(MAPFILE)
+endif
+PROCESS_MAP_FILE = grep -v ';-' $(LIBRARY_NAME).def | \
+        sed -e 's,;+,,' -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,;,' > $@
 
-
-PACKAGE =       org/mozilla/jss/pkcs7
-
-
-CLASSES =	            \
-            ContentInfo    \
-            DigestedData \
-            DigestInfo          \
-            EncryptedContentInfo \
-            EncryptedData       \
-            EnvelopedData  \
-            IssuerAndSerialNumber \
-            RecipientInfo \
-            SignedAndEnvelopedData \
-            SignedData     \
-            SignerInfo     \
-            $(NULL)
-
-
-
-JSRCS =	                       \
-            ContentInfo.java    \
-            DigestedData.java \
-            DigestInfo.java          \
-            EncryptedContentInfo.java \
-            EncryptedData.java       \
-            EnvelopedData.java  \
-            IssuerAndSerialNumber.java \
-            RecipientInfo.java \
-            SignedAndEnvelopedData.java \
-            SignedData.java     \
-            SignerInfo.java     \
-            $(NULL)
