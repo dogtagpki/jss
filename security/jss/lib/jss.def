@@ -33,20 +33,20 @@
 ;+#
 ;+# OK, this file is meant to support SUN, LINUX, AIX and WINDOWS
 ;+#   1. For all unix platforms, the string ";-"  means "remove this line"
-;+#   2. For all unix platforms, the string " DATA " will be removed from any 
-;+#	line on which it occurs.
+;+#   2. For all unix platforms, the string " DATA " will be removed from any
+;+#     line on which it occurs.
 ;+#   3. Lines containing ";+" will have ";+" removed on SUN and LINUX.
-;+#      On AIX, lines containing ";+" will be removed.  
+;+#      On AIX, lines containing ";+" will be removed.
 ;+#   4. For all unix platforms, the string ";;" will thave the ";;" removed.
 ;+#   5. For all unix platforms, after the above processing has taken place,
-;+#    all characters after the first ";" on the line will be removed.  
+;+#    all characters after the first ";" on the line will be removed.
 ;+#    And for AIX, the first ";" will also be removed.
 ;+#  This file is passed directly to windows. Since ';' is a comment, all UNIX
 ;+#   directives are hidden behind ";", ";+", and ";-"
 ;+JSS_3.0 {       # JSS 3.0 release
 ;+    global:
-LIBRARY jss3	;-
-EXPORTS		;-
+LIBRARY jss3    ;-
+EXPORTS         ;-
 Java_org_mozilla_jss_crypto_EncryptionAlgorithm_getIVLength;
 Java_org_mozilla_jss_crypto_PQGParams_generateNative__I;
 Java_org_mozilla_jss_crypto_PQGParams_generateNative__II;
@@ -231,6 +231,14 @@ Java_org_mozilla_jss_crypto_SecretDecoderRing_decrypt;
 Java_org_mozilla_jss_CryptoManager_verifyCertNowNative;
 Java_org_mozilla_jss_CryptoManager_verifyCertTempNative;
 Java_org_mozilla_jss_CryptoManager_configureOCSPNative;
+Java_org_mozilla_jss_ssl_SocketBase_getLocalAddressNative;
+Java_org_mozilla_jss_ssl_SSLServerSocket_setServerCert;
+Java_org_mozilla_jss_ssl_SocketBase_setClientCert;
+Java_org_mozilla_jss_ssl_SocketProxy_releaseNativeResources;
+Java_org_mozilla_jss_ssl_SSLSocket_getImplementedCipherSuites;
+Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreferenceDefault;
+Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreferenceDefault;
+Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreference;
 ;+    local:
 ;+       *;
 ;+};
