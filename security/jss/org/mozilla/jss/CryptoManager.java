@@ -1304,26 +1304,14 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * Loads the JSS dynamic library if necessary.
-     * The system property "jss.load" will be set to "no" by jssjava
-     * because it is statically linked to the jss libraries. If this
-     * property is not set, that means we are not running jssjava
-     * and need to dynamically load the library.
      * <p>This method is idempotent.
      */
     synchronized static void loadNativeLibraries()
     {
-        if( ! mNativeLibrariesLoaded &&
-            ! ("no").equals(System.getProperty("jss.load")) )
+        if( ! mNativeLibrariesLoaded )
         {
-            try {
-                Debug.trace(Debug.VERBOSE, "about to load jss library");
-                System.loadLibrary("jss3");
-                Debug.trace(Debug.VERBOSE, "jss library loaded");
-            } catch( UnsatisfiedLinkError e) {
-                Debug.trace(Debug.ERROR, "ERROR: Unable to load jss library");
-                throw new UnsatisfiedLinkError(
-                    "Unable to load jss library or one of its dependencies");
-            }
+            System.loadLibrary("jss3");
+            Debug.trace(Debug.VERBOSE, "jss library loaded");
             mNativeLibrariesLoaded = true;
         }
     }
