@@ -45,6 +45,7 @@ JNI_GEN =											\
 			org.mozilla.jss.crypto.Algorithm		\
 			org.mozilla.jss.crypto.EncryptionAlgorithm		\
 			org.mozilla.jss.crypto.PQGParams       \
+			org.mozilla.jss.crypto.SecretDecoderRing \
 			$(NULL)
 
 PRIVATE_EXPORTS =                                   \
@@ -85,6 +86,7 @@ CLASSES =	                                        \
             PQGParamGenException                \
             RSAParameterSpec                    \
             JSSSecureRandom                        \
+            SecretDecoderRing                  \
             ShortBufferException            \
             Signature                       \
             SignatureSpi                       \
@@ -135,6 +137,7 @@ JSRCS =	                                        \
             PQGParamGenException.java           \
             RSAParameterSpec.java               \
             JSSSecureRandom.java                   \
+            SecretDecoderRing.java                 \
             ShortBufferException.java            \
             Signature.java                      \
             SignatureAlgorithm.java             \
@@ -154,6 +157,7 @@ PRIVATE_JSRCS =                                 \
 
 CSRCS =		Algorithm.c							\
             PQGParams.c                         \
+            SecretDecoderRing.c                         \
 			$(NULL)
 
 
