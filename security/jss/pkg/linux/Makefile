@@ -34,7 +34,8 @@ else
 		opt/sun/private/share/lib/jss3.jar
 endif
 	tar czvf $(NAME)-$(VERSION).tar.gz opt 
-	echo "%define _topdir `pwd`" >temp.spec
+	echo "AutoReq: 0" > temp.spec
+	echo "%define _topdir `pwd`" >>temp.spec
 	sed -e "s/NAME_REPLACE/$(NAME)/" \
 		-e "s/VERSION_REPLACE/$(VERSION)/" \
 		-e "s/RELEASE_REPLACE/$(RELEASE)/" \
