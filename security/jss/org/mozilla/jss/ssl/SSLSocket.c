@@ -48,6 +48,10 @@
 #include <winsock.h>
 #endif
 
+#ifdef WINNT
+#include <private/pprio.h>
+#endif
+
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_setSSLDefaultOption(JNIEnv *env,
     jclass clazz, jint joption, jint on)
@@ -603,6 +607,20 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
             {
                 /* just try again */
             } else {
+#ifdef WINNT
+                if (err == PR_IO_TIMEOUT_ERROR ) {
+                /*
+                 * if timeout was set, and the PR_Accept() timed out,
+                 * then cancel the I/O on the port, otherwise PR_Accept()
+                 * will always return PR_IO_PENDING_ERROR on subsequent
+                 * calls
+                 */
+					PR_NT_CancelIo(sock->fd);
+                    JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
+							 "Socket Operation timed out");
+                    goto finish;
+                }
+#endif 
                 /* unrecoverable error */
                 JSS_throwMsgPrErr(env, SOCKET_EXCEPTION,
                     "Error reading from socket");
@@ -684,6 +702,15 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
             {
                 /* just try again */
             } else if( err == PR_IO_TIMEOUT_ERROR ) {
+#ifdef WINNT
+                /*
+                 * if timeout was set, and the PR_Accept() timed out,
+                 * then cancel the I/O on the port, otherwise PR_Accept()
+                 * will always return PR_IO_PENDING_ERROR on subsequent
+                 * calls
+                 */
+					PR_NT_CancelIo(sock->fd);
+#endif 
                 JSS_throwMsgPrErr(env, SOCKET_EXCEPTION, "Operation timed out");
                 goto finish;
             } else {
