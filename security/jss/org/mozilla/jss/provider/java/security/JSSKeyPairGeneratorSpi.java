@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Netscape Communications Corporation.
- * Portions created by the Initial Developer are Copyright (C) 2002
+ * Portions created by the Initial Developer are Copyright (C) 2001
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -36,78 +36,65 @@
 
 package org.mozilla.jss.provider.java.security;
 
-import java.security.DigestException;
 import org.mozilla.jss.crypto.*;
+import java.security.KeyPair;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.InvalidAlgorithmParameterException;
 
 
-abstract class GenericMessageDigestSpi {
+class JSSKeyPairGeneratorSpi
+    extends java.security.KeyPairGeneratorSpi
+{
 
-    private JSSMessageDigest digest;
+    private KeyPairGenerator kpg;
 
-    private GenericMessageDigestSpi() { }
+    private JSSKeyPairGeneratorSpi() { super(); }
 
-    protected GenericMessageDigestSpi(DigestAlgorithm alg) {
+    protected JSSKeyPairGeneratorSpi(KeyPairAlgorithm alg) {
         super();
         CryptoToken token =
             TokenSupplierManager.getTokenSupplier().getThreadToken();
         try {
-            try {
-              digest = token.getDigestContext(alg);
-            } catch(java.security.NoSuchAlgorithmException e) {
-                throw new UnsupportedOperationException(
-                    "Token '" + token.getName() + "' does not support " +
-                    "algorithm " + alg.toString());
-            }
+          try {
+            kpg = token.getKeyPairGenerator(alg);
+          } catch(java.security.NoSuchAlgorithmException e) {
+            throw new UnsupportedOperationException(
+                "Token '" + token.getName() + "' does not support algorithm " +
+                alg.toString());
+          }
         } catch(TokenException e) {
             throw new TokenRuntimeException(e.getMessage());
-        } catch(DigestException e1) {
-            throw new TokenRuntimeException(e1.getMessage());
         }
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        throw new CloneNotSupportedException();
-    }
-
-    public byte[] engineDigest() {
-      try {
-        return digest.digest();
-      } catch(java.security.DigestException de) {
-        throw new TokenRuntimeException(de.getMessage());
-      }
-    }
-
-    public int engineDigest(byte[] buf, int offset, int len)
-        throws DigestException
+    public void initialize(AlgorithmParameterSpec params,
+        SecureRandom random) throws InvalidAlgorithmParameterException
     {
-        return digest.digest(buf, offset, len);
+        kpg.initialize(params, random);
     }
 
-    public int engineGetDigestLength() {
-        return digest.getOutputSize();
+    public void initialize(int keysize, SecureRandom random) {
+        kpg.initialize(keysize, random);
     }
-
-    public void engineReset() {
+        
+    public KeyPair generateKeyPair() {
+        kpg.temporaryPairs(true);
       try {
-        digest.reset();
-      } catch(java.security.DigestException de) {
-        throw new TokenRuntimeException(de.getMessage());
+        return kpg.genKeyPair();
+      } catch(TokenException e) { 
+        throw new TokenRuntimeException(e.getMessage());
       }
     }
 
-    public void engineUpdate(byte input) {
-      try {
-        digest.update(input);
-      } catch(java.security.DigestException de) {
-        throw new TokenRuntimeException(de.getMessage());
-      }
+    public static class RSA extends JSSKeyPairGeneratorSpi {
+        public RSA() {
+            super(KeyPairAlgorithm.RSA);
+        }
     }
-
-    public void engineUpdate(byte[] input, int offset, int len) {
-      try {
-        digest.update(input,offset,len);
-      } catch(java.security.DigestException de) {
-        throw new TokenRuntimeException(de.getMessage());
-      }
+    public static class DSA extends JSSKeyPairGeneratorSpi {
+        public DSA() {
+            super(KeyPairAlgorithm.DSA);
+        }
     }
 }

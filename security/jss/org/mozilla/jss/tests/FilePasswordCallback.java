@@ -11,7 +11,7 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Network Security Services for Java.
+ * The Original Code is Netscape Security Services for Java.
  *
  * The Initial Developer of the Original Code is
  * Netscape Communications Corporation.
@@ -34,13 +34,42 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.mozilla.jss.provider.java.security;
+package org.mozilla.jss.tests;
 
-import org.mozilla.jss.crypto.DigestAlgorithm;
+import org.mozilla.jss.util.*;
+import java.io.*;
+import java.util.Properties;
 
-public class MD5MessageDigestSpi extends GenericMessageDigestSpi {
+/**
+ */
+public class FilePasswordCallback implements PasswordCallback {
 
-    public MD5MessageDigestSpi() {
-        super( DigestAlgorithm.MD5 );
+    private Properties passwords;
+
+    public FilePasswordCallback(String filename) throws IOException {
+        passwords = new Properties();
+        passwords.load( new FileInputStream(filename) );
+    }
+
+    /**
+     */
+	public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
+		throws GiveUpException
+    {
+        String pw = passwords.getProperty(info.getName());
+        if( pw == null ) {
+            throw new GiveUpException();
+        } else {
+            System.out.println("***FilePasswordCallback returns " + pw);
+            return new Password(pw.toCharArray());
+        }
+    }
+
+    /**
+     */
+    public Password getPasswordAgain(PasswordCallbackInfo info)
+        throws GiveUpException
+    {
+        throw new GiveUpException();
     }
 }
