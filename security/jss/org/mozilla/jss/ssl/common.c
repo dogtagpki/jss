@@ -1,27 +1,27 @@
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Security Services for Java.
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
+ * Communications Corporation.  Portions created by Netscape are
  * Copyright (C) 2001 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -98,12 +98,12 @@ JSSL_throwSSLSocketException(JNIEnv *env, char *message)
         excepClass = (*env)->FindClass(env, INTERRUPTED_IO_EXCEPTION);
         PR_ASSERT(excepClass != NULL);
         if( excepClass == NULL ) goto finish;
-    
+
         excepCons = (*env)->GetMethodID(env, excepClass, "<init>",
             "(Ljava/lang/String;)V");
         PR_ASSERT( excepCons != NULL );
         if( excepCons == NULL ) goto finish;
-    
+
         excepObj = (*env)->NewObject(env, excepClass, excepCons, msgString);
         PR_ASSERT(excepObj != NULL);
         if( excepObj == NULL ) goto finish;
@@ -111,12 +111,12 @@ JSSL_throwSSLSocketException(JNIEnv *env, char *message)
         excepClass = (*env)->FindClass(env, SSLSOCKET_EXCEPTION);
         PR_ASSERT(excepClass != NULL);
         if( excepClass == NULL ) goto finish;
-    
+
         excepCons = (*env)->GetMethodID(env, excepClass, "<init>",
             "(Ljava/lang/String;I)V");
         PR_ASSERT( excepCons != NULL );
         if( excepCons == NULL ) goto finish;
-    
+
         excepObj = (*env)->NewObject(env, excepClass, excepCons, msgString,
             JSS_ConvertNativeErrcodeToJava(nativeErrcode));
         PR_ASSERT(excepObj != NULL);
@@ -162,7 +162,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
         newFD = JSS_SSL_javasockToPRFD(env, javaSock);
         if( newFD == NULL ) {
             JSS_throwMsg(env, SOCKET_EXCEPTION,
-                "failed to construct NSPR wrapper around java socket");   
+                "failed to construct NSPR wrapper around java socket");
             goto finish;
         }
         priv = newFD->secret;
@@ -251,7 +251,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
     }
 
     /* pass the pointer back to Java */
-    sdArray = JSS_ptrToByteArray(env, (void*) sockdata);   
+    sdArray = JSS_ptrToByteArray(env, (void*) sockdata);
     if( sdArray == NULL ) {
         /* exception was thrown */
         goto finish;
@@ -407,7 +407,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
         JSS_throwMsgPrErr(env, BIND_EXCEPTION,
             "Could not bind to address");
         goto finish;
-    }       
+    }
 
 finish:
     if( addrBAelems != NULL ) {
@@ -431,9 +431,34 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
         goto finish;
     }
 
+
+    //clean up the sock structure, but don't delete the sock since it was past to the SocketProxy
+    //and the SocketProxy will releaseNativeresources
+
     if( ! sock->closed ) {
         PR_Close(sock->fd);
-        sock->closed = PR_TRUE;
+        sock->closed = PR_TRUE; 
+
+        if( sock->socketObject != NULL ) {
+            DELETE_WEAK_GLOBAL_REF(env, sock->socketObject );
+            sock->socketObject = NULL;
+        }
+
+        if( sock->certApprovalCallback != NULL ) {
+            (*env)->DeleteGlobalRef(env, sock->certApprovalCallback);
+            sock->certApprovalCallback = NULL;
+        }
+
+        if( sock->clientCertSelectionCallback != NULL ) {
+            (*env)->DeleteGlobalRef(env, sock->clientCertSelectionCallback);
+            sock->clientCertSelectionCallback = NULL;
+        }
+
+        if( sock->clientCert != NULL ) {
+            CERT_DestroyCertificate(sock->clientCert);
+            sock->clientCert = NULL;
+        }
+
         /* this may have thrown an exception */
     }
 
