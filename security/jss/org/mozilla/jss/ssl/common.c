@@ -309,21 +309,11 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketProxy_releaseNativeResources
     (JNIEnv *env, jobject this)
 {
-    JSSL_SocketData *sock = NULL;
-
-    /* get the FD */
-    if( JSS_getPtrFromProxy(env, this, (void**)&sock) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
-
-    JSSL_DestroySocketData(env, sock);
-
-finish:
-    return;     
+   /*call to socket.close or a the finalize method calls close */
+   /* and destroy socketData */
 }
 
-void JSSL_DestroySocketResources(JNIEnv *env, JSSL_SocketData *sd) 
+void JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
 {
     if( !sd->closed ) {
         PR_Close(sd->fd);
@@ -343,21 +333,6 @@ void JSSL_DestroySocketResources(JNIEnv *env, JSSL_SocketData *sd)
         CERT_DestroyCertificate(sd->clientCert);
         sd->clientCert = NULL;
     }
-    if (sd->jsockPriv != NULL) {
-        /*jsockPriv should always be null in common.c layer which operates */
-        /*on socket created by PR_NewTCPSocket() in socketCreate or */
-        /*socketAccept; */
-        PR_ASSERT(sd->jsockPriv != NULL );
-        sd->jsockPriv == NULL;
-    }
-}
-
-void JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
-{
-    PR_ASSERT(sd != NULL);
-    /* if user did not call Socket.Close need to releaseResources */  
-    JSSL_DestroySocketResources(env, sd); 
-    /* now destroy the socket object and socket itself */
     if( sd->socketObject != NULL ) {
         DELETE_WEAK_GLOBAL_REF(env, sd->socketObject );
         sd->socketObject = NULL;
@@ -447,12 +422,8 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
         goto finish;
     }
 
-    if(!sock->closed ) {
-        /*user is closing socket. Destroy all related memory structures*/ 
-        /* related to the socket because in high load the Garbage */
-        /* Collection may not releaseNativeResources soon enough */
-        /* releaseNativeResource will free the actual structure */
-        JSSL_DestroySocketResources(env, sock);
+    if(sock != NULL) {
+        JSSL_DestroySocketData(env, sock);
     }
 
 finish:
