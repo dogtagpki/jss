@@ -393,11 +393,15 @@ public class SSLSocket extends java.net.Socket {
     /**
      * Closes this socket. Waits tills the read and write i/o
      * operations are completed, then any further i/o operation
-     * throws an exception that the socket is closed. Note, if the
-     * I/o operation never returns this will result in the close 
-     * operation hanging, but we will fix this very soon. 
+     * throws an exception that the socket is closed.      
      */
     public void close() throws IOException {
+        if (ioRead) {
+            shutdownNative(SocketBase.PR_SHUTDOWN_RCV);
+        }
+        if (ioWrite) {
+            shutdownNative(SocketBase.PR_SHUTDOWN_SEND);
+        }
         synchronized (readLock) {
             synchronized (writeLock) {
                 isClosed = true;
