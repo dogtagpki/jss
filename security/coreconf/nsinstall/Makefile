@@ -44,7 +44,7 @@ PROGRAM		= nsinstall
 
 include $(DEPTH)/coreconf/config.mk
 
-ifeq (,$(filter-out OS2 WINNT,$(OS_ARCH)))
+ifeq ($(OS_ARCH),WINNT)
 PROGRAM		=
 else
 TARGETS		= $(PROGRAM) $(PLSRCS:.pl=)
