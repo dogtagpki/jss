@@ -54,6 +54,8 @@ endif
 	echo "%dir /opt/sun" >>temp.spec
 	echo "%dir /opt/sun/private" >>temp.spec
 	echo "%dir /opt/sun/private/lib" >>temp.spec
+	echo "%dir /opt/sun/private/share" >>temp.spec
+	echo "%dir /opt/sun/private/share/lib" >>temp.spec
 	find opt \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	echo "" >>temp.spec
