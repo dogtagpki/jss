@@ -388,7 +388,10 @@ public class SSLSocket extends java.net.Socket {
      * Closes this socket.
      */
     public void close() throws IOException {
-        base.close();
+        if( sockProxy != null ) {
+             base.close();
+             sockProxy = null;
+         }
     }
 
     private native void socketConnect(byte[] addr, String hostname, int port)

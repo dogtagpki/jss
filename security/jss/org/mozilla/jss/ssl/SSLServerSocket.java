@@ -188,7 +188,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      */
     public static native void clearSessionCache();
 
-    protected void finalize() throws Throwable { }
+    
 
 
     /**
@@ -198,11 +198,17 @@ public class SSLServerSocket extends java.net.ServerSocket {
         return base.getLocalPort();
     }
 
+     protected void finalize() throws Throwable {
+         close();
+     }
     /**
      * Closes this socket.
      */
     public void close() throws IOException {
-        base.close();
+        if( sockProxy != null ) {
+             base.close();
+             sockProxy = null;
+         }
     }
 
     // This directory is used as the default for the Session ID cache
