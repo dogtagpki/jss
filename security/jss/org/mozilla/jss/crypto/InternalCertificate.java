@@ -46,9 +46,10 @@ public interface InternalCertificate extends X509Certificate
     public static final int VALID_PEER          = (1<<0);
     public static final int TRUSTED_PEER        = (1<<1); // CERTDB_TRUSTED
     public static final int VALID_CA            = (1<<3);
-    public static final int TRUSTED_CA          = (1<<4);
+    public static final int TRUSTED_CA          = (1<<4) | (1<<3);
     public static final int USER                = (1<<6);
-    public static final int TRUSTED_CLIENT_CA   = (1<<7);
+    public static final int TRUSTED_CLIENT_CA   = (1<<7) | (1<<3);
+
 
     /**
      * Set the SSL trust flags for this certificate.
