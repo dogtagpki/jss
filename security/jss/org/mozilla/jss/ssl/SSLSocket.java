@@ -393,8 +393,9 @@ public class SSLSocket extends java.net.Socket {
 
     public void close() throws IOException {
         if (isClosed) {
-            return;
+            return;  /* finalize will call close if user did not */
         }
+        
         if (ioRead) {
             shutdownNativeLow(SocketBase.PR_SHUTDOWN_RCV);
         } 

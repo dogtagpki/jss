@@ -99,13 +99,11 @@ class SocketBase {
     static final int SSL_POLICY_EXPORT = 10;
     static final int SSL_POLICY_FRANCE = 11;
 
+    // close method is locked in SSLSocket for reader and writer
     void close() throws IOException {
         socketClose();
     }
-
-    // This method is synchronized because there is a potential race
-    // condition in the native code.
-    native synchronized void socketClose() throws IOException;
+    native void socketClose() throws IOException;
 
     private boolean requestingClientAuth = false;
 
