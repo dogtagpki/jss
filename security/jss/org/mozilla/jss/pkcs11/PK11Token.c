@@ -1130,7 +1130,7 @@ GenerateCertRequest(JNIEnv *env,
 #ifdef DEBUG      
 	printf("data = %s\n", *b64request);
 #endif
-        PORT_FreeArena(log.arena, PR_FALSE);
+        PORT_FreeArena(arena , PR_FALSE);
 }
 
 /******************************************************************
