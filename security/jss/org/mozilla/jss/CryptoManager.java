@@ -1330,7 +1330,7 @@ public final class CryptoManager implements TokenSupplier
     {
         if( ! mNativeLibrariesLoaded )
         {
-            System.loadLibrary("jss3");
+            System.loadLibrary("jss4");
             Debug.trace(Debug.VERBOSE, "jss library loaded");
             mNativeLibrariesLoaded = true;
         }
