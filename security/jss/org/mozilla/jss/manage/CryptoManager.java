@@ -833,7 +833,7 @@ public final class CryptoManager implements TokenSupplier
      * @return An array of all CA certificates stored permanently
      *      in the trust database.
      */
-    public native InternalCertificate[]
+    public native X509Certificate[]
     getCACerts();
 
     /**
@@ -843,7 +843,7 @@ public final class CryptoManager implements TokenSupplier
      * @return An array of all certificates stored permanently
      *      in the trust database.
      */
-    public native InternalCertificate[]
+    public native X509Certificate[]
     getPermCerts();
 
     /**
