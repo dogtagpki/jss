@@ -1,4 +1,4 @@
-#
+# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Netscape Security Services for Java.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,51 +29,18 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-#
+# 
 
-#######################################################################
-# Master "Core Components" for computing program prefixes             #
-#######################################################################
+javadoc:
+	@echo Steve's Javadoc rule -------------------------
+	/usr/java/jdk1.1.5/bin/javadoc -sourcepath $(JAVA_HOME)/lib/classes.zip:$(CORE_DEPTH)/ninja -d /u/stevep/javadoc $(JSRCS)
+	@echo End of Steve's Javadoc rule ------------------
 
-#
-# Object prefixes
-#
+runserver:
+	$(DEBUG_CMD) $(SOURCE_BIN_DIR)/jssjava -classpath $(JAVA_HOME)/lib/classes.zip:$(SOURCE_CLASSES_DIR)_DBG org.mozilla.jss.ssl.SSLServer
 
-ifndef OBJ_PREFIX
-	OBJ_PREFIX = 
-endif
+runclient:
+	$(DEBUG_CMD) $(SOURCE_BIN_DIR)/jssjava -classpath $(JAVA_HOME)/lib/classes.zip:$(SOURCE_CLASSES_DIR)_DBG org.mozilla.jss.ssl.SSLClient
 
-#
-# Library suffixes
-#
-
-ifndef LIB_PREFIX
-	ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
-		LIB_PREFIX = 
-	else
-		LIB_PREFIX = lib
-	endif
-endif
-
-
-ifndef DLL_PREFIX
-	ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
-		DLL_PREFIX = 
-	else
-		DLL_PREFIX = lib
-	endif
-endif
-
-
-ifndef IMPORT_LIB_PREFIX
-	IMPORT_LIB_PREFIX = 
-endif
-
-#
-# Program prefixes
-#
-
-ifndef PROG_PREFIX
-	PROG_PREFIX = 
-endif
-
+debugcore:
+	dbx $(SOURCE_BIN_DIR)/jssjava core
