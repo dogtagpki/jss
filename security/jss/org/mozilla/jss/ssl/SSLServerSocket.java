@@ -208,7 +208,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     /**
      * Closes this socket.
      */
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
         if( sockProxy != null ) {
              base.close();
              sockProxy = null;
