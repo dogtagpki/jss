@@ -396,6 +396,9 @@ public class SSLSocket extends java.net.Socket {
      * throws an exception that the socket is closed.      
      */
     public void close() throws IOException {
+        if (isClosed) {
+            return;
+        }
         if (ioRead) {
             shutdownNative(SocketBase.PR_SHUTDOWN_RCV);
         }
@@ -404,8 +407,10 @@ public class SSLSocket extends java.net.Socket {
         }
         synchronized (readLock) {
             synchronized (writeLock) {
-                isClosed = true;
+                if (!isClosed) {
                     base.close();
+                    isClosed = true;
+                }
             }
         }
     }
