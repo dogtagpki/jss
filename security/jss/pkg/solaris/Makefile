@@ -50,16 +50,16 @@ $(ROOT) $(ROOT)/%:
 ifdef USE_64
 $(ROOT)/usr/lib/mps/sparcv9: $(ROOT)/usr/lib
 	$(LN) -sf ../../../../$(DIST)/lib $@
-../../../../$(DIST)/lib/jss32.jar: $(IMPORT_XPCLASS_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)
+../../../../$(DIST)/lib/jss312.jar: $(IMPORT_XPCLASS_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)
 	$(LN) -sf $(IMPORT_XPCLASS_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $@
 else
 $(ROOT)/usr/lib/mps: $(ROOT)/usr/lib
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)"
 	$(LN) -sf ../../../$(DIST)/lib $@
-#	$(LN) -sf $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/jss32.jar
-	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/jss32.jar
+#	$(LN) -sf $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/jss312.jar
+	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/jss312.jar
 
-#$(ROOT)/usr/lib/mps/jss32.jar: $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) 
-#$(ROOT)/usr/lib/mps/jss32.jar: $(ROOT)/usr/lib/mps
+#$(ROOT)/usr/lib/mps/jss312.jar: $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) 
+#$(ROOT)/usr/lib/mps/jss312.jar: $(ROOT)/usr/lib/mps
 #	$(LN) -sf $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $@
 endif
