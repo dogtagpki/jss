@@ -29,43 +29,37 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-
-#
-# Config stuff for HP-UX
 #
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
+#
+# Config stuff for WINNT 5.1 (Windows XP)
+#
+# This makefile defines the following variables:
+# OS_CFLAGS and OS_DLLFLAGS.
 
-DEFAULT_COMPILER = cc
+include $(CORE_DEPTH)/coreconf/WIN32.mk
 
-CPU_ARCH   = hppa
-DLL_SUFFIX = sl
-CC         = cc
-CCC        = CC
-OS_CFLAGS  += -Ae $(DSO_CFLAGS) -DHPUX -D$(CPU_ARCH) -D_HPUX_SOURCE
-
-ifeq ($(DEFAULT_IMPL_STRATEGY),_PTH)
-	USE_PTHREADS = 1
-	ifeq ($(CLASSIC_NSPR),1)
-		USE_PTHREADS =
-		IMPL_STRATEGY = _CLASSIC
-	endif
-	ifeq ($(PTHREADS_USER),1)
-		USE_PTHREADS =
-		IMPL_STRATEGY = _PTH_USER
+ifeq ($(CPU_ARCH), x386)
+	OS_CFLAGS += -W3 -nologo
+	DEFINES += -D_X86_
+else 
+	ifeq ($(CPU_ARCH), MIPS)
+		#OS_CFLAGS += -W3 -nologo
+		#DEFINES += -D_MIPS_
+		OS_CFLAGS += -W3 -nologo
+	else 
+		ifeq ($(CPU_ARCH), ALPHA)
+			OS_CFLAGS += -W3 -nologo
+			DEFINES += -D_ALPHA_=1
+		endif
 	endif
 endif
 
-ifdef PTHREADS_USER
-	OS_CFLAGS	+= -D_POSIX_C_SOURCE=199506L
-endif
+OS_DLLFLAGS += -nologo -DLL -SUBSYSTEM:WINDOWS -PDB:NONE
+#
+# Win NT needs -GT so that fibers can work
+#
+OS_CFLAGS += -GT
+DEFINES += -DWINNT
 
-LDFLAGS			= -z -Wl,+s
-
-MKSHLIB			= $(LD) $(DSO_LDOPTS)
-
-DSO_LDOPTS		= -b +h $(notdir $@)
-DSO_LDFLAGS		=
-
-# +Z generates position independent code for use in shared libraries.
-DSO_CFLAGS = +Z
+NSPR31_LIB_PREFIX = lib

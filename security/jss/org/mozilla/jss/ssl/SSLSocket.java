@@ -735,6 +735,12 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA      =  0x0038;
     public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA      =  0x0039;
     public final static int TLS_DH_ANON_WITH_AES_256_CBC_SHA      =  0x003A;
+    public final static int TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA   =  0x0062; 
+    public final static int TLS_RSA_EXPORT1024_WITH_RC4_56_SHA    =  0x0064;
+
+    public final static int TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA = 0x0063; 
+    public final static int TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA  = 0x0065;
+    public final static int TLS_DHE_DSS_WITH_RC4_128_SHA            = 0x0066;
 
 }
 
