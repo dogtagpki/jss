@@ -677,9 +677,9 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
 {
     JSSL_SocketData *sock = NULL;
     jbyte *buf = NULL;
-    jint size;
+    jint size = 0;
     PRIntervalTime ivtimeout;
-    jint nread;
+    jint nread =0;
 
     /* get the socket */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -692,7 +692,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     }
 
     size = (*env)->GetArrayLength(env, bufBA);
-    if( off < 0 || len < 0 || (off+len) > size) {
+    if( off < 0 || len <= 0 || (off+len) > size) {
         JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
         goto finish;
     }
@@ -780,7 +780,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
 {
     JSSL_SocketData *sock = NULL;
     jbyte *buf = NULL;
-    jint size;
+    jint size = 0;
     PRIntervalTime ivtimeout;
 
     if( bufBA == NULL ) {
@@ -789,7 +789,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
     }
 
     size = (*env)->GetArrayLength(env, bufBA);
-    if( off < 0 || len < 0 || (off+len) > size ) {
+    if( off < 0 || len <= 0 || (off+len) > size ) {
         JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
         goto finish;
     }
