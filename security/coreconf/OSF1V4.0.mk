@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,23 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
+# On OSF1 V4.0, pthreads is the default implementation strategy.
+# Classic nspr is also available.
+#
+ifneq ($(OS_RELEASE),V3.2)
+	USE_PTHREADS = 1
+	ifeq ($(CLASSIC_NSPR), 1)
+		USE_PTHREADS =
+		IMPL_STRATEGY := _CLASSIC
+	endif
+endif
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+#
+# Config stuff for DEC OSF/1 V4.0
+#
+include $(CORE_DEPTH)/coreconf/OSF1.mk
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
-
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+ifeq ($(OS_RELEASE),V4.0)
+	OS_CFLAGS += -DOSF1V4
+endif

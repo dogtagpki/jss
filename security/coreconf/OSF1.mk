@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,38 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
+# Config stuff for DEC OSF/1
+#
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+#
+# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
+# which we use to stop LOOP_OVER_DIRS submakes as soon as any
+# submake fails.  So we use the Korn shell instead.
+#
+SHELL = /usr/bin/ksh
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+include $(CORE_DEPTH)/coreconf/UNIX.mk
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+DEFAULT_COMPILER = cc
+
+CC         = cc
+OS_CFLAGS += $(NON_LD_FLAGS) -std1
+CCC        = cxx
+RANLIB     = /bin/true
+CPU_ARCH   = alpha
+
+ifdef BUILD_OPT
+	OPTIMIZER += -Olimit 4000
+endif
+
+NON_LD_FLAGS += -ieee_with_inexact
+OS_CFLAGS    += -DOSF1 -D_REENTRANT 
+
+ifeq ($(USE_PTHREADS),1)
+	OS_CFLAGS += -pthread
+endif
+
+# The command to build a shared library on OSF1.
+MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
+DSO_LDOPTS += -shared

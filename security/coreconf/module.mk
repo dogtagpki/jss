@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,36 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+#######################################################################
+# The master "Core Components" source and release component directory #
+# names are ALWAYS identical and are the value of $(MODULE).          #
+# NOTE:  A component is also called a module or a subsystem.          #
+#######################################################################
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+#
+#  All "Core Components" <component>-specific source-side tags must
+#  always be identified for compiling/linking purposes
+#
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+ifndef JAVA_SOURCE_COMPONENT
+	JAVA_SOURCE_COMPONENT = java
+endif
+
+ifndef NETLIB_SOURCE_COMPONENT
+	NETLIB_SOURCE_COMPONENT = netlib
+endif
+
+ifndef NSPR_SOURCE_COMPONENT
+	NSPR_SOURCE_COMPONENT = nspr20
+endif
+
+ifndef SECTOOLS_SOURCE_COMPONENT
+	SECTOOLS_SOURCE_COMPONENT = sectools
+endif
+
+ifndef SECURITY_SOURCE_COMPONENT
+	SECURITY_SOURCE_COMPONENT = security
+endif
+

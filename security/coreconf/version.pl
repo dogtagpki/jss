@@ -1,5 +1,5 @@
+#!/usr/sbin/perl
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +10,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +30,47 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+# Compose lowercase alphabet
+@alphabet = ( "a", "b", "c", "d", "e", "f", "g", "h",
+              "i", "j", "k", "l", "m", "n", "o", "p",
+              "q", "r", "s", "t", "u", "v", "w", "x",
+              "y", "z" );
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+# Compute year
+$year = (localtime)[5] + 1900;
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+# Compute month
+$month = (localtime)[4] + 1;
+
+# Compute day
+$day = (localtime)[3];
+
+# Compute base build number
+$version = sprintf( "%d%02d%02d", $year, $month, $day );
+$directory = sprintf( "%s\/%s\/%d%02d%02d", $ARGV[0], $ARGV[1], $year, $month, $day );
+
+# Print out the name of the first version directory which does not exist
+#if( ! -e  $directory )
+#{
+    print $version;
+#}
+#else
+#{
+#    # Loop through combinations
+#    foreach $ch1 (@alphabet)
+#    {
+#	foreach $ch2 (@alphabet)
+#	{
+#	    $version = sprintf( "%d%02d%02d%s%s", $year, $month, $day, $ch1, $ch2 );
+#	    $directory = sprintf( "%s\/%s\/%d%02d%02d%s%s", $ARGV[0], $ARGV[1], $year, $month, $day, $ch1, $ch2 );
+#	    if( ! -e  $directory )
+#	    {
+#		print STDOUT $version;
+#		exit;
+#	    }
+#	}
+#    }
+#}
+
