@@ -43,7 +43,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Algorithm {
 
-	private Algorithm() { }
+    private Algorithm() { }
 
     /**
      * @param oidIndex Index of the oid that this algorithm represents.
@@ -51,7 +51,7 @@ public class Algorithm {
      */
     protected Algorithm(int oidIndex, String name) {
         this.oidIndex = oidIndex;
-		this.name = name;
+        this.name = name;
     }
 
     /**
@@ -85,12 +85,12 @@ public class Algorithm {
         }
     }
 
-	/**
-	 * Returns a String representation of the algorithm.
-	 */
-	public String toString() {
-		return name;
-	}
+    /**
+     * Returns a String representation of the algorithm.
+     */
+    public String toString() {
+        return name;
+    }
 
     /**
      * Returns the object identifier for this algorithm.
@@ -156,7 +156,7 @@ public class Algorithm {
      * Index into the SECOidTag array in Algorithm.c.
      */
     protected int oidIndex;
-	String name;
+    String name;
     protected OBJECT_IDENTIFIER oid;
     private Class[] parameterClasses=new Class[0];
 
@@ -191,11 +191,11 @@ public class Algorithm {
     protected static final short SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC=19;
     protected static final short SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC=20;
     protected static final short
-		SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4=21;
+        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4=21;
     protected static final short
-		SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4=22;
+        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4=22;
     protected static final short
-		SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC=23;
+        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC=23;
     protected static final short SEC_OID_MD2=24;
     protected static final short SEC_OID_MD5=25;
     protected static final short SEC_OID_SHA1=26;
@@ -214,4 +214,12 @@ public class Algorithm {
     protected static final short CKM_AES_CBC_PAD=35;
     protected static final short CKM_RC2_CBC_PAD=36;
     protected static final short CKM_RC2_KEY_GEN=37;
+    //FIPS 180-2
+    protected static final short SEC_OID_SHA256=38;
+    protected static final short SEC_OID_SHA384=39;
+    protected static final short SEC_OID_SHA512=40;
+    protected static final short SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION=41;
+    protected static final short SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION=42;
+    protected static final short SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION=43;
+
 }

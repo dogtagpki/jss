@@ -107,7 +107,7 @@ sub setup_vars {
     $java = $java . $ENV{NATIVE_FLAG};
 
     if ($ENV{USE_64}) {
-	$java = $java . " -d64";
+        $java = $java . " -d64";
     }
 
     $pwfile = "passwords";
@@ -193,3 +193,10 @@ print STDERR "============= test Secret Decoder Ring\n";
 $result = system("$java org.mozilla.jss.tests.TestSDR $testdir $pwfile");
 $result >>=8;
 $result and die "TestSDR returned $result";
+
+# test JCA Sig Test
+#
+print STDERR "============= test Mozilla-JSS SigatureSPI JCASitTest\n";
+$result = system("$java org.mozilla.jss.tests.JCASigTest $testdir $pwfile");
+$result >>=8;
+$result and die "TestJCASigTest returned $result";
