@@ -331,7 +331,7 @@ SECStatus
 JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
              PRBool isServer)
 {
-    char *          hostname;
+    char *          hostname = NULL;
     SECStatus         rv    = SECFailure;
     SECCertUsage      certUsage;
     CERTCertificate   *peerCert=NULL;
@@ -370,6 +370,9 @@ JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
         rv = SECFailure;
 
     if (peerCert) CERT_DestroyCertificate(peerCert);
+    if (hostname != NULL) {
+        PR_Free(hostname);
+    }
     return rv;
 }
 
@@ -646,7 +649,7 @@ SECStatus
 JSSL_ConfirmExpiredPeerCert(void *arg, PRFileDesc *fd, PRBool checkSig,
              PRBool isServer)
 {
-    char* hostname;
+    char* hostname = NULL;
     SECStatus rv=SECFailure;
     SECCertUsage certUsage;
     CERTCertificate* peerCert=NULL;
@@ -691,5 +694,10 @@ JSSL_ConfirmExpiredPeerCert(void *arg, PRFileDesc *fd, PRBool checkSig,
 
 finish:
     if (peerCert!=NULL) CERT_DestroyCertificate(peerCert);
+
+    if (hostname != NULL) {
+        PR_Free(hostname);
+    }
+
     return rv;
 }

@@ -566,6 +566,9 @@ finish:
     if( issuer != NULL ) {
         PR_Free(issuer);
     }
+    if (subject != NULL) {
+        PR_Free(subject);
+    }
     /* subject is not allocated so it doesn't need to be freed */
     if( peerCert != NULL ) {
         CERT_DestroyCertificate(peerCert);
