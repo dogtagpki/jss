@@ -19,21 +19,21 @@ include $(CORE_DEPTH)/coreconf/config.mk
 publish:
 	$(MAKE) clean
 	mkdir -p SOURCES SRPMS RPMS BUILD
-	mkdir -p usr/lib/mps/secv1
+	mkdir -p opt/sun/private/lib
 	find $(CORE_DEPTH)/../dist/$(OBJDIR)/lib -type l \
 		\( -name "*jss*.so" \) \
-        -exec cp {} usr/lib/mps/secv1 \;
+        -exec cp {} opt/sun/private/lib \;
 #	(cd $(CORE_DEPTH)/../dist/public && tar cphf - .) \
-#		| (mkdir -p usr/include/mps && cd usr/include/mps && tar xvfBp -)
-	mkdir -p usr/share/lib/mps/secv1
+#		| (mkdir -p opt/sun/private/include && cd opt/sun/private/include && tar xvfBp -)
+	mkdir -p opt/sun/private/share/lib 
 ifeq ($(BUILD_OPT), 1)
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/xpclass.jar \
-		usr/share/lib/mps/secv1/jss3.jar
+		opt/sun/private/share/lib/jss3.jar
 else
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes_DBG/xpclass_dbg.jar \
-		usr/share/lib/mps/secv1/jss3.jar
+		opt/sun/private/share/lib/jss3.jar
 endif
-	tar czvf $(NAME)-$(VERSION).tar.gz usr
+	tar czvf $(NAME)-$(VERSION).tar.gz opt 
 	echo "%define _topdir `pwd`" >temp.spec
 	sed -e "s/NAME_REPLACE/$(NAME)/" \
 		-e "s/VERSION_REPLACE/$(VERSION)/" \
@@ -42,24 +42,24 @@ endif
 	echo "" >>temp.spec
 	echo "%files" >>temp.spec
 	echo "%defattr(-,root,root)" >>temp.spec
-	echo "%dir /usr" >>temp.spec
-	echo "%dir /usr/lib" >>temp.spec
-	echo "%dir /usr/lib/mps" >>temp.spec
-	echo "%dir /usr/lib/mps/secv1" >>temp.spec
-	find usr \( -name "*.so" -o -name "*.jar" \) \
+	echo "%dir /opt" >>temp.spec
+	echo "%dir /opt/sun" >>temp.spec
+	echo "%dir /opt/sun/private" >>temp.spec
+	echo "%dir /opt/sun/private/lib" >>temp.spec
+	find opt \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	echo "" >>temp.spec
 	echo "%files devel" >>temp.spec
 	echo "%defattr(-,root,root)" >>temp.spec
-	find usr -type d | sed -e "s-^-%dir /-" >>temp.spec
-	find usr -type f ! \( -name "*.so" -o -name "*.jar" \) \
+	find opt -type d | sed -e "s-^-%dir /-" >>temp.spec
+	find opt -type f ! \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	cp $(NAME)-$(VERSION).tar.gz SOURCES
 	rpm -ba temp.spec
 
 clean::
 	rm -rf SOURCES SRPMS RPMS BUILD
-	rm -rf usr
+	rm -rf opt 
 	rm -f temp.spec
 	rm -f $(NAME)-$(VERSION).tar.gz
 
