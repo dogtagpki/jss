@@ -2,7 +2,7 @@
 #
 #ident	"$Id$"
 #
-# Copyright 2002 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
 # Simple script which builds the awk_pkginfo awk script.  This awk script
