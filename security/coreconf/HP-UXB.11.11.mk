@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 2001 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,28 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
+# On HP-UX 10.30 and 11.x, the default implementation strategy is
+# pthreads.  Classic nspr and pthreads-user are also available.
+#
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+ifeq ($(OS_RELEASE),B.11.11)
+OS_CFLAGS		+= -DHPUX10
+OS_CFLAGS               += -D_USE_BIG_FDS
+DEFAULT_IMPL_STRATEGY = _PTH
+endif
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+#
+# To use the true pthread (kernel thread) library on 10.30 and
+# 11.x, we should define _POSIX_C_SOURCE to be 199506L.
+# The _REENTRANT macro is deprecated.
+#
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+ifdef USE_PTHREADS
+	OS_CFLAGS	+= -D_POSIX_C_SOURCE=199506L
+endif
+
+#
+# Config stuff for HP-UXB.11.11.
+#
+include $(CORE_DEPTH)/coreconf/HP-UXB.11.mk

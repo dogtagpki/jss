@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,33 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
+# Config stuff for NEC Mips SYSV
+#
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+include $(CORE_DEPTH)/coreconf/UNIX.mk
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+DEFAULT_COMPILER = $(CORE_DEPTH)/build/hcc
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+CPU_ARCH		= mips
+
+ifdef NS_USE_GCC
+CC			= gcc
+CCC			= g++
+else
+CC			= $(CORE_DEPTH)/build/hcc
+OS_CFLAGS		= -Xa -KGnum=0 -KOlimit=4000
+CCC			= g++
+endif
+
+MKSHLIB			= $(LD) $(DSO_LDOPTS)
+
+RANLIB			= /bin/true
+
+OS_CFLAGS		+= $(ODD_CFLAGS) -DSVR4 -D__SVR4 -DNEC -Dnec_ews -DHAVE_STRERROR
+OS_LIBS			= -lsocket -lnsl -ldl $(LDOPTIONS)
+LDOPTIONS		= -lc -L/usr/ucblib -lucb
+
+NOSUCHFILE		= /nec-rm-f-sucks
+
+DSO_LDOPTS		= -G

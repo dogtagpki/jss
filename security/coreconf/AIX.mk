@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,46 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
+# Config stuff for AIX.
+#
+include $(CORE_DEPTH)/coreconf/UNIX.mk
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+#
+# There are two implementation strategies available on AIX:
+# pthreads, and pthreads-user.  The default is pthreads.
+# In both strategies, we need to use pthread_user.c, instead of
+# aix.c.  The fact that aix.c is never used is somewhat strange.
+# 
+# So we need to do the following:
+# - Default (PTHREADS_USER not defined in the environment or on
+#   the command line):
+#   Set PTHREADS_USER=1, USE_PTHREADS=1
+# - PTHREADS_USER=1 set in the environment or on the command line:
+#   Do nothing.
+#
+ifeq ($(PTHREADS_USER),1)
+	USE_PTHREADS =            # just to be safe
+	IMPL_STRATEGY = _PTH_USER
+else
+	USE_PTHREADS = 1
+	PTHREADS_USER = 1
+endif
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+DEFAULT_COMPILER = xlC_r
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+CC		= xlC_r
+CCC		= xlC_r
+
+CPU_ARCH	= rs6000
+
+RANLIB		= ranlib
+
+OS_CFLAGS	= -DAIX -DSYSV
+ifeq ($(CC),xlC_r)
+	OS_CFLAGS += -qarch=com
+endif
+
+AIX_WRAP	= $(DIST)/lib/aixwrap.o
+AIX_TMP		= $(OBJDIR)/_aix_tmp.o
+OS_LIBS		+= -lsvld

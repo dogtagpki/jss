@@ -1,5 +1,4 @@
 #
-# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -10,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -30,19 +29,30 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
+#
 
-CORE_DEPTH = ..
- 
-MODULE = jss
- 
-IMPORTS =	nss/NSS_3_3_4_BETA2\
-			nspr20/v4.1.4-beta3 \
-			$(NULL)
+#######################################################################
+# Master "Core Components" include switch for support header files    #
+#######################################################################
 
-DIRS =  org     \
-        lib     \
-        $(NULL)
+#
+#  Always append source-side machine-dependent (md) and cross-platform
+#  (xp) include paths
+#
 
-PACKAGE_DIR = _TOP
- 
-RELEASE = jss
+INCLUDES  += -I$(SOURCE_MDHEADERS_DIR) 
+
+ifneq ($(OS_TARGET),WIN16)
+INCLUDES  += -I$(SOURCE_XPHEADERS_DIR)
+endif
+
+#
+#  Only append source-side private cross-platform include paths for
+#  sectools
+#
+
+INCLUDES += -I$(SOURCE_XPPRIVATE_DIR)
+
+ifdef MOZILLA_CLIENT
+INCLUDES += -I$(SOURCE_XP_DIR)/include $(MOZILLA_INCLUDES)
+endif
