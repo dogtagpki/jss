@@ -109,14 +109,8 @@ public class SSLClientAuth implements Runnable {
         CryptoManager cm = CryptoManager.getInstance();
 
         CryptoToken tok = cm.getInternalKeyStorageToken();
-        if(!tok.passwordIsInitialized()){
-           tok.initPassword( new NullPasswordCallback(),
-            new Password(args[1].toCharArray()));
-        }
-
-        Password pass = new Password(args[1].toCharArray());
-        tok.login(pass);
-        pass.clear();
+        PasswordCallback cb = new FilePasswordCallback(args[1]);
+        tok.login(cb);
 
         SecureRandom rng= SecureRandom.getInstance("pkcs11prng",
             "Mozilla-JSS");

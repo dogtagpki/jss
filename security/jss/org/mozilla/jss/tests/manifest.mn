@@ -42,7 +42,6 @@ REQUIRES =      nspr20 security
 PACKAGE = org/mozilla/jss/tests
 
 PRIVATE_CLASSES =                                                   \
-                    DigestTest                              \
                     SelfTest                           \
                     SymKeyGen                          \
                     PK10Gen                            \
@@ -53,10 +52,13 @@ PRIVATE_CLASSES =                                                   \
 
 CLASSES =                                                   \
                     ListCerts                               \
+                    ListCACerts                               \
                     SSLClientAuth                           \
-                    SetupDBs                                \
                     SigTest                                 \
+                    SetupDBs                                \
+                    FilePasswordCallback                    \
                     socketTest                              \
+                    DigestTest                              \
                     TestKeyGen                              \
                     AddCert                                  \
                     ModifyTrust                              \
@@ -64,7 +66,6 @@ CLASSES =                                                   \
                     $(NULL)
 
 JSRCS =                                                                                         \
-                    DigestTest.java                         \
                     SelfTest.java                           \
                     SymKeyGen.java                          \
                     PK10Gen.java                          \
@@ -72,10 +73,13 @@ JSRCS =                                                                         
                     CloseDBs.java                           \
                     KeyWrapping.java                        \
                     ListCerts.java                           \
-                    socketTest.java                           \
+                    ListCACerts.java                           \
                     TestKeyGen.java                         \
+                    socketTest.java                           \
+                    DigestTest.java                           \
                     SigTest.java                            \
                     SetupDBs.java                           \
+                    FilePasswordCallback.java               \
                     SSLClientAuth.java                      \
                     AddCert.java                             \
                     ModifyTrust.java                         \
