@@ -36,6 +36,7 @@ package org.mozilla.jss.crypto;
 import java.security.NoSuchAlgorithmException;
 import org.mozilla.jss.asn1.*;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.RC2ParameterSpec;
 import java.util.*;
 
 /**
@@ -308,27 +309,11 @@ public class EncryptionAlgorithm extends Algorithm {
         return padding;
     }
 
-    //
-    // In JDK 1.4, Sun introduced javax.crypto.spec.IvParameterSpec,
-    // which obsoletes org.mozilla.jss.crypto.IVParameterSpec. However,
-    // we still need to support pre-1.4 runtimes, so we have to be
-    // prepared for this new class not to be available. Here we try to load
-    // the new 1.4 class. If we succeed, we will accept either JSS's
-    // IVParameterSpec or Java's IvParameterSpec. If we fail, which will
-    // happen if we are running a pre-1.4 runtime, we just accept
-    // JSS's IVParameterSpec.
-    //
     private static Class[] IVParameterSpecClasses = null;
     static {
-        try {
-            IVParameterSpecClasses = new Class[2];
-            IVParameterSpecClasses[0] = IVParameterSpec.class;
-            IVParameterSpecClasses[1] = IvParameterSpec.class;
-        } catch(NoClassDefFoundError e) {
-            // We must be running on a pre-1.4 JRE.
-            IVParameterSpecClasses = new Class[1];
-            IVParameterSpecClasses[0] = IVParameterSpec.class;
-        }
+        IVParameterSpecClasses = new Class[2];
+        IVParameterSpecClasses[0] = IVParameterSpec.class;
+        IVParameterSpecClasses[1] = IvParameterSpec.class;
     }
 
     /**
@@ -374,7 +359,15 @@ public class EncryptionAlgorithm extends Algorithm {
 
     public static final EncryptionAlgorithm
     RC2_CBC = new EncryptionAlgorithm(SEC_OID_RC2_CBC, Alg.RC2, Mode.CBC,
-        Padding.NONE, IVParameterSpecClasses, 8,
+        Padding.NONE, RC2ParameterSpec.class, 8,
+        null, 0); // no oid, see comment below
+
+    // Which algorithm should be associated with this OID, RC2_CBC or
+    // RC2_CBC_PAD? NSS says RC2_CBC, but PKCS #5 v2.0 says RC2_CBC_PAD.
+    // See NSS bug 202925.
+    public static final EncryptionAlgorithm
+    RC2_CBC_PAD = new EncryptionAlgorithm(CKM_RC2_CBC_PAD, Alg.RC2, Mode.CBC,
+        Padding.PKCS5, RC2ParameterSpec.class, 8,
         OBJECT_IDENTIFIER.RSA_CIPHER.subBranch(2), 0);
 
     public static final OBJECT_IDENTIFIER AES_ROOT_OID = 

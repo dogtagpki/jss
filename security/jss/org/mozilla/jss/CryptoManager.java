@@ -747,9 +747,7 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * This function sets the global password callback.  It is
-     * not thread-safe to change this. A better strategy than using
-     * callbacks is to explicitly login to the tokens you need to use.
-     * Password callbacks are then only used as a last resort.
+     * not thread-safe to change this.
      * <p>The callback may be NULL, in which case password callbacks will
      * fail gracefully.
      */
@@ -863,10 +861,13 @@ public final class CryptoManager implements TokenSupplier
 
             int position = java.security.Security.insertProviderAt(
                             new JSSProvider(), 1);
-            if(position==-1) {
-                Debug.trace(Debug.ERROR,
-                    "Unable to install default provider");
-            }
+            // This returns -1 if the provider was already installed, in which
+            // case it is not installed again.  Is this
+            // an error? I don't think so, although it might be confusing
+            // if the provider is not in the position they expected.
+            // However, this will only happen if they are installing the
+            // provider themselves, so presumably they know what they're
+            // doing.
         }
         if( values.removeSunProvider ) {
             java.security.Security.removeProvider("SUN");
@@ -1302,7 +1303,7 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_3_1";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_4";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
