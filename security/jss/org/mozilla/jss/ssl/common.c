@@ -309,18 +309,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketProxy_releaseNativeResources
     (JNIEnv *env, jobject this)
 {
-    JSSL_SocketData *sock = NULL;
-
-    /* get the FD */
-    if( JSS_getPtrFromProxy(env, this, (void**)&sock) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
-
-    JSSL_DestroySocketData(env, sock);
-
-finish:
-    return;
+    
 }
 
 void
@@ -347,6 +336,7 @@ JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
         CERT_DestroyCertificate(sd->clientCert);
     }
     PR_Free(sd);
+    sd=NULL;
 }
 
 /*
@@ -434,33 +424,12 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
 
     /*clean up the sock structure, but don't delete the sock since it was past to the SocketProxy */
     /*and the SocketProxy will releaseNativeresources */
-
-    if( ! sock->closed ) {
-        PR_Close(sock->fd);
-        sock->closed = PR_TRUE;
-
-        if( sock->socketObject != NULL ) {
-            DELETE_WEAK_GLOBAL_REF(env, sock->socketObject );
-            sock->socketObject = NULL;
-        }
-
-        if( sock->certApprovalCallback != NULL ) {
-            (*env)->DeleteGlobalRef(env, sock->certApprovalCallback);
-            sock->certApprovalCallback = NULL;
-        }
-
-        if( sock->clientCertSelectionCallback != NULL ) {
-            (*env)->DeleteGlobalRef(env, sock->clientCertSelectionCallback);
-            sock->clientCertSelectionCallback = NULL;
-        }
-
-        if( sock->clientCert != NULL ) {
-            CERT_DestroyCertificate(sock->clientCert);
-            sock->clientCert = NULL;
-        }
+if (sock != NULL) {
+    JSSL_DestroySocketData(env, sock);
+}
+        
 
         /* this may have thrown an exception */
-    }
 
 finish:
     EXCEPTION_CHECK(env, sock)
