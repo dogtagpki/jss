@@ -1,4 +1,5 @@
-#
+
+# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +10,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Netscape Security Services for Java.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,51 +30,30 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-#
+# 
 
-#######################################################################
-# Master "Core Components" for computing program prefixes             #
-#######################################################################
+# Since Java doesn't support preprocessing, we need to make two versions
+# of Debug.java: one has debugging enabled, the other has debugging
+# disabled.  Since the class is called Debug, the file must be called
+# Debug.java.  So we actually have two versions of the file, and we
+# copy one of them to Debug.java depending on whether we are building
+# debuggable or not.  A hack, to be sure, and I'm open to better ideas.
+# (nicolson)
 
-#
-# Object prefixes
-#
-
-ifndef OBJ_PREFIX
-	OBJ_PREFIX = 
+ifdef BUILD_OPT
+	JSS_DEBUG_SOURCE_FILE = Debug_ship.java
+else
+	JSS_DEBUG_SOURCE_FILE = Debug_debug.java
 endif
 
-#
-# Library suffixes
-#
+# Since we're introducing new rules before the global rules.mk, we will
+# wipe out the default rule.  So put this here to keep "all" the default.
+jss_util_all: all
 
-ifndef LIB_PREFIX
-	ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
-		LIB_PREFIX = 
-	else
-		LIB_PREFIX = lib
-	endif
-endif
+export::
+	@echo "Copying $(JSS_DEBUG_SOURCE_FILE) to Debug.java"
+	cp $(JSS_DEBUG_SOURCE_FILE) Debug.java
+	chmod 0644 Debug.java
 
-
-ifndef DLL_PREFIX
-	ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
-		DLL_PREFIX = 
-	else
-		DLL_PREFIX = lib
-	endif
-endif
-
-
-ifndef IMPORT_LIB_PREFIX
-	IMPORT_LIB_PREFIX = 
-endif
-
-#
-# Program prefixes
-#
-
-ifndef PROG_PREFIX
-	PROG_PREFIX = 
-endif
-
+clean::
+	rm -f Debug.java

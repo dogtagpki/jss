@@ -1,4 +1,4 @@
-#
+# 
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Netscape Security Services for Java.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,51 +29,66 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-#
+# 
 
 #######################################################################
-# Master "Core Components" for computing program prefixes             #
+# Adjust variables for component library linkage on some platforms    #
 #######################################################################
 
 #
-# Object prefixes
+# AIX platforms
 #
 
-ifndef OBJ_PREFIX
-	OBJ_PREFIX = 
+ifeq ($(OS_ARCH),AIX)
+	LDOPTS += -blibpath:.:$(PWD)/$(SOURCE_LIB_DIR):/usr/lib/threads:/usr/lpp/xlC/lib:/usr/lib:/lib 
 endif
 
 #
-# Library suffixes
+# HP/UX platforms
 #
 
-ifndef LIB_PREFIX
-	ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
-		LIB_PREFIX = 
+ifeq ($(OS_ARCH), HP-UX)
+	LDOPTS += -Wl,+s,+b,$(PWD)/$(SOURCE_LIB_DIR)
+endif
+
+#
+# IRIX platforms
+#
+
+ifeq ($(OS_ARCH), IRIX)
+	LDOPTS += -rpath $(PWD)/$(SOURCE_LIB_DIR)
+endif
+
+#
+# OSF 1 platforms
+#
+
+ifeq ($(OS_ARCH), OSF1)
+	LDOPTS += -rpath $(PWD)/$(SOURCE_LIB_DIR) -lpthread
+endif
+
+#
+# Solaris platforms
+#     NOTE:  Disable optimization on SunOS4.1.3
+#
+
+ifeq ($(OS_ARCH), SunOS)
+	ifneq ($(OS_RELEASE), 4.1.3_U1)
+		ifdef NS_USE_GCC
+			LDOPTS += -Xlinker -R -Xlinker $(PWD)/$(SOURCE_LIB_DIR)
+		else
+			LDOPTS += -R $(PWD)/$(SOURCE_LIB_DIR)
+		endif
 	else
-		LIB_PREFIX = lib
+		OPTIMIZER =
 	endif
 endif
 
-
-ifndef DLL_PREFIX
-	ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
-		DLL_PREFIX = 
-	else
-		DLL_PREFIX = lib
-	endif
-endif
-
-
-ifndef IMPORT_LIB_PREFIX
-	IMPORT_LIB_PREFIX = 
-endif
-
 #
-# Program prefixes
+# Windows platforms
 #
 
-ifndef PROG_PREFIX
-	PROG_PREFIX = 
+ifeq ($(OS_ARCH), WINNT)
+	LDOPTS    += -NOLOGO -DEBUG -DEBUGTYPE:CV -INCREMENTAL:NO
 endif
 
