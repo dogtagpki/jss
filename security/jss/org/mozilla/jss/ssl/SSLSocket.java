@@ -244,11 +244,11 @@ public class SSLSocket extends java.net.Socket {
         try {
             int intAddr = getLocalAddressNative();
             InetAddress in;
-            byte[] addr = new byte[4];
-            addr[0] = (byte)((intAddr >>> 24) & 0xff);
-            addr[1] = (byte)((intAddr >>> 16) & 0xff);
-            addr[2] = (byte)((intAddr >>>  8) & 0xff);
-            addr[3] = (byte)((intAddr       ) & 0xff);
+             int[] addr = new int[4];
+             addr[0] = ((intAddr >>> 24) & 0xff);
+             addr[1] = ((intAddr >>> 16) & 0xff);
+             addr[2] = ((intAddr >>>  8) & 0xff);
+             addr[3] = ((intAddr       ) & 0xff);
             try {
             in = InetAddress.getByName(
                 addr[0] + "." + addr[1] + "." + addr[2] + "." + addr[3] );
@@ -711,8 +711,8 @@ public class SSLSocket extends java.net.Socket {
     public final static int SSL3_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA= 0x001d;
     public final static int SSL3_FORTEZZA_DMS_WITH_RC4_128_SHA     = 0x001e;
 
-    public final static int SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA     = 0xffe0;
-    public final static int SSL_RSA_FIPS_WITH_DES_CBC_SHA          = 0xffe1;
+    public final static int SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA     = 0xfeff;
+    public final static int SSL_RSA_FIPS_WITH_DES_CBC_SHA          = 0xfefe;
 
     public final static int TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA    = 0x0062;
     public final static int TLS_RSA_EXPORT1024_WITH_RC4_56_SHA     = 0x0064;
@@ -720,6 +720,21 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA = 0x0063;
     public final static int TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA  = 0x0065;
     public final static int TLS_DHE_DSS_WITH_RC4_128_SHA            = 0x0066;
+
+// New TLS cipher suites in NSS 3.4 
+    public final static int TLS_RSA_WITH_AES_128_CBC_SHA          =  0x002F;
+    public final static int TLS_DH_DSS_WITH_AES_128_CBC_SHA       =  0x0030;
+    public final static int TLS_DH_RSA_WITH_AES_128_CBC_SHA       =  0x0031;
+    public final static int TLS_DHE_DSS_WITH_AES_128_CBC_SHA      =  0x0032;
+    public final static int TLS_DHE_RSA_WITH_AES_128_CBC_SHA      =  0x0033;
+    public final static int TLS_DH_ANON_WITH_AES_128_CBC_SHA      =  0x0034;
+
+    public final static int TLS_RSA_WITH_AES_256_CBC_SHA          =  0x0035;
+    public final static int TLS_DH_DSS_WITH_AES_256_CBC_SHA       =  0x0036;
+    public final static int TLS_DH_RSA_WITH_AES_256_CBC_SHA       =  0x0037;
+    public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA      =  0x0038;
+    public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA      =  0x0039;
+    public final static int TLS_DH_ANON_WITH_AES_256_CBC_SHA      =  0x003A;
 
 }
 

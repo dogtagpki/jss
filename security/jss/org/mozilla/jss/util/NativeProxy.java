@@ -54,7 +54,7 @@ public abstract class NativeProxy
      * Default constructor. Should not be called.
      */
     private NativeProxy() {
-        Assert.assert(false);
+        Assert._assert(false);
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class NativeProxy
      * NativeProxy instance acts as a proxy for that native data structure.
      */
     public NativeProxy(byte[] pointer) {
-		Assert.assert(pointer!=null);
+		Assert._assert(pointer!=null);
         if(Debug.DEBUG) {
             registryIndex = register();
         }
@@ -184,7 +184,7 @@ public abstract class NativeProxy
         Long element;
 
         element = (Long) registry.remove(Lindex);
-        Assert.assert(element != null);
+        Assert._assert(element != null);
     }
 
     /**

@@ -1,27 +1,27 @@
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Security Services for Java.
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
- * Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+ * Communications Corporation.  Portions created by Netscape are
+ * Copyright (C) 2001 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -31,32 +31,35 @@
  * GPL.
  */
 
-package org.mozilla.jss.pkcs12;
+package org.mozilla.jss.tests;
 
-import org.mozilla.jss.crypto.KeyGenerator;
-import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.*;
+import org.mozilla.jss.util.*;
 
-/**
- * Converts password chars to bytes.  The output format is big-endian Unicode,
- * with two zero bytes of null-termination at the end.
- */
-public final class PasswordConverter
-    implements KeyGenerator.CharToByteConverter {
+public class SetupDBs {
 
-        public byte[] convert(char[] chars) {
-            byte[] bytes = new byte[ (chars.length+1) * 2 ];
-
-            int c; // char index
-            int b; // byte index
-            for(c=0, b=0; c < chars.length; c++) {
-                bytes[b++] = (byte) ((chars[c] & 0xff00) >>> 8);
-                bytes[b++] = (byte) (chars[c] & 0xff);
-            }
-            bytes[b++] = 0;
-            bytes[b++] = 0;
-            Assert._assert(b == bytes.length);
-
-            return bytes;
+    public static void main(String args[]) {
+      try {
+        if( args.length != 1 ) {
+            System.err.println("Invalid number of arguments");
+            System.exit(1);
         }
-    }
+        String dbdir = args[0];
         
+        CryptoManager.initialize(dbdir);
+        CryptoManager cm = CryptoManager.getInstance();
+
+        CryptoToken tok = cm.getInternalKeyStorageToken();
+        tok.initPassword( new NullPasswordCallback(),
+            new Password( ("netscape").toCharArray() )
+        );
+
+        System.exit(0);
+      } catch(Exception e) {
+        e.printStackTrace();
+        System.exit(1);
+      }
+    }
+
+}

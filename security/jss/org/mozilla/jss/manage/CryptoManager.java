@@ -475,7 +475,7 @@ public final class CryptoManager implements TokenSupplier
                     return token;
                 }
             } catch( TokenException e ) {
-                Assert.assert(false, "Got a token exception");
+                Assert._assert(false, "Got a token exception");
             }
         }
         throw new NoSuchTokenException();
@@ -588,16 +588,16 @@ public final class CryptoManager implements TokenSupplier
         while(tokens.hasMoreElements()) {
             PK11Token token = (PK11Token) tokens.nextElement();
             if( token.isInternalCryptoToken() ) {
-                Assert.assert(internalCryptoToken == null);
+                Assert._assert(internalCryptoToken == null);
                 internalCryptoToken = token;
             }
             if( token.isInternalKeyStorageToken() ) {
-                Assert.assert(internalKeyStorageToken == null);
+                Assert._assert(internalKeyStorageToken == null);
                 internalKeyStorageToken = token;
             }
         }
-        Assert.assert(internalKeyStorageToken != null);
-        Assert.assert(internalCryptoToken != null);
+        Assert._assert(internalKeyStorageToken != null);
+        Assert._assert(internalCryptoToken != null);
     }
 
     /**
@@ -1080,7 +1080,7 @@ public final class CryptoManager implements TokenSupplier
 	findCertByNickname(String nickname)
         throws ObjectNotFoundException, TokenException
 	{
-        Assert.assert(nickname!=null);
+        Assert._assert(nickname!=null);
 		return findCertByNicknameNative(nickname);
 	}
 
@@ -1096,7 +1096,7 @@ public final class CryptoManager implements TokenSupplier
     findCertsByNickname(String nickname)
         throws TokenException
 	{
-        Assert.assert(nickname!=null);
+        Assert._assert(nickname!=null);
 		return findCertsByNicknameNative(nickname);
 	}
 
@@ -1185,7 +1185,7 @@ public final class CryptoManager implements TokenSupplier
 	findPrivKeyByCert(org.mozilla.jss.crypto.X509Certificate cert)
         throws ObjectNotFoundException, TokenException
 	{
-        Assert.assert(cert!=null);
+        Assert._assert(cert!=null);
 		if(! (cert instanceof org.mozilla.jss.pkcs11.PK11Cert)) {
 			Assert.notReached("non-pkcs11 cert passed to PK11Finder");
 			throw new ObjectNotFoundException();
@@ -1240,15 +1240,15 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_0";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_1_2_1";
     public static final String
-    JAR_JDK_VERSION     = "JDK_VERSION = JDK 1.2.2";
+    JAR_JDK_VERSION     = "JDK_VERSION = JDK 1.4.0";
     public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_2_RTM";
+    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_3_1_RTM";
     public static final String
-    JAR_DBM_VERSION     = "DBM_VERSION = NSS_3_1_1_RTM";
+    JAR_DBM_VERSION     = "DBM_VERSION = NSS_3_3_1_RTM";
     public static final String
-    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_1";
+    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_1_2";
 
     /**
      * Loads the JSS dynamic library if necessary.
@@ -1269,7 +1269,8 @@ public final class CryptoManager implements TokenSupplier
                 Debug.trace(Debug.VERBOSE, "jss library loaded");
             } catch( UnsatisfiedLinkError e) {
                 Debug.trace(Debug.ERROR, "ERROR: Unable to load jss library");
-                throw e;
+                throw new UnsatisfiedLinkError(
+                    "Unable to load jss library or one of its dependencies");
             }
             mNativeLibrariesLoaded = true;
         }
