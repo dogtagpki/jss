@@ -87,3 +87,11 @@ build_coreconf:
 import::
 	rm -rf $(SOURCE_XP_DIR)/public/security
 	mv $(SOURCE_XP_DIR)/public/nss $(SOURCE_XP_DIR)/public/security
+
+ifeq ($(OS_ARCH),SunOS)
+solarispkg::
+	@echo Making Solaris packages.
+	rm -rf pkg/$(OBJDIR)
+	cp -r pkg/solaris pkg/$(OBJDIR)
+	$(MAKE) -C  pkg/$(OBJDIR) publish
+endif
