@@ -331,10 +331,6 @@ void JSSL_DestroySocketResources(JNIEnv *env, JSSL_SocketData *sd)
         sd->closed = PR_TRUE;
     }
 
-    if( sd->socketObject != NULL ) {
-        DELETE_WEAK_GLOBAL_REF(env, sd->socketObject );
-        sd->socketObject = NULL;
-    }
     if( sd->certApprovalCallback != NULL ) {
         (*env)->DeleteGlobalRef(env, sd->certApprovalCallback);
         sd->certApprovalCallback = NULL;
@@ -361,6 +357,11 @@ void JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
     PR_ASSERT(sd != NULL);
     /* if user did not call Socket.Close need to releaseResources */  
     JSSL_DestroySocketResources(env, sd); 
+    /* now destroy the socket object and socket itself */
+    if( sd->socketObject != NULL ) {
+        DELETE_WEAK_GLOBAL_REF(env, sd->socketObject );
+        sd->socketObject = NULL;
+    }
     PR_Free(sd);
 }
 

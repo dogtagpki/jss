@@ -46,6 +46,12 @@ import java.security.AccessController;
  */
 public class SSLSocket extends java.net.Socket {
 
+    private java.lang.Object readLock = new java.lang.Object();
+    private java.lang.Object writeLock = new java.lang.Object();
+    private boolean isClosed = false;
+    private boolean ioWrite = false;
+    private boolean ioRead = false;
+
     /**
      * For sockets that get created by accept().
      */
@@ -385,13 +391,19 @@ public class SSLSocket extends java.net.Socket {
     public native int getReceiveBufferSize() throws SocketException;
 
     /**
-     * Closes this socket.
+     * Closes this socket. Waits tills the read and write i/o
+     * operations are completed, then any further i/o operation
+     * throws an exception that the socket is closed. Note, if the
+     * I/o operation never returns this will result in the close 
+     * operation hanging, but we will fix this very soon. 
      */
     public void close() throws IOException {
-        if( sockProxy != null ) {
-             base.close();
-             sockProxy = null;
-         }
+        synchronized (readLock) {
+            synchronized (writeLock) {
+                isClosed = true;
+                    base.close();
+            }
+        }
     }
 
     private native void socketConnect(byte[] addr, String hostname, int port)
@@ -646,11 +658,44 @@ public class SSLSocket extends java.net.Socket {
         throws IOException;
 
     int read(byte[] b, int off, int len) throws IOException {
-        return socketRead(b, off, len, base.getTimeout());
+
+        int iRet = 0;
+
+        synchronized (readLock) {
+            ioRead=true;
+            if (isClosed) {
+                throw new 
+                IOException("Socket has been closed, and cannot be reused."); 
+            }
+            try {
+                iRet = socketRead(b, off, len, base.getTimeout()); 
+            } catch (IOException ioe) {
+                ioRead=false;
+                throw new 
+                IOException("SocketException cannot read on socket");
+            }
+            ioRead=false;
+        }
+        return iRet;
     }
 
     void write(byte[] b, int off, int len) throws IOException {
-        socketWrite(b, off, len, base.getTimeout());
+    
+        synchronized (writeLock) {
+            ioWrite=true;
+            if (isClosed) {
+                throw new 
+                IOException("Socket has been closed, and cannot be reused."); 
+            }
+            try {
+                socketWrite(b, off, len, base.getTimeout());
+            } catch (IOException ioe) {
+                ioWrite=false;
+                throw new 
+                IOException("SocketException cannot write on socket");
+            }
+            ioWrite=false;
+        }
     }
 
     private native int socketRead(byte[] b, int off, int len, int timeout)
