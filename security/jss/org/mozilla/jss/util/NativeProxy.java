@@ -31,9 +31,9 @@
  * GPL.
  */
 
-package com.netscape.jss.util;
+package org.mozilla.jss.util;
 
-import com.netscape.jss.util.*;
+import org.mozilla.jss.util.*;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Enumeration;
@@ -206,7 +206,7 @@ public abstract class NativeProxy
     /**
      * Assert that the Registry is empty.  Only works in debug mode; in
      * ship mode, it is a no-op.  If the Registry is not empty when this
-     * is called, an assertion (com.netscape.jss.util.AssertionException)
+     * is called, an assertion (org.mozilla.jss.util.AssertionException)
      * is thrown.
      */
     public synchronized static void assertRegistryEmpty() {

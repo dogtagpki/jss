@@ -30,17 +30,17 @@
  * may use your version of this file under either the MPL or the
  * GPL.
  */
-package com.netscape.jss.util;
+package org.mozilla.jss.util;
 
-import com.netscape.jss.util.*;
+import org.mozilla.jss.util.*;
 
 /**
  * C-style assertions in Java.
  * These methods are only active in debug mode
- * (com.netscape.jss.Debug.DEBUG==true).
+ * (org.mozilla.jss.Debug.DEBUG==true).
  *
- * @see com.netscape.jss.util.Debug
- * @see com.netscape.jss.util.AssertionException
+ * @see org.mozilla.jss.util.Debug
+ * @see org.mozilla.jss.util.AssertionException
  * @version $Revision$ $Date$
  */
 public class Assert {
@@ -52,7 +52,7 @@ public class Assert {
      */
     public static void assert(boolean cond) {
         if(Debug.DEBUG && !cond) {
-            throw new com.netscape.jss.util.AssertionException(
+            throw new org.mozilla.jss.util.AssertionException(
                 "assertion failure!");
         }
     }
@@ -66,7 +66,7 @@ public class Assert {
      */
 	public static void assert(boolean cond, String msg) {
 		if(Debug.DEBUG && !cond) {
-			throw new com.netscape.jss.util.AssertionException(msg);
+			throw new org.mozilla.jss.util.AssertionException(msg);
 		}
 	}
 

@@ -30,7 +30,7 @@
  * may use your version of this file under either the MPL or the
  * GPL.
  */
-package com.netscape.jss.util;
+package org.mozilla.jss.util;
 
 /**
  * Assertion exceptions are thrown when assertion code is invoked
@@ -38,8 +38,8 @@ package com.netscape.jss.util;
  * not be caught by exception handlers. Instead, they will cause the
  * VM to halt and print a stack trace.
  *
- * @see com.netscape.jss.util.Assert
- * @see com.netscape.jss.util.Debug
+ * @see org.mozilla.jss.util.Assert
+ * @see org.mozilla.jss.util.Debug
  * @version $Revision$ $Date$
  */
 public class AssertionException extends RuntimeException {

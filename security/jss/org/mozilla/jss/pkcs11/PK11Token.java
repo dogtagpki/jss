@@ -31,11 +31,11 @@
  * GPL.
  */
 
-package com.netscape.jss.pkcs11;
+package org.mozilla.jss.pkcs11;
 
 import java.util.*;
-import com.netscape.jss.util.*;
-import com.netscape.jss.crypto.*;
+import org.mozilla.jss.util.*;
+import org.mozilla.jss.crypto.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
@@ -46,7 +46,7 @@ import java.security.InvalidParameterException;
  *
  * @author nicolson
  * @version $Revision$ $Date$ 
- * @see com.netscape.jss.CryptoManager
+ * @see org.mozilla.jss.CryptoManager
  */
 public final class PK11Token implements CryptoToken {
 
@@ -67,7 +67,7 @@ public final class PK11Token implements CryptoToken {
     ////////////////////////////////////////////////////
     //  public routines
     ////////////////////////////////////////////////////
-	public com.netscape.jss.crypto.Signature
+	public org.mozilla.jss.crypto.Signature
 	getSignatureContext(SignatureAlgorithm algorithm) 
 		throws java.security.NoSuchAlgorithmException, TokenException
 	{
@@ -143,7 +143,7 @@ public final class PK11Token implements CryptoToken {
 		throw new NotImplementedException();
 	}
 
-	public com.netscape.jss.crypto.KeyPairGenerator
+	public org.mozilla.jss.crypto.KeyPairGenerator
 	getKeyPairGenerator(KeyPairAlgorithm algorithm)
 		throws java.security.NoSuchAlgorithmException, TokenException
 	{
