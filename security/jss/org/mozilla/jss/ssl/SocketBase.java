@@ -82,27 +82,31 @@ class SocketBase {
     native void socketBind(byte[] addrBA, int port) throws SocketException;
 
     /**
-     * Enums. These must match the enums table in SSLSocket.c. This is
+     * Enums. These must match the enums table in common.c. This is
      * safer than copying the values of the C constants, which are subject
      * to change, into Java code.
      */
     static final int SSL_ENABLE_SSL2 = 0;
     static final int SSL_ENABLE_SSL3 = 1;
-    static final int TCP_NODELAY = 2;
-    static final int SO_KEEPALIVE = 3;
-    static final int PR_SHUTDOWN_RCV = 4;
-    static final int PR_SHUTDOWN_SEND = 5;
-    static final int SSL_REQUIRE_CERTIFICATE = 6;
-    static final int SSL_REQUEST_CERTIFICATE = 7;
-    static final int SSL_NO_CACHE = 8;
-    static final int SSL_POLICY_DOMESTIC = 9;
-    static final int SSL_POLICY_EXPORT = 10;
-    static final int SSL_POLICY_FRANCE = 11;
+    static final int SSL_ENABLE_TLS = 2;
+    static final int TCP_NODELAY = 3;
+    static final int SO_KEEPALIVE = 4;
+    static final int PR_SHUTDOWN_RCV = 5;
+    static final int PR_SHUTDOWN_SEND = 6;
+    static final int SSL_REQUIRE_CERTIFICATE = 7;
+    static final int SSL_REQUEST_CERTIFICATE = 8;
+    static final int SSL_NO_CACHE = 9;
+    static final int SSL_POLICY_DOMESTIC = 10;
+    static final int SSL_POLICY_EXPORT = 11;
+    static final int SSL_POLICY_FRANCE = 12;
 
-    // close method is locked in SSLSocket for reader and writer
     void close() throws IOException {
         socketClose();
     }
+
+    // SSLServerSocket and SSLSocket close methods
+    // have their own synchronization control that 
+    // protects SocketBase.socketClose.
     native void socketClose() throws IOException;
 
     private boolean requestingClientAuth = false;
@@ -128,6 +132,10 @@ class SocketBase {
 
     void enableSSL3(boolean enable) throws SocketException {
         setSSLOption(SSL_ENABLE_SSL3, enable);
+    }
+
+    void enableTLS(boolean enable) throws SocketException {
+        setSSLOption(SSL_ENABLE_TLS, enable);
     }
 
     void setSSLOption(int option, boolean on)

@@ -37,14 +37,17 @@
 /*
  * JSS's major version, minor version, patch level, and whether
  * this is a beta release.
- *
+ * 
+ * you also need to update the version in  
+ * 	org/mozilla/jss/manage/CryptoManager.c 
+ * 	org/mozilla/jss/manage/CryptoManager.java 
  * The format of the version string should be
  *     "<major version>.<minor version>[.<patch level>] [<Beta>]"
  */
-#define JSS_VERSION  "3.1.5"
+#define JSS_VERSION  "3.1.6"
 #define JSS_VMAJOR   3
 #define JSS_VMINOR   1
-#define JSS_VPATCH   5 
+#define JSS_VPATCH   6 
 #define JSS_BETA     PR_FALSE
 
 #endif

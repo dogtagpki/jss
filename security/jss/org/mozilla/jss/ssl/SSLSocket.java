@@ -46,11 +46,30 @@ import java.security.AccessController;
  */
 public class SSLSocket extends java.net.Socket {
 
+    /*
+     * Locking strategy of SSLSocket
+     *
+     * isClosed, inRead, and inWrite must be accessed with the object
+     * locked.
+     *
+     * readLock must be locked throughout the read method.  It is used
+     * to serialize read calls.
+     *
+     * writeLock must be locked throughout the write method. It is used
+     * to serialize write calls.
+     */
+
     private java.lang.Object readLock = new java.lang.Object();
     private java.lang.Object writeLock = new java.lang.Object();
     private boolean isClosed = false;
-    private boolean ioWrite = false;
-    private boolean ioRead = false;
+    private boolean inRead = false;
+    private boolean inWrite = false;
+    private InetAddress inetAddress;
+    private int port;
+    private SocketProxy sockProxy = null;
+    private boolean open = false;
+    private boolean handshakeAsClient = true;
+    private SocketBase base = new SocketBase();
 
     /**
      * For sockets that get created by accept().
@@ -340,9 +359,8 @@ public class SSLSocket extends java.net.Socket {
         shutdownNative(SocketBase.PR_SHUTDOWN_SEND);
     }
 
-    private native void shutdownNativeLow(int how) throws IOException;   
     private native void shutdownNative(int how) throws IOException;
-
+    private native void abortReadWrite() throws IOException;
     /**
      * Sets the SO_LINGER socket option.
      * param linger The time (in seconds) to linger for.
@@ -386,28 +404,43 @@ public class SSLSocket extends java.net.Socket {
      */
     public native void setReceiveBufferSize(int size) throws SocketException;
 
-    /**
+    /** 
      * Returnst he size (in bytes) of the receive buffer.
      */
     public native int getReceiveBufferSize() throws SocketException;
 
+    /** 
+     * Closes this socket.
+     */
     public void close() throws IOException {
-        if (isClosed) {
-            return;  /* finalize will call close if user did not */
+        synchronized (this) {
+            if( isClosed ) {
+                /* finalize calls close or user calls close more than once */
+                return;
+            }
+            isClosed = true;
+            if( sockProxy == null ) {
+                /* nothing to do */
+                return;
+            }
+            /*
+             * If a read or write is occuring, abort the I/O.  Any
+             * further attempts to read/write will fail since isClosed
+             * is true
+             */
+            if ( inRead || inWrite ) {
+                abortReadWrite();
+            }
         }
-        
-        if (ioRead) {
-            shutdownNativeLow(SocketBase.PR_SHUTDOWN_RCV);
-        } 
-        if (ioWrite) {
-            shutdownNativeLow(SocketBase.PR_SHUTDOWN_SEND);
-        }
+        /*
+         * Lock readLock and writeLock to ensure that read and write
+         * have been aborted.
+         */
         synchronized (readLock) {
             synchronized (writeLock) {
-                if (!isClosed) {
-                    base.close();
-                    isClosed = true;
-                }
+                base.close();
+                sockProxy = null;
+                base.setProxy(null);
             }
         }
     }
@@ -448,7 +481,7 @@ public class SSLSocket extends java.net.Socket {
             l.handshakeCompleted(event);
         }
     }
-
+               
 
     /**
      * Enables SSL v2 on this socket. It is enabled  by default, unless the
@@ -474,10 +507,25 @@ public class SSLSocket extends java.net.Socket {
     }
 
     /**
-     * Sets the default for SSL v2 for all new sockets.
+     * Sets the default for SSL v3 for all new sockets.
      */
     static public void enableSSL3Default(boolean enable) throws SocketException{
         setSSLDefaultOption(SocketBase.SSL_ENABLE_SSL3, enable);
+    }
+
+    /**
+     * Enables TLS on this socket.  It is enabled by default, unless the
+     * default has been changed with <code>enableTLSDefault</code>.
+     */
+    public void enableTLS(boolean enable) throws SocketException {
+        base.enableTLS(enable);
+    }
+
+    /**
+     * Sets the default for TLS for all new sockets.
+     */
+    static public void enableTLSDefault(boolean enable) throws SocketException{
+        setSSLDefaultOption(SocketBase.SSL_ENABLE_TLS, enable);
     }
 
     /**
@@ -509,7 +557,7 @@ public class SSLSocket extends java.net.Socket {
      */
     public native void forceHandshake() throws SocketException;
 
-    /**
+    /** 
      * Determines whether this end of the socket is the client or the server
      *  for purposes of the SSL protocol. By default, it is the client.
      * @param b true if this end of the socket is the SSL slient, false
@@ -616,19 +664,13 @@ public class SSLSocket extends java.net.Socket {
         base.useCache(b);
     }
 
-    /**
+    /** 
      * Sets the default setting for use of the session cache.
      */
     public void useCacheDefault(boolean b) throws SocketException {
         setSSLDefaultOption(SocketBase.SSL_NO_CACHE, !b);
     }
 
-    private InetAddress inetAddress;
-    private int port;
-    private SocketProxy sockProxy;
-    private boolean open = false;
-    private boolean handshakeAsClient=true;
-    private SocketBase base = new SocketBase();
 
     private static void setSSLDefaultOption(int option, boolean on)
         throws SocketException
@@ -664,43 +706,48 @@ public class SSLSocket extends java.net.Socket {
         throws IOException;
 
     int read(byte[] b, int off, int len) throws IOException {
-
-        int iRet = 0;
-
         synchronized (readLock) {
-            ioRead=true;
-            if (isClosed) {
-                throw new 
-                IOException("Socket has been closed, and cannot be reused."); 
+            synchronized (this) {
+                if ( isClosed ) { /* abort read if socket is closed */
+                    throw new IOException(
+                        "Socket has been closed, and cannot be reused."); 
+                }
+                inRead = true;            
             }
+            int iRet;
             try {
                 iRet = socketRead(b, off, len, base.getTimeout()); 
             } catch (IOException ioe) {
-                ioRead=false;
-                throw new 
-                IOException("SocketException cannot read on socket");
+                throw new IOException(
+                    "SocketException cannot read on socket");
+            } finally {
+                synchronized (this) {
+                    inRead = false;
+                }
             }
-            ioRead=false;
+            return iRet;
         }
-        return iRet;
     }
 
     void write(byte[] b, int off, int len) throws IOException {
-    
         synchronized (writeLock) {
-            ioWrite=true;
-            if (isClosed) {
-                throw new 
-                IOException("Socket has been closed, and cannot be reused."); 
+            synchronized (this) {
+                if ( isClosed ) { /* abort write if socket is closed */
+                    throw new IOException(
+                        "Socket has been closed, and cannot be reused."); 
+                }
+                inWrite = true;
             }
             try {
                 socketWrite(b, off, len, base.getTimeout());
             } catch (IOException ioe) {
-                ioWrite=false;
-                throw new 
-                IOException("SocketException cannot write on socket");
+                throw new IOException(
+                    "SocketException cannot write on socket");
+            } finally {
+                synchronized (this) {
+                    inWrite = false;
+                }
             }
-            ioWrite=false;
         }
     }
 
@@ -734,17 +781,16 @@ public class SSLSocket extends java.net.Socket {
      *  If false, only the session key will be regenerated.
      */
     public native void redoHandshake(boolean flushCache) throws SocketException;
-    
+
     protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
+        close(); /* in case user did not call close */
     }
 
     public static class CipherPolicy {
-        private int enum;
-        private CipherPolicy(int enum) { }
+        private int _enum;
+        private CipherPolicy(int _enum) { }
 
-        int getEnum() { return enum; }
+        int getEnum() { return _enum; }
 
         public static final CipherPolicy DOMESTIC =
             new CipherPolicy(SocketBase.SSL_POLICY_DOMESTIC);
@@ -838,12 +884,12 @@ public class SSLSocket extends java.net.Socket {
 
     public final static int TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA    = 0x0062;
     public final static int TLS_RSA_EXPORT1024_WITH_RC4_56_SHA     = 0x0064;
-
+ 
     public final static int TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA = 0x0063;
     public final static int TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA  = 0x0065;
     public final static int TLS_DHE_DSS_WITH_RC4_128_SHA            = 0x0066;
 
-// New TLS cipher suites in NSS 3.4
+// New TLS cipher suites in NSS 3.4 
     public final static int TLS_RSA_WITH_AES_128_CBC_SHA          =  0x002F;
     public final static int TLS_DH_DSS_WITH_AES_128_CBC_SHA       =  0x0030;
     public final static int TLS_DH_RSA_WITH_AES_128_CBC_SHA       =  0x0031;
