@@ -35,8 +35,8 @@ CORE_DEPTH = ..
  
 MODULE = jss
  
-IMPORTS =	nss/NSS_3_3_RTM \
-			nspr20/v4.1.2 \
+IMPORTS =	nss/NSS_3_3_4_RTM\
+			nspr20/v4.1.4 \
 			$(NULL)
 
 DIRS =  org     \

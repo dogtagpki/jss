@@ -457,7 +457,7 @@ extends PK11Token
     private
     PK12Token()
     {
-        Assert.assert( false );
+        Assert._assert( false );
     }
 
 

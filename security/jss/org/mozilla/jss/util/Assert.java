@@ -50,6 +50,33 @@ public class Assert {
      *
      * @param cond The condition that is being tested.
      */
+    public static void _assert(boolean cond) {
+        if(Debug.DEBUG && !cond) {
+            throw new org.mozilla.jss.util.AssertionException(
+                "assertion failure!");
+        }
+    }
+    /**
+     * Assert that a condition is true. If it is not true, abort by throwing
+     * an AssertionException.
+     *
+     * @param cond The condition that is being tested.
+     * @param msg A message describing what is wrong if the condition is false.
+     */
+        public static void _assert(boolean cond, String msg) {
+                if(Debug.DEBUG && !cond) {
+                        throw new org.mozilla.jss.util.AssertionException(msg);
+                }
+        }
+
+    /**
+     * Assert that a condition is true.  If it is not true, abort by
+     * throwing an AssertionException.
+     *
+     * @param cond The condition that is being tested.
+     * @deprecated As of JDK release 1.4, assert is a keyword, and
+     *      may not be used as an identifier 
+     */
     public static void assert(boolean cond) {
         if(Debug.DEBUG && !cond) {
             throw new org.mozilla.jss.util.AssertionException(
@@ -63,13 +90,16 @@ public class Assert {
      *
      * @param cond The condition that is being tested.
      * @param msg A message describing what is wrong if the condition is false.
+     * @deprecated As of JDK release 1.4, assert is a keyword, and
+     *      may not be used as an identifier
      */
-	public static void assert(boolean cond, String msg) {
-		if(Debug.DEBUG && !cond) {
-			throw new org.mozilla.jss.util.AssertionException(msg);
-		}
-	}
+     public static void assert(boolean cond, String msg) {
+         if(Debug.DEBUG && !cond) {
+               throw new org.mozilla.jss.util.AssertionException(msg);
+          }
+     }
 
+ 
     /**
      * Throw an AssertionException if this statement is reached.
      *

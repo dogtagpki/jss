@@ -43,7 +43,7 @@ final class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
 	implements PrivateKey {
 
     protected PK11PrivKey(byte[] pointer) {
-        Assert.assert(pointer!=null);
+        Assert._assert(pointer!=null);
         keyProxy = new PrivateKeyProxy(pointer);
     }
 
@@ -70,7 +70,7 @@ final class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
         if( kt == KeyType.RSA ) {
             return PrivateKey.Type.RSA;
         } else {
-            Assert.assert(kt == KeyType.DSA);
+            Assert._assert(kt == KeyType.DSA);
             return PrivateKey.Type.DSA;
         }
     }
