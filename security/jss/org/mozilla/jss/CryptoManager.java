@@ -1302,15 +1302,15 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_2";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_3";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_4_2_RTM";
+    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_6_RTM";
     public static final String
     JAR_DBM_VERSION     = "DBM_VERSION = N/A";
     public static final String
-    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_2";
+    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPRPUB_RELEASE_4_2_2";
 
     /**
      * Loads the JSS dynamic library if necessary.
