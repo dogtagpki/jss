@@ -33,6 +33,8 @@
 
 package org.mozilla.jss.crypto;
 
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Algorithms that can be used for keypair generation.
  */
@@ -41,6 +43,7 @@ public class KeyPairAlgorithm extends Algorithm {
     protected KeyPairAlgorithm(int oidIndex, String name, Algorithm algFamily) {
         super(oidIndex, name);
         this.algFamily = algFamily;
+        nameMap.put(name, this);
     }
 
     /**
@@ -54,6 +57,25 @@ public class KeyPairAlgorithm extends Algorithm {
     getAlgFamily()
     {
         return algFamily;
+    }
+
+    private static Hashtable nameMap = new Hashtable();
+
+    /**
+     * Looks up a key pair generation algorithm from its name. The names
+     * are those specified in the JCA spec. For example, "RSA" and "DSA".
+     *
+     * @throws NoSuchAlgorithmException If the name of the algorithm is not
+     *  recognized as a supported algorithm.
+     */
+    public static KeyPairAlgorithm fromString(String algName)
+        throw NoSuchAlgorithmException
+    {
+        KeyPairAlgorithm alg = nameMap.get(algName);
+        if( alg == null ) {
+            throw new NoSuchAlgorithmException();
+        }
+        return alg;
     }
 
     protected Algorithm algFamily;

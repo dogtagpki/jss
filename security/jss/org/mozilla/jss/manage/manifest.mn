@@ -52,6 +52,7 @@ CLASSES = 											\
             KeyDatabaseException                    \
             NoSuchTokenException                    \
             DatabaseCloser                          \
+            JSSProvider                             \
 			$(NULL)
 
 JSRCS = 											\
@@ -61,6 +62,7 @@ JSRCS = 											\
             KeyDatabaseException.java               \
             NoSuchTokenException.java               \
             DatabaseCloser.java                     \
+            JSSProvider.java                        \
 			$(NULL)
 
 CSRCS =                             \

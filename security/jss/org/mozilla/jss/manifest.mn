@@ -36,17 +36,17 @@ CORE_DEPTH = ../../../..
 MODULE = jss
 
 DIRS =	\
-	policy	\
 	util	\
 	asn1	\
 	crypto	\
 	pkcs11	\
-	provider	\
 	manage	\
 	pkix/primitive    \
+	provider	\
 	pkcs10	\
 	pkix	\
 	pkcs7	\
+    pkcs8   \
 	pkcs12	\
     ssl     \
 	tests	\
