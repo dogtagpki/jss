@@ -52,10 +52,10 @@ ifdef USE_64
 $(ROOT)/usr/lib/mps/sparcv9: $(ROOT)/usr/lib
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)"
 	$(LN) -sf ../../../../$(DIST)/lib $@ 
-	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/sparcv9/jss312.jar
+	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/share/lib/mps/sparcv9/jss3.jar
 else
 $(ROOT)/usr/lib/mps: $(ROOT)/usr/lib
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)"
 	$(LN) -sf ../../../$(DIST)/lib $@
-	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/lib/mps/jss312.jar
+	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/share/lib/mps/jss3.jar
 endif
