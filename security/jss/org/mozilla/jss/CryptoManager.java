@@ -855,9 +855,6 @@ public final class CryptoManager implements TokenSupplier
                 instance.reloadModules();
             }
         }
-        if( values.removeSunProvider ) {
-            java.security.Security.removeProvider("SUN");
-        }
         if( values.installJSSProvider ) {
             // Force class load before we install the provider. Otherwise we get
             // an infinite loop as the Security manager tries to instantiate the
@@ -870,6 +867,9 @@ public final class CryptoManager implements TokenSupplier
                 Debug.trace(Debug.ERROR,
                     "Unable to install default provider");
             }
+        }
+        if( values.removeSunProvider ) {
+            java.security.Security.removeProvider("SUN");
         }
     }
 
