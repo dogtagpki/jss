@@ -240,7 +240,8 @@ Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreferenceDefault;
 Java_org_mozilla_jss_ssl_SSLSocket_setCipherPreferenceDefault;
 Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreference;
 Java_org_mozilla_jss_CryptoManager_initializeAllNative2;
-Java_org_mozilla_jss_ssl_SSLSocket_shutdownNativeLow;
+Java_org_mozilla_jss_ssl_SSLSocket_abortReadWrite;
+Java_org_mozilla_jss_ssl_SSLServerSocket_abortAccept;
 ;+    local:
 ;+       *;
 ;+};
