@@ -851,7 +851,7 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
     packageLen = (*env)->GetArrayLength(env, packageArray);
 
     /***************************************************
-     * Decode package with NSS function
+     * Decode package with HCL function
      ***************************************************/
     status = CERT_DecodeCertPackage((char*) packageBytes,
                                     (int) packageLen,
