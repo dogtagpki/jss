@@ -89,7 +89,7 @@ cat << EOF > $awk_script
    }
 /$VERSION2/ {
       sub(/\=[^=]*$/,"=$rev\"")
-      sub(/NSPRVERS/,"$version")
+      sub(/JSSVERS/,"$version")
       print
       next
    }
