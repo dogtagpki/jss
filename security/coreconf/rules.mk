@@ -87,6 +87,10 @@ import::
 		"$(XPHEADER_JAR)=$(IMPORT_XP_DIR)|$(SOURCE_XP_DIR)/public/|v" \
 		"$(MDHEADER_JAR)=$(IMPORT_MD_DIR)|$(SOURCE_MD_DIR)/include|"        \
 		"$(MDBINARY_JAR)=$(IMPORT_MD_DIR)|$(SOURCE_MD_DIR)|"
+# On Mac OS X ranlib needs to be rerun after static libs are moved.
+ifeq ($(OS_TARGET),Darwin)
+	find $(SOURCE_MD_DIR)/lib -name "*.a" -exec $(RANLIB) {} \;
+endif
 
 export:: 
 	+$(LOOP_OVER_DIRS)
@@ -106,9 +110,6 @@ ifdef LIBRARY
 endif
 ifdef SHARED_LIBRARY
 	$(INSTALL) -m 775 $(SHARED_LIBRARY) $(SOURCE_LIB_DIR)
-ifeq ($(OS_TARGET),OpenVMS)
-	$(INSTALL) -m 775 $(SHARED_LIBRARY:$(DLL_SUFFIX)=vms) $(SOURCE_LIB_DIR)
-endif
 endif
 ifdef IMPORT_LIBRARY
 	$(INSTALL) -m 775 $(IMPORT_LIBRARY) $(SOURCE_LIB_DIR)
@@ -311,7 +312,7 @@ endif
 ifeq ($(OS_TARGET),OS2)
 $(IMPORT_LIBRARY): $(SHARED_LIBRARY)
 	rm -f $@
-	$(IMPLIB) $@ $(patsubst %.lib,%.dll.def,$@)
+	$(IMPLIB) $@ $(SHARED_LIBRARY)
 	$(RANLIB) $@
 endif
 
@@ -338,32 +339,12 @@ else
 ifeq (,$(filter-out WIN%,$(OS_TARGET)))
 	$(LINK_DLL) -MAP $(DLLBASE) $(subst /,\\,$(OBJS) $(SUB_SHLOBJS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS) $(LD_LIBS) $(RES))
 else
-ifeq ($(OS_TARGET),OS2)
-	@cmd /C "echo LIBRARY $(notdir $(basename $(SHARED_LIBRARY))) INITINSTANCE TERMINSTANCE >$@.def"
-	@cmd /C "echo PROTMODE >>$@.def"
-	@cmd /C "echo CODE    LOADONCALL MOVEABLE DISCARDABLE >>$@.def"
-	@cmd /C "echo DATA    PRELOAD MOVEABLE MULTIPLE NONSHARED >>$@.def"	
-	@cmd /C "echo EXPORTS >>$@.def"
-	$(FILTER) $(OBJS) >>$@.def
-ifdef SUB_SHLOBJS
-	@echo Number of words in OBJ list = $(words $(SUB_SHLOBJS))
-	@echo If above number is over 100, need to reedit coreconf/rules.mk
-	-$(FILTER) $(wordlist 1,20,$(SUB_SHLOBJS)) >>$@.def
-	-$(FILTER) $(wordlist 21,40,$(SUB_SHLOBJS)) >>$@.def
-	-$(FILTER) $(wordlist 41,60,$(SUB_SHLOBJS)) >>$@.def
-	-$(FILTER) $(wordlist 61,80,$(SUB_SHLOBJS)) >>$@.def
-	-$(FILTER) $(wordlist 81,100,$(SUB_SHLOBJS)) >>$@.def
-endif
-endif #OS2
 ifdef XP_OS2_VACPP
-	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $@.def
+	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
 else
 	$(MKSHLIB) -o $@ $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
 endif
 	chmod +x $@
-ifeq ($(OS_TARGET),OpenVMS)
-	@echo "`translate $@`" > $(@:$(DLL_SUFFIX)=vms)
-endif
 ifeq ($(OS_TARGET),Darwin)
 ifdef MAPFILE
 	nmedit -s $(MAPFILE) $@
@@ -414,10 +395,12 @@ else
 	$(CC) -o $@ -c $(CFLAGS) $<
 endif
 
+ifndef XP_OS2_VACPP
 ifneq (,$(filter-out WIN%,$(OS_TARGET)))
 $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX): %.s
 	@$(MAKE_OBJDIR)
 	$(AS) -o $@ $(ASFLAGS) -c $<
+endif
 endif
 
 $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX): %.asm
@@ -849,7 +832,7 @@ endif
 
 -include $(DEPENDENCIES)
 
-ifneq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
+ifneq (,$(filter-out OpenVMS OS2 WIN%,$(OS_TARGET)))
 # Can't use sed because of its 4000-char line length limit, so resort to perl
 .DEFAULT:
 	@perl -e '                                                            \
