@@ -1123,6 +1123,7 @@ GenerateCertRequest(JNIEnv *env,
 	if (rv) {
 	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
 			     "signing of data failed");
+          PORT_FreeArena(arena , PR_FALSE);
 	  return;
 	}
 
