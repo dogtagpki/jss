@@ -1,27 +1,27 @@
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Security Services for Java.
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
+ * Communications Corporation.  Portions created by Netscape are
  * Copyright (C) 1998-2001 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -50,7 +50,7 @@
 #include <secder.h>
 
 static SECStatus
-secCmpCertChainWCANames(CERTCertificate *cert, CERTDistNames *caNames) 
+secCmpCertChainWCANames(CERTCertificate *cert, CERTDistNames *caNames)
 {
     SECItem *         caname;
     CERTCertificate * curcert;
@@ -62,10 +62,10 @@ secCmpCertChainWCANames(CERTCertificate *cert, CERTDistNames *caNames)
     SECStatus         rv;
     SECItem           issuerName;
     SECItem           compatIssuerName;
-    
+
     depth=0;
     curcert = CERT_DupCertificate(cert);
-    
+
     while( curcert ) {
     issuerName = curcert->derIssuer;
 
@@ -81,7 +81,7 @@ secCmpCertChainWCANames(CERTCertificate *cert, CERTDistNames *caNames)
         compatIssuerName.data = NULL;
         compatIssuerName.len = 0;
     }
-        
+
     for (j = 0; j < caNames->nnames; j++) {
         caname = &caNames->names[j];
         if (SECITEM_CompareItem(&issuerName, caname) == SECEqual) {
@@ -113,7 +113,7 @@ done:
     return rv;
 }
 
-/* 
+/*
  * This callback is called when the peer has request you to send you
  * client-auth certificate. You get to pick which one you want
  * to send.
@@ -155,7 +155,7 @@ JSSL_CallCertSelectionCallback(    void * arg,
         goto loser;
     }
     PR_ASSERT(env != NULL);
-    
+
 
     clientcertselectionclass = (*env)->GetObjectClass(env,nicknamecallback);
 
@@ -187,7 +187,7 @@ JSSL_CallCertSelectionCallback(    void * arg,
     if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectoradd: %lx\n",vector_add); }
 
     /* create new vector */
-    vector = (*env)->NewObject( env, vectorclass, vectorcons); 
+    vector = (*env)->NewObject( env, vectorclass, vectorcons);
 
     if (debug_cc) { PR_fprintf(PR_STDOUT,"  got new vector: %lx\n",vector); }
 
@@ -231,17 +231,17 @@ JSSL_CallCertSelectionCallback(    void * arg,
             (*env)->CallVoidMethod(env,vector,vector_add,
                 nickname_string
                 );
-                        
+
             if (debug_cc) { PR_fprintf(PR_STDOUT,"  back from vector_add\n"); }
                 }
-            
+
         }
         CERT_DestroyCertificate(cert);
         }
         CERT_FreeNicknames(names);
     }
 
-    /* okay - so we made a vector of the certs - now call the java 
+    /* okay - so we made a vector of the certs - now call the java
        class to figure out which one to send */
 
     chosen_nickname = (*env)->CallObjectMethod(env,nicknamecallback,
@@ -268,7 +268,7 @@ JSSL_CallCertSelectionCallback(    void * arg,
             chosen_nickname,
             chosen_nickname_for_c);
     }
-            
+
 
     if (cert == NULL) {
         rv = SECFailure;
@@ -336,7 +336,7 @@ JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
     CERTCertificate   *peerCert=NULL;
 
     certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
- 
+
 
     /* SSL_PeerCertificate() returns a shallow copy of the cert, so we
        must destroy it before we exit this function */
@@ -430,7 +430,7 @@ addToVerifyLog(JNIEnv *env, CERTVerifyLog *log, CERTCertificate *cert,
  * Callback from SSL for checking a (possibly) expired
  * certificate the peer presents.
  *
- * obj - a jobject -> instance of a class implementing 
+ * obj - a jobject -> instance of a class implementing
  *       the SSLCertificateApprovalCallback interface
  */
 SECStatus
@@ -454,8 +454,11 @@ JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
     PR_ASSERT(fd != NULL);
 
     /* initialize logging structures */
-    log.arena = PR_Calloc(1, sizeof(PLArenaPool));
-    PL_InitArenaPool(log.arena,"jss",DER_DEFAULT_CHUNKSIZE,sizeof(double));
+    //log.arena = PR_Calloc(1, sizeof(PLArenaPool));
+    //PL_InitArenaPool(log.arena,"jss",DER_DEFAULT_CHUNKSIZE,sizeof(double));
+    log.arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
+    if (log.arena == NULL) return SECFailure;
+    
     log.head = NULL;
     log.tail = NULL;
     log.count = 0;
@@ -468,13 +471,13 @@ JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
 
     /* First, get a handle on the cert that the peer presented */
     peerCert = SSL_PeerCertificate(fd);
-    
+
     /* if peer didn't present a cert, why am I called? */
     if (peerCert == NULL) return SECFailure;
 
     certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
 
-    /* 
+    /*
      * verify it against current time - (can't use
      * CERT_VerifyCertNow() since it doesn't allow passing of
      * logging parameter)
@@ -534,7 +537,7 @@ JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
             goto finish;
         }
     }
-    
+
     /*
      * Load up the ValidityStatus object with all the reasons for failure
      */
@@ -603,8 +606,9 @@ finish:
     if( hostname != NULL) {
         PR_Free(hostname);
     }
-    PL_FinishArenaPool(log.arena);
-    PR_Free(log.arena);
+    //PL_FinishArenaPool(log.arena);
+    //PR_Free(log.arena);
+    PORT_FreeArena(log.arena, PR_FALSE);
     return retval;
 }
 
@@ -628,12 +632,12 @@ JSSL_GetClientAuthData( void * arg,
             rv = SECSuccess;
         }
     }
-    
+
     if (rv == SECSuccess) {
-        *pRetCert = CERT_DupCertificate(sock->clientCert); 
+        *pRetCert = CERT_DupCertificate(sock->clientCert);
         *pRetKey  = privkey;
     }
-    
+
     return rv;
 }
 
@@ -665,7 +669,7 @@ JSSL_ConfirmExpiredPeerCert(void *arg, PRFileDesc *fd, PRBool checkSig,
          * the cert has expired.
          */
         rv = CERT_VerifyCert(CERT_GetDefaultCertDB(), peerCert,
-                             checkSig, certUsage, 
+                             checkSig, certUsage,
                              notAfter, NULL /*pinarg*/,
                              NULL /* log */);
     }
