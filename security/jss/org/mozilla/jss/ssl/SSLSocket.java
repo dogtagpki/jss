@@ -244,11 +244,11 @@ public class SSLSocket extends java.net.Socket {
         try {
             int intAddr = getLocalAddressNative();
             InetAddress in;
-            byte[] addr = new byte[4];
-            addr[0] = (byte)((intAddr >>> 24) & 0xff);
-            addr[1] = (byte)((intAddr >>> 16) & 0xff);
-            addr[2] = (byte)((intAddr >>>  8) & 0xff);
-            addr[3] = (byte)((intAddr       ) & 0xff);
+             int[] addr = new int[4];
+             addr[0] = ((intAddr >>> 24) & 0xff);
+             addr[1] = ((intAddr >>> 16) & 0xff);
+             addr[2] = ((intAddr >>>  8) & 0xff);
+             addr[3] = ((intAddr       ) & 0xff);
             try {
             in = InetAddress.getByName(
                 addr[0] + "." + addr[1] + "." + addr[2] + "." + addr[3] );
