@@ -765,7 +765,11 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketAvailable(
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
     }
-
+    if (sock->closed == PR_TRUE) {
+        JSSL_throwSSLSocketException(env,
+        "Socket is marked as closed");
+        goto finish;
+    }
     available = SSL_DataPending(sock->fd);
     PR_ASSERT(available >= 0);
 
