@@ -228,6 +228,9 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_getReuseAddress;
 ;+    global:
 Java_org_mozilla_jss_crypto_SecretDecoderRing_encrypt;
 Java_org_mozilla_jss_crypto_SecretDecoderRing_decrypt;
+Java_org_mozilla_jss_CryptoManager_configureOCSPNative;
+Java_org_mozilla_jss_CryptoManager_verifyCertNowNative;
+Java_org_mozilla_jss_CryptoManager_verifyCertTempNative;
 ;+    local:
 ;+       *;
 ;+};

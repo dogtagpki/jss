@@ -1,27 +1,27 @@
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Security Services for Java.
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
+ * Communications Corporation.  Portions created by Netscape are
  * Copyright (C) 1998-2000 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -51,10 +51,54 @@ import org.mozilla.jss.CRLImportException;
  * Initialization is done with static methods, and must be done before
  * an instance can be created.  All other operations are done with instance
  * methods.
- * @version $Revision$ $Date$ 
+ * @version $Revision$ $Date$
  */
 public final class CryptoManager implements TokenSupplier
 {
+
+    /**
+     * CertUsage options for validation
+     */
+    public final static class CertUsage {
+        private int usage;
+        private String name;
+        static private ArrayList list = new ArrayList();
+        private CertUsage() {};
+        private CertUsage(int usage, String name) {
+            this.usage = usage;
+            this.name =  name;
+            this.list.add(this);
+
+        }
+        public int getUsage() {
+            return usage;
+        }
+
+        static public Iterator getCertUsages() {
+            return list.iterator();
+
+        }
+        public String toString() {
+            return name;
+        }
+
+
+
+        // certUsage, these must be kept in sync with nss/lib/certdb/certt.h
+        public static final CertUsage SSLClient = new CertUsage(0, "SSLClient");
+        public static final CertUsage SSLServer = new CertUsage(1, "SSLServer");
+        public static final CertUsage SSLServerWithStepUp = new CertUsage(2, "SSLServerWithStepUp");
+        public static final CertUsage SSLCA = new CertUsage(3, "SSLCA");
+        public static final CertUsage EmailSigner = new CertUsage(4, "EmailSigner");
+        public static final CertUsage EmailRecipient = new CertUsage(5, "EmailRecipient");
+        public static final CertUsage ObjectSigner = new CertUsage(6, "ObjectSigner");
+        public static final CertUsage UserCertImport = new CertUsage(7, "UserCertImport");
+        public static final CertUsage VerifyCA = new CertUsage(8, "VerifyCA");
+        public static final CertUsage ProtectedObjectSigner = new CertUsage(9, "ProtectedObjectSigner");
+        public static final CertUsage StatusResponder = new CertUsage(10, "StatusResponder");
+        public static final CertUsage AnyCA = new CertUsage(11, "AnyCA");
+    }
+
     public final static class NotInitializedException extends Exception {}
     public final static class NicknameConflictException extends Exception {}
     public final static class UserCertConflictException extends Exception {}
@@ -91,7 +135,7 @@ public final class CryptoManager implements TokenSupplier
         /**
          * This class enumerates the possible modes for FIPS compliance.
          */
-        public static final class FIPSMode { 
+        public static final class FIPSMode {
             private FIPSMode() {}
 
             /**
@@ -108,7 +152,7 @@ public final class CryptoManager implements TokenSupplier
              * be altering FIPS mode.
              */
             public static final FIPSMode UNCHANGED = new FIPSMode();
-		}
+                }
 
         public InitializationValues(String configDir) {
             this.configDir = configDir;
@@ -381,36 +425,36 @@ public final class CryptoManager implements TokenSupplier
         private String FIPSKeyStorageSlotDescription =
             "NSS Internal FIPS-140-1 Private Key and Certificate Storage      ";
 
-		/**
-		 * To have NSS check the OCSP responder for when verifying
-		 * certificates, set this flags to true. It is false by
-		 * default.
-		 */
-		public boolean ocspCheckingEnabled = false;
+                /**
+                 * To have NSS check the OCSP responder for when verifying
+                 * certificates, set this flags to true. It is false by
+                 * default.
+                 */
+                public boolean ocspCheckingEnabled = false;
 
-		/**
- 		 * Specify the location and cert of the responder.
- 		 * If OCSP checking is enabled *and* this variable is
-		 * set to some URL, all OCSP checking will be done via
-		 * this URL.
-		 *
-		 * If this variable is null, the OCSP responder URL will
-		 * be obtained from the AIA extension in the certificate
-		 * being queried.
-		 *
-		 * If this is set, you must also set ocspResponderCertNickname
-		 *
-		 */
+                /**
+                 * Specify the location and cert of the responder.
+                 * If OCSP checking is enabled *and* this variable is
+                 * set to some URL, all OCSP checking will be done via
+                 * this URL.
+                 *
+                 * If this variable is null, the OCSP responder URL will
+                 * be obtained from the AIA extension in the certificate
+                 * being queried.
+                 *
+                 * If this is set, you must also set ocspResponderCertNickname
+                 *
+                 */
 
-		
-		public String ocspResponderURL = null;
+                
+                public String ocspResponderURL = null;
 
-		/**
-		 * The nickname of the cert to trust (expected) to 
-		 * sign the OCSP responses. 
-		 * Only checked when the OCSPResponder value is set.
-		 */
-		public String ocspResponderCertNickname = null;
+                /**
+                 * The nickname of the cert to trust (expected) to
+                 * sign the OCSP responses.
+                 * Only checked when the OCSPResponder value is set.
+                 */
+                public String ocspResponderCertNickname = null;
 
 
         /**
@@ -481,24 +525,24 @@ public final class CryptoManager implements TokenSupplier
         throw new NoSuchTokenException();
     }
 
-	/**
-	 * Retrieves all tokens that support the given algorithm.
-	 *
-	 */
-	public synchronized Enumeration getTokensSupportingAlgorithm(Algorithm alg)
-	{
-		Enumeration tokens = getAllTokens();
-		Vector goodTokens = new Vector();
-		CryptoToken tok;
+        /**
+         * Retrieves all tokens that support the given algorithm.
+         *
+         */
+        public synchronized Enumeration getTokensSupportingAlgorithm(Algorithm alg)
+        {
+                Enumeration tokens = getAllTokens();
+                Vector goodTokens = new Vector();
+                CryptoToken tok;
 
-		while(tokens.hasMoreElements()) {
-			tok = (CryptoToken) tokens.nextElement();
-			if( tok.doesAlgorithm(alg) ) {
-				goodTokens.addElement(tok);
-			}
-		}
-		return goodTokens.elements();
-	}
+                while(tokens.hasMoreElements()) {
+                        tok = (CryptoToken) tokens.nextElement();
+                        if( tok.doesAlgorithm(alg) ) {
+                                goodTokens.addElement(tok);
+                        }
+                }
+                return goodTokens.elements();
+        }
 
     /**
      * Retrieves all tokens. This is an enumeration of all tokens on all
@@ -571,7 +615,7 @@ public final class CryptoManager implements TokenSupplier
      */
     private Vector moduleVector;
 
-    /** 
+    /**
      * Re-creates the Vector of modules that is stored by CryptoManager.
      * This entails going into native code to enumerate all modules,
      * wrap each one in a PK11Module, and storing the PK11Module in the vector.
@@ -630,7 +674,7 @@ public final class CryptoManager implements TokenSupplier
     }
 
     /**
-     * Retrieve the single instance of CryptoManager. 
+     * Retrieve the single instance of CryptoManager.
      * This cannot be called before initialization.
      *
      * @see #initialize(CryptoManager.InitializationValues)
@@ -657,22 +701,22 @@ public final class CryptoManager implements TokenSupplier
     // FIPS management
     ///////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Enables or disables FIPS-140-1 compliant mode. If this returns true,
+        /**
+         * Enables or disables FIPS-140-1 compliant mode. If this returns true,
      * you must reloadModules(). This should only be called once in a program,
      * at the beginning, because it invalidates tokens and modules.
-	 *
-	 * @param fips true to turn FIPS compliant mode on, false to turn it off.
-	 */
+         *
+         * @param fips true to turn FIPS compliant mode on, false to turn it off.
+         */
     private static native boolean enableFIPS(boolean fips)
         throws GeneralSecurityException;
 
-	/**
-	 * Determines whether FIPS-140-1 compliance is active.
-	 *
-	 * @return true if the security library is in FIPS-140-1 compliant mode.
-	 */
-	public synchronized native boolean FIPSEnabled();
+        /**
+         * Determines whether FIPS-140-1 compliance is active.
+         *
+         * @return true if the security library is in FIPS-140-1 compliant mode.
+         */
+        public synchronized native boolean FIPSEnabled();
 
     ///////////////////////////////////////////////////////////////////////
     // Password Callback management
@@ -754,12 +798,12 @@ public final class CryptoManager implements TokenSupplier
             throw new AlreadyInitializedException();
         }
         loadNativeLibraries();
-		if (values.ocspResponderURL != null) {
-			if (values.ocspResponderCertNickname == null) {
-				throw new GeneralSecurityException(
-					"Must set ocspResponderCertNickname");
-			}
-		}
+                if (values.ocspResponderURL != null) {
+                        if (values.ocspResponderCertNickname == null) {
+                                throw new GeneralSecurityException(
+                                        "Must set ocspResponderCertNickname");
+                        }
+                }
         initializeAllNative(values.configDir,
                             values.certPrefix,
                             values.keyPrefix,
@@ -773,10 +817,10 @@ public final class CryptoManager implements TokenSupplier
                             values.getInternalKeyStorageSlotDescription(),
                             values.getFIPSSlotDescription(),
                             values.getFIPSKeyStorageSlotDescription(),
-							values.ocspCheckingEnabled,
-							values.ocspResponderURL,
-							values.ocspResponderCertNickname
-							);
+                                                        values.ocspCheckingEnabled,
+                                                        values.ocspResponderURL,
+                                                        values.ocspResponderCertNickname
+                                                        );
 
         instance = new CryptoManager();
         instance.setPasswordCallback(values.passwordCallback);
@@ -788,16 +832,16 @@ public final class CryptoManager implements TokenSupplier
             }
         }
         if( values.removeSunProvider ) {
-		    java.security.Security.removeProvider("SUN");
+                    java.security.Security.removeProvider("SUN");
         }
         if( values.installJSSProvider ) {
-		    int position = java.security.Security.insertProviderAt(
-							new org.mozilla.jss.provider.Provider(),
-							1);
-		    if(position==-1) {
-			    Debug.trace(Debug.ERROR,
-				    "Unable to install default provider");
-		    }
+                    int position = java.security.Security.insertProviderAt(
+                                                        new org.mozilla.jss.provider.Provider(),
+                                                        1);
+                    if(position==-1) {
+                            Debug.trace(Debug.ERROR,
+                                    "Unable to install default provider");
+                    }
         }
     }
 
@@ -815,9 +859,9 @@ public final class CryptoManager implements TokenSupplier
                         String internalKeyStorageSlotDescription,
                         String fipsSlotDescription,
                         String fipsKeyStorageSlotDescription,
-						boolean ocspCheckingEnabled,
-						String ocspResponderURL,
-						String ocspResponderCertNickname
+                                                boolean ocspCheckingEnabled,
+                                                String ocspResponderURL,
+                                                String ocspResponderCertNickname
 )
         throws KeyDatabaseException,
         CertDatabaseException,
@@ -974,27 +1018,27 @@ public final class CryptoManager implements TokenSupplier
      * @param derCert the certificate you want to add
      * @param nickname the nickname you want to refer to the certificate as
      *        (must not be null)
-	 */
+         */
 
-	public InternalCertificate
-		importCertToPerm(X509Certificate cert, String nickname)
-		throws TokenException, InvalidNicknameException
-	{
-		if (nickname==null) {
-			throw new InvalidNicknameException("Nickname must be non-null");
-		}
+        public InternalCertificate
+                importCertToPerm(X509Certificate cert, String nickname)
+                throws TokenException, InvalidNicknameException
+        {
+                if (nickname==null) {
+                        throw new InvalidNicknameException("Nickname must be non-null");
+                }
 
-		if (cert instanceof InternalCertificate) {
-			return (InternalCertificate) cert;
-		}
-		else {
-			return importCertToPermNative(cert,nickname);
-		}
-	}
+                if (cert instanceof InternalCertificate) {
+                        return (InternalCertificate) cert;
+                }
+                else {
+                        return importCertToPermNative(cert,nickname);
+                }
+        }
 
-	private native InternalCertificate
-		importCertToPermNative(X509Certificate cert, String nickname)
-		throws TokenException;
+        private native InternalCertificate
+                importCertToPermNative(X509Certificate cert, String nickname)
+                throws TokenException;
 
     /**
      * @param noUser true if we know that none of the certs are user certs.
@@ -1010,42 +1054,42 @@ public final class CryptoManager implements TokenSupplier
             NoSuchItemOnTokenException,
             TokenException;
 
-	/*============ CRL importing stuff ********************************/
+        /*============ CRL importing stuff ********************************/
 
-	private static int TYPE_KRL = 0;
-	private static int TYPE_CRL = 1;
-	/**
-	 * Imports a CRL, and stores it into the cert7.db
-	 * Validate CRL then import it to the dbase.  If there is already a CRL with the
- 	 * same CA in the dbase, it will be replaced if derCRL is more up to date.
-	 *
-	 * @param crl the DER-encoded CRL.
-	 * @param url the URL where this CRL can be retrieved from (for future updates).
-	 *    [ note that CRLs are not retrieved automatically ]. Can be null
+        private static int TYPE_KRL = 0;
+        private static int TYPE_CRL = 1;
+        /**
+         * Imports a CRL, and stores it into the cert7.db
+         * Validate CRL then import it to the dbase.  If there is already a CRL with the
+         * same CA in the dbase, it will be replaced if derCRL is more up to date.
+         *
+         * @param crl the DER-encoded CRL.
+         * @param url the URL where this CRL can be retrieved from (for future updates).
+         *    [ note that CRLs are not retrieved automatically ]. Can be null
      * @exception CRLImportException If the package encoding
      *      was not recognized.
-	 */
- 	public void
+         */
+        public void
     importCRL(byte[] crl,String url)
         throws CRLImportException,
             TokenException
-	{
-		importCRLNative(crl,url,TYPE_CRL);
-	}
+        {
+                importCRLNative(crl,url,TYPE_CRL);
+        }
 
 
-	/**
-	 * Imports a CRL, and stores it into the cert7.db
-	 *
-	 * @param the DER-encoded CRL.
-	 */
-	private native 
-	void importCRLNative(byte[] crl, String url, int rl_type)
+        /**
+         * Imports a CRL, and stores it into the cert7.db
+         *
+         * @param the DER-encoded CRL.
+         */
+        private native
+        void importCRLNative(byte[] crl, String url, int rl_type)
         throws CRLImportException, TokenException;
 
 
 
-	/*============ Cert Exporting stuff ********************************/
+        /*============ Cert Exporting stuff ********************************/
 
 
     /**
@@ -1054,18 +1098,18 @@ public final class CryptoManager implements TokenSupplier
      * field contains the given certificates but whose <i>content</i> field
      * is empty.
      *
-     * @param certs One or more certificates that should be exported into 
+     * @param certs One or more certificates that should be exported into
      *      the PKCS #7 object.  The leaf certificate should be the first
      *      in the chain.  The output of <code>buildCertificateChain</code>
      *      would be appropriate here.
-	 * @exception CertificateEncodingException If the array is empty,
-	 *		or an error occurred encoding the certificates.
+         * @exception CertificateEncodingException If the array is empty,
+         *              or an error occurred encoding the certificates.
      * @return A byte array containing a PKCS #7 <i>SignedData</i> object.
      * @see #buildCertificateChain
      */
     public native byte[]
     exportCertsToPKCS7(X509Certificate[] certs)
-		throws CertificateEncodingException;
+                throws CertificateEncodingException;
 
     /**
      * Looks up a certificate given its nickname.
@@ -1077,12 +1121,12 @@ public final class CryptoManager implements TokenSupplier
      * @exception TokenException If an error occurs in the security library.
      */
     public org.mozilla.jss.crypto.X509Certificate
-	findCertByNickname(String nickname)
+        findCertByNickname(String nickname)
         throws ObjectNotFoundException, TokenException
-	{
+        {
         Assert._assert(nickname!=null);
-		return findCertByNicknameNative(nickname);
-	}
+                return findCertByNicknameNative(nickname);
+        }
 
     /**
      * Returns all certificates with the given nickname.
@@ -1095,16 +1139,16 @@ public final class CryptoManager implements TokenSupplier
     public org.mozilla.jss.crypto.X509Certificate[]
     findCertsByNickname(String nickname)
         throws TokenException
-	{
+        {
         Assert._assert(nickname!=null);
-		return findCertsByNicknameNative(nickname);
-	}
+                return findCertsByNicknameNative(nickname);
+        }
 
     /**
      * Looks up a certificate by issuer and serial number. The internal
      *      database and all PKCS #11 modules are searched.
      *
-     * @param derIssuer The DER encoding of the certificate issuer name. 
+     * @param derIssuer The DER encoding of the certificate issuer name.
      *      The issuer name has ASN.1 type <i>Name</i>, which is defined in
      *      X.501.
      * @param serialNumber The certificate serial number.
@@ -1135,9 +1179,9 @@ public final class CryptoManager implements TokenSupplier
     findCertByIssuerAndSerialNumberNative(byte[] derIssuer, byte[] serialNumber)
         throws ObjectNotFoundException, TokenException;
 
-	protected native org.mozilla.jss.crypto.X509Certificate
-	findCertByNicknameNative(String nickname)
-		throws ObjectNotFoundException, TokenException;
+        protected native org.mozilla.jss.crypto.X509Certificate
+        findCertByNicknameNative(String nickname)
+                throws ObjectNotFoundException, TokenException;
 
     protected native org.mozilla.jss.crypto.X509Certificate[]
     findCertsByNicknameNative(String nickname)
@@ -1156,19 +1200,19 @@ public final class CryptoManager implements TokenSupplier
      *      by the underlying provider.
      */
     public org.mozilla.jss.crypto.X509Certificate[]
-	buildCertificateChain(org.mozilla.jss.crypto.X509Certificate leaf)
+        buildCertificateChain(org.mozilla.jss.crypto.X509Certificate leaf)
         throws java.security.cert.CertificateException, TokenException
-	{
-		if( ! (leaf instanceof PK11Cert) ) {
-			throw new CertificateException(
-						"Certificate is not a PKCS #11 certificate");
-		}
-		return buildCertificateChainNative((PK11Cert)leaf);
-	}
+        {
+                if( ! (leaf instanceof PK11Cert) ) {
+                        throw new CertificateException(
+                                                "Certificate is not a PKCS #11 certificate");
+                }
+                return buildCertificateChainNative((PK11Cert)leaf);
+        }
 
-	native org.mozilla.jss.crypto.X509Certificate[]
+        native org.mozilla.jss.crypto.X509Certificate[]
     buildCertificateChainNative(PK11Cert leaf)
-		throws CertificateException, TokenException;
+                throws CertificateException, TokenException;
 
 
     /////////////////////////////////////////////////////////////
@@ -1182,19 +1226,19 @@ public final class CryptoManager implements TokenSupplier
      * @exception TokenException If an error occurs in the security library.
      */
     public org.mozilla.jss.crypto.PrivateKey
-	findPrivKeyByCert(org.mozilla.jss.crypto.X509Certificate cert)
+        findPrivKeyByCert(org.mozilla.jss.crypto.X509Certificate cert)
         throws ObjectNotFoundException, TokenException
-	{
+        {
         Assert._assert(cert!=null);
-		if(! (cert instanceof org.mozilla.jss.pkcs11.PK11Cert)) {
-			Assert.notReached("non-pkcs11 cert passed to PK11Finder");
-			throw new ObjectNotFoundException();
-		}
-		return findPrivKeyByCertNative(cert);
-	}
+                if(! (cert instanceof org.mozilla.jss.pkcs11.PK11Cert)) {
+                        Assert.notReached("non-pkcs11 cert passed to PK11Finder");
+                        throw new ObjectNotFoundException();
+                }
+                return findPrivKeyByCertNative(cert);
+        }
 
     protected native org.mozilla.jss.crypto.PrivateKey
-	findPrivKeyByCertNative(org.mozilla.jss.crypto.X509Certificate cert)
+        findPrivKeyByCertNative(org.mozilla.jss.crypto.X509Certificate cert)
         throws ObjectNotFoundException, TokenException;
 
     /////////////////////////////////////////////////////////////
@@ -1206,7 +1250,7 @@ public final class CryptoManager implements TokenSupplier
      *
      * @return A JSS SecureRandom implemented with FIPS-validated NSS.
      */
-    public org.mozilla.jss.crypto.JSSSecureRandom 
+    public org.mozilla.jss.crypto.JSSSecureRandom
     createPseudoRandomNumberGenerator()
     {
         return new PK11SecureRandom();
@@ -1276,5 +1320,98 @@ public final class CryptoManager implements TokenSupplier
         }
     }
     static private boolean mNativeLibrariesLoaded = false;
+    /////////////////////////////////////////////////////////////
+    // isCertValid
+    /////////////////////////////////////////////////////////////
+    /**
+     * Verify a certificate that exists in the given cert database,
+     * check if is valid and that we trust the issuer. Verify time
+     * against Now.
+     * @param nickname The nickname of the certificate to verify.
+     * @param checkSig verify the signature of the certificate
+     * @param certUsage see exposed certUsage defines to verify Certificate
+     * @return true for success; false otherwise
+     *
+     * @exception InvalidNicknameException If the nickname is null
+     * @exception ObjectNotFoundException If no certificate could be found
+     *      with the given nickname.
+     */
+
+    public boolean isCertValid(String nickname, boolean checkSig,
+            CertUsage certUsage)
+        throws ObjectNotFoundException, InvalidNicknameException
+    {
+        if (nickname==null) {
+            throw new InvalidNicknameException("Nickname must be non-null");
+        }
+        return verifyCertNowNative(nickname, checkSig, certUsage.getUsage());
+    }
+
+    private native boolean verifyCertNowNative(String nickname,
+        boolean checkSig, int cUsage) throws ObjectNotFoundException;
+
+    /////////////////////////////////////////////////////////////
+    // isCertValid
+    /////////////////////////////////////////////////////////////
+    /**
+     * Verify a certificate in memory. Check if
+     * valid and that we trust the issuer. Verify time
+     * against Now.
+     * @param certificate in memory
+     * @param checkSig verify the signature of the certificate
+     * @param certUsage see exposed certUsage defines to verify Certificate
+     * @return true for success; false otherwise
+     *
+     * @exception TokenException unable to insert temporary certificate
+     *            into database.
+     * @exception CertificateEncodingException If the package encoding
+     *      was not recognized.
+     */
+
+    public boolean isCertValid(byte[] certPackage, boolean checkSig,
+            CertUsage certUsage)
+        throws TokenException, CertificateEncodingException
+    {
+        return verifyCertTempNative(certPackage , checkSig,
+                                    certUsage.getUsage());
+    }
+
+
+    private native boolean verifyCertTempNative(byte[] certPackage,
+        boolean checkSig, int cUsage)
+        throws TokenException, CertificateEncodingException;
+
+     ///////////////////////////////////////////////////////////////////////
+    // OCSP management
+    ///////////////////////////////////////////////////////////////////////
+
+    /**
+     * Enables OCSP, note when you Initialize JSS for the first time, for
+     * backwards compatibility, the initialize will enable OCSP if you
+     * previously set values.ocspCheckingEnabled and
+     * values.ocspResponderURL/values.ocspResponderCertNickname
+     * configureOCSP will allow changing of the the OCSPResponder at runtime.
+     *      * @param ocspChecking true or false to enable/disable OCSP
+     *      * @param ocspResponderURL - url of the OCSP responder
+     *      * @param ocspResponderCertNickname - the nickname of the OCSP
+     *        signer certificate or the CA certificate found in the cert DB
+     */
+
+    public void configureOCSP(
+        boolean ocspCheckingEnabled,
+        String ocspResponderURL,
+        String ocspResponderCertNickname )
+    throws GeneralSecurityException
+    {
+        configureOCSPNative(ocspCheckingEnabled,
+                                   ocspResponderURL,
+                                    ocspResponderCertNickname );
+    }
+
+    private native void configureOCSPNative( boolean ocspCheckingEnabled,
+                    String ocspResponderURL,
+                    String ocspResponderCertNickname )
+                    throws GeneralSecurityException;
+
 
 }
