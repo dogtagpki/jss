@@ -1,4 +1,4 @@
-# 
+#
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,38 +29,16 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-# 
+#
+# Config stuff for SunOS5.9
+#
 
-CORE_DEPTH = ../../../../../..
+SOL_CFLAGS += -D_SVID_GETTOD
 
-MODULE = jss
+include $(CORE_DEPTH)/coreconf/SunOS5.mk
 
-NS_USE_JDK = 1
+ifeq ($(OS_RELEASE),5.9)
+	OS_DEFINES += -DSOLARIS2_9
+endif
 
-
-PACKAGE =       org/mozilla/jss/pkix/cmc
-
-
-CLASSES =	            \
-            PKIData \
-            TaggedCertificationRequest \
-            TaggedRequest \
-            ResponseBody \
-            TaggedAttribute \
-            CMCStatusInfo \
-            PendInfo \
-            OtherInfo \
-            $(NULL)
-
-
-
-JSRCS =	                       \
-            PKIData.java \
-            TaggedCertificationRequest.java \
-            TaggedRequest.java \
-            ResponseBody.java \
-            TaggedAttribute.java \
-            CMCStatusInfo.java \
-            PendInfo.java \
-            OtherInfo.java \
-            $(NULL)
+OS_LIBS += -lthread -lnsl -lsocket -lposix4 -ldl -lc 
