@@ -55,6 +55,7 @@ import org.mozilla.jss.CRLImportException;
  */
 public final class CryptoManager implements TokenSupplier
 {
+
     public final static class NotInitializedException extends Exception {}
     public final static class NicknameConflictException extends Exception {}
     public final static class UserCertConflictException extends Exception {}
@@ -419,9 +420,9 @@ public final class CryptoManager implements TokenSupplier
         public boolean installJSSProvider = true;
 
         /**
-         * Remove the Sun crypto provider. Default is true.
+         * Remove the Sun crypto provider. Default is false.
          */
-        public boolean removeSunProvider = true;
+        public boolean removeSunProvider = false;
     }
 
     ////////////////////////////////////////////////////
