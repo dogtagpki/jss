@@ -34,7 +34,7 @@ ARCH='ARCH=\"ISA\"'
 mach=""
 prodver=""
 awk_script=""
-version="JSS 3.3"
+version="JSSVERS"
 
 while getopts o:p:m:v: c
 do
@@ -89,7 +89,7 @@ cat << EOF > $awk_script
    }
 /$VERSION2/ {
       sub(/\=[^=]*$/,"=$rev\"")
-      sub(/NSPRVERS/,"$version")
+      sub(/JSSVERS/,"$version")
       print
       next
    }
