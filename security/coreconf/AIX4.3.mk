@@ -39,14 +39,13 @@ include $(CORE_DEPTH)/coreconf/AIX.mk
 ifeq ($(USE_64), 1)
 # Next line replaced by generic name handling in arch.mk
 #	COMPILER_TAG    = _64
-	OS_CFLAGS	+= -DAIX_64BIT
+	OS_CFLAGS	+= -O2 -DAIX_64BIT
 	OBJECT_MODE=64
 	export OBJECT_MODE
 endif
 OS_CFLAGS	+= -DAIX4_3
-DSO_LDOPTS	= -brtl -bM:SRE -bnoentry $(EXPORT_RULES)
+DSO_LDOPTS	= -brtl -bM:SRE -bnoentry -bexpall
 MKSHLIB		= $(LD) $(DSO_LDOPTS) -lsvld -L/usr/lpp/xlC/lib -lc -lm
 
 OS_LIBS		+= -L/usr/lpp/xlC/lib -lc -lm
-EXPORT_RULES	= -bexpall
 

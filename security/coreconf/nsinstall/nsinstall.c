@@ -55,7 +55,7 @@ typedef unsigned int mode_t;
 
 #define HAVE_LCHOWN
 
-#if defined(AIX) || defined(BSDI) || defined(HPUX) || defined(LINUX) || defined(SUNOS4) || defined(SCO) || defined(UNIXWARE) || defined(VMS)
+#if defined(AIX) || defined(BSDI) || defined(HPUX) || defined(LINUX) || defined(SUNOS4) || defined(SCO) || defined(UNIXWARE)
 #undef HAVE_LCHOWN
 #endif
 
@@ -72,27 +72,6 @@ typedef unsigned int mode_t;
 #if defined(SNI)
 extern int fchmod(int fildes, mode_t mode);
 #endif
-
-
-#ifdef GETCWD_CANT_MALLOC
-/*
- * this should probably go into a utility library in case other applications
- * need it.
- */
-static char *
-getcwd_do_malloc(char *path, int len) {
-
-    if (!path) {
-	path = malloc(PATH_MAX +1);
-	if (!path) return NULL;
-    }
-    return getcwd(path, PATH_MAX);
-}
-#define GETCWD	getcwd_do_malloc
-#else
-#define GETCWD	getcwd
-#endif
-
 
 static void
 usage(void)
@@ -260,14 +239,14 @@ main(int argc, char **argv)
 	return 0;
 
     if (!cwd) {
-	cwd = GETCWD(0, PATH_MAX);
+	cwd = getcwd(0, PATH_MAX);
 	if (!cwd)
 	    fail("could not get CWD");
     }
 
     /* make sure we can get into todir. */
     xchdir(todir);
-    todir = GETCWD(0, PATH_MAX);
+    todir = getcwd(0, PATH_MAX);
     if (!todir)
 	fail("could not get CWD in todir");
     tdlen = strlen(todir);

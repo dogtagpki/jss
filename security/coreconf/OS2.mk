@@ -70,7 +70,6 @@ AR                      = emxomfar -p256 r $@
 AR_FLAGS                = 
 RANLIB 			= @echo OS2 RANLIB
 BSDECHO 		= @echo OS2 BSDECHO
-IMPLIB    = emximp -o
 FILTER    = emxexp
 
 ifndef NO_SHARED_LIB
@@ -124,7 +123,6 @@ AR		= -ilib /NOL /NOI /O:$(subst /,\\,$@)
 AR_FLAGS                = 
 RANLIB 			= @echo OS2 RANLIB
 BSDECHO 		= @echo OS2 BSDECHO
-IMPLIB    = implib /NOL /NOI
 FILTER    = cppfilt -b -p -q
 
 ifndef NO_SHARED_LIB

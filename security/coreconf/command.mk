@@ -39,6 +39,7 @@
 AS            = $(CC)
 ASFLAGS      += $(CFLAGS)
 CCF           = $(CC) $(CFLAGS)
+PURIFY        = purify $(PURIFYOPTIONS)
 LINK_DLL      = $(LINK) $(OS_DLLFLAGS) $(DLLFLAGS)
 LINK_EXE      = $(LINK) $(OS_LFLAGS) $(LFLAGS)
 NFSPWD        = $(NSINSTALL_DIR)/nfspwd

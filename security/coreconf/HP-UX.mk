@@ -40,7 +40,6 @@ DEFAULT_COMPILER = cc
 
 CPU_ARCH   = hppa
 DLL_SUFFIX = sl
-CC         = cc
 CCC        = CC
 OS_CFLAGS  += -Ae $(DSO_CFLAGS) -DHPUX -D$(CPU_ARCH) -D_HPUX_SOURCE
 
@@ -64,8 +63,10 @@ LDFLAGS			= -z -Wl,+s
 
 MKSHLIB			= $(LD) $(DSO_LDOPTS)
 
-DSO_LDOPTS		= -b +h $(notdir $@)
+DSO_LDOPTS		= -b
 DSO_LDFLAGS		=
 
 # +Z generates position independent code for use in shared libraries.
 DSO_CFLAGS = +Z
+
+HAVE_PURIFY		= 1

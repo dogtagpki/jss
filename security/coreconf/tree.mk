@@ -43,20 +43,20 @@ ifndef RELEASE_TREE
 		ifdef USE_SHIPS 
 			RELEASE_TREE = $(BUILD_SHIP)
 		else
-			RELEASE_TREE = /share/builds/components
+			RELEASE_TREE = /m/dist
 		endif
 	else
-		RELEASE_TREE = /share/builds/components
+		RELEASE_TREE = /m/dist
 	endif
 		ifeq ($(OS_TARGET), WINNT)
 		ifdef BUILD_SHIP
 			ifdef USE_SHIPS
 				RELEASE_TREE = $(NTBUILD_SHIP)
 			else
-				RELEASE_TREE = //hs-sca15c/components
+				RELEASE_TREE = //iridium/components
 			endif
 		else
-			RELEASE_TREE = //hs-sca15c/components
+			RELEASE_TREE = //iridium/components
 		endif
 		endif
 	
@@ -65,10 +65,10 @@ ifndef RELEASE_TREE
 			ifdef USE_SHIPS
 				RELEASE_TREE = $(NTBUILD_SHIP)
 			else
-				RELEASE_TREE = //hs-sca15c/components
+				RELEASE_TREE = //iridium/components
 			endif
 		else
-			RELEASE_TREE = //hs-sca15c/components
+			RELEASE_TREE = //iridium/components
 		endif
 	endif
 	ifeq ($(OS_TARGET), WIN16)
@@ -76,10 +76,10 @@ ifndef RELEASE_TREE
 		ifdef USE_SHIPS
 			RELEASE_TREE = $(NTBUILD_SHIP)
 		else
-			RELEASE_TREE = //hs-sca15c/components
+			RELEASE_TREE = //iridium/components
 		endif
 	else
-		RELEASE_TREE = //hs-sca15c/components
+		RELEASE_TREE = //iridium/components
 	endif
 	endif
 endif

@@ -67,11 +67,11 @@ ifeq ($(OS_ARCH),IRIX64)
 endif
 
 #
-# Force the older BSD/OS versions to use the new arch name.
+# Force the newer BSDI versions to use the old arch name.
 #
 
-ifeq ($(OS_ARCH),BSD_386)
-	OS_ARCH = BSD_OS
+ifeq ($(OS_ARCH),BSD_OS)
+	OS_ARCH = BSD_386
 endif
 
 #
@@ -143,11 +143,6 @@ endif
 #
 ifeq ($(OS_ARCH),OS_2)
 	OS_ARCH = OS2
-	OS_RELEASE := $(shell uname -v)
-endif
-
-ifneq (,$(findstring OpenVMS,$(OS_ARCH)))
-	OS_ARCH = OpenVMS
 	OS_RELEASE := $(shell uname -v)
 endif
 
