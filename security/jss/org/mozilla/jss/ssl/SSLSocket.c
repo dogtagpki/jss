@@ -692,7 +692,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     }
 
     size = (*env)->GetArrayLength(env, bufBA);
-    if( off < 0 || len <= 0 || (off+len) > size) {
+    if( off < 0 || len < 0 || (off+len) > size) {
         JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
         goto finish;
     }
@@ -789,7 +789,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
     }
 
     size = (*env)->GetArrayLength(env, bufBA);
-    if( off < 0 || len <= 0 || (off+len) > size ) {
+    if( off < 0 || len < 0 || (off+len) > size ) {
         JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
         goto finish;
     }
