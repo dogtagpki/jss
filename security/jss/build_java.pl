@@ -118,7 +118,6 @@ sub setup_vars {
     $javadoc = "$ENV{JAVA_HOME}/bin/javadoc";
 
     $dist_dir = $cmdline_vars{SOURCE_PREFIX};
-    $ENV{JCE_JAR} or die "Must specify JCE_JAR environment variable";
     $jce_jar = $ENV{JCE_JAR};
 
     $class_release_dir = $cmdline_vars{SOURCE_RELEASE_PREFIX};
