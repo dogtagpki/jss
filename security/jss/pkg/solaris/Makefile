@@ -16,17 +16,17 @@ CORE_DEPTH = ../../..
 DIRS = \
 	SUNWjss
 
+include Makefile.com
+
 PROTO = \
 	$(ROOT) \
 	$(ROOT)/usr/share/lib/mps \
 	$(ROOT)/usr/lib/mps
 
-ifeq ($(ARCH),sparc)
+ifeq ($(MACH),sparc)
 	PROTO += $(ROOT)/usr/share/lib/mps/sparcv9 \
 	$(ROOT)/usr/lib/mps/sparcv9
 endif
-
-include Makefile.com
 
 DIST64 = $(shell echo $(DIST) | sed -e "s|_OPT|_64_OPT|g" -e "s|_DBG|_64_DBG|g")
 
