@@ -432,12 +432,12 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
     }
 
 
-    //clean up the sock structure, but don't delete the sock since it was past to the SocketProxy
-    //and the SocketProxy will releaseNativeresources
+    /*clean up the sock structure, but don't delete the sock since it was past to the SocketProxy */
+    /*and the SocketProxy will releaseNativeresources */
 
     if( ! sock->closed ) {
         PR_Close(sock->fd);
-        sock->closed = PR_TRUE; 
+        sock->closed = PR_TRUE;
 
         if( sock->socketObject != NULL ) {
             DELETE_WEAK_GLOBAL_REF(env, sock->socketObject );
