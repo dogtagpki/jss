@@ -28,13 +28,13 @@ ifdef JSS3_LOCATION
 endif
 	mkdir -p opt/sun/private/share/lib 
 ifeq ($(BUILD_OPT), 1)
-	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/xpclass.jar \
+	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/jss4.jar \
 		opt/sun/private/share/lib/jss4.jar
 ifdef JSS3_LOCATION
 	cp $(JSS3_LOCATION)/xpclass.jar opt/sun/private/share/lib/jss3.jar
 endif
 else
-	cp $(CORE_DEPTH)/../dist/release/no-policy/classes_DBG/xpclass_dbg.jar \
+	cp $(CORE_DEPTH)/../dist/release/no-policy/classes_DBG/jss4_dbg.jar \
 		opt/sun/private/share/lib/jss4.jar
 ifdef JSS3_LOCATION
 	cp $(JSS3_LOCATION)/xpclass_dbg.jar opt/sun/private/share/lib/jss3.jar
