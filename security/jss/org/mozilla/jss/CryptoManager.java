@@ -747,9 +747,7 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * This function sets the global password callback.  It is
-     * not thread-safe to change this. A better strategy than using
-     * callbacks is to explicitly login to the tokens you need to use.
-     * Password callbacks are then only used as a last resort.
+     * not thread-safe to change this.
      * <p>The callback may be NULL, in which case password callbacks will
      * fail gracefully.
      */
