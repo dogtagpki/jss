@@ -1,4 +1,4 @@
-# 
+#
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -9,11 +9,11 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 # 
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 # 
 # The Initial Developer of the Original Code is Netscape
 # Communications Corporation.  Portions created by Netscape are 
-# Copyright (C) 1998-2000 Netscape Communications Corporation.  All
+# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
 # Rights Reserved.
 # 
 # Contributor(s):
@@ -29,38 +29,24 @@
 # the GPL.  If you do not delete the provisions above, a recipient
 # may use your version of this file under either the MPL or the
 # GPL.
-# 
+#
+# Config stuff for AIX5.1
+#
 
-CORE_DEPTH = ../../../../../..
-
-MODULE = jss
-
-NS_USE_JDK = 1
+include $(CORE_DEPTH)/coreconf/AIX.mk
 
 
-PACKAGE =       org/mozilla/jss/pkix/cmc
+ifeq ($(USE_64), 1)
+# Next line replaced by generic name handling in arch.mk
+#	COMPILER_TAG    = _64
+	OS_CFLAGS	+= -DAIX_64BIT
+	OBJECT_MODE=64
+	export OBJECT_MODE
+endif
+OS_CFLAGS	+= -DAIX5_1
+DSO_LDOPTS	= -brtl -bM:SRE -bnoentry $(EXPORT_RULES)
+MKSHLIB		= $(LD) $(DSO_LDOPTS) -lsvld -L/usr/lpp/xlC/lib -lc -lm
 
+OS_LIBS		+= -L/usr/lpp/xlC/lib -lc -lm
+EXPORT_RULES	= -bexpall
 
-CLASSES =	            \
-            PKIData \
-            TaggedCertificationRequest \
-            TaggedRequest \
-            ResponseBody \
-            TaggedAttribute \
-            CMCStatusInfo \
-            PendInfo \
-            OtherInfo \
-            $(NULL)
-
-
-
-JSRCS =	                       \
-            PKIData.java \
-            TaggedCertificationRequest.java \
-            TaggedRequest.java \
-            ResponseBody.java \
-            TaggedAttribute.java \
-            CMCStatusInfo.java \
-            PendInfo.java \
-            OtherInfo.java \
-            $(NULL)
