@@ -94,7 +94,7 @@ $(ROOT)/usr/share/lib/mps/amd64:
 
 $(ROOT)/usr/lib/mps:
 	mkdir -p $@
-	$(CP) -r $(DIST)/lib/*.so $@
+	$(CP) -r $(DIST32)/lib/*.so $@
 ifdef JSS3_LOCATION
 	$(CP) $(JSS3_LOCATION)/$(OBJ32)/lib/libjss3.so $@
 endif
