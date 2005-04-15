@@ -110,6 +110,10 @@ sub setup_vars {
         $java = $java . " -d64";
     }
 
+	if( $osname =~ /Linux/ ) {
+		$ENV{$ld_lib_path} .= "$ENV{JAVA_HOME}/jre/lib/i386/native_threads";
+	}
+
     $pwfile = "passwords";
 
     print STDERR "*****ENVIRONMENT*****\n";
