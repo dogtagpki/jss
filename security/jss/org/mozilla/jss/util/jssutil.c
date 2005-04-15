@@ -392,8 +392,8 @@ JSS_OctetStringToByteArray(JNIEnv *env, SECItem *item)
     jbyte *bytes;
     int size;    /* size of the resulting byte array */
 
-    PR_ASSERT(env != NULL && item && item->len>0);
-    if (!env || item || !item->len || !item->data) {
+    PR_ASSERT(env != NULL && item != NULL && item->len>0);
+    if (!env || !item || !item->len || !item->data) {
         return NULL;
     }
 
