@@ -285,24 +285,42 @@ public class SSLSocket extends java.net.Socket {
     }
 
     /**
-     * @return The remote peer's IP address.
+     * @the remote IP address to which this socket is connected, 
+     * @or null if the socket is not connected.
      */
     public InetAddress getInetAddress() {
-        return base.getInetAddress();
+        synchronized (this) {
+            if ( isClosed ) { 
+                return null;
+            }
+            return base.getInetAddress();
+        }
     }
 
     /**
-     * @return The local IP address.
+     * @ the local address to which the socket is bound or 
+     * @ null if the socket is not connected.
      */
     public InetAddress getLocalAddress() {
-        return base.getLocalAddress();
+        synchronized (this) {
+            if ( isClosed ) { 
+                return null;
+            }
+            return base.getLocalAddress();
+        }
     }
 
     /**
-     * @return The local port.
+     * @the local port number to which this socket is bound 
+     * @or -1 if the socket is not connected.
      */
     public int getLocalPort() {
-        return base.getLocalPort();
+        synchronized (this) {
+            if ( isClosed ) { 
+                return -1;
+            }
+            return base.getLocalPort();
+        }
     }
 
     /**

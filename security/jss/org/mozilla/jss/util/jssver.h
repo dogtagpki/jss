@@ -44,10 +44,10 @@
  * The format of the version string should be
  *     "<major version>.<minor version>[.<patch level>] [<Beta>]"
  */
-#define JSS_VERSION  "3.1.6"
+#define JSS_VERSION  "3.1.7"
 #define JSS_VMAJOR   3
 #define JSS_VMINOR   1
-#define JSS_VPATCH   6 
+#define JSS_VPATCH   7 
 #define JSS_BETA     PR_FALSE
 
 #endif
