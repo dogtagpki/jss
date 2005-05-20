@@ -156,7 +156,6 @@ public final class CryptoManager implements TokenSupplier
         public InitializationValues(String configDir) {
             this.configDir = configDir;
         }
-
         public InitializationValues(String configDir, String certPrefix,
             String keyPrefix, String secmodName)
         {
@@ -866,6 +865,13 @@ public final class CryptoManager implements TokenSupplier
         }
     }
 
+    private static native void loadNSPRNative();
+
+    public static synchronized void loadNSPR () {
+       loadNativeLibraries();
+       loadNSPRNative();
+    }
+
     private static native void
     initializeAllNative2(String configDir,
                         String certPrefix,
@@ -1304,7 +1310,7 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
     public static final String
-     JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_1_7";
+     JAR_JSS_VERSION     = "JSS_VERSION = JSS_3_1_8";
      public static final String
      JAR_JDK_VERSION     = "JDK_VERSION = JDK 1.4.0";
      public static final String

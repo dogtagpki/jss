@@ -1,3 +1,4 @@
+
 /*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
@@ -66,7 +67,7 @@
 /*                                                                  */
 /********************************************************************/
 
-static const char* DLL_JSS_VERSION     = "JSS_VERSION = JSS_3_1_7";
+static const char* DLL_JSS_VERSION     = "JSS_VERSION = JSS_3_1_8";
 static const char* DLL_JDK_VERSION     = "JDK_VERSION = JDK 1.4.0";
 static const char* DLL_NSS_VERSION     = "NSS_VERSION = NSS_3_3_11";
 static const char* DLL_DBM_VERSION     = "DBM_VERSION = NSS_3_3_11";
@@ -113,8 +114,6 @@ handleSigChild(JNIEnv *env) {
 }
 
 #endif
-
-
 int ConfigureOCSP(
         JNIEnv *env,
         jboolean ocspCheckingEnabled,
@@ -241,6 +240,12 @@ static jobject globalPasswordCallback = NULL;
  * pointer from callback functions.
  */
 JavaVM * JSS_javaVM;
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_loadNSPRNative (JNIEnv *env, jobject this) 
+{
+    PR_Init( PR_SYSTEM_THREAD, PR_PRIORITY_NORMAL, 1);
+}
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_CryptoManager_initializeAllNative

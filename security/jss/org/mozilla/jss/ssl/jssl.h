@@ -132,9 +132,9 @@ JSS_SSL_processExceptions(JNIEnv *env, PRFilePrivate *priv);
 
 #define EXCEPTION_CHECK(env, sock) \
     if( sock != NULL && sock->jsockPriv!=NULL) { \
-        JSS_SSL_processExceptions(env, sock->jsockPriv); \
     }
 
+/*        JSS_SSL_processExceptions(env, sock->jsockPriv);  */
 
 void JSSL_throwSSLSocketException(JNIEnv *env, char *message);
 
