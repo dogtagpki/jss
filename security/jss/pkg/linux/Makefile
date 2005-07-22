@@ -52,6 +52,11 @@ BUILDROOT   = $(PWD)\/$(NAME)-root
 
 include $(CORE_DEPTH)/coreconf/config.mk
 
+# Force i386 for non 64 bit build
+ifneq ($(USE_64),1)
+	RPMTARGET = "--target=i386"
+endif
+
 publish:
 	$(MAKE) clean
 	mkdir -p SOURCES SRPMS RPMS BUILD
@@ -101,7 +106,7 @@ endif
 	find opt -type f ! \( -name "*.so" -o -name "*.jar" \) \
 		| sed -e "s-^-/-" >>temp.spec
 	cp $(NAME)-$(VERSION).tar.gz SOURCES
-	rpm -ba temp.spec
+	rpmbuild $(RPMTARGET) -bb temp.spec
 
 clean::
 	rm -rf SOURCES SRPMS RPMS BUILD
