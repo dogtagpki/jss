@@ -67,7 +67,7 @@
 /*                                                                  */
 /********************************************************************/
 
-static const char* DLL_JSS_VERSION     = "JSS_VERSION = JSS_3_1_8";
+static const char* DLL_JSS_VERSION     = "JSS_VERSION = JSS_3_1_9";
 static const char* DLL_JDK_VERSION     = "JDK_VERSION = JDK 1.4.0";
 static const char* DLL_NSS_VERSION     = "NSS_VERSION = NSS_3_3_11";
 static const char* DLL_DBM_VERSION     = "DBM_VERSION = NSS_3_3_11";
