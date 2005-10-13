@@ -7,7 +7,7 @@
 
 CORE_DEPTH = ../../..
 
-NAME        = sun-jss
+NAME        = sun-jss3
 RELEASE     = 1
 VERSION     = `grep JSS_VERSION $(CORE_DEPTH)/jss/org/mozilla/jss/util/jssver.h \
 		| sed -e 's/"$$//' -e 's/.*"//' -e 's/ .*//'`

@@ -18,7 +18,8 @@ DIRS = \
     SUNWjssx
 else
 DIRS = \
-    SUNWjss
+    SUNWjss \
+    SUNWjss3
 endif
 
 PROTO = \
@@ -58,6 +59,9 @@ $(ROOT)/usr/lib/mps/secv1/sparcv9: $(ROOT)/usr/lib
 else
 $(ROOT)/usr/lib/mps/secv1: $(ROOT)/usr/lib
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR)"
-	$(LN) -sf ../../../../$(DIST)/lib $@
+	mkdir -p $(ROOT)/usr/lib/mps/secv1/sparcv9
+	cp  $(DIST)/lib/libjss3.so $@
 	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/share/lib/mps/secv1/jss3.jar
+	cp $(DIST)/lib/libjss3.so $(ROOT)/usr/lib/mps
+	cp $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_XPCLASS_JAR) $(ROOT)/usr/share/lib/mps/jss3.jar
 endif
