@@ -181,13 +181,15 @@ public final class PK11KeyPairGenerator
                                     token,
                                     rsaparams.getKeySize(),
                                     rsaparams.getPublicExponent().longValue(),
-                                    temporaryPairMode);
+                                    temporaryPairMode,
+                                    extractablePairMode);
             } else {
                 return generateRSAKeyPair(
                                     token,
                                     DEFAULT_RSA_KEY_SIZE,
                                     DEFAULT_RSA_PUBLIC_EXPONENT.longValue(),
-                                    temporaryPairMode);
+                                    temporaryPairMode,
+                                    extractablePairMode);
             }
         } else {
             Assert._assert( algorithm == KeyPairAlgorithm.DSA );
@@ -200,7 +202,8 @@ public final class PK11KeyPairGenerator
                 PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getP()),
                 PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getQ()),
                 PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getG()),
-                temporaryPairMode );
+                temporaryPairMode,
+                extractablePairMode);
         }
     }
 
@@ -224,7 +227,7 @@ public final class PK11KeyPairGenerator
      */
     private native KeyPair
     generateRSAKeyPair(PK11Token token, int keySize, long publicExponent,
-            boolean temporary)
+            boolean temporary, int extractable)
         throws TokenException;
 
     /**
@@ -233,7 +236,7 @@ public final class PK11KeyPairGenerator
      */
     private native KeyPair
     generateDSAKeyPair(PK11Token token, byte[] P, byte[] Q, byte[] G,
-            boolean temporary)
+            boolean temporary, int extractable)
         throws TokenException;
 
     ///////////////////////////////////////////////////////////////////////
@@ -342,6 +345,10 @@ public final class PK11KeyPairGenerator
         temporaryPairMode = temp;
     }
 
+    public void extractablePairs(boolean extractable) {
+        extractablePairMode = extractable ? 1 : 0;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -353,4 +360,8 @@ public final class PK11KeyPairGenerator
     private KeyPairAlgorithm algorithm;
     private boolean mKeygenOnInternalToken;
     private boolean temporaryPairMode = false;
+    //  1: extractable
+    //  0: unextractable
+    // -1: unspecified (token dependent)
+    private int extractablePairMode = -1;
 }
