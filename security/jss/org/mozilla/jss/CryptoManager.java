@@ -1308,6 +1308,7 @@ public final class CryptoManager implements TokenSupplier
     /*                                                                  */
     /* org/mozilla/jss/CryptoManager.java                               */
     /* org/mozilla/jss/CryptoManager.c                                  */
+    /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
     /* lib/manifest.mn                                                  */
     /*                                                                  */
