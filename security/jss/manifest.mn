@@ -42,8 +42,10 @@ MODULE = jss
 #
 # To change the JSS version, update the version macros in
 # org/mozilla/jss/util/jssver.h, the JAR_JSS_VERSION value in
-# org/mozilla/jss/CryptoManager.java, and the PRODUCT_VERSION
-# and PRODUCT_NAME values in pkg/solaris/Makefile.com.
+# org/mozilla/jss/CryptoManager.java, the Mozilla-JSS provider
+# version in org/mozilla/jss/JSSProvider.java, the LIBRARY_VERSION
+# value in lib/manifest.mn, and the PRODUCT_VERSION and
+# PRODUCT_NAME values in pkg/solaris/Makefile.com.
 #
 IMPORTS =	nss/NSS_3_10_2_RTM \
 			nspr20/v4.6 \

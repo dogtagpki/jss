@@ -21,7 +21,7 @@ FILES = $(DATAFILES) pkginfo prototype
 PACKAGE = $(shell basename `pwd`)
 
 PRODUCT_VERSION = 3.7
-PRODUCT_NAME = JSS_3_7_BETA1
+PRODUCT_NAME = JSS_3_7_RTM
 
 LN = /usr/bin/ln
 

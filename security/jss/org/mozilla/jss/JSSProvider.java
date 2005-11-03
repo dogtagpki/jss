@@ -35,7 +35,7 @@ package org.mozilla.jss;
 public final class JSSProvider extends java.security.Provider {
 
     public JSSProvider() {
-        super("Mozilla-JSS", 3.3,
+        super("Mozilla-JSS", 3.7,
                 "Provides Signature, Message Digesting, and RNG");
 
         /////////////////////////////////////////////////////////////
