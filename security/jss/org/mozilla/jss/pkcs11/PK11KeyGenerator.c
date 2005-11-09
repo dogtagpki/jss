@@ -70,7 +70,7 @@ PBE_DestroyContext(PBEBitGenContext *context);
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateNormal
     (JNIEnv *env, jclass clazz, jobject token, jobject alg, jint strength,
-    jint opFlags, jboolean temporary)
+    jint opFlags, jboolean temporary, jint sensitive)
 {
     PK11SlotInfo *slot=NULL;
     PK11SymKey *skey=NULL;
@@ -91,6 +91,12 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateNormal
 
     if(!temporary) {
         attrFlags |= (PK11_ATTR_TOKEN | PK11_ATTR_PRIVATE);
+    }
+
+    if(sensitive==1) {
+        attrFlags |= PK11_ATTR_SENSITIVE;
+    } else if(sensitive==0) {
+        attrFlags |= PK11_ATTR_INSENSITIVE;
     }
 
     /* generate the key */

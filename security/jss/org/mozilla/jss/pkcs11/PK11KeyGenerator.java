@@ -84,6 +84,12 @@ public final class PK11KeyGenerator implements KeyGenerator {
     // Whether the key will be temporary or permanent
     private boolean temporaryKeyMode = true;
 
+    // Whether the key will be sensitive or insensitive
+    //  1: sensitive
+    //  0: insensitive
+    // -1: unspecified (token dependent)
+    private int sensitiveKeyMode = -1;
+
     // Used to convert Java Password into a byte[].
     private KeyGenerator.CharToByteConverter charToByte;
 
@@ -176,6 +182,10 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.temporaryKeyMode = temp;
     }
 
+    public void sensitiveKeys(boolean sensitive)
+    {
+        this.sensitiveKeyMode = sensitive ? 1 : 0;
+    }
 
     /**
      * Generates the key. This is the public interface, the actual
@@ -206,7 +216,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
             }
         } else {
             return generateNormal(token, algorithm, strength,
-                opFlags, temporaryKeyMode);
+                opFlags, temporaryKeyMode, sensitiveKeyMode);
         }
     }
 
@@ -307,7 +317,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
      */
     private static native SymmetricKey
     generateNormal(PK11Token token, KeyGenAlgorithm algorithm, int strength,
-        int opFlags, boolean temporary)
+        int opFlags, boolean temporary, int sensitive)
         throws TokenException;
 
     /**
