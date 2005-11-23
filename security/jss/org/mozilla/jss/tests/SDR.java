@@ -81,7 +81,9 @@ public class SDR {
 
       } catch(Exception e) {
         e.printStackTrace();
+        System.exit(1);
       }
+      System.exit(0);
     }
 
     private static char[] hex = new char[]

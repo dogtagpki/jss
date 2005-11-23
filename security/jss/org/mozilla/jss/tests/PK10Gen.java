@@ -104,6 +104,8 @@ public class PK10Gen {
 			System.out.println("exception caught in PK10Gen: " +
 							   e.getMessage());
 			e.printStackTrace();
+			System.exit(1);
 		}
+		System.exit(0);
 	}
 }

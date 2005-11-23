@@ -65,6 +65,8 @@ my $lib_suffix    = ".so";
 my $lib_jss       = "libjss";
 my $jss_rel_dir   = "";
 my $jss_classpath = "";
+my $portJSSEServer = 29753;
+my $portJSSServer = 29750;
 
 sub setup_vars {
     my $argv = shift;
@@ -74,7 +76,7 @@ sub setup_vars {
     my $truncate_lib_path = 1;
     if( $osname =~ /HP/ ) {
         $ld_lib_path = "SHLIB_PATH";
-	$scriptext = "sh";
+        $scriptext = "sh";
     } elsif( $osname =~ /win/i ) {
         $ld_lib_path = "PATH";
         $truncate_lib_path = 0;
@@ -84,7 +86,7 @@ sub setup_vars {
         $lib_jss    = "jss";
     } else {
         $ld_lib_path = "LD_LIBRARY_PATH";
-	$scriptext = "sh";
+        $scriptext = "sh";
     }
 
     my $jar_dbg_suffix = "_dbg";
@@ -94,6 +96,7 @@ sub setup_vars {
 
     $ENV{CLASSPATH}  = "";
     $ENV{$ld_lib_path} = "" if $truncate_lib_path;
+
 
     if( $$argv[0] eq "dist" ) {
         shift @$argv;
@@ -106,20 +109,20 @@ sub setup_vars {
         $jss_rel_dir   = "$dist_dir/../classes$dbg_suffix/org";
         $jss_classpath = "$dist_dir/../xpclass$jar_dbg_suffix.jar";
 
-		# Test directory = $DIST_DIR
-		# make it absolute path
-		$testdir = `cd $dist_dir;pwd`;
-		# take the last part (can be overriden if not <OS><VERSION>_<OPT|DBG>.OBJ
-		$testdir = `basename $testdir`;
-		chomp $testdir;
+        # Test directory = $DIST_DIR
+        # make it absolute path
+        $testdir = `cd $dist_dir;pwd`;
+        # take the last part (can be overriden if not <OS><VERSION>_<OPT|DBG>.OBJ
+        $testdir = `basename $testdir`;
+        chomp $testdir;
     } elsif( $$argv[0] eq "release" ) {
         shift @$argv;
 
         $jss_rel_dir     = shift @$argv or usage();
         my $nss_rel_dir  = shift @$argv or usage();
         my $nspr_rel_dir = shift @$argv or usage();
-		$testdir = `basename $nss_rel_dir`;
-		chomp $testdir;
+        $testdir = `basename $nss_rel_dir`;
+        chomp $testdir;
 
         $ENV{CLASSPATH} .= "$jss_rel_dir/../xpclass$jar_dbg_suffix.jar";
         $ENV{$ld_lib_path} =
@@ -129,6 +132,14 @@ sub setup_vars {
         $jss_classpath = "$jss_rel_dir/../xpclass$jar_dbg_suffix.jar";
     } else {
         usage();
+    }
+
+    if ($ENV{PORT_JSSE_SERVER}) {
+       $portJSSEServer = $ENV{PORT_JSSE_SERVER};
+    }
+
+    if ($ENV{PORT_JSS_SERVER}) { 
+       $portJSSServer = $ENV{PORT_JSS_SERVER};
     }
 
     unless( $ENV{JAVA_HOME} ) {
@@ -143,19 +154,19 @@ sub setup_vars {
     $java = "$ENV{JAVA_HOME}/jre/bin/java$exe_suffix";
     my $java_64bit = 0;
     if ($osname eq "SunOS") {
-	if ($ENV{USE_64}) {
-	    my $cpu = `/usr/bin/isainfo -n`;
-	    if ($cpu == "amd64") {
-		$java = "$ENV{JAVA_HOME}/jre/bin/amd64/java$exe_suffix";
-		$java_64bit = 1;
-	    }
-	}
+        if ($ENV{USE_64}) {
+            my $cpu = `/usr/bin/isainfo -n`;
+            if ($cpu == "amd64") {
+                $java = "$ENV{JAVA_HOME}/jre/bin/amd64/java$exe_suffix";
+                $java_64bit = 1;
+        }
+    }
     }
     (-f $java) or die "'$java' does not exist\n";
     $java = $java . $ENV{NATIVE_FLAG};
 
     if ($ENV{USE_64} && !$java_64bit) {
-	$java = $java . " -d64";
+    $java = $java . " -d64";
     }
 
     $pwfile = "passwords";
@@ -175,13 +186,16 @@ sub setup_vars {
     print "NATIVE_FLAG=$ENV{NATIVE_FLAG}\n";
     print "$ld_lib_path=$ENV{$ld_lib_path}\n";
     print "CLASSPATH=$ENV{CLASSPATH}\n";
+    print "BUILD_OPT=$ENV{BUILD_OPT}\n";
     print "USE_64=$ENV{USE_64}\n";
     print "testdir=$testdir\n";
+    print "portJSSEServer=$portJSSEServer\n";
+    print "portJSSServer=$portJSSServer\n";
 }
 
 sub print_case_result {
     my $result = shift;
-	my $testname = shift;
+    my $testname = shift;
 
     $testrun++;
     if ($result == 0) {
@@ -243,11 +257,14 @@ print_case_result ($result,"List CA certs");
 # test sockets
 #
 print "============= test sockets\n";
-$result = system("$java org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile");
+$result = system("$java org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile ");
 $result >>=8;
 $result and print "SSLClientAuth returned $result\n";
 print_case_result ($result,"Sockets");
 
+$portJSSServer=$portJSSServer+1;
+
+#
 # test key gen
 #
 print "============= test key gen\n";
@@ -256,7 +273,6 @@ $result >>=8;
 $result and print "TestKeyGen returned $result\n";
 print_case_result ($result,"Key generation");
 
-
 # test KeyFactory 
 #
 print "============= test KeyFactory\n";
@@ -264,7 +280,6 @@ $result = system("$java org.mozilla.jss.tests.KeyFactoryTest $testdir $pwfile");
 $result >>=8;
 $result and print "KeyFactoryTest returned $result\n";
 print_case_result ($result,"KeyFactoryTest");
-
 
 # test digesting
 #
@@ -282,15 +297,6 @@ $result = system("$java org.mozilla.jss.tests.HMACTest $testdir $pwfile");
 $result >>=8;
 $result and print "HMACTest returned $result\n";
 print_case_result ($result,"HMACTest");
-
-
-# test signing
-#
-print "============= test signing\n";
-$result = system("$java org.mozilla.jss.tests.SigTest $testdir " .
-            "\"$signingToken\" $pwfile"); $result >>=8;
-$result and print "SigTest returned $result\n";
-print_case_result ($result,"Signing");
 
 # test JCA Sig Test
 #
@@ -317,12 +323,39 @@ $result >>=8;
 $result and print "Generate known cert pair for testing returned $result\n";
 
 #
+# List cert by certnick
+#
+print "============= List cert by certnick\n";
+$result = system("$java org.mozilla.jss.tests.ListCerts $testdir JSSCATestCert");
+$result >>=8;
+$result and print "List cert by certnick returned $result\n";
+print_case_result ($result,"List cert by certnick");
+
+#
+# Verify cert by certnick
+#
+print "============= Verify cert by certnick\n";
+$result = system("$java org.mozilla.jss.tests.VerifyCert $testdir $pwfile JSSCATestCert");
+$result >>=8;
+$result and print "Verify cert by certnick returned $result\n";
+print_case_result ($result,"Verify cert by certnick");
+
+#
 # Create keystore.pfx from generated cert db
 # for "JSSCATestCert"
 print "============= convert PKCS11 cert to PKCS12 format\n";
 $result = system("$nss_lib_dir/../bin/pk12util$exe_suffix -o $testdir/keystore.pfx -n JSSCATestCert -d ./$testdir -K netscape -W netscape");
 $result >>=8;
 $result and print "Convert PKCS11 to PKCS12 returned $result\n";
+
+#
+# TestSDR Test
+#
+print "============= TestSDR Test\n";
+$result = system("$java org.mozilla.jss.tests.TestSDR $testdir $pwfile");
+$result >>=8;
+$result and print "TestSDR test returned $result\n";
+print_case_result ($result,"TestSDR test");
 
 #
 # Start JSSE server
@@ -359,22 +392,13 @@ $result and print "JSSE client returned $result\n";
 print_case_result ($result,"JSS server / JSSE client");
 
 #
-# Test Enable FIPSMODE 
+# Test SecretKeys
 #
-print "============= Start enable FIPSMODE\n";
-$result = system("$java org.mozilla.jss.tests.FipsTest $testdir enable");
+print "============= Start Secret Key Gen and Ciphers\n";
+$result = system("$java org.mozilla.jss.tests.SymKeyGen $testdir");
 $result >>=8;
-$result and print "Enable FIPSMODE returned $result\n";
-print_case_result ($result,"FIPSMODE enabled");
-
-#
-# Test Disable FIPSMODE 
-#
-print "============= Start disable FIPSMODE\n";
-$result = system("$java org.mozilla.jss.tests.FipsTest $testdir disable");
-$result >>=8;
-$result and print "Disable FIPSMODE returned $result\n";
-print_case_result ($result,"FIPSMODE disabled");
+$result and print "SymKeyGen returned $result\n";
+print_case_result ($result,"SymKeyGen successful");
 
 #
 # Test for JSS jar and library revision
@@ -399,3 +423,10 @@ print "JSSTEST_SUITE: $testpass / $testrun\n";
 my $rate = $testpass / $testrun * 100;
 printf "JSSTEST_RATE: %.0f %\n",$rate;
 
+if ($testpass ne $testrun) {
+    printf "Test Status: FAILURE\n";
+    system("false");
+} else {
+    printf "Test Status: SUCCESS\n";
+    system("true");
+}

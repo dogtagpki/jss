@@ -165,6 +165,7 @@ public class JSS_SelfServServer  {
         if ( Constants.debug_level >= 3 )
             System.out.println ("Server created socket");
         
+        // Only used to reproduce CLOSE_WAIT error.
         //serverSock.setSoTimeout(120 * 1000);
         serverSock.requireClientAuth (true, true);
         serverSock.setServerCertNickname (fServerCertNick);

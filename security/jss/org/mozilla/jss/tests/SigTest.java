@@ -43,6 +43,9 @@
  * one of the internal tokens:
  *  Internal Crypto Services Token
  *  Internal Key Storage Token    (keys stored in key3.db)
+ *
+ * @see org.mozilla.jss.tests.JCASigTest
+ * @deprecated Use the JCA interface instead
  */
 
 package org.mozilla.jss.tests;
