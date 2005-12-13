@@ -46,27 +46,6 @@ import java.io.CharConversionException;
 
 public final class PK11KeyGenerator implements KeyGenerator {
 
-    // opFlag constants: each of these flags specifies a crypto operation
-    // the key will support.  Their values must match the same-named C
-    // preprocessor macros defined in the PKCS #11 header pkcs11t.h.
-    private static final int CKF_ENCRYPT = 0x00000100;
-    private static final int CKF_DECRYPT = 0x00000200;
-    private static final int CKF_SIGN = 0x00000800;
-    private static final int CKF_VERIFY = 0x00002000;
-    private static final int CKF_WRAP = 0x00020000;
-    private static final int CKF_UNWRAP = 0x00040000;
-
-    // A table for mapping SymmetricKey.Usage to opFlag.  This must be
-    // synchronized with SymmetricKey.Usage.
-    private static final int opFlagForUsage[] = {
-        CKF_ENCRYPT,    /* 0 */
-        CKF_DECRYPT,    /* 1 */
-        CKF_WRAP,       /* 2 */
-        CKF_UNWRAP,     /* 3 */
-        CKF_SIGN,       /* 4 */
-        CKF_VERIFY      /* 5 */
-    };
-
     // The token this key will be generated on.
     private PK11Token token;
 
@@ -79,13 +58,6 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
     // The parameters for this algorithm. May be null for some algorithms.
     private AlgorithmParameterSpec parameters;
-
-    // The crypto operations the key will support.  It is the logical OR
-    // of the opFlag constants, each specifying a supported operation.
-    private int opFlags = CKF_SIGN | CKF_ENCRYPT;
-
-    // Whether the key will be temporary or permanent
-    private boolean temporaryKeyMode = true;
 
     // Used to convert Java Password into a byte[].
     private KeyGenerator.CharToByteConverter charToByte;
@@ -164,21 +136,6 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.parameters = parameters;
     }
 
-    public void setKeyUsages(SymmetricKey.Usage[] usages)
-    {
-        this.opFlags = 0;
-        for( int i = 0; i < usages.length; i++ ) {
-            if( usages[i] != null ) {
-                this.opFlags |= opFlagForUsage[usages[i].getVal()];
-            }
-        }
-    }
-
-    public void temporaryKeys(boolean temp)
-    {
-        this.temporaryKeyMode = temp;
-    }
-
 
     /**
      * Generates the key. This is the public interface, the actual
@@ -208,8 +165,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
                 }
             }
         } else {
-            return generateNormal(token, algorithm, strength,
-                opFlags, temporaryKeyMode);
+            return generateNormal(token, algorithm, strength);
         }
     }
 
@@ -301,16 +257,11 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
     /**
      * A native method to generate a non-PBE key.
-     * @param token The token where the key generation happens
-     * @param algorithm The algorithm to use
      * @param strength The key size in bits, should be 0 for fixed-length
      *      key algorithms.
-     * @param opFlags The crypto operations the key will support
-     * @param temporary Whether the key will be temporary or permanent
      */
     private static native SymmetricKey
-    generateNormal(PK11Token token, KeyGenAlgorithm algorithm, int strength,
-        int opFlags, boolean temporary)
+    generateNormal(PK11Token token, KeyGenAlgorithm algorithm, int strength)
         throws TokenException;
 
     /**

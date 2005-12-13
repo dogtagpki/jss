@@ -160,23 +160,12 @@ public class KeyPairGenerator {
     }
 
     /**
-     * Tells the generator to generate temporary or permanent keypairs.
-     * Temporary keys are not written permanently to the token.  They
-     * are destroyed by the garbage collector.  If this method is not
-     * called, the default is permanent keypairs.
+     * Tells the generator to generate temporary, rather than permanent,
+     * keypairs.  Temporary keys are not written permanently to the token.
+     * They are destroyed by the garbage collector.
      */
     public void temporaryPairs(boolean temp) {
         engine.temporaryPairs(temp);
-    }
-
-    /**
-     * Tells the generator to generate extractable or unextractable
-     * keypairs.  Extractable keys can be extracted from the token after
-     * wrapping.  If this method is not called, the default is token
-     * dependent.
-     */
-    public void extractablePairs(boolean extractable) {
-        engine.extractablePairs(extractable);
     }
 
 	protected KeyPairAlgorithm algorithm;
