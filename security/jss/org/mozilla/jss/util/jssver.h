@@ -57,10 +57,10 @@
 /*                                                                  */
 /********************************************************************/
 
-#define JSS_VERSION  "4.1.2"
+#define JSS_VERSION  "4.1.3"
 #define JSS_VMAJOR   4
 #define JSS_VMINOR   1
-#define JSS_VPATCH   2 
+#define JSS_VPATCH   3 
 #define JSS_BETA     PR_FALSE
 
 #endif
