@@ -111,6 +111,8 @@ PR_BEGIN_EXTERN_C
 
 #define SOCKET_EXCEPTION "java/net/SocketException"
 
+#define IO_EXCEPTION "java/net/IOException"
+
 #define SSLSOCKET_EXCEPTION "org/mozilla/jss/ssl/SSLSocketException"
 
 #define TOKEN_EXCEPTION "org/mozilla/jss/crypto/TokenException"

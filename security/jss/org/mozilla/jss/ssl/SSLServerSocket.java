@@ -188,9 +188,6 @@ public class SSLServerSocket extends java.net.ServerSocket {
                     handshakeAsClient);
                 SocketProxy sp = new SocketProxy(socketPointer);
                 s.setSockProxy(sp);
-            } catch (Exception e) {
-                /* unnessary to do a s.close() since exception thrown*/
-                throw new IOException("accept method failed");
             } finally {
                 synchronized (this) {
                     inAccept=false;

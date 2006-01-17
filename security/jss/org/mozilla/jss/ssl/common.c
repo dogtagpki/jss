@@ -107,6 +107,19 @@ JSSL_throwSSLSocketException(JNIEnv *env, char *message)
         excepObj = (*env)->NewObject(env, excepClass, excepCons, msgString);
         PR_ASSERT(excepObj != NULL);
         if( excepObj == NULL ) goto finish;
+    } else if( nativeErrcode == PR_IO_ERROR ) {
+        excepClass = (*env)->FindClass(env, IO_EXCEPTION);
+        PR_ASSERT(excepClass != NULL);
+        if( excepClass == NULL ) goto finish;
+
+        excepCons = (*env)->GetMethodID(env, excepClass, "<init>",
+            "(Ljava/lang/String;)V");
+        PR_ASSERT( excepCons != NULL );
+        if( excepCons == NULL ) goto finish;
+
+        excepObj = (*env)->NewObject(env, excepClass, excepCons, msgString);
+        PR_ASSERT(excepObj != NULL);
+        if( excepObj == NULL ) goto finish;
     } else {
         excepClass = (*env)->FindClass(env, SSLSOCKET_EXCEPTION);
         PR_ASSERT(excepClass != NULL);
@@ -439,14 +452,10 @@ Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
     /* get the FD */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
         /* exception was thrown */
-        goto finish;
+        return;
     }
 
     JSSL_DestroySocketData(env, sock);
-
-finish:
-    EXCEPTION_CHECK(env, sock)
-    return;
 }
 
 JNIEXPORT void JNICALL

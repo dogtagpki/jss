@@ -108,20 +108,23 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketAccept
     sock->accepter = NULL;
     PR_Unlock(sock->lock);
     if( newFD == NULL ) {
-#ifdef WINNT
         PRErrorCode err = PR_GetError();
+#ifdef WINNT
         if( err == PR_PENDING_INTERRUPT_ERROR ||
             err == PR_IO_TIMEOUT_ERROR ) {
             PR_NT_CancelIo(sock->fd);
         }
 #endif
         JSSL_throwSSLSocketException(env,
-            "Failed to accept new connection");
+            "Failed to accept new connection. newFD is null:" + err);
         goto finish;
     }
 
     newSD = JSSL_CreateSocketData(env, newSock, newFD, NULL /* priv */);
     if( newSD == NULL ) {
+        PRErrorCode err = PR_GetError();
+        JSSL_throwSSLSocketException(env,
+            "Failed to accept new connection. newSD is null:" + err);
         goto finish;
     }
     newFD = NULL;
