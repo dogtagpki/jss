@@ -316,12 +316,13 @@ public class JSS_SSLClient {
         String  usage      = "USAGE:\n" +
                 "java org.mozilla.jss.tests.JSS_SSLClient" +
                 " <cert db path> <password file>\n" +
-                " <test cipher> <server host> <server port>";
+                " [server host] [server port] [test cipher]";
         
         try {
-            if ( ((String)args[0]).toLowerCase().equals("-h") ) {
+            if ( ((String)args[0]).toLowerCase().equals("-h") || 
+                    args.length < 2) {
                 System.out.println(usage);
-                System.exit(0);
+                System.exit(1);
             }
             
             if ( args.length >= 2 ) {
@@ -332,14 +333,21 @@ public class JSS_SSLClient {
             if ( certDbPath != null)
                 setCertDbPath(certDbPath);
             
-            if ( args.length >= 3 ) {
-                testCipher = new Integer(args[2]).intValue();
+            if ( args.length >= 3) {
+                testhost   = (String)args[2];
+                System.out.println("testhost" + testhost);
             }
             
-            if ( args.length >= 5 ) {
-                testhost   = (String)args[3];
-                testport   = new Integer(args[4]).intValue();
+            if (args.length >= 4) {
+                testport   = new Integer(args[3]).intValue();
+                System.out.println("using port: " + testport);
             }
+
+            if ( args.length >= 5 ) {
+                testCipher = new Integer(args[4]).intValue();
+                System.out.println("testCipher " + testCipher);
+            }
+            
             Thread.sleep(5000);
         } catch (Exception e) {
             System.out.println("Exception caught " + e.toString());
@@ -378,6 +386,7 @@ public class JSS_SSLClient {
                 } catch (Exception ex) {
                     System.out.println("Exception caught " + ex.getMessage());
                     ex.printStackTrace();
+                    System.exit(1);
                 }
                 // Set EOF to null to trigger server socket close
                 jssTest.setCipher(testCipher);
@@ -425,6 +434,7 @@ public class JSS_SSLClient {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
+            System.exit(1);
         }
     }
 }

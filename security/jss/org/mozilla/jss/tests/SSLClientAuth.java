@@ -110,9 +110,9 @@ public class SSLClientAuth implements Runnable {
 
     public void doIt(String[] args) throws Exception {
 
-        if ( args.length != 2 ) {
-	    System.out.println("Usage: java org.mozilla.jss.tests." +
-			       "SSLClientAuth <dbdir> <passwordFile>");
+        if ( args.length < 2 ) {
+            System.out.println("Usage: java org.mozilla.jss.tests." +
+                      "SSLClientAuth <dbdir> <passwordFile> [port]");
             System.exit(1);
         }
 
@@ -124,10 +124,14 @@ public class SSLClientAuth implements Runnable {
         PasswordCallback cb = new FilePasswordCallback(args[1]);
         tok.login(cb);
 
+        if (args.length == 3) {
+            port = new Integer(args[2]).intValue();
+            System.out.println("using port:" + port);
+        }
+        
         SecureRandom rng= SecureRandom.getInstance("pkcs11prng",
             "Mozilla-JSS");
         int rand = nextRandInt(rng);
-
 
         // generate CA cert
         // 512-bit RSA Key with default exponent
@@ -254,7 +258,7 @@ public class SSLClientAuth implements Runnable {
 
     private boolean success = true;
 
-    public static int port = 29752;
+    public int port = 29752;
 
     public boolean serverReady = false;
 

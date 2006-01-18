@@ -65,8 +65,8 @@ my $lib_suffix    = ".so";
 my $lib_jss       = "libjss";
 my $jss_rel_dir   = "";
 my $jss_classpath = "";
-my $portJSSEServer = 29753;
-my $portJSSServer = 29750;
+my $portJSSEServer = 2876;
+my $portJSSServer = 2877;
 
 sub setup_vars {
     my $argv = shift;
@@ -257,12 +257,10 @@ print_case_result ($result,"List CA certs");
 # test sockets
 #
 print "============= test sockets\n";
-$result = system("$java org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile ");
+$result = system("$java org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $portJSSServer");
 $result >>=8;
 $result and print "SSLClientAuth returned $result\n";
 print_case_result ($result,"Sockets");
-
-$portJSSServer=$portJSSServer+1;
 
 #
 # test key gen
@@ -361,7 +359,7 @@ print_case_result ($result,"TestSDR test");
 # Start JSSE server
 #
 print "============= Start JSSE server tests\n";
-$result=system("./startJsseServ.$scriptext $jss_classpath $testdir $java");
+$result=system("./startJsseServ.$scriptext $jss_classpath $testdir $portJSSEServer $java");
 $result >>=8;
 $result and print "JSSE servers returned $result\n";
 
@@ -369,16 +367,18 @@ $result and print "JSSE servers returned $result\n";
 # Test JSS client communication
 #
 print "============= Start JSS client tests\n";
-$result = system("$java org.mozilla.jss.tests.JSS_SSLClient $testdir $pwfile");
+$result = system("$java org.mozilla.jss.tests.JSS_SSLClient $testdir $pwfile localhost $portJSSEServer ");
 $result >>=8;
 $result and print "JSS client returned $result\n";
 print_case_result ($result,"JSSE server / JSS client");
+
+$portJSSServer=$portJSSServer+1;
 
 #
 # Start JSS server
 #
 print "============= Start JSS server tests\n";
-$result=system("./startJssServ.$scriptext $jss_classpath $testdir $java");
+$result=system("./startJssServ.$scriptext $jss_classpath $testdir $portJSSServer $java");
 $result >>=8;
 $result and print "JSS servers returned $result\n";
 
@@ -386,7 +386,7 @@ $result and print "JSS servers returned $result\n";
 # Test JSSE client communication
 #
 print "============= Start JSSE client tests\n";
-$result = system("$java org.mozilla.jss.tests.JSSE_SSLClient $testdir");
+$result = system("$java org.mozilla.jss.tests.JSSE_SSLClient $testdir $portJSSServer");
 $result >>=8;
 $result and print "JSSE client returned $result\n";
 print_case_result ($result,"JSS server / JSSE client");

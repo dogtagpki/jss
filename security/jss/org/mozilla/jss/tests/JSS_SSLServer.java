@@ -81,6 +81,8 @@ public class JSS_SSLServer  {
             System.out.println("Thread Interrupted, exiting normally ...\n");
             System.exit(0);
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            System.exit(1);
         }
     }
     
@@ -88,17 +90,17 @@ public class JSS_SSLServer  {
     private String        serverHost      = "localhost";
     private boolean       TestInetAddress = false;
     private boolean       success         = true;
-    public  static int    port            = 29750;
+    public  int           port            = 29750;
     public  static String usage           = "USAGE: java JSS_SSLServer " +
-            "<cert db path> passwords server_name " +
-            "servercertnick [ true | false ]";
+            "[cert db path] [passwords] [server_name] " +
+            "[servercertnick] [ true | false ] [ portNumber ]";
     
     public void doIt(String[] args) throws Exception {
         
-        if ( args.length < 1 ) {
+        if ( args.length < 4 ) {
             System.out.println(usage);
-            System.exit(0);
-        }
+            System.exit(1);
+        }               
         
         CryptoManager.initialize(args[0]);
         CryptoManager    cm = CryptoManager.getInstance();
@@ -108,9 +110,15 @@ public class JSS_SSLServer  {
         serverHost          = args[2]; // localhost
         serverCertNick      = args[3]; // servercertnick
         
-        if (args[4].equalsIgnoreCase("true") == true) {
+        if ((args.length >= 5) && args[4].equalsIgnoreCase("true") == true) {
             TestInetAddress = true;
+            System.out.println("testing Inet Address");
         }
+        
+        if ((args.length >= 6)) {
+            port = new Integer(args[5]).intValue();
+            System.out.println("using port: " + port);
+        }       
         
         // We have to configure the server session ID cache before
         // creating any server sockets.
@@ -128,7 +136,7 @@ public class JSS_SSLServer  {
         for (int i = 0; Constants.jssCipherSuites[i] != 0;  ++i) {
             try {
                 SSLSocket.setCipherPreferenceDefault(
-                        Constants.jssCipherSuites[i], true);
+                    Constants.jssCipherSuites[i], true);
             } catch (Exception ex) {
             }
         }
