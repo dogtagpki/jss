@@ -1,4 +1,3 @@
-#! perl
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -17,7 +16,7 @@
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 2002
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -36,15 +35,25 @@
 #
 # ***** END LICENSE BLOCK *****
 
-require "fastcwd.pl";
+# On HP-UX 10.30 and 11.x, the default implementation strategy is
+# pthreads.  Classic nspr and pthreads-user are also available.
 
-$_ = &fastcwd;
-if (m@^/[uh]/@o || s@^/tmp_mnt/@/@o) {
-    print("$_\n");
-} elsif ((($user, $rest) = m@^/usr/people/(\w+)/(.*)@o)
-      && readlink("/u/$user") eq "/usr/people/$user") {
-    print("/u/$user/$rest\n");
-} else {
-    chop($host = `hostname`);
-    print("/h/$host$_\n");
-}
+ifeq ($(OS_RELEASE),B.11.23)
+OS_CFLAGS		+= -DHPUX10
+DEFAULT_IMPL_STRATEGY = _PTH
+endif
+
+#
+# To use the true pthread (kernel thread) library on 10.30 and
+# 11.x, we should define _POSIX_C_SOURCE to be 199506L.
+# The _REENTRANT macro is deprecated.
+#
+
+ifdef USE_PTHREADS
+	OS_CFLAGS	+= -D_POSIX_C_SOURCE=199506L
+endif
+
+#
+# Config stuff for HP-UXB.11.x.
+#
+include $(CORE_DEPTH)/coreconf/HP-UXB.11.mk

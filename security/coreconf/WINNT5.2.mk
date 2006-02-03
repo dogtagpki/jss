@@ -1,4 +1,3 @@
-#! perl
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -36,15 +35,39 @@
 #
 # ***** END LICENSE BLOCK *****
 
-require "fastcwd.pl";
+#
+# Config stuff for WINNT 5.2 (Windows Server 2003)
+#
+# This makefile defines the following variables:
+# OS_CFLAGS and OS_DLLFLAGS.
 
-$_ = &fastcwd;
-if (m@^/[uh]/@o || s@^/tmp_mnt/@/@o) {
-    print("$_\n");
-} elsif ((($user, $rest) = m@^/usr/people/(\w+)/(.*)@o)
-      && readlink("/u/$user") eq "/usr/people/$user") {
-    print("/u/$user/$rest\n");
-} else {
-    chop($host = `hostname`);
-    print("/h/$host$_\n");
-}
+include $(CORE_DEPTH)/coreconf/WIN32.mk
+
+ifeq ($(CPU_ARCH), x386)
+	OS_CFLAGS += -W3 -nologo
+	DEFINES += -D_X86_
+else 
+	ifeq ($(CPU_ARCH), MIPS)
+		#OS_CFLAGS += -W3 -nologo
+		#DEFINES += -D_MIPS_
+		OS_CFLAGS += -W3 -nologo
+	else 
+		ifeq ($(CPU_ARCH), ALPHA)
+			OS_CFLAGS += -W3 -nologo
+			DEFINES += -D_ALPHA_=1
+		endif
+	endif
+endif
+
+OS_DLLFLAGS += -nologo -DLL -SUBSYSTEM:WINDOWS
+ifndef MOZ_DEBUG_SYMBOLS
+	OS_DLLFLAGS += -PDB:NONE
+endif
+
+#
+# Win NT needs -GT so that fibers can work
+#
+OS_CFLAGS += -GT
+DEFINES += -DWINNT
+
+NSPR31_LIB_PREFIX = lib
