@@ -34,46 +34,40 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-include $(CORE_DEPTH)/coreconf/HP-UX.mk
 
-ifndef NS_USE_GCC
-    CCC                 = /opt/aCC/bin/aCC -ext
-    ifeq ($(USE_64), 1)
-	ifeq ($(OS_TEST), ia64)
-	    ARCHFLAG	= -Aa +e +p +DD64
-	else
-	    # Our HP-UX build machine has a strange problem.  If
-	    # a 64-bit PA-RISC executable calls getcwd() in a
-	    # network-mounted directory, it fails with ENOENT.
-	    # We don't know why.  Since nsinstall calls getcwd(),
-	    # this breaks our 64-bit HP-UX nightly builds.  None
-	    # of our other HP-UX machines have this problem.
-	    #
-	    # We worked around this problem by building nsinstall
-	    # as a 32-bit PA-RISC executable for 64-bit PA-RISC
-	    # builds.  -- wtc 2003-06-03
-	    ifdef INTERNAL_TOOLS
-	    ARCHFLAG	= +DAportable +DS2.0
-	    else
-	    ARCHFLAG	= -Aa +e +DA2.0W +DS2.0 +DChpux
-	    endif
+#
+# Config stuff for WINNT 5.2 (Windows Server 2003)
+#
+# This makefile defines the following variables:
+# OS_CFLAGS and OS_DLLFLAGS.
+
+include $(CORE_DEPTH)/coreconf/WIN32.mk
+
+ifeq ($(CPU_ARCH), x386)
+	OS_CFLAGS += -W3 -nologo
+	DEFINES += -D_X86_
+else 
+	ifeq ($(CPU_ARCH), MIPS)
+		#OS_CFLAGS += -W3 -nologo
+		#DEFINES += -D_MIPS_
+		OS_CFLAGS += -W3 -nologo
+	else 
+		ifeq ($(CPU_ARCH), ALPHA)
+			OS_CFLAGS += -W3 -nologo
+			DEFINES += -D_ALPHA_=1
+		endif
 	endif
-    else
-	ifeq ($(OS_TEST), ia64)
-	    ARCHFLAG	= -Aa +e +p +DD32
-	else
-	    ARCHFLAG	= +DAportable +DS2.0
-	endif
-    endif
-else
-    CCC = aCC
 endif
 
-OS_CFLAGS += $(ARCHFLAG) -DHPUX11
-OS_LIBS   += -lpthread -lm -lrt
-#ifeq ($(USE_64), 1)
-#OS_LIBS   += -ldl
-#else
-#OS_LIBS   += -ldld
-#endif
-HPUX11	= 1
+OS_DLLFLAGS += -nologo -DLL -SUBSYSTEM:WINDOWS
+ifndef MOZ_DEBUG_SYMBOLS
+	OS_DLLFLAGS += -PDB:NONE
+endif
+
+#
+# Win NT needs -GT so that fibers can work
+#
+OS_CFLAGS += -GT
+DEFINES += -DWINNT
+
+NSPR31_LIB_PREFIX = lib

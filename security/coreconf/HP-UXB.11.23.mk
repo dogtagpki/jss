@@ -16,7 +16,7 @@
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 2002
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -34,46 +34,26 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-include $(CORE_DEPTH)/coreconf/HP-UX.mk
 
-ifndef NS_USE_GCC
-    CCC                 = /opt/aCC/bin/aCC -ext
-    ifeq ($(USE_64), 1)
-	ifeq ($(OS_TEST), ia64)
-	    ARCHFLAG	= -Aa +e +p +DD64
-	else
-	    # Our HP-UX build machine has a strange problem.  If
-	    # a 64-bit PA-RISC executable calls getcwd() in a
-	    # network-mounted directory, it fails with ENOENT.
-	    # We don't know why.  Since nsinstall calls getcwd(),
-	    # this breaks our 64-bit HP-UX nightly builds.  None
-	    # of our other HP-UX machines have this problem.
-	    #
-	    # We worked around this problem by building nsinstall
-	    # as a 32-bit PA-RISC executable for 64-bit PA-RISC
-	    # builds.  -- wtc 2003-06-03
-	    ifdef INTERNAL_TOOLS
-	    ARCHFLAG	= +DAportable +DS2.0
-	    else
-	    ARCHFLAG	= -Aa +e +DA2.0W +DS2.0 +DChpux
-	    endif
-	endif
-    else
-	ifeq ($(OS_TEST), ia64)
-	    ARCHFLAG	= -Aa +e +p +DD32
-	else
-	    ARCHFLAG	= +DAportable +DS2.0
-	endif
-    endif
-else
-    CCC = aCC
+# On HP-UX 10.30 and 11.x, the default implementation strategy is
+# pthreads.  Classic nspr and pthreads-user are also available.
+
+ifeq ($(OS_RELEASE),B.11.23)
+OS_CFLAGS		+= -DHPUX10
+DEFAULT_IMPL_STRATEGY = _PTH
 endif
 
-OS_CFLAGS += $(ARCHFLAG) -DHPUX11
-OS_LIBS   += -lpthread -lm -lrt
-#ifeq ($(USE_64), 1)
-#OS_LIBS   += -ldl
-#else
-#OS_LIBS   += -ldld
-#endif
-HPUX11	= 1
+#
+# To use the true pthread (kernel thread) library on 10.30 and
+# 11.x, we should define _POSIX_C_SOURCE to be 199506L.
+# The _REENTRANT macro is deprecated.
+#
+
+ifdef USE_PTHREADS
+	OS_CFLAGS	+= -D_POSIX_C_SOURCE=199506L
+endif
+
+#
+# Config stuff for HP-UXB.11.x.
+#
+include $(CORE_DEPTH)/coreconf/HP-UXB.11.mk
