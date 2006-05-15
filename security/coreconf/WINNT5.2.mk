@@ -35,52 +35,39 @@
 #
 # ***** END LICENSE BLOCK *****
 
-#######################################################################
-# Master "Core Components" macros to figure out binary code location  #
-#######################################################################
+#
+# Config stuff for WINNT 5.2 (Windows Server 2003)
+#
+# This makefile defines the following variables:
+# OS_CFLAGS and OS_DLLFLAGS.
+
+include $(CORE_DEPTH)/coreconf/WIN32.mk
+
+ifeq ($(CPU_ARCH), x386)
+	OS_CFLAGS += -W3 -nologo
+	DEFINES += -D_X86_
+else 
+	ifeq ($(CPU_ARCH), MIPS)
+		#OS_CFLAGS += -W3 -nologo
+		#DEFINES += -D_MIPS_
+		OS_CFLAGS += -W3 -nologo
+	else 
+		ifeq ($(CPU_ARCH), ALPHA)
+			OS_CFLAGS += -W3 -nologo
+			DEFINES += -D_ALPHA_=1
+		endif
+	endif
+endif
+
+OS_DLLFLAGS += -nologo -DLL -SUBSYSTEM:WINDOWS
+ifndef MOZ_DEBUG_SYMBOLS
+	OS_DLLFLAGS += -PDB:NONE
+endif
 
 #
-# Figure out where the binary code lives.
+# Win NT needs -GT so that fibers can work
 #
+OS_CFLAGS += -GT
+DEFINES += -DWINNT
 
-ifdef BUILD_TREE
-ifdef LIBRARY_NAME
-BUILD         = $(BUILD_TREE)/nss/$(LIBRARY_NAME)
-OBJDIR        = $(BUILD_TREE)/nss/$(LIBRARY_NAME)
-DEPENDENCIES  = $(BUILD_TREE)/nss/$(LIBRARY_NAME)/.md
-else
-BUILD         = $(BUILD_TREE)/nss
-OBJDIR        = $(BUILD_TREE)/nss
-DEPENDENCIES  = $(BUILD_TREE)/nss/.md
-endif
-else
-BUILD         = $(PLATFORM)
-OBJDIR        = $(PLATFORM)
-DEPENDENCIES  = $(PLATFORM)/.md
-endif
-
-DIST          = $(SOURCE_PREFIX)/$(PLATFORM)
-
-ifdef BUILD_DEBUG_GC
-    DEFINES += -DDEBUG_GC
-endif
-
-GARBAGE += $(DEPENDENCIES) core $(wildcard core.[0-9]*)
-
-ifdef NSPR_INCLUDE_DIR
-    INCLUDES += -I$(NSPR_INCLUDE_DIR)
-endif
-
-ifndef NSPR_LIB_DIR
-    NSPR_LIB_DIR = $(DIST)/lib
-endif
-
-ifdef NSS_INCLUDE_DIR
-    INCLUDES += -I$(NSS_INCLUDE_DIR)
-endif
-                                                                                
-ifndef NSS_LIB_DIR
-    NSS_LIB_DIR = $(DIST)/lib
-endif
-
-MK_LOCATION = included
+NSPR31_LIB_PREFIX = lib

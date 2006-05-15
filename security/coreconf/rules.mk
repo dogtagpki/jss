@@ -137,22 +137,6 @@ realclean clobber_all::
 	rm -rf $(wildcard *.OBJ) dist $(ALL_TRASH)
 	+$(LOOP_OVER_DIRS)
 
-#ifdef ALL_PLATFORMS
-#all_platforms:: $(NFSPWD)
-#	@d=`$(NFSPWD)`;							\
-#	if test ! -d LOGS; then rm -rf LOGS; mkdir LOGS; fi;		\
-#	for h in $(PLATFORM_HOSTS); do					\
-#		echo "On $$h: $(MAKE) $(ALL_PLATFORMS) >& LOGS/$$h.log";\
-#		rsh $$h -n "(chdir $$d;					\
-#			     $(MAKE) $(ALL_PLATFORMS) >& LOGS/$$h.log;	\
-#			     echo DONE) &" 2>&1 > LOGS/$$h.pid &	\
-#		sleep 1;						\
-#	done
-#
-#$(NFSPWD):
-#	cd $(@D); $(MAKE) $(@F)
-#endif
-
 #######################################################################
 # Double-Colon rules for populating the binary release model.         #
 #######################################################################
@@ -348,9 +332,9 @@ else
 endif
 else
 ifdef XP_OS2_VACPP
-	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
+	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
 else
-	$(MKSHLIB) -o $@ $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
+	$(MKSHLIB) -o $@ $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
 endif
 	chmod +x $@
 ifeq ($(OS_TARGET),Darwin)
@@ -373,7 +357,7 @@ endif
 	@echo $(RES) finished
 endif
 
-$(MAPFILE): $(LIBRARY_NAME).def
+$(MAPFILE): $(MAPFILE_SOURCE)
 	@$(MAKE_OBJDIR)
 	$(PROCESS_MAP_FILE)
 
@@ -395,25 +379,29 @@ WCCFLAGS3 := $(subst -D,-d,$(WCCFLAGS2))
 # Translate source filenames to absolute paths. This is required for
 # debuggers under Windows & OS/2 to find source files automatically
 
-ifeq (,$(filter-out OS2%,$(OS_TARGET)))
+ifeq (,$(filter-out OS2 AIX,$(OS_TARGET)))
+# OS/2 and AIX
 NEED_ABSOLUTE_PATH := 1
 PWD := $(shell pwd)
-endif
 
+else
+# Windows
 ifeq (,$(filter-out _WIN%,$(NS_USE_GCC)_$(OS_TARGET)))
 NEED_ABSOLUTE_PATH := 1
+PWD := $(shell pwd)
 ifeq (,$(findstring ;,$(PATH)))
-PWD :=  $(subst \,/,$(shell cygpath -w `pwd`))
+ifndef USE_MSYS
+PWD := $(subst \,/,$(shell cygpath -w $(PWD)))
+endif
+endif
+
 else
+# everything else
 PWD := $(shell pwd)
 endif
 endif
 
-ifdef NEED_ABSOLUTE_PATH
 abspath = $(if $(findstring :,$(1)),$(1),$(if $(filter /%,$(1)),$(1),$(PWD)/$(1)))
-else
-abspath = $(1)
-endif
 
 $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX): %.c
 	@$(MAKE_OBJDIR)
