@@ -35,52 +35,12 @@
 #
 # ***** END LICENSE BLOCK *****
 
-#######################################################################
-# Master "Core Components" macros to figure out binary code location  #
-#######################################################################
+SOL_CFLAGS += -D_SVID_GETTOD
 
-#
-# Figure out where the binary code lives.
-#
+include $(CORE_DEPTH)/coreconf/SunOS5.mk
 
-ifdef BUILD_TREE
-ifdef LIBRARY_NAME
-BUILD         = $(BUILD_TREE)/nss/$(LIBRARY_NAME)
-OBJDIR        = $(BUILD_TREE)/nss/$(LIBRARY_NAME)
-DEPENDENCIES  = $(BUILD_TREE)/nss/$(LIBRARY_NAME)/.md
-else
-BUILD         = $(BUILD_TREE)/nss
-OBJDIR        = $(BUILD_TREE)/nss
-DEPENDENCIES  = $(BUILD_TREE)/nss/.md
-endif
-else
-BUILD         = $(PLATFORM)
-OBJDIR        = $(PLATFORM)
-DEPENDENCIES  = $(PLATFORM)/.md
+ifeq ($(OS_RELEASE),5.11)
+	OS_DEFINES += -DSOLARIS2_11
 endif
 
-DIST          = $(SOURCE_PREFIX)/$(PLATFORM)
-
-ifdef BUILD_DEBUG_GC
-    DEFINES += -DDEBUG_GC
-endif
-
-GARBAGE += $(DEPENDENCIES) core $(wildcard core.[0-9]*)
-
-ifdef NSPR_INCLUDE_DIR
-    INCLUDES += -I$(NSPR_INCLUDE_DIR)
-endif
-
-ifndef NSPR_LIB_DIR
-    NSPR_LIB_DIR = $(DIST)/lib
-endif
-
-ifdef NSS_INCLUDE_DIR
-    INCLUDES += -I$(NSS_INCLUDE_DIR)
-endif
-                                                                                
-ifndef NSS_LIB_DIR
-    NSS_LIB_DIR = $(DIST)/lib
-endif
-
-MK_LOCATION = included
+OS_LIBS += -lthread -lnsl -lsocket -lposix4 -ldl -lc 
