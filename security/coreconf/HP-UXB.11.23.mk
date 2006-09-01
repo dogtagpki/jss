@@ -16,7 +16,7 @@
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 2002
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -35,52 +35,25 @@
 #
 # ***** END LICENSE BLOCK *****
 
-#######################################################################
-# Master "Core Components" macros to figure out binary code location  #
-#######################################################################
+# On HP-UX 10.30 and 11.x, the default implementation strategy is
+# pthreads.  Classic nspr and pthreads-user are also available.
+
+ifeq ($(OS_RELEASE),B.11.23)
+OS_CFLAGS		+= -DHPUX10
+DEFAULT_IMPL_STRATEGY = _PTH
+endif
 
 #
-# Figure out where the binary code lives.
+# To use the true pthread (kernel thread) library on 10.30 and
+# 11.x, we should define _POSIX_C_SOURCE to be 199506L.
+# The _REENTRANT macro is deprecated.
 #
 
-ifdef BUILD_TREE
-ifdef LIBRARY_NAME
-BUILD         = $(BUILD_TREE)/nss/$(LIBRARY_NAME)
-OBJDIR        = $(BUILD_TREE)/nss/$(LIBRARY_NAME)
-DEPENDENCIES  = $(BUILD_TREE)/nss/$(LIBRARY_NAME)/.md
-else
-BUILD         = $(BUILD_TREE)/nss
-OBJDIR        = $(BUILD_TREE)/nss
-DEPENDENCIES  = $(BUILD_TREE)/nss/.md
-endif
-else
-BUILD         = $(PLATFORM)
-OBJDIR        = $(PLATFORM)
-DEPENDENCIES  = $(PLATFORM)/.md
+ifdef USE_PTHREADS
+	OS_CFLAGS	+= -D_POSIX_C_SOURCE=199506L
 endif
 
-DIST          = $(SOURCE_PREFIX)/$(PLATFORM)
-
-ifdef BUILD_DEBUG_GC
-    DEFINES += -DDEBUG_GC
-endif
-
-GARBAGE += $(DEPENDENCIES) core $(wildcard core.[0-9]*)
-
-ifdef NSPR_INCLUDE_DIR
-    INCLUDES += -I$(NSPR_INCLUDE_DIR)
-endif
-
-ifndef NSPR_LIB_DIR
-    NSPR_LIB_DIR = $(DIST)/lib
-endif
-
-ifdef NSS_INCLUDE_DIR
-    INCLUDES += -I$(NSS_INCLUDE_DIR)
-endif
-                                                                                
-ifndef NSS_LIB_DIR
-    NSS_LIB_DIR = $(DIST)/lib
-endif
-
-MK_LOCATION = included
+#
+# Config stuff for HP-UXB.11.x.
+#
+include $(CORE_DEPTH)/coreconf/HP-UXB.11.mk
