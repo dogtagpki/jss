@@ -137,22 +137,6 @@ realclean clobber_all::
 	rm -rf $(wildcard *.OBJ) dist $(ALL_TRASH)
 	+$(LOOP_OVER_DIRS)
 
-#ifdef ALL_PLATFORMS
-#all_platforms:: $(NFSPWD)
-#	@d=`$(NFSPWD)`;							\
-#	if test ! -d LOGS; then rm -rf LOGS; mkdir LOGS; fi;		\
-#	for h in $(PLATFORM_HOSTS); do					\
-#		echo "On $$h: $(MAKE) $(ALL_PLATFORMS) >& LOGS/$$h.log";\
-#		rsh $$h -n "(chdir $$d;					\
-#			     $(MAKE) $(ALL_PLATFORMS) >& LOGS/$$h.log;	\
-#			     echo DONE) &" 2>&1 > LOGS/$$h.pid &	\
-#		sleep 1;						\
-#	done
-#
-#$(NFSPWD):
-#	cd $(@D); $(MAKE) $(@F)
-#endif
-
 #######################################################################
 # Double-Colon rules for populating the binary release model.         #
 #######################################################################
@@ -291,6 +275,12 @@ $(PROGRAM): $(OBJS) $(EXTRA_LIBS)
 	@$(MAKE_OBJDIR)
 ifeq (,$(filter-out _WIN%,$(NS_USE_GCC)_$(OS_TARGET)))
 	$(MKPROG) $(subst /,\\,$(OBJS)) -Fe$@ -link $(LDFLAGS) $(subst /,\\,$(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS))
+ifdef MT
+	if test -f $@.manifest; then \
+		$(MT) -NOLOGO -MANIFEST $@.manifest -OUTPUTRESOURCE:$@\;1; \
+		rm -f $@.manifest; \
+	fi
+endif	# MSVC with manifest tool
 else
 ifdef XP_OS2_VACPP
 	$(MKPROG) -Fe$@ $(CFLAGS) $(OBJS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
@@ -345,12 +335,18 @@ ifdef NS_USE_GCC
 	$(LINK_DLL) $(OBJS) $(SUB_SHLOBJS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS) $(LD_LIBS) $(RES)
 else
 	$(LINK_DLL) -MAP $(DLLBASE) $(subst /,\\,$(OBJS) $(SUB_SHLOBJS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS) $(LD_LIBS) $(RES))
+ifdef MT
+	if test -f $@.manifest; then \
+		$(MT) -NOLOGO -MANIFEST $@.manifest -OUTPUTRESOURCE:$@\;2; \
+		rm -f $@.manifest; \
+	fi
+endif	# MSVC with manifest tool
 endif
 else
 ifdef XP_OS2_VACPP
-	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
+	$(MKSHLIB) $(DLLFLAGS) $(LDFLAGS) $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
 else
-	$(MKSHLIB) -o $@ $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS)
+	$(MKSHLIB) -o $@ $(OBJS) $(SUB_SHLOBJS) $(LD_LIBS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
 endif
 	chmod +x $@
 ifeq ($(OS_TARGET),Darwin)
@@ -373,7 +369,7 @@ endif
 	@echo $(RES) finished
 endif
 
-$(MAPFILE): $(LIBRARY_NAME).def
+$(MAPFILE): $(MAPFILE_SOURCE)
 	@$(MAKE_OBJDIR)
 	$(PROCESS_MAP_FILE)
 
@@ -383,6 +379,12 @@ $(OBJDIR)/$(PROG_PREFIX)%$(PROG_SUFFIX): $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX)
 ifeq (,$(filter-out _WIN%,$(NS_USE_GCC)_$(OS_TARGET)))
 	$(MKPROG) $< -Fe$@ -link \
 	$(LDFLAGS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
+ifdef MT
+	if test -f $@.manifest; then \
+		$(MT) -NOLOGO -MANIFEST $@.manifest -OUTPUTRESOURCE:$@\;1; \
+		rm -f $@.manifest; \
+	fi
+endif	# MSVC with manifest tool
 else
 	$(MKPROG) -o $@ $(CFLAGS) $< \
 	$(LDFLAGS) $(EXTRA_LIBS) $(EXTRA_SHARED_LIBS) $(OS_LIBS)
@@ -395,25 +397,29 @@ WCCFLAGS3 := $(subst -D,-d,$(WCCFLAGS2))
 # Translate source filenames to absolute paths. This is required for
 # debuggers under Windows & OS/2 to find source files automatically
 
-ifeq (,$(filter-out OS2%,$(OS_TARGET)))
+ifeq (,$(filter-out OS2 AIX,$(OS_TARGET)))
+# OS/2 and AIX
 NEED_ABSOLUTE_PATH := 1
 PWD := $(shell pwd)
-endif
 
+else
+# Windows
 ifeq (,$(filter-out _WIN%,$(NS_USE_GCC)_$(OS_TARGET)))
 NEED_ABSOLUTE_PATH := 1
+PWD := $(shell pwd)
 ifeq (,$(findstring ;,$(PATH)))
-PWD :=  $(subst \,/,$(shell cygpath -w `pwd`))
+ifndef USE_MSYS
+PWD := $(subst \,/,$(shell cygpath -w $(PWD)))
+endif
+endif
+
 else
+# everything else
 PWD := $(shell pwd)
 endif
 endif
 
-ifdef NEED_ABSOLUTE_PATH
 abspath = $(if $(findstring :,$(1)),$(1),$(if $(filter /%,$(1)),$(1),$(PWD)/$(1)))
-else
-abspath = $(1)
-endif
 
 $(OBJDIR)/$(PROG_PREFIX)%$(OBJ_SUFFIX): %.c
 	@$(MAKE_OBJDIR)
@@ -885,8 +891,7 @@ endif
 
 ifneq (,$(filter-out OpenVMS OS2 WIN%,$(OS_TARGET)))
 # Can't use sed because of its 4000-char line length limit, so resort to perl
-.DEFAULT:
-	@perl -e '                                                            \
+PERL_DEPENDENCIES_PROGRAM =                                                   \
 	    open(MD, "< $(DEPENDENCIES)");                                    \
 	    while (<MD>) {                                                    \
 		if (m@ \.*/*$< @) {                                           \
@@ -913,7 +918,10 @@ ifneq (,$(filter-out OpenVMS OS2 WIN%,$(OS_TARGET)))
 	    } elsif ("$<" ne "$(DEPENDENCIES)") {                             \
 		print "$(MAKE): *** No rule to make target $<.  Stop.\n";     \
 		exit(1);                                                      \
-	    }'
+	    }
+
+.DEFAULT:
+	@perl -e '$(PERL_DEPENDENCIES_PROGRAM)'
 endif
 
 #############################################################################
