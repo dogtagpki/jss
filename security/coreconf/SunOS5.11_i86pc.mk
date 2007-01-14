@@ -1,7 +1,4 @@
 #
-# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
-# Use is subject to license terms.
-#
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -37,34 +34,20 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-#
-#ident	"$Id$"
-#
-#
-# This required package information file describes characteristics of the
-# package, such as package abbreviation, full package name, package version,
-# and package architecture.
-#
-PKG="SUNWjss"
-NAME="Network Security Services for Java (JSS)"
-ARCH="ISA"
-VERSION="JSSVERS,REV=0.0.0"
-SUNW_PRODNAME="Network Security Services for Java (JSS)"
-SUNW_PRODVERS="JSSVERS"
-SUNW_PKGTYPE="usr"
-MAXINST="1000"
-CATEGORY="system"
-DESC="Network Security Services for Java (JSS)"
-VENDOR="Sun Microsystems, Inc."
-HOTLINE="Please contact your local service provider"
-EMAIL=""
-CLASSES="none"
-BASEDIR=/
-SUNW_PKGVERS="1.0"
-#VSTOCK="<reserved by Release Engineering for package part #>"
-#ISTATES="<developer defined>"
-#RSTATES='<developer defined>'
-#ULIMIT="<developer defined>"
-#ORDER="<developer defined>"
-#PSTAMP="<developer defined>"
-#INTONLY="<developer defined>"
+
+SOL_CFLAGS	= -D_SVID_GETTOD
+
+include $(CORE_DEPTH)/coreconf/SunOS5.mk
+
+ifeq ($(USE_64),1)
+    CPU_ARCH		= x86_64
+else
+    CPU_ARCH		= x86
+    OS_DEFINES		+= -Di386
+endif
+
+ifeq ($(OS_RELEASE),5.11_i86pc)
+	OS_DEFINES += -DSOLARIS2_11
+endif
+
+OS_LIBS += -lthread -lnsl -lsocket -lposix4 -ldl -lc
