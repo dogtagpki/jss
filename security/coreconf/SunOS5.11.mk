@@ -1,4 +1,4 @@
-# 
+#
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -12,11 +12,11 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is the Netscape Security Services for Java.
+# The Original Code is the Netscape security libraries.
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1998-2000
+# Portions created by the Initial Developer are Copyright (C) 1994-2000
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -35,27 +35,12 @@
 #
 # ***** END LICENSE BLOCK *****
 
-CORE_DEPTH = ../../../../..
+SOL_CFLAGS += -D_SVID_GETTOD
 
-MODULE = jss
+include $(CORE_DEPTH)/coreconf/SunOS5.mk
 
-NS_USE_JDK = 1
+ifeq ($(OS_RELEASE),5.11)
+	OS_DEFINES += -DSOLARIS2_11
+endif
 
-REQUIRES =      nspr20 nss
-
-PACKAGE =       org/mozilla/jss/util
-
-PRIVATE_EXPORTS =   jssutil.h               \
-					jss_exceptions.h		\
-					java_ids.h				\
-                    jss_bigint.h            \
-                    jssver.h                \
-                    $(NULL)
-
-CSRCS =     jssutil.c                    \
-            jssver.c                     \
-            errstrings.c                 \
-            NativeErrcodes.c            \
-            $(NULL)
-
-LIBRARY_NAME = jssutil
+OS_LIBS += -lthread -lnsl -lsocket -lposix4 -ldl -lc 
