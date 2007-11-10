@@ -156,6 +156,9 @@ public final class PK11Token implements CryptoToken {
 	}
 
     public native boolean isLoggedIn() throws TokenException;
+   
+    public native boolean needsLogin() throws TokenException;
+
 
     /**
      * Log into the token. If you are already logged in, this method has
