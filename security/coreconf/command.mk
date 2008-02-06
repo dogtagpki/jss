@@ -56,4 +56,17 @@ TAR           = /bin/tar
 NOMD_CFLAGS  += $(OPTIMIZER) $(NOMD_OS_CFLAGS) $(XP_DEFINE) $(DEFINES) \
 		$(INCLUDES) $(XCFLAGS)
 
+# Optimization of code for size
+# OPT_CODE_SIZE
+# =1: The code can be optimized for size.
+#     The code is actually optimized for size only if ALLOW_OPT_CODE_SIZE=1
+#     in a given source code directory (in manifest.mn)
+# =0: Never optimize the code for size.
+#
+# Default value = 0 
+# Can be overridden from the make command line.
+ifndef OPT_CODE_SIZE
+OPT_CODE_SIZE = 0
+endif
+
 MK_COMMAND = included
