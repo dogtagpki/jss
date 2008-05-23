@@ -1318,7 +1318,7 @@ public final class CryptoManager implements TokenSupplier
 
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_2_6_RTM";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_2_7_BETA";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
