@@ -111,7 +111,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * The OID space for FIPS-180-2 SHA256/SHA384/SHA512 standardized algorithms.
      */
     public static final OBJECT_IDENTIFIER HASH_ALGORITHM =
-        new OBJECT_IDENTIFIER( new long[] {2, 16, 840, 1, 101, 3, 4 } );
+        new OBJECT_IDENTIFIER( new long[] {2, 16, 840, 1, 101, 3, 4, 2 } );
 
 
     /**
