@@ -39,7 +39,6 @@ import java.security.cert.CertificateEncodingException;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.ssl.*;
 import org.mozilla.jss.crypto.*;
-import java.security.*;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.primitive.*;
 import org.mozilla.jss.pkix.cert.*;
@@ -49,8 +48,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.security.*;
 import java.security.PrivateKey;
-import java.io.InputStream;
-import java.io.EOFException;
 import java.io.*;
 import java.net.SocketException;
 
@@ -148,18 +145,18 @@ public class SSLClientAuth implements Runnable {
         PasswordCallback cb = new FilePasswordCallback(args[1]);
         tok.login(cb);
         
-        if (args.length == 3) {
+        if (args.length >= 3) {
             port = new Integer(args[2]).intValue();
             System.out.println("using port:" + port);
         }
         
-        if (args.length == 4 && (args[3].equalsIgnoreCase("bypass") == true)) {
+        if (args.length >= 4 && (args[3].equalsIgnoreCase("bypass") == true)) {
             org.mozilla.jss.ssl.SSLSocket.bypassPKCS11Default(true);
             System.out.println("enabled bypassPKCS11 mode for all sockets");
             System.out.println(SSLSocket.getSSLDefaultOptions());
         }
         
-        if (args.length == 5) {
+        if (args.length >= 5) {
             serialNum = new Integer(args[4]).intValue();
         } else {
              SecureRandom rng= SecureRandom.getInstance("pkcs11prng",
