@@ -552,6 +552,23 @@ public class SSLSocket extends java.net.Socket {
     static public void enableTLSDefault(boolean enable) throws SocketException{
         setSSLDefaultOption(SocketBase.SSL_ENABLE_TLS, enable);
     }
+ 
+    /**
+     * Enables Session tickets on this socket. It is disabled by default, 
+     * unless the default has been changed with 
+     * <code>enableSessionTicketsDefault</code>.
+     */
+    public void enableSessionTickets(boolean enable) throws SocketException {
+        base.enableSessionTickets(enable);
+    }
+
+    /**
+     * Sets the default for Session Tickets for all new sockets.
+     */
+    static public void enableSessionTicketsDefault(boolean enable) 
+        throws SocketException{
+        setSSLDefaultOption(SocketBase.SSL_ENABLE_SESSION_TICKETS, enable);
+    }
 
     /**
      * Enables bypass of PKCS11 on this socket.  
@@ -706,6 +723,9 @@ public class SSLSocket extends java.net.Socket {
             buf.append("\nSSL_ENABLE_TLS"  + 
                 ((getSSLDefaultOption(SocketBase.SSL_ENABLE_TLS) != 0) 
                 ? "=on" :  "=off"));
+            buf.append("\nSSL_ENABLE_SESSION_TICKETS"  +
+                ((getSSLDefaultOption(SocketBase.SSL_ENABLE_SESSION_TICKETS)
+                != 0) ? "=on" :  "=off"));
             buf.append("\nSSL_REQUIRE_CERTIFICATE"); 
             switch (getSSLDefaultOption(SocketBase.SSL_REQUIRE_CERTIFICATE)) {
                 case 0:
