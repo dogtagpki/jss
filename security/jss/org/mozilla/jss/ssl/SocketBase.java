@@ -114,6 +114,7 @@ class SocketBase {
     static final int SSL_REQUIRE_ALWAYS = 19;
     static final int SSL_REQUIRE_FIRST_HANDSHAKE = 20;
     static final int SSL_REQUIRE_NO_ERROR = 21;
+    static final int SSL_ENABLE_SESSION_TICKETS = 22;
 
     void close() throws IOException {
         socketClose();
@@ -151,6 +152,10 @@ class SocketBase {
 
     void enableTLS(boolean enable) throws SocketException {
         setSSLOption(SSL_ENABLE_TLS, enable);
+    }
+
+    void enableSessionTickets(boolean enable) throws SocketException {
+        setSSLOption(SSL_ENABLE_SESSION_TICKETS, enable);
     }
 
     void bypassPKCS11(boolean enable) throws SocketException {

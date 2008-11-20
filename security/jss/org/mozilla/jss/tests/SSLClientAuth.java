@@ -275,7 +275,10 @@ public class SSLClientAuth implements Runnable {
             SSLSocket.enableSSL2Default(false);
             SSLSocket.enableSSL3Default(false);
             /* TLS is enabled by default */
-            
+
+            /* Enable Session tickets by default */
+            SSLSocket.enableSessionTicketsDefault(true);
+
             /* if FIPS is enabled, configure only FIPS ciphersuites */
             if (cm.FIPSEnabled()) {
                 System.out.println("The NSS database is confirued in FIPS" +

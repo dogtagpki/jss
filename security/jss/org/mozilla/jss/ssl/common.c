@@ -394,6 +394,7 @@ PRInt32 JSSL_enums[] = {
     SSL_REQUIRE_ALWAYS,         /* 19 */        /* ssl.h */
     SSL_REQUIRE_FIRST_HANDSHAKE,/* 20 */        /* ssl.h */
     SSL_REQUIRE_NO_ERROR,       /* 21 */        /* ssl.h */
+    SSL_ENABLE_SESSION_TICKETS, /* 22 */        /* ssl.h */
 
     0
 };

@@ -387,6 +387,15 @@ public class SSLServerSocket extends java.net.ServerSocket {
     }
 
     /**
+     * Enables Session tickets on this socket. It is disabled by default, 
+     * unless the default has been changed with 
+     * <code>SSLSocket.enableSessionTicketsDefault</code>.
+     */
+    public void enableSessionTickets(boolean enable) throws SocketException {
+        base.enableSessionTickets(enable);
+    }
+
+    /**
      * Enables the bypass of PKCS11 for performance on this socket. 
      * It is disabled by default, unless the default has been changed 
      * with <code>SSLSocket.bypassPKCS11Default</code>.
