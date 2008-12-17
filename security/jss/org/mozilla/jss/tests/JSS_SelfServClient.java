@@ -244,7 +244,8 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 if ((ciphersuite.indexOf("SSL2_") != -1)    ||
                         (ciphersuite.indexOf("_ECDHE_") != -1)  ||
                         (ciphersuite.indexOf("_ECDH_") != -1)   ||
-                        (ciphersuite.indexOf("_CAMELLIA_") != -1)||
+                        (ciphersuite.indexOf("_CAMELLIA_") != -1) ||
+                        (ciphersuite.indexOf("_SEED_") != -1) ||
                         (ciphersuite.indexOf("_DHE_DSS_") != -1) ||
                         (ciphersuite.indexOf("_EXPORT1024_") != -1) ||
                         (ciphersuite.indexOf("_RSA_FIPS_") != -1)  ||
@@ -260,7 +261,8 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 if ((ciphersuite.indexOf("SSL2_")  != -1)  ||
                         (ciphersuite.indexOf("_ECDHE_") != -1)  ||
                         (ciphersuite.indexOf("_ECDH_") != -1)   ||
-                        (ciphersuite.indexOf("_CAMELLIA_") != -1)||
+                        (ciphersuite.indexOf("_CAMELLIA_") != -1) ||
+                        (ciphersuite.indexOf("_SEED_") != -1) ||
                         (ciphersuite.indexOf("_DHE_DSS_") != -1)||
                         (ciphersuite.indexOf("_EXPORT1024_") != -1) ||
                         (ciphersuite.indexOf("_RSA_FIPS_") != -1)  ||

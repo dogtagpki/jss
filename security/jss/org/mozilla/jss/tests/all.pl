@@ -428,9 +428,8 @@ sub print_case_result {
         $testpass++;
         print "JSSTEST_CASE $testrun ($testname): PASS\n";
     } else {
-        print "JSSTEST_CASE $testrun ($testname): FAIL return value $result\n";
+        print "JSSTEST_CASE $testrun ($testname): FAILED return value $result\n";
     }
-
 }
 
 setup_vars(\@ARGV);
