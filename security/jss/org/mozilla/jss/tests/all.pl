@@ -529,6 +529,10 @@ $testname = "HMAC ";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.HMACTest $testdir $pwfile";
 run_test($testname, $command);
 
+$testname = "KeyWrapping ";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JCAKeyWrap $testdir $pwfile";
+run_test($testname, $command);
+
 $testname = "Mozilla-JSS JCA Signature ";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.JCASigTest $testdir $pwfile";
 run_test($testname, $command);
@@ -647,12 +651,16 @@ $serverPort = checkPort(++$serverPort);
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $serverPort bypassoff $certSN";
 run_test($testname, $command);
 
-$testname = "HMAC ";
+$testname = "HMAC FIPSMODE";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.HMACTest $testdir $pwfile";
 run_test($testname, $command);
 
+$testname = "KeyWrapping FIPSMODE";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JCAKeyWrap $testdir $pwfile";
+run_test($testname, $command);
+
 $serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSS Server and JSS client both with Bypass Off";
+$testname = "SSL Ciphersuite FIPSMODE JSS Server and JSS client both with Bypass Off";
 $serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort bypassoff $java";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypassOff verboseoff JSS";
 run_ssl_test($testname, $serverCommand, $command);
