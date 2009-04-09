@@ -1,4 +1,4 @@
-#
+# 
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -12,11 +12,11 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Netscape Security Services for Java.
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 1998-2000
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -35,46 +35,36 @@
 #
 # ***** END LICENSE BLOCK *****
 
-#
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
-#
-SHELL = /usr/bin/ksh
+CORE_DEPTH = ../../../../..
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
+MODULE = jss
 
-DEFAULT_COMPILER = cc
+NS_USE_JDK = 1
 
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
+REQUIRES =      nspr20 nss
 
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
-endif
+PACKAGE =       org/mozilla/jss/pkcs11
 
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
+# These are meant to be used within Ninja only.
+PRIVATE_EXPORTS =   pk11util.h       \
+                    $(NULL)
 
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
-endif
+CSRCS =                             \
+			PK11Cert.c				\
+			PK11Cipher.c			\
+            PK11KeyGenerator.c      \
+            PK11KeyPairGenerator.c  \
+            PK11KeyWrapper.c        \
+			PK11MessageDigest.c		\
+            PK11Module.c            \
+            PK11PrivKey.c       \
+            PK11PubKey.c        \
+            PK11Signature.c         \
+			PK11SecureRandom.c		\
+			PK11Store.c				\
+            PK11SymKey.c            \
+			PK11Token.c				\
+            $(NULL)
 
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
 
-DSO_LDOPTS += -shared
-
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
-
+LIBRARY_NAME = jsspkcs11

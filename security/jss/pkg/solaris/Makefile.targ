@@ -1,4 +1,7 @@
 #
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -34,47 +37,38 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-
 #
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
+#ident	"$Id$"
 #
-SHELL = /usr/bin/ksh
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
+include ../proto64.mk
 
-DEFAULT_COMPILER = cc
-
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
-
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
+ifdef JSS3_LOCATION
+	PROTOTYPE_BASE=prototype3_
+else
+	PROTOTYPE_BASE=prototype_
 endif
 
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
+pkginfo: pkginfo.tmpl ../awk_pkginfo
+	$(RM) $@; nawk -f ../awk_pkginfo $@.tmpl > $@
 
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
-endif
+prototype: prototype_$(MACH)
+	@echo "Using $(PROTOTYPE_BASE)$(MACH) to build package $(PACKAGE)"
+	cat $(PROTOTYPE_BASE)$(MACH) | sed $(sed_proto64) >prototype
 
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
+pkg: $(PKGARCHIVE) pkgdepend prototype
+	pkgmk -f prototype -d $(PKGARCHIVE) -r $(ROOT) -o $(PACKAGE)
 
-DSO_LDOPTS += -shared
+$(PKGARCHIVE):
+	[ -d $(PKGARCHIVE) ] || mkdir -p $(PKGARCHIVE)
 
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
+$(DATAFILES):: %: ../common_files/%
+	$(RM) $@; cp ../common_files/$@ $@
 
+$(MACHDATAFILES): %: ../common_files/%_$(MACH)
+	$(RM) $@; cp ../common_files/$@_$(MACH) $@
+
+clobber clean::
+	-$(RM) $(CLOBBERFILES) $(CLEANFILES)
+
+.PHONY: pkg

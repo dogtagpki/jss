@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -35,46 +36,38 @@
 #
 # ***** END LICENSE BLOCK *****
 
+########################################################################
 #
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
-#
-SHELL = /usr/bin/ksh
+# "Starting JSSE JSSE_SSLServer Test..."
+# 
+JSS_CLASSPATH=$1
+Port=$2
+ClientAuth=$3
+TestDir=$4
+dbFile=$5
+provider=$6
+nssConfigFile=$7
+nssPWFile=$8
+shift 8 
+JAVA_BIN_AND_OPT=$@
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
+if [ -z "$JAVA_BIN_AND_OPT" ] ;
+then
+  JAVA_BIN_AND_OPT=${JAVA_HOME}/bin/java
+fi
 
-DEFAULT_COMPILER = cc
+#echo "command"
+#echo "JSS_CLASSPATH=${JSS_CLASSPATH}"
+#echo "Port=${Port}"
+#echo "ClientAuth=${ClientAuth}"
+#echo "TestDir=${TestDir}"
+#echo "dbFile=${dbFile}"
+#echo "provider=${provider}"
+#echo "nssConfigFile=${nssConfigFile}"
+#echo "nssPWFile=${nssPWFile}"
+#echo "JAVA_BIN_AND_OPT=${JAVA_BIN_AND_OPT}"
 
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
-
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
-endif
-
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
-
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
-endif
-
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
-
-DSO_LDOPTS += -shared
-
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
+echo "${JAVA_BIN_AND_OPT} -classpath ${JSS_CLASSPATH} org.mozilla.jss.tests.JSSE_SSLServer ${Port} TLS ${ClientAuth} ${TestDir} ${dbFile} ${provider} ${nssConfigFile} ${nssPWFile}&"
+echo "command"
+${JAVA_BIN_AND_OPT} -classpath ${JSS_CLASSPATH} org.mozilla.jss.tests.JSSE_SSLServer ${Port} TLS ${ClientAuth} ${TestDir} ${dbFile} ${provider} ${nssConfigFile} ${nssPWFile}&
 
