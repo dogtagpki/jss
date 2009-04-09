@@ -1,3 +1,4 @@
+#! gmake
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -35,46 +36,24 @@
 #
 # ***** END LICENSE BLOCK *****
 
-#
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
-#
-SHELL = /usr/bin/ksh
+CORE_DEPTH = ../..
+DEPTH      = ../..
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
+include $(CORE_DEPTH)/coreconf/config.mk
 
-DEFAULT_COMPILER = cc
-
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
-
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
+publish:
+ifeq ($(OS_TARGET),Linux)
+	rm -rf $(OBJDIR)
+	cp -r linux $(OBJDIR)
+	$(MAKE) -C $(OBJDIR) publish
+endif
+ifeq ($(OS_TARGET),SunOS)
+	rm -rf $(OBJDIR)
+	cp -r solaris $(OBJDIR)
+	$(MAKE) -C $(OBJDIR) publish
 endif
 
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
+clean::
+	rm -rf $(OBJDIR)
 
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
-endif
-
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
-
-DSO_LDOPTS += -shared
-
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
-
+include $(CORE_DEPTH)/coreconf/rules.mk

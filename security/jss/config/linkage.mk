@@ -1,4 +1,4 @@
-#
+# 
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -12,11 +12,11 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Netscape Security Services for Java.
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 1998-2000
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -35,46 +35,64 @@
 #
 # ***** END LICENSE BLOCK *****
 
+#######################################################################
+# Adjust variables for component library linkage on some platforms    #
+#######################################################################
+
 #
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
+# AIX platforms
 #
-SHELL = /usr/bin/ksh
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
-
-DEFAULT_COMPILER = cc
-
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
-
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
+ifeq ($(OS_ARCH),AIX)
+	LDOPTS += -blibpath:.:$(PWD)/$(SOURCE_LIB_DIR):/usr/lib/threads:/usr/lpp/xlC/lib:/usr/lib:/lib 
 endif
 
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
+#
+# HP/UX platforms
+#
 
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
+ifeq ($(OS_ARCH), HP-UX)
+	LDOPTS += -Wl,+s,+b,$(PWD)/$(SOURCE_LIB_DIR)
 endif
 
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
+#
+# IRIX platforms
+#
+
+ifeq ($(OS_ARCH), IRIX)
+	LDOPTS += -rpath $(PWD)/$(SOURCE_LIB_DIR)
 endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
 
-DSO_LDOPTS += -shared
+#
+# OSF 1 platforms
+#
 
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
+ifeq ($(OS_ARCH), OSF1)
+	LDOPTS += -rpath $(PWD)/$(SOURCE_LIB_DIR) -lpthread
+endif
+
+#
+# Solaris platforms
+#     NOTE:  Disable optimization on SunOS4.1.3
+#
+
+ifeq ($(OS_ARCH), SunOS)
+	ifneq ($(OS_RELEASE), 4.1.3_U1)
+		ifdef NS_USE_GCC
+			LDOPTS += -Xlinker -R -Xlinker $(PWD)/$(SOURCE_LIB_DIR)
+		else
+			LDOPTS += -R $(PWD)/$(SOURCE_LIB_DIR)
+		endif
+	else
+		OPTIMIZER =
+	endif
+endif
+
+#
+# Windows platforms
+#
+
+ifeq ($(OS_ARCH), WINNT)
+	LDOPTS    += -NOLOGO -DEBUG -DEBUGTYPE:CV -INCREMENTAL:NO
+endif
 

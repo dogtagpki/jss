@@ -1,4 +1,4 @@
-#
+# 
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -12,11 +12,11 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Netscape Security Services for Java.
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 1998-2000
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -36,45 +36,38 @@
 # ***** END LICENSE BLOCK *****
 
 #
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
+# Configuration information unique to the "sectools" component
 #
-SHELL = /usr/bin/ksh
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
 
-DEFAULT_COMPILER = cc
+#######################################################################
+#  Local "sectools" component library link options                    #
+#######################################################################
 
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
+include $(CORE_DEPTH)/$(MODULE)/config/linkage.mk
 
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
+#######################################################################
+#  Local "sectools" component STATIC system library names             #
+#######################################################################
+
+include $(CORE_DEPTH)/$(MODULE)/config/static.mk
+
+#######################################################################
+#  Local "sectools" component DYNAMIC system library names            #
+#######################################################################
+
+include $(CORE_DEPTH)/$(MODULE)/config/dynamic.mk
+
+# Stricter semantic checking for SunOS compiler. This catches calling
+# undeclared functions, a major headache during debugging.
+ifeq ($(OS_ARCH), SunOS)
+    OS_CFLAGS += -v
 endif
 
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
-
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
+ifeq ($(OS_ARCH), WINNT)
+LINK_DLL += -LIBPATH:$(SOURCE_LIB_DIR)
+LINK_DLL += -LIBPATH:$(JAVA_HOME)/$(JAVA_LIBDIR)
+LINK_DLL += $(foreach file,$(LD_LIBS),-DEFAULTLIB:"$(notdir $(file))")
 endif
 
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
-
-DSO_LDOPTS += -shared
-
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
-
+CFLAGS += -I$(JAVA_HOME)/include

@@ -1,3 +1,5 @@
+# Copyright 2005 Microsystems, Inc.  All Rights Reserved.
+# Use is subject to license terms.
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -34,47 +36,23 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-
 #
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
+#	$Id$
 #
-SHELL = /usr/bin/ksh
+# This package information file defines software dependencies associated
+# with the pkg.  You can define three types of pkg dependencies with this file:
+#	 P indicates a prerequisite for installation
+#	 I indicates an incompatible package
+#	 R indicates a reverse dependency
+# <pkg.abbr> see pkginfo(4), PKG parameter
+# <name> see pkginfo(4), NAME parameter
+# <version> see pkginfo(4), VERSION parameter
+# <arch> see pkginfo(4), ARCH parameter
+# <type> <pkg.abbr> <name>
+# 	(<arch>)<version>
+# 	(<arch>)<version>
+# 	...
+# <type> <pkg.abbr> <name>
+# ...
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
-
-DEFAULT_COMPILER = cc
-
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
-
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
-endif
-
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
-
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
-endif
-
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
-
-DSO_LDOPTS += -shared
-
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
-
+P SUNWtls	Netscape Security Services

@@ -1,4 +1,7 @@
 #
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -34,47 +37,40 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
+#
+#ident	"$Id$"
+#
+# This required package information file contains a list of package contents.
+# The 'pkgmk' command uses this file to identify the contents of a package
+# and their location on the development machine when building the package.
+# Can be created via a text editor or through use of the 'pkgproto' command.
+
+#!search <pathname pathname ...>	# where to find pkg objects
+#!include <filename>			# include another 'prototype' file
+#!default <mode> <owner> <group>	# default used if not specified on entry
+#!<param>=<value>			# puts parameter in pkg environment
 
 #
-# The Bourne shell (sh) on OSF1 doesn't handle "set -e" correctly,
-# which we use to stop LOOP_OVER_DIRS submakes as soon as any
-# submake fails.  So we use the Korn shell instead.
+# Include ISA independent files (prototype_com)
 #
-SHELL = /usr/bin/ksh
-
-include $(CORE_DEPTH)/coreconf/UNIX.mk
-
-DEFAULT_COMPILER = cc
-
-CC         = cc
-OS_CFLAGS += $(NON_LD_FLAGS) -std1
-CCC        = cxx
-RANLIB     = /bin/true
-CPU_ARCH   = alpha
-
-ifdef BUILD_OPT
-	OPTIMIZER += -Olimit 4000
-endif
-
-NON_LD_FLAGS += -ieee_with_inexact
-OS_CFLAGS    += -DOSF1 -D_REENTRANT 
-
-ifeq ($(USE_PTHREADS),1)
-	OS_CFLAGS += -pthread
-endif
-
-# The command to build a shared library on OSF1.
-MKSHLIB    += ld -shared -expect_unresolved "*" -soname $(notdir $@)
-ifdef MAPFILE
-MKSHLIB += -hidden -input $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
- sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,-exported_symbol ,' > $@
-
-DSO_LDOPTS += -shared
-
-# required for freebl
-USE_64=1
-# this platform name does not use a bit tag due to only having a 64-bit ABI
-64BIT_TAG=
+!include prototype_com
+#
+#
+#
+# List files which are SPARC specific here
+#
+# source locations relative to the prototype file
+#
+#
+# SUNWjss
+#64#s none usr/lib/mps/64=sparcv9
+#64#s none usr/lib/mps/secv1/64=sparcv9
+#64#d none usr/lib/mps/sparcv9 755 root bin
+#64#d none usr/share/lib/mps/sparcv9 755 root bin
+#64#d none usr/lib/mps/secv1/sparcv9 755 root bin
+#64#d none usr/share/lib/mps/secv1/sparcv9 755 root bin
+#64#f none usr/lib/mps/sparcv9/libjss4.so 755 root bin
+#64#f none usr/share/lib/mps/sparcv9/jss4.jar 644 root bin
+#64#s none usr/lib/mps/secv1/sparcv9/libjss4.so=../../sparcv9/libjss4.so
+#64#s none usr/share/lib/mps/secv1/sparcv9/jss4.jar=../../sparcv9/jss4.jar
 
