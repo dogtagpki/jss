@@ -116,7 +116,9 @@ public class JCASymKeyGen {
     }
     /**
      * 
-     * @param  
+     * @param key
+     * @param kg
+     * @return
      */
     public javax.crypto.SecretKey genSecretKey(String keyType, String provider){
         javax.crypto.SecretKey key = null;
