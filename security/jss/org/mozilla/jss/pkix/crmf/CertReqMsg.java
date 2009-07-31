@@ -130,6 +130,16 @@ public class CertReqMsg implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
 	public void verify() throws SignatureException,
+        InvalidKeyFormatException, NoSuchAlgorithmException,
+        org.mozilla.jss.CryptoManager.NotInitializedException,
+        TokenException, java.security.InvalidKeyException, IOException{
+
+        CryptoToken token = CryptoManager.getInstance()
+                                .getInternalCryptoToken();
+        verify(token);
+    }
+
+    public void verify(CryptoToken token) throws SignatureException,
 		InvalidKeyFormatException, NoSuchAlgorithmException,
 		org.mozilla.jss.CryptoManager.NotInitializedException,
 		TokenException, java.security.InvalidKeyException, IOException{
@@ -149,8 +159,6 @@ public class CertReqMsg implements ASN1Value {
 				pubkey = (PublicKey) spi.toPublicKey();
 			}
 
-			CryptoToken token = CryptoManager.getInstance()
-                                .getInternalCryptoToken();
 			SignatureAlgorithm sigAlg =
 				SignatureAlgorithm.fromOID(alg.getOID());
 			Signature sig = token.getSignatureContext(sigAlg);
