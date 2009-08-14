@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -35,63 +36,38 @@
 #
 # ***** END LICENSE BLOCK *****
 
+########################################################################
 #
-# Config stuff for HP-UX
-#
+# "Starting JSSE JSSE_SSLServer Test..."
+# 
+JSS_CLASSPATH=$1
+Port=$2
+ClientAuth=$3
+TestDir=$4
+dbFile=$5
+provider=$6
+nssConfigFile=$7
+nssPWFile=$8
+shift 8 
+JAVA_BIN_AND_OPT=$@
 
-include $(CORE_DEPTH)/coreconf/UNIX.mk
+if [ -z "$JAVA_BIN_AND_OPT" ] ;
+then
+  JAVA_BIN_AND_OPT=${JAVA_HOME}/bin/java
+fi
 
-DEFAULT_COMPILER = cc
+#echo "command"
+#echo "JSS_CLASSPATH=${JSS_CLASSPATH}"
+#echo "Port=${Port}"
+#echo "ClientAuth=${ClientAuth}"
+#echo "TestDir=${TestDir}"
+#echo "dbFile=${dbFile}"
+#echo "provider=${provider}"
+#echo "nssConfigFile=${nssConfigFile}"
+#echo "nssPWFile=${nssPWFile}"
+#echo "JAVA_BIN_AND_OPT=${JAVA_BIN_AND_OPT}"
 
-ifeq ($(OS_TEST),ia64)
-	CPU_ARCH = ia64
-	CPU_TAG = _$(CPU_ARCH)
-	ifneq ($(USE_64),1)
-		64BIT_TAG = _32
-	endif
-	DLL_SUFFIX = so
-else
-	CPU_ARCH = hppa
-	DLL_SUFFIX = sl
-endif
-CC         = cc
-CCC        = CC
-OS_CFLAGS  += -Ae $(DSO_CFLAGS) -DHPUX -D$(CPU_ARCH) -D_HPUX_SOURCE -D_USE_BIG_FDS
+echo "${JAVA_BIN_AND_OPT} -classpath ${JSS_CLASSPATH} org.mozilla.jss.tests.JSSE_SSLServer ${Port} TLS ${ClientAuth} ${TestDir} ${dbFile} ${provider} ${nssConfigFile} ${nssPWFile}&"
+echo "command"
+${JAVA_BIN_AND_OPT} -classpath ${JSS_CLASSPATH} org.mozilla.jss.tests.JSSE_SSLServer ${Port} TLS ${ClientAuth} ${TestDir} ${dbFile} ${provider} ${nssConfigFile} ${nssPWFile}&
 
-ifeq ($(DEFAULT_IMPL_STRATEGY),_PTH)
-	USE_PTHREADS = 1
-	ifeq ($(CLASSIC_NSPR),1)
-		USE_PTHREADS =
-		IMPL_STRATEGY = _CLASSIC
-	endif
-	ifeq ($(PTHREADS_USER),1)
-		USE_PTHREADS =
-		IMPL_STRATEGY = _PTH_USER
-	endif
-endif
-
-ifdef PTHREADS_USER
-	OS_CFLAGS	+= -D_POSIX_C_SOURCE=199506L
-endif
-
-LDFLAGS			= -z -Wl,+s
-
-MKSHLIB			= $(LD) $(DSO_LDOPTS) $(RPATH)
-ifdef MAPFILE
-MKSHLIB += -c $(MAPFILE)
-endif
-PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
-         sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,+e ,' > $@
-
-DSO_LDOPTS		= -b +h $(notdir $@)
-RPATH			= +b '$$ORIGIN'
-ifneq ($(OS_TEST),ia64)
-# pa-risc
-ifndef USE_64
-RPATH			=
-endif
-endif
-DSO_LDFLAGS		=
-
-# +Z generates position independent code for use in shared libraries.
-DSO_CFLAGS = +Z
