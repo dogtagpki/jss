@@ -81,7 +81,6 @@ public class KeyPairGenerator {
 	genKeyPair() throws TokenException {
 		return engine.generateKeyPair();
 	}
-
     /**
      * @return The type of key that this generator generates.
      */
@@ -164,6 +163,7 @@ public class KeyPairGenerator {
      * Temporary keys are not written permanently to the token.  They
      * are destroyed by the garbage collector.  If this method is not
      * called, the default is permanent keypairs.
+     * @param temp
      */
     public void temporaryPairs(boolean temp) {
         engine.temporaryPairs(temp);
@@ -177,6 +177,7 @@ public class KeyPairGenerator {
      * compatibility.  The default is sensitive keypairs if the
      * temporaryPairs mode is false, or insensitive keypairs if the
      * temporaryPairs mode is true.
+     * @param sensitive
      */
     public void sensitivePairs(boolean sensitive) {
         engine.sensitivePairs(sensitive);
@@ -187,9 +188,15 @@ public class KeyPairGenerator {
      * keypairs.  Extractable keys can be extracted from the token after
      * wrapping.  If this method is not called, the default is token
      * dependent.
+     * @param extractable 
      */
     public void extractablePairs(boolean extractable) {
         engine.extractablePairs(extractable);
+    }
+
+    public void setKeyPairUsages(KeyPairGeneratorSpi.Usage[] usages,
+                                 KeyPairGeneratorSpi.Usage[] usages_mask) {
+        engine.setKeyPairUsages(usages,usages_mask);
     }
 
 	protected KeyPairAlgorithm algorithm;

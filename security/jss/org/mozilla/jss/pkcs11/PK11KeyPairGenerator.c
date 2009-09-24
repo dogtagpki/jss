@@ -120,13 +120,11 @@ finish:
 
 int PK11_NumberObjectsFor(PK11SlotInfo*, CK_ATTRIBUTE*, int);
 
-/*
- * make a common key gen function for both this file and PK11Token.c
- */
 SECStatus
-JSS_PK11_generateKeyPair(JNIEnv *env, CK_MECHANISM_TYPE mechanism, 
+JSS_PK11_generateKeyPairWithOpFlags(JNIEnv *env, CK_MECHANISM_TYPE mechanism, 
     PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privk,
-    void *params, PRBool temporary, jint sensitive, jint extractable)
+    void *params, PRBool temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
 {
     PK11AttrFlags attrFlags = 0;
     *privk=NULL;
@@ -173,12 +171,17 @@ JSS_PK11_generateKeyPair(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
     } else {
         attrFlags |= (PK11_ATTR_INSENSITIVE | PK11_ATTR_PUBLIC);
     }
-    *privk = PK11_GenerateKeyPairWithFlags(slot,
+
+    *privk = PK11_GenerateKeyPairWithOpFlags(slot,
                                           mechanism,
                                           params, 
                                           pubk,
                                           attrFlags,
+                                          (CK_FLAGS) op_flags,
+                                          (CK_FLAGS) op_flags_mask
+                                          /* the ones we don't want*/,
                                           NULL /* default PW callback */ );
+
     if( *privk == NULL ) {
         int errLength;
         char *errBuf;
@@ -217,13 +220,29 @@ finish:
     return SECFailure;
 }
 
-/**********************************************************************
- * Local generic helper
+/*
+ * make a common key gen function for both this file and PK11Token.c
  */
+SECStatus
+JSS_PK11_generateKeyPair(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
+    PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privk,
+    void *params, PRBool temporary, jint sensitive, jint extractable)
+{
+
+    return JSS_PK11_generateKeyPairWithOpFlags(env, mechanism, slot, pubk, 
+                   privk, params, temporary, sensitive, extractable, 0, 0);
+}
+
+
+/**********************************************************************
+ * Local generic helpers
+ */
+
 static jobject 
-PK11KeyPairGenerator(JNIEnv *env, jobject this, jobject token, 
+PK11KeyPairGeneratorWithOpFlags(JNIEnv *env, jobject this, jobject token, 
     CK_MECHANISM_TYPE mechanism, void *params, 
-    jboolean temporary, jint sensitive, jint extractable)
+    jboolean temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
 {
     PK11SlotInfo* slot;
     SECKEYPrivateKey *privk=NULL;
@@ -242,8 +261,8 @@ PK11KeyPairGenerator(JNIEnv *env, jobject this, jobject token,
     }
     PR_ASSERT(slot != NULL);
 
-    rv = JSS_PK11_generateKeyPair(env, mechanism, slot, &pubk, &privk,
-    	params, temporary, sensitive, extractable);
+    rv = JSS_PK11_generateKeyPairWithOpFlags(env, mechanism, slot, &pubk, &privk,
+    	params, temporary, sensitive, extractable, op_flags, op_flags_mask);
     if (rv != SECSuccess) {
         goto finish;
     }
@@ -267,6 +286,15 @@ finish:
     return keyPair;
 }
 
+static jobject
+PK11KeyPairGenerator(JNIEnv *env, jobject this, jobject token,
+    CK_MECHANISM_TYPE mechanism, void *params,
+    jboolean temporary, jint sensitive, jint extractable)
+{
+    return PK11KeyPairGeneratorWithOpFlags(env, this, token, mechanism,
+                      params, temporary, sensitive, extractable, 0, 0);
+}
+
 /**********************************************************************
  * PK11KeyPairGenerator.generateRSAKeyPair
  */
@@ -288,6 +316,30 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateRSAKeyPair
     return PK11KeyPairGenerator(env, this, token, CKM_RSA_PKCS_KEY_PAIR_GEN,
      &params, temporary, sensitive, extractable);
 }
+
+/**********************************************************************
+ * PK11KeyPairGenerator.generateRSAKeyPairWithOpFlags
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateRSAKeyPairWithOpFlags
+  (JNIEnv *env, jobject this, jobject token, jint keySize, jlong publicExponent,
+    jboolean temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
+{
+    PK11RSAGenParams params;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
+
+    /**************************************************
+     * setup parameters
+     *************************************************/
+    params.keySizeInBits = keySize;
+    params.pe = publicExponent;
+
+    return PK11KeyPairGeneratorWithOpFlags(env, this, token, CKM_RSA_PKCS_KEY_PAIR_GEN,
+     &params, temporary, sensitive, extractable, op_flags, op_flags_mask);
+}
+
 
 #define ZERO_SECITEM(item) {(item).len=0; (item).data=NULL;}
 
@@ -339,6 +391,58 @@ finish:
     return keyPair;
 }
 
+/**********************************************************************
+ *
+ * PK11KeyPairGenerator.generateDSAKeyPair
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateDSAKeyPairWithOpFlags
+  (JNIEnv *env, jobject this, jobject token, jbyteArray P, jbyteArray Q,
+    jbyteArray G, jboolean temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
+{
+    SECItem p, q, g;
+    PQGParams *params=NULL;
+    jobject keyPair=NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL && P!=NULL && Q!=NULL
+                && G!=NULL);
+
+    /* zero these so we can free them indiscriminately later */
+    ZERO_SECITEM(p);
+    ZERO_SECITEM(q);
+    ZERO_SECITEM(g);
+
+    /**************************************************
+     * Setup the parameters
+     *************************************************/
+    if( JSS_ByteArrayToOctetString(env, P, &p) ||
+        JSS_ByteArrayToOctetString(env, Q, &q) ||
+        JSS_ByteArrayToOctetString(env, G, &g) )
+    {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+        goto finish;
+    }
+    params = PK11_PQG_NewParams(&p, &q, &g);
+    if(params == NULL) {
+        JSS_throw(env, OUT_OF_MEMORY_ERROR);
+        goto finish;
+    }
+    keyPair = PK11KeyPairGeneratorWithOpFlags(env, this, token,
+                        CKM_DSA_KEY_PAIR_GEN, params,
+                        temporary, sensitive, extractable,
+                        op_flags, op_flags_mask);
+
+finish:
+    SECITEM_FreeItem(&p, PR_FALSE);
+    SECITEM_FreeItem(&q, PR_FALSE);
+    SECITEM_FreeItem(&g, PR_FALSE);
+    PK11_PQG_DestroyParams(params);
+    return keyPair;
+}
+
+
 void
 DumpItem(SECItem *item)
 {
@@ -361,6 +465,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateECKeyPair
   (JNIEnv *env, jobject this, jobject token, jbyteArray Curve, 
     jboolean temporary, jint sensitive, jint extractable)
 {
+
     SECItem curve;
     jobject keyPair=NULL;
 
@@ -380,6 +485,43 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateECKeyPair
 
     keyPair = PK11KeyPairGenerator(env, this, token, CKM_EC_KEY_PAIR_GEN,
      			&curve, temporary, sensitive, extractable);
+
+finish:
+    SECITEM_FreeItem(&curve, PR_FALSE);
+    return keyPair;
+}
+
+/**********************************************************************
+ *
+ * PK11KeyPairGenerator.generateECKeyPairWithOpFlags
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateECKeyPairWithOpFlags
+  (JNIEnv *env, jobject this, jobject token, jbyteArray Curve, 
+    jboolean temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
+{
+    SECItem curve;
+    jobject keyPair=NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL && Curve!=NULL );
+
+    /* zero these so we can free them indiscriminately later */
+    ZERO_SECITEM(curve);
+
+    /**************************************************
+     * Setup the parameters
+     *************************************************/
+    if( JSS_ByteArrayToOctetString(env, Curve, &curve))
+    {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+        goto finish;
+    }
+    keyPair = PK11KeyPairGeneratorWithOpFlags(env, this, token,
+                CKM_EC_KEY_PAIR_GEN, &curve, temporary, 
+                sensitive, extractable,
+                op_flags, op_flags_mask);
 
 finish:
     SECITEM_FreeItem(&curve, PR_FALSE);

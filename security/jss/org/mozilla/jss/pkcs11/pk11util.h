@@ -157,6 +157,12 @@ JSS_PK11_generateKeyPair(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
     PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privK,
     void *params, PRBool temporary, jint senstive, jint extractable);
 
+SECStatus
+JSS_PK11_generateKeyPair_withOpFlags(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
+    PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privk,
+    void *params, PRBool temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask);
+
 /*=====================================================================
                        C E R T I F I C A T E S
 =====================================================================*/
