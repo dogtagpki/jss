@@ -321,3 +321,12 @@ Java_org_mozilla_jss_pkcs11_PK11Token_needsLogin;
 ;+    local:
 ;+       *;
 ;+};
+;+JSS_4.3.1 {     # JSS 4.3.1 release
+;+    global:
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateECKeyPairWithOpFlags;
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateRSAKeyPairWithOpFlags;
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateDSAKeyPairWithOpFlags;
+;+    local:
+;+       *;
+;+};
+

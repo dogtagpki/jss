@@ -55,6 +55,39 @@ public final class PK11KeyPairGenerator
     extends org.mozilla.jss.crypto.KeyPairGeneratorSpi
 {
 
+    // opFlag constants: each of these flags specifies a crypto operation
+    // the key will support.  Their values must match the same-named C
+    // preprocessor macros defined in the PKCS #11 header pkcs11t.h.
+    private static final int CKF_ENCRYPT = 0x00000100;
+    private static final int CKF_DECRYPT = 0x00000200;
+    private static final int CKF_SIGN = 0x00000800;
+    private static final int CKF_SIGN_RECOVER = 0x00001000;
+    private static final int CKF_VERIFY = 0x00002000;
+    private static final int CKF_VERIFY_RECOVER = 0x00004000;
+    private static final int CKF_WRAP = 0x00020000;
+    private static final int CKF_UNWRAP = 0x00040000;
+    private static final int CKF_DERIVE = 0x00080000;
+
+    // A table for mapping SymmetricKey.Usage to opFlag.  This must be
+    // synchronized with SymmetricKey.Usage.
+    private static final int opFlagForUsage[] = {
+        CKF_ENCRYPT,        /* 0 */
+        CKF_DECRYPT,        /* 1 */
+        CKF_SIGN,           /* 2 */
+        CKF_SIGN_RECOVER,   /* 3 */
+        CKF_VERIFY,         /* 4 */
+        CKF_VERIFY_RECOVER, /* 5 */
+        CKF_WRAP,           /* 6 */
+        CKF_UNWRAP,         /* 7 */
+        CKF_DERIVE          /* 8 */
+    };
+
+    // The crypto operations the key will support.  It is the logical OR
+    // of the opFlag constants, each specifying a supported operation.
+    private int opFlags = 0;
+    private int opFlagsMask = 0;
+
+
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     // Constructors
@@ -68,6 +101,8 @@ public final class PK11KeyPairGenerator
      *      <code>KeyPairAlgorithm.RSA</code> , 
      *      <code>KeyPairAlgorithm.DSA</code> and
      *      <code>KeyPairAlgorithm.EC</code> are supported.
+     * @throws NoSuchAlgorithmException
+     * @throws TokenException
      */
     public PK11KeyPairGenerator(PK11Token token, KeyPairAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
@@ -188,57 +223,65 @@ public final class PK11KeyPairGenerator
     /**
      * Generates a key pair on a token. Uses parameters if they were passed
      * in through a call to <code>initialize</code>, otherwise uses defaults.
+     * @return
+     * @throws TokenException
      */
+
     public KeyPair generateKeyPair()
         throws TokenException
     {
         if(algorithm == KeyPairAlgorithm.RSA) {
             if(params != null) {
                 RSAParameterSpec rsaparams = (RSAParameterSpec)params;
-                return generateRSAKeyPair(
+                return generateRSAKeyPairWithOpFlags(
                                     token,
                                     rsaparams.getKeySize(),
                                     rsaparams.getPublicExponent().longValue(),
                                     temporaryPairMode,
                                     sensitivePairMode,
-                                    extractablePairMode);
+                                    extractablePairMode,
+                                    opFlags, opFlagsMask);
             } else {
-                return generateRSAKeyPair(
+                return generateRSAKeyPairWithOpFlags(
                                     token,
                                     DEFAULT_RSA_KEY_SIZE,
                                     DEFAULT_RSA_PUBLIC_EXPONENT.longValue(),
                                     temporaryPairMode,
                                     sensitivePairMode,
-                                    extractablePairMode);
+                                    extractablePairMode,
+                                    opFlags, opFlagsMask);
             }
         } else if(algorithm == KeyPairAlgorithm.DSA ) {
             if(params==null) {
                 params = PQG1024;
             }
             DSAParameterSpec dsaParams = (DSAParameterSpec)params;
-            return generateDSAKeyPair(
+            return generateDSAKeyPairWithOpFlags(
                 token,
                 PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getP()),
                 PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getQ()),
                 PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getG()),
                 temporaryPairMode,
                 sensitivePairMode,
-                extractablePairMode);
+                extractablePairMode,
+                opFlags, opFlagsMask);
         } else {
             Assert._assert( algorithm == KeyPairAlgorithm.EC );
             // requires JAVA 1.5 for ECParameters.
             //
             //AlgorithmParameters ecParams = 
-	    //			AlgorithmParameters.getInstance("ECParameters");
-	    // ecParams.init(params);
+	        //			AlgorithmParameters.getInstance("ECParameters");
+	        // ecParams.init(params);
             PK11ParameterSpec ecParams = (PK11ParameterSpec) params;
 
-            return generateECKeyPair(
+            return generateECKeyPairWithOpFlags(
                 token,
-		ecParams.getEncoded(), /* curve */
+		        ecParams.getEncoded(), /* curve */
                 temporaryPairMode,
                 sensitivePairMode,
-                extractablePairMode);
+                extractablePairMode,
+                opFlags,
+                opFlagsMask);
         } 
     }
 
@@ -266,6 +309,17 @@ public final class PK11KeyPairGenerator
         throws TokenException;
 
     /**
+     * Generates an RSA key pair with the given size and public exponent.
+     * Adds the ability to specify a set of flags and masks
+     * to control how NSS generates the key pair.
+     */
+    private native KeyPair
+    generateRSAKeyPairWithOpFlags(PK11Token token, int keySize, long publicExponent,
+            boolean temporary, int sensitive, int extractable,
+            int op_flags, int op_flags_mask)
+        throws TokenException;
+
+    /**
      * Generates a DSA key pair with the given P, Q, and G values.
      * P, Q, and G are stored as big-endian twos-complement octet strings.
      */
@@ -275,12 +329,37 @@ public final class PK11KeyPairGenerator
         throws TokenException;
 
     /**
+     * Generates a DSA key pair with the given P, Q, and G values.
+     * P, Q, and G are stored as big-endian twos-complement octet strings.
+     * Adds the ability to specify a set of flags and masks
+     * to control how NSS generates the key pair.
+     */
+    private native KeyPair
+    generateDSAKeyPairWithOpFlags(PK11Token token, byte[] P, byte[] Q, byte[] G,
+            boolean temporary, int sensitive, int extractable,
+            int op_flags, int op_flags_mask)
+        throws TokenException;
+
+
+    /**
      * Generates a EC key pair with the given a curve.
      * Curves are stored as DER Encoded Parameters.
      */
     private native KeyPair
     generateECKeyPair(PK11Token token, byte[] Curve, 
             boolean temporary, int sensitive, int extractable)
+        throws TokenException;
+    /**
+     * Generates a EC key pair with the given a curve.
+     * Curves are stored as DER Encoded Parameters.
+     * Adds the ability to specify a set of flags and masks
+     * to control how NSS generates the key pair.
+     */
+
+    private native KeyPair
+    generateECKeyPairWithOpFlags(PK11Token token, byte[] Curve, 
+            boolean temporary, int sensitive, int extractable,
+            int op_flags, int op_flags_mask)
         throws TokenException;
 
     ///////////////////////////////////////////////////////////////////////
@@ -395,6 +474,38 @@ public final class PK11KeyPairGenerator
 
     public void extractablePairs(boolean extractable) {
         extractablePairMode = extractable ? 1 : 0;
+    }
+
+    /**
+     * Sets the requested key usages desired for the 
+     * generated key pair. 
+     * This allows the caller to suggest how NSS generates the key pair.
+     * @param usages List of desired key usages. 
+     * @param usages_mask Corresponding mask for the key usages.
+     * if a usages is desired, make sure it is in the mask as well.
+     */
+
+    public void setKeyPairUsages(org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages, 
+                                 org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages_mask) {
+
+        this.opFlags = 0;
+        this.opFlagsMask = 0;
+
+        if(usages != null) {
+            for( int i = 0; i < usages.length; i++ ) {
+                if( usages[i] != null ) {
+                    this.opFlags |= opFlagForUsage[usages[i].getVal()];
+                }
+            }
+        }
+
+        if(usages_mask != null) {
+            for( int i = 0; i < usages_mask.length; i++ ) {
+                if( usages_mask[i] != null ) {
+                    this.opFlagsMask |= opFlagForUsage[usages_mask[i].getVal()];
+                }
+            }
+        }
     }
 
     //
