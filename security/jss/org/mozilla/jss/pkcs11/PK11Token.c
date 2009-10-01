@@ -1160,23 +1160,24 @@ GenerateCertRequest(JNIEnv *env,
 static CERTCertificateRequest*
 make_cert_request(JNIEnv *env, const char *subject, SECKEYPublicKey *pubk)
 {
-	CERTName *subj;
-	CERTSubjectPublicKeyInfo *spki;
+	CERTName *subj = NULL;
+	CERTSubjectPublicKeyInfo *spki = NULL;
 
-	CERTCertificateRequest *req;
+	CERTCertificateRequest *req = NULL;
 
 	/* Create info about public key */
 	spki = SECKEY_CreateSubjectPublicKeyInfo(pubk);
 	if (!spki) {
 	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
 			     "unable to create subject public key");
-	  return NULL;
+	  goto finish;
 	}
 
 	subj = CERT_AsciiToName ((char *)subject);    
 	if(subj == NULL) {
 	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
 		"Invalid data in certificate description");
+	  goto finish;
 	}
 
 	/* Generate certificate request */
@@ -1184,12 +1185,19 @@ make_cert_request(JNIEnv *env, const char *subject, SECKEYPublicKey *pubk)
 	if (!req) {
 	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
 			     "unable to make certificate request");
-	  return NULL;
+	  goto finish;
 	}  
 
 #ifdef DEBUG      
 	printf("certificate request generated\n");
 #endif
 
+finish:
+	if (subj) {
+	  CERT_DestroyName(subj);
+	}
+	if (spki) {
+	  SECKEY_DestroySubjectPublicKeyInfo(spki);
+	}
 	return req;
 }
