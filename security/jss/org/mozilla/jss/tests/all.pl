@@ -331,7 +331,7 @@ sub outputEnv {
    print "release=$release\n";
    print "which perl=";
    system ("which perl");
-   system ("perl -version");
+   system ("perl -version | grep \"This is perl\"");
    system ("$java -version");
 }
 sub createpkcs11_cfg {
