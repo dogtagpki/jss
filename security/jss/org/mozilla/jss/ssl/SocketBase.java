@@ -115,6 +115,10 @@ class SocketBase {
     static final int SSL_REQUIRE_FIRST_HANDSHAKE = 20;
     static final int SSL_REQUIRE_NO_ERROR = 21;
     static final int SSL_ENABLE_SESSION_TICKETS = 22;
+    static final int SSL_RENEGOTIATE_NEVER = 23;
+    static final int SSL_RENEGOTIATE_UNRESTRICTED = 24;
+    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 25;
+    static final int SSL_ENABLE_RENEGOTIATION = 26;
 
     void close() throws IOException {
         socketClose();
@@ -156,6 +160,12 @@ class SocketBase {
 
     void enableSessionTickets(boolean enable) throws SocketException {
         setSSLOption(SSL_ENABLE_SESSION_TICKETS, enable);
+    }
+
+    void enableRenegotiation(int mode)
+            throws SocketException
+    {
+        setSSLOptionMode(SocketBase.SSL_ENABLE_RENEGOTIATION, mode);
     }
 
     void bypassPKCS11(boolean enable) throws SocketException {
@@ -255,6 +265,25 @@ class SocketBase {
             buf.append("\nSSL_V2_COMPATIBLE_HELLO"  + 
                 ((getSSLOption(SocketBase.SSL_V2_COMPATIBLE_HELLO) != 0) 
                 ? "=on" :  "=off"));
+            buf.append("\nSSL_ENABLE_SESSION_TICKETS"  +
+                ((getSSLOption(SocketBase.SSL_ENABLE_SESSION_TICKETS)
+                != 0) ? "=on" :  "=off"));
+            buf.append("\nSSL_ENABLE_RENEGOTIATION");
+            switch (getSSLOption(SocketBase.SSL_ENABLE_RENEGOTIATION)) {
+                case 0:
+                    buf.append("=SSL_RENEGOTIATE_NEVER");
+                    break;
+                case 1:
+                    buf.append("=SSL_RENEGOTIATE_UNRESTRICTED");
+                    break;
+               case 2:
+                    buf.append("=SSL_RENEGOTIATE_REQUIRES_XTN");
+                    break;
+              default:
+                   buf.append("=Report JSS Bug this option has a status.");
+                   break;
+            } //end switch
+
         } catch (SocketException e) {
             buf.append("\ngetSSLOptions exception " + e.getMessage());
         }

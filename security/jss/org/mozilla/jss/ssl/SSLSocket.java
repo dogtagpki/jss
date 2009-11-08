@@ -80,6 +80,12 @@ public class SSLSocket extends java.net.Socket {
            org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_FIRST_HANDSHAKE;
     static final public int SSL_REQUIRE_NO_ERROR = 
            org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_NO_ERROR;
+    static final public int SSL_RENEGOTIATE_NEVER =
+           org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_NEVER;
+    static final public int SSL_RENEGOTIATE_REQUIRES_XTN =
+           org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_REQUIRES_XTN;
+    static final public int SSL_RENEGOTIATE_UNRESTRICTED =
+           org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_UNRESTRICTED;
 
     /**
      * For sockets that get created by accept().
@@ -571,6 +577,57 @@ public class SSLSocket extends java.net.Socket {
     }
 
     /**
+     *  Enables the mode of renegotiation that the peer must use on this
+     *  socket. Default is never renegotiate at all. Unless the default has
+     *  been changed with <code>SSLSocket.enableRenegotiationDefault</code>.
+     *
+     *  @param mode One of:
+     *      SSLSocket.SSL_RENEGOTIATE_NEVER - Never renegotiate at all.
+     *
+     *      SSLSocket.SSL_RENEGOTIATE_UNRESTRICTED - Renegotiate without
+     *      restriction, whether or not the peer's client hello bears the
+     *      renegotiation info extension (like we always did in the past).
+     *
+     *      SSLSocket.SSL_RENEGOTIATE_REQUIRES_XTN - NOT YET IMPLEMENTED
+     */
+    public void enableRenegotiation(int mode)
+            throws SocketException
+    {
+        if (mode >= SocketBase.SSL_RENEGOTIATE_NEVER &&
+            mode <= SocketBase.SSL_RENEGOTIATE_REQUIRES_XTN) {
+            base.enableRenegotiation(mode);
+        } else {
+            throw new SocketException("Incorrect input value.");
+        }
+     }
+
+    /**
+     * Set the mode of renegotiation that the peer must use for all new
+     * sockets. The default is never renegotiate at all.
+     *
+     *  @param mode One of:
+     *      SSLSocket.SSL_RENEGOTIATE_NEVER - Never renegotiate at all.
+     *
+     *      SSLSocket.SSL_RENEGOTIATE_UNRESTRICTED - Renegotiate without
+     *      restriction, whether or not the peer's client hello bears the
+     *      renegotiation info extension (like we always did in the past).
+     *
+     *      SSLSocket.SSL_RENEGOTIATE_REQUIRES_XTN - NOT YET IMPLEMENTED
+     */
+    static public void enableRenegotiationDefault(int mode)
+            throws SocketException
+    {
+        if (mode >= SocketBase.SSL_RENEGOTIATE_NEVER &&
+            mode <= SocketBase.SSL_RENEGOTIATE_REQUIRES_XTN) {
+
+            setSSLDefaultOptionMode(SocketBase.SSL_ENABLE_RENEGOTIATION,
+                    mode);
+        } else {
+            throw new SocketException("Incorrect input value.");
+        }
+     }
+
+    /**
      * Enables bypass of PKCS11 on this socket.  
      * It is disabled by default, unless the default has been changed 
      * with <code>bypassPKCS11Default</code>.
@@ -765,6 +822,24 @@ public class SSLSocket extends java.net.Socket {
             buf.append("\nSSL_V2_COMPATIBLE_HELLO"  + 
                 ((getSSLDefaultOption(SocketBase.SSL_V2_COMPATIBLE_HELLO) != 0) 
                 ? "=on" :  "=off"));
+            buf.append("\nSSL_ENABLE_SESSION_TICKETS"  +
+                ((getSSLDefaultOption(SocketBase.SSL_ENABLE_SESSION_TICKETS)
+                != 0) ? "=on" :  "=off"));
+            buf.append("\nSSL_ENABLE_RENEGOTIATION");
+            switch (getSSLDefaultOption(SocketBase.SSL_ENABLE_RENEGOTIATION)) {
+                case 0:
+                    buf.append("=SSL_RENEGOTIATE_NEVER");
+                    break;
+                case 1:
+                    buf.append("=SSL_RENEGOTIATE_UNRESTRICTED");
+                    break;
+               case 2:
+                    buf.append("=SSL_RENEGOTIATE_REQUIRES_XTN");
+                    break;
+              default:
+                   buf.append("=Report JSS Bug this option has a status.");
+                   break;
+            } //end switch
         } catch (SocketException e) {
             buf.append("\ngetSSLDefaultOptions exception " + e.getMessage());
         }
