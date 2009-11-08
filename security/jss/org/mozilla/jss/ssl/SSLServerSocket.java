@@ -396,6 +396,32 @@ public class SSLServerSocket extends java.net.ServerSocket {
     }
 
     /**
+     * Enables the mode of renegotiation that the peer must use.
+     * The default is never renegotiate at all unless the default
+     * has been changed with <code>SSLSocket.enableRenegotiationDefault</code>.
+     *
+     *  @param mode One of:
+     *      SSLSocket.SSL_RENEGOTIATE_NEVER - Never renegotiate at all.
+     *
+     *      SSLSocket.SSL_RENEGOTIATE_UNRESTRICTED - Renegotiate without
+     *      restriction, whether or not the peer's client hello bears the
+     *      renegotiation info extension (like we always did in the past).
+     *
+     *      SSLSocket.SSL_RENEGOTIATE_REQUIRES_XTN - NOT YET IMPLEMENTED
+     */
+
+    public void enableRenegotiation(int mode)
+            throws SocketException
+    {
+        if (mode >= SocketBase.SSL_RENEGOTIATE_NEVER &&
+            mode <= SocketBase.SSL_RENEGOTIATE_REQUIRES_XTN) {
+            base.enableRenegotiation(mode);
+        } else {
+            throw new SocketException("Incorrect input value.");
+        }
+     }
+
+    /**
      * Enables the bypass of PKCS11 for performance on this socket. 
      * It is disabled by default, unless the default has been changed 
      * with <code>SSLSocket.bypassPKCS11Default</code>.
