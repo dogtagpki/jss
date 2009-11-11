@@ -115,10 +115,13 @@ class SocketBase {
     static final int SSL_REQUIRE_FIRST_HANDSHAKE = 20;
     static final int SSL_REQUIRE_NO_ERROR = 21;
     static final int SSL_ENABLE_SESSION_TICKETS = 22;
-    static final int SSL_RENEGOTIATE_NEVER = 23;
-    static final int SSL_RENEGOTIATE_UNRESTRICTED = 24;
-    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 25;
-    static final int SSL_ENABLE_RENEGOTIATION = 26;
+    static final int SSL_ENABLE_RENEGOTIATION = 23;
+    static final int SSL_RENEGOTIATE_NEVER = 24;
+    static final int SSL_RENEGOTIATE_UNRESTRICTED = 25;
+    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 26;
+    // Note: 27 is reserved for a potential fourth SSL_RENEGOTIATE_xxx
+    // constant.
+    // static final int SSL_RENEGOTIATE_RESERVED = 27;
 
     void close() throws IOException {
         socketClose();
@@ -276,12 +279,12 @@ class SocketBase {
                 case 1:
                     buf.append("=SSL_RENEGOTIATE_UNRESTRICTED");
                     break;
-               case 2:
+                case 2:
                     buf.append("=SSL_RENEGOTIATE_REQUIRES_XTN");
                     break;
-              default:
-                   buf.append("=Report JSS Bug this option has a status.");
-                   break;
+                default:
+                    buf.append("=Report JSS Bug this option has a status.");
+                    break;
             } //end switch
 
         } catch (SocketException e) {
