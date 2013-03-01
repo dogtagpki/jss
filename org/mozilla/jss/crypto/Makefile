@@ -18,7 +18,7 @@ include $(CORE_DEPTH)/coreconf/config.mk
 #######################################################################
 # (3) Include "component" configuration information. (OPTIONAL)       #
 #######################################################################
-include $(CORE_DEPTH)/$(MODULE)/config/config.mk
+include $(CORE_DEPTH)/config/config.mk
  
 
 #######################################################################

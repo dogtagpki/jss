@@ -48,9 +48,6 @@ include $(CORE_DEPTH)/coreconf/rules.mk
 
 include rules.mk
 
-build_coreconf:
-	cd $(CORE_DEPTH)/coreconf ;  $(MAKE)
-
 package:
 		$(MAKE) -C pkg publish
 

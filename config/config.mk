@@ -12,19 +12,19 @@
 #  Local "sectools" component library link options                    #
 #######################################################################
 
-include $(CORE_DEPTH)/$(MODULE)/config/linkage.mk
+include $(CORE_DEPTH)//config/linkage.mk
 
 #######################################################################
 #  Local "sectools" component STATIC system library names             #
 #######################################################################
 
-include $(CORE_DEPTH)/$(MODULE)/config/static.mk
+include $(CORE_DEPTH)/config/static.mk
 
 #######################################################################
 #  Local "sectools" component DYNAMIC system library names            #
 #######################################################################
 
-include $(CORE_DEPTH)/$(MODULE)/config/dynamic.mk
+include $(CORE_DEPTH)/config/dynamic.mk
 
 # Stricter semantic checking for SunOS compiler. This catches calling
 # undeclared functions, a major headache during debugging.
