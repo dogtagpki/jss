@@ -20,7 +20,7 @@ include $(CORE_DEPTH)/coreconf/config.mk
 # (3) Include "component" configuration information. (OPTIONAL)       #
 #######################################################################
 
-include $(CORE_DEPTH)/$(MODULE)/config/config.mk
+include $(CORE_DEPTH)/config/config.mk
 
 #######################################################################
 # (4) Include "local" platform-dependent assignments (OPTIONAL).      #
@@ -38,7 +38,7 @@ include $(CORE_DEPTH)/coreconf/rules.mk
 # (6) Execute "component" rules. (OPTIONAL)                           #
 #######################################################################
 
-include $(CORE_DEPTH)/$(MODULE)/config/rules.mk
+include $(CORE_DEPTH)/config/rules.mk
 
 #######################################################################
 # (7) Execute "local" rules. (OPTIONAL).                              #

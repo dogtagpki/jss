@@ -228,7 +228,7 @@ MyLabel
         ensure_dir_exists($class_dir);
         print_do("$javac $javac_opt_flag -sourcepath . -d $class_dir " .
             "$classpath " . join(" ",@source_list));
-        print_do("sh -c 'pwd && cd $class_dir && pwd && rm -f $class_jar && pwd && ls -al && ls -al ../../dist && $jar -cvmf ../../security/jss/$manifest_file $class_jar *'");
+        print_do("sh -c 'pwd && cd $class_dir && pwd && rm -f $class_jar && pwd && ls -al && ls -al ../../dist && $jar -cvmf ../../jss/$manifest_file ../$class_jar *'");
         print_do("rm -f $manifest_file");
         print "Exit status was " . ($?>>8) . "\n";
     }

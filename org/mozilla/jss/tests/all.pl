@@ -224,7 +224,7 @@ sub setup_vars {
     # $all_dir = Directory where all.pl is
     my $all_dir = dirname($0);
     # Find where mozilla directory is
-    my $base_mozilla = $all_dir . "/../../../../../..";
+    my $base_mozilla = $all_dir . "/../../../../..";
     my $abs_base_mozilla = abs_path($base_mozilla);
     # $result_dir = Directory where the results are (mozilla/tests_results/jss)
     my $result_dir =  $abs_base_mozilla . "/tests_results";

@@ -4,7 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-CORE_DEPTH = ..
+CORE_DEPTH = .
  
 MODULE = jss
 
@@ -24,7 +24,8 @@ IMPORTS =	nss/NSS_3_12_RTM \
 			nspr20/v4.7 \
 			$(NULL)
 
-DIRS =  org     \
+DIRS =  coreconf \
+        org     \
         lib     \
         $(NULL)
 
