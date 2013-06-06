@@ -1340,7 +1340,10 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DH_RSA_WITH_AES_256_CBC_SHA       =  0x0037;
     public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA      =  0x0038;
     public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA      =  0x0039;
-    public final static int TLS_DH_ANON_WITH_AES_256_CBC_SHA      =  0x003A;
+    public final static int TLS_DH_ANON_WITH_AES_256_CBC_SHA      =  0x003a;
+    public final static int TLS_RSA_WITH_NULL_SHA256              =  0x003b;
+    public final static int TLS_RSA_WITH_AES_128_CBC_SHA256       =  0x003c;
+    public final static int TLS_RSA_WITH_AES_256_CBC_SHA256       =  0x003d;
 
     public final static int TLS_RSA_WITH_CAMELLIA_128_CBC_SHA     =  0x0041;
     public final static int TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA  =  0x0042;
@@ -1348,6 +1351,9 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA =  0x0044;
     public final static int TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA =  0x0045;
     public final static int TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA =  0x0046;
+
+    public final static int TLS_DHE_RSA_WITH_AES_128_CBC_SHA256   =  0x0067;
+    public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA256   =  0x006b;
 
     public final static int TLS_RSA_WITH_CAMELLIA_256_CBC_SHA     =  0x0084;
     public final static int TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA  =  0x0085;
@@ -1388,5 +1394,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_ECDH_anon_WITH_AES_128_CBC_SHA    =  0xc018;
     public final static int TLS_ECDH_anon_WITH_AES_256_CBC_SHA    =  0xc019;
 
+    public final static int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 = 0xc023;
+    public final static int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 =  0xc027;
 }
 
