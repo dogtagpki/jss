@@ -107,17 +107,24 @@ public interface Constants {
 /*47 */  new cipher(SSLSocket.TLS_ECDH_ECDSA_WITH_NULL_SHA, "TLS_ECDH_ECDSA_WITH_NULL_SHA"),
 /*48 */  new cipher(SSLSocket.SSL3_RSA_WITH_NULL_SHA, "SSL3_RSA_WITH_NULL_SHA"),
 /*49 */  new cipher(SSLSocket.SSL3_RSA_WITH_NULL_MD5, "SSL3_RSA_WITH_NULL_MD5"),
+/*50 */  new cipher(SSLSocket.TLS_RSA_WITH_NULL_SHA256, "TLS_RSA_WITH_NULL_SHA256"),
+/*51 */  new cipher(SSLSocket.TLS_RSA_WITH_AES_128_CBC_SHA256, "TLS_RSA_WITH_AES_128_CBC_SHA256"),
+/*52 */  new cipher(SSLSocket.TLS_RSA_WITH_AES_256_CBC_SHA256, "TLS_RSA_WITH_AES_256_CBC_SHA256"),
+/*53 */  new cipher(SSLSocket.TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256"),
+/*54 */  new cipher(SSLSocket.TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256"),
+/*55 */  new cipher(SSLSocket.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256"),
+/*56 */  new cipher(SSLSocket.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"),
 /**
 /* SSL2 ciphersuites are here for legacy purposes.  
  * you should call SSLSocket.enableSSL2Default(false) during your setup. 
  * to disable all SSL2 ciphersuites.  
  **/ 
-/*50 */  new cipher(SSLSocket.SSL2_RC4_128_WITH_MD5, "SSL2_RC4_128_WITH_MD5"),
-/*51 */  new cipher(SSLSocket.SSL2_RC2_128_CBC_WITH_MD5, "SSL2_RC2_128_CBC_WITH_MD5"),
-/*52 */  new cipher(SSLSocket.SSL2_DES_192_EDE3_CBC_WITH_MD5, "SSL2_DES_192_EDE3_CBC_WITH_MD5"),
-/*53 */  new cipher(SSLSocket.SSL2_DES_64_CBC_WITH_MD5, "SSL2_DES_64_CBC_WITH_MD5"),
-/*54 */  new cipher(SSLSocket.SSL2_RC4_128_EXPORT40_WITH_MD5, "SSL2_RC4_128_EXPORT40_WITH_MD5"),
-/*55 */  new cipher(SSLSocket.SSL2_RC2_128_CBC_EXPORT40_WITH_MD5, "SSL2_RC2_128_CBC_EXPORT40_WITH_MD5")
+/*57 */  new cipher(SSLSocket.SSL2_RC4_128_WITH_MD5, "SSL2_RC4_128_WITH_MD5"),
+/*58 */  new cipher(SSLSocket.SSL2_RC2_128_CBC_WITH_MD5, "SSL2_RC2_128_CBC_WITH_MD5"),
+/*59 */  new cipher(SSLSocket.SSL2_DES_192_EDE3_CBC_WITH_MD5, "SSL2_DES_192_EDE3_CBC_WITH_MD5"),
+/*60 */  new cipher(SSLSocket.SSL2_DES_64_CBC_WITH_MD5, "SSL2_DES_64_CBC_WITH_MD5"),
+/*61 */  new cipher(SSLSocket.SSL2_RC4_128_EXPORT40_WITH_MD5, "SSL2_RC4_128_EXPORT40_WITH_MD5"),
+/*62 */  new cipher(SSLSocket.SSL2_RC2_128_CBC_EXPORT40_WITH_MD5, "SSL2_RC2_128_CBC_EXPORT40_WITH_MD5")
     };
     
     /** Cipher supported by JSSE (JDK 1.5.x) */

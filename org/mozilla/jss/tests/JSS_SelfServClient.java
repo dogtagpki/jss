@@ -138,7 +138,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
         int ciphers[] =
                 org.mozilla.jss.ssl.SSLSocket.getImplementedCipherSuites();
         
-        //
         for (int i = 0; i < ciphers.length; i++) {
             //if we do not find the ciphersuite than the JSS
             // table is out of date.
@@ -152,14 +151,14 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
         if (!cipherSuites) {
             System.out.println("ERROR: NSS has implemented " +
                     "ciphersuites that JSS does not support!\n");
-            System.out.println("see http://mxr.mozilla.org/security/" +
-                    "source/security/nss/lib/ssl/sslproto.h");
+            System.out.println("see http://mxr.mozilla.org/nss/" +
+                    "source/lib/ssl/sslproto.h");
             System.out.println("Update org/mozilla/jss/ssl/" +
                     "SSLSocket.java");
             System.out.println("Update org/mozilla/jss/tests/" +
                     "Constants.java");
             
-            System.out.println("NSS implemented Ciphersuites " +
+            System.out.println("NSS implemented ciphersuites " +
                     "missing from JSS");
         }
         return cipherSuites;
@@ -168,7 +167,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     public void configureDefaultSSLOptions() {
         initJSS();
         try {
-            
             //Disable SSL2
             SSLSocket.enableSSL2Default(false);
             
@@ -194,6 +192,14 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             testCipher = true;
             if (bVerbose) {
                 System.out.print(ciphersuite);
+            }
+            // This class uses the TLS versions that NSS enables by default.
+            // Until NSS enables TLS 1.2 by default, don't test the cipher
+            // suites that only work in TLS 1.2.
+            if ((ciphersuite.indexOf("_SHA256") != -1) ||
+                    (ciphersuite.indexOf("_SHA384") != -1)  ) {
+                if (bVerbose) System.out.print(" -");
+                testCipher = false;
             }
             if (server.equalsIgnoreCase("JSS")) {
                 //For JSS SSLServer don't test
