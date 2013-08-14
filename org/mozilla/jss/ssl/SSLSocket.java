@@ -1364,6 +1364,9 @@ public class SSLSocket extends java.net.Socket {
 
     public final static int TLS_RSA_WITH_SEED_CBC_SHA             =  0x0096;
 
+    public final static int TLS_RSA_WITH_AES_128_GCM_SHA256       =  0x009c;
+    public final static int TLS_DHE_RSA_WITH_AES_128_GCM_SHA256   =  0x009e;
+
     public final static int TLS_ECDH_ECDSA_WITH_NULL_SHA          =  0xc001;
     public final static int TLS_ECDH_ECDSA_WITH_RC4_128_SHA       =  0xc002;
     public final static int TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA  =  0xc003;
@@ -1396,5 +1399,7 @@ public class SSLSocket extends java.net.Socket {
 
     public final static int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 = 0xc023;
     public final static int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 =  0xc027;
+    public final static int TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 = 0xc02b;
+    public final static int TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 =  0xc02f;
 }
 
