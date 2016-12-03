@@ -34,13 +34,13 @@ import org.mozilla.jss.util.Debug;
  * Start the server:
  *
  *  java -cp ./jss4.jar org.mozilla.jss.tests.JSS_SelfServServer . passwords localhost 
- *             false 2921 bypassoff verboseoff
+ *             false 2921 verboseoff
  *
  * Start the client with 4 threads using ciphersuite 0x33.
  * Look at the file Constant.java for the ciphersuites values.
  *
  * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 2 0x33 
- * . localhost 2921 bypassoff verboseoff JSS Client_RSA     
+ * . localhost 2921 verboseoff JSS Client_RSA     
  *
  * If you envoke the client with a ciphersuite value -1
  * then all current JSS ciphersuites will be tested fox X number of
@@ -49,7 +49,7 @@ import org.mozilla.jss.util.Debug;
  * shutdown. This case is for the nightly automated tests.
  *
  * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 4 -1 
- * . passwords localhost 2921 bypassoff verboseoff JSS
+ * . passwords localhost 2921 verboseoff JSS
  */
 
 public class JSS_SelfServServer  {
@@ -76,12 +76,11 @@ public class JSS_SelfServServer  {
     private boolean       TestInetAddress = false;
     private boolean       success         = true;
     private boolean       bVerbose        = false;
-    private boolean       bBypass         = false;
     public  int    port            = 29754;
     public  static String usage           = "\nUSAGE:\njava JSS_SelfServServer"+
         " [certdb path] [password file]\n"+
         "[server_host_name] [testInetAddress: true|false]" +
-        "<port> <bypass> <verbose> <cert nickname> ";
+        "<port> <verbose> <cert nickname> ";
     
     public void JSS_SelfServServer() {
         if (Constants.debug_level > 3) {
@@ -106,14 +105,11 @@ public class JSS_SelfServServer  {
                 TestInetAddress = true;
             if (args.length >= 5)
                 port = new Integer(args[4]).intValue();
-            if (args.length >=6 && args[5].equalsIgnoreCase("bypass")) {
-                bBypass = true;
-            }
-            if (args.length >=7 && args[6].equalsIgnoreCase("verbose")) {
+            if (args.length >=6 && args[5].equalsIgnoreCase("verbose")) {
                 bVerbose = true;
             }
-            if (args.length >=8 && !args[7].equalsIgnoreCase("default")) {
-                fServerCertNick = args[7];
+            if (args.length >=7 && !args[6].equalsIgnoreCase("default")) {
+                fServerCertNick = args[6];
             }
         } catch (Exception e) {
             System.out.println("Error parsing command line " + e.getMessage());
@@ -135,11 +131,6 @@ public class JSS_SelfServServer  {
         SSLServerSocket.configServerSessionIDCache(10, 100, 100, null);
         
         if (cm.FIPSEnabled()) {
-            if (bBypass) {
-                System.out.println("Bypass mode cannot be set in FIPS mode.");
-                System.out.println(usage);
-                System.exit(1);
-            }
             /* turn on only FIPS ciphersuites */
             /* Disable SSL2 and SSL3 ciphers */
             SSLSocket.enableSSL2Default(false);
@@ -178,14 +169,6 @@ public class JSS_SelfServServer  {
             }
             //disable SSL2 ciphersuites
             SSLSocket.enableSSL2Default(false);
-            SSLSocket.bypassPKCS11Default(bBypass);
-        }
-        
-        if (bVerbose) {
-            if (bBypass)
-                System.out.println("SSLSockets in Bypass Mode");
-            else
-                System.out.println("SSLSockets in Non Bypass Mode");
         }
         
         // open the server socket and bind to the port

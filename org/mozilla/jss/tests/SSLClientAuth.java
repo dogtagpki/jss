@@ -102,7 +102,7 @@ public class SSLClientAuth implements Runnable {
         if ( args.length < 2 ) {
             System.out.println("Usage: java org.mozilla.jss.tests." +
                     "SSLClientAuth <dbdir> <passwordFile> [port]" +
-                    " [bypass] [Certificate Serial Number]");
+                    " [Certificate Serial Number]");
             System.exit(1);
         }
         
@@ -118,14 +118,8 @@ public class SSLClientAuth implements Runnable {
             System.out.println("using port:" + port);
         }
         
-        if (args.length >= 4 && (args[3].equalsIgnoreCase("bypass") == true)) {
-            org.mozilla.jss.ssl.SSLSocket.bypassPKCS11Default(true);
-            System.out.println("enabled bypassPKCS11 mode for all sockets");
-            System.out.println(SSLSocket.getSSLDefaultOptions());
-        }
-        
-        if (args.length >= 5) {
-            serialNum = new Integer(args[4]).intValue();
+        if (args.length >= 4) {
+            serialNum = new Integer(args[3]).intValue();
         } else {
              SecureRandom rng= SecureRandom.getInstance("pkcs11prng",
                 "Mozilla-JSS");
