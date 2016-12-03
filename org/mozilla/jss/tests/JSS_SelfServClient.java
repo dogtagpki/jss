@@ -30,13 +30,13 @@ import java.util.*;
  * Start the server:
  *
  *  java -cp ./jss4.jar org.mozilla.jss.tests.JSS_SelfServServer . passwords
- *             localhost false 2921 bypassoff verboseoff
+ *             localhost false 2921 verboseoff
  *
  * Start the client with 4 threads using ciphersuite 0x33.
  * Look at the file Constant.java for the ciphersuites values.
  *
  * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 2 0x33
- * . localhost 2921 bypassoff verboseoff JSS Client_RSA
+ * . localhost 2921 verboseoff JSS Client_RSA
  *
  * If you envoke the client with a ciphersuite value -1
  * then all current JSS ciphersuites will be tested fox X number of
@@ -45,7 +45,7 @@ import java.util.*;
  * shutdown. This case is for the nightly automated tests.
  *
  * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 4 -1
- * . passwords localhost 2921 bypassoff verboseoff JSS
+ * . passwords localhost 2921 verboseoff JSS
  */
 
 interface ConstantsBase {
@@ -72,7 +72,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     private boolean handshakeCompleted   = false;
     private boolean bVerbose             = false;
     private boolean bFipsMode            = false;
-    private boolean bBypassPKCS11        = false;
     /* ciphersuites to test */
     private ArrayList ciphersToTest      = new ArrayList();
     
@@ -120,13 +119,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     public void setVerbose(boolean v) {
         bVerbose = v;
     }
-    public void setBypassPKCS11(boolean f) {
-        bBypassPKCS11 = f;
-    }
-    
-    public boolean getBypassPKCS11() {
-        return bBypassPKCS11;
-    }
     
     /**
      * returns true if JSS is sync with NSS ciphersuites.
@@ -173,9 +165,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             //if in FIPS mode disable SSL3
             if (bFipsMode)
                 SSLSocket.enableSSL3Default(false);
-            
-            if (bBypassPKCS11 && !bFipsMode)
-                SSLSocket.bypassPKCS11Default(true);
+
         } catch (SocketException ex) {
             ex.printStackTrace();
             System.exit(1);
@@ -905,7 +895,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
         int     numOfThreads = 10;
         String  certDbPath = null;
         String  passwdFile = null;
-        boolean bBypassPKCS11 = false;
         boolean bVerbose = false;
         String server = "JSS";
         try {
@@ -918,7 +907,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 " [# sockets] [JSS cipher hex code \"0xC013\" value or -1] " +
                 "\n\nOptional:\n" +
                 "[certdb path] [password file] [server host] [server port]" +
-                "[bypass] [verbose] [server = JSS or JSSE] [ClientCert]";
+                "[verbose] [server = JSS or JSSE] [ClientCert]";
         
         try {
             if (args.length <= 0 ||
@@ -949,21 +938,17 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             if (args.length >= 6) {
                 testport   = new Integer(args[5]).intValue();
             }
-            if ((args.length >= 7) &&
-                    args[6].equalsIgnoreCase("bypass")== true) {
-                bBypassPKCS11 = true;
-            }
-            if ((args.length >= 8) && args[7].equalsIgnoreCase("verbose")
+            if ((args.length >= 7) && args[6].equalsIgnoreCase("verbose")
             == true) {
                 System.out.println("verbose mode enabled.");
                 bVerbose = true;
             }
-            if (args.length >= 9) {
+            if (args.length >= 8) {
                 
-                server = args[8].toUpperCase();
+                server = args[7].toUpperCase();
             }
-            if (args.length >=10) {
-                certnick = (String)args[9];
+            if (args.length >=9) {
+                certnick = (String)args[8];
                 System.out.println("certnickname: " + certnick);
             }
             
@@ -993,7 +978,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 System.exit(1);
             }
             jssTest.setTestCertCallback(true);
-            jssTest.setBypassPKCS11(bBypassPKCS11);
             jssTest.configureDefaultSSLOptions();
             
             if ( certDbPath != null )
