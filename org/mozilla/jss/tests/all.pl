@@ -471,15 +471,10 @@ run_test($testname, $command);
 
 updateCertSN();
 $serverPort = checkPort($serverPort);
-$testname = "SSLClientAuth bypass off";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $serverPort bypassoff $certSN";
+$testname = "SSLClientAuth";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $serverPort $certSN";
 run_test($testname, $command);
 
-updateCertSN();
-$serverPort = checkPort($serverPort);
-$testname = "SSLClientAuth bypass on";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $serverPort bypass $certSN";
-run_test($testname, $command);
 
 $testname = "Key Generation";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.TestKeyGen $testdir $pwfile";
@@ -537,40 +532,28 @@ run_test($testname, $command);
 #
 
 $serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSS Server and JSS client both with Bypass Off";
-$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort bypassoff $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypassOff verboseoff JSS";
-run_ssl_test($testname, $serverCommand, $command);
+$testname = "SSL Ciphersuite JSS Server and JSS client both";
+$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort  $java";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort verboseoff JSS";
+# To be restored when bug 1321594 is fixed
+# run_ssl_test($testname, $serverCommand, $command);
+
 
 $serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSS Server and JSS client both with Bypass On";
-$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort bypass $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypass verboseoff JSS";
-run_ssl_test($testname, $serverCommand, $command);
-
-$serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSS Server with Bypass Off and JSSE client";
-$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort bypassOff $java";
+$testname = "SSL Ciphersuite JSS Server and JSSE client";
+$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort $java";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSSE_SSLClient $testdir $serverPort $hostname JSS";
-run_ssl_test($testname, $serverCommand, $command);
+# To be restored when bug 1321594 is fixed
+#run_ssl_test($testname, $serverCommand, $command);
+
 
 $serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSS Server with Bypass On and JSSE client";
-$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort bypass $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSSE_SSLClient $testdir $serverPort $hostname JSS";
-run_ssl_test($testname, $serverCommand, $command);
-
-$serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSSE Server using default provider and JSS client with Bypass Off";
+$testname = "SSL Ciphersuite JSSE Server using default provider and JSS client";
 $serverCommand = "$run_shell ./startJsseServ.$scriptext $jss_classpath $serverPort false $testdir rsa.pfx default $configfile $pwfile $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypassOff verboseoff JSSE";
-run_ssl_test($testname, $serverCommand, $command);
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort  verboseoff JSSE";
+# To be restored when bug 1321594 is fixed
+#run_ssl_test($testname, $serverCommand, $command);
 
-$serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSSE Server using default provider and JSS client with Bypass ON";
-$serverCommand = "$run_shell ./startJsseServ.$scriptext $jss_classpath $serverPort false $testdir rsa.pfx default $configfile $pwfile $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypass verboseoff JSSE";
-run_ssl_test($testname, $serverCommand, $command);
 
 if ($java =~ /1.4/i || $osname =~ /HP/ || ( ($osname =~ /Linux/)  && $java =~ /1.5/i && ($ENV{USE_64}) )) {
     print "don't run the SunJSSE with Mozilla-JSS provider with Java4 need java5 or higher";
@@ -579,29 +562,25 @@ if ($java =~ /1.4/i || $osname =~ /HP/ || ( ($osname =~ /Linux/)  && $java =~ /1
 } else {
 #with JSS is being build with JDK 1.5 add the Sunpkcs11-NSS support back in!
 #$serverPort = checkPort($serverPort);
-#$testname = "SSL Ciphersuite JSSE Server using Sunpkcs11-NSS provider and JSS client with Bypass Off";
+#$testname = "SSL Ciphersuite JSSE Server using Sunpkcs11-NSS provider and JSS client";
 #$serverCommand = "./startJsseServ.$scriptext $jss_classpath $serverPort false $testdir rsa.pfx Sunpkcs11 $configfile $pwfile $java";
-#$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypassOff verboseoff JSSE";
+#$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort  verboseoff JSSE";
 #run_ssl_test($testname, $serverCommand, $command);
 
 #$serverPort = checkPort($serverPort);
-#$testname = "SSL Ciphersuite JSSE Server using Sunpkcs11-NSS provider and JSS client with Bypass ON";
+#$testname = "SSL Ciphersuite JSSE Server using Sunpkcs11-NSS provider and JSS client";
 #$serverCommand = "./startJsseServ.$scriptext $jss_classpath $serverPort false $testdir rsa.pfx Sunpkcs11 $configfile $pwfile $java";
-#$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypass verboseoff JSSE";
+#$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort verboseoff JSSE";
 #run_ssl_test($testname, $serverCommand, $command);
 
 #Mozilla-JSS only works with JDK 1.5 or higher when used as provider for SunJSSE
 $serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSSE Server using Mozilla-JSS provider and JSS client with Bypass Off";
+$testname = "SSL Ciphersuite JSSE Server using Mozilla-JSS provider and JSS client";
 $serverCommand = "$run_shell ./startJsseServ.$scriptext $jss_classpath $serverPort false $testdir rsa.pfx Mozilla-JSS $configfile $pwfile $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypass verboseoff Mozilla-JSS";
-run_ssl_test($testname, $serverCommand, $command);
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort verboseoff Mozilla-JSS";
+# To be restored when bug 1321594 is fixed
+#run_ssl_test($testname, $serverCommand, $command);
 
-$serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite JSSE Server using Mozilla-JSS provider and JSS client with Bypass ON";
-$serverCommand = "$run_shell ./startJsseServ.$scriptext $jss_classpath $serverPort false $testdir rsa.pfx Mozilla-JSS $configfile $pwfile $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypass verboseoff Mozilla-JSS";
-run_ssl_test($testname, $serverCommand, $command);
 
 }
 
@@ -620,7 +599,7 @@ run_test($testname, $command);
 updateCertSN();
 $testname = "SSLClientAuth FIPSMODE";
 $serverPort = checkPort(++$serverPort);
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $serverPort bypassoff $certSN";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.SSLClientAuth $testdir $pwfile $serverPort $certSN";
 run_test($testname, $command);
 
 $testname = "HMAC FIPSMODE";
@@ -640,10 +619,11 @@ $command = "$java -cp $jss_classpath org.mozilla.jss.tests.SigTest $testdir $pwf
 run_test($testname, $command);
 
 $serverPort = checkPort($serverPort);
-$testname = "SSL Ciphersuite FIPSMODE JSS Server and JSS client both with Bypass Off";
-$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort bypassoff $java";
-$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort bypassOff verboseoff JSS";
-run_ssl_test($testname, $serverCommand, $command);
+$testname = "SSL Ciphersuite FIPSMODE JSS Server and JSS client both";
+$serverCommand = "$run_shell ./startJssSelfServ.$scriptext $jss_classpath $testdir $hostname $serverPort  $java";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $testdir $pwfile $hostname $serverPort  verboseoff JSS";
+# To be restored when bug 1321594 is fixed
+#run_ssl_test($testname, $serverCommand, $command);
 
 $testname = "Disable FipsMODE";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.FipsTest $testdir disable";
