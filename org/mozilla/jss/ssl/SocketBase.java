@@ -73,22 +73,21 @@ class SocketBase {
     static final int SSL_POLICY_DOMESTIC = 10;
     static final int SSL_POLICY_EXPORT = 11;
     static final int SSL_POLICY_FRANCE = 12;
-    static final int SSL_BYPASS_PKCS11 = 13;      
-    static final int SSL_ROLLBACK_DETECTION = 14; 
-    static final int SSL_NO_STEP_DOWN = 15;
-    static final int SSL_ENABLE_FDX = 16;
-    static final int SSL_V2_COMPATIBLE_HELLO = 17;
-    static final int SSL_REQUIRE_NEVER = 18;
-    static final int SSL_REQUIRE_ALWAYS = 19;
-    static final int SSL_REQUIRE_FIRST_HANDSHAKE = 20;
-    static final int SSL_REQUIRE_NO_ERROR = 21;
-    static final int SSL_ENABLE_SESSION_TICKETS = 22;
-    static final int SSL_ENABLE_RENEGOTIATION = 23;
-    static final int SSL_RENEGOTIATE_NEVER = 24;
-    static final int SSL_RENEGOTIATE_UNRESTRICTED = 25;
-    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 26;
-    static final int SSL_RENEGOTIATE_TRANSITIONAL = 27;
-    static final int SSL_REQUIRE_SAFE_NEGOTIATION = 28;
+    static final int SSL_ROLLBACK_DETECTION = 13; 
+    static final int SSL_NO_STEP_DOWN = 14;
+    static final int SSL_ENABLE_FDX = 15;
+    static final int SSL_V2_COMPATIBLE_HELLO = 16;
+    static final int SSL_REQUIRE_NEVER = 17;
+    static final int SSL_REQUIRE_ALWAYS = 18;
+    static final int SSL_REQUIRE_FIRST_HANDSHAKE = 19;
+    static final int SSL_REQUIRE_NO_ERROR = 20;
+    static final int SSL_ENABLE_SESSION_TICKETS = 21;
+    static final int SSL_ENABLE_RENEGOTIATION = 22;
+    static final int SSL_RENEGOTIATE_NEVER = 23;
+    static final int SSL_RENEGOTIATE_UNRESTRICTED = 24;
+    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 25;
+    static final int SSL_RENEGOTIATE_TRANSITIONAL = 26;
+    static final int SSL_REQUIRE_SAFE_NEGOTIATION = 27;
 
     void close() throws IOException {
         socketClose();
@@ -140,10 +139,6 @@ class SocketBase {
 
     void enableRequireSafeNegotiation(boolean enable) throws SocketException {
         setSSLOption(SSL_REQUIRE_SAFE_NEGOTIATION, enable);
-    }
-
-    void bypassPKCS11(boolean enable) throws SocketException {
-        setSSLOption(SSL_BYPASS_PKCS11, enable);
     }
 
     void enableRollbackDetection(boolean enable) throws SocketException {
@@ -223,9 +218,6 @@ class SocketBase {
                 ? "=on" :  "=off"));
             buf.append("\nSSL_NO_CACHE"  + 
                 ((getSSLOption(SocketBase.SSL_NO_CACHE) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_BYPASS_PKCS11"  + 
-                ((getSSLOption(SocketBase.SSL_BYPASS_PKCS11) != 0) 
                 ? "=on" :  "=off"));
             buf.append("\nSSL_ROLLBACK_DETECTION"  + 
                 ((getSSLOption(SocketBase.SSL_ROLLBACK_DETECTION) != 0)
