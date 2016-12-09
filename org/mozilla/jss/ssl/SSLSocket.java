@@ -636,24 +636,6 @@ public class SSLSocket extends java.net.Socket {
     }
 
     /**
-     * Enables bypass of PKCS11 on this socket.  
-     * It is disabled by default, unless the default has been changed 
-     * with <code>bypassPKCS11Default</code>.
-     */
-    public void bypassPKCS11(boolean enable) throws SocketException {
-        base.bypassPKCS11(enable);
-    }
-
-    /**
-     * Sets the default to bypass PKCS11 layer (except for public keys)
-     * for all new sockets.
-     */
-    static public void bypassPKCS11Default(boolean enable) 
-        throws SocketException{
-        setSSLDefaultOption(SocketBase.SSL_BYPASS_PKCS11, enable);
-    }
-
-    /**
      * Enable rollback detection for this socket.
      * It is enabled by default, unless the default has been changed 
      * with <code>enableRollbackDetectionDefault</code>.
@@ -814,9 +796,6 @@ public class SSLSocket extends java.net.Socket {
                 ? "=on" :  "=off"));
             buf.append("\nSSL_NO_CACHE"  + 
                 ((getSSLDefaultOption(SocketBase.SSL_NO_CACHE) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_BYPASS_PKCS11"  + 
-                ((getSSLDefaultOption(SocketBase.SSL_BYPASS_PKCS11) != 0) 
                 ? "=on" :  "=off"));
             buf.append("\nSSL_ROLLBACK_DETECTION"  + 
                 ((getSSLDefaultOption(SocketBase.SSL_ROLLBACK_DETECTION) != 0)

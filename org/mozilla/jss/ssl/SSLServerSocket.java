@@ -410,15 +410,6 @@ public class SSLServerSocket extends java.net.ServerSocket {
     }
 
     /**
-     * Enables the bypass of PKCS11 for performance on this socket. 
-     * It is disabled by default, unless the default has been changed 
-     * with <code>SSLSocket.bypassPKCS11Default</code>.
-     */
-    public void bypassPKCS11(boolean enable) throws SocketException {
-        base.bypassPKCS11(enable);
-    }
-
-    /**
      * Enable rollback detection for this socket.
      * It is enabled by default, unless the default has been changed 
      * with <code>SSLSocket.enableRollbackDetectionDefault</code>.
