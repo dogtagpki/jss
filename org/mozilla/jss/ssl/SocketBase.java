@@ -38,16 +38,16 @@ class SocketBase {
     native byte[] socketCreate(Object socketObject,
         SSLCertificateApprovalCallback certApprovalCallback,
         SSLClientCertificateSelectionCallback clientCertSelectionCallback,
-        java.net.Socket javaSock, String host)
+        java.net.Socket javaSock, String host,int family)
             throws SocketException;
 
     byte[] socketCreate(Object socketObject,
         SSLCertificateApprovalCallback certApprovalCallback,
-        SSLClientCertificateSelectionCallback clientCertSelectionCallback)
+        SSLClientCertificateSelectionCallback clientCertSelectionCallback,int family)
             throws SocketException
     {
         return socketCreate(socketObject, certApprovalCallback,
-            clientCertSelectionCallback, null, null);
+            clientCertSelectionCallback, null, null,family);
     }
 
     native void socketBind(byte[] addrBA, int port) throws SocketException;
@@ -88,6 +88,9 @@ class SocketBase {
     static final int SSL_RENEGOTIATE_REQUIRES_XTN = 25;
     static final int SSL_RENEGOTIATE_TRANSITIONAL = 26;
     static final int SSL_REQUIRE_SAFE_NEGOTIATION = 27;
+
+    static final int SSL_AF_INET  = 50;
+    static final int SSL_AF_INET6 = 51;
 
     void close() throws IOException {
         socketClose();
@@ -287,13 +290,25 @@ class SocketBase {
         return in;
     }
 
+    private native byte[] getLocalAddressByteArrayNative() throws SocketException;
+    private native byte[] getPeerAddressByteArrayNative() throws SocketException;
     /**
      * @return the InetAddress of the peer end of the socket.
      */
     InetAddress getInetAddress()
     {
         try {
-            return convertIntToInetAddress( getPeerAddressNative() );
+            byte[] address = getPeerAddressByteArrayNative();
+
+            InetAddress iAddr = null;
+
+            try {
+
+                iAddr = InetAddress.getByAddress(address);
+            }   catch(UnknownHostException e) {
+            }
+
+            return iAddr;
         } catch(SocketException e) {
             return null;
         }
@@ -305,7 +320,17 @@ class SocketBase {
      */
     InetAddress getLocalAddress() {
         try {
-            return convertIntToInetAddress( getLocalAddressNative() );
+            byte[] address = getLocalAddressByteArrayNative();
+
+            InetAddress lAddr = null;
+
+            try {
+
+                lAddr = InetAddress.getByAddress(address);
+            }   catch(UnknownHostException e) {
+            }
+
+            return lAddr;
         } catch(SocketException e) {
             return null;
         }
@@ -383,5 +408,46 @@ class SocketBase {
         Assert.notReached("Problem constructing exception container");
         return topException;
       }
+    }
+
+    static private int supportsIPV6 = -1;
+    static boolean supportsIPV6() {
+
+        if(supportsIPV6 >= 0) {
+            if(supportsIPV6 > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        Enumeration netInter;
+        try {
+                 netInter = NetworkInterface.getNetworkInterfaces();
+        }  catch (SocketException e) {
+
+                 return false;
+        }
+        while ( netInter.hasMoreElements() )
+        {
+            NetworkInterface ni = (NetworkInterface)netInter.nextElement();
+            Enumeration addrs = ni.getInetAddresses();
+            while ( addrs.hasMoreElements() )
+            {
+                 Object o = addrs.nextElement();
+                 if ( o.getClass() == InetAddress.class ||
+                     o.getClass() == Inet4Address.class ||
+                     o.getClass() == Inet6Address.class )
+                 {
+                      InetAddress iaddr = (InetAddress) o;
+                      if(o.getClass() == Inet6Address.class) {
+                          supportsIPV6 = 1;
+                          return true;
+                      }
+                 }
+            }
+        }
+        supportsIPV6 = 0;
+        return false;
     }
 }

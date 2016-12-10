@@ -19,6 +19,9 @@
 #include <winsock.h>
 #endif
 
+#define SSL_AF_INET  50
+#define SSL_AF_INET6 51
+
 void
 JSSL_throwSSLSocketException(JNIEnv *env, char *message)
 {
@@ -110,7 +113,7 @@ finish:
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
     jobject sockObj, jobject certApprovalCallback,
-    jobject clientCertSelectionCallback, jobject javaSock, jstring host)
+    jobject clientCertSelectionCallback, jobject javaSock, jstring host,jint family)
 {
     jbyteArray sdArray = NULL;
     JSSL_SocketData *sockdata = NULL;
@@ -118,10 +121,21 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
     PRFileDesc *newFD;
     PRFileDesc *tmpFD;
     PRFilePrivate *priv = NULL;
+    int socketFamily = 0;
+
+    if (family != SSL_AF_INET6 && family  != SSL_AF_INET) {
+       JSSL_throwSSLSocketException(env,
+                "socketCreate() Invalid family!");
+            goto finish;
+    }
+    if( family == SSL_AF_INET)
+       socketFamily = PR_AF_INET;
+    else
+       socketFamily = PR_AF_INET6;
 
     if( javaSock == NULL ) {
         /* create a TCP socket */
-        newFD = PR_NewTCPSocket();
+        newFD = PR_OpenTCPSocket(socketFamily);
         if( newFD == NULL ) {
             JSSL_throwSSLSocketException(env,
                 "PR_NewTCPSocket() returned NULL");
@@ -378,7 +392,12 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
     JSSL_SocketData *sock;
     PRNetAddr addr;
     jbyte *addrBAelems = NULL;
+    int addrBALen = 0;
     PRStatus status;
+
+    jmethodID supportsIPV6ID;
+    jclass socketBaseClass;
+    jboolean supportsIPV6 = 0;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
         /* exception was thrown */
@@ -388,19 +407,72 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
     /*
      * setup the PRNetAddr structure
      */
-    addr.inet.family = AF_INET;
-    addr.inet.port = htons(port);
+
+    /*
+     * Do we support IPV6?
+     */
+
+    socketBaseClass = (*env)->FindClass(env, SOCKET_BASE_NAME);
+    if( socketBaseClass == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    supportsIPV6ID = (*env)->GetStaticMethodID(env, socketBaseClass,
+        SUPPORTS_IPV6_NAME, SUPPORTS_IPV6_SIG);
+
+    if( supportsIPV6ID == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    supportsIPV6 = (*env)->CallStaticBooleanMethod(env, socketBaseClass,
+         supportsIPV6ID);
+
+    memset( &addr, 0, sizeof( PRNetAddr ));
+
     if( addrBA != NULL ) {
-        PR_ASSERT(sizeof(addr.inet.ip) == 4);
-        PR_ASSERT( (*env)->GetArrayLength(env, addrBA) == 4);
         addrBAelems = (*env)->GetByteArrayElements(env, addrBA, NULL);
+        addrBALen = (*env)->GetArrayLength(env, addrBA);
+
         if( addrBAelems == NULL ) {
             ASSERT_OUTOFMEM(env);
             goto finish;
         }
-        memcpy(&addr.inet.ip, addrBAelems, 4);
+
+        if(addrBALen != 4 && addrBALen != 16) {
+            JSS_throwMsgPrErr(env, BIND_EXCEPTION,
+            "Invalid address in bind!");
+             goto finish;
+        }
+
+        if( addrBALen == 4) {
+            addr.inet.family = PR_AF_INET;
+            addr.inet.port = PR_htons(port);
+            memcpy(&addr.inet.ip, addrBAelems, 4);
+
+            if(supportsIPV6) {
+                addr.inet.family = PR_AF_INET6;
+                addr.ipv6.port = PR_htons(port);
+                PR_ConvertIPv4AddrToIPv6(addr.inet.ip,&addr.ipv6.ip);
+            }
+
+        }  else {   /* Must be 16 and ipv6 */
+            if(supportsIPV6) {
+                addr.ipv6.family = PR_AF_INET6;
+                addr.ipv6.port = PR_htons(port);
+                memcpy(&addr.ipv6.ip,addrBAelems, 16);
+            }  else {
+                JSS_throwMsgPrErr(env, BIND_EXCEPTION,
+                    "Invalid address in bind!");
+                goto finish;
+            }
+        }
     } else {
-        addr.inet.ip = PR_htonl(INADDR_ANY);
+        if(supportsIPV6) {
+            status = PR_SetNetAddr(PR_IpAddrAny, PR_AF_INET6, port, &addr);
+        } else {
+            status = PR_SetNetAddr(PR_IpAddrAny, PR_AF_INET, port, &addr);
+        }
     }
 
     /* do the bind() call */
@@ -573,6 +645,78 @@ finish:
     EXCEPTION_CHECK(env, sock)
     return status;
 }
+
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_ssl_SocketBase_getPeerAddressByteArrayNative
+    (JNIEnv *env, jobject self)
+{
+    jbyteArray byteArray=NULL;
+    PRNetAddr addr;
+    jbyte *address=NULL;
+    int size=4;
+
+    if( JSSL_getSockAddr(env, self, &addr, PEER_SOCK) != PR_SUCCESS) {
+        goto finish;
+    }
+
+    if( PR_NetAddrFamily(&addr) ==  PR_AF_INET6) {
+        size = 16;
+        address = (jbyte *) &addr.ipv6.ip;
+    } else {
+        address = (jbyte *) &addr.inet.ip;
+    }
+
+    byteArray = (*env)->NewByteArray(env,size);
+    if(byteArray == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    (*env)->SetByteArrayRegion(env, byteArray, 0,size ,address);
+    if( (*env)->ExceptionOccurred(env) != NULL) {
+        PR_ASSERT(PR_FALSE);
+        goto finish;
+    }
+
+finish:
+    return byteArray;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_ssl_SocketBase_getLocalAddressByteArrayNative
+    (JNIEnv *env, jobject self)
+{
+    jbyteArray byteArray=NULL;
+    PRNetAddr addr;
+    jbyte *address=NULL;
+    int size=4;
+
+    if( JSSL_getSockAddr(env, self, &addr, LOCAL_SOCK) != PR_SUCCESS) {
+        goto finish;
+    }
+
+    if( PR_NetAddrFamily(&addr) ==  PR_AF_INET6) {
+        size = 16;
+        address = (jbyte *) &addr.ipv6.ip;
+    } else {
+        address = (jbyte *) &addr.inet.ip;
+    }
+
+    byteArray = (*env)->NewByteArray(env,size);
+    if(byteArray == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    (*env)->SetByteArrayRegion(env, byteArray, 0,size,address);
+    if( (*env)->ExceptionOccurred(env) != NULL) {
+        PR_ASSERT(PR_FALSE);
+        goto finish;
+    }
+
+finish:
+    return byteArray;
+}
+
+/* Leave the original versions of these functions for compatibility */
 
 JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_getPeerAddressNative
