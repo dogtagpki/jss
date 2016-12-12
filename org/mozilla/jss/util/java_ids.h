@@ -211,6 +211,7 @@ PR_BEGIN_EXTERN_C
  */
 #define PK11SYMKEY_CLASS_NAME "org/mozilla/jss/pkcs11/PK11SymKey"
 #define PK11SYMKEY_CONSTRUCTOR_SIG "([B)V"
+#define PK11SYMKEY_CONSTRUCTOR_1_SIG "([BLjava/lang/String;)V" 
 
 /*
  * PK11Token

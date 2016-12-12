@@ -99,6 +99,11 @@ public final class PK11Token implements CryptoToken {
         return PK11KeyGenerator.clone(key, this);
     }
 
+    public PK11SymmetricKeyDeriver getSymmetricKeyDeriver()
+    {
+         return new PK11SymmetricKeyDeriver(this);
+    }
+
     public KeyWrapper
     getKeyWrapper(KeyWrapAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException

@@ -43,6 +43,18 @@ public interface CryptoStore {
     getPrivateKeys() throws TokenException;
 
     /**
+     * Returns all symmetric keys stored on this token.
+     *
+     * @return An array of all symmetric keys stored on this token.
+     * @exception TokenException If an error occurs on the token while
+     *      gathering the keys.
+     */
+    public SymmetricKey[]
+    getSymmetricKeys() throws TokenException;
+
+
+
+    /**
      * Deletes the given PrivateKey from the CryptoToken.
      * This is a very dangerous call: it deletes the key from the underlying
      * token. After calling this, the PrivateKey passed in must no longer

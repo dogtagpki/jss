@@ -39,6 +39,10 @@ public interface SymmetricKey {
 
     String getFormat();
 
+    String getNickName();
+
+    void setNickName(String nickName);
+
     public final static class Type {
         // all names converted to lowercase for case insensitivity
         private static Hashtable nameMap = new Hashtable();

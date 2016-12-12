@@ -67,17 +67,19 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
     }
 
     /* copy the key, setting the CKA_SIGN attribute */
-    newKey = PK11_CopySymKeyForSigning(origKey, mech);
+/*    newKey = PK11_CopySymKeyForSigning(origKey, mech);
     if( newKey == NULL ) {
         JSS_throwMsg(env, DIGEST_EXCEPTION,
                         "Unable to set CKA_SIGN attribute on symmetric key");
         goto finish;
     }
 
+*/
+
     param.data = NULL;
     param.len = 0;
 
-    context = PK11_CreateContextBySymKey(mech, CKA_SIGN, newKey, &param);
+    context = PK11_CreateContextBySymKey(mech, CKA_SIGN, origKey, &param);
     if( context == NULL ) {
         JSS_throwMsg(env, DIGEST_EXCEPTION,
             "Unable to initialize digest context");
