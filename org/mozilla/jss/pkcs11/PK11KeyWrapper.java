@@ -158,21 +158,23 @@ final class PK11KeyWrapper implements KeyWrapper {
         if( key==null ) {
             throw new InvalidKeyException("Key is null");
         }
-        if( ! key.getOwningToken().equals(token) ) {
-            throw new InvalidKeyException("Key does not reside on the "+
-                "current token");
-        }
-        if( ! (key instanceof PK11SymKey) ) {
-            throw new InvalidKeyException("Key is not a PKCS #11 key");
-        }
         try {
+            if( ! key.getOwningToken().equals(token) ) {
+                throw new InvalidKeyException("Key does not reside on the current token: key owning token="+
+                    key.getOwningToken().getName());
+            }
+            if( ! (key instanceof PK11SymKey) ) {
+                throw new InvalidKeyException("Key is not a PKCS #11 key");
+            }
             if( ((PK11SymKey)key).getKeyType() !=
-                    KeyType.getKeyTypeFromAlgorithm(algorithm) ) {
-                throw new InvalidKeyException("Key is not the right type for"+
+                KeyType.getKeyTypeFromAlgorithm(algorithm) ) {
+                    throw new InvalidKeyException("Key is not the right type for"+
                     " this algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
             Assert.notReached("Unknown algorithm");
+        } catch (Exception e) {
+            Assert.notReached("Exception:"+ e.toString());
         }
     }
 

@@ -11,6 +11,7 @@ import org.mozilla.jss.util.Assert;
 import java.security.*;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.util.Password;
+import org.mozilla.jss.crypto.PrivateKey;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
@@ -151,6 +152,89 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
       }
       return null;
     }
+
+
+    /**
+     * Creates a new EncryptedPrivateKeyInfo, where the data is encrypted
+     * with a password-based key- 
+     *       with wrapping/unwrapping happening on token.
+     *
+     * @param keyGenAlg The algorithm for generating a symmetric key from
+     *      a password, salt, and iteration count.
+     * @param password The password to use in generating the key.
+     * @param salt The salt to use in generating the key.
+     * @param iterationCount The number of hashing iterations to perform
+     *      while generating the key.
+     * @param charToByteConverter The mechanism for converting the characters
+     *      in the password into bytes.  If null, the default mechanism
+     *      will be used, which is UTF8.
+     * @param pri The PrivateKey to be encrypted and stored in the
+     *      EncryptedContentInfo.
+     */
+    public static EncryptedPrivateKeyInfo
+    createPBE(PBEAlgorithm keyGenAlg, Password password, byte[] salt,
+            int iterationCount,
+            KeyGenerator.CharToByteConverter charToByteConverter,
+            PrivateKey pri, CryptoToken token)
+        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
+        CharConversionException
+    {
+      try {
+
+        // check key gen algorithm
+
+        if( ! (keyGenAlg instanceof PBEAlgorithm) ) {
+            throw new NoSuchAlgorithmException("Key generation algorithm"+
+                " is not a PBE algorithm");
+        }
+
+        PBEAlgorithm pbeAlg = (PBEAlgorithm) keyGenAlg;
+
+        // generate key
+
+        KeyGenerator kg = token.getKeyGenerator( keyGenAlg );
+        PBEKeyGenParams pbekgParams = new PBEKeyGenParams(
+            password, salt, iterationCount);
+        if( charToByteConverter != null ) {
+            kg.setCharToByteConverter( charToByteConverter );
+        }
+        kg.initialize(pbekgParams);
+        kg.temporaryKeys(true);
+        SymmetricKey key = kg.generate();
+
+        // generate IV
+        EncryptionAlgorithm encAlg = pbeAlg.getEncryptionAlg();
+        AlgorithmParameterSpec params=null;
+        if( encAlg.getParameterClass().equals( IVParameterSpec.class ) ) {
+            params = new IVParameterSpec( kg.generatePBE_IV() );
+        }
+
+        KeyWrapper wrapper = token.getKeyWrapper(
+                KeyWrapAlgorithm.DES3_CBC);
+        wrapper.initWrap(key, params);
+        byte encrypted[] = wrapper.wrap(pri);
+
+        // make encryption algorithm identifier
+        PBEParameter pbeParam = new PBEParameter( salt, iterationCount );
+        AlgorithmIdentifier encAlgID = new AlgorithmIdentifier(
+                keyGenAlg.toOID(), pbeParam);
+
+        // create EncryptedPrivateKeyInfo
+        EncryptedPrivateKeyInfo epki = new EncryptedPrivateKeyInfo (
+                encAlgID,
+                new OCTET_STRING(encrypted) );
+
+        return epki;
+
+      } catch (Exception e) {
+        Assert.notReached("EncryptedPrivateKeyInfo exception:"
+            +".createPBE");
+      }
+
+      return null;
+    }
+
 
     /**
      * Decrypts an EncryptedPrivateKeyInfo that was encrypted with a PBE
