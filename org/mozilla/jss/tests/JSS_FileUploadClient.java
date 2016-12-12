@@ -17,7 +17,7 @@ import java.net.*;
 import java.io.*;
 
 public class JSS_FileUploadClient {
-    
+
     private String  clientCertNick      = null;
     private String  serverHost          = null;
     private boolean TestCertCallBack    = false;
@@ -114,7 +114,7 @@ public class JSS_FileUploadClient {
     public boolean isHandshakeCompleted() {
         return this.handshakeCompleted;
     }
-    
+
     /**
      * Set handshakeCompleted flag to indicate
      * that the socket handshake is coplete.
@@ -122,7 +122,7 @@ public class JSS_FileUploadClient {
     public void setHandshakeCompleted() {
         this.handshakeCompleted = true;
     }
-    
+
     /**
      * Clear handshakeCompleted flag to indicate
      * that the system is now ready for another
@@ -131,43 +131,43 @@ public class JSS_FileUploadClient {
     public void clearHandshakeCompleted() {
         this.handshakeCompleted = false;
     }
-    
+
     /**
      * Set EOF for closing server socket
-     * @param null for closing server socket
+     * @param fEof for closing server socket
      */
     public void setEOF(String fEof) {
         this.EOF = fEof;
     }
-    
+
     /**
      * ReadWrite thread class that takes a
      * SSLSocket as input and sleeps
      * for 2 sec between sending some test
      * data and receiving.
      * NOTE: If bufferedStream.mark(Integer.MAX_VALUE);
-     * method is invoked then fill method of 
-     * BufferedInputStream class copies lot of data using 
-     * System.arraycopy (which in-turn use memcpy). This 
+     * method is invoked then fill method of
+     * BufferedInputStream class copies lot of data using
+     * System.arraycopy (which in-turn use memcpy). This
      * causes very high CPU usage.
      */
     private class readWriteThread extends Thread {
         private SSLSocket clientSock = null;
         private int socketCntr   = 0;
-        
+
         public readWriteThread(SSLSocket sock, int cntr) {
             clientSock = sock;
             socketCntr = cntr;
         }
-        
+
         public void run() {
-            
+
             try {
                 String socketData  = null;
                 char[] cbuf        = null;
                 int    readLength  = 0;
                 String readString  = null;
-                
+
                 OutputStream   os  = clientSock.getOutputStream();
                 System.out.println("Reading file foo.in");
                 BufferedReader in  = new BufferedReader(
@@ -176,7 +176,7 @@ public class JSS_FileUploadClient {
                                     fUploadFile);
                 PrintWriter   out  = new PrintWriter(new BufferedWriter(
                         new OutputStreamWriter(os)));
-                
+
                 while ((readString = in.readLine()) != null) {
                     System.out.println("Read:" + readString);
                     out.println(readString);
@@ -191,13 +191,13 @@ public class JSS_FileUploadClient {
             }
         }
     }
-    
+
     /**
      * Initialize and create a socket connection to
      * SSLServer using the set parameters.
      */
     public void doIt() throws Exception {
-        
+
         try {
             CryptoManager.initialize(fCertDbPath);
             cm  = CryptoManager.getInstance();
@@ -206,25 +206,25 @@ public class JSS_FileUploadClient {
             tok.login(cb);
         } catch (Exception e) {
         }
-        
+
         // connect to the server
         if ( Constants.debug_level >= 3 )
             System.out.println("client about to connect...");
-        
+
         String hostAddr =
                 InetAddress.getByName(serverHost).getHostAddress();
-        
+
         if ( Constants.debug_level >= 3 )
             System.out.println("the host " + serverHost +
                     " and the address " + hostAddr);
-        
+
         SSLCertificateApprovalCallback approvalCallback =
                 new TestCertApprovalCallback();
         SSLClientCertificateSelectionCallback certSelectionCallback =
                 new TestClientCertificateSelectionCallback();
-        
+
         SSLSocket sock = null;
-        
+
         if (TestCertCallBack) {
             if ( Constants.debug_level >= 3 )
                 System.out.println("calling approvalCallBack");
@@ -240,7 +240,7 @@ public class JSS_FileUploadClient {
             sock = new SSLSocket(InetAddress.getByName(hostAddr),
                     port);
         }
-        
+
         if ( Constants.debug_level >= 3 )
             System.out.println("clientCertNick=" + clientCertNick);
         sock.setClientCertNickname(clientCertNick);
@@ -251,7 +251,7 @@ public class JSS_FileUploadClient {
             System.out.println("Client specified cert by nickname");
             System.out.println("client connected");
         }
-        
+
         // Set socket timeout to 10 sec
         //sock.setSoTimeout(10 * 1000);
         //sock.setKeepAlive(true);
@@ -261,7 +261,7 @@ public class JSS_FileUploadClient {
         readWriteThread rwThread = new readWriteThread(sock, 0);
         rwThread.start();
     }
-    
+
     /**
      * SSL Handshake Listener implementation.
      */
@@ -291,26 +291,26 @@ public class JSS_FileUploadClient {
             setHandshakeCompleted();
         }
     }
-    
+
     /**
      * Set status return value to false.
      */
     public synchronized void setFailure() {
         success = false;
     }
-    
+
     /**
      * Set status return value to success.
      */
     public synchronized boolean getSuccess() {
         return success;
     }
-    
+
     /**
      * Main method. Used for unit testing.
      */
     public static void main(String[] args) {
-        
+
         String  certnick   = "JSSCATestCert";
         String  testCipher = "1";
         String  testhost   = "localhost";
@@ -319,13 +319,13 @@ public class JSS_FileUploadClient {
         String  certDbPath = null;
         String  passwdFile = null;
         String  uploadFile = "foo.in";
-        
+
         String  usage      = "\nUSAGE:\n" +
                 "java org.mozilla.jss.tests.JSS_FileUploadClient" +
                 " [# sockets] [JSS cipher integer]\n[certdb path]" +
                 " [password file] [upload test file] " +
                 " [server host] [server port]";
-        
+
         try {
             if (args.length <= 0 || args[0].toLowerCase().equals("-h")) {
                 System.out.println(usage);
@@ -336,42 +336,42 @@ public class JSS_FileUploadClient {
             }
             testCipher = (String)args[1];
             System.out.println("Test Cipher    = " + testCipher);
-            
+
             if ( args.length >= 3 ) {
                 certDbPath = (String)args[2];
                 passwdFile = (String)args[3];
             }
-            
+
             if ( args.length >= 5 ) {
                 uploadFile = (String)args[4];
                 testhost   = (String)args[5];
                 testport   = new Integer(args[6]).intValue();
             }
         } catch (Exception e) { }
-        
+
         System.out.println("Client connecting to server ...");
-        
+
         for ( int j=0; j<socketCntr; j++) {
             JSS_FileUploadClient jssTest = new JSS_FileUploadClient();
             try {
                 if ( !testhost.equals("localhost") )
                     jssTest.setHostName(testhost);
-                
+
                 if ( testport != 29755 )
                     jssTest.setPort(testport);
-                
+
                 jssTest.setTestCertCallback(true);
                 jssTest.setClientCertNick(certnick);
-                
+
                 if ( certDbPath != null )
                     jssTest.setCertDbPath(certDbPath);
-                
+
                 if ( passwdFile != null )
                     jssTest.setPasswordFile(passwdFile);
-                
+
                 if ( !uploadFile.equals("foo.in") )
                     jssTest.setUploadFile(uploadFile);
-                
+
                 if ( testCipher != null ) {
                     try {
                         jssTest.setCipher(new Integer(testCipher).intValue());

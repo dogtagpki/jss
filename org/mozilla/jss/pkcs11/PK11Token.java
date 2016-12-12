@@ -16,7 +16,7 @@ import java.security.InvalidParameterException;
  * CryptoManager class.
  *
  * @author nicolson
- * @version $Revision$ $Date$ 
+ * @version $Revision$ $Date$
  * @see org.mozilla.jss.CryptoManager
  */
 public final class PK11Token implements CryptoToken {
@@ -39,7 +39,7 @@ public final class PK11Token implements CryptoToken {
     //  public routines
     ////////////////////////////////////////////////////
 	public org.mozilla.jss.crypto.Signature
-	getSignatureContext(SignatureAlgorithm algorithm) 
+	getSignatureContext(SignatureAlgorithm algorithm)
 		throws NoSuchAlgorithmException, TokenException
 	{
         Assert._assert(algorithm!=null);
@@ -135,7 +135,7 @@ public final class PK11Token implements CryptoToken {
 	}
 
     public native boolean isLoggedIn() throws TokenException;
-   
+
     public native boolean needsLogin() throws TokenException;
 
 
@@ -143,7 +143,7 @@ public final class PK11Token implements CryptoToken {
      * Log into the token. If you are already logged in, this method has
      * no effect, even if the PIN is wrong.
      *
-     * @param callback A callback to use to obtain the password, or a 
+     * @param callback A callback to use to obtain the password, or a
      *      Password object.
      * @exception NotInitializedException The token has not yet been
      *  initialized.
@@ -179,7 +179,7 @@ public final class PK11Token implements CryptoToken {
     public native boolean isPresent();
 
     /**
-     * Log out of the token. 
+     * Log out of the token.
      *
      * @exception TokenException If you are already logged in, or an
      *  unspecified error occurs.
@@ -209,8 +209,10 @@ public final class PK11Token implements CryptoToken {
      *
      * @param ssopwcb The security officer's current password callback.
      * @param userpwcb The user's new password callback.
-     * @exception IncorrectPinException If the security officer PIN is
+     * @exception IncorrectPasswordException If the security officer PIN is
      *  incorrect.
+     * @exception AlreadyInitializedException If the password hasn't already
+     *  been set.
      * @exception TokenException If the PIN was already initialized,
      *  or there was an unspecified error in the token.
      */
@@ -258,7 +260,7 @@ public final class PK11Token implements CryptoToken {
 			userpw = userpwcb.getPasswordFirstAttempt(pwcb);
 			userpwArray = Tunnel.getPasswordByteCopy(userpw);
 			initPassword(ssopwArray, userpwArray);
-			
+
 		} catch (PasswordCallback.GiveUpException e) {
 			throw new IncorrectPasswordException(e.toString());
 		} finally {
@@ -342,7 +344,7 @@ public final class PK11Token implements CryptoToken {
 			newPIN = newPINcb.getPasswordFirstAttempt(pwcb);
 			newPW = Tunnel.getPasswordByteCopy(newPIN);
 			changePassword(oldPW, newPW);
-			
+
 		} catch (PasswordCallback.GiveUpException e) {
 			throw new IncorrectPasswordException(e.toString());
 		} finally {
@@ -403,7 +405,7 @@ public final class PK11Token implements CryptoToken {
 
     /**
      * Deep-comparison operator.
-     * 
+     *
      * @return true if these tokens point to the same underlying native token.
      *  false otherwise, or if <code>compare</code> is null.
      */
@@ -460,7 +462,7 @@ public final class PK11Token implements CryptoToken {
 					G = g;
 					String pk10String;
 					try {
-						pk10String = 
+						pk10String =
 							generatePK10(subject, keysize, keyType, p,
 									 q, g);
 					} catch (TokenException e) {
@@ -468,7 +470,7 @@ public final class PK11Token implements CryptoToken {
 					} catch (InvalidParameterException e) {
 						throw e;
 					}
-					
+
 					return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
 							pk10String +
 							"\n-----END NEW CERTIFICATE REQUEST-----");
@@ -479,7 +481,7 @@ public final class PK11Token implements CryptoToken {
 			}
 			String pk10String;
 			try {
-				pk10String = 
+				pk10String =
 					generatePK10(subject, keysize, keyType, P,
 								 Q, G);
 			} catch (TokenException e) {
@@ -512,7 +514,7 @@ public final class PK11Token implements CryptoToken {
 
     /**
      * Creates a new PK11Token.  Should only be called from PK11Token's
-     * native code. 
+     * native code.
      * @param pointer A byte array containing a pointer to a PKCS #11 slot.
      */
     protected PK11Token(byte[] pointer, boolean internal, boolean keyStorage) {
