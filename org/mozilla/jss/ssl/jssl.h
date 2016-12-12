@@ -79,6 +79,7 @@ JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd);
 
 
 extern PRInt32 JSSL_enums[];
+#define JSSL_enums_size 36
 
 JSSL_SocketData*
 JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD,

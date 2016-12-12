@@ -7,6 +7,7 @@
 #include <pk11func.h>
 #include <ssl.h>
 #include <sslerr.h>
+#include <sslproto.h>
 
 #include <jssutil.h>
 #include <jss_exceptions.h>
