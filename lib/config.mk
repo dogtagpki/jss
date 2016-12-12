@@ -12,6 +12,7 @@ SHARED_LIBRARY_DIRS = \
     ../org/mozilla/jss/SecretDecoderRing \
     ../org/mozilla/jss \
     ../org/mozilla/jss/pkcs11 \
+    ../org/mozilla/jss/asn1 \
     ../org/mozilla/jss/ssl \
     ../org/mozilla/jss/util \
     ../org/mozilla/jss/provider/java/security \

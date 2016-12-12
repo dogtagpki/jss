@@ -9,6 +9,8 @@ MODULE = jss
  
 NS_USE_JDK = 1
 
+REQUIRES =      nspr20 nss
+
 PACKAGE =       org/mozilla/jss/asn1
 
 CLASSES = 											\
@@ -80,3 +82,9 @@ JSRCS = 											\
             UTCTime.java                            \
             UTF8String.java                         \
 			$(NULL)
+
+CSRCS =                             \
+            ASN1Util.c     \
+            $(NULL)
+
+LIBRARY_NAME = jssasn1
