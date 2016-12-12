@@ -30,7 +30,7 @@
 JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getEncoded
   (JNIEnv *env, jobject this)
 {
-	PRThread *pThread;
+	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 	CERTCertificate *cert;
 	SECItem *derCert;
 	jbyteArray derArray=NULL;
@@ -86,9 +86,9 @@ finish:
 JNIEXPORT jint JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getVersion
   (JNIEnv *env, jobject this)
 {
-	PRThread *pThread;
+	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 	CERTCertificate *cert;
-	long lVersion;
+	long lVersion = 0;
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
@@ -133,7 +133,7 @@ Java_org_mozilla_jss_pkcs11_PK11Cert_getPublicKey
 {
 	CERTCertificate *cert;
 	SECKEYPublicKey *pubk=NULL;
-	PRThread *pThread;
+	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 	jobject pubKey=NULL;
 
 	PR_ASSERT(env!=NULL && this!=NULL);
@@ -178,7 +178,7 @@ Java_org_mozilla_jss_pkcs11_CertProxy_releaseNativeResources
   (JNIEnv *env, jobject this)
 {
 	CERTCertificate *cert;
-	PRThread *pThread;
+	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 
 	PR_ASSERT(env!=NULL && this!=NULL);
 

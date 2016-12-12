@@ -142,7 +142,7 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getKeyType
   (JNIEnv *env, jobject this)
 {
-    PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
     SECKEYPrivateKey *privk;
     KeyType keyType;
     char* keyTypeFieldName;
@@ -227,7 +227,7 @@ Java_org_mozilla_jss_pkcs11_PrivateKeyProxy_releaseNativeResources
   (JNIEnv *env, jobject this)
 {
     SECKEYPrivateKey *privk;
-    PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
@@ -326,7 +326,6 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getUniqueID
     (JNIEnv *env, jobject this)
 {
     SECKEYPrivateKey *key = NULL;
-    PK11SlotInfo *slot = NULL;
     SECItem *idItem = NULL;
     jbyteArray byteArray = NULL;
 

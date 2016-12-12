@@ -23,7 +23,7 @@
 
 #include "pk11util.h"
 
-#if defined(AIX) || defined(HPUX) || defined(LINUX)
+#if defined(AIX) || defined(HPUX)
 #include <signal.h>
 #endif
 
@@ -74,13 +74,13 @@ static char*
 getPWFromCallback(PK11SlotInfo *slot, PRBool retry, void *arg);
 
 /*************************************************************
- * AIX, HP, and Linux signal handling madness
+ * AIX and HP signal handling madness
  *
  * In order for the JVM, kernel, and NSPR to work together, we setup
  * a signal handler for SIGCHLD that does nothing.  This is only done
- * on AIX, HP, and Linux.
+ * on AIX and HP.
  *************************************************************/
-#if defined(AIX) || defined(HPUX) || defined(LINUX)
+#if defined(AIX) || defined(HPUX)
 
 static PRStatus
 handleSigChild(JNIEnv *env) {

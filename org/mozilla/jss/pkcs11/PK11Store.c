@@ -317,7 +317,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_deleteCertOnly
     (JNIEnv *env, jobject this, jobject certObject)
 {
     CERTCertificate *cert;
-    SECStatus status;
+    SECStatus VARIABLE_MAY_NOT_BE_USED status;
 
     PR_ASSERT(env!=NULL && this!=NULL);
     if(certObject == NULL) {

@@ -60,7 +60,7 @@ writebuf(JNIEnv *env, PRFileDesc *fd, jobject sockObj, jbyteArray byteArray)
     jmethodID getOutputStream, writeMethod;
     jclass sockClass, osClass;
     jobject outputStream;
-    jint arrayLen;
+    jint arrayLen=-1;
     PRInt32 retval;
 
     /*
@@ -179,7 +179,7 @@ jsock_write(PRFileDesc *fd, const PRIOVec *iov, PRInt32 iov_size,
     jobject sockObj;
     JNIEnv *env;
     jbyteArray outbufArray;
-    PRInt32 retval;
+    PRInt32 retval=-1;
 
     if( GET_ENV(fd->secret->javaVM, env) ) goto finish;
 
@@ -468,7 +468,7 @@ static PRInt32
 jsock_recv(PRFileDesc *fd, void *buf, PRInt32 amount,
     PRIntn flags, PRIntervalTime timeout)
 {
-    PRInt32 retval;
+    PRInt32 retval=-1;
     JNIEnv *env;
     jobject sockObj;
     jbyteArray byteArray;
@@ -605,7 +605,7 @@ getIntProperty(JNIEnv *env, jobject sock, const char* methodName)
 {
     jclass sockClass;
     jmethodID method;
-    jint retval;
+    jint retval=0;
 
     sockClass = (*env)->GetObjectClass(env, sock);
     if( sockClass == NULL ) goto finish;
@@ -968,12 +968,6 @@ static const PRIOMethods jsockMethods = {
     (PRReservedFN) invalidInt,
     (PRReservedFN) invalidInt
 };
-
-static const PRIOMethods*
-getJsockMethods()
-{
-    return &jsockMethods;
-}
 
 static void
 jsockDestructor(PRFileDesc *fd)

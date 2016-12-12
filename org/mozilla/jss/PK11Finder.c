@@ -231,7 +231,7 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_CryptoManager_findPrivKeyByCertNative
   (JNIEnv *env, jobject this, jobject Cert)
 {
-    PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread=NULL;
     CERTCertificate *cert;
     PK11SlotInfo *slot;
     SECKEYPrivateKey *privKey=NULL;
@@ -426,7 +426,7 @@ JNIEXPORT jobjectArray JNICALL
 Java_org_mozilla_jss_CryptoManager_buildCertificateChainNative
     (JNIEnv *env, jobject this, jobject leafCert)
 {
-    PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread=NULL;
     CERTCertificate *leaf;
     jobjectArray chainArray=NULL;
     CERTCertDBHandle *certdb;
@@ -780,7 +780,7 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
     SECItem *derCerts=NULL;
     int certi= -1;
     SECItem theDerCert;
-    int numCerts;
+    int numCerts = 0;
     jbyte *packageBytes=NULL;
     jsize packageLen;
     SECStatus status;
@@ -1454,7 +1454,7 @@ Java_org_mozilla_jss_CryptoManager_importCRLNative
     CERTSignedCrl *crl = NULL;
     SECItem *packageItem = NULL;
     int status = SECFailure;
-    char *url;
+    char *url = NULL;
     char *errmsg = NULL;
 
     /***************************************************
@@ -1648,7 +1648,6 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
     SECStatus         rv    = SECFailure;
     SECCertUsage      certUsage;
     SECItem *derCerts[2];
-    SECStatus status;
     CERTCertificate **certArray = NULL;
     CERTCertDBHandle *certdb = CERT_GetDefaultCertDB();
 

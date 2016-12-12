@@ -929,9 +929,9 @@ JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_generatePK10
    jstring keyType, jbyteArray P, jbyteArray Q, jbyteArray G)
 {
     PK11SlotInfo *slot;
-    const char* c_subject;
+    const char* c_subject=NULL;
     jboolean isCopy;
-    unsigned char *b64request;
+    unsigned char *b64request=NULL;
     SECItem p, q, g;
     PQGParams *dsaParams=NULL;
     const char* c_keyType;
@@ -1048,7 +1048,7 @@ GenerateCertRequest(JNIEnv *env,
 	SECStatus rv;
 	PRArenaPool *arena;
 	SECItem result_der, result;
-	SECItem *blob;
+	SECItem * VARIABLE_MAY_NOT_BE_USED blob;
 	CK_MECHANISM_TYPE signMech;
 	CK_MECHANISM_TYPE keygenMech;
 
