@@ -1552,6 +1552,7 @@ public final class CryptoManager implements TokenSupplier
             throw e;
         } catch (CertificateException e) {
             return false;
+        }
     }
 
     /**
