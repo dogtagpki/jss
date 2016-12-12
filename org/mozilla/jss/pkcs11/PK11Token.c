@@ -930,12 +930,12 @@ JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_generatePK10
 {
     PK11SlotInfo *slot;
     const char* c_subject=NULL;
-    jboolean isCopy;
+    jboolean isCopy = JNI_FALSE;
     unsigned char *b64request=NULL;
     SECItem p, q, g;
     PQGParams *dsaParams=NULL;
     const char* c_keyType;
-    jboolean k_isCopy;
+    jboolean k_isCopy = JNI_FALSE;
     SECOidTag signType = SEC_OID_UNKNOWN;
     PK11RSAGenParams rsaParams;
     void *params = NULL;
