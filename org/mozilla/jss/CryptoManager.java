@@ -1440,21 +1440,21 @@ public final class CryptoManager implements TokenSupplier
     /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
     /* lib/manifest.mn                                                  */
-    /* mozilla/security/jss/manifest.mn                                 */
+    /* jss/manifest.mn                                                  */
     /*                                                                  */
     /********************************************************************/
 
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_3_2_RTM";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_4_0_RTM";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_12_RTM";
+    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_21_RTM";
     public static final String
     JAR_DBM_VERSION     = "DBM_VERSION = N/A";
     public static final String
-    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPR_4_7_RTM";
+    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPR_4_11_RTM";
 
     /**
      * Loads the JSS dynamic library if necessary.

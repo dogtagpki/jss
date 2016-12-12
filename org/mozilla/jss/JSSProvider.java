@@ -13,13 +13,13 @@ public final class JSSProvider extends java.security.Provider {
     /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
     /* lib/manifest.mn                                                  */
-    /* mozilla/security/jss/manifest.mn                                 */
+    /* jss/manifest.mn                                                  */
     /*                                                                  */
     /********************************************************************/
 
     private static int JSS_MAJOR_VERSION  = 4;
-    private static int JSS_MINOR_VERSION  = 3;
-    private static int JSS_PATCH_VERSION  = 2;
+    private static int JSS_MINOR_VERSION  = 4;
+    private static int JSS_PATCH_VERSION  = 0;
     private static double JSS_VERSION     = JSS_MAJOR_VERSION +
                                            (JSS_MINOR_VERSION * 100 +
                                             JSS_PATCH_VERSION)/10000.0;
