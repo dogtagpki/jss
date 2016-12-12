@@ -290,10 +290,13 @@ final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidKeyException("key to be wrapped is not a "+
                 "PKCS #11 key");
         }
+/* NSS is capable of moving keys appropriately,
+   so this call is prematurely bailing
         if( ! symKey.getOwningToken().equals(token) ) {
             throw new InvalidKeyException("key to be wrapped does not live"+
                 " on the same token as the wrapping key");
         }
+*/
     }
 
     /**
@@ -308,10 +311,13 @@ final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidKeyException("key to be wrapped is not a "+
                 "PKCS #11 key");
         }
+/* NSS is capable of moving keys appropriately,
+   so this call is prematurely bailing
         if( ! privKey.getOwningToken().equals(token) ) {
             throw new InvalidKeyException("key to be wrapped does not live"+
                 " on the same token as the wrapping key");
         }
+*/
     }
 
     /**
