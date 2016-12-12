@@ -3,18 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /* This program demonstrates how to sign data with keys from JSS
  *
- * Most of this code is deprecated look at JCASigTest.java
- *
- * java -cp ./jss4.jar org.mozilla.jss.tests.SigTest . 
- *               passwords "Internal Key Storage Token"
- *
  * The token name can be either the name of a hardware token, or
  * one of the internal tokens:
  *  Internal Crypto Services Token
  *  Internal Key Storage Token    (keys stored in key4.db)
- *
- * @see org.mozilla.jss.tests.JCASigTest
- * @deprecated Use the JCA interface instead
  */
 package org.mozilla.jss.tests;
 
