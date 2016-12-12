@@ -126,6 +126,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_deletePrivateKey;
 Java_org_mozilla_jss_pkcs11_PK11Store_importPrivateKey;
 Java_org_mozilla_jss_pkcs11_PK11Store_putCertsInVector;
 Java_org_mozilla_jss_pkcs11_PK11Store_putKeysInVector;
+Java_org_mozilla_jss_pkcs11_PK11Store_putSymKeysInVector;
 Java_org_mozilla_jss_pkcs11_SigContextProxy_releaseNativeResources;
 Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getModulusByteArray;
 Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getPublicExponentByteArray;
@@ -215,6 +216,7 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_fromSPKI;
 Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineGetKey;
 Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineIsCertificateEntry;
 Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineSetKeyEntryNative;
+Java_org_mozilla_jss_CryptoManager_initializeAllNative2;
 Java_org_mozilla_jss_ssl_SocketBase_getLocalAddressNative;
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getDSAParamsNative;
 Java_org_mozilla_jss_CryptoManager_verifyCertNowNative;
@@ -288,6 +290,23 @@ Java_org_mozilla_jss_ssl_SSLSocket_isFipsCipherSuiteNative;
 ;+JSS_4.3 {     # JSS 4.3 release
 ;+    global:
 Java_org_mozilla_jss_pkcs11_PK11Token_needsLogin;
+;+    local:
+;+       *;
+;+};
+;+JSS_4.2.6 {     # JSS 4.2.6 release
+;+    global:
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateECKeyPairWithOpFlags;
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateRSAKeyPairWithOpFlags;
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateDSAKeyPairWithOpFlags;
+Java_org_mozilla_jss_CryptoManager_OCSPCacheSettingsNative;
+Java_org_mozilla_jss_CryptoManager_setOCSPTimeoutNative;
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative;
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowCUNative;
+Java_org_mozilla_jss_asn1_ASN1Util_getTagDescriptionByOid;
+Java_org_mozilla_jss_ssl_SocketBase_setSSLVersionRange;
+Java_org_mozilla_jss_ssl_SSLSocket_setSSLVersionRangeDefault;
+Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_nativeDeriveSymKey;
+Java_org_mozilla_jss_pkcs11_PK11SymKey_setNickNameNative;
 ;+    local:
 ;+       *;
 ;+};
