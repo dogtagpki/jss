@@ -56,7 +56,7 @@ public abstract class JSSMessageDigest {
      * Completes digestion.
      * 
      * @return The, ahem, output of the digest operation.
-     * @param If an error occurs while digesting.
+     * @exception DigestException If an error occurs while digesting.
      */
     public byte[] digest() throws DigestException {
         byte[] output = new byte[getOutputSize()];

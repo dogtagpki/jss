@@ -28,7 +28,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      *      Must not be null. It is the responsibility of the caller to
      *      use the right salt length for the algorithm. Most algorithms
      *      use 8 bytes of salt.
-     * @param The iteration count for the PBE algorithm.
+     * @param iterations The iteration count for the PBE algorithm.
      */
     public PBEKeyGenParams(Password pass, byte[] salt, int iterations) {
         if(pass==null || salt==null) {
@@ -48,7 +48,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      *      Must not be null. It is the responsibility of the caller to
      *      use the right salt length for the algorithm. Most algorithms
      *      use 8 bytes of salt.
-     * @param The iteration count for the PBE algorithm.
+     * @param iterations The iteration count for the PBE algorithm.
      */
     public PBEKeyGenParams(char[] pass, byte[] salt, int iterations) {
         if(pass==null || salt==null) {

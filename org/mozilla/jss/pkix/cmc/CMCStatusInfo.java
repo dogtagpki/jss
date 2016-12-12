@@ -76,7 +76,7 @@ public class CMCStatusInfo implements ASN1Value {
      * @param status A CMCStatus constant.
      * @param bodyList The sequence of bodyPartID.
      * @param statusString A String.
-     * @param OtherInfo The OtherInfo choice.
+     * @param otherInfo The OtherInfo choice.
      */
     public CMCStatusInfo(int status, SEQUENCE bodyList, String
 						 statusString, OtherInfo otherInfo) {

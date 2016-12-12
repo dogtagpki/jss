@@ -1184,7 +1184,7 @@ public final class CryptoManager implements TokenSupplier
      * Imports a single certificate into the permanent certificate
      * database.
      *
-     * @param derCert the certificate you want to add
+     * @param cert the certificate you want to add
      * @param nickname the nickname you want to refer to the certificate as
      *        (must not be null)
      */
@@ -1492,8 +1492,8 @@ public final class CryptoManager implements TokenSupplier
      * this thread's token to <tt>null</tt> will also cause the
      * InternalKeyStorageToken to be used.
      *
-     * @param The token to use for crypto operations. Specifying <tt>null</tt>
-     * will cause the InternalKeyStorageToken to be used.
+     * @param token The token to use for crypto operations. Specifying
+     * <tt>null</tt> will cause the InternalKeyStorageToken to be used.
      */
     public void setThreadToken(CryptoToken token) {
         if( token != null ) {
@@ -1597,7 +1597,7 @@ public final class CryptoManager implements TokenSupplier
      * Verify a certificate in memory. Check if
      * valid and that we trust the issuer. Verify time
      * against Now.
-     * @param certificate in memory
+     * @param certPackage certificate in memory
      * @param checkSig verify the signature of the certificate
      * @param certUsage see exposed certUsage defines to verify Certificate
      * @return true for success; false otherwise

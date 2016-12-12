@@ -59,14 +59,18 @@ class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         // versions is to use the reflection API.
         Class specClass = spec.getClass();
         try {
-            Method getSaltMethod = specClass.getMethod("getSalt", null);
+            Method getSaltMethod = specClass.getMethod("getSalt",
+                                       (java.lang.Class) null);
             Method getIterationMethod =
-                specClass.getMethod("getIterationCount", null);
+                specClass.getMethod("getIterationCount",
+                                    (java.lang.Class) null);
 
-            byte[] salt = (byte[]) getSaltMethod.invoke(spec, null);
+            byte[] salt = (byte[]) getSaltMethod.invoke(spec,
+                                       (java.lang.Class) null);
             
             Integer itCountObj =
-                (Integer) getIterationMethod.invoke(spec,null);
+                (Integer) getIterationMethod.invoke(spec,
+                                                    (java.lang.Class) null);
             int iterationCount = itCountObj.intValue();
 
             Password pass = new Password(spec.getPassword());

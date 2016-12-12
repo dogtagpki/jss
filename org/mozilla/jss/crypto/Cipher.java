@@ -112,8 +112,8 @@ public abstract class Cipher {
      *  <i>B</i> is the block size, the padding string consists of
      *  <i>B</i> - (<i>M</i> mod <i>B</i>) octets, each having the value
      *  <i>B</i> - (<i>M</i> mod <i>B</i>).
-     * @param The block size of the encryption algorithm.  Must be greater
-     *  than zero.
+     * @param blockSize The block size of the encryption algorithm.
+     *  Must be greater than zero.
      * @see #unPad
      */
     public static byte[]

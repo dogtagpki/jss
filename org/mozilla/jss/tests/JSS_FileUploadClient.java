@@ -43,7 +43,7 @@ public class JSS_FileUploadClient {
     /**
      * Initialize the desired cipher to be set
      * on the socket.
-     * @param int Cipher
+     * @param aCipher
      */
     public void setCipher(int aCipher) {
         fCipher = aCipher;
@@ -51,7 +51,7 @@ public class JSS_FileUploadClient {
     
     /**
      * Initialize the hostname to run the server
-     * @param String ServerName
+     * @param aHostName
      */
     public void setHostName(String aHostName) {
         serverHost = aHostName;
@@ -59,7 +59,7 @@ public class JSS_FileUploadClient {
     
     /**
      * Initialize the port to run the server
-     * @param int port
+     * @param aPort
      */
     public void setPort(int aPort) {
         port = aPort;
@@ -67,7 +67,7 @@ public class JSS_FileUploadClient {
     
     /**
      * Initialize the passwords file name
-     * @param String passwords
+     * @param aPasswordFile
      */
     public void setPasswordFile(String aPasswordFile) {
         fPasswordFile = aPasswordFile;
@@ -75,7 +75,7 @@ public class JSS_FileUploadClient {
     
     /**
      * Initialize the cert db path name
-     * @param String CertDbPath
+     * @param aCertDbPath
      */
     public void setCertDbPath(String aCertDbPath) {
         fCertDbPath = aCertDbPath;
@@ -84,7 +84,7 @@ public class JSS_FileUploadClient {
     /**
      * Initialize the name of the file to
      * be used for testing along with full path.
-     * @param String UploadFile
+     * @param aUploadFile
      */
     public void setUploadFile(String aUploadFile) {
         fUploadFile = aUploadFile;
@@ -92,7 +92,7 @@ public class JSS_FileUploadClient {
     
     /**
      * Enable/disable Test Cert Callback.
-     * @param boolean
+     * @param aTestCertCallback
      */
     public void setTestCertCallback(boolean aTestCertCallback) {
         TestCertCallBack = aTestCertCallback;
@@ -100,7 +100,7 @@ public class JSS_FileUploadClient {
     
     /**
      * Set client certificate
-     * @param String Certificate Nick Name
+     * @param aClientCertNick Certificate Nick Name
      */
     public void setClientCertNick(String aClientCertNick) {
         clientCertNick = aClientCertNick;
