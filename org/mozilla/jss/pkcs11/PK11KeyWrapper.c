@@ -302,32 +302,36 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     PRBool isExtractable = PR_FALSE;
 
     /* special case nethsm and lunasa*/
-    CK_UTF8CHAR nethsmLabel[4] = {'N','H','S','M'};
-    CK_UTF8CHAR lunasaLabel[4] = {'l','u','n','a'};
+    const int numManufacturerIDchars = 7;
+    CK_UTF8CHAR nethsmManufacturerID[] = {'n','C','i','p','h','e','r'};
+    CK_UTF8CHAR lunasaManufacturerID[] = {'S','a','f','e','n','e','t'};
     PRBool isNethsm = PR_TRUE;
     PRBool isLunasa = PR_TRUE;
+
+    tokenInfo.manufacturerID[0] = 0;
 
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
         /* exception was thrown */
         goto finish;
     }
 
-    if ( PK11_GetTokenInfo(slot, &tokenInfo) == PR_SUCCESS) {
+    if ( (PK11_GetTokenInfo(slot, &tokenInfo) == PR_SUCCESS) &&
+       (tokenInfo.manufacturerID[0] != 0)) {
         int ix = 0;
-        for(ix=0; ix < 4; ix++) {
-            if (tokenInfo.label[ix] != nethsmLabel[ix]) {
+
+        for(ix=0; ix < numManufacturerIDchars; ix++) {
+            if (tokenInfo.manufacturerID[ix] != nethsmManufacturerID[ix]) {
                isNethsm = PR_FALSE;
                break;
             }
         }
-        ix = 0;
-        for(ix=0; ix < 4; ix++) {
-            if (tokenInfo.label[ix] != lunasaLabel[ix]) {
+
+        for(ix=0; ix < numManufacturerIDchars; ix++) {
+            if (tokenInfo.manufacturerID[ix] != lunasaManufacturerID[ix]) {
                isLunasa = PR_FALSE;
                break;
             }
         }
-
     } else {
         isNethsm = PR_FALSE;
         isLunasa = PR_FALSE;
