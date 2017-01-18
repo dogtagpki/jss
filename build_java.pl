@@ -447,6 +447,6 @@ sub test {
             die "JSS builds are not available at $jss_symlink.";
         }
     } else {
-        die "make test_jss is only available on Linux  and MacOS platforms.";
+        die "make test_jss is only available on Linux and MacOS platforms.";
     }
 }
