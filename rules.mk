@@ -1,6 +1,7 @@
 .PHONY: buildJava
 .PHONY: cleanJava
 .PHONY: releaseJava
+.PHONY: testJava
 
 clean:: cleanJava
 release_classes:: releaseJava
@@ -21,6 +22,9 @@ buildJava:
 
 cleanJava:
 	perl build_java.pl $(PERL_VARIABLES) clean
+
+testJava:
+	perl build_java.pl $(PERL_VARIABLES) test
 
 releaseJava:
 	perl build_java.pl $(PERL_VARIABLES) release
