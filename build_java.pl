@@ -81,6 +81,9 @@ org.mozilla.jss.util
 );
 
 
+# setup environment
+setup_env();
+
 # setup variables
 setup_vars(\@ARGV);
 
@@ -111,13 +114,31 @@ sub dump_cmdline_vars {
     }
 }
 
+sub setup_env {
+    # check that JAVA_HOME environment variable has been set externally
+    $ENV{JAVA_HOME} or
+    die "\nMust specify JAVA_HOME environment variable!\n"
+      . "(e. g. - export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0_openjdk)"
+      . "\n\n";
+    print "JAVA_HOME=$ENV{'JAVA_HOME'}\n";
+
+    # check that USE_64 environment variable has been set externally
+    # for 64-bit architectures (when applicable)
+    $bitsize = `getconf LONG_BIT`;
+    if( $bitsize == 64 ) {
+        $ENV{USE_64} or
+        die "\nMust specify USE_64 environment variable!\n"
+          . "(e. g. - export USE_64=1)\n\n";
+        print "USE_64=$ENV{'USE_64'}\n";
+    }
+}
+
 sub setup_vars {
     my $argv = shift;
 
     grab_cmdline_vars($argv);
     dump_cmdline_vars();
 
-    $ENV{JAVA_HOME} or die "Must specify JAVA_HOME environment variable";
     $jar = "$ENV{JAVA_HOME}/bin/jar";
     $javac = "$ENV{JAVA_HOME}/bin/javac";
     $javah = "$ENV{JAVA_HOME}/bin/javah";
@@ -144,6 +165,84 @@ sub setup_vars {
 
     if( $jce_jar ) {
         $classpath = "-classpath $jce_jar";
+    }
+
+    # retrieve present working directory
+    $pwd = `pwd`;
+    $pwd =~ chomp $pwd;
+
+    # retrieve architecture
+    $arch = `uname -m`;
+    $arch =~ chomp $arch;
+
+    # retrieve operating system
+    $os = `uname`;
+    $os =~ chomp $os;
+
+    # Verify existence of work area
+    if(( ! -d "$pwd/../nspr" ) ||
+       ( ! -d "$pwd/../nss" )  ||
+       ( ! -d "$pwd/../jss" )) {
+        my $workarea = "\nA work area must first be prepared; for example:\n\n"
+                     . "    mkdir sandbox\n"
+                     . "    cd sandbox\n"
+                     . "    hg clone https://hg.mozilla.org/projects/nspr\n"
+                     . "    hg clone https://hg.mozilla.org/projects/nss\n"
+                     . "    hg clone https://hg.mozilla.org/projects/jss\n"
+                     . "    cd ..\n\n";
+
+        die "$workarea";
+    }
+
+    # Build NSS if not already built
+    if( ! -d $dist_dir ) {
+        print("########################\n" .
+              "# BEGIN:  Building NSS #\n" .
+              "########################\n");
+        print_do("cd ../nss;make clean nss_build_all;cd ../jss");
+        print("######################\n" .
+              "# END:  Building NSS #\n" .
+              "######################\n");
+    }
+
+    if( $os eq 'Linux' || $os eq 'Darwin' ) {
+        # set major and minor release numbers
+        $majorrel = `uname -r | cut -f1 -d.`;
+        $majorrel =~ chomp $majorrel;
+        $minorrel = `uname -r | cut -f2 -d.`;
+        $minorrel =~ chomp $minorrel;
+
+        # read the contents of the $dist_dir into an array
+        opendir DIR, $dist_dir or die "Cannot open directory: $!";
+        my @files = readdir DIR;
+        closedir DIR;
+
+        # process the array to obtain the NSS OBJDIR_NAME
+        my $prefix = "$os$majorrel.$minorrel";
+        foreach my $file (@files) {
+            if ((index($file, $prefix) != -1) &&
+                (index($file, "_cc") != -1)) {
+                $nss_objdir_name = $file;
+                print "NSS OBJDIR_NAME=$nss_objdir_name\n";
+
+                # craft JSS OBJDIR_NAME based upon value of NSS OBJDIR_NAME
+                $jss_objdir_name = $nss_objdir_name;
+                $jss_objdir_name =~ s/_cc//;
+                print "JSS OBJDIR_NAME=$jss_objdir_name\n";
+
+                break;
+            } 
+        }
+
+        # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME in $dist_dir
+        $jss_symlink = "$pwd/../dist/$jss_objdir_name";
+        if( ! -l $jss_symlink ) {
+            my $cmd = "cd ../dist;"
+                    . "ln -s $nss_objdir_name $jss_objdir_name;"
+                    . "cd ../jss";
+            print_do($cmd);
+        }
+        print "jss_symlink=$jss_symlink\n"
     }
 }
 
@@ -328,4 +427,28 @@ sub javadoc {
     print_do("$javadoc -breakiterator -sourcepath . -d $dist_dir/jssdoc $html_header_opt $targets");
     print_do("cp $dist_dir/jssdoc/index.html $dist_dir/jssdoc/index.html.bak");
     print_do("cp $dist_dir/jssdoc/overview-summary.html $dist_dir/jssdoc/index.html");
+}
+
+sub test {
+    # Test JSS presuming that it has already been built
+    if( $os eq 'Linux' || $os eq 'Darwin' ) {
+        if(( -d $dist_dir )  &&
+           ( -l $jss_symlink )) {
+            my $cmd = "cd $pwd/org/mozilla/jss/tests;"
+                    . "perl all.pl dist $jss_symlink;"
+                    . "cd $pwd";
+
+            print("#######################\n" .
+                  "# BEGIN:  Testing JSS #\n" .
+                  "#######################\n");
+            print_do($cmd);
+            print("#####################\n" .
+                  "# END:  Testing JSS #\n" .
+                  "#####################\n");
+        } else {
+            die "JSS builds are not available at $jss_symlink.";
+        }
+    } else {
+        die "make test_jss is only available on Linux and MacOS platforms.";
+    }
 }
