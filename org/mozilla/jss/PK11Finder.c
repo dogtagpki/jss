@@ -1651,7 +1651,7 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
 {
     SECStatus         rv    = SECFailure;
     SECCertUsage      certUsage;
-    SECItem *derCerts[2];
+    SECItem *derCerts[2] = { NULL, NULL };
     SECStatus status;
     CERTCertificate **certArray = NULL;
     CERTCertDBHandle *certdb = CERT_GetDefaultCertDB();
