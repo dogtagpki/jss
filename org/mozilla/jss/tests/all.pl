@@ -500,6 +500,10 @@ $testname = "Mozilla-JSS JCA Signature ";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.JCASigTest $testdir $pwfile";
 run_test($testname, $command);
 
+$testname = "Mozilla-JSS NSS Signature ";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.SigTest $testdir $pwfile";
+run_test($testname, $command);
+
 $testname = "JSS Signature test";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.SigTest $testdir $pwfile";
 run_test($testname, $command);
