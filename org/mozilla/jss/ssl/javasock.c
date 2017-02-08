@@ -63,6 +63,10 @@ writebuf(JNIEnv *env, PRFileDesc *fd, jobject sockObj, jbyteArray byteArray)
     jint arrayLen;
     PRInt32 retval;
 
+    if( env == NULL ) {
+        goto finish;
+    }
+
     /*
      * get the OutputStream
      */
