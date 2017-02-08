@@ -1543,8 +1543,59 @@ finish:
 }
 
 /***********************************************************************
- * CryptoManager.verifyCertNowNative
+ * CryptoManager.verifyCertificateNowNative
  *
+ * Returns JNI_TRUE if success, JNI_FALSE otherwise
+ */
+JNIEXPORT jboolean JNICALL
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
+        jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage)
+{
+    SECStatus         rv    = SECFailure;
+    SECCertificateUsage      certificateUsage;
+    SECCertificateUsage      currUsage;  /* unexposed for now */
+    CERTCertificate   *cert=NULL;
+    char *nickname=NULL;
+
+    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
+    if( nickname == NULL ) {
+         goto finish;
+    }
+
+    certificateUsage = required_certificateUsage;
+
+    cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
+
+    if (cert == NULL) {
+        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        goto finish;
+    } else {
+    /* 0 for certificateUsage in call to CERT_VerifyCertificateNow to
+     * just get the current usage (which we are not passing back for now
+     * but will bypass the certificate usage check
+     */
+        rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+            checkSig, certificateUsage, NULL, &currUsage );
+    }
+
+finish:
+    if(nickname != NULL) {
+      (*env)->ReleaseStringUTFChars(env, nickString, nickname);
+    }
+    if(cert != NULL) {
+       CERT_DestroyCertificate(cert);
+    }
+    if( rv == SECSuccess) {
+        return JNI_TRUE;
+    } else {
+        return JNI_FALSE;
+    }
+}
+
+
+/***********************************************************************
+ * CryptoManager.verifyCertNowNative
+ * note: this calls obsolete NSS function
  * Returns JNI_TRUE if success, JNI_FALSE otherwise
  */
 JNIEXPORT jboolean JNICALL
