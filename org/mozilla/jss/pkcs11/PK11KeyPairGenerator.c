@@ -164,7 +164,8 @@ JSS_PK11_generateKeyPairWithOpFlags(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
             }
             PR_GetErrorText(errBuf);
         }
-        msgBuf = PR_smprintf("Keypair Generation failed on token: %s",
+        msgBuf = PR_smprintf("Keypair Generation failed on token with error: %d : %s",
+            PR_GetError(),
             errLength>0? errBuf : "");
         if(errLength>0) {
             PR_Free(errBuf);
