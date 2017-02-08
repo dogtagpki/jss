@@ -251,8 +251,9 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapPrivWithSym
     status = PK11_WrapPrivKey(slot, wrapping, toBeWrapped, mech, param,
                 &wrapped, NULL /* wincx */ );
     if(status != SECSuccess) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
-                "Wrapping operation failed on token");
+        char err[256] = {0};
+        PR_snprintf(err, 256, "Wrapping operation failed on token:%d", PR_GetError());
+        JSS_throwMsg(env, TOKEN_EXCEPTION, err);
         goto finish;
     }
     PR_ASSERT(wrapped.len>0 && wrapped.data!=NULL);
@@ -296,28 +297,44 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     int numAttribs = 0;
     CK_TOKEN_INFO tokenInfo;
 
+    /* ideal defaults */
     PRBool isSensitive = PR_TRUE;
     PRBool isExtractable = PR_FALSE;
-    /* special case nethsm*/
-    CK_UTF8CHAR nethsmLabel[4] = {'N','H','S','M'};
+
+    /* special case nethsm and lunasa*/
+    const int numManufacturerIDchars = 7;
+    CK_UTF8CHAR nethsmManufacturerID[] = {'n','C','i','p','h','e','r'};
+    CK_UTF8CHAR lunasaManufacturerID[] = {'S','a','f','e','n','e','t'};
     PRBool isNethsm = PR_TRUE;
+    PRBool isLunasa = PR_TRUE;
+
+    tokenInfo.manufacturerID[0] = 0;
 
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
         /* exception was thrown */
         goto finish;
     }
 
-    if ( PK11_GetTokenInfo(slot, &tokenInfo) == PR_SUCCESS) {
+    if ( (PK11_GetTokenInfo(slot, &tokenInfo) == PR_SUCCESS) &&
+       (tokenInfo.manufacturerID[0] != 0)) {
         int ix = 0;
-        for(ix=0; ix < 4; ix++) {
-            if (tokenInfo.label[ix] != nethsmLabel[ix]) {
+
+        for(ix=0; ix < numManufacturerIDchars; ix++) {
+            if (tokenInfo.manufacturerID[ix] != nethsmManufacturerID[ix]) {
                isNethsm = PR_FALSE;
                break;
             }
         }
 
+        for(ix=0; ix < numManufacturerIDchars; ix++) {
+            if (tokenInfo.manufacturerID[ix] != lunasaManufacturerID[ix]) {
+               isLunasa = PR_FALSE;
+               break;
+            }
+        }
     } else {
         isNethsm = PR_FALSE;
+        isLunasa = PR_FALSE;
     }
 
     /* get unwrapping key */
@@ -380,23 +397,25 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     }
     keyType = PK11_GetKeyType(keyTypeMech, 0);
 
+    /* special case nethsm and lunasa*/
     if( isNethsm ) {
         isSensitive = PR_FALSE;
         isExtractable = PR_FALSE;
+    } else if ( isLunasa) {
+        isSensitive = PR_FALSE;
+        isExtractable = PR_TRUE;
     }
 
-setAttrs:
     /* figure out which operations to enable for this key */
     switch (keyType) {
     case CKK_RSA:
+        numAttribs = 3;
         attribs[0] = CKA_SIGN;
         attribs[1] = CKA_SIGN_RECOVER;
         attribs[2] = CKA_UNWRAP;
         if (isExtractable) {
             attribs[3] = CKA_EXTRACTABLE;
             numAttribs = 4;
-        } else {
-            numAttribs = 3;
         }
 	break;
     case CKK_DSA:
@@ -427,7 +446,9 @@ setAttrs:
                 &label, pubValue, token, isSensitive /*sensitive*/, keyType,
                 attribs, numAttribs, NULL /*wincx*/);
     if( privk == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Key Unwrap failed on token");
+        char err[256] = {0};
+        PR_snprintf(err, 256, "Key Unwrap failed on token:%d", PR_GetError());
+        JSS_throwMsg(env, TOKEN_EXCEPTION, err);
         goto finish;
     }
                 

@@ -211,7 +211,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
         }
 
         KeyWrapper wrapper = token.getKeyWrapper(
-                KeyWrapAlgorithm.DES3_CBC);
+                KeyWrapAlgorithm.DES3_CBC_PAD);
         wrapper.initWrap(key, params);
         byte encrypted[] = wrapper.wrap(pri);
 
@@ -228,6 +228,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
         return epki;
 
       } catch (Exception e) {
+        System.out.println("createPBE: exception:"+e.toString());
         Assert.notReached("EncryptedPrivateKeyInfo exception:"
             +".createPBE");
       }
