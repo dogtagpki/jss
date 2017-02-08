@@ -219,11 +219,16 @@ public class SSLSocket extends java.net.Socket {
         SSLClientCertificateSelectionCallback clientCertSelectionCallback)
             throws IOException
     {
+
+        int socketFamily = SocketBase.SSL_AF_INET;
+        if(SocketBase.supportsIPV6()) {
+            socketFamily = SocketBase.SSL_AF_INET6;
+        }
         // create the socket
         sockProxy =
             new SocketProxy(
                 base.socketCreate(
-                    this, certApprovalCallback, clientCertSelectionCallback) );
+                    this, certApprovalCallback, clientCertSelectionCallback,socketFamily) );
 
         base.setProxy(sockProxy);
 
@@ -264,7 +269,7 @@ public class SSLSocket extends java.net.Socket {
             new SocketProxy(
                 base.socketCreate(
                     this, certApprovalCallback, clientCertSelectionCallback,
-                    s, host ) );
+                    s, host,SocketBase.SSL_AF_INET ) );
 
         base.setProxy(sockProxy);
         resetHandshake();
