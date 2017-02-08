@@ -428,9 +428,14 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     JSSL_SocketData *sock;
     PRNetAddr addr;
     jbyte *addrBAelems = NULL;
+    int addrBALen = 0;
     PRStatus status;
     int stat;
     const char *hostnameStr=NULL;
+
+    jmethodID supportsIPV6ID;
+    jclass socketBaseClass;
+    jboolean supportsIPV6 = 0;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
         /* exception was thrown */
@@ -440,16 +445,32 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     /*
      * setup the PRNetAddr structure
      */
-    addr.inet.family = AF_INET;
-    addr.inet.port = htons(port);
-    PR_ASSERT(sizeof(addr.inet.ip) == 4);
-    PR_ASSERT( (*env)->GetArrayLength(env, addrBA) == 4);
+
+    socketBaseClass = (*env)->FindClass(env, SOCKET_BASE_NAME);
+    if( socketBaseClass == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    supportsIPV6ID = (*env)->GetStaticMethodID(env, socketBaseClass,
+        SUPPORTS_IPV6_NAME, SUPPORTS_IPV6_SIG);
+
+    if( supportsIPV6ID == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    supportsIPV6 = (*env)->CallStaticBooleanMethod(env, socketBaseClass,
+         supportsIPV6ID);
+
     addrBAelems = (*env)->GetByteArrayElements(env, addrBA, NULL);
+    addrBALen = (*env)->GetArrayLength(env, addrBA);
+
+    PR_ASSERT(addrBALen != 0);
+
     if( addrBAelems == NULL ) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
-    memcpy(&addr.inet.ip, addrBAelems, 4);
 
     /*
      * Tell SSL the URL we think we want to connect to.
@@ -461,6 +482,38 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     if( stat != 0 ) {
         JSSL_throwSSLSocketException(env, "Failed to set the SSL URL");
         goto finish;
+    }
+
+    if( addrBAelems == NULL ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    if(addrBALen != 4 && addrBALen != 16) {
+        JSSL_throwSSLSocketException(env, "Invalid address in connect!");
+        goto finish;
+    }
+
+    if( addrBALen == 4) {
+        addr.inet.family = AF_INET;
+        addr.inet.port = PR_htons(port);
+        memcpy(&addr.inet.ip, addrBAelems, 4);
+
+        if(supportsIPV6) {
+            addr.ipv6.family = AF_INET6;
+            addr.ipv6.port = PR_htons(port);
+            PR_ConvertIPv4AddrToIPv6(addr.inet.ip,&addr.ipv6.ip);
+        }
+
+    }  else {   /* Must be 16 and ipv6 */
+        if(supportsIPV6) {
+            addr.ipv6.family = AF_INET6;
+            addr.ipv6.port = PR_htons(port);
+            memcpy(&addr.ipv6.ip,addrBAelems, 16);
+        }  else {
+                JSSL_throwSSLSocketException(env, "Invalid address in connect!");
+                goto finish;
+        }
     }
 
     /*
