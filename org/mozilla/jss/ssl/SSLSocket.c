@@ -484,11 +484,6 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
         goto finish;
     }
 
-    if( addrBAelems == NULL ) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-
     if(addrBALen != 4 && addrBALen != 16) {
         JSSL_throwSSLSocketException(env, "Invalid address in connect!");
         goto finish;
@@ -688,7 +683,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getCipherPreference(
 {
     JSSL_SocketData *sock=NULL;
     SECStatus status;
-    PRBool enabled;
+    PRBool enabled = PR_FAILURE;
 
     /* get the fd */
     if( JSSL_getSockData(env, sockObj, &sock) != PR_SUCCESS) {

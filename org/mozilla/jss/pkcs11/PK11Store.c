@@ -358,18 +358,18 @@ importPrivateKey
     SECStatus status;
     SECItem nickname;
 
-    keyType = JSS_PK11_getKeyType(env, keyTypeObj);
-    if( keyType == nullKey ) {
-        /* exception was thrown */
-        goto finish;
-    }
-
     /*
      * initialize so we can goto finish
      */
     derPK.data = NULL;
     derPK.len = 0;
 
+
+    keyType = JSS_PK11_getKeyType(env, keyTypeObj);
+    if( keyType == nullKey ) {
+        /* exception was thrown */
+        goto finish;
+    }
 
     PR_ASSERT(env!=NULL && this!=NULL);
 

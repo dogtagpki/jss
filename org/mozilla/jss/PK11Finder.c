@@ -736,6 +736,10 @@ static int find_leaf_cert(
     int *linked = NULL;
 
     linked = PR_Malloc( sizeof(int) * numCerts );
+    if (linked == NULL) {
+        status = 0;
+        goto finish;
+    }
 
     /* initialize the bitmap */
     for (i = 0; i < numCerts; i++) {
@@ -1662,7 +1666,6 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
     }
     PR_ASSERT(certdb != NULL);
 
-    derCerts[0] = NULL;
     derCerts[0] = JSS_ByteArrayToSECItem(env, packageArray);
     derCerts[1] = NULL;
 

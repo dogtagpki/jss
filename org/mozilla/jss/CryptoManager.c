@@ -707,14 +707,14 @@ getPWFromCallback(PK11SlotInfo *slot, PRBool retry, void *arg)
     }
 
 finish:
-    if( (exception=(*env)->ExceptionOccurred(env)) != NULL) {
 #ifdef DEBUG
+    if( (exception=(*env)->ExceptionOccurred(env)) != NULL) {
         jclass giveupClass;
         jmethodID printStackTrace;
         jclass excepClass;
-#endif
+
         (*env)->ExceptionClear(env);
-#ifdef DEBUG
+
         giveupClass = (*env)->FindClass(env, GIVE_UP_EXCEPTION);
         PR_ASSERT(giveupClass != NULL);
         if( ! (*env)->IsInstanceOf(env, exception, giveupClass) ) {
@@ -725,8 +725,12 @@ finish:
             PR_ASSERT( PR_FALSE );
         }
         PR_ASSERT(returnchars==NULL);
-#endif
     }
+#else
+    if( ((*env)->ExceptionOccurred(env)) != NULL) {
+        (*env)->ExceptionClear(env);
+    }
+#endif
     return returnchars;
 }
 
