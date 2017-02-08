@@ -74,10 +74,13 @@ public final class PK11Token implements CryptoToken {
     getKeyGenerator(KeyGenAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
     {
+/* NSS is capable of finding the right token to do algorithm,
+   so this call is prematurely bailing
         if( ! doesAlgorithm(algorithm) ) {
             throw new NoSuchAlgorithmException(
                 algorithm+" is not supported by this token");
         }
+*/
         return new PK11KeyGenerator(this, algorithm);
     }
 
