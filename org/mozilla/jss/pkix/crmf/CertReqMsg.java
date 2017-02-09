@@ -80,7 +80,7 @@ public class CertReqMsg implements ASN1Value {
 
     /**
      * Constructs a <i>CertReqmsg</i> from a <i>CertRequest</i> and, optionally,
-     * a <i>pop>/i> and a <i>regInfo</i>.
+     * a <i>pop</i> and a <i>regInfo</i>.
      * @param pop May be NULL.
      * @param regInfo May be NULL.
      */

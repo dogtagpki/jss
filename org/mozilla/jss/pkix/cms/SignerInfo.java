@@ -98,7 +98,8 @@ public class SignerInfo implements ASN1Value {
     /**
      * Retrieves the DigestAlgorithm used in this SignerInfo.
      *
-     * @exception NoSuchAlgorithm If the algorithm is not recognized by JSS.
+     * @exception NoSuchAlgorithmException If the algorithm is not
+     *  recognized by JSS.
      */
     public DigestAlgorithm getDigestAlgorithm()
         throws NoSuchAlgorithmException
@@ -371,9 +372,9 @@ public class SignerInfo implements ASN1Value {
     /**
      * Verifies that this SignerInfo contains a valid signature of the
      * given message digest.  If any signed attributes are present,
-     * they are also validated. The verification algorithm is as follows:<ul>
-     * <p>Note that this does <b>not</b> verify the validity of the
-     *  the certificate itself, only the signature.
+     * they are also validated. The verification algorithm is as follows:
+     * Note that this does <b>not</b> verify the validity of the
+     *  the certificate itself, only the signature.<ul>
      *
      * <li>If no signed attributes are present, the content type is 
      *  verified to be <i>data</i>. Then it is verified that the message
@@ -399,8 +400,8 @@ public class SignerInfo implements ASN1Value {
      *  SignerInfo.
      * @param contentType The type of the content that is signed by this
      *  SignerInfo.
-     * @exception NoSuchObjectException If no certificate matching the
-     *      the issuer name and serial number can be found.
+     * @exception ObjectNotFoundException If no certificate
+     *       matching the issuer name and serial number can be found.
      */
     public void verify(byte[] messageDigest, OBJECT_IDENTIFIER contentType)
         throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,

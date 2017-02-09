@@ -21,7 +21,7 @@ import java.util.Iterator;
  *
  */
 public class JSSE_SSLClient {
-    
+
     // Local members
     private String  sslRevision         = "TLS";
     private String  host                = null;
@@ -112,20 +112,20 @@ public class JSSE_SSLClient {
         }
         for (int i = 0 ; i < 20 ; i++) {
             try {
-                
+
                 Thread.sleep(1000);
                            System.out.println("Testing Connection:" +
                     host + ":" + port);
                 socket = (SSLSocket)factory.createSocket(host, port);
                 socket.setEnabledCipherSuites(factory.getDefaultCipherSuites());
- 
+
                 if (socket.isBound()) {
                                System.out.println("connect isBound");
                     isServerAlive = true;
                     socket.close();
                     break;
                 }
-                           
+
             }  catch (java.net.ConnectException ex) {
                 //not able to connect
             } catch (InterruptedException ex) {
@@ -133,9 +133,9 @@ public class JSSE_SSLClient {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            
+
         }
-        
+
         return isServerAlive;
     }
     /**
@@ -147,7 +147,7 @@ public class JSSE_SSLClient {
         if (factory == null) {
             initSocketFactory();
         }
-        
+
         if (!isServerAlive()) {
             System.out.println("Unable to connect to " + host + ":" +
                     port + " exiting.");
@@ -167,18 +167,18 @@ public class JSSE_SSLClient {
             }
         }
     }
-    
-    
+
+
     public void configureCipherSuites(String server, String CipherSuite) {
-        
+
         boolean testCipher = true;
-        
+
         if (factory == null) {
             initSocketFactory();
         }
-        
+
         String ciphers[] = factory.getSupportedCipherSuites();
-        
+
         for (int i = 0; i < ciphers.length;  ++i) {
             String ciphersuite = ciphers[i];
             testCipher = true;
@@ -209,31 +209,31 @@ public class JSSE_SSLClient {
                 }
                  */
             }
-            
+
             if (testCipher) {
                 ciphersToTest.add(ciphers[i]);
                 if (bVerbose) System.out.print(" - Testing");
             }
         }
-        
+
         if (bVerbose) System.out.print("\n");
-        
+
         if(bVerbose) System.out.println("\nTesting " + ciphersToTest.size() +
                 " ciphersuites.");
-        
+
     }
-    
+
     private void initSocketFactory() {
-        
+
         SSLContext          ctx      = null;
         KeyManagerFactory   kmf      = null;
         TrustManagerFactory tmf      = null;
         KeyStore            ks       = null;
         KeyStore            ksTrust  = null;
         String              provider = "SunJCE";
-        
-        
-        
+
+
+
         /*
          * Set up a key manager for client authentication
          * if asked by the server.  Use the implementation's
@@ -241,13 +241,13 @@ public class JSSE_SSLClient {
          */
         char[] passphrase      = "m1oZilla".toCharArray();
         try {
-            
-            
+
+
             String javaVendor      = System.getProperty("java.vendor");
             if (Constants.debug_level > 3)
                 System.out.println("DEBUG: JSSE_SSLClient.java java.vendor=" +
                         javaVendor);
-            
+
             // Initialize the system
             if (javaVendor.equals("IBM Corporation")) {
                 System.setProperty("java.protocol.handler.pkgs",
@@ -261,7 +261,7 @@ public class JSSE_SSLClient {
                 java.security.Security.addProvider((java.security.Provider)
                 Class.forName("com.sun.crypto.provider.SunJCE").newInstance());
             }
-            
+
             // Load the keystore that contains the certificate
             String certificate = new String("SunX509");
             ks  = KeyStore.getInstance("PKCS12");
@@ -269,7 +269,7 @@ public class JSSE_SSLClient {
                 certificate = new String("IbmX509");
                 ks  = KeyStore.getInstance("PKCS12", provider);
             }
-            
+
             try {
                 kmf = KeyManagerFactory.getInstance(certificate);
                 ks.load(new FileInputStream(getKeystoreLoc()), passphrase);
@@ -289,7 +289,7 @@ public class JSSE_SSLClient {
                 throw keyEx;
             }
             kmf.init(ks, passphrase);
-            
+
             // trust manager that trusts all certificates
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -317,11 +317,11 @@ public class JSSE_SSLClient {
                             String authType) {}
                 }
             };
-            
+
             ctx = SSLContext.getInstance(sslRevision);
             ctx.init(kmf.getKeyManagers(), trustAllCerts, null);
             factory = ctx.getSocketFactory();
-            
+
             String[] JSSE_ciphers = factory.getSupportedCipherSuites();
         } catch (KeyStoreException ex) {
             ex.printStackTrace();
@@ -336,9 +336,9 @@ public class JSSE_SSLClient {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
     }
-    
+
     /**
      * sendServerShutdownMsg
      */
@@ -348,11 +348,11 @@ public class JSSE_SSLClient {
             if (factory == null) {
                 initSocketFactory();
             }
-            
+
             socket = (SSLSocket)factory.createSocket(host, port);
             socket.setEnabledCipherSuites(factory.getDefaultCipherSuites());
-            
-            
+
+
             if (bVerbose) System.out.println("Sending shutdown message " +
                     "to server.");
             socket.startHandshake();
@@ -366,9 +366,9 @@ public class JSSE_SSLClient {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
     }
-    
+
     private void testSSLSocket(SSLSocket socket, String ciphersuite,
             int socketID) {
             /*
@@ -395,12 +395,12 @@ public class JSSE_SSLClient {
             handshakeEx.printStackTrace();
             System.exit(1);
         }
-        
+
         try {
             // Set socket timeout to 10 sec
             socket.setSoTimeout(10 * 1000);
             socket.startHandshake();
-            
+
             String outputLine  = null;
             String inputLine   = null;
             InputStream  is    = socket.getInputStream();
@@ -409,7 +409,7 @@ public class JSSE_SSLClient {
                     new InputStreamReader(is));
             PrintWriter out;
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(os)));
-            
+
             //write then read on the connection once.
             outputLine = ciphersuite + ":" + socketID + "\n";
             if (bVerbose) {
@@ -436,23 +436,23 @@ public class JSSE_SSLClient {
             ex.printStackTrace();
         }
     }
-    
-    
-    
+
+
+
     public void outputCipherResults() {
         String banner = new String
                 ("\n----------------------------------------------------------\n");
-        
+
         System.out.println(banner);
         System.out.println("JSSE has " +
                 factory.getSupportedCipherSuites().length + " ciphersuites and " +
                 ciphersToTest.size() + " were configured and tested.");
-        
+
         if (ciphersToTest.size() == h_ciphers.size()) {
             System.out.println("All " + ciphersToTest.size() +
                     " configured ciphersuites tested Successfully!\n");
         }
-        
+
         if (!h_ciphers.isEmpty()) {
             if (!f_ciphers.isEmpty()) {
                 System.out.println(banner);
@@ -463,14 +463,14 @@ public class JSSE_SSLClient {
             Iterator iter = h_ciphers.iterator();
             while (iter.hasNext()) {
                 System.out.println((String) iter.next());
-                
+
             }
         }
         if (bFipsMode) {
             System.out.println("Note: ciphersuites that have the prefix " +
                     "\"SSL\" or \"SSL3\" were used in TLS mode.");
         }
-        
+
         if (ciphersToTest.size()
         != (h_ciphers.size() + f_ciphers.size())) {
             System.out.println("ERROR: did not test all expected ciphersuites");
@@ -483,24 +483,24 @@ public class JSSE_SSLClient {
             Iterator iter = f_ciphers.iterator();
             while (iter.hasNext()) {
                 System.out.println((String) iter.next());
-                
+
             }
             System.out.println("we should have no failed ciphersuites!");
             System.exit(1);
         }
-        
+
         System.out.println(banner);
-        
+
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Main method for local unit testing.
      */
     public static void main(String [] args) {
-        
+
         String testCipher       = null;
         String testHost         = "localhost";
         String keystoreLocation = "rsa.pfx";
@@ -509,13 +509,13 @@ public class JSSE_SSLClient {
         String usage            = "java org.mozilla.jss.tests.JSSE_SSLClient" +
                 "\n<keystore location> " +
                 "<test port> <test host> <server type> <test cipher>";
-        
+
         try {
             if ( args[0].toLowerCase().equals("-h") || args.length < 1) {
                 System.out.println(usage);
                 System.exit(1);
             }
-            
+
             if ( args.length >= 1 ) {
                 keystoreLocation = (String)args[0];
             }
@@ -536,13 +536,13 @@ public class JSSE_SSLClient {
             System.out.println(usage);
             System.exit(1);
         }
-        
+
         JSSE_SSLClient sslSock = new JSSE_SSLClient();
-        
+
         sslSock.setHost(testHost);
         sslSock.setPort(testPort);
         sslSock.setKeystoreLoc(keystoreLocation);
-        
+
         sslSock.setCipherSuite(testCipher);
         sslSock.configureCipherSuites(serverType, testCipher);
         try {
@@ -555,8 +555,8 @@ public class JSSE_SSLClient {
         }
         sslSock.sendServerShutdownMsg();
         sslSock.outputCipherResults();
-        
-        
+
+
         System.exit(0);
     }
 }

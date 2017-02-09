@@ -19,19 +19,19 @@ public class ContentInfo implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG; // XXX is this right?
 
 
-    public static OBJECT_IDENTIFIER DATA = 
+    public static OBJECT_IDENTIFIER DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 1  });
-    public static OBJECT_IDENTIFIER SIGNED_DATA = 
+    public static OBJECT_IDENTIFIER SIGNED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 2  });
-    public static OBJECT_IDENTIFIER ENVELOPED_DATA = 
+    public static OBJECT_IDENTIFIER ENVELOPED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 3  });
-    public static OBJECT_IDENTIFIER SIGNED_AND_ENVELOPED_DATA = 
+    public static OBJECT_IDENTIFIER SIGNED_AND_ENVELOPED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 4  });
-    public static OBJECT_IDENTIFIER DIGESTED_DATA = 
+    public static OBJECT_IDENTIFIER DIGESTED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 5  });
-    public static OBJECT_IDENTIFIER ENCRYPTED_DATA = 
+    public static OBJECT_IDENTIFIER ENCRYPTED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 6  });
-          
+
 
 
 
@@ -137,7 +137,6 @@ public class ContentInfo implements ASN1Value {
      *  an OCTET_STRING will be returned.
      * <p>If the contentType is <b>not</b> one of the six standard types,
      *      the returned object will be an ANY.
-     * </ul>
      */
     public ASN1Value getInterpretedContent() throws InvalidBERException {
         if(contentType.equals(DATA)) {
@@ -209,7 +208,7 @@ public class ContentInfo implements ASN1Value {
                         ));
         }
 
-        public ASN1Value decode(InputStream istream) 
+        public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(ContentInfo.TAG,istream);

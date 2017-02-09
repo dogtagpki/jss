@@ -227,7 +227,7 @@ public class ASN1Header {
     /**
      * This constructor is to be called when we are constructing an ASN1Value
      * rather than decoding it.
-     * @param contentLength Must be >=0. Although indefinite length
+     * @param contentLength Must be &ge;0. Although indefinite length
      *      <i>decoding</i> is supported, indefinite length <i>encoding</i>
      *      is not.
      */
