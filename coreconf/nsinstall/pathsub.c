@@ -243,11 +243,9 @@ diagnosePath(const char * path)
 	    rv = readlink(myPath, buf, sizeof buf);
 	    if (rv < 0) {
 	    	perror("readlink");
-	    	buf[0] = 0;
-	    } else if ( rv < BUFSIZ ) {
-	    	buf[rv] = 0;
+		buf[0] = 0;
 	    } else {
-	    	buf[BUFSIZ-1] = 0;
+	    	buf[rv] = 0;
 	    }
 	    fprintf(stderr, "%s is a link to %s\n", myPath, buf);
 	} else if (S_ISDIR(sb.st_mode)) {

@@ -150,6 +150,6 @@ public class DirectoryString implements ASN1Value {
         {
             Assert._assert( tagMatch(implicitTag) );
             return decode(istream);
-        }
+        } 
     }
 }

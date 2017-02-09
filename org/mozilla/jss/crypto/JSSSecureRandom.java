@@ -6,6 +6,7 @@ package org.mozilla.jss.crypto;
 
 /**
  * An interface for secure random numbers.
+ * @deprecated Use the JCA interface instead ({@link java.security.SecureRandom})
  */
 public interface JSSSecureRandom {
 

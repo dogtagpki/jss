@@ -29,29 +29,15 @@ public final class PK11ECPublicKey extends PK11PubKey {
 //      }
 //    }
 //
-
-    public BigInteger getCurve() {
-      try {
-        return new BigInteger( getCurveByteArray() );
-      } catch(NumberFormatException e) {
-       Assert.notReached("Unable to decode EC curve");
-       return null;
-      }
-    }
-
-    public byte[] getCurveBA() {
-        return getCurveByteArray();
-    }
-
-    public BigInteger getW() {
-      try {
-        return new BigInteger( getWByteArray() );
-      } catch(NumberFormatException e) {
-        Assert.notReached("Unable to decode EC public value");
-        return null;
-      }
-    }
-
-    private native byte[] getCurveByteArray();
-    private native byte[] getWByteArray();
+//    public BigInteger getW() {
+//      try {
+//        return new BigInteger( getWByteArray() );
+//      } catch(NumberFormatException e) {
+//        Assert.notReached("Unable to decode DSA public value");
+//        return null;
+//      }
+//    }
+//
+//    private native byte[] getCurveByteArray();
+//    private native byte[] getWByteArray();
 }

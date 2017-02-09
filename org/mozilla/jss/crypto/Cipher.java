@@ -17,6 +17,7 @@ import org.mozilla.jss.util.Assert;
  * it is not necessary to call <code>update</code> if all of the data is
  * available at once.  In this case, all of the input can be processed with one
  * call to <code>doFinal</code>.
+ * @deprecated Use the JCA interface instead ({@link javax.crypto.Cipher})
  */
 public abstract class Cipher {
 
@@ -43,7 +44,7 @@ public abstract class Cipher {
         throws InvalidKeyException, InvalidAlgorithmParameterException,
         TokenException;
 
-    /**
+    /** 
      * Initializes a decryption context with a symmetric key and
      * algorithm parameters.
      */

@@ -29,7 +29,6 @@ import org.mozilla.jss.provider.java.security.JSSMessageDigestSpi;
 public final class CryptoManager implements TokenSupplier
 {
     /**
-     * note: this is obsolete in NSS
      * CertUsage options for validation
      */
     public final static class CertUsage {
@@ -55,6 +54,8 @@ public final class CryptoManager implements TokenSupplier
             return name;
         }
 
+
+
         // certUsage, these must be kept in sync with nss/lib/certdb/certt.h
         public static final CertUsage SSLClient = new CertUsage(0, "SSLClient");
         public static final CertUsage SSLServer = new CertUsage(1, "SSLServer");
@@ -68,63 +69,6 @@ public final class CryptoManager implements TokenSupplier
         public static final CertUsage ProtectedObjectSigner = new CertUsage(9, "ProtectedObjectSigner");
         public static final CertUsage StatusResponder = new CertUsage(10, "StatusResponder");
         public static final CertUsage AnyCA = new CertUsage(11, "AnyCA");
-    }
-
-    /**
-     * CertificateUsage options for validation
-     */
-    public final static class CertificateUsage {
-        private int usage;
-        private String name;
-
-        // certificateUsage, these must be kept in sync with nss/lib/certdb/certt.h
-        private static final int certificateUsageCheckAllUsages = 0x0000;
-        private static final int certificateUsageSSLClient = 0x0001;
-        private static final int certificateUsageSSLServer = 0x0002;
-        private static final int certificateUsageSSLServerWithStepUp = 0x0004;
-        private static final int certificateUsageSSLCA = 0x0008;
-        private static final int certificateUsageEmailSigner = 0x0010;
-        private static final int certificateUsageEmailRecipient = 0x0020;
-        private static final int certificateUsageObjectSigner = 0x0040;
-        private static final int certificateUsageUserCertImport = 0x0080;
-        private static final int certificateUsageVerifyCA = 0x0100;
-        private static final int certificateUsageProtectedObjectSigner = 0x0200;
-        private static final int certificateUsageStatusResponder = 0x0400;
-        private static final int certificateUsageAnyCA = 0x0800;
-
-        static private ArrayList list = new ArrayList();
-        private CertificateUsage() {};
-        private CertificateUsage(int usage, String name) {
-            this.usage = usage;
-            this.name =  name;
-            this.list.add(this);
-
-        }
-        public int getUsage() {
-            return usage;
-        }
-
-        static public Iterator getCertificateUsages() {
-            return list.iterator();
-
-        }
-        public String toString() {
-            return name;
-        }
-
-        public static final CertificateUsage CheckAllUsages = new CertificateUsage(certificateUsageCheckAllUsages, "CheckAllUsages");
-        public static final CertificateUsage SSLClient = new CertificateUsage(certificateUsageSSLClient, "SSLClient");
-        public static final CertificateUsage SSLServer = new CertificateUsage(certificateUsageSSLServer, "SSLServer");
-        public static final CertificateUsage SSLServerWithStepUp = new CertificateUsage(certificateUsageSSLServerWithStepUp, "SSLServerWithStepUp");
-        public static final CertificateUsage SSLCA = new CertificateUsage(certificateUsageSSLCA, "SSLCA");
-        public static final CertificateUsage EmailSigner = new CertificateUsage(certificateUsageEmailSigner, "EmailSigner");
-        public static final CertificateUsage EmailRecipient = new CertificateUsage(certificateUsageEmailRecipient, "EmailRecipient");
-        public static final CertificateUsage ObjectSigner = new CertificateUsage(certificateUsageObjectSigner, "ObjectSigner");
-        public static final CertificateUsage UserCertImport = new CertificateUsage(certificateUsageUserCertImport, "UserCertImport");
-        public static final CertificateUsage VerifyCA = new CertificateUsage(certificateUsageVerifyCA, "VerifyCA");
-        public static final CertificateUsage ProtectedObjectSigner = new CertificateUsage(certificateUsageProtectedObjectSigner, "ProtectedObjectSigner");
-        public static final CertificateUsage StatusResponder = new CertificateUsage(certificateUsageStatusResponder, "StatusResponder");
-        public static final CertificateUsage AnyCA = new CertificateUsage(certificateUsageAnyCA, "AnyCA");
     }
 
     public final static class NotInitializedException extends Exception {}
@@ -399,7 +343,7 @@ public final class CryptoManager implements TokenSupplier
         ////////////////////////////////////////////////////////////////////
         /**
          * Returns the description of the internal PKCS #11 FIPS slot.
-         * <p>The default is
+         * <p>The default is 
          * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
          */
         public String getFIPSSlotDescription() {
@@ -430,7 +374,7 @@ public final class CryptoManager implements TokenSupplier
         /**
          * Returns the description of the internal PKCS #11 FIPS
          * Key Storage slot.
-         * <p>The default is
+         * <p>The default is 
          * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
          */
         public String getFIPSKeyStorageSlotDescription() {
@@ -520,26 +464,26 @@ public final class CryptoManager implements TokenSupplier
         public boolean initializeJavaOnly = false;
 
         /**
-         * Enable PKIX verify rather than the old cert library,
+         * Enable PKIX verify rather than the old cert library, 
          * to verify certificates. Default is false.
          */
         public boolean PKIXVerify = false;
 
         /**
-         * Don't open the cert DB and key DB's, just
+         * Don't open the cert DB and key DB's, just 
          * initialize the volatile certdb. Default is false.
          */
         public boolean noCertDB = false;
 
         /**
-         * Don't open the security module DB,
+         * Don't open the security module DB, 
          * just initialize the PKCS #11 module.
          * Default is false.
          */
-        public boolean noModDB = false;
+        public boolean noModDB = false; 
 
-        /**
-         * Continue to force initializations even if the
+        /** 
+         * Continue to force initializations even if the 
          * databases cannot be opened.
          * Default is false.
          */
@@ -552,7 +496,7 @@ public final class CryptoManager implements TokenSupplier
          */
         public boolean noRootInit = false;
 
-        /**
+        /** 
          * Use smaller tables and caches.
          * Default is false.
          */
@@ -576,11 +520,11 @@ public final class CryptoManager implements TokenSupplier
          * error when loading PKCS#11 modules. This is necessary
          * if another piece of code is using the same PKCS#11
          * modules that NSS is accessing without going through
-         * NSS, for example Java SunPKCS11 provider.
+         * NSS, for example Java SunPKCS11 provider. 
          * default is false.
          */
         public boolean PK11Reload = false;
-
+        
         /**
          * never call C_Finalize on any
          * PKCS#11 module. This may be necessary in order to
@@ -595,7 +539,7 @@ public final class CryptoManager implements TokenSupplier
          * Default is false.
          */
         public boolean noPK11Finalize = false;
-
+ 
         /**
          * Sets 4 recommended options for applications that
          * use both NSS and the Java SunPKCS11 provider.
@@ -640,7 +584,7 @@ public final class CryptoManager implements TokenSupplier
      * loaded cryptographic modules for the token.
      *
      * @param name The name of the token.
-     * @exception org.mozilla.jss.NoSuchTokenException If no token
+     * @exception org.mozilla.jss.crypto.NoSuchTokenException If no token
      *  is found with the given name.
      */
     public synchronized CryptoToken getTokenByName(String name)
@@ -895,9 +839,9 @@ public final class CryptoManager implements TokenSupplier
      * <code>initialize()</code>.
      *
      * @param configDir The directory containing the security databases.
-     * @exception org.mozilla.jss.KeyDatabaseException Unable to open
+     * @exception org.mozilla.jss.util.KeyDatabaseException Unable to open
      *  the key database, or it was currupted.
-     * @exception org.mozilla.jss.CertDatabaseException Unable
+     * @exception org.mozilla.jss.util.CertDatabaseException Unable
      *  to open the certificate database, or it was currupted.
      **/
     public static synchronized void initialize( String configDir )
@@ -918,10 +862,10 @@ public final class CryptoManager implements TokenSupplier
      * <code>initialize()</code>.
      *
      * @param values The options with which to initialize CryptoManager.
-     * @exception org.mozilla.jss.KeyDatabaseException Unable to open
+     * @exception org.mozilla.jss.util.KeyDatabaseException Unable to open
      *  the key database, or it was corrupted.
-     * @exception org.mozilla.jss.CertDatabaseException Unable
-     *  to open the certificate database, or it was currupted.
+     * @exception org.mozilla.jss.util.CertDatabaseException Unable
+     *  to open the certificate database, or it was corrupted.
      **/
     public static synchronized void initialize( InitializationValues values )
         throws
@@ -959,7 +903,7 @@ public final class CryptoManager implements TokenSupplier
                             values.initializeJavaOnly,
                             values.PKIXVerify,
                             values.noCertDB,
-                            values.noModDB,
+                            values.noModDB, 
                             values.forceOpen,
                             values.noRootInit,
                             values.optimizeSpace,
@@ -1024,7 +968,7 @@ public final class CryptoManager implements TokenSupplier
                         boolean initializeJavaOnly,
                         boolean PKIXVerify,
                         boolean noCertDB,
-                        boolean noModDB,
+                        boolean noModDB, 
                         boolean forceOpen,
                         boolean noRootInit,
                         boolean optimizeSpace,
@@ -1080,7 +1024,7 @@ public final class CryptoManager implements TokenSupplier
      * @return The leaf certificate from the chain.
      * @exception CertificateEncodingException If the package encoding
      *      was not recognized.
-     * @exception NicknameConflictException If the leaf certificate
+     * @exception CertificateNicknameConflictException If the leaf certificate
      *      is a user certificate, and another certificate already has the
      *      given nickname.
      * @exception UserCertConflictException If the leaf certificate
@@ -1118,7 +1062,7 @@ public final class CryptoManager implements TokenSupplier
      * @return The leaf certificate from the chain.
      * @exception CertificateEncodingException If the package encoding
      *      was not recognized.
-     * @exception NicknameConflictException If the leaf certificate
+     * @exception CertificateNicknameConflictException If the leaf certificate
      *      another certificate already has the given nickname.
      * @exception UserCertConflictException If the leaf certificate
      *      has already been imported.
@@ -1462,20 +1406,11 @@ public final class CryptoManager implements TokenSupplier
      */
     synchronized static void loadNativeLibraries()
     {
-        if( ! mNativeLibrariesLoaded ) {
-//            try {
-                System.loadLibrary( "jss4" );
-                Debug.trace(Debug.VERBOSE, "jss library loaded");
-                mNativeLibrariesLoaded = true;
-//            } catch( UnsatisfiedLinkError e ) {
-//                try {
-//                    System.load( "/usr/lib/jss/libjss4.so" );
-//                    Debug.trace(Debug.VERBOSE, "jss library loaded");
-//                    mNativeLibrariesLoaded = true;
-//                } catch( UnsatisfiedLinkError f ) {
-//                    Debug.trace(Debug.VERBOSE, "jss library load failed");
-//                }
-//            }
+        if( ! mNativeLibrariesLoaded )
+        {
+            System.loadLibrary("jss4");
+            Debug.trace(Debug.VERBOSE, "jss library loaded");
+            mNativeLibrariesLoaded = true;
         }
     }
     static private boolean mNativeLibrariesLoaded = false;
@@ -1523,69 +1458,10 @@ public final class CryptoManager implements TokenSupplier
         }
         return tok;
     }
-
     /////////////////////////////////////////////////////////////
     // isCertValid
     /////////////////////////////////////////////////////////////
     /**
-     * Verify a certificate that exists in the given cert database,
-     * check if is valid and that we trust the issuer. Verify time
-     * against Now.
-     * @param nickname The nickname of the certificate to verify.
-     * @param checkSig verify the signature of the certificate
-     * @param certificateUsage see exposed certificateUsage defines to verify Certificate; null will bypass usage check
-     * @return true for success; false otherwise
-     *
-     * @exception InvalidNicknameException If the nickname is null
-     * @exception ObjectNotFoundException If no certificate could be found
-     *      with the given nickname.
-     */
-
-    public boolean isCertValid(String nickname, boolean checkSig,
-            CertificateUsage certificateUsage)
-        throws ObjectNotFoundException, InvalidNicknameException
-    {
-        try {
-            verifyCertificate(nickname, checkSig, certificateUsage);
-            return true;
-        } catch (ObjectNotFoundException | InvalidNicknameException e) {
-            throw e;
-        } catch (CertificateException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Verify a certificate that exists in the given cert database,
-     * check if it's valid and that we trust the issuer. Verify time
-     * against now.
-     * @param nickname nickname of the certificate to verify.
-     * @param checkSig verify the signature of the certificate
-     * @param certificateUsage see certificate usage defined to verify certificate
-     *
-     * @exception InvalidNicknameException If the nickname is null.
-     * @exception ObjectNotFoundException If no certificate could be found
-     *      with the given nickname.
-     * @exception CertificateException If certificate is invalid.
-     */
-    public void verifyCertificate(String nickname,
-            boolean checkSig,
-            CertificateUsage certificateUsage)
-                    throws ObjectNotFoundException, InvalidNicknameException, CertificateException {
-        int usage = certificateUsage == null ? 0 : certificateUsage.getUsage();
-        verifyCertificateNowNative(nickname, checkSig, usage);
-    }
-
-    private native void verifyCertificateNowNative(
-            String nickname,
-            boolean checkSig,
-            int certificateUsage)
-                    throws ObjectNotFoundException, InvalidNicknameException, CertificateException;
-
-
-    /**
-     * note: this method calls obsolete function in NSS
-     *
      * Verify a certificate that exists in the given cert database,
      * check if is valid and that we trust the issuer. Verify time
      * against Now.
@@ -1609,9 +1485,6 @@ public final class CryptoManager implements TokenSupplier
         return verifyCertNowNative(nickname, checkSig, certUsage.getUsage());
     }
 
-    /*
-     * Obsolete in NSS
-     */
     private native boolean verifyCertNowNative(String nickname,
         boolean checkSig, int cUsage) throws ObjectNotFoundException;
 
@@ -1678,41 +1551,4 @@ public final class CryptoManager implements TokenSupplier
                     String ocspResponderCertNickname )
                     throws GeneralSecurityException;
 
-    /**
-     * change OCSP cache settings
-     *      * @param ocsp_cache_size max cache entries
-     *      * @param ocsp_min_cache_entry_duration minimum seconds to next fetch attempt
-     *      * @param ocsp_max_cache_entry_duration maximum seconds to next fetch attempt
-     */
-    public void OCSPCacheSettings(
-        int ocsp_cache_size, 
-        int ocsp_min_cache_entry_duration,
-        int ocsp_max_cache_entry_duration)
-    throws GeneralSecurityException
-    {
-        OCSPCacheSettingsNative(ocsp_cache_size,
-                                   ocsp_min_cache_entry_duration,
-                                   ocsp_max_cache_entry_duration);
-    }
-
-    private native void OCSPCacheSettingsNative(
-        int ocsp_cache_size, 
-        int ocsp_min_cache_entry_duration,
-        int ocsp_max_cache_entry_duration)
-                    throws GeneralSecurityException;
-
-    /**
-     * set OCSP timeout value
-     *      * @param ocspTimeout OCSP timeout in seconds
-     */
-    public void setOCSPTimeout(
-        int ocsp_timeout )
-    throws GeneralSecurityException
-    {
-        setOCSPTimeoutNative( ocsp_timeout);
-    }
-
-    private native void setOCSPTimeoutNative(
-        int ocsp_timeout )
-                    throws GeneralSecurityException;
 }

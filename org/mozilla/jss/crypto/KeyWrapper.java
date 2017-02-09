@@ -8,6 +8,9 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.PublicKey;
 import java.security.InvalidKeyException;
 
+/**
+ * @deprecated Use the JCA interface instead ({@link javax.crypto.Cipher})
+ */
 public interface KeyWrapper {
 
     public void initWrap(SymmetricKey wrappingKey,
@@ -100,22 +103,5 @@ public interface KeyWrapper {
         int keyLength)
         throws TokenException, IllegalStateException,
             InvalidAlgorithmParameterException;
-
-    public SymmetricKey unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type,
-        SymmetricKey.Usage usage, int keyLength)
-        throws TokenException, IllegalStateException,
-            InvalidAlgorithmParameterException;
-
-    /**
-     * Unwraps a key and allows it to be used for all operations.
-     * @param keyLength The expected length of the key in bytes.  This is
-     *   only used for variable-length keys (RC4) and non-padding
-     *   algorithms. Otherwise, it can be set to anything(like 0).
-     */
-    public SymmetricKey unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type,
-        int keyLength)
-        throws TokenException, IllegalStateException,
-            InvalidAlgorithmParameterException;
-
 
 }

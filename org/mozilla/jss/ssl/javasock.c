@@ -63,10 +63,6 @@ writebuf(JNIEnv *env, PRFileDesc *fd, jobject sockObj, jbyteArray byteArray)
     jint arrayLen;
     PRInt32 retval;
 
-    if( env == NULL ) {
-        goto finish;
-    }
-
     /*
      * get the OutputStream
      */
@@ -262,7 +258,6 @@ getInetAddress(PRFileDesc *fd, PRNetAddr *addr, LocalOrPeer localOrPeer)
     jobject inetAddress;
     jbyteArray addrByteArray;
     jint port;
-    int addrBALen = 0;
 
     if( GET_ENV(fd->secret->javaVM, env) ) goto finish;
 
@@ -350,9 +345,8 @@ getInetAddress(PRFileDesc *fd, PRNetAddr *addr, LocalOrPeer localOrPeer)
 
         memset(addr, 0, sizeof(PRNetAddr));
 
-        addrBALen = (*env)->GetArrayLength(env, addrByteArray);
-
-        PR_ASSERT( (addrBALen == 4) || (addrBALen == 16 ) );
+        /* we only handle IPV4 */
+        PR_ASSERT( (*env)->GetArrayLength(env, addrByteArray) == 4 );
 
         /* make sure you release them later */
         addrBytes = (*env)->GetByteArrayElements(env, addrByteArray, NULL);
@@ -362,16 +356,9 @@ getInetAddress(PRFileDesc *fd, PRNetAddr *addr, LocalOrPeer localOrPeer)
         }
 
         /* ip field is in network byte order */
-
-        if (addrBALen == 4) {
-            memcpy( (void*) &addr->inet.ip, addrBytes, 4);
-            addr->inet.family = PR_AF_INET;
-            addr->inet.port = port;
-        } else {
-            memcpy( (void*) &addr->ipv6.ip,addrBytes, 16);
-            addr->inet.family = PR_AF_INET6;
-            addr->inet.port = port;
-        }
+        memcpy( (void*) &addr->inet.ip, addrBytes, 4);
+        addr->inet.family = PR_AF_INET;
+        addr->inet.port = port;
 
         (*env)->ReleaseByteArrayElements(env, addrByteArray, addrBytes,
             JNI_ABORT);

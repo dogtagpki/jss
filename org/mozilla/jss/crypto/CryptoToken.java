@@ -28,6 +28,7 @@ public interface CryptoToken {
      * @param algorithm The algorithm used for the signing/verification.
      * @exception java.security.NoSuchAlgorithmException If the given
      *      algorithm is not supported by this provider.
+     * @deprecated Use the JCA interface instead ({@link java.security.Signature})
      */
     public abstract org.mozilla.jss.crypto.Signature
     getSignatureContext(SignatureAlgorithm algorithm)
@@ -40,6 +41,7 @@ public interface CryptoToken {
      * @param algorithm The algorithm used for digesting.
      * @exception java.security.NoSuchAlgorithmException If this provider
      *  does not support the given algorithm.
+     * @deprecated Use the JCA interface instead ({@link java.security.MessageDigest})
      */
     public abstract JSSMessageDigest
     getDigestContext(DigestAlgorithm algorithm)
@@ -55,14 +57,15 @@ public interface CryptoToken {
      * @param algorithm The algorithm used for encryption/decryption.
      * @exception java.security.NoSuchAlgorithmException If this provider
      *      does not support the given algorithm.
+     * @deprecated Use the JCA interface instead ({@link javax.crypto.Cipher})
      */
     public abstract Cipher
     getCipherContext(EncryptionAlgorithm algorithm)
         throws java.security.NoSuchAlgorithmException, TokenException;
 
-    public abstract SymmetricKeyDeriver getSymmetricKeyDeriver() 
-        throws TokenException;
-
+    /**
+     * @deprecated Use the JCA interface instead ({@link javax.crypto.Cipher})
+     */
     public abstract KeyWrapper
     getKeyWrapper(KeyWrapAlgorithm algorithm)
         throws java.security.NoSuchAlgorithmException, TokenException;
@@ -88,6 +91,7 @@ public interface CryptoToken {
      * @param algorithm The algorithm that the keys will be used with.
      * @exception java.security.NoSuchAlgorithmException If this token does not
      *      support the given algorithm.
+     * @deprecated Use the JCA interface instead ({@link javax.crypto.KeyGenerator})
      */
     public abstract KeyGenerator
     getKeyGenerator(KeyGenAlgorithm algorithm)
@@ -100,6 +104,7 @@ public interface CryptoToken {
      *      cannot be extracted from the current token.
      * @exception InvalidKeyException If the owning token cannot process
      *      the key to be cloned.
+     * @deprecated Use the JCA interface instead ({@link javax.crypto.SecretKeyFactory})
      */
     public SymmetricKey cloneKey(SymmetricKey key)
         throws SymmetricKey.NotExtractableException,
@@ -114,6 +119,7 @@ public interface CryptoToken {
      *      DSA, EC, etc.)
      * @exception java.security.NoSuchAlgorithmException If this token does
      *      not support the given algorithm.
+     * @deprecated Use the JCA interface instead ({@link java.security.KeyPairGenerator})
      */
     public abstract KeyPairGenerator
     getKeyPairGenerator(KeyPairAlgorithm algorithm)
@@ -142,7 +148,7 @@ public interface CryptoToken {
     /**
      * Determines whether this token supports the given algorithm.
      *
-     * @param alg A JSS algorithm.  Note that for Signature, a token may
+     * @param alg A JSS algorithm.  Note that for Signature, a token may 
      *      fail to support a specific SignatureAlgorithm (such as
      *      RSASignatureWithMD5Digest) even though it does support the
      *      generic algorithm (RSASignature). In this case, the signature
@@ -231,9 +237,9 @@ public interface CryptoToken {
      * @see #logout
      */
     public boolean isLoggedIn() throws TokenException;
-
+     
     /**
-     * returns true if this token needs to be logged into before
+     * returns true if this token needs to be logged into before 
      * it can be used.
      *
      * @see #login

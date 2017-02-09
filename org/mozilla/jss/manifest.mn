@@ -16,7 +16,6 @@ DIRS =	\
 	crypto	\
     SecretDecoderRing \
 	pkcs11	\
-    asn1   \
     ssl     \
     provider \
 	$(NULL)
