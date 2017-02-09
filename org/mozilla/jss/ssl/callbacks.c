@@ -652,13 +652,17 @@ JSSL_ConfirmExpiredPeerCert(void *arg, PRFileDesc *fd, PRBool checkSig,
         * Now check the name field in the cert against the desired hostname.
         * NB: This is our only defense against Man-In-The-Middle (MITM) attacks!
         */
-        char* hostname = NULL;
-        hostname = SSL_RevealURL(fd); /* really is a hostname, not a URL */
-        if (hostname && hostname[0]) {
-            rv = CERT_VerifyCertName(peerCert, hostname);
-            PORT_Free(hostname);
-        } else {
+        if( peerCert == NULL ) {
             rv = SECFailure;
+        } else {
+            char* hostname = NULL;
+            hostname = SSL_RevealURL(fd); /* really is a hostname, not a URL */
+            if (hostname && hostname[0]) {
+                rv = CERT_VerifyCertName(peerCert, hostname);
+                PORT_Free(hostname);
+            } else {
+                rv = SECFailure;
+            }
         }
     }
 

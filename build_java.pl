@@ -19,7 +19,6 @@ org.mozilla.jss.crypto.Algorithm
 org.mozilla.jss.crypto.EncryptionAlgorithm      
 org.mozilla.jss.crypto.PQGParams     
 org.mozilla.jss.crypto.SecretDecoderRing
-org.mozilla.jss.asn1.ASN1Util
 org.mozilla.jss.pkcs11.CertProxy        
 org.mozilla.jss.pkcs11.CipherContextProxy 
 org.mozilla.jss.pkcs11.PK11Module 
@@ -31,8 +30,7 @@ org.mozilla.jss.pkcs11.PK11MessageDigest
 org.mozilla.jss.pkcs11.PK11PrivKey   
 org.mozilla.jss.pkcs11.PK11PubKey     
 org.mozilla.jss.pkcs11.PK11SymKey      
-org.mozilla.jss.pkcs11.PK11KeyPairGenerator
-org.mozilla.jss.pkcs11.PK11SymmetricKeyDeriver
+org.mozilla.jss.pkcs11.PK11KeyPairGenerator 
 org.mozilla.jss.pkcs11.PK11KeyGenerator
 org.mozilla.jss.pkcs11.PK11Token
 org.mozilla.jss.pkcs11.PrivateKeyProxy  

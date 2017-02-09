@@ -59,7 +59,6 @@ public class CertBag implements ASN1Value {
      * <li>If the type is <code>SDSI_CERT_TYPE</code>, returns
      *      an IA5String.
      * <li>For all other types, returns an ANY.
-     * </ul>
      *
      * @exception InvalidBERException If the cert is not encoded correctly.
      */

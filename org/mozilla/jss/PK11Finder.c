@@ -736,10 +736,6 @@ static int find_leaf_cert(
     int *linked = NULL;
 
     linked = PR_Malloc( sizeof(int) * numCerts );
-    if (linked == NULL) {
-        status = 0;
-        goto finish;
-    }
 
     /* initialize the bitmap */
     for (i = 0; i < numCerts; i++) {
@@ -1547,101 +1543,8 @@ finish:
 }
 
 /***********************************************************************
- * CryptoManager.verifyCertificateNowNative
- *
- * Verify a certificate that exists in the given cert database,
- * check if it's valid and that we trust the issuer. Verify time
- * against now.
- * @param nickname nickname of the certificate to verify.
- * @param checkSig verify the signature of the certificate
- * @param certificateUsage see certificate usage defined to verify certificate
- *
- * @exception InvalidNicknameException If the nickname is null.
- * @exception ObjectNotFoundException If no certificate could be found
- *      with the given nickname.
- * @exception CertificateException If certificate is invalid.
- */
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
-        jobject self, jstring nickString, jboolean checkSig, jint certificateUsage)
-{
-    SECCertificateUsage      currUsage = 0x000;  /* unexposed for now */
-    SECStatus                rv = SECFailure;
-    CERTCertificate          *cert = NULL;
-    char                     *nickname = NULL;
-    
-    if (nickString == NULL) {
-        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
-        goto finish;
-    }
-
-    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
-    if (nickname == NULL) {
-        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
-        goto finish;
-    }
-
-    cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
-
-    if (cert == NULL) {
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
-        goto finish;
-    }
-
-    cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
-
-    if (cert == NULL) {
-        char *msgBuf;
-        msgBuf = PR_smprintf("Certificate not found: %s", nickname);
-        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, msgBuf);
-        PR_Free(msgBuf);
-        goto finish;
-    }
-
-    /* 0 for certificateUsage in call to CERT_VerifyCertificateNow will
-     * retrieve the current valid usage into currUsage
-     */
-    rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
-        checkSig, certificateUsage, NULL, &currUsage);
-
-    if (rv != SECSuccess) {
-        JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Invalid certificate");
-        goto finish;
-    }
-
-    if ((certificateUsage == 0x0000) &&
-        (currUsage ==
-            ( certUsageUserCertImport |
-            certUsageVerifyCA |
-            certUsageProtectedObjectSigner |
-            certUsageAnyCA ))) {
-
-        /* The certificate is good for nothing.
-         * The following usages cannot be verified:
-         *   certUsageAnyCA
-         *   certUsageProtectedObjectSigner
-         *   certUsageUserCertImport
-         *   certUsageVerifyCA
-         *   (0x0b80)
-         */
-
-        JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Unusable certificate");
-        goto finish;
-    }
-
-finish:
-    if (nickname != NULL) {
-        (*env)->ReleaseStringUTFChars(env, nickString, nickname);
-    }
-    if (cert != NULL) {
-        CERT_DestroyCertificate(cert);
-    }
-}
-
-
-/***********************************************************************
  * CryptoManager.verifyCertNowNative
- * note: this calls obsolete NSS function
+ *
  * Returns JNI_TRUE if success, JNI_FALSE otherwise
  */
 JNIEXPORT jboolean JNICALL
@@ -1693,7 +1596,8 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
 {
     SECStatus         rv    = SECFailure;
     SECCertUsage      certUsage;
-    SECItem *derCerts[2] = { NULL, NULL };
+    SECItem *derCerts[2];
+    SECStatus status;
     CERTCertificate **certArray = NULL;
     CERTCertDBHandle *certdb = CERT_GetDefaultCertDB();
 
@@ -1707,6 +1611,7 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
     }
     PR_ASSERT(certdb != NULL);
 
+    derCerts[0] = NULL;
     derCerts[0] = JSS_ByteArrayToSECItem(env, packageArray);
     derCerts[1] = NULL;
 

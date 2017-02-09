@@ -12,17 +12,9 @@ public final class PK11SymKey implements SymmetricKey {
     protected PK11SymKey(byte[] pointer) {
         Assert._assert(pointer!=null);
         keyProxy  = new SymKeyProxy(pointer);
-        nickName = null;
-    }
-
-    protected PK11SymKey(byte[] pointer,String nickName) {
-        Assert._assert(pointer!=null);
-        keyProxy  = new SymKeyProxy(pointer);
-        this.nickName = nickName;
     }
 
     private SymKeyProxy keyProxy;
-    private String nickName;
 
     public SymmetricKey.Type getType() {
         KeyType kt = getKeyType();
@@ -84,20 +76,6 @@ public final class PK11SymKey implements SymmetricKey {
     public String getFormat() {
         return "RAW";
     }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-
-        if( nickName != null) {
-            setNickNameNative(nickName);
-        }
-    }
-
-    public native void setNickNameNative(String nickName);
 }
 
 class SymKeyProxy extends KeyProxy {

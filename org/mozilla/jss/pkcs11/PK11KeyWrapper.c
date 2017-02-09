@@ -251,9 +251,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapPrivWithSym
     status = PK11_WrapPrivKey(slot, wrapping, toBeWrapped, mech, param,
                 &wrapped, NULL /* wincx */ );
     if(status != SECSuccess) {
-        char err[256] = {0};
-        PR_snprintf(err, 256, "Wrapping operation failed on token:%d", PR_GetError());
-        JSS_throwMsg(env, TOKEN_EXCEPTION, err);
+        JSS_throwMsg(env, TOKEN_EXCEPTION,
+                "Wrapping operation failed on token");
         goto finish;
     }
     PR_ASSERT(wrapped.len>0 && wrapped.data!=NULL);
@@ -293,48 +292,12 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     SECItem *wrapped=NULL, *iv=NULL, *param=NULL, *pubValue=NULL;
     SECItem label; /* empty secitem, doesn't need to be freed */
     PRBool token;
-    CK_ATTRIBUTE_TYPE attribs[4] = {0, 0, 0, 0};
-    int numAttribs = 0;
-    CK_TOKEN_INFO tokenInfo;
-
-    /* ideal defaults */
-    PRBool isSensitive = PR_TRUE;
-    PRBool isExtractable = PR_FALSE;
-
-    /* special case nethsm and lunasa*/
-    const int numManufacturerIDchars = 7;
-    CK_UTF8CHAR nethsmManufacturerID[] = {'n','C','i','p','h','e','r'};
-    CK_UTF8CHAR lunasaManufacturerID[] = {'S','a','f','e','n','e','t'};
-    PRBool isNethsm = PR_TRUE;
-    PRBool isLunasa = PR_TRUE;
-
-    tokenInfo.manufacturerID[0] = 0;
+    CK_ATTRIBUTE_TYPE attribs[4];
+    int numAttribs;
 
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
         /* exception was thrown */
         goto finish;
-    }
-
-    if ( (PK11_GetTokenInfo(slot, &tokenInfo) == PR_SUCCESS) &&
-       (tokenInfo.manufacturerID[0] != 0)) {
-        int ix = 0;
-
-        for(ix=0; ix < numManufacturerIDchars; ix++) {
-            if (tokenInfo.manufacturerID[ix] != nethsmManufacturerID[ix]) {
-               isNethsm = PR_FALSE;
-               break;
-            }
-        }
-
-        for(ix=0; ix < numManufacturerIDchars; ix++) {
-            if (tokenInfo.manufacturerID[ix] != lunasaManufacturerID[ix]) {
-               isLunasa = PR_FALSE;
-               break;
-            }
-        }
-    } else {
-        isNethsm = PR_FALSE;
-        isLunasa = PR_FALSE;
     }
 
     /* get unwrapping key */
@@ -397,34 +360,14 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     }
     keyType = PK11_GetKeyType(keyTypeMech, 0);
 
-    /* special case nethsm and lunasa*/
-    if( isNethsm ) {
-        isSensitive = PR_FALSE;
-        isExtractable = PR_FALSE;
-    } else if ( isLunasa) {
-        isSensitive = PR_FALSE;
-        isExtractable = PR_TRUE;
-    }
-
     /* figure out which operations to enable for this key */
     switch (keyType) {
     case CKK_RSA:
-        numAttribs = 3;
         attribs[0] = CKA_SIGN;
-        attribs[1] = CKA_SIGN_RECOVER;
-        attribs[2] = CKA_UNWRAP;
-        if (isExtractable) {
-            attribs[3] = CKA_EXTRACTABLE;
-            numAttribs = 4;
-        }
-	break;
-    case CKK_EC:
-        numAttribs = 1;
-        attribs[0] = CKA_SIGN;
-        if (isExtractable) {
-            attribs[1] = CKA_EXTRACTABLE;
-            numAttribs = 2;
-        }
+        attribs[1] = CKA_DECRYPT;
+        attribs[2] = CKA_SIGN_RECOVER;
+        attribs[3] = CKA_UNWRAP;
+        numAttribs = 4;
 	break;
     case CKK_DSA:
         attribs[0] = CKA_SIGN;
@@ -436,6 +379,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
         attribs[0] = CKA_DERIVE;
         numAttribs = 1;
 	break;
+    case CKK_EC:
+        attribs[0] = CKA_SIGN;
+        attribs[1] = CKA_DERIVE;
+        numAttribs = 2;
+	break;
     default:
         /* unknown key type */
         PR_ASSERT(PR_FALSE);
@@ -446,12 +394,10 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
 
     /* perform the unwrap */
     privk = PK11_UnwrapPrivKey(slot, unwrappingKey, wrapType, param, wrapped,
-                &label, pubValue, token, isSensitive /*sensitive*/, keyType,
+                &label, pubValue, token, PR_TRUE /*sensitive*/, keyType,
                 attribs, numAttribs, NULL /*wincx*/);
     if( privk == NULL ) {
-        char err[256] = {0};
-        PR_snprintf(err, 256, "Key Unwrap failed on token:error=%d, keyType=%d", PR_GetError(), keyType);
-        JSS_throwMsg(env, TOKEN_EXCEPTION, err);
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Key Unwrap failed on token");
         goto finish;
     }
                 
@@ -487,7 +433,7 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
     (JNIEnv *env, jclass clazz, jobject tokenObj, jobject unwrapperObj,
         jbyteArray wrappedBA, jobject wrapAlgObj, jobject typeAlgObj,
-        jint keyLen, jbyteArray ivBA, jint usageEnum,jboolean temporary)
+        jint keyLen, jbyteArray ivBA, jint usageEnum)
 {
     PK11SymKey *symKey=NULL, *wrappingKey=NULL;
     CK_MECHANISM_TYPE wrappingMech, keyTypeMech;
@@ -495,7 +441,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
     jobject keyObj = NULL;
     CK_ULONG operation;
     CK_FLAGS flags;
-    PRBool isPermanent = PR_FALSE;
 
     /* get key type */
     keyTypeMech = JSS_getPK11MechFromAlg(env, typeAlgObj);
@@ -548,21 +493,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
         flags = 0;
     }
 
-    if( temporary ) {
-        isPermanent = PR_FALSE;
-    } else {
-        isPermanent = PR_TRUE;
-    }
-
-    if( isPermanent == PR_FALSE) {
-        symKey = PK11_UnwrapSymKeyWithFlags(wrappingKey, wrappingMech, param,
-            wrappedKey, keyTypeMech, operation, keyLen, flags);
-
-    } else {
-        symKey = PK11_UnwrapSymKeyWithFlagsPerm(wrappingKey, wrappingMech, param,
-            wrappedKey, keyTypeMech, operation, keyLen, flags,isPermanent);
-    }
-
+    symKey = PK11_UnwrapSymKeyWithFlags(wrappingKey, wrappingMech, param,
+        wrappedKey, keyTypeMech, operation, keyLen, flags);
     if( symKey == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
@@ -684,7 +616,7 @@ finish:
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
     (JNIEnv *env, jclass clazz, jobject tokenObj, jbyteArray wrappedBA,
-        jobject typeAlgObj, jint usageEnum,jboolean temporary)
+        jobject typeAlgObj, jint usageEnum)
 {
     PK11SymKey *symKey=NULL;
     CK_MECHANISM_TYPE keyTypeMech;
@@ -693,8 +625,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
     PK11SlotInfo *slot = NULL;
     CK_ULONG operation;
     CK_FLAGS flags;
-    PRBool isPerm = PR_FALSE;
-
 
     /* get key type */
     keyTypeMech = JSS_getPK11MechFromAlg(env, typeAlgObj);
@@ -724,15 +654,9 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
         flags = 0;
     }
 
-    if( temporary ) {
-        isPerm = PR_FALSE;
-    } else {
-        isPerm = PR_TRUE;
-    }
-
     /* pull in the key */
     symKey = PK11_ImportSymKeyWithFlags(slot, keyTypeMech, PK11_OriginUnwrap,
-        operation, wrappedKey, flags, isPerm, NULL);
+        operation, wrappedKey, flags, PR_FALSE /*isPerm*/, NULL);
     if( symKey == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;

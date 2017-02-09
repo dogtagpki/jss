@@ -707,14 +707,14 @@ getPWFromCallback(PK11SlotInfo *slot, PRBool retry, void *arg)
     }
 
 finish:
-#ifdef DEBUG
     if( (exception=(*env)->ExceptionOccurred(env)) != NULL) {
+#ifdef DEBUG
         jclass giveupClass;
         jmethodID printStackTrace;
         jclass excepClass;
-
+#endif
         (*env)->ExceptionClear(env);
-
+#ifdef DEBUG
         giveupClass = (*env)->FindClass(env, GIVE_UP_EXCEPTION);
         PR_ASSERT(giveupClass != NULL);
         if( ! (*env)->IsInstanceOf(env, exception, giveupClass) ) {
@@ -725,12 +725,8 @@ finish:
             PR_ASSERT( PR_FALSE );
         }
         PR_ASSERT(returnchars==NULL);
-    }
-#else
-    if( ((*env)->ExceptionOccurred(env)) != NULL) {
-        (*env)->ExceptionClear(env);
-    }
 #endif
+    }
     return returnchars;
 }
 
@@ -954,48 +950,6 @@ Java_org_mozilla_jss_CryptoManager_configureOCSPNative(
         JSS_throwMsgPrErr(env,
                      GENERAL_SECURITY_EXCEPTION,
                      "Failed to configure OCSP");
-    }
-}
-
-
-/**********************************************************************
-* OCSPCacheSettingsNative
-*
-* Allows configuration of the OCSP responder cache during runtime.
-*/
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_CryptoManager_OCSPCacheSettingsNative(
-        JNIEnv *env, jobject this,
-        jint ocsp_cache_size,
-        jint ocsp_min_cache_entry_duration,
-        jint ocsp_max_cache_entry_duration)
-{
-    SECStatus rv = SECFailure;
-
-    rv = CERT_OCSPCacheSettings(
-        ocsp_cache_size, ocsp_min_cache_entry_duration,
-        ocsp_max_cache_entry_duration);
-
-    if (rv != SECSuccess) {
-        JSS_throwMsgPrErr(env,
-                     GENERAL_SECURITY_EXCEPTION,
-                     "Failed to set OCSP cache: error "+ PORT_GetError());
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_CryptoManager_setOCSPTimeoutNative(
-        JNIEnv *env, jobject this,
-        jint ocsp_timeout )
-{
-    SECStatus rv = SECFailure;
-
-    rv = CERT_SetOCSPTimeout(ocsp_timeout);
-
-    if (rv != SECSuccess) {
-        JSS_throwMsgPrErr(env,
-                     GENERAL_SECURITY_EXCEPTION,
-                     "Failed to set OCSP timeout: error "+ PORT_GetError());
     }
 }
 

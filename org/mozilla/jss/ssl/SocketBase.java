@@ -38,16 +38,16 @@ class SocketBase {
     native byte[] socketCreate(Object socketObject,
         SSLCertificateApprovalCallback certApprovalCallback,
         SSLClientCertificateSelectionCallback clientCertSelectionCallback,
-        java.net.Socket javaSock, String host,int family)
+        java.net.Socket javaSock, String host)
             throws SocketException;
 
     byte[] socketCreate(Object socketObject,
         SSLCertificateApprovalCallback certApprovalCallback,
-        SSLClientCertificateSelectionCallback clientCertSelectionCallback, int family)
+        SSLClientCertificateSelectionCallback clientCertSelectionCallback)
             throws SocketException
     {
         return socketCreate(socketObject, certApprovalCallback,
-            clientCertSelectionCallback, null, null, family);
+            clientCertSelectionCallback, null, null);
     }
 
     native void socketBind(byte[] addrBA, int port) throws SocketException;
@@ -73,34 +73,21 @@ class SocketBase {
     static final int SSL_POLICY_DOMESTIC = 10;
     static final int SSL_POLICY_EXPORT = 11;
     static final int SSL_POLICY_FRANCE = 12;
-    static final int SSL_ROLLBACK_DETECTION = 14; 
-    static final int SSL_NO_STEP_DOWN = 15;
-    static final int SSL_ENABLE_FDX = 16;
-    static final int SSL_V2_COMPATIBLE_HELLO = 17;
-    static final int SSL_REQUIRE_NEVER = 18;
-    static final int SSL_REQUIRE_ALWAYS = 19;
-    static final int SSL_REQUIRE_FIRST_HANDSHAKE = 20;
-    static final int SSL_REQUIRE_NO_ERROR = 21;
-    static final int SSL_ENABLE_SESSION_TICKETS = 22;
-    static final int SSL_ENABLE_RENEGOTIATION = 23;
-    static final int SSL_RENEGOTIATE_NEVER = 24;
-    static final int SSL_RENEGOTIATE_UNRESTRICTED = 25;
-    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 26;
-    static final int SSL_RENEGOTIATE_TRANSITIONAL = 27;
-    static final int SSL_REQUIRE_SAFE_NEGOTIATION = 28;
-    /* ssl/sslproto.h for supporting SSLVersionRange */
-    static final int SSL_LIBRARY_VERSION_2 = 29;
-    static final int SSL_LIBRARY_VERSION_3_0 = 30;
-    static final int SSL_LIBRARY_VERSION_TLS_1_0 = 31;
-    static final int SSL_LIBRARY_VERSION_TLS_1_1 = 32;
-    static final int SSL_LIBRARY_VERSION_TLS_1_2 = 33;
-    /* ssl/sslt.h */
-    static final int SSL_Variant_Stream = 34;
-    static final int SSL_Variant_Datagram = 35;
-
-
-    static final int SSL_AF_INET  = 50;
-    static final int SSL_AF_INET6 = 51;
+    static final int SSL_ROLLBACK_DETECTION = 13; 
+    static final int SSL_NO_STEP_DOWN = 14;
+    static final int SSL_ENABLE_FDX = 15;
+    static final int SSL_V2_COMPATIBLE_HELLO = 16;
+    static final int SSL_REQUIRE_NEVER = 17;
+    static final int SSL_REQUIRE_ALWAYS = 18;
+    static final int SSL_REQUIRE_FIRST_HANDSHAKE = 19;
+    static final int SSL_REQUIRE_NO_ERROR = 20;
+    static final int SSL_ENABLE_SESSION_TICKETS = 21;
+    static final int SSL_ENABLE_RENEGOTIATION = 22;
+    static final int SSL_RENEGOTIATE_NEVER = 23;
+    static final int SSL_RENEGOTIATE_UNRESTRICTED = 24;
+    static final int SSL_RENEGOTIATE_REQUIRES_XTN = 25;
+    static final int SSL_RENEGOTIATE_TRANSITIONAL = 26;
+    static final int SSL_REQUIRE_SAFE_NEGOTIATION = 27;
 
     void close() throws IOException {
         socketClose();
@@ -181,18 +168,6 @@ class SocketBase {
      * enable/disable values.
      */
     native void setSSLOption(int option, int on)
-        throws SocketException;
-
-    void setSSLVersionRange(org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range)
-        throws SocketException
-    {
-        setSSLVersionRange(range.getMinEnum(), range.getMaxEnum());
-    }
-
-    /**
-     * Sets SSL Version Range for this socket to support TLS v1.1 and v1.2
-     */
-    native void setSSLVersionRange(int min, int max)
         throws SocketException;
 
     /** 
@@ -312,25 +287,13 @@ class SocketBase {
         return in;
     }
 
-    private native byte[] getLocalAddressByteArrayNative() throws SocketException;
-    private native byte[] getPeerAddressByteArrayNative() throws SocketException;
     /**
      * @return the InetAddress of the peer end of the socket.
      */
     InetAddress getInetAddress()
     {
         try {
-            byte[] address = getPeerAddressByteArrayNative();
-
-            InetAddress iAddr = null;
-
-            try {
-
-                iAddr = InetAddress.getByAddress(address);
-            }   catch(UnknownHostException e) {
-            }
-
-            return iAddr;
+            return convertIntToInetAddress( getPeerAddressNative() );
         } catch(SocketException e) {
             return null;
         }
@@ -342,17 +305,7 @@ class SocketBase {
      */
     InetAddress getLocalAddress() {
         try {
-            byte[] address = getLocalAddressByteArrayNative();
-
-            InetAddress lAddr = null;
-
-            try {
-
-                lAddr = InetAddress.getByAddress(address);
-            }   catch(UnknownHostException e) {
-            }
-
-            return lAddr;
+            return convertIntToInetAddress( getLocalAddressNative() );
         } catch(SocketException e) {
             return null;
         }
@@ -430,46 +383,5 @@ class SocketBase {
         Assert.notReached("Problem constructing exception container");
         return topException;
       }
-    }
-
-    static private int supportsIPV6 = -1;
-    static boolean supportsIPV6() {
-
-        if(supportsIPV6 >= 0) {
-            if(supportsIPV6 > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        Enumeration netInter;
-        try {
-                 netInter = NetworkInterface.getNetworkInterfaces();
-        }  catch (SocketException e) {
-
-                 return false;
-        }
-        while ( netInter.hasMoreElements() )
-        {
-            NetworkInterface ni = (NetworkInterface)netInter.nextElement();
-            Enumeration addrs = ni.getInetAddresses();
-            while ( addrs.hasMoreElements() )
-            {
-                 Object o = addrs.nextElement();
-                 if ( o.getClass() == InetAddress.class ||
-                     o.getClass() == Inet4Address.class ||
-                     o.getClass() == Inet6Address.class )
-                 {
-                      InetAddress iaddr = (InetAddress) o;
-                      if(o.getClass() == Inet6Address.class) {
-                          supportsIPV6 = 1;
-                          return true;
-                      }
-                 }
-            }
-        }
-        supportsIPV6 = 0;
-        return false;
     }
 }
