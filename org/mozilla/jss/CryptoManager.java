@@ -1463,19 +1463,19 @@ public final class CryptoManager implements TokenSupplier
     synchronized static void loadNativeLibraries()
     {
         if( ! mNativeLibrariesLoaded ) {
-//            try {
-                System.loadLibrary( "jss4" );
+            try {
+                System.load( "/usr/lib64/jss/libjss4.so" );
                 Debug.trace(Debug.VERBOSE, "jss library loaded");
                 mNativeLibrariesLoaded = true;
-//            } catch( UnsatisfiedLinkError e ) {
-//                try {
-//                    System.load( "/usr/lib/jss/libjss4.so" );
-//                    Debug.trace(Debug.VERBOSE, "jss library loaded");
-//                    mNativeLibrariesLoaded = true;
-//                } catch( UnsatisfiedLinkError f ) {
-//                    Debug.trace(Debug.VERBOSE, "jss library load failed");
-//                }
-//            }
+            } catch( UnsatisfiedLinkError e ) {
+                try {
+                    System.load( "/usr/lib/jss/libjss4.so" );
+                    Debug.trace(Debug.VERBOSE, "jss library loaded");
+                    mNativeLibrariesLoaded = true;
+                } catch( UnsatisfiedLinkError f ) {
+                    Debug.trace(Debug.VERBOSE, "jss library load failed");
+                }
+            }
         }
     }
     static private boolean mNativeLibrariesLoaded = false;
