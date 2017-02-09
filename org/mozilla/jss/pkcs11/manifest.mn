@@ -32,6 +32,7 @@ CSRCS =                             \
 			PK11Store.c				\
             PK11SymKey.c            \
 			PK11Token.c				\
+            PK11SymmetricKeyDeriver.c \
             $(NULL)
 
 

@@ -60,6 +60,9 @@ public interface CryptoToken {
     getCipherContext(EncryptionAlgorithm algorithm)
         throws java.security.NoSuchAlgorithmException, TokenException;
 
+    public abstract SymmetricKeyDeriver getSymmetricKeyDeriver() 
+        throws TokenException;
+
     public abstract KeyWrapper
     getKeyWrapper(KeyWrapAlgorithm algorithm)
         throws java.security.NoSuchAlgorithmException, TokenException;

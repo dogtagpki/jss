@@ -34,7 +34,22 @@ public final class PK11Store implements CryptoStore {
         keys.copyInto( (Object[]) array );
         return array;
     }
+
+    public synchronized SymmetricKey[]
+    getSymmetricKeys() throws TokenException {
+
+        Vector keys = new Vector();
+        putSymKeysInVector(keys);
+        SymmetricKey[] array = new SymmetricKey[keys.size()];
+        keys.copyInto( (Object[]) array);
+        return array;
+    }
+
+
+
     protected native void putKeysInVector(Vector keys) throws TokenException;
+
+    protected native void putSymKeysInVector(Vector symKeys) throws TokenException;
 
 
     public native void deletePrivateKey(PrivateKey key)
