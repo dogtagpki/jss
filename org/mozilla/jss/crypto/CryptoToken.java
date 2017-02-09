@@ -142,7 +142,7 @@ public interface CryptoToken {
     /**
      * Determines whether this token supports the given algorithm.
      *
-     * @param alg A JSS algorithm.  Note that for Signature, a token may 
+     * @param alg A JSS algorithm.  Note that for Signature, a token may
      *      fail to support a specific SignatureAlgorithm (such as
      *      RSASignatureWithMD5Digest) even though it does support the
      *      generic algorithm (RSASignature). In this case, the signature
@@ -231,9 +231,9 @@ public interface CryptoToken {
      * @see #logout
      */
     public boolean isLoggedIn() throws TokenException;
-     
+
     /**
-     * returns true if this token needs to be logged into before 
+     * returns true if this token needs to be logged into before
      * it can be used.
      *
      * @see #login

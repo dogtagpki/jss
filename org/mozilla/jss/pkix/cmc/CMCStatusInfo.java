@@ -15,17 +15,17 @@ import java.util.BitSet;
 /**
  * CMC <i>CMCStatusInfo</i>:
  * <pre>
- *     CMCStatusInfo ::= SEQUENCE { 
- *          cMCStatus           CMCStatus, 
- *          bodyList            SEQUENCE SIZE (1..MAX) OF BodyPartID, 
- *          statusString        UTF8String OPTIONAL, 
- *          otherInfo           CHOICE { 
- *            failInfo            CMCFailInfo, 
- *            pendInfo            PendInfo } OPTIONAL 
- *     } 
- *     PendInfo ::= SEQUENCE { 
- *          pendToken           OCTET STRING, 
- *          pendTime            GeneralizedTime 
+ *     CMCStatusInfo ::= SEQUENCE {
+ *          cMCStatus           CMCStatus,
+ *          bodyList            SEQUENCE SIZE (1..MAX) OF BodyPartID,
+ *          statusString        UTF8String OPTIONAL,
+ *          otherInfo           CHOICE {
+ *            failInfo            CMCFailInfo,
+ *            pendInfo            PendInfo } OPTIONAL
+ *     }
+ *     PendInfo ::= SEQUENCE {
+ *          pendToken           OCTET STRING,
+ *          pendTime            GeneralizedTime
  *     }
  * </pre>
  */
@@ -36,7 +36,7 @@ public class CMCStatusInfo implements ASN1Value {
     // Members
     ///////////////////////////////////////////////////////////////////////
     private INTEGER status;
-    private SEQUENCE bodyList; 
+    private SEQUENCE bodyList;
     private UTF8String statusString;
 	private OtherInfo otherInfo;
 
@@ -135,7 +135,7 @@ public class CMCStatusInfo implements ASN1Value {
 	public int getStatus() {
 		return status.intValue();
 	}
-	
+
 	public SEQUENCE getBodyList() {
 		return bodyList;
 	}
