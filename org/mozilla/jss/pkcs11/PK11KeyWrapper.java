@@ -460,6 +460,64 @@ final class PK11KeyWrapper implements KeyWrapper {
         return unwrapSymmetric(wrapped, type, -1, keyLen);
     }
 
+    public SymmetricKey
+    unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type,
+        SymmetricKey.Usage usage, int keyLen)
+        throws TokenException, IllegalStateException,
+            InvalidAlgorithmParameterException
+    {
+        return unwrapSymmetricPerm(wrapped, type, usage.getVal(), keyLen);
+    }
+
+    public SymmetricKey
+    unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type, int keyLen)
+        throws TokenException, IllegalStateException,
+            InvalidAlgorithmParameterException
+    {
+        return unwrapSymmetricPerm(wrapped, type, -1, keyLen);
+    }
+
+    private SymmetricKey
+    unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type,
+        int usageEnum, int keyLen)
+        throws TokenException, IllegalStateException,
+            InvalidAlgorithmParameterException
+    {
+        if( state != UNWRAP ) {
+            throw new IllegalStateException();
+        }
+
+        /* Since we want permanent,make the temporary arg false */
+        boolean temporary = false;
+
+
+        if( (! algorithm.isPadded()) && (type == SymmetricKey.RC4) ) {
+            if( keyLen <= 0 ) {
+                throw new InvalidAlgorithmParameterException(
+                    "RC4 keys wrapped in unpadded algorithms need key length"+
+                    " specified when unwrapping");
+            }
+        } else {
+            // Don't use the key length
+            keyLen = 0;
+        }
+
+        if( algorithm == KeyWrapAlgorithm.PLAINTEXT ) {
+            return nativeUnwrapSymPlaintext(token, wrapped, algFromType(type),
+                usageEnum,temporary );
+        } else {
+            if( symKey != null ) {
+                Assert._assert(pubKey==null && privKey==null);
+                return nativeUnwrapSymWithSym(token, symKey, wrapped, algorithm,
+                        algFromType(type), keyLen, IV, usageEnum,temporary);
+            } else {
+                Assert._assert(privKey!=null && pubKey==null && symKey==null);
+                throw new TokenException("We do not support permnament unwrapping with private key.");
+            }
+        }
+    }
+
+
     private SymmetricKey
     unwrapSymmetric(byte[] wrapped, SymmetricKey.Type type,
         int usageEnum, int keyLen)
@@ -478,17 +536,21 @@ final class PK11KeyWrapper implements KeyWrapper {
             }
         } else {
             // Don't use the key length
-            keyLen = 0;
+            //keyLen = 0;
         }
+
+        /* Since we DONT want permanent,make the temporary arg true */
+        boolean temporary = true;
+
 
         if( algorithm == KeyWrapAlgorithm.PLAINTEXT ) {
             return nativeUnwrapSymPlaintext(token, wrapped, algFromType(type),
-                usageEnum );
+                usageEnum, temporary );
         } else {
             if( symKey != null ) {
                 Assert._assert(pubKey==null && privKey==null);
                 return nativeUnwrapSymWithSym(token, symKey, wrapped, algorithm,
-                        algFromType(type), keyLen, IV, usageEnum);
+                        algFromType(type), keyLen, IV, usageEnum,temporary);
             } else {
                 Assert._assert(privKey!=null && pubKey==null && symKey==null);
                 return nativeUnwrapSymWithPriv(token, privKey, wrapped,
@@ -550,7 +612,7 @@ final class PK11KeyWrapper implements KeyWrapper {
     private static native SymmetricKey
     nativeUnwrapSymWithSym(PK11Token token, SymmetricKey unwrappingKey,
         byte[] wrappedKey, KeyWrapAlgorithm alg, Algorithm type, int keyLen,
-        byte[] IV, int usageEnum)
+        byte[] IV, int usageEnum,boolean temporary)
             throws TokenException;
 
     /**
@@ -564,7 +626,7 @@ final class PK11KeyWrapper implements KeyWrapper {
 
     private static native SymmetricKey
     nativeUnwrapSymPlaintext(PK11Token token, byte[] wrappedKey,
-        Algorithm type, int usageEnum);
+        Algorithm type, int usageEnum,boolean temporary);
 
     private void reset() {
         state = UNINITIALIZED;

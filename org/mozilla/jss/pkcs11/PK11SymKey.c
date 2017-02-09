@@ -30,6 +30,8 @@ JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey)
     jmethodID constructor;
     jbyteArray ptrArray;
     jobject Key=NULL;
+    char *nickname = NULL;
+    jstring jnickname = NULL;
 
     PR_ASSERT(env!=NULL && symKey!=NULL && *symKey!=NULL);
 
@@ -40,10 +42,17 @@ JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey)
         goto finish;
     }
 
+    nickname = PK11_GetSymKeyNickname( *symKey );
+
+    if (nickname) {
+        jnickname = (*env)->NewStringUTF(env, nickname);
+    }
+
+ 
     /* find the constructor */
     constructor = (*env)->GetMethodID(env, keyClass,
                                         PLAIN_CONSTRUCTOR,
-                                        PK11SYMKEY_CONSTRUCTOR_SIG);
+                                        PK11SYMKEY_CONSTRUCTOR_1_SIG);
     if(constructor == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
@@ -55,11 +64,15 @@ JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey)
         goto finish;
     }
     /* call the constructor */
-    Key = (*env)->NewObject(env, keyClass, constructor, ptrArray);
+    Key = (*env)->NewObject(env, keyClass, constructor, ptrArray,jnickname);
 
 finish:
     if(Key == NULL) {
         PK11_FreeSymKey(*symKey);
+    }
+    if(nickname != NULL) {
+        PORT_Free(nickname);
+        nickname = NULL;
     }
     *symKey = NULL;
     return Key;
@@ -145,6 +158,49 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_getLength
 
 finish:
     return (jint) strength;
+}
+
+/***********************************************************************
+ *
+ * PK11SymKey.setNickNameNative
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11SymKey_setNickNameNative
+    (JNIEnv *env, jobject this,jstring nickname)
+{
+    PK11SymKey *key=NULL;
+    const char *keyname = NULL;
+    SECStatus status;
+
+    /* If no nickname provided, we are done */
+    if( nickname == NULL ) {
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+            "Nickname is NULL, will not be set");        
+        goto finish;
+    }
+
+    /* get the key pointer */
+    if( JSS_PK11_getSymKeyPtr(env, this, &key) != PR_SUCCESS) {
+        goto finish;
+    }
+
+    /* convert the Java String into a native "C" string */
+    keyname = (*env)->GetStringUTFChars( env, nickname, 0 );
+
+    /* name the key */
+    status = PK11_SetSymKeyNickname( key, keyname );
+    if( status != SECSuccess ) {
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+            "Failed to name symmetric key");
+    }
+finish:
+
+    if( keyname != NULL ) {
+        /* free the native "C" string */
+        (*env)->ReleaseStringUTFChars(env, nickname, keyname);
+    }
+
+    return;
 }
 
 /***********************************************************************
@@ -247,6 +303,10 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_getKeyType
           case CKK_AES:
             typeFieldName = AES_KEYTYPE_FIELD;
             break;
+          case CKK_DES2:
+             printf("hello des2! \n");
+             typeFieldName = DES3_KEYTYPE_FIELD;
+             break;
           default:
             PR_ASSERT(PR_FALSE);
             typeFieldName = DES_KEYTYPE_FIELD;

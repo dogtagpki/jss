@@ -12,13 +12,101 @@
 #include <cert.h>
 #include <certdb.h>
 #include <secasn1.h>
-
 #include <jssutil.h>
 #include <Algorithm.h>
 #include "pk11util.h"
 #include <java_ids.h>
 #include <jss_exceptions.h>
 
+typedef struct
+{
+    enum
+    {
+        PW_NONE = 0,
+        PW_FROMFILE = 1,
+        PW_PLAINTEXT = 2,
+        PW_EXTERNAL = 3
+    } source;
+    char *data;
+} secuPWData;
+
+/**********************************************************************
+ * PK11Store.putSymKeysInVector
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_putSymKeysInVector
+    (JNIEnv *env, jobject this, jobject keyVector)
+{
+    PK11SlotInfo *slot;
+    jobject object = NULL;
+    jclass vectorClass;
+    jmethodID addElement;
+
+    PK11SymKey *firstSymKey= NULL;
+    PK11SymKey *sk  = NULL;
+    PK11SymKey *nextSymKey = NULL;
+    secuPWData  pwdata;
+
+    PK11SymKey *freeSymKey = NULL;
+    PK11SymKey *nextFreeSymKey = NULL;
+
+    pwdata.source   = PW_NONE;
+    pwdata.data     = (char *) NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && keyVector!=NULL);
+
+    if( JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    PR_ASSERT(slot!=NULL);
+
+    vectorClass = (*env)->GetObjectClass(env, keyVector);
+    if(vectorClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    addElement = (*env)->GetMethodID(env,
+                                     vectorClass,
+                                     VECTOR_ADD_ELEMENT_NAME,
+                                     VECTOR_ADD_ELEMENT_SIG);
+    if(addElement == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    PK11_Authenticate(slot, PR_TRUE /*load certs*/, NULL /*wincx*/);
+
+    /* Obtain the symmetric key list. */
+    firstSymKey = PK11_ListFixedKeysInSlot( slot , NULL, ( void *) &pwdata );
+    sk = firstSymKey;
+
+    while(( sk != NULL ))
+    {
+        if( sk ) {
+
+            nextSymKey = sk;
+            object = JSS_PK11_wrapSymKey(env, &sk);
+
+            if(object == NULL) {
+                PR_ASSERT( (*env)->ExceptionOccurred(env) );
+                goto finish;
+            }
+
+            /***************************************************
+            * Insert the key into the vector
+            ***************************************************/
+            (*env)->CallVoidMethod(env, keyVector, addElement, object);
+        }
+
+        sk = PK11_GetNextSymKey( nextSymKey );
+    }
+
+finish:
+
+    return;
+}
 
 /**********************************************************************
  * PK11Store.putKeysInVector
