@@ -1450,11 +1450,11 @@ public final class CryptoManager implements TokenSupplier
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_21_RTM";
+    JAR_NSS_VERSION     = "NSS_VERSION = NSS_3_12_RTM";
     public static final String
     JAR_DBM_VERSION     = "DBM_VERSION = N/A";
     public static final String
-    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPR_4_11_RTM";
+    JAR_NSPR_VERSION    = "NSPR_VERSION = NSPR_4_7_RTM";
 
     /**
      * Loads the JSS dynamic library if necessary.
@@ -1463,19 +1463,19 @@ public final class CryptoManager implements TokenSupplier
     synchronized static void loadNativeLibraries()
     {
         if( ! mNativeLibrariesLoaded ) {
-            try {
-                System.load( "/usr/lib64/jss/libjss4.so" );
+//            try {
+                System.loadLibrary( "jss4" );
                 Debug.trace(Debug.VERBOSE, "jss library loaded");
                 mNativeLibrariesLoaded = true;
-            } catch( UnsatisfiedLinkError e ) {
-                try {
-                    System.load( "/usr/lib/jss/libjss4.so" );
-                    Debug.trace(Debug.VERBOSE, "jss library loaded");
-                    mNativeLibrariesLoaded = true;
-                } catch( UnsatisfiedLinkError f ) {
-                    Debug.trace(Debug.VERBOSE, "jss library load failed");
-                }
-            }
+//            } catch( UnsatisfiedLinkError e ) {
+//                try {
+//                    System.load( "/usr/lib/jss/libjss4.so" );
+//                    Debug.trace(Debug.VERBOSE, "jss library loaded");
+//                    mNativeLibrariesLoaded = true;
+//                } catch( UnsatisfiedLinkError f ) {
+//                    Debug.trace(Debug.VERBOSE, "jss library load failed");
+//                }
+//            }
         }
     }
     static private boolean mNativeLibrariesLoaded = false;
@@ -1677,4 +1677,41 @@ public final class CryptoManager implements TokenSupplier
                     String ocspResponderCertNickname )
                     throws GeneralSecurityException;
 
+    /**
+     * change OCSP cache settings
+     *      * @param ocsp_cache_size max cache entries
+     *      * @param ocsp_min_cache_entry_duration minimum seconds to next fetch attempt
+     *      * @param ocsp_max_cache_entry_duration maximum seconds to next fetch attempt
+     */
+    public void OCSPCacheSettings(
+        int ocsp_cache_size, 
+        int ocsp_min_cache_entry_duration,
+        int ocsp_max_cache_entry_duration)
+    throws GeneralSecurityException
+    {
+        OCSPCacheSettingsNative(ocsp_cache_size,
+                                   ocsp_min_cache_entry_duration,
+                                   ocsp_max_cache_entry_duration);
+    }
+
+    private native void OCSPCacheSettingsNative(
+        int ocsp_cache_size, 
+        int ocsp_min_cache_entry_duration,
+        int ocsp_max_cache_entry_duration)
+                    throws GeneralSecurityException;
+
+    /**
+     * set OCSP timeout value
+     *      * @param ocspTimeout OCSP timeout in seconds
+     */
+    public void setOCSPTimeout(
+        int ocsp_timeout )
+    throws GeneralSecurityException
+    {
+        setOCSPTimeoutNative( ocsp_timeout);
+    }
+
+    private native void setOCSPTimeoutNative(
+        int ocsp_timeout )
+                    throws GeneralSecurityException;
 }

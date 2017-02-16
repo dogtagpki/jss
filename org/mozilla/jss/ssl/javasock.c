@@ -973,6 +973,12 @@ static const PRIOMethods jsockMethods = {
     (PRReservedFN) invalidInt
 };
 
+static const PRIOMethods* FUNCTION_MAY_NOT_BE_USED
+getJsockMethods()
+{
+    return &jsockMethods;
+}
+
 static void
 jsockDestructor(PRFileDesc *fd)
 {

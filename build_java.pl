@@ -179,68 +179,73 @@ sub setup_vars {
     $os = `uname`;
     $os =~ chomp $os;
 
-    # Verify existence of work area
-    if(( ! -d "$pwd/../nspr" ) ||
-       ( ! -d "$pwd/../nss" )  ||
-       ( ! -d "$pwd/../jss" )) {
-        my $workarea = "\nA work area must first be prepared; for example:\n\n"
-                     . "    mkdir sandbox\n"
-                     . "    cd sandbox\n"
-                     . "    hg clone https://hg.mozilla.org/projects/nspr\n"
-                     . "    hg clone https://hg.mozilla.org/projects/nss\n"
-                     . "    hg clone https://hg.mozilla.org/projects/jss\n"
-                     . "    cd ..\n\n";
-
-        die "$workarea";
-    }
-
-    # Build NSS if not already built
-    if( ! -d $dist_dir ) {
-        print("########################\n" .
-              "# BEGIN:  Building NSS #\n" .
-              "########################\n");
-        print_do("cd ../nss;make clean nss_build_all;cd ../jss");
-        print("######################\n" .
-              "# END:  Building NSS #\n" .
-              "######################\n");
-    }
-
-    if( $os eq 'Linux' || $os eq 'Darwin' ) {
-        # set major and minor release numbers
-        $majorrel = `uname -r | cut -f1 -d.`;
-        $majorrel =~ chomp $majorrel;
-        $minorrel = `uname -r | cut -f2 -d.`;
-        $minorrel =~ chomp $minorrel;
-
-        # read the contents of the $dist_dir into an array
-        opendir DIR, $dist_dir or die "Cannot open directory: $!";
-        my @files = readdir DIR;
-        closedir DIR;
-
-        # process the array to obtain the NSS OBJDIR_NAME
-        my $prefix = "$os$majorrel.$minorrel";
-        foreach my $file (@files) {
-            if ((index($file, $prefix) != -1) &&
-                (index($file, "_cc") != -1)) {
-                $nss_objdir_name = $file;
-                print "NSS OBJDIR_NAME=$nss_objdir_name\n";
-
-                # craft JSS OBJDIR_NAME based upon value of NSS OBJDIR_NAME
-                $jss_objdir_name = $nss_objdir_name;
-                $jss_objdir_name =~ s/_cc//;
-                print "JSS OBJDIR_NAME=$jss_objdir_name\n";
-
-                break;
-            } 
+    if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
+        print "Using the NSPR and NSS installed on the system to build JSS.\n";
+    } else {
+        # Verify existence of work area
+        if(( ! -d "$pwd/../nspr" ) ||
+           ( ! -d "$pwd/../nss" )  ||
+           ( ! -d "$pwd/../jss" )) {
+            my $workarea = "\nA work area must first be prepared; for example:\n\n"
+                         . "    mkdir sandbox\n"
+                         . "    cd sandbox\n"
+                         . "    hg clone https://hg.mozilla.org/projects/nspr\n"
+                         . "    hg clone https://hg.mozilla.org/projects/nss\n"
+                         . "    hg clone https://hg.mozilla.org/projects/jss\n"
+                         . "    cd ..\n\n";
+            
+            die "$workarea";
         }
-
-        # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME in $dist_dir
-        $jss_symlink = "$pwd/../dist/$jss_objdir_name";
-        if( ! -l $jss_symlink ) {
-            my $cmd = "cd ../dist;"
-                    . "ln -s $nss_objdir_name $jss_objdir_name;"
-                    . "cd ../jss";
-            print_do($cmd);
+        
+        # Build NSS if not already built
+        if( ! -d $dist_dir ) {
+            print("########################\n" .
+                  "# BEGIN:  Building NSS #\n" .
+                  "########################\n");
+            print_do("cd ../nss;make clean nss_build_all;cd ../jss");
+            print("######################\n" .
+                  "# END:  Building NSS #\n" .
+                  "######################\n");
+        }
+        
+        if( $os eq 'Linux' || $os eq 'Darwin' ) {
+            # set major and minor release numbers
+            $majorrel = `uname -r | cut -f1 -d.`;
+            $majorrel =~ chomp $majorrel;
+            $minorrel = `uname -r | cut -f2 -d.`;
+            $minorrel =~ chomp $minorrel;
+            
+            # read the contents of the $dist_dir into an array
+            opendir DIR, $dist_dir or die "Cannot open directory: $!";
+            my @files = readdir DIR;
+            closedir DIR;
+            
+            # process the array to obtain the NSS OBJDIR_NAME
+            my $prefix = "$os$majorrel.$minorrel";
+            foreach my $file (@files) {
+                if ((index($file, $prefix) != -1) &&
+                    (index($file, "_cc") != -1)) {
+                    $nss_objdir_name = $file;
+                    print "NSS OBJDIR_NAME=$nss_objdir_name\n";
+                    
+                    # craft JSS OBJDIR_NAME based upon value of NSS OBJDIR_NAME
+                    $jss_objdir_name = $nss_objdir_name;
+                    $jss_objdir_name =~ s/_cc//;
+                    print "JSS OBJDIR_NAME=$jss_objdir_name\n";
+                    
+                    break;
+                } 
+            }
+            
+            # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME in $dist_dir
+            $jss_symlink = "$pwd/../dist/$jss_objdir_name";
+            if( ! -l $jss_symlink ) {
+                my $cmd = "cd ../dist;"
+                        . "ln -s $nss_objdir_name $jss_objdir_name;"
+                        . "cd ../jss";
+                print_do($cmd);
+            }
+            print "jss_symlink=$jss_symlink\n"
         }
         print "jss_symlink=$jss_symlink\n"
     }
@@ -430,8 +435,10 @@ sub javadoc {
 }
 
 sub test {
-    # Test JSS presuming that it has already been built
-    if( $os eq 'Linux' || $os eq 'Darwin' ) {
+    if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
+        die "make test_jss is only available on upstream builds of Linux and MacOS platforms.";
+    } elsif( $os eq 'Linux' || $os eq 'Darwin' ) {
+        # Test JSS presuming that it has already been built
         if(( -d $dist_dir )  &&
            ( -l $jss_symlink )) {
             my $cmd = "cd $pwd/org/mozilla/jss/tests;"

@@ -957,3 +957,45 @@ Java_org_mozilla_jss_CryptoManager_configureOCSPNative(
     }
 }
 
+
+/**********************************************************************
+* OCSPCacheSettingsNative
+*
+* Allows configuration of the OCSP responder cache during runtime.
+*/
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_OCSPCacheSettingsNative(
+        JNIEnv *env, jobject this,
+        jint ocsp_cache_size,
+        jint ocsp_min_cache_entry_duration,
+        jint ocsp_max_cache_entry_duration)
+{
+    SECStatus rv = SECFailure;
+
+    rv = CERT_OCSPCacheSettings(
+        ocsp_cache_size, ocsp_min_cache_entry_duration,
+        ocsp_max_cache_entry_duration);
+
+    if (rv != SECSuccess) {
+        JSS_throwMsgPrErr(env,
+                     GENERAL_SECURITY_EXCEPTION,
+                     "Failed to set OCSP cache: error "+ PORT_GetError());
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_setOCSPTimeoutNative(
+        JNIEnv *env, jobject this,
+        jint ocsp_timeout )
+{
+    SECStatus rv = SECFailure;
+
+    rv = CERT_SetOCSPTimeout(ocsp_timeout);
+
+    if (rv != SECSuccess) {
+        JSS_throwMsgPrErr(env,
+                     GENERAL_SECURITY_EXCEPTION,
+                     "Failed to set OCSP timeout: error "+ PORT_GetError());
+    }
+}
+

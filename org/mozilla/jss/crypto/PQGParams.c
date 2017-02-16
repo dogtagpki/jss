@@ -339,7 +339,7 @@ Java_org_mozilla_jss_crypto_PQGParams_paramsAreValidNative
     /***********************************************************************
      * Perform the verification.
      */
-    if( PK11_PQG_VerifyParams(pParams, pVfy, &verifyResult) != SECSuccess) {
+    if( PK11_PQG_VerifyParams(pParams, pVfy, &verifyResult) != PR_SUCCESS) {
         JSS_throw(env, OUT_OF_MEMORY_ERROR);
         goto finish;
     }

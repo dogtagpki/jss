@@ -368,21 +368,29 @@ PRInt32 JSSL_enums[] = {
     SSL_POLICY_DOMESTIC,        /* 10 */        /* ssl.h */
     SSL_POLICY_EXPORT,          /* 11 */        /* ssl.h */
     SSL_POLICY_FRANCE,          /* 12 */        /* ssl.h */
-    SSL_ROLLBACK_DETECTION,     /* 13 */        /* ssl.h */
-    SSL_NO_STEP_DOWN,           /* 14 */        /* ssl.h */
-    SSL_ENABLE_FDX,             /* 15 */        /* ssl.h */
-    SSL_V2_COMPATIBLE_HELLO,    /* 16 */        /* ssl.h */
-    SSL_REQUIRE_NEVER,          /* 17 */        /* ssl.h */
-    SSL_REQUIRE_ALWAYS,         /* 18 */        /* ssl.h */
-    SSL_REQUIRE_FIRST_HANDSHAKE,/* 19 */        /* ssl.h */
-    SSL_REQUIRE_NO_ERROR,       /* 20 */        /* ssl.h */
-    SSL_ENABLE_SESSION_TICKETS, /* 21 */        /* ssl.h */
-    SSL_ENABLE_RENEGOTIATION,     /* 22 */      /* ssl.h */
-    SSL_RENEGOTIATE_NEVER,        /* 23 */      /* ssl.h */
-    SSL_RENEGOTIATE_UNRESTRICTED, /* 24 */      /* ssl.h */
-    SSL_RENEGOTIATE_REQUIRES_XTN, /* 25 */      /* ssl.h */
-    SSL_RENEGOTIATE_TRANSITIONAL, /* 26 */      /* ssl.h */
-    SSL_REQUIRE_SAFE_NEGOTIATION, /* 27 */      /* ssl.h */
+    16, /* deprecated */        /* 13 */
+    SSL_ROLLBACK_DETECTION,     /* 14 */        /* ssl.h */
+    SSL_NO_STEP_DOWN,           /* 15 */        /* ssl.h */
+    SSL_ENABLE_FDX,             /* 16 */        /* ssl.h */
+    SSL_V2_COMPATIBLE_HELLO,    /* 17 */        /* ssl.h */
+    SSL_REQUIRE_NEVER,          /* 18 */        /* ssl.h */
+    SSL_REQUIRE_ALWAYS,         /* 19 */        /* ssl.h */
+    SSL_REQUIRE_FIRST_HANDSHAKE,/* 20 */        /* ssl.h */
+    SSL_REQUIRE_NO_ERROR,       /* 21 */        /* ssl.h */
+    SSL_ENABLE_SESSION_TICKETS, /* 22 */        /* ssl.h */
+    SSL_ENABLE_RENEGOTIATION,     /* 23 */      /* ssl.h */
+    SSL_RENEGOTIATE_NEVER,        /* 24 */      /* ssl.h */
+    SSL_RENEGOTIATE_UNRESTRICTED, /* 25 */      /* ssl.h */
+    SSL_RENEGOTIATE_REQUIRES_XTN, /* 26 */      /* ssl.h */
+    SSL_RENEGOTIATE_TRANSITIONAL, /* 27 */      /* ssl.h */
+    SSL_REQUIRE_SAFE_NEGOTIATION, /* 28 */      /* ssl.h */
+    SSL_LIBRARY_VERSION_2,        /* 29 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_3_0,      /* 30 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_TLS_1_0,  /* 31 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_TLS_1_1,  /* 32 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_TLS_1_2,  /* 33 */      /* sslproto.h */
+    ssl_variant_stream,           /* 34 */      /* sslt.h */
+    ssl_variant_datagram,         /* 35 */      /* sslt.h */
     0
 };
 

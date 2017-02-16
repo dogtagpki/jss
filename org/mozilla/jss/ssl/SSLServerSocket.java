@@ -440,8 +440,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     /**
      * Enable simultaneous read/write by separate read and write threads
      * (full duplex) for this socket.
-     * Enables the bypass of PKCS11 for performance on this socket.
-     * It is disabled by default, unless the default has been changed.
+     * It is disabled by default, unless the default has been changed
      * with <code>SSLSocket.enableFDXDefault</code>.
      */
     public void enableFDX(boolean enable) throws SocketException {
