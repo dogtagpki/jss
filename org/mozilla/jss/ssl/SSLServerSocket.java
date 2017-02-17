@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.ssl;
 
+import java.util.*;
 import java.net.InetAddress;
 import java.io.IOException;
 import java.net.Socket;
@@ -106,33 +107,33 @@ public class SSLServerSocket extends java.net.ServerSocket {
         super.close();
 
         // create the socket
+
+        int socketFamily = SocketBase.SSL_AF_INET;
+        if(SocketBase.supportsIPV6()) {
+            socketFamily = SocketBase.SSL_AF_INET6;
+        }
+
         sockProxy = new SocketProxy(
-            base.socketCreate(this, certApprovalCallback, null) );
+            base.socketCreate(this, certApprovalCallback, null,socketFamily) );
 
         base.setProxy(sockProxy);
 
         setReuseAddress(reuseAddr);
 
-        // bind it to the local address and port
-        if( bindAddr == null ) {
-            bindAddr = anyLocalAddr;
-        }
         byte[] bindAddrBA = null;
         if( bindAddr != null ) {
             bindAddrBA = bindAddr.getAddress();
         }
         base.socketBind(bindAddrBA, port);
+
+        String hostName = null;
+        if(bindAddr != null)  {
+            hostName = bindAddr.getCanonicalHostName();
+        }
         socketListen(backlog);
     }
 
     private native void socketListen(int backlog) throws SocketException;
-
-    private static InetAddress anyLocalAddr;
-    static {
-        try {
-            anyLocalAddr = InetAddress.getByName("0.0.0.0");
-        } catch (java.net.UnknownHostException e) { }
-    }
 
     /**
      * Accepts a connection. This call will block until a connection is made

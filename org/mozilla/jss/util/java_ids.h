@@ -280,6 +280,8 @@ PR_BEGIN_EXTERN_C
 #define SOCKET_BASE_NAME "org/mozilla/jss/ssl/SocketBase"
 #define PROCESS_EXCEPTIONS_NAME "processExceptions"
 #define PROCESS_EXCEPTIONS_SIG "(Ljava/lang/Throwable;Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+#define SUPPORTS_IPV6_NAME "supportsIPV6"
+#define SUPPORTS_IPV6_SIG "()Z"
 
 /*
  * SSLCertificateApprovalCallback
