@@ -1551,4 +1551,41 @@ public final class CryptoManager implements TokenSupplier
                     String ocspResponderCertNickname )
                     throws GeneralSecurityException;
 
+    /**
+     * change OCSP cache settings
+     *      * @param ocsp_cache_size max cache entries
+     *      * @param ocsp_min_cache_entry_duration minimum seconds to next fetch attempt
+     *      * @param ocsp_max_cache_entry_duration maximum seconds to next fetch attempt
+     */
+    public void OCSPCacheSettings(
+        int ocsp_cache_size, 
+        int ocsp_min_cache_entry_duration,
+        int ocsp_max_cache_entry_duration)
+    throws GeneralSecurityException
+    {
+        OCSPCacheSettingsNative(ocsp_cache_size,
+                                   ocsp_min_cache_entry_duration,
+                                   ocsp_max_cache_entry_duration);
+    }
+
+    private native void OCSPCacheSettingsNative(
+        int ocsp_cache_size, 
+        int ocsp_min_cache_entry_duration,
+        int ocsp_max_cache_entry_duration)
+                    throws GeneralSecurityException;
+
+    /**
+     * set OCSP timeout value
+     *      * @param ocspTimeout OCSP timeout in seconds
+     */
+    public void setOCSPTimeout(
+        int ocsp_timeout )
+    throws GeneralSecurityException
+    {
+        setOCSPTimeoutNative( ocsp_timeout);
+    }
+
+    private native void setOCSPTimeoutNative(
+        int ocsp_timeout )
+                    throws GeneralSecurityException;
 }

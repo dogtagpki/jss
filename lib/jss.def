@@ -296,6 +296,8 @@ Java_org_mozilla_jss_pkcs11_PK11Token_needsLogin;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateECKeyPairWithOpFlags;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateRSAKeyPairWithOpFlags;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateDSAKeyPairWithOpFlags;
+Java_org_mozilla_jss_CryptoManager_OCSPCacheSettingsNative;
+Java_org_mozilla_jss_CryptoManager_setOCSPTimeoutNative;
 ;+    local:
 ;+       *;
 ;+};
