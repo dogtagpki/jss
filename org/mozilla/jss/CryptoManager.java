@@ -125,6 +125,19 @@ public final class CryptoManager implements TokenSupplier
         public static final CertificateUsage ProtectedObjectSigner = new CertificateUsage(certificateUsageProtectedObjectSigner, "ProtectedObjectSigner");
         public static final CertificateUsage StatusResponder = new CertificateUsage(certificateUsageStatusResponder, "StatusResponder");
         public static final CertificateUsage AnyCA = new CertificateUsage(certificateUsageAnyCA, "AnyCA");
+
+        /*
+                 The folllowing usages cannot be verified:
+                   certUsageAnyCA
+                   certUsageProtectedObjectSigner
+                   certUsageUserCertImport
+                   certUsageVerifyCA
+        */
+        public static final int basicCertificateUsages = /*0x0b80;*/
+                certificateUsageUserCertImport |
+                certificateUsageVerifyCA |
+                certificateUsageProtectedObjectSigner |
+                certificateUsageAnyCA ;
     }
 
     public final static class NotInitializedException extends Exception {}
@@ -1524,14 +1537,43 @@ public final class CryptoManager implements TokenSupplier
      * against Now.
      * @param nickname The nickname of the certificate to verify.
      * @param checkSig verify the signature of the certificate
-     * @param certificateUsage see exposed certificateUsage defines to verify Certificate; null will bypass usage check
+     * @return currCertificateUsage which contains current usage bit map as defined in CertificateUsage
+     *
+     * @exception InvalidNicknameException If the nickname is null
+     * @exception ObjectNotFoundException If no certificate could be found
+     *      with the given nickname.
+     */
+    public int isCertValid(String nickname, boolean checkSig)
+        throws ObjectNotFoundException, InvalidNicknameException
+    {
+        if (nickname==null) {
+            throw new InvalidNicknameException("Nickname must be non-null");
+        }
+        int currCertificateUsage = 0x0000; // initialize it to 0
+        currCertificateUsage = verifyCertificateNowCUNative(nickname,
+                checkSig);
+        return currCertificateUsage;
+    }
+
+    private native int verifyCertificateNowCUNative(String nickname,
+        boolean checkSig) throws ObjectNotFoundException;
+
+    /////////////////////////////////////////////////////////////
+    // isCertValid
+    /////////////////////////////////////////////////////////////
+    /**
+     * Verify a certificate that exists in the given cert database,
+     * check if is valid and that we trust the issuer. Verify time
+     * against Now.
+     * @param nickname The nickname of the certificate to verify.
+     * @param checkSig verify the signature of the certificate
+     * @param certificateUsage see certificateUsage defined to verify Certificate; to retrieve current certificate usage, call the isCertValid() above
      * @return true for success; false otherwise
      *
      * @exception InvalidNicknameException If the nickname is null
      * @exception ObjectNotFoundException If no certificate could be found
      *      with the given nickname.
      */
-
     public boolean isCertValid(String nickname, boolean checkSig,
             CertificateUsage certificateUsage)
         throws ObjectNotFoundException, InvalidNicknameException
@@ -1539,11 +1581,23 @@ public final class CryptoManager implements TokenSupplier
         if (nickname==null) {
             throw new InvalidNicknameException("Nickname must be non-null");
         }
-        // 0 certificate usage was supposed to get current usage, however,
-        // it is not exposed at this point
-        return verifyCertificateNowNative(nickname,
-              checkSig,
-              (certificateUsage == null) ? 0:certificateUsage.getUsage());
+        // 0 certificate usage will get current usage
+        // should call isCertValid() call above that returns certificate usage
+        if ((certificateUsage == null) ||
+                (certificateUsage == CertificateUsage.CheckAllUsages)){
+            int currCertificateUsage = 0x0000;
+            currCertificateUsage = verifyCertificateNowCUNative(nickname,
+                checkSig);
+
+            if (currCertificateUsage == CertificateUsage.basicCertificateUsages){ 
+                // cert is good for nothing
+                return false;
+            } else
+                return true;
+        } else {
+            return verifyCertificateNowNative(nickname, checkSig,
+              certificateUsage.getUsage());
+        }
     }
 
     private native boolean verifyCertificateNowNative(String nickname,
