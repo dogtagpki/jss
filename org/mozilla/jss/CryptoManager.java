@@ -127,7 +127,7 @@ public final class CryptoManager implements TokenSupplier
         public static final CertificateUsage AnyCA = new CertificateUsage(certificateUsageAnyCA, "AnyCA");
 
         /*
-                 The folllowing usages cannot be verified:
+                The folllowing usages cannot be verified:
                    certUsageAnyCA
                    certUsageProtectedObjectSigner
                    certUsageUserCertImport
