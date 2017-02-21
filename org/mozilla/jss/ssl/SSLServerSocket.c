@@ -92,20 +92,16 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketAccept
             /* Clean up after PR_interrupt. */
             PR_NT_CancelIo(sock->fd);
 #endif
-            JSSL_throwSSLSocketException(env, 
-                "Accept operation interrupted with error code " + err);
+            JSSL_throwSSLSocketException(env, "Accept operation interrupted");
         } else if( err == PR_IO_TIMEOUT_ERROR ) {
 #ifdef WINNT
             PR_NT_CancelIo(sock->fd);
 #endif
-            JSSL_throwSSLSocketException(env, 
-                "Accept operation timed out with error code " + err);
+            JSSL_throwSSLSocketException(env, "Accept operation timed out");
         } else if( err == PR_IO_ERROR ) {
-            JSSL_throwSSLSocketException(env, 
-                "Accept operation received IO error with error code " + err);
+            JSSL_throwSSLSocketException(env, "Accept operation received IO error");
         } else {
-            JSSL_throwSSLSocketException(env, 
-                "Accept operation failed with error code " + err);
+            JSSL_throwSSLSocketException(env, "Accept operation failed");
         }
         goto finish;
     }
