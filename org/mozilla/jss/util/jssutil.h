@@ -4,6 +4,19 @@
 #ifndef JSS_NATIVE_UTIL_H
 #define JSS_NATIVE_UTIL_H
 
+/* The following #defines are used to suppress undesired compiler warnings
+ * that have been deemed inappropriate.
+ *
+ * IMPORTANT:  These are ONLY used on an "as-needed" basis!
+ */
+#ifdef __GNUC__
+#define FUNCTION_MAY_NOT_BE_USED __attribute__ ((unused))
+#define VARIABLE_MAY_NOT_BE_USED __attribute__ ((unused))
+#else
+#define FUNCTION_MAY_NOT_BE_USED
+#define VARIABLE_MAY_NOT_BE_USED
+#endif
+
 /* Need to include these first.
  * #include <nspr.h>
  * #include <jni.h>

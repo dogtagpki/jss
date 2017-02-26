@@ -16,7 +16,7 @@ public final class JSSProvider extends java.security.Provider {
     /* mozilla/security/jss/manifest.mn                                 */
     /*                                                                  */
     /********************************************************************/
-
+    /* QUESTION: When do we change MINOR and PATCH to 4 and 0? */
     private static int JSS_MAJOR_VERSION  = 4;
     private static int JSS_MINOR_VERSION  = 3;
     private static int JSS_PATCH_VERSION  = 2;

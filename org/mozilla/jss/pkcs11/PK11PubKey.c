@@ -30,7 +30,7 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PublicKeyProxy_releaseNativeR
   (JNIEnv *env, jobject this)
 {
     SECKEYPublicKey *pubk;
-    PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
@@ -147,7 +147,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken
   (JNIEnv *env, jobject this, jobject token)
 {
-	PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 	SECKEYPublicKey *key = NULL;
 	PK11SlotInfo *slot = NULL;
 	PK11SlotInfo *keySlot = NULL;
@@ -199,7 +199,7 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11PubKey_getKeyType
   (JNIEnv *env, jobject this)
 {
-    PRThread *pThread;
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
     SECKEYPublicKey *pubk;
     KeyType keyType;
     char* keyTypeFieldName;
@@ -422,7 +422,7 @@ get_public_key_info
 {
     SECKEYPublicKey *pubk;
     jbyteArray byteArray=NULL;
-    SECItem *item;
+    SECItem *item=NULL;
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
@@ -494,7 +494,6 @@ pubkFromRaw(JNIEnv *env, CK_KEY_TYPE type, jbyteArray rawBA)
 {
     jobject pubkObj=NULL;
     SECKEYPublicKey *pubk=NULL;
-    SECStatus rv;
     SECItem *pubkDER=NULL;
 
     /* validate args */

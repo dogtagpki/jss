@@ -420,7 +420,7 @@ DumpItem(SECItem *item)
   for (i=0; i < item->len; i++) {
     printf(" %02x",data[i]);
   }
-  printf(" : 0x%08x %d\n", data, item->len);
+  printf(" : %8p %d\n", data, item->len);
 }
 
 /**********************************************************************

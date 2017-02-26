@@ -23,7 +23,7 @@
 
 #include "pk11util.h"
 
-#if defined(AIX) || defined(HPUX) || defined(LINUX)
+#if defined(AIX) || defined(HPUX)
 #include <signal.h>
 #endif
 
@@ -58,11 +58,11 @@ const char * jss_sccsid() {
 /********************************************************************/
 
 /* JSS_VERSION from  mozilla/security/jss/org/mozilla/jss/util/jssver.h */
-static const char* DLL_JSS_VERSION     = "JSS_VERSION = " JSS_VERSION;
+static const char* VARIABLE_MAY_NOT_BE_USED DLL_JSS_VERSION     = "JSS_VERSION = " JSS_VERSION;
 /* NSS_VERSION from mozilla/security/nss/lib/nss/nss.h */
-static const char* DLL_NSS_VERSION     = "NSS_VERSION = " NSS_VERSION;
+static const char* VARIABLE_MAY_NOT_BE_USED DLL_NSS_VERSION     = "NSS_VERSION = " NSS_VERSION;
 /* NSPR_version from mozilla/nsprpub/pr/include/prinit.h */
-static const char* DLL_NSPR_VERSION    = "NSPR_VERSION = " PR_VERSION;
+static const char* VARIABLE_MAY_NOT_BE_USED DLL_NSPR_VERSION    = "NSPR_VERSION = " PR_VERSION;
 
 
 
@@ -74,13 +74,13 @@ static char*
 getPWFromCallback(PK11SlotInfo *slot, PRBool retry, void *arg);
 
 /*************************************************************
- * AIX, HP, and Linux signal handling madness
+ * AIX and HP signal handling madness
  *
  * In order for the JVM, kernel, and NSPR to work together, we setup
  * a signal handler for SIGCHLD that does nothing.  This is only done
- * on AIX, HP, and Linux.
+ * on AIX and HP.
  *************************************************************/
-#if defined(AIX) || defined(HPUX) || defined(LINUX)
+#if defined(AIX) || defined(HPUX)
 
 static PRStatus
 handleSigChild(JNIEnv *env) {
@@ -268,8 +268,6 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative
         jboolean cooperate)
 {
     SECStatus rv = SECFailure;
-    JavaVM *VMs[5];
-    jint numVMs;
     char *szConfigDir = NULL;
     char *szCertPrefix = NULL;
     char *szKeyPrefix = NULL;

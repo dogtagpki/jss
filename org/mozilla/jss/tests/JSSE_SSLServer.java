@@ -43,7 +43,7 @@ public class JSSE_SSLServer {
     
        /**
      * Set the provider to use.
-     * @param String p
+     * @param p
      */
     public void setProvider(String p) {
         provider = p;
@@ -58,7 +58,7 @@ public class JSSE_SSLServer {
     }
     /**
      * Set the location of keystore file.
-     * @param String fconfigDir
+     * @param fconfigDir
      */
     public void setKeystore(String fconfigDir) {
         configDir = fconfigDir;
@@ -85,7 +85,7 @@ public class JSSE_SSLServer {
     
     /**
      * Start SSLServer and accept connections.
-     * @param args[]
+     * @param args
      */
     public void startSSLServer(String[] args) throws Exception {
         String configDir = "";

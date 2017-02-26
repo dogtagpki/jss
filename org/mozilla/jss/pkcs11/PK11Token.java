@@ -196,8 +196,8 @@ public final class PK11Token implements CryptoToken {
      * Initialize PIN.  This sets the user's new PIN, using the current
      * security officer PIN for authentication.
      *
-     * @param ssopw The security officer's current password.
-     * @param userpw The user's new password.
+     * @param ssopwcb The security officer's current password callback.
+     * @param userpwcb The user's new password callback.
      * @exception IncorrectPinException If the security officer PIN is
      *  incorrect.
      * @exception TokenException If the PIN was already initialized,
@@ -290,8 +290,8 @@ public final class PK11Token implements CryptoToken {
      * Change password.  This changes the user's PIN after it has already
      * been initialized.
      *
-     * @param oldPIN The user's old PIN.
-     * @param newPIN The new PIN.
+     * @param oldPINcb The user's old PIN callback.
+     * @param newPINcb The new PIN callback.
      * @exception IncorrectPasswordException If the old PIN is incorrect.
      * @exception TokenException If some other error occurs on the token.
      *

@@ -162,7 +162,7 @@ public interface CryptoToken {
      * Login to the token. If a token is logged in, it will not trigger
      * password callbacks.
      *
-     * @param password The password for this token.
+     * @param pwcb The password callback for this token.
      * @exception IncorrectPasswordException If the supplied password is
      *  incorrect.
      * @see #setLoginMode

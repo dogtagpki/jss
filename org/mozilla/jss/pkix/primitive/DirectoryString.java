@@ -83,10 +83,6 @@ public class DirectoryString implements ASN1Value {
 
     /**
      * Converts an ASN.1 DirectoryString to a Java string.
-     *
-     * @param dirstr An ANY containing a BER-encoded DirectoryString.
-     * @exception InvalidBERException If the encoding does not contain a
-     *      valid DirectoryString.
      */
     public String toString() {
         return asn1String.toString();
@@ -144,6 +140,8 @@ public class DirectoryString implements ASN1Value {
         /**
          * @param implicitTag <b>This parameter is ignored</b>, because
          *      DirectoryStrings (being CHOICEs) cannot have implicit tags.
+         * @exception InvalidBERException If the encoding does not contain a
+         *      valid DirectoryString.
          */
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException

@@ -164,7 +164,7 @@ finish:
 }
 #endif
 
-static void
+static void FUNCTION_MAY_NOT_BE_USED
 print_secitem(SECItem *item) {
     int i;
     int online;

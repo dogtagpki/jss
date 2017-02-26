@@ -57,7 +57,6 @@ traverseTokenObjects
     SECKEYPublicKeyList* pubkList = NULL;
     PK11SymKey *symKey = NULL;
     CERTCertList *certList = NULL;
-    SECStatus secstat;
 
     /*
      * Get all private keys
@@ -476,7 +475,6 @@ lookupCertByNickname(JNIEnv *env, jobject this, jstring alias)
 {
     PK11SlotInfo *slot;
     EngineGetCertificateCBInfo cbinfo = {NULL,NULL};
-    jbyteArray derCertBA = NULL;
     PRStatus status = PR_FAILURE;
 
     if( alias == NULL ) goto finish;
@@ -781,7 +779,6 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineIsCertificateEn
     PK11SlotInfo *slot;
     EngineGetCertificateCBInfo cbinfo = {NULL,NULL};
     jboolean retVal = JNI_FALSE;
-    SECKEYPrivateKey *privk = NULL;
 
     if( alias == NULL ) goto finish;
 

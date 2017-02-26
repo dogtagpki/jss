@@ -201,7 +201,7 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_getKeyType
     jfieldID typeField=NULL;
     jobject typeObject=NULL;
 
-    if( JSS_PK11_getSymKeyPtr(env, this, &key) != SECSuccess ) {
+    if( JSS_PK11_getSymKeyPtr(env, this, &key) != PR_SUCCESS ) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }

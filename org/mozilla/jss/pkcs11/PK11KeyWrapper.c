@@ -530,7 +530,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
         jint keyLen, jbyteArray ivBA, jint usageEnum)
 {
     PK11SymKey *symKey=NULL;
-    CK_MECHANISM_TYPE wrappingMech, keyTypeMech;
+    CK_MECHANISM_TYPE wrappingMech=0, keyTypeMech=0;
     SECItem *wrappedKey=NULL, *iv=NULL, *param=NULL;
     jobject keyObj=NULL;
     SECKEYPrivateKey *wrappingKey=NULL;

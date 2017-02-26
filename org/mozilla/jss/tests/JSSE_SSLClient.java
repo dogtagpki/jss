@@ -46,7 +46,7 @@ public class JSSE_SSLClient {
     
     /**
      * Set the protocol type and revision
-     * @param String sslRevision
+     * @param fSslRevision
      */
     public void setSslRevision(String fSslRevision) {
         
@@ -59,7 +59,7 @@ public class JSSE_SSLClient {
     
     /**
      * Set the host name to connect to.
-     * @param String hostname
+     * @param fHost
      */
     public void setHost(String fHost) {
         this.host = fHost;
@@ -67,7 +67,7 @@ public class JSSE_SSLClient {
     
     /**
      * Set the port number to connect to.
-     * @param int portnumber
+     * @param fPort
      */
     public void setPort(int fPort) {
         this.port = fPort;
@@ -75,7 +75,7 @@ public class JSSE_SSLClient {
     
     /**
      * Set the cipher suite name to use.
-     * @param String cipherSuiteName
+     * @param fCipherSuite
      */
     public void setCipherSuite(String fCipherSuite) {
         this.cipherName = fCipherSuite;
@@ -83,7 +83,7 @@ public class JSSE_SSLClient {
     
     /**
      * Set the location of rsa.pfx
-     * @param String fKeystoreLoc
+     * @param fKeystoreLoc
      */
     public void setKeystoreLoc(String fKeystoreLoc) {
         keystoreLoc = fKeystoreLoc + "/" + keystoreLoc;

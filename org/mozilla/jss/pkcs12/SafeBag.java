@@ -256,7 +256,7 @@ public final class SafeBag implements ASN1Value {
      *      as the nickname of the associated cert.
      * @param localKeyID The localKeyID for the key; should be the same as
      *      the localKeyID of the associated cert.
-     * @param The password used to encrypt the private key.
+     * @param password The password used to encrypt the private key.
      */
     public static SafeBag
     createEncryptedPrivateKeyBag(PrivateKeyInfo privk, String friendlyName,

@@ -326,7 +326,6 @@ Java_org_mozilla_jss_SecretDecoderRing_KeyManager_deleteKeyNative
 {
     PK11SlotInfo *slot = NULL;
     PK11SymKey *symk = NULL;
-    SECStatus status;
 
     /* get the slot */
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS ) {

@@ -365,7 +365,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getSoLinger(JNIEnv *env, jobject self)
 {
     PRSocketOptionData sockOptions;
     JSSL_SocketData *sock = NULL;
-    jint retval;
+    jint retval=-1;
     PRStatus status;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -842,7 +842,7 @@ JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_socketAvailable(
     JNIEnv *env, jobject self)
 {
-    jint available;
+    jint available=0;
     JSSL_SocketData *sock = NULL;
 
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
