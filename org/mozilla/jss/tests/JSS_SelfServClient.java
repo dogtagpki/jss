@@ -291,7 +291,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     /**
      * Initialize the desired ciphersuite to be set
      * on the socket.
-     * @param int Cipher
+     * @param aCipher
      */
     public void setCipher(int aCipher) {
         
@@ -343,7 +343,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     
     /**
      * Initialize the hostname to run the server
-     * @param String ServerName
+     * @param aHostName
      */
     public void setHostName(String aHostName) {
         serverHost = aHostName;
@@ -351,7 +351,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     
     /**
      * Initialize the port to run the server
-     * @param int port
+     * @param aPort
      */
     public void setPort(int aPort) {
         port = aPort;
@@ -359,7 +359,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     
     /**
      * Initialize the passwords file name
-     * @param String passwords
+     * @param aPasswordFile
      */
     public void setPasswordFile(String aPasswordFile) {
         fPasswordFile = aPasswordFile;
@@ -367,7 +367,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     
     /**
      * Initialize the cert db path name
-     * @param String CertDbPath
+     * @param aCertDbPath
      */
     public void setCertDbPath(String aCertDbPath) {
         fCertDbPath = aCertDbPath;
@@ -375,7 +375,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     
     /**
      * Enable/disable Test Cert Callback.
-     * @param boolean
+     * @param aTestCertCallback
      */
     public void setTestCertCallback(boolean aTestCertCallback) {
         TestCertCallBack = aTestCertCallback;
@@ -383,7 +383,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     
     /**
      * Set client certificate
-     * @param String Certificate Nick Name
+     * @param aClientCertNick Certificate Nick Name
      */
     public void setClientCertNick(String aClientCertNick) {
         clientCertNick = aClientCertNick;

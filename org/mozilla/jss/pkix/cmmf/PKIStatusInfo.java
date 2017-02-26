@@ -56,7 +56,6 @@ public class PKIStatusInfo implements ASN1Value {
     /**
      * Create a PKIStatusInfo with no failure info.
      * @param status A PKIStatus constant.
-     * @param failInfo The bitwise AND of the PKIFailureInfo constants.
      */
     public PKIStatusInfo(int status) {
         this.status = new INTEGER(status);

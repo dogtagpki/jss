@@ -83,7 +83,7 @@ void
 JSS_throwMsg(JNIEnv *env, char *throwableClassName, char *message) {
 
     jclass throwableClass;
-    jint result;
+    jint VARIABLE_MAY_NOT_BE_USED result;
 
     /* validate arguments */
     PR_ASSERT(env!=NULL && throwableClassName!=NULL && message!=NULL);
@@ -124,7 +124,7 @@ JSS_throw(JNIEnv *env, char *throwableClassName)
     jclass throwableClass;
     jobject throwable;
     jmethodID constructor;
-    jint result;
+    jint VARIABLE_MAY_NOT_BE_USED result;
     
     PR_ASSERT( (*env)->ExceptionOccurred(env) == NULL );
 
@@ -190,7 +190,9 @@ JSS_throw(JNIEnv *env, char *throwableClassName)
 PRStatus
 JSS_getPtrFromProxy(JNIEnv *env, jobject nativeProxy, void **ptr)
 {
+#ifdef DEBUG
     jclass nativeProxyClass;
+#endif
 	jclass proxyClass;
     jfieldID byteArrayField;
     jbyteArray byteArray;
@@ -713,7 +715,7 @@ JSS_trace(JNIEnv *env, jint level, char *mesg)
 void
 JSS_assertOutOfMem(JNIEnv *env)
 {
-    jclass memErrClass;
+    jclass VARIABLE_MAY_NOT_BE_USED memErrClass;
     jthrowable excep;
 
     PR_ASSERT(env != NULL);
@@ -772,7 +774,7 @@ JSS_SECItemToByteArray(JNIEnv *env, SECItem *item)
         goto finish;
     }
 
-    (*env)->SetByteArrayRegion(env, array, 0, item->len, item->data);
+    (*env)->SetByteArrayRegion(env, array, 0, item->len, (jbyte*)item->data);
 
 finish:
     return array;

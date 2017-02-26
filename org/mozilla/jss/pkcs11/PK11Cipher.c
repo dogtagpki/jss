@@ -41,7 +41,7 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_initContextWithKeyBits
     SECItem *iv=NULL;
     PK11Context *context=NULL;
     CK_ATTRIBUTE_TYPE op;
-    jobject contextObj;
+    jobject contextObj = NULL;
 
     PR_ASSERT(env!=NULL && clazz!=NULL && keyObj!=NULL && algObj!=NULL);
 

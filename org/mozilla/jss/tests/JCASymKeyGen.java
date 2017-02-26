@@ -84,9 +84,9 @@ public class JCASymKeyGen {
     }
     /**
      * 
-     * @param key
-     * @param kg
-     * @return
+     * @param keyType
+     * @param provider
+     * @return javax.crypto.SecretKey key
      */
     public javax.crypto.SecretKey genSecretKey(String keyType, String provider){
         javax.crypto.SecretKey key = null;
@@ -123,7 +123,7 @@ public class JCASymKeyGen {
      * 
      * @param keyType 
      * @param provider 
-     * @return 
+     * @return javax.crypto.SecretKey key
      */
     public javax.crypto.SecretKey genPBESecretKey(String keyType,
             String provider){
@@ -165,8 +165,10 @@ public class JCASymKeyGen {
     /**
      *
      * @param sKey
-     * @param AlgType
-     * @param provider
+     * @param algFamily
+     * @param algType
+     * @param providerForEncrypt
+     * @param providerForDecrypt
      */
     public void testCipher(javax.crypto.SecretKey sKey, String algFamily,
             String algType, String providerForEncrypt, String providerForDecrypt)
@@ -272,8 +274,10 @@ public class JCASymKeyGen {
     /**
      *
      * @param sKey
-     * @param AlgType
-     * @param provider
+     * @param algFamily
+     * @param algType
+     * @param providerForEncrypt
+     * @param providerForDecrypt
      */
     public void testMultiPartCipher(javax.crypto.SecretKey sKey, String algFamily,
             String algType, String providerForEncrypt, String providerForDecrypt)

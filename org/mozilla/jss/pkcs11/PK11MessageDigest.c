@@ -56,7 +56,6 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
     PK11Context *context = NULL;
     CK_MECHANISM_TYPE mech;
     SECItem param;
-    PK11SlotInfo *slot=NULL;
     jobject contextObj=NULL;
 
     mech = JSS_getPK11MechFromAlg(env, algObj);

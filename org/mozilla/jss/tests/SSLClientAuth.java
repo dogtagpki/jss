@@ -39,7 +39,7 @@ public class SSLClientAuth implements Runnable {
      * @param rand
      * @param extensions
      * @throws java.lang.Exception
-     * @return
+     * @return Certificate
      */
     public static Certificate makeCert(String issuerName, String subjectName,
             int serialNumber, PrivateKey privKey, PublicKey pubKey, int rand,

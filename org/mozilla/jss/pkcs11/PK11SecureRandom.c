@@ -80,7 +80,7 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed
      * "C" data members
      */
 
-    PRThread*     pThread = NULL;
+    PRThread*     VARIABLE_MAY_NOT_BE_USED pThread = NULL;
     SECStatus     status  = PR_FALSE;
     PK11SlotInfo* slot    = NULL;
 
@@ -230,7 +230,7 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_nextBytes
      * "C" data members
      */
 
-    PRThread*     pThread = NULL;
+    PRThread*     VARIABLE_MAY_NOT_BE_USED pThread = NULL;
     SECStatus     status  = PR_FALSE;
 
 

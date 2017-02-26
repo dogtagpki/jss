@@ -398,7 +398,6 @@ public class SignerInfo implements ASN1Value {
      *  SignerInfo.
      * @param contentType The type of the content that is signed by this
      *  SignerInfo.
-     * @param pubkey The public key to use to verify the signature.
      * @exception NoSuchObjectException If no certificate matching the
      *      the issuer name and serial number can be found.
      */

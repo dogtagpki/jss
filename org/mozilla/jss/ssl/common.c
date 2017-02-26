@@ -33,7 +33,7 @@ JSSL_throwSSLSocketException(JNIEnv *env, char *message)
     jmethodID excepCons;
     jobject excepObj;
     jstring msgString;
-    jint result;
+    jint VARIABLE_MAY_NOT_BE_USED result;
 
     /*
      * get the error code and error string
@@ -118,8 +118,8 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
     jbyteArray sdArray = NULL;
     JSSL_SocketData *sockdata = NULL;
     SECStatus status;
-    PRFileDesc *newFD;
-    PRFileDesc *tmpFD;
+    PRFileDesc *newFD = NULL;
+    PRFileDesc *tmpFD = NULL;
     PRFilePrivate *priv = NULL;
     int socketFamily = 0;
 
@@ -601,7 +601,7 @@ Java_org_mozilla_jss_ssl_SocketBase_getSSLOption(JNIEnv *env,
     SECStatus status = SECSuccess;
     PRBool bOption = PR_FALSE;
 
-    if( JSSL_getSockData(env, self, &sock) != SECSuccess ) {
+    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
         goto finish;
     }
 
@@ -623,7 +623,7 @@ JSSL_getSockAddr
     (JNIEnv *env, jobject self, PRNetAddr *addr, LocalOrPeer localOrPeer)
 {
     JSSL_SocketData *sock = NULL;
-    PRStatus status;
+    PRStatus status=PR_FAILURE;
 
     /* get my fd */
     if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
@@ -867,7 +867,7 @@ JSS_SSL_processExceptions(JNIEnv *env, PRFilePrivate *priv)
 
 finish:
     if( currentExcep != NULL && (*env)->ExceptionOccurred(env) == NULL) {
-        int ret = (*env)->Throw(env, currentExcep);
+        int VARIABLE_MAY_NOT_BE_USED ret = (*env)->Throw(env, currentExcep);
         PR_ASSERT(ret == 0);
     }
 }

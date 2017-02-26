@@ -123,7 +123,7 @@ public class HMACTest {
 
     /**
      * Main test method.
-     * @params args[]
+     * @params argv
      */
     public static void main(String[] argv) {
 

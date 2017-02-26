@@ -158,11 +158,11 @@ public class SSLSocket extends java.net.Socket {
     }
 
     /**
-     * Creates an SSL client socket and connects to the specified host and
+     * Creates an SSL client socket and connects to the specified address and
      *  port. Binds to the given local address and port. Installs the given
      *  callbacks for certificate approval and client certificate selection.
      *
-     * @param host The hostname to connect to.
+     * @param address The IP address to connect to.
      * @param port The port to connect to.
      * @param localAddr The local address to bind to. It can be null, in which
      *      case an unspecified local address will be chosen.
