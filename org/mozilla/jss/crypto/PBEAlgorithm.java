@@ -61,6 +61,27 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
     ///////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////
+    // PKCS 5 v2
+    public static final PBEAlgorithm
+    PBE_PKCS5_PBKDF2 = new PBEAlgorithm(
+        SEC_OID_PKCS5_PBKDF2, "PBKDF2", 128,
+            PKCS5.subBranch(12), EncryptionAlgorithm.AES_128_CBC, 8 );
+
+    //////////////////////////////////////////////////////////////
+    // PKCS 5 v2
+    public static final PBEAlgorithm
+    PBE_PKCS5_PBES2 = new PBEAlgorithm(
+        SEC_OID_PKCS5_PBES2, "PBES2", 128,
+            PKCS5.subBranch(13), EncryptionAlgorithm.AES_128_CBC, 8 );
+
+    //////////////////////////////////////////////////////////////
+    // PKCS 5 v2
+    public static final PBEAlgorithm
+    PBE_PKCS5_PBMAC1 = new PBEAlgorithm(
+        SEC_OID_PKCS5_PBMAC1, "PBMAC1", 128,
+            PKCS5.subBranch(14), EncryptionAlgorithm.AES_128_CBC, 8 );
+
+    //////////////////////////////////////////////////////////////
     public static final PBEAlgorithm
     PBE_MD2_DES_CBC = new PBEAlgorithm(
         SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC, "PBE/MD2/DES/CBC", 56,

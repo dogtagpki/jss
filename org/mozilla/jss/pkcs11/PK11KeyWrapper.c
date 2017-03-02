@@ -292,12 +292,32 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     SECItem *wrapped=NULL, *iv=NULL, *param=NULL, *pubValue=NULL;
     SECItem label; /* empty secitem, doesn't need to be freed */
     PRBool token;
-    CK_ATTRIBUTE_TYPE attribs[4];
-    int numAttribs;
+    CK_ATTRIBUTE_TYPE attribs[4] = {0, 0, 0, 0};
+    int numAttribs = 0;
+    CK_TOKEN_INFO tokenInfo;
+
+    PRBool isSensitive = PR_TRUE;
+    PRBool isExtractable = PR_FALSE;
+    /* special case nethsm*/
+    CK_UTF8CHAR nethsmLabel[4] = {'N','H','S','M'};
+    PRBool isNethsm = PR_TRUE;
 
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
         /* exception was thrown */
         goto finish;
+    }
+
+    if ( PK11_GetTokenInfo(slot, &tokenInfo) == PR_SUCCESS) {
+        int ix = 0;
+        for(ix=0; ix < 4; ix++) {
+            if (tokenInfo.label[ix] != nethsmLabel[ix]) {
+               isNethsm = PR_FALSE;
+               break;
+            }
+        }
+
+    } else {
+        isNethsm = PR_FALSE;
     }
 
     /* get unwrapping key */
@@ -360,14 +380,24 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     }
     keyType = PK11_GetKeyType(keyTypeMech, 0);
 
+    if( isNethsm ) {
+        isSensitive = PR_FALSE;
+        isExtractable = PR_FALSE;
+    }
+
+setAttrs:
     /* figure out which operations to enable for this key */
     switch (keyType) {
     case CKK_RSA:
         attribs[0] = CKA_SIGN;
-        attribs[1] = CKA_DECRYPT;
-        attribs[2] = CKA_SIGN_RECOVER;
-        attribs[3] = CKA_UNWRAP;
-        numAttribs = 4;
+        attribs[1] = CKA_SIGN_RECOVER;
+        attribs[2] = CKA_UNWRAP;
+        if (isExtractable) {
+            attribs[3] = CKA_EXTRACTABLE;
+            numAttribs = 4;
+        } else {
+            numAttribs = 3;
+        }
 	break;
     case CKK_DSA:
         attribs[0] = CKA_SIGN;
@@ -394,7 +424,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
 
     /* perform the unwrap */
     privk = PK11_UnwrapPrivKey(slot, unwrappingKey, wrapType, param, wrapped,
-                &label, pubValue, token, PR_TRUE /*sensitive*/, keyType,
+                &label, pubValue, token, isSensitive /*sensitive*/, keyType,
                 attribs, numAttribs, NULL /*wincx*/);
     if( privk == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Key Unwrap failed on token");
