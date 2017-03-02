@@ -149,7 +149,7 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_digest
     PK11Context *context=NULL;
     jbyte *bytes=NULL;
     SECStatus status;
-    unsigned int outLen;
+    unsigned int outLen = 0;
 
     if( JSS_PK11_getCipherContext(env, proxyObj, &context) != PR_SUCCESS) {
         /* exception was thrown */

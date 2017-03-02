@@ -497,7 +497,7 @@ JSS_wipeCharArray(char* array)
  */
 static char* getPWFromConsole()
 {
-    char c;
+    int c;
     char *ret;
     int i;
     char buf[200];  /* no buffer overflow: we bail after 200 chars */
