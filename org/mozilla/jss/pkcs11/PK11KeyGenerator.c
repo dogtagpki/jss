@@ -281,7 +281,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE
     }
     /* print_secitem(pwitem); */
 
-
     mech = JSS_getPK11MechFromAlg(env, alg);
 
     if( mech == CKM_PBA_SHA1_WITH_SHA1_HMAC ) {
@@ -301,7 +300,14 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE
         PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
 
         /* create algid */
-        algid = PK11_CreatePBEAlgorithmID(oidTag, iterationCount, salt);
+        algid = PK11_CreatePBEV2AlgorithmID(
+            oidTag,
+            SEC_OID_DES_EDE3_CBC,
+            SEC_OID_HMAC_SHA1,
+            168/8,
+            iterationCount,
+            salt);
+
         if( algid == NULL ) {
             JSS_throwMsg(env, TOKEN_EXCEPTION,
                     "Unable to process PBE parameters");
