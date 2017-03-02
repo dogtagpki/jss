@@ -17,7 +17,6 @@ import java.security.spec.AlgorithmParameterSpec;
  * <code>keygenOnInternalToken</code> to find out if this is happening.
  *
  * @see org.mozilla.jss.crypto.CryptoToken#getKeyPairGenerator
- * @deprecated Use the JCA interface instead ({@link java.security.KeyPairGenerator})
  */
 public class KeyPairGenerator {
 
