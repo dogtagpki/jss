@@ -205,7 +205,7 @@ static PRStatus
 getAlgInfo(JNIEnv *env, jobject alg, JSS_AlgInfo *info)
 {
     jint index;
-    PRStatus status;
+    PRStatus status = PR_FAILURE;
 
     PR_ASSERT(env!=NULL && alg!=NULL && info!=NULL);
 

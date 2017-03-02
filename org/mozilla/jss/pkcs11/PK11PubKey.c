@@ -241,6 +241,7 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_getKeyType
         break;
     case keaKey:
         keyTypeFieldName = KEA_KEYTYPE_FIELD;
+        break;
     default:
         PR_ASSERT(PR_FALSE);
         keyTypeFieldName = NULL_KEYTYPE_FIELD;
