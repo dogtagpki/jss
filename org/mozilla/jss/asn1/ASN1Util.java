@@ -4,6 +4,8 @@
 package org.mozilla.jss.asn1;
 
 import java.io.*;
+import java.util.Arrays;
+
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.util.Assert;
 
@@ -82,4 +84,71 @@ public class ASN1Util {
             numRead += nr;
         }
     }
+
+    /**
+     * returns the ECC curve byte array given the X509 public key byte array
+     *
+     * @param X509PubKeyBytes byte array of an X509PubKey
+     * @param withHeader tells if the return byes should inclulde the tag and size header or not
+     */
+    public static byte[] getECCurveBytesByX509PublicKeyBytes(byte[] X509PubKeyBytes,
+        boolean withHeader)
+        throws IllegalArgumentException, ArrayIndexOutOfBoundsException,
+               NullPointerException
+    {
+        if ((X509PubKeyBytes == null) || (X509PubKeyBytes.length == 0)) {
+            throw new IllegalArgumentException("X509PubKeyBytes null");
+        }
+
+        /* EC public key OID complete with tag and size */
+        byte[] EC_PubOIDBytes_full =
+            ASN1Util.encode(OBJECT_IDENTIFIER.EC_PUBKEY_OID);
+
+        /* EC public key OID without tag and size */
+        byte[] EC_PubOIDBytes =
+            Arrays.copyOfRange(EC_PubOIDBytes_full, 2, EC_PubOIDBytes_full.length);
+
+        int curveBeginIndex = 0;
+        for (int idx = 0; idx<= X509PubKeyBytes.length; idx++) {
+            byte[] tmp = 
+                Arrays.copyOfRange(X509PubKeyBytes, idx, idx+EC_PubOIDBytes.length);
+            if (Arrays.equals(tmp, EC_PubOIDBytes)) {
+                curveBeginIndex = idx+ EC_PubOIDBytes.length;
+                break;
+            }
+        }
+
+        int curveByteArraySize = (int) X509PubKeyBytes[curveBeginIndex+ 1];
+
+        if (withHeader) {
+            /* actual curve with tag and size */
+            byte curve[] = Arrays.copyOfRange(X509PubKeyBytes, curveBeginIndex, curveBeginIndex + curveByteArraySize + 2);
+            return curve;
+        } else {
+            /* actual curve without tag and size */
+            byte curve[] = 
+                Arrays.copyOfRange(X509PubKeyBytes, curveBeginIndex + 2,
+                    curveBeginIndex + 2 + curveByteArraySize);
+            return curve;
+        }
+    }
+
+    /**
+     * getOIDdescription() returns a text description of the OID
+     *     from OID byte array
+     * the OID byte array is expected to be without the OID Tag (6) and size
+     *    (together 2 bytes)
+     */
+    public static String
+    getOIDdescription(byte[] oidBA) {
+        return getTagDescriptionByOid(oidBA);
+    }
+
+    /**
+     * get OID description JNI method
+     */
+    private native static String
+    getTagDescriptionByOid(byte[] oidBA);
+
+
 }

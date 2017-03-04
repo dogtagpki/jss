@@ -427,13 +427,19 @@ final class PK11KeyWrapper implements KeyWrapper {
         if( type == PrivateKey.RSA ) {
             if( !(publicKey instanceof RSAPublicKey)) {
                 throw new InvalidKeyException("Type of public key does not "+
-                    "match type of private key");
+                    "match type of private key which is RSA");
             }
             return ((RSAPublicKey)publicKey).getModulus().toByteArray();
+        } else if(type == PrivateKey.EC) {
+            if( !(publicKey instanceof PK11ECPublicKey) ) {
+                throw new InvalidKeyException("Type of public key does not "+
+                    "match type of private key which is EC");
+            }
+            return ((PK11ECPublicKey)publicKey).getW().toByteArray();
         } else if(type == PrivateKey.DSA) {
             if( !(publicKey instanceof DSAPublicKey) ) {
                 throw new InvalidKeyException("Type of public key does not "+
-                    "match type of private key");
+                    "match type of private key which is DSA");
             }
             return ((DSAPublicKey)publicKey).getY().toByteArray();
         } else {
