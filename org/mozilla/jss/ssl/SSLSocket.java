@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.ssl;
 
+import java.lang.IllegalArgumentException;
 import java.net.*;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -1037,6 +1038,63 @@ public class SSLSocket extends java.net.Socket {
         setSSLDefaultOption(SocketBase.SSL_NO_CACHE, !b);
     }
 
+   /*
+    * _min_enum and _max_enum should be one of the following:
+    *     SocketBase.SSL_LIBRARY_VERSION_3_0
+    *     SocketBase.SSL_LIBRARY_VERSION_TLS_1_0
+    *     SocketBase.SSL_LIBRARY_VERSION_TLS_1_1
+    *     SocketBase.SSL_LIBRARY_VERSION_TLS_1_2
+    */
+    public static class SSLVersionRange {
+        private int _min_enum;
+        private int _max_enum;
+        public static final int ssl3 = SocketBase.SSL_LIBRARY_VERSION_3_0;
+        public static final int tls1_0 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_0;
+        public static final int tls1_1 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_1;
+        public static final int tls1_2 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_2;
+        public SSLVersionRange(int min_enum, int max_enum)
+          throws IllegalArgumentException {
+            if ((min_enum >= SocketBase.SSL_LIBRARY_VERSION_3_0) &&
+                (max_enum <= SocketBase.SSL_LIBRARY_VERSION_TLS_1_2) &&
+                (min_enum <= max_enum)) {
+                _min_enum = min_enum;
+                _max_enum = max_enum;
+            } else {
+                throw new IllegalArgumentException("JSS SSLSocket SSLVersionRange: arguments out of range");
+            }
+        }
+
+        int getMinEnum() { return _min_enum; }
+        int getMaxEnum() { return _max_enum; }
+
+    }
+
+    public static class SSLProtocolVariant {
+        private int _enum;
+        private SSLProtocolVariant(int val) { _enum = val; }
+
+        int getEnum() { return _enum; }
+
+        public static final SSLProtocolVariant STREAM =
+            new SSLProtocolVariant(SocketBase.SSL_Variant_Stream);
+        public static final SSLProtocolVariant DATA_GRAM =
+            new SSLProtocolVariant(SocketBase.SSL_Variant_Datagram);
+
+    }
+
+    public static void setSSLVersionRangeDefault(SSLProtocolVariant ssl_variant, SSLVersionRange range)
+        throws SocketException
+    {
+        if (range == null)
+            throw new SocketException("setSSLVersionRangeDefault: range null");
+        setSSLVersionRangeDefault(ssl_variant.getEnum(), range.getMinEnum(), range.getMaxEnum());
+    }
+
+    /** 
+     * Sets SSL Version Range Default
+     */
+    private static native void setSSLVersionRangeDefault(int ssl_variant, int min, int max)
+        throws SocketException;
 
     private static void setSSLDefaultOption(int option, boolean on)
         throws SocketException
@@ -1350,6 +1408,7 @@ public class SSLSocket extends java.net.Socket {
 
     public final static int TLS_RSA_WITH_AES_128_GCM_SHA256       =  0x009c;
     public final static int TLS_DHE_RSA_WITH_AES_128_GCM_SHA256   =  0x009e;
+    public final static int TLS_DHE_DSS_WITH_AES_128_GCM_SHA256   =  0x00A2;
 
     public final static int TLS_ECDH_ECDSA_WITH_NULL_SHA          =  0xc001;
     public final static int TLS_ECDH_ECDSA_WITH_RC4_128_SHA       =  0xc002;
@@ -1384,6 +1443,8 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 = 0xc023;
     public final static int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 =  0xc027;
     public final static int TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 = 0xc02b;
+    public final static int TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256  = 0xc02D;
     public final static int TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 =  0xc02f;
+    public final static int TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256    = 0xc031;
 }
 
