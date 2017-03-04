@@ -25,7 +25,7 @@ include $(CORE_DEPTH)/config/config.mk
 #######################################################################
 # (4) Include "local" platform-dependent assignments (OPTIONAL).      #
 #######################################################################
-#include config.mk
+include config.mk
 
 
 #######################################################################

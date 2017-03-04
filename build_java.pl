@@ -19,6 +19,7 @@ org.mozilla.jss.crypto.Algorithm
 org.mozilla.jss.crypto.EncryptionAlgorithm      
 org.mozilla.jss.crypto.PQGParams     
 org.mozilla.jss.crypto.SecretDecoderRing
+org.mozilla.jss.asn1.ASN1Util
 org.mozilla.jss.pkcs11.CertProxy        
 org.mozilla.jss.pkcs11.CipherContextProxy 
 org.mozilla.jss.pkcs11.PK11Module 

@@ -418,6 +418,14 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
             numAttribs = 4;
         }
 	break;
+    case CKK_EC:
+        numAttribs = 1;
+        attribs[0] = CKA_SIGN;
+        if (isExtractable) {
+            attribs[1] = CKA_EXTRACTABLE;
+            numAttribs = 2;
+        }
+	break;
     case CKK_DSA:
         attribs[0] = CKA_SIGN;
         numAttribs = 1;
@@ -427,11 +435,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     case CKK_X9_42_DH:
         attribs[0] = CKA_DERIVE;
         numAttribs = 1;
-	break;
-    case CKK_EC:
-        attribs[0] = CKA_SIGN;
-        attribs[1] = CKA_DERIVE;
-        numAttribs = 2;
 	break;
     default:
         /* unknown key type */
@@ -447,7 +450,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
                 attribs, numAttribs, NULL /*wincx*/);
     if( privk == NULL ) {
         char err[256] = {0};
-        PR_snprintf(err, 256, "Key Unwrap failed on token:%d", PR_GetError());
+        PR_snprintf(err, 256, "Key Unwrap failed on token:error=%d, keyType=%d", PR_GetError(), keyType);
         JSS_throwMsg(env, TOKEN_EXCEPTION, err);
         goto finish;
     }

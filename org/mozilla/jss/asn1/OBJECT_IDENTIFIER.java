@@ -20,6 +20,12 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
+     * The OID space for EC
+     */
+    public static final OBJECT_IDENTIFIER EC_PUBKEY_OID =
+        new OBJECT_IDENTIFIER( new long[]{1, 2, 840, 10045, 2, 1} );
+
+    /**
      * The OID space for RSA Data Security, Inc.
      */
     public static final OBJECT_IDENTIFIER RSADSI =
