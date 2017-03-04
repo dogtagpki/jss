@@ -7,6 +7,7 @@
 #include <pk11func.h>
 #include <ssl.h>
 #include <sslerr.h>
+#include <sslproto.h>
 
 #include <jssutil.h>
 #include <jss_exceptions.h>
@@ -382,6 +383,13 @@ PRInt32 JSSL_enums[] = {
     SSL_RENEGOTIATE_REQUIRES_XTN, /* 25 */      /* ssl.h */
     SSL_RENEGOTIATE_TRANSITIONAL, /* 26 */      /* ssl.h */
     SSL_REQUIRE_SAFE_NEGOTIATION, /* 27 */      /* ssl.h */
+    SSL_LIBRARY_VERSION_2,        /* 28 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_3_0,      /* 29 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_TLS_1_0,  /* 30 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_TLS_1_1,  /* 31 */      /* sslproto.h */
+    SSL_LIBRARY_VERSION_TLS_1_2,  /* 32 */      /* sslproto.h */
+    ssl_variant_stream,           /* 33 */      /* sslt.h */
+    ssl_variant_datagram,         /* 34 */      /* sslt.h */
     0
 };
 
