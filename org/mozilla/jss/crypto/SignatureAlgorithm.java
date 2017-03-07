@@ -92,7 +92,7 @@ public class SignatureAlgorithm extends Algorithm {
      * operates on its input, which should be a hash.
      */
     public static final SignatureAlgorithm
-    ECSignature = new SignatureAlgorithm(SEC_OID_ANSIX962_EC_PUBLIC_KEY, 
+    ECSignature = new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST, 
 	"EC",
         null, null, ANSI_X962_OID.subBranch(2).subBranch(1) );
 
