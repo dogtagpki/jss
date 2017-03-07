@@ -62,7 +62,12 @@ public class KeyPairAlgorithm extends Algorithm {
     DSAFamily = new Algorithm(SEC_OID_ANSIX9_DSA_SIGNATURE, "DSA");
 
     public static final Algorithm
-    ECFamily = new Algorithm(SEC_OID_ANSIX962_EC_PUBLIC_KEY, "EC");
+
+//    To support both ECDSA and ECDH, it is best to provide two EC Families;
+//    However, since there is no token that does only CKM_DERIVE to
+//    date, we will just do ECDSA for now as it is sufficient enough today.
+//    This fix will support tokens that do not do ECDH
+    ECFamily = new Algorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST, "EC");
 
     public static final KeyPairAlgorithm
     RSA = new KeyPairAlgorithm(CKM_RSA_PKCS_KEY_PAIR_GEN, "RSA", RSAFamily);
