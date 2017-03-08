@@ -953,7 +953,7 @@ public final class CryptoManager implements TokenSupplier
                     "Must set ocspResponderCertNickname");
             }
         }
-        initializeAllNative(values.configDir,
+        initializeAllNative2(values.configDir,
                             values.certPrefix,
                             values.keyPrefix,
                             values.secmodName,
@@ -1018,7 +1018,7 @@ public final class CryptoManager implements TokenSupplier
     }
 
     private static native void
-    initializeAllNative(String configDir,
+    initializeAllNative2(String configDir,
                         String certPrefix,
                         String keyPrefix,
                         String secmodName,
@@ -1573,6 +1573,7 @@ public final class CryptoManager implements TokenSupplier
      * @exception InvalidNicknameException If the nickname is null
      * @exception ObjectNotFoundException If no certificate could be found
      *      with the given nickname.
+     * @deprecated Use verifyCertificate() instead
      */
     public boolean isCertValid(String nickname, boolean checkSig,
             CertificateUsage certificateUsage)
@@ -1600,8 +1601,35 @@ public final class CryptoManager implements TokenSupplier
         }
     }
 
+    /**
+     * Verify a certificate that exists in the given cert database,
+     * check if it's valid and that we trust the issuer. Verify time
+     * against now.
+     * @param nickname nickname of the certificate to verify.
+     * @param checkSig verify the signature of the certificate
+     * @param certificateUsage see certificate usage defined to verify certificate
+     *
+     * @exception InvalidNicknameException If the nickname is null.
+     * @exception ObjectNotFoundException If no certificate could be found
+     *      with the given nickname.
+     * @exception CertificateException If certificate is invalid.
+     */
+    public void verifyCertificate(String nickname,
+            boolean checkSig,
+            CertificateUsage certificateUsage)
+                    throws ObjectNotFoundException, InvalidNicknameException, CertificateException {
+        int usage = certificateUsage == null ? 0 : certificateUsage.getUsage();
+        verifyCertificateNowNative2(nickname, checkSig, usage);
+    }
+
     private native boolean verifyCertificateNowNative(String nickname,
         boolean checkSig, int certificateUsage) throws ObjectNotFoundException;
+
+    private native void verifyCertificateNowNative2(
+            String nickname,
+            boolean checkSig,
+            int certificateUsage)
+       throws ObjectNotFoundException, InvalidNicknameException, CertificateException;
 
     /**
      * note: this method calls obsolete function in NSS
