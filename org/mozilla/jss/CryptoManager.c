@@ -267,6 +267,70 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative
         jboolean noPK11Finalize,
         jboolean cooperate)
 {
+    Java_org_mozilla_jss_CryptoManager_initializeAllNative2(
+        env,
+        clazz,
+        configDir,
+        certPrefix,
+        keyPrefix,
+        secmodName,
+        readOnly,
+        manuString,
+        libraryString,
+        tokString,
+        keyTokString,
+        slotString,
+        keySlotString,
+        fipsString,
+        fipsKeyString,
+        ocspCheckingEnabled,
+        ocspResponderURL,
+        ocspResponderCertNickname,
+        JNI_FALSE, /*initializeJavaOnly*/
+        PKIXVerify,
+        noCertDB,
+        noModDB,
+        forceOpen,
+        noRootInit,
+        optimizeSpace,
+        PK11ThreadSafe,
+        PK11Reload,
+        noPK11Finalize,
+        cooperate);
+}
+
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_initializeAllNative2
+    (JNIEnv *env, jclass clazz,
+        jstring configDir,
+        jstring certPrefix,
+        jstring keyPrefix,
+        jstring secmodName,
+        jboolean readOnly,
+        jstring manuString,
+        jstring libraryString,
+        jstring tokString,
+        jstring keyTokString,
+        jstring slotString,
+        jstring keySlotString,
+        jstring fipsString,
+        jstring fipsKeyString,
+        jboolean ocspCheckingEnabled,
+        jstring ocspResponderURL,
+        jstring ocspResponderCertNickname,
+        jboolean initializeJavaOnly,
+        jboolean PKIXVerify,
+        jboolean noCertDB,
+        jboolean noModDB, 
+        jboolean forceOpen,
+        jboolean noRootInit,
+        jboolean optimizeSpace,
+        jboolean PK11ThreadSafe,
+        jboolean PK11Reload,
+        jboolean noPK11Finalize,
+        jboolean cooperate)
+{
     SECStatus rv = SECFailure;
     char *szConfigDir = NULL;
     char *szCertPrefix = NULL;

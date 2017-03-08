@@ -25,6 +25,13 @@
 SECStatus
 CERT_ImportCAChainTrusted(SECItem *certs, int numcerts, SECCertUsage certUsage);
 
+/*
+ * This is a private function, used only by JSS in this file.
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
+        jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage);
+
 /*****************************************************************
  *
  * CryptoManager. f i n d C e r t B y N i c k n a m e N a t i v e
@@ -1593,6 +1600,98 @@ finish:
         return JNI_TRUE;
     } else {
         return JNI_FALSE;
+    }
+}
+
+/***********************************************************************
+ * CryptoManager.verifyCertificateNowNative2
+ *
+ * Verify a certificate that exists in the given cert database,
+ * check if it's valid and that we trust the issuer. Verify time
+ * against now.
+ * @param nickname nickname of the certificate to verify.
+ * @param checkSig verify the signature of the certificate
+ * @param certificateUsage see certificate usage defined to verify certificate
+ *
+ * @exception InvalidNicknameException If the nickname is null.
+ * @exception ObjectNotFoundException If no certificate could be found
+ *      with the given nickname.
+ * @exception CertificateException If certificate is invalid.
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
+        jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage)
+{
+    jint certificateUsage;
+    SECCertificateUsage      currUsage = 0x0000;  /* unexposed for now */
+    SECStatus                rv = SECFailure;
+    CERTCertificate          *cert = NULL;
+    char                     *nickname = NULL;
+    
+    if (nickString == NULL) {
+        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
+        goto finish;
+    }
+
+    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
+    if (nickname == NULL) {
+        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
+        goto finish;
+    }
+
+    certificateUsage = required_certificateUsage;
+    if (cert == NULL) {
+        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        goto finish;
+    }
+
+    cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
+
+    if (cert == NULL) {
+        char *msgBuf;
+        msgBuf = PR_smprintf("Certificate not found: %s", nickname);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, msgBuf);
+        PR_Free(msgBuf);
+        goto finish;
+    }
+
+    /* 0 for certificateUsage in call to CERT_VerifyCertificateNow will
+     * retrieve the current valid usage into currUsage
+     */
+    rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+        checkSig, certificateUsage, NULL, &currUsage);
+
+    if (rv != SECSuccess) {
+        JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Invalid certificate");
+        goto finish;
+    }
+
+    if ((certificateUsage == 0x0000) &&
+        (currUsage ==
+            ( certUsageUserCertImport |
+            certUsageVerifyCA |
+            certUsageProtectedObjectSigner |
+            certUsageAnyCA ))) {
+
+        /* The certificate is good for nothing.
+         * The following usages cannot be verified:
+         *   certUsageAnyCA
+         *   certUsageProtectedObjectSigner
+         *   certUsageUserCertImport
+         *   certUsageVerifyCA
+         *   (0x0b80)
+         */
+
+        JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Unusable certificate");
+        goto finish;
+    }
+
+finish:
+    if (nickname != NULL) {
+        (*env)->ReleaseStringUTFChars(env, nickString, nickname);
+    }
+    if (cert != NULL) {
+        CERT_DestroyCertificate(cert);
     }
 }
 
