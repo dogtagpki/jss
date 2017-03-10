@@ -36,6 +36,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSSLVersionRangeDefault(JNIEnv *env,
 {
     SECStatus status;
     SSLVersionRange vrange;
+    SSLVersionRange supported_range;
 
     if (ssl_variant <0 || ssl_variant >= JSSL_enums_size|| 
             min <0 || min >= JSSL_enums_size ||
@@ -50,7 +51,6 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSSLVersionRangeDefault(JNIEnv *env,
     vrange.max = JSSL_enums[max];
 
     /* get supported range */
-    SSLVersionRange supported_range;
     status = SSL_VersionRangeGetSupported(JSSL_enums[ssl_variant],
                 &supported_range);
     if( status != SECSuccess ) {
