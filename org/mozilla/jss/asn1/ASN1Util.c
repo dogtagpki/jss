@@ -57,8 +57,8 @@ Java_org_mozilla_jss_asn1_ASN1Util_getTagDescriptionByOid(JNIEnv *env, jobject t
 {
     SECItem *oid = NULL;
     SECOidTag oidTag = SEC_OID_UNKNOWN;
-    char *oidDesc = NULL;
-    jstring description= "";
+    const char *oidDesc = NULL;
+    jstring description = (jstring)"";
 
     if (oidBA == NULL) {
         JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
