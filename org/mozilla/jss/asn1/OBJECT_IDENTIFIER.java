@@ -189,6 +189,10 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * for the OID string is dotted numbers, for example:
      * "<code>3.2.456.53.23.64</code>".
      *
+     * Because the toString() method here provides a different format, we also
+     * allow that format, for example:
+     * "<code>{3 2 456 53 23 64}</code>".
+     * 
      * @exception NumberFormatException If the given string cannot be
      *      parsed into an OID.
      */
@@ -196,6 +200,17 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
 
         if( dottedOID == null || dottedOID.length()==0 ) {
             throw new NumberFormatException("OID string is zero-length");
+        }
+
+        if (dottedOID.startsWith("{")) {
+            // input string is of the format provided by OBJECT_IDENTIFIER,toString()
+            // convert this first to dotted OID
+        	
+        	// remove the leading and trailing brackets
+            dottedOID = dottedOID.substring(1, dottedOID.length()-1);
+            
+            // convert spaces to dots
+            dottedOID = dottedOID.replaceAll(" ", ".");
         }
 
         StringTokenizer stok = new StringTokenizer(dottedOID, ".");
@@ -271,6 +286,14 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
             ret = ret + " " + numbers[i];
         }
         ret += "}";
+        return ret;
+    }
+
+    public String toDottedString() {
+        String ret = String.valueOf(numbers[0]);
+        for(int i=1; i < numbers.length; i++) {
+            ret = ret + "." + numbers[i];
+        }
         return ret;
     }
 
