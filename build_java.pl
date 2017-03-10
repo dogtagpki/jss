@@ -32,6 +32,7 @@ org.mozilla.jss.pkcs11.PK11PrivKey
 org.mozilla.jss.pkcs11.PK11PubKey     
 org.mozilla.jss.pkcs11.PK11SymKey      
 org.mozilla.jss.pkcs11.PK11KeyPairGenerator 
+org.mozilla.jss.pkcs11.PK11SymmetricKeyDeriver
 org.mozilla.jss.pkcs11.PK11KeyGenerator
 org.mozilla.jss.pkcs11.PK11Token
 org.mozilla.jss.pkcs11.PrivateKeyProxy  
@@ -78,7 +79,6 @@ org.mozilla.jss.ssl
 org.mozilla.jss.tests
 org.mozilla.jss.util
 );
-
 
 # setup environment
 setup_env();

@@ -487,7 +487,7 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
     (JNIEnv *env, jclass clazz, jobject tokenObj, jobject unwrapperObj,
         jbyteArray wrappedBA, jobject wrapAlgObj, jobject typeAlgObj,
-        jint keyLen, jbyteArray ivBA, jint usageEnum)
+        jint keyLen, jbyteArray ivBA, jint usageEnum, jboolean temporary)
 {
     PK11SymKey *symKey=NULL, *wrappingKey=NULL;
     CK_MECHANISM_TYPE wrappingMech, keyTypeMech;
@@ -495,6 +495,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
     jobject keyObj = NULL;
     CK_ULONG operation;
     CK_FLAGS flags;
+    PRBool isPermanent = PR_FALSE;
 
     /* get key type */
     keyTypeMech = JSS_getPK11MechFromAlg(env, typeAlgObj);
@@ -547,8 +548,21 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
         flags = 0;
     }
 
-    symKey = PK11_UnwrapSymKeyWithFlags(wrappingKey, wrappingMech, param,
-        wrappedKey, keyTypeMech, operation, keyLen, flags);
+    if( temporary ) {
+        isPermanent = PR_FALSE;
+    } else {
+        isPermanent = PR_TRUE;
+    }
+
+    if( isPermanent == PR_FALSE) {
+        symKey = PK11_UnwrapSymKeyWithFlags(wrappingKey, wrappingMech, param,
+            wrappedKey, keyTypeMech, operation, keyLen, flags);
+
+    } else {
+        symKey = PK11_UnwrapSymKeyWithFlagsPerm(wrappingKey, wrappingMech, param,
+            wrappedKey, keyTypeMech, operation, keyLen, flags,isPermanent);
+    }
+
     if( symKey == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
@@ -670,7 +684,7 @@ finish:
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
     (JNIEnv *env, jclass clazz, jobject tokenObj, jbyteArray wrappedBA,
-        jobject typeAlgObj, jint usageEnum)
+        jobject typeAlgObj, jint usageEnum, jboolean temporary)
 {
     PK11SymKey *symKey=NULL;
     CK_MECHANISM_TYPE keyTypeMech;
@@ -679,12 +693,19 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
     PK11SlotInfo *slot = NULL;
     CK_ULONG operation;
     CK_FLAGS flags;
+    PRBool isPerm = PR_FALSE;
 
     /* get key type */
     keyTypeMech = JSS_getPK11MechFromAlg(env, typeAlgObj);
     if( keyTypeMech == CKM_INVALID_MECHANISM ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unrecognized key type algorithm");
         goto finish;
+    }
+
+    if( temporary ) {
+        isPerm = PR_FALSE;
+    } else {
+        isPerm = PR_TRUE;
     }
 
     /* get the slot */
@@ -710,7 +731,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
 
     /* pull in the key */
     symKey = PK11_ImportSymKeyWithFlags(slot, keyTypeMech, PK11_OriginUnwrap,
-        operation, wrappedKey, flags, PR_FALSE /*isPerm*/, NULL);
+        operation, wrappedKey, flags, isPerm, NULL);
     if( symKey == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
