@@ -210,5 +210,6 @@ public class Algorithm {
     protected static final short SEC_OID_PKCS5_PBES2=54;
     protected static final short SEC_OID_PKCS5_PBMAC1=55;
     protected static final short SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST=56;
-
+    protected static final short CKM_NSS_AES_KEY_WRAP=57;
+    protected static final short CKM_NSS_AES_KEY_WRAP_PAD=58;
 }

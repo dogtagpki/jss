@@ -111,4 +111,12 @@ public class KeyWrapAlgorithm extends Algorithm {
     public static final KeyWrapAlgorithm
     RC2_CBC_PAD = new KeyWrapAlgorithm(CKM_RC2_CBC_PAD, "RC2/CBC/PKCS5Padding",
                         RC2ParameterSpec.class, true, 8);
+    
+    public static final KeyWrapAlgorithm
+    AES_KEY_WRAP = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP, "AES KeyWrap",
+    		(Class) null, true, 8);
+    
+    public static final KeyWrapAlgorithm
+    AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
+    		(Class) null, true, 8);
 }
