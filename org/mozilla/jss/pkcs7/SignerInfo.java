@@ -97,7 +97,8 @@ public class SignerInfo implements ASN1Value {
     /**
      * Retrieves the DigestAlgorithm used in this SignerInfo.
      *
-     * @exception NoSuchAlgorithm If the algorithm is not recognized by JSS.
+     * @exception NoSuchAlgorithmException If the algorithm is not recognized
+     *  by JSS.
      */
     public DigestAlgorithm getDigestAlgorithm()
         throws NoSuchAlgorithmException
@@ -290,7 +291,7 @@ public class SignerInfo implements ASN1Value {
             signingAlg.getRawAlg().toOID(),null );
 
 
-        if( authenticatedAttributes != null ) 
+        if( authenticatedAttributes != null )
         {
             Assert._assert( authenticatedAttributes.size() >= 2 );
             this.authenticatedAttributes = authenticatedAttributes;
@@ -370,11 +371,11 @@ public class SignerInfo implements ASN1Value {
     /**
      * Verifies that this SignerInfo contains a valid signature of the
      * given message digest.  If any authenticated attributes are present,
-     * they are also validated. The verification algorithm is as follows:<ul>
-     * <p>Note that this does <b>not</b> verify the validity of the
-     *  the certificate itself, only the signature.
+     * they are also validated. The verification algorithm is as follows:
+     * Note that this does <b>not</b> verify the validity of the
+     *  the certificate itself, only the signature.<ul>
      *
-     * <li>If no authenticated attributes are present, the content type is 
+     * <li>If no authenticated attributes are present, the content type is
      *  verified to be <i>data</i>. Then it is verified that the message
      *  digest passed
      *  in, when encrypted with the given public key, matches the encrypted
@@ -398,7 +399,7 @@ public class SignerInfo implements ASN1Value {
      *  SignerInfo.
      * @param contentType The type of the content that is signed by this
      *  SignerInfo.
-     * @exception NoSuchObjectException If no certificate matching the
+     * @exception ObjectNotFoundException If no certificate matching the
      *      the issuer name and serial number can be found.
      */
     public void verify(byte[] messageDigest, OBJECT_IDENTIFIER contentType)
@@ -412,14 +413,14 @@ public class SignerInfo implements ASN1Value {
             issuerAndSerialNumber.getSerialNumber()  );
         verify(messageDigest, contentType, cert.getPublicKey());
     }
-    
+
 
     /**
      * Verifies that this SignerInfo contains a valid signature of the
      * given message digest.  If any authenticated attributes are present,
      * they are also validated. The verification algorithm is as follows:<ul>
      *
-     * <li>If no authenticated attributes are present, the content type is 
+     * <li>If no authenticated attributes are present, the content type is
      *  verified to be <i>data</i>. Then it is verified that the message
      *  digest passed
      *  in, when encrypted with the given public key, matches the encrypted
@@ -666,7 +667,7 @@ public class SignerInfo implements ASN1Value {
         // verify the contents octets of the DER encoded authenticated attribs
         byte[] toBeDigested;
         toBeDigested = ASN1Util.encode(authenticatedAttributes);
-    
+
         MessageDigest md = MessageDigest.getInstance(
                 DigestAlgorithm.fromOID(digestAlgorithm.getOID()).toString() );
         byte[] digest = md.digest(toBeDigested);
@@ -715,7 +716,7 @@ public class SignerInfo implements ASN1Value {
         }
 
         return true;
-    } 
+    }
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -779,7 +780,7 @@ public class SignerInfo implements ASN1Value {
             seqt.addOptionalElement(
                         new Tag(0),
                         new SET.OF_Template(Attribute.getTemplate()));
-          
+
             // digestEncryptionAlgorithm
             seqt.addElement(AlgorithmIdentifier.getTemplate());  // dig encr alg
 
@@ -792,12 +793,12 @@ public class SignerInfo implements ASN1Value {
                     new SET.OF_Template(Attribute.getTemplate()));
 
         }
-        
+
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
-        public ASN1Value decode(InputStream istream) 
+        public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(TAG,istream);
