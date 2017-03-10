@@ -136,7 +136,6 @@ public class ContentInfo implements ASN1Value {
      *  an OCTET_STRING will be returned.
      * <p>If the contentType is <b>not</b> one of the six standard types,
      *      the returned object will be an ANY.
-     * </ul>
      */
     public ASN1Value getInterpretedContent() throws InvalidBERException {
         if(contentType.equals(DATA)) {

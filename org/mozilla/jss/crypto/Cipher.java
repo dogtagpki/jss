@@ -43,7 +43,7 @@ public abstract class Cipher {
         throws InvalidKeyException, InvalidAlgorithmParameterException,
         TokenException;
 
-    /** 
+    /**
      * Initializes a decryption context with a symmetric key and
      * algorithm parameters.
      */

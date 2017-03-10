@@ -69,7 +69,7 @@ public class HMACTest {
         mozillaHmac.update(clearText.getBytes());
         mozillaHmacOut = mozillaHmac.doFinal();
 
-        // loop through all configured providers; if they support the 
+        // loop through all configured providers; if they support the
         // algorithm compare the result to Mozilla's HMAC
         Provider[] providers = Security.getProviders("Mac." + alg);
         String provider = null;
@@ -157,17 +157,17 @@ public class HMACTest {
             String clearText = new String("FireFox and Thunderbird rule");
             for (int i = 0; i < JSS_HMAC_Algs.length; i++) {
                 if (hmacTest.fipsMode()) {
-                    //In FIPS Mode only test JSS due to NSS prevents 
-                    //key data from being extracted above the 
-                    //NSS cryptographic boundary when FIPS mode 
-                    //is enabled. 
+                    //In FIPS Mode only test JSS due to NSS prevents
+                    //key data from being extracted above the
+                    //NSS cryptographic boundary when FIPS mode
+                    //is enabled.
                     //note there is a bug with HmacSHA512 in fipsmode.
                     //https://bugzilla.mozilla.org/show_bug.cgi?id=436907
                     if (!JSS_HMAC_Algs[i].equals("HmacSHA512")) {
                         hmacTest.doHMAC(JSS_HMAC_Algs[i], sk, clearText);
                     }
                 } else {
-                    // compare MOZ_PROVIDER_NAME implementation with all 
+                    // compare MOZ_PROVIDER_NAME implementation with all
                     // providers that also support the given algorithm
                     if (!hmacTest.compareHMAC(
                             JSS_HMAC_Algs[i], sk, clearText)) {

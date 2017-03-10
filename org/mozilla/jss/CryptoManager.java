@@ -412,7 +412,7 @@ public final class CryptoManager implements TokenSupplier
         ////////////////////////////////////////////////////////////////////
         /**
          * Returns the description of the internal PKCS #11 FIPS slot.
-         * <p>The default is 
+         * <p>The default is
          * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
          */
         public String getFIPSSlotDescription() {
@@ -443,7 +443,7 @@ public final class CryptoManager implements TokenSupplier
         /**
          * Returns the description of the internal PKCS #11 FIPS
          * Key Storage slot.
-         * <p>The default is 
+         * <p>The default is
          * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
          */
         public String getFIPSKeyStorageSlotDescription() {
@@ -533,26 +533,26 @@ public final class CryptoManager implements TokenSupplier
         public boolean initializeJavaOnly = false;
 
         /**
-         * Enable PKIX verify rather than the old cert library, 
+         * Enable PKIX verify rather than the old cert library,
          * to verify certificates. Default is false.
          */
         public boolean PKIXVerify = false;
 
         /**
-         * Don't open the cert DB and key DB's, just 
+         * Don't open the cert DB and key DB's, just
          * initialize the volatile certdb. Default is false.
          */
         public boolean noCertDB = false;
 
         /**
-         * Don't open the security module DB, 
+         * Don't open the security module DB,
          * just initialize the PKCS #11 module.
          * Default is false.
          */
-        public boolean noModDB = false; 
+        public boolean noModDB = false;
 
-        /** 
-         * Continue to force initializations even if the 
+        /**
+         * Continue to force initializations even if the
          * databases cannot be opened.
          * Default is false.
          */
@@ -565,7 +565,7 @@ public final class CryptoManager implements TokenSupplier
          */
         public boolean noRootInit = false;
 
-        /** 
+        /**
          * Use smaller tables and caches.
          * Default is false.
          */
@@ -589,11 +589,11 @@ public final class CryptoManager implements TokenSupplier
          * error when loading PKCS#11 modules. This is necessary
          * if another piece of code is using the same PKCS#11
          * modules that NSS is accessing without going through
-         * NSS, for example Java SunPKCS11 provider. 
+         * NSS, for example Java SunPKCS11 provider.
          * default is false.
          */
         public boolean PK11Reload = false;
-        
+
         /**
          * never call C_Finalize on any
          * PKCS#11 module. This may be necessary in order to
@@ -608,7 +608,7 @@ public final class CryptoManager implements TokenSupplier
          * Default is false.
          */
         public boolean noPK11Finalize = false;
- 
+
         /**
          * Sets 4 recommended options for applications that
          * use both NSS and the Java SunPKCS11 provider.
@@ -653,7 +653,7 @@ public final class CryptoManager implements TokenSupplier
      * loaded cryptographic modules for the token.
      *
      * @param name The name of the token.
-     * @exception org.mozilla.jss.crypto.NoSuchTokenException If no token
+     * @exception org.mozilla.jss.NoSuchTokenException If no token
      *  is found with the given name.
      */
     public synchronized CryptoToken getTokenByName(String name)
@@ -908,9 +908,9 @@ public final class CryptoManager implements TokenSupplier
      * <code>initialize()</code>.
      *
      * @param configDir The directory containing the security databases.
-     * @exception org.mozilla.jss.util.KeyDatabaseException Unable to open
+     * @exception org.mozilla.jss.KeyDatabaseException Unable to open
      *  the key database, or it was currupted.
-     * @exception org.mozilla.jss.util.CertDatabaseException Unable
+     * @exception org.mozilla.jss.CertDatabaseException Unable
      *  to open the certificate database, or it was currupted.
      **/
     public static synchronized void initialize( String configDir )
@@ -931,10 +931,10 @@ public final class CryptoManager implements TokenSupplier
      * <code>initialize()</code>.
      *
      * @param values The options with which to initialize CryptoManager.
-     * @exception org.mozilla.jss.util.KeyDatabaseException Unable to open
+     * @exception org.mozilla.jss.KeyDatabaseException Unable to open
      *  the key database, or it was corrupted.
-     * @exception org.mozilla.jss.util.CertDatabaseException Unable
-     *  to open the certificate database, or it was corrupted.
+     * @exception org.mozilla.jss.CertDatabaseException Unable
+     *  to open the certificate database, or it was currupted.
      **/
     public static synchronized void initialize( InitializationValues values )
         throws
@@ -972,7 +972,7 @@ public final class CryptoManager implements TokenSupplier
                             values.initializeJavaOnly,
                             values.PKIXVerify,
                             values.noCertDB,
-                            values.noModDB, 
+                            values.noModDB,
                             values.forceOpen,
                             values.noRootInit,
                             values.optimizeSpace,
@@ -1037,7 +1037,7 @@ public final class CryptoManager implements TokenSupplier
                         boolean initializeJavaOnly,
                         boolean PKIXVerify,
                         boolean noCertDB,
-                        boolean noModDB, 
+                        boolean noModDB,
                         boolean forceOpen,
                         boolean noRootInit,
                         boolean optimizeSpace,
@@ -1093,7 +1093,7 @@ public final class CryptoManager implements TokenSupplier
      * @return The leaf certificate from the chain.
      * @exception CertificateEncodingException If the package encoding
      *      was not recognized.
-     * @exception CertificateNicknameConflictException If the leaf certificate
+     * @exception NicknameConflictException If the leaf certificate
      *      is a user certificate, and another certificate already has the
      *      given nickname.
      * @exception UserCertConflictException If the leaf certificate
@@ -1131,7 +1131,7 @@ public final class CryptoManager implements TokenSupplier
      * @return The leaf certificate from the chain.
      * @exception CertificateEncodingException If the package encoding
      *      was not recognized.
-     * @exception CertificateNicknameConflictException If the leaf certificate
+     * @exception NicknameConflictException If the leaf certificate
      *      another certificate already has the given nickname.
      * @exception UserCertConflictException If the leaf certificate
      *      has already been imported.

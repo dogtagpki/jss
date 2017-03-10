@@ -63,7 +63,7 @@ public final class SafeBag implements ASN1Value {
      */
     public SET getBagAttributes() {
        return bagAttributes;
-    } 
+    }
 
     ///////////////////////////////////////////////////////////////////////
     // OIDs
@@ -81,7 +81,7 @@ public final class SafeBag implements ASN1Value {
     public static final OBJECT_IDENTIFIER PKCS12_BAG_IDS =
                 PKCS12_VERSION_1.subBranch(1);
 
-    /** 
+    /**
      * A bag containing a private key.  The bag content is a <i>KeyBag</i>,
      * which is equivalent to a PKCS #8 <i>PrivateKeyInfo</i>
      */
@@ -124,7 +124,7 @@ public final class SafeBag implements ASN1Value {
     /**
      * A FriendlyName attribute. The value is a BMPString.
      */
-    public static final OBJECT_IDENTIFIER FRIENDLY_NAME = 
+    public static final OBJECT_IDENTIFIER FRIENDLY_NAME =
             OBJECT_IDENTIFIER.PKCS9.subBranch(20);
 
     /**
@@ -149,7 +149,7 @@ public final class SafeBag implements ASN1Value {
      * @param bagAttributes A SET of Attributes for this SafeBag.  Since
      *      attributes are optional, this parameter may be null.
      */
-    public SafeBag(OBJECT_IDENTIFIER bagType, ASN1Value bagContent, 
+    public SafeBag(OBJECT_IDENTIFIER bagType, ASN1Value bagContent,
                 SET bagAttributes)
     {
         if( bagType==null || bagContent==null ) {
@@ -244,7 +244,7 @@ public final class SafeBag implements ASN1Value {
         MessageDigest digester = MessageDigest.getInstance("SHA-1");
         return digester.digest(derCert);
     }
-        
+
 
     /**
      * Creates a SafeBag containing a PKCS-8ShroudedKeyBag, which is
@@ -275,7 +275,7 @@ public final class SafeBag implements ASN1Value {
         EncryptedPrivateKeyInfo epki= EncryptedPrivateKeyInfo.createPBE(
                 PBEAlgorithm.PBE_SHA1_DES3_CBC, password, salt,
                 DEFAULT_ITERATIONS, new PasswordConverter(), privk);
-        
+
         SET attributes = new SET();
         attributes.addElement(new Attribute(
                     FRIENDLY_NAME,
