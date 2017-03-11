@@ -1453,13 +1453,13 @@ public final class CryptoManager implements TokenSupplier
     /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
     /* lib/manifest.mn                                                  */
-    /* mozilla/security/jss/manifest.mn                                 */
+    /* jss/manifest.mn                                                  */
     /*                                                                  */
     /********************************************************************/
 
 
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_3_2_RTM";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_4_0_RTM";
     public static final String
     JAR_JDK_VERSION     = "JDK_VERSION = N/A";
     public static final String
