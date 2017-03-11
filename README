@@ -1,0 +1,98 @@
+============================================
+||  Upstream JSS Build/Test Instructions  ||
+============================================
+
+(1) Prepare a work area
+
+    (a) For upstream builds which checkout and utilize the current NSPR and NSS
+        source repositories: 
+
+        # mkdir sandbox
+        # cd sandbox
+        # hg clone https://hg.mozilla.org/projects/nspr
+        # hg clone https://hg.mozilla.org/projects/nss
+        # hg clone https://hg.mozilla.org/projects/jss
+        # cd ..
+
+        (There is no need to clone every time. For additional builds,
+         simply use:
+          cd nspr; hg pull -u -v; cd ..; cd nss; hg pull -u -v; cd ..;
+          cd jss; hg pull -u -v; cd ..
+        )
+
+    (b) Alternatively, for upstream builds which use the NSPR and NSS installed 
+        on the system:
+
+        # mkdir sandbox
+        # cd sandbox
+        # export USE_INSTALLED_NSPR=1
+        # export USE_INSTALLED_NSS=1
+        # hg clone https://hg.mozilla.org/projects/jss
+        # cd ..
+
+        (There is no need to clone every time. For additional builds,
+         simply use:
+          cd jss; hg pull -u -v; cd ..
+        )
+
+
+(2) Prepare an interactive shell for building:
+
+    # export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0_openjdk
+    # export USE_64=1
+
+    NOTE:  JSS will now attempt to verify whether or not these two environment
+           variables have been set (JAVA_HOME is mandatory; USE_64 is mandatory
+           on 64-bit platforms when building 64-bit).
+
+
+(3) Build JSS
+
+    # cd sandbox/jss
+    # make clean all
+    # cd ../..
+
+    (or you can run "# script -c 'make clean all' typescript.build')
+
+    NOTE: When build method (1)(a) is being utilized, if nss has not been
+          built, it will now automatically be built before jss; if nss has
+          already been built, only jss will be built/re-built.
+
+
+(4) Run JSS Tests
+
+    # cd sandbox/jss
+    # make test_jss
+    # cd ../..
+
+    (or you can run "# script -c 'make test_jss' typescript.tests)
+
+    NOTE: This command is currently only available on Linux and Macintosh
+          platforms; currenty JSS must be built via 'make clean all' before
+          execution of this command (e.g. - build is separate from test).
+
+
+(5) Known Issues
+
+    * Mozilla Bug #1346410 - Load JSS libraries appropriately
+
+    Testing failures were found while working on Bug 1346410 when loading the
+    JSS libraries to meet requirements of certain operating systems.  Our
+    investigation revealed that due to the nature of the changes made via this
+    patch and its interaction with the HMAC Tests (both non-FIPS and FIPS),
+    that a failure may be encountered on one or more of the HMAC algorithms
+    causing these two tests to fail.  On 64-bit Linux, for example, the
+    workaround for this issue is to perform the following steps before
+    re-running the tests: 
+
+        # sudo mv /usr/lib64/jss/libjss4.so /usr/lib64/jss/libjss4.so.orig
+        # sudo cp -p
+          sandbox/dist/Linux3.10_x86_64_cc_glibc_PTH_64_DBG.OBJ/lib/libjss4.so
+          /usr/lib64/jss/libjss4.so
+        # sudo chown root:root /usr/lib64/jss/libjss4.so
+        # sudo chmod 755 /usr/lib64/jss/libjss4.so
+        # cd sandbox/jss; make test_jss
+
+    NOTE:  If the system is being used for purposes other than test, the user
+           may wish to restore 'libjss4.so.orig' back to 'libjss4.so'.
+
