@@ -22,6 +22,7 @@
 /* org/mozilla/jss/JSSProvider.java                                 */
 /* org/mozilla/jss/util/jssver.h                                    */
 /* lib/manifest.mn                                                  */
+/* jss/manifest.mn                                                  */
 /*                                                                  */
 /********************************************************************/
 
