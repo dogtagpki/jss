@@ -1,3 +1,7 @@
+# This file has been renamed to "jss/org/mozilla/jss/tests/README_bbenv", and
+# the build/test procedure documented below has been replaced; the new build/test
+# procedure has been documented in top-level "jss/README".
+
 Procedure for building nspr/nss/jss and testing jss by using the provided
 sample run and bbenv scripts located in the jss/org/mozilla/jss/tests directory:
 
