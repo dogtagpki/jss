@@ -21,6 +21,8 @@ public abstract class KeyPairGeneratorSpi {
 
     public abstract KeyPair generateKeyPair() throws TokenException;
 
+    public abstract int getCurveCodeByName(String curveName) throws InvalidParameterException;
+
     public abstract void temporaryPairs(boolean temp);
 
     public abstract void sensitivePairs(boolean sensitive);
