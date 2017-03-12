@@ -166,6 +166,11 @@ public class KeyPairGenerator {
         engine.setKeyPairUsages(usages,usages_mask);
     }
 
+    public int getCurveCodeByName(String curveName)
+        throws InvalidParameterException {
+        return engine.getCurveCodeByName(curveName);
+    }
+
 	protected KeyPairAlgorithm algorithm;
 	protected KeyPairGeneratorSpi engine;
 }
