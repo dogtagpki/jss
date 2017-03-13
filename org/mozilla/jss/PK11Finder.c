@@ -1640,10 +1640,6 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
     }
 
     certificateUsage = required_certificateUsage;
-    if (cert == NULL) {
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
-        goto finish;
-    }
 
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
 
