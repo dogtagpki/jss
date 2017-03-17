@@ -33,45 +33,166 @@ public class SSLSocket extends java.net.Socket {
     public final static int SSL2_DES_64_CBC_WITH_MD5                     = 0xFF06;
     public final static int SSL2_DES_192_EDE3_CBC_WITH_MD5               = 0xFF07;
 
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_NULL_MD5.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_NULL_MD5                       = 0x0001;
+    public final static int TLS_RSA_WITH_NULL_MD5                        = 0x0001;
+
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_NULL_SHA.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_NULL_SHA                       = 0x0002;
+    public final static int TLS_RSA_WITH_NULL_SHA                        = 0x0002;
+
     public final static int SSL3_RSA_EXPORT_WITH_RC4_40_MD5              = 0x0003;
+
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_RC4_128_MD5.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_RC4_128_MD5                    = 0x0004;
+    public final static int TLS_RSA_WITH_RC4_128_MD5                     = 0x0004;
+
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_RC4_128_SHA.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_RC4_128_SHA                    = 0x0005;
+    public final static int TLS_RSA_WITH_RC4_128_SHA                     = 0x0005;
+
     public final static int SSL3_RSA_EXPORT_WITH_RC2_CBC_40_MD5          = 0x0006;
+
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_IDEA_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_IDEA_CBC_SHA                   = 0x0007;
+    public final static int TLS_RSA_WITH_IDEA_CBC_SHA                    = 0x0007;
+
     public final static int SSL3_RSA_EXPORT_WITH_DES40_CBC_SHA           = 0x0008;
+
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_DES_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_DES_CBC_SHA                    = 0x0009;
+    public final static int TLS_RSA_WITH_DES_CBC_SHA                     = 0x0009;
+
+    /**
+     * @deprecated Replaced with TLS_RSA_WITH_3DES_EDE_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_RSA_WITH_3DES_EDE_CBC_SHA               = 0x000a;
+    public final static int TLS_RSA_WITH_3DES_EDE_CBC_SHA                = 0x000a;
 
     public final static int SSL3_DH_DSS_EXPORT_WITH_DES40_CBC_SHA        = 0x000b;
+
+    /**
+     * @deprecated Replaced with TLS_DH_DSS_WITH_DES_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DH_DSS_WITH_DES_CBC_SHA                 = 0x000c;
+    public final static int TLS_DH_DSS_WITH_DES_CBC_SHA                  = 0x000c;
+
+    /**
+     * @deprecated Replaced with TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DH_DSS_WITH_3DES_EDE_CBC_SHA            = 0x000d;
+    public final static int TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA             = 0x000d;
+
     public final static int SSL3_DH_RSA_EXPORT_WITH_DES40_CBC_SHA        = 0x000e;
+
+    /**
+     * @deprecated Replaced with TLS_DH_RSA_WITH_DES_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DH_RSA_WITH_DES_CBC_SHA                 = 0x000f;
+    public final static int TLS_DH_RSA_WITH_DES_CBC_SHA                  = 0x000f;
+
+    /**
+     * @deprecated Replaced with TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DH_RSA_WITH_3DES_EDE_CBC_SHA            = 0x0010;
+    public final static int TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA             = 0x0010;
 
     public final static int SSL3_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA       = 0x0011;
+
+    /**
+     * @deprecated Replaced with TLS_DHE_DSS_WITH_DES_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DHE_DSS_WITH_DES_CBC_SHA                = 0x0012;
+    public final static int TLS_DHE_DSS_WITH_DES_CBC_SHA                 = 0x0012;
+
+    /**
+     * @deprecated Replaced with TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DHE_DSS_WITH_3DES_EDE_CBC_SHA           = 0x0013;
+    public final static int TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA            = 0x0013;
+
     public final static int SSL3_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA       = 0x0014;
+
+    /**
+     * @deprecated Replaced with TLS_DHE_RSA_WITH_DES_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DHE_RSA_WITH_DES_CBC_SHA                = 0x0015;
+    public final static int TLS_DHE_RSA_WITH_DES_CBC_SHA                 = 0x0015;
+
+    /**
+     * @deprecated Replaced with TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DHE_RSA_WITH_3DES_EDE_CBC_SHA           = 0x0016;
+    public final static int TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA            = 0x0016;
 
     public final static int SSL3_DH_ANON_EXPORT_WITH_RC4_40_MD5          = 0x0017;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_RC4_128_MD5.
+     */
+    @Deprecated
     public final static int SSL3_DH_ANON_WITH_RC4_128_MD5                = 0x0018;
+    public final static int TLS_DH_anon_WITH_RC4_128_MD5                 = 0x0018;
+
     public final static int SSL3_DH_ANON_EXPORT_WITH_DES40_CBC_SHA       = 0x0019;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_DES_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DH_ANON_WITH_DES_CBC_SHA                = 0x001a;
+    public final static int TLS_DH_anon_WITH_DES_CBC_SHA                 = 0x001a;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_3DES_EDE_CBC_SHA.
+     */
+    @Deprecated
     public final static int SSL3_DH_ANON_WITH_3DES_EDE_CBC_SHA           = 0x001b;
+    public final static int TLS_DH_anon_WITH_3DES_EDE_CBC_SHA            = 0x001b;
 
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
-     * SSL3_FORTEZZA_DMS_WITH_NULL_SHA, SSL3_FORTEZZA_DMS_WITH_RC4_128_SHA
-     * and SSL3_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA are placeholders for
-     * backward compatibility.
      */
+    @Deprecated
     public final static int SSL3_FORTEZZA_DMS_WITH_NULL_SHA              = 0x001c;
+
+    /**
+     * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
+     */
+    @Deprecated
     public final static int SSL3_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA      = 0x001d;
+
+    /**
+     * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
+     */
+    @Deprecated
     public final static int SSL3_FORTEZZA_DMS_WITH_RC4_128_SHA           = 0x001e;
 
     public final static int SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA           = 0xfeff;
@@ -92,14 +213,27 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DH_RSA_WITH_AES_128_CBC_SHA              = 0x0031;
     public final static int TLS_DHE_DSS_WITH_AES_128_CBC_SHA             = 0x0032;
     public final static int TLS_DHE_RSA_WITH_AES_128_CBC_SHA             = 0x0033;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_AES_128_CBC_SHA.
+     */
+    @Deprecated
     public final static int TLS_DH_ANON_WITH_AES_128_CBC_SHA             = 0x0034;
+    public final static int TLS_DH_anon_WITH_AES_128_CBC_SHA             = 0x0034;
 
     public final static int TLS_RSA_WITH_AES_256_CBC_SHA                 = 0x0035;
     public final static int TLS_DH_DSS_WITH_AES_256_CBC_SHA              = 0x0036;
     public final static int TLS_DH_RSA_WITH_AES_256_CBC_SHA              = 0x0037;
     public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA             = 0x0038;
     public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA             = 0x0039;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_AES_256_CBC_SHA.
+     */
+    @Deprecated
     public final static int TLS_DH_ANON_WITH_AES_256_CBC_SHA             = 0x003A;
+    public final static int TLS_DH_anon_WITH_AES_256_CBC_SHA             = 0x003A;
+
     public final static int TLS_RSA_WITH_NULL_SHA256                     = 0x003B;
     public final static int TLS_RSA_WITH_AES_128_CBC_SHA256              = 0x003C;
     public final static int TLS_RSA_WITH_AES_256_CBC_SHA256              = 0x003D;
@@ -109,14 +243,26 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA         = 0x0043;
     public final static int TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA        = 0x0044;
     public final static int TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA        = 0x0045;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA.
+     */
+    @Deprecated
     public final static int TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA        = 0x0046;
+    public final static int TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA        = 0x0046;
 
     public final static int TLS_RSA_WITH_CAMELLIA_256_CBC_SHA            = 0x0084;
     public final static int TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA         = 0x0085;
     public final static int TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA         = 0x0086;
     public final static int TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA        = 0x0087;
     public final static int TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA        = 0x0088;
+
+    /**
+     * @deprecated Replaced with TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA.
+     */
+    @Deprecated
     public final static int TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA        = 0x0089;
+    public final static int TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA        = 0x0089;
 
     public final static int TLS_RSA_WITH_SEED_CBC_SHA                    = 0x0096;
 
