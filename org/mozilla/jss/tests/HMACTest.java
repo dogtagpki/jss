@@ -130,11 +130,11 @@ public class HMACTest {
         try {
             HMACTest hmacTest = new HMACTest(argv);
 
-            //The secret key must be a JSS key. That is, it must be an 
+            //The secret key must be a JSS key. That is, it must be an
             //instanceof org.mozilla.jss.crypto.SecretKeyFacade.
 
             //Generate the secret key using PKCS # 5 password Based Encryption
-            //we have to specify a salt and an iteration count.  
+            //we have to specify a salt and an iteration count.
 
             PBEKeySpec pbeKeySpec;
             SecretKeyFactory keyFac;

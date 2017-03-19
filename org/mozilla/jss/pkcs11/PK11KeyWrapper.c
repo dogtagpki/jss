@@ -702,12 +702,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
         goto finish;
     }
 
-    if( temporary ) {
-        isPerm = PR_FALSE;
-    } else {
-        isPerm = PR_TRUE;
-    }
-
     /* get the slot */
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
         /* exception was thrown */

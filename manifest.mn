@@ -16,11 +16,11 @@ MODULE = jss
 #/* org/mozilla/jss/JSSProvider.java                                 */
 #/* org/mozilla/jss/util/jssver.h                                    */
 #/* lib/manifest.mn                                                  */
-#/* mozilla/security/jss/manifest.mn                                 */
+#/* jss/manifest.mn                                                  */
 #/*                                                                  */
 #/********************************************************************/
 
-IMPORTS =	nss/NSS_3_12_RTM \
+IMPORTS =	nss/NSS_3_21_RTM \
 			nspr20/v4.7 \
 			$(NULL)
 
