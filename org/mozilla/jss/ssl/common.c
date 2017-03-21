@@ -261,6 +261,7 @@ JSSL_SocketData*
 JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD,
         PRFilePrivate *priv)
 {
+    SECStatus status;
     JSSL_SocketData *sockdata = NULL;
 
     /* make a JSSL_SocketData structure */
@@ -296,6 +297,24 @@ JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD,
      */
     sockdata->socketObject = NEW_WEAK_GLOBAL_REF(env, sockObj);
     if( sockdata->socketObject == NULL ) goto finish;
+
+    /* registering alert received callback */
+
+    status = SSL_AlertReceivedCallback(sockdata->fd, JSSL_AlertReceivedCallback, sockdata);
+
+    if (status != SECSuccess) {
+        JSSL_throwSSLSocketException(env, "Unable to install alert received callback");
+        goto finish;
+    }
+
+    /* registering alert sent callback */
+
+    status = SSL_AlertSentCallback(sockdata->fd, JSSL_AlertSentCallback, sockdata);
+
+    if (status != SECSuccess) {
+        JSSL_throwSSLSocketException(env, "Unable to install alert sent callback");
+        goto finish;
+    }
 
 finish:
     if( (*env)->ExceptionOccurred(env) != NULL ) {

@@ -5,6 +5,8 @@
 #ifndef ORG_MOZILLA_JSS_SSL_JSSL_H
 #define ORG_MOZILLA_JSS_SSL_JSSL_H
 
+#include <ssl.h>
+
 struct JSSL_SocketData {
     PRFileDesc *fd;
     jobject socketObject; /* weak global ref */
@@ -24,6 +26,12 @@ typedef struct JSSL_SocketData JSSL_SocketData;
 SECStatus
 JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
              PRBool isServer);
+
+void
+JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *client_data, const SSLAlert *alert);
+
+void
+JSSL_AlertSentCallback(const PRFileDesc *fd, void *client_data, const SSLAlert *alert);
 
 void
 JSSL_HandshakeCallback(PRFileDesc *fd, void *arg);

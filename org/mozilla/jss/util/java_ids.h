@@ -285,6 +285,11 @@ PR_BEGIN_EXTERN_C
 #define SUPPORTS_IPV6_SIG "()Z"
 
 /*
+ * SSLAlertEvent
+ */
+#define SSL_ALERT_EVENT_CLASS "org/mozilla/jss/ssl/SSLAlertEvent"
+
+/*
  * SSLCertificateApprovalCallback
  */
 #define SSLCERT_APP_CB_APPROVE_NAME "approve"
@@ -300,8 +305,11 @@ PR_BEGIN_EXTERN_C
 /*
  * SSLSocket
  */
+#define SSLSOCKET_CLASS "org/mozilla/jss/ssl/SSLSocket"
+
 #define SSLSOCKET_HANDSHAKE_NOTIFIER_NAME "notifyAllHandshakeListeners"
 #define SSLSOCKET_HANDSHAKE_NOTIFIER_SIG "()V"
+
 #define SSLSOCKET_PROXY_FIELD "sockProxy"
 #define SSLSOCKET_PROXY_SIG "Lorg/mozilla/jss/ssl/SocketProxy;"
 
