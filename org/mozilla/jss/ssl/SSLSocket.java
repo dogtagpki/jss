@@ -11,7 +11,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * SSL client socket.
@@ -348,6 +349,9 @@ public class SSLSocket extends java.net.Socket {
            org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_UNRESTRICTED;
     static final public int SSL_RENEGOTIATE_TRANSITIONAL  =
            org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_TRANSITIONAL;
+
+    private Collection<SSLSocketListener> socketListeners = new ArrayList<>();
+    private Collection<SSLHandshakeCompletedListener> handshakeCompletedListeners = new ArrayList<>();
 
     /**
      * For sockets that get created by accept().
@@ -749,37 +753,50 @@ public class SSLSocket extends java.net.Socket {
     ////////////////////////////////////////////////////////////////////
     // SSL-specific stuff
     ////////////////////////////////////////////////////////////////////
-    private Vector handshakeCompletedListeners = new Vector();
+
+    public void addSocketListener(SSLSocketListener listener) {
+        socketListeners.add(listener);
+        addHandshakeCompletedListener(listener);
+    }
+
+    public void removeSocketListener(SSLSocketListener listener) {
+        socketListeners.remove(listener);
+        removeHandshakeCompletedListener(listener);
+    }
+
+    private void fireAlertReceivedEvent(SSLAlertEvent event) {
+        for (SSLSocketListener listener : socketListeners) {
+            listener.alertReceived(event);
+        }
+    }
+
+    private void fireAlertSentEvent(SSLAlertEvent event) {
+        for (SSLSocketListener listener : socketListeners) {
+            listener.alertSent(event);
+        }
+    }
 
     /**
      * Adds a listener to be notified when an SSL handshake completes.
      */
-    public void addHandshakeCompletedListener(SSLHandshakeCompletedListener l) {
-        handshakeCompletedListeners.addElement(l);
+    public void addHandshakeCompletedListener(SSLHandshakeCompletedListener listener) {
+        handshakeCompletedListeners.add(listener);
     }
 
     /**
      * Removes a previously registered listener for handshake completion.
      */
-    public void removeHandshakeCompletedListener(
-            SSLHandshakeCompletedListener l) {
-        handshakeCompletedListeners.removeElement(l);
+    public void removeHandshakeCompletedListener(SSLHandshakeCompletedListener listener) {
+        handshakeCompletedListeners.remove(listener);
     }
 
     private void notifyAllHandshakeListeners() {
-        SSLHandshakeCompletedEvent event =
-            new SSLHandshakeCompletedEvent(this);
+        SSLHandshakeCompletedEvent event = new SSLHandshakeCompletedEvent(this);
 
-        /* XXX NOT THREAD SAFE */
-        int i;
-        for( i=0; i < handshakeCompletedListeners.size(); ++i) {
-            SSLHandshakeCompletedListener l =
-                (SSLHandshakeCompletedListener)
-                 handshakeCompletedListeners.elementAt(i);
-            l.handshakeCompleted(event);
+        for (SSLHandshakeCompletedListener listener : handshakeCompletedListeners) {
+            listener.handshakeCompleted(event);
         }
     }
-
 
     /**
      * Enables SSL v2 on this socket. It is enabled  by default, unless the
