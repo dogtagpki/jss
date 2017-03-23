@@ -5,6 +5,7 @@
 package org.mozilla.jss.util;
 
 import java.io.CharConversionException;
+import java.io.Console;
 
 /**
  * Stores a password.  <code>clear</code> should be
@@ -114,7 +115,7 @@ public class Password implements PasswordCallback, Cloneable,
      * for example using <code>wipeChars</code>.
      */
     public synchronized char[] getCharCopy() {
-        return (char[]) password.clone();
+        return password.clone();
     }
 
     /**
@@ -125,7 +126,7 @@ public class Password implements PasswordCallback, Cloneable,
      * for example using <code>wipeChars</code>.
      */
     synchronized byte[] getByteCopy() {
-        return charToByte( (char[]) password.clone() );
+        return charToByte( password.clone() );
     }
 
     /**
@@ -150,11 +151,11 @@ public class Password implements PasswordCallback, Cloneable,
     public synchronized Object clone() {
         Password dolly = new Password();
 
-        dolly.password = (char[]) password.clone();
+        dolly.password = password.clone();
         dolly.cleared = cleared;
         return dolly;
     }
-          
+
 
     /**
      * The finalizer clears the sensitive information before releasing
@@ -230,9 +231,18 @@ public class Password implements PasswordCallback, Cloneable,
      *      <code>&lt;enter&gt;</code>).
 	 * @return The password the user entered at the command line.
  	 */
-	public synchronized static native Password readPasswordFromConsole()
-        throws PasswordCallback.GiveUpException;
-        
+	public static Password readPasswordFromConsole() throws PasswordCallback.GiveUpException {
+
+	    Console console = System.console();
+	    char[] password = console.readPassword();
+
+	    if (password == null || password.length == 0) {
+	        throw new PasswordCallback.GiveUpException();
+	    }
+
+	    return new Password(password);
+        }
+
     // The password, stored as a char[] so we can clear it.  Passwords
     // should never be stored in Strings because Strings can't be cleared.
     private char[] password;
