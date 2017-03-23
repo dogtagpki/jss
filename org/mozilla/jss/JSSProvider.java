@@ -9,11 +9,11 @@ public final class JSSProvider extends java.security.Provider {
     /* The VERSION Strings should be updated in the following           */
     /* files everytime a new release of JSS is generated:               */
     /*                                                                  */
+    /* lib/manifest.mn                                                  */
+    /* org/mozilla/jss/CryptoManager.c                                  */
     /* org/mozilla/jss/CryptoManager.java                               */
     /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
-    /* lib/manifest.mn                                                  */
-    /* jss/manifest.mn                                                  */
     /*                                                                  */
     /********************************************************************/
     /* QUESTION: When do we change MINOR and PATCH to 4 and 0? */
