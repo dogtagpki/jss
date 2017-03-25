@@ -15,6 +15,11 @@ import org.mozilla.jss.util.Assert;
  *   TaggedRequest ::= CHOICE { 
  *       tcr               [0] TaggedCertificationRequest, 
  *       crm               [1] CertReqMsg 
+ *       orm               [2] SEQUENCE {
+ *            bodyPartID            BodyPartID,
+ *            requestMessageType    OBJECT IDENTIFIER,
+ *            requestMessageValue   ANY DEFINED BY requestMessageType
+ *       } // added for rfc 5272; defined in OtherReqMsg
  *   } 
  * </pre>
  */
@@ -27,9 +32,11 @@ public class TaggedRequest implements ASN1Value {
 
         static Type PKCS10 = new Type();
         static Type CRMF = new Type();
+        static Type OTHER = new Type();
     }
     public static Type PKCS10 = Type.PKCS10;
     public static Type CRMF = Type.CRMF;
+    public static Type OTHER = Type.OTHER;
 
     ///////////////////////////////////////////////////////////////////////
     // members and member access
@@ -38,6 +45,7 @@ public class TaggedRequest implements ASN1Value {
     private Type type;
     private TaggedCertificationRequest tcr; // if type == PKCS10
     private CertReqMsg crm; // if type == CRMF
+    private OtherReqMsg orm; // if type == OTHER
 
     ///////////////////////////////////////////////////////////////////////
     // Constructors
@@ -48,7 +56,7 @@ public class TaggedRequest implements ASN1Value {
 
     /** 
      * Constructs a TaggedRequest from its components.
-     *
+     *   kept for backward compatibility for now
      * @param type The type of the request.
      * @param tcr Tagged pkcs10 request.
      * @param crm CRMF request.
@@ -59,6 +67,24 @@ public class TaggedRequest implements ASN1Value {
         this.crm = crm;
     }
 
+    /** 
+     * Constructs a TaggedRequest from its components.
+     *   rfc 5272
+     * @param type The type of the request.
+     * @param tcr Tagged pkcs10 request.
+     * @param crm CRMF request.
+     * @param orm OTHER request.
+     */
+    public TaggedRequest(Type type,
+            TaggedCertificationRequest tcr,
+            CertReqMsg crm,
+            OtherReqMsg orm) {
+        this.type = type;
+        this.tcr = tcr;
+        this.crm = crm;
+        this.orm = orm;
+    }
+
     ///////////////////////////////////////////////////////////////////////
     // accessors
     ///////////////////////////////////////////////////////////////////////
@@ -67,6 +93,7 @@ public class TaggedRequest implements ASN1Value {
      * Returns the type of TaggedRequest: <ul>
      * <li><code>PKCS10</code>
      * <li><code>CRMF</code>
+     * <li><code>OTHER</code>
      * </ul>
      */
     public Type getType() {
@@ -89,6 +116,14 @@ public class TaggedRequest implements ASN1Value {
         return crm;
     }
 
+    /**
+     * If type == OTHER, returns the orm field. Otherwise,
+     * returns null.
+     */
+    public OtherReqMsg getOrm() {
+        return orm;
+    }
+
     ///////////////////////////////////////////////////////////////////////
     // DER decoding/encoding
     ///////////////////////////////////////////////////////////////////////
@@ -96,9 +131,11 @@ public class TaggedRequest implements ASN1Value {
     public Tag getTag() {
         if( type == PKCS10 ) {
             return Tag.get(0);
-        } else {
-            Assert._assert( type == CRMF );
+        } else if( type == CRMF ){
             return Tag.get(1);
+        } else {
+            Assert._assert( type == OTHER );
+            return Tag.get(2);
         }
     }
 
@@ -109,11 +146,16 @@ public class TaggedRequest implements ASN1Value {
             // a CHOICE must be explicitly tagged
             //EXPLICIT e = new EXPLICIT( Tag.get(0), tcr );
             //e.encode(ostream);
-        } else {
-            Assert._assert( type == CRMF );
+        } else if( type == CRMF ) {
             crm.encode(Tag.get(1), ostream);
             // a CHOICE must be explicitly tagged
             //EXPLICIT e = new EXPLICIT( Tag.get(1), crm );
+            //e.encode(ostream);
+        } else {
+            Assert._assert( type == OTHER );
+            orm.encode(Tag.get(2), ostream);
+            // a CHOICE must be explicitly tagged
+            //EXPLICIT e = new EXPLICIT( Tag.get(2), orm );
             //e.encode(ostream);
         }
     }
@@ -142,12 +184,16 @@ public class TaggedRequest implements ASN1Value {
 
             //EXPLICIT.Template et = new EXPLICIT.Template(
             //    Tag.get(0), TaggedCertificationRequest.getTemplate() );
-			//choicet.addElement( et );
+            //choicet.addElement( et );
             choicet.addElement( Tag.get(0), TaggedCertificationRequest.getTemplate() );
             //et = new EXPLICIT.Template(
             //    Tag.get(1), CertReqMsg.getTemplate() );
-			//choicet.addElement( et );
+            //choicet.addElement( et );
             choicet.addElement( Tag.get(1), CertReqMsg.getTemplate() );
+            //et = new EXPLICIT.Template(
+            //    Tag.get(2), CertReqMsg.getTemplate() );
+            //choicet.addElement( et );
+            choicet.addElement( Tag.get(2), OtherReqMsg.getTemplate() );
         }
 
         public boolean tagMatch(Tag tag) {
@@ -161,15 +207,21 @@ public class TaggedRequest implements ASN1Value {
             if( c.getTag().equals(Tag.get(0)) ) {
                 //EXPLICIT e = (EXPLICIT) c.getValue();
                 //return new TaggedRequest(PKCS10,
-				//						 (TaggedCertificationRequest)
-				//						 e.getContent(), null );
+                //            (TaggedCertificationRequest)
+                //            e.getContent(), null );
                 return new TaggedRequest(PKCS10, (TaggedCertificationRequest) c.getValue() , null);
-            } else {
-                Assert._assert( c.getTag().equals(Tag.get(1)) );
+            } if( c.getTag().equals(Tag.get(1)) ) {
                 //EXPLICIT e = (EXPLICIT) c.getValue();
-                //return new TaggedRequest(CRMF, null,
-				//						 (CertReqMsg) e.getContent() );
-                return new TaggedRequest(CRMF, null, (CertReqMsg) c.getValue());
+                //return new TaggedRequest(CRMF,
+                //            (CertReqMsg)
+                //            e.getContent(), null );
+                return new TaggedRequest(CRMF, null, (CertReqMsg) c.getValue() , null);
+            } else {
+                Assert._assert( c.getTag().equals(Tag.get(2)) );
+                //EXPLICIT e = (EXPLICIT) c.getValue();
+                //return new TaggedRequest(OTHER, null,
+                //            (CertReqMsg) e.getContent() );
+                return new TaggedRequest(OTHER, null, null, (OtherReqMsg) c.getValue());
             }
         }
 
