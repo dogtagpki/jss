@@ -34,7 +34,7 @@ public class HMACAlgorithm extends DigestAlgorithm {
      * @exception NoSuchAlgorithmException If no registered HMAC algorithm
      *  has the given OID.
      */
-    public static DigestAlgorithm fromOID(OBJECT_IDENTIFIER oid)
+    public static HMACAlgorithm fromOID(OBJECT_IDENTIFIER oid)
         throws NoSuchAlgorithmException
     {
         Object alg = oidMap.get(oid);

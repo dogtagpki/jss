@@ -140,6 +140,27 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
     id_cmc_idPOPLinkWitness = id_cmc.subBranch(23);
     public static final OBJECT_IDENTIFIER
     id_cmc_idConfirmCertAcceptance = id_cmc.subBranch(24);
+    // rfc 5272
+    public static final OBJECT_IDENTIFIER
+    id_cmc_statusInfoV2 = id_cmc.subBranch(25);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_trustedAnchors = id_cmc.subBranch(26);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_authData = id_cmc.subBranch(27);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_batchRequests = id_cmc.subBranch(28);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_batchResponses = id_cmc.subBranch(29);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_publishCert = id_cmc.subBranch(30);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_modCertTemplate = id_cmc.subBranch(31);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_controlProcessed = id_cmc.subBranch(32);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_popLinkWitnessV2 = id_cmc.subBranch(33);
+    public static final OBJECT_IDENTIFIER
+    id_cmc_identityProofV2 = id_cmc.subBranch(34);
 
     public static final OBJECT_IDENTIFIER
     id_cct = PKIX.subBranch( 12 );

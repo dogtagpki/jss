@@ -57,6 +57,13 @@ public class CertRequest implements ASN1Value {
     }
 
     /**
+     * Returns the <i>controls</i> field.
+     */
+    public SEQUENCE getControls() {
+        return controls;
+    }
+
+    /**
      * Returns the number of optional Controls in the cert request.
      * The number may be zero.
      */
