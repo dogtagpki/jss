@@ -47,6 +47,8 @@ PR_BEGIN_EXTERN_C
 
 #define INTERRUPTED_IO_EXCEPTION "java/io/InterruptedIOException"
 
+#define INVALID_DER_EXCEPTION "org/mozilla/jss/crypto/InvalidDERException"
+
 #define INVALID_NICKNAME_EXCEPTION "org/mozilla/jss/util/InvalidNicknameException"
 
 #define INVALID_KEY_FORMAT_EXCEPTION "org/mozilla/jss/crypto/InvalidKeyFormatException"
