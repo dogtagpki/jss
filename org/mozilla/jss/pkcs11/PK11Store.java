@@ -23,9 +23,15 @@ public final class PK11Store implements CryptoStore {
      * @exception TokenException If the key cannot be imported to this token.
      * @exception KeyAlreadyImportedException If the key already on this token.
      */
-    public native void
-    importPrivateKey(  byte[] key,
-                       PrivateKey.Type type       )
+    public PrivateKey
+    importPrivateKey(byte[] key, PrivateKey.Type type)
+            throws TokenException,KeyAlreadyImportedException {
+        return importPrivateKey(key, type, false);
+    }
+
+    public native PrivateKey
+    importPrivateKey(
+        byte[] key, PrivateKey.Type type, boolean temporary)
         throws TokenException,KeyAlreadyImportedException;
 
     public synchronized PrivateKey[]

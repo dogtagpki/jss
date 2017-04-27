@@ -429,35 +429,28 @@ finish:
 int PK11_NumberObjectsFor(PK11SlotInfo*, CK_ATTRIBUTE*, int);
 
 /***********************************************************************
- * importPrivateKey
+ * PK11Store.importdPrivateKey
  */
-static void
-importPrivateKey
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_importPrivateKey
     (   JNIEnv *env,
         jobject this,
         jbyteArray keyArray,
         jobject keyTypeObj,
-        PRBool temporary            )
+        jboolean temporary            )
 {
     SECItem derPK;
     PK11SlotInfo *slot;
     jthrowable excep;
-    KeyType keyType;
     SECStatus status;
     SECItem nickname;
+    jobject privkObj = NULL;
 
     /*
      * initialize so we can goto finish
      */
     derPK.data = NULL;
     derPK.len = 0;
-
-
-    keyType = JSS_PK11_getKeyType(env, keyTypeObj);
-    if( keyType == nullKey ) {
-        /* exception was thrown */
-        goto finish;
-    }
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
@@ -492,11 +485,19 @@ importPrivateKey
     nickname.len = 0;
     nickname.data = NULL;
 
-    status = PK11_ImportDERPrivateKeyInfo(slot, &derPK, &nickname,
-                NULL /*public value*/, PR_TRUE /*isPerm*/,
-                PR_TRUE /*isPrivate*/, 0 /*keyUsage*/, NULL /*wincx*/);
+    SECKEYPrivateKey *privk = NULL;
+    status = PK11_ImportDERPrivateKeyInfoAndReturnKey(
+                slot, &derPK, &nickname,
+                NULL /*public value*/, !temporary /*isPerm*/,
+                PR_TRUE /*isPrivate*/, 0 /*keyUsage*/,
+                &privk, NULL /*wincx*/);
     if(status != SECSuccess) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to import private key info");
+        goto finish;
+    }
+
+    privkObj = JSS_PK11_wrapPrivKey(env, &privk);
+    if (privkObj == NULL) {
         goto finish;
     }
 
@@ -515,23 +516,10 @@ finish:
     if( excep ) {
         (*env)->Throw(env, excep);
     }
+    return privkObj;
 }
 
 extern const SEC_ASN1Template SECKEY_EncryptedPrivateKeyInfoTemplate[];
-
-/***********************************************************************
- * PK11Store.importdPrivateKey
- */
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Store_importPrivateKey
-    (   JNIEnv *env,
-        jobject this,
-        jbyteArray keyArray,
-        jobject keyTypeObj        )
-{
-    importPrivateKey(env, this, keyArray,
-        keyTypeObj, PR_FALSE /* not temporary */);
-}
 
 
 JNIEXPORT jbyteArray JNICALL

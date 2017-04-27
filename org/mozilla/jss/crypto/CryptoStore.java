@@ -21,15 +21,28 @@ public interface CryptoStore {
     ////////////////////////////////////////////////////////////
 
     /**
-     * Imports a raw private key into this token.
+     * Imports a raw private key into this token (permanently).
      *
      * @param key The private key.
      * @exception TokenException If the key cannot be imported to this token.
      * @exception KeyAlreadyImportedException If the key already exists on this token.
      */
-    public void
+    public PrivateKey
     importPrivateKey(  byte[] key,
                        PrivateKey.Type type       )
+        throws TokenException, KeyAlreadyImportedException;
+
+    /**
+     * Imports a raw private key into this token.
+     *
+     * @param key The private key.
+     * @param temporary Whether the key should be temporary.
+     * @exception TokenException If the key cannot be imported to this token.
+     * @exception KeyAlreadyImportedException If the key already exists on this token.
+     */
+    public PrivateKey
+    importPrivateKey(  byte[] key,
+                       PrivateKey.Type type, boolean temporary)
         throws TokenException, KeyAlreadyImportedException;
 
 
