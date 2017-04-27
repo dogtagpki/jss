@@ -31,6 +31,8 @@ typedef struct
     char *data;
 } secuPWData;
 
+SECItem *preparePassword(JNIEnv *env, jobject conv, jobject pwObj);
+
 /**********************************************************************
  * PK11Store.putSymKeysInVector
  */
@@ -533,103 +535,293 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importPrivateKey
 
 
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo
-(JNIEnv *env, jobject this, jobject certObj, jobject algObj,
-    jobject pwObj, jint iteration)
-
+Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo(
+    JNIEnv *env,
+    jobject this,
+    jobject conv,
+    jobject pwObj,
+    jobject algObj,
+    jint iterations,
+    jobject key)
 {
+    // initialisations so we can goto finish
+    SECItem *pwItem = NULL;
     SECKEYEncryptedPrivateKeyInfo *epki = NULL;
-    jbyteArray encodedEpki = NULL;
-    PK11SlotInfo *slot = NULL;
-    SECOidTag algTag;
-    jclass passwordClass = NULL;
-    jmethodID getByteCopyMethod = NULL;
-    jbyteArray pwArray = NULL;
-    jbyte* pwchars = NULL;
-    SECItem pwItem;
-    CERTCertificate *cert = NULL;
     SECItem epkiItem;
-
     epkiItem.data = NULL;
+    epkiItem.len = 0;
 
-    /* get slot */
+    PR_ASSERT(env != NULL && this != NULL);
+
+    if (pwObj == NULL || algObj == NULL || key == NULL) {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
+        goto finish;
+    }
+
+    if (iterations <= 0) {
+        iterations = 2000;  // set default iterations
+    }
+
+    // get slot
+    PK11SlotInfo *slot = NULL;
     if( JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
     PR_ASSERT(slot!=NULL);
-    
-    /* get algorithm */
-    algTag = JSS_getOidTagFromAlg(env, algObj);
-    if( algTag == SEC_OID_UNKNOWN ) {
-        JSS_throwMsg(env, NO_SUCH_ALG_EXCEPTION, "Unrecognized PBE algorithm");
+
+    // get algorithm
+    SECOidTag algTag = JSS_getOidTagFromAlg(env, algObj);
+    if (algTag == SEC_OID_UNKNOWN) {
+        JSS_throwMsg(env, NO_SUCH_ALG_EXCEPTION, "Unrecognized algorithm");
         goto finish;
     }
 
-    /*
-     * get password
-     */
-    passwordClass = (*env)->GetObjectClass(env, pwObj);
-    if(passwordClass == NULL) {
+    pwItem = preparePassword(env, conv, pwObj);
+    if (pwItem == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
-    getByteCopyMethod = (*env)->GetMethodID(
-                                            env,
-                                            passwordClass,
-                                            PW_GET_BYTE_COPY_NAME,
-                                            PW_GET_BYTE_COPY_SIG);
-    if(getByteCopyMethod==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    pwArray = (*env)->CallObjectMethod( env, pwObj, getByteCopyMethod);
-    pwchars = (*env)->GetByteArrayElements(env, pwArray, NULL);
-    /* !!! Include the NULL byte or not? */
-    pwItem.data = (unsigned char*) pwchars;
-    pwItem.len = strlen((const char*)pwchars) + 1;
 
-    /*
-     * get cert
-     */
-    if( JSS_PK11_getCertPtr(env, certObj, &cert) != PR_SUCCESS ) {
-        /* exception was thrown */
+    // get key
+    SECKEYPrivateKey *privk;
+    if (JSS_PK11_getPrivKeyPtr(env, key, &privk) != PR_SUCCESS) {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
         goto finish;
     }
 
-    /*
-     * export the epki
-     */
-    epki = PK11_ExportEncryptedPrivateKeyInfo(slot, algTag, &pwItem,
-            cert, iteration, NULL /*wincx*/);
+    // export the epki
+    epki = PK11_ExportEncryptedPrivKeyInfo(
+        slot, algTag, pwItem, privk, iterations, NULL /*wincx*/);
 
-
-    /*
-     * DER-encode the epki
-     */
-    epkiItem.data = NULL;
-    epkiItem.len = 0;
-    if( SEC_ASN1EncodeItem(NULL, &epkiItem, epki,
-        SEC_ASN1_GET(SECKEY_EncryptedPrivateKeyInfoTemplate) )  == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to ASN1-encode "
-            "EncryptedPrivateKeyInfo");
+    // DER-encode the epki
+    if (SEC_ASN1EncodeItem(NULL, &epkiItem, epki,
+        SEC_ASN1_GET(SECKEY_EncryptedPrivateKeyInfoTemplate)) == NULL) {
+        JSS_throwMsg(
+            env, TOKEN_EXCEPTION,
+            "Failed to ASN1-encode EncryptedPrivateKeyInfo");
         goto finish;
     }
 
-    /*
-     * convert to Java byte array
-     */
-    encodedEpki = JSS_SECItemToByteArray(env, &epkiItem);
+    // convert to Java byte array
+    jbyteArray encodedEpki = JSS_SECItemToByteArray(env, &epkiItem);
 
 finish:
-    if( epki != NULL ) {
+    if (epki != NULL) {
         SECKEY_DestroyEncryptedPrivateKeyInfo(epki, PR_TRUE /*freeit*/);
     }
-    if( pwchars != NULL ) {
-        (*env)->ReleaseByteArrayElements(env, pwArray, pwchars, JNI_ABORT);
+    if (epkiItem.data != NULL) {
+        SECITEM_FreeItem(&epkiItem, PR_FALSE /*freeit*/);
     }
-    if(epkiItem.data != NULL) {
-        PR_Free(epkiItem.data);
+    if (pwItem != NULL) {
+        SECITEM_FreeItem(pwItem, PR_TRUE /*freeit*/);
     }
     return encodedEpki;
+}
+
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo(
+    JNIEnv *env,
+    jobject this,
+    jobject conv,
+    jobject pwObj,
+    jstring nickname,
+    jobject pubKeyObj,
+    jbyteArray epkiBytes)
+{
+    // initialisations so we can goto finish
+    SECItem *epkiItem = NULL;
+    SECKEYEncryptedPrivateKeyInfo *epki = NULL;
+    SECItem *pwItem = NULL;
+    SECItem *spkiItem = NULL;
+    CERTSubjectPublicKeyInfo *spki = NULL;
+    SECKEYPublicKey *pubKey = NULL;
+    const char *nicknameChars = NULL;
+
+    PR_ASSERT(env != NULL && this != NULL);
+
+    if (pwObj == NULL || nickname == NULL || pubKeyObj == NULL) {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
+        goto finish;
+    }
+
+    // get slot
+    PK11SlotInfo *slot = NULL;
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    PR_ASSERT(slot != NULL);
+
+    // decode EncryptedPrivateKeyInfo
+    epkiItem = JSS_ByteArrayToSECItem(env, epkiBytes);
+    epki = PR_Calloc(1, sizeof(SECKEYEncryptedPrivateKeyInfo));
+    if (SEC_ASN1DecodeItem(
+                NULL,
+                epki,
+                SEC_ASN1_GET(SECKEY_EncryptedPrivateKeyInfoTemplate),
+                epkiItem
+            ) != SECSuccess) {
+        JSS_throwMsg(env, INVALID_DER_EXCEPTION,
+            "Failed to decode EncryptedPrivateKeyInfo");
+        goto finish;
+    }
+
+    pwItem = preparePassword(env, conv, pwObj);
+    if (pwItem == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    // get public key value
+    jclass pubKeyClass = (*env)->GetObjectClass(env, pubKeyObj);
+    if (pubKeyClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    jmethodID getEncoded = (*env)->GetMethodID(
+        env, pubKeyClass, "getEncoded", "()[B");
+    if (getEncoded == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    jbyteArray spkiBytes = (*env)->CallObjectMethod(
+        env, pubKeyObj, getEncoded);
+    spkiItem = JSS_ByteArrayToSECItem(env, spkiBytes);
+    spki = PR_Calloc(1, sizeof(CERTSubjectPublicKeyInfo));
+    if (SEC_ASN1DecodeItem(
+                NULL,
+                spki,
+                SEC_ASN1_GET(CERT_SubjectPublicKeyInfoTemplate),
+                spkiItem
+            ) != SECSuccess) {
+        JSS_throwMsg(env, INVALID_DER_EXCEPTION,
+            "Failed to decode SubjectPublicKeyInfo");
+        goto finish;
+    }
+
+    pubKey = SECKEY_ExtractPublicKey(spki);
+    if (pubKey == NULL) {
+        JSS_throwMsgPrErr(env, INVALID_DER_EXCEPTION,
+            "Failed to extract public key from SubjectPublicKeyInfo");
+        goto finish;
+    }
+
+    SECItem *pubValue;
+    switch (pubKey->keyType) {
+        case dsaKey:
+            pubValue = &pubKey->u.dsa.publicValue;
+            break;
+        case dhKey:
+            pubValue = &pubKey->u.dh.publicValue;
+            break;
+        case rsaKey:
+            pubValue = &pubKey->u.rsa.modulus;
+            break;
+        case ecKey:
+            pubValue = &pubKey->u.ec.publicValue;
+            break;
+        default:
+            pubValue = NULL;
+    }
+
+    // prepare nickname
+    nicknameChars = (*env)->GetStringUTFChars(env, nickname, NULL);
+    if (nicknameChars == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    SECItem nickItem;
+    nickItem.data = nicknameChars;
+    nickItem.len = (*env)->GetStringUTFLength(env, nickname);
+
+    // if keyUsage = 0, defaults to signing and encryption/key agreement.
+    //   see pk11akey.c in NSS
+    int keyUsage = 0;
+
+    // perform import
+    SECStatus result = PK11_ImportEncryptedPrivateKeyInfo(
+        slot, epki, pwItem, &nickItem, pubValue,
+        PR_TRUE /* isperm */, PR_TRUE /* isprivate */,
+        pubKey->keyType, keyUsage, NULL /* wincx */);
+    if (result != SECSuccess) {
+        JSS_throwMsg(
+            env, TOKEN_EXCEPTION,
+            "Failed to import EncryptedPrivateKeyInfo to token");
+        goto finish;
+    }
+
+finish:
+    if (epkiItem != NULL) {
+        SECITEM_FreeItem(epkiItem, PR_TRUE /*freeit*/);
+    }
+    if (epki != NULL) {
+        SECKEY_DestroyEncryptedPrivateKeyInfo(epki, PR_TRUE /*freeit*/);
+    }
+    if (spkiItem != NULL) {
+        SECITEM_FreeItem(spkiItem, PR_TRUE /*freeit*/);
+    }
+    if (spki != NULL) {
+        SECKEY_DestroySubjectPublicKeyInfo(spki);
+    }
+    if (pwItem != NULL) {
+        SECITEM_FreeItem(pwItem, PR_TRUE /*freeit*/);
+    }
+    if (pubKey != NULL) {
+        SECKEY_DestroyPublicKey(pubKey);
+    }
+    if (nicknameChars != NULL) {
+        (*env)->ReleaseStringUTFChars(env, nickname, nicknameChars);
+    }
+}
+
+/* Process the given password through the given PasswordConverter,
+ * returning a new SECItem* on success.
+ *
+ * After use, the caller should free the SECItem:
+ *
+ *   SECITEM_FreeItem(pwItem, PR_TRUE).
+ */
+SECItem *preparePassword(JNIEnv *env, jobject conv, jobject pwObj) {
+    jclass passwordClass = (*env)->GetObjectClass(env, pwObj);
+    if (passwordClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        return NULL;
+    }
+
+    jbyteArray pwBytes;
+
+    if (conv == NULL) {
+        jmethodID getByteCopy = (*env)->GetMethodID(
+            env, passwordClass, PW_GET_BYTE_COPY_NAME, PW_GET_BYTE_COPY_SIG);
+        if (getByteCopy == NULL) {
+            ASSERT_OUTOFMEM(env);
+            return NULL;
+        }
+        pwBytes = (*env)->CallObjectMethod(env, pwObj, getByteCopy);
+    } else {
+        jmethodID getChars = (*env)->GetMethodID(
+            env, passwordClass, "getChars", "()[C");
+        if (getChars == NULL) {
+            ASSERT_OUTOFMEM(env);
+            return NULL;
+        }
+        jcharArray pwChars = (*env)->CallObjectMethod(env, pwObj, getChars);
+
+        jclass convClass = (*env)->GetObjectClass(env, conv);
+        if (conv == NULL) {
+            ASSERT_OUTOFMEM(env);
+            return NULL;
+        }
+        jmethodID convert = (*env)->GetMethodID(
+            env, convClass, "convert", "([C)[B");
+        if (convert == NULL) {
+            ASSERT_OUTOFMEM(env);
+            return NULL;
+        }
+        pwBytes = (*env)->CallObjectMethod(env, conv, convert, pwChars);
+    }
+
+    return JSS_ByteArrayToSECItem(env, pwBytes);
 }

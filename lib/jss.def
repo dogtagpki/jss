@@ -324,3 +324,9 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_setNickNameNative;
 ;+    local:
 ;+       *;
 ;+};
+;+JSS_4.4.1 {     # JSS 4.4.1 release
+;+    global:
+Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo;
+;+    local:
+;+       *;
+;+};

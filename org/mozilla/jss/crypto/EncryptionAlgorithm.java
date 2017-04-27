@@ -347,12 +347,14 @@ public class EncryptionAlgorithm extends Algorithm {
             { 2, 16, 840, 1, 101, 3, 4, 1 } );
 
     public static final EncryptionAlgorithm
-    AES_128_ECB = new EncryptionAlgorithm(CKM_AES_ECB, Alg.AES, Mode.ECB,
+    AES_128_ECB = new EncryptionAlgorithm(SEC_OID_AES_128_ECB,
+        Alg.AES, Mode.ECB,
         Padding.NONE, (Class)null, 16,
         AES_ROOT_OID.subBranch(1), 128);
 
     public static final EncryptionAlgorithm
-    AES_128_CBC = new EncryptionAlgorithm(CKM_AES_CBC, Alg.AES, Mode.CBC,
+    AES_128_CBC = new EncryptionAlgorithm(SEC_OID_AES_128_CBC,
+        Alg.AES, Mode.CBC,
         Padding.NONE, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(2), 128);
 
@@ -361,11 +363,13 @@ public class EncryptionAlgorithm extends Algorithm {
         Padding.PKCS5, IVParameterSpecClasses, 16, null, 128); // no oid
     
     public static final EncryptionAlgorithm
-    AES_192_ECB = new EncryptionAlgorithm(CKM_AES_ECB, Alg.AES, Mode.ECB,
+    AES_192_ECB = new EncryptionAlgorithm(SEC_OID_AES_192_ECB,
+        Alg.AES, Mode.ECB,
         Padding.NONE, (Class)null, 16, AES_ROOT_OID.subBranch(21), 192);
 
     public static final EncryptionAlgorithm
-    AES_192_CBC = new EncryptionAlgorithm(CKM_AES_CBC, Alg.AES, Mode.CBC,
+    AES_192_CBC = new EncryptionAlgorithm(SEC_OID_AES_192_CBC,
+        Alg.AES, Mode.CBC,
         Padding.NONE, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(22), 192);
     
@@ -374,11 +378,13 @@ public class EncryptionAlgorithm extends Algorithm {
         Padding.PKCS5, IVParameterSpecClasses, 16, null, 192); // no oid
 
     public static final EncryptionAlgorithm
-    AES_256_ECB = new EncryptionAlgorithm(CKM_AES_ECB, Alg.AES, Mode.ECB,
+    AES_256_ECB = new EncryptionAlgorithm(SEC_OID_AES_256_ECB,
+        Alg.AES, Mode.ECB,
         Padding.NONE, (Class)null, 16, AES_ROOT_OID.subBranch(41), 256);
 
     public static final EncryptionAlgorithm
-    AES_256_CBC = new EncryptionAlgorithm(CKM_AES_CBC, Alg.AES, Mode.CBC,
+    AES_256_CBC = new EncryptionAlgorithm(SEC_OID_AES_256_CBC,
+        Alg.AES, Mode.CBC,
         Padding.NONE, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(42), 256);
     

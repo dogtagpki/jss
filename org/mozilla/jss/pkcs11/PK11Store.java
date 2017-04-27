@@ -4,8 +4,10 @@
 
 package org.mozilla.jss.pkcs11;
 
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.util.*;
+import java.security.PublicKey;
 import java.security.cert.CertificateEncodingException;
 import java.util.Vector;
 
@@ -53,8 +55,35 @@ public final class PK11Store implements CryptoStore {
     public native void deletePrivateKey(PrivateKey key)
         throws NoSuchItemOnTokenException, TokenException;
 
-    public native byte[] getEncryptedPrivateKeyInfo(X509Certificate cert,
-        PBEAlgorithm pbeAlg, Password pw, int iteration);
+    public byte[] getEncryptedPrivateKeyInfo(
+            X509Certificate cert,
+            PBEAlgorithm pbeAlg,
+            Password pw,
+            int iteration)
+            throws CryptoManager.NotInitializedException,
+                ObjectNotFoundException, TokenException {
+        return getEncryptedPrivateKeyInfo(
+            null,
+            pw,
+            pbeAlg,
+            iteration,
+            CryptoManager.getInstance().findPrivKeyByCert(cert)
+        );
+    }
+
+    public native byte[] getEncryptedPrivateKeyInfo(
+        KeyGenerator.CharToByteConverter conv,
+        Password pw,
+        Algorithm alg,
+        int n,
+        PrivateKey k);
+
+    public native void importEncryptedPrivateKeyInfo(
+        KeyGenerator.CharToByteConverter conv,
+        Password pw,
+        String nickname,
+        PublicKey pubKey,
+        byte[] epkiBytes);
 
     ////////////////////////////////////////////////////////////
     // Certs

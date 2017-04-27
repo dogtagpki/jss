@@ -212,4 +212,12 @@ public class Algorithm {
     protected static final short SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST=56;
     protected static final short CKM_NSS_AES_KEY_WRAP=57;
     protected static final short CKM_NSS_AES_KEY_WRAP_PAD=58;
+
+    // AES Encryption Algorithms
+    protected static final short SEC_OID_AES_128_ECB = 59;
+    protected static final short SEC_OID_AES_128_CBC = 60;
+    protected static final short SEC_OID_AES_192_ECB = 61;
+    protected static final short SEC_OID_AES_192_CBC = 62;
+    protected static final short SEC_OID_AES_256_ECB = 63;
+    protected static final short SEC_OID_AES_256_CBC = 64;
 }

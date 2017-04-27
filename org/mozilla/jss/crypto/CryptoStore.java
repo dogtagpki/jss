@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.crypto;
 
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.util.*;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
@@ -68,9 +69,50 @@ public interface CryptoStore {
     public void deletePrivateKey(org.mozilla.jss.crypto.PrivateKey key)
         throws NoSuchItemOnTokenException, TokenException;
 
-
+    /**
+     * Get an encrypted private key for the given cert.
+     *
+     * @param cert Certificate of key to be exported
+     * @param pbeAlg The PBEAlgorithm to use
+     * @param pw The password to encrypt with
+     * @param iteration Iteration count; default of 2000 if le 0
+     */
     public byte[] getEncryptedPrivateKeyInfo(X509Certificate cert,
-        PBEAlgorithm pbeAlg, Password pw, int iteration);
+        PBEAlgorithm pbeAlg, Password pw, int iteration)
+        throws CryptoManager.NotInitializedException,
+            ObjectNotFoundException, TokenException;
+
+    /**
+     * Get an encrypted private key, with optional password
+     * conversion.
+     *
+     * @param conv Password converter.  If null, pw.getByteCopy()
+     *             will be used to get password bytes.
+     * @param pw The password
+     * @param alg The encryption algorithm
+     * @param n Iteration count; default of 2000 if le 0
+     * @param k The private key
+     */
+    public byte[] getEncryptedPrivateKeyInfo(
+        KeyGenerator.CharToByteConverter conv,
+        Password pw,
+        Algorithm alg,
+        int n,
+        PrivateKey k);
+
+    /**
+     * @param conv Password converter.  If null, pw.getByteCopy()
+     *             will be used to get password bytes.
+     * @param pw The password
+     * @param nickname Nickname to use for private key
+     * @param pubKey Public key corresponding to private key
+     */
+    public void importEncryptedPrivateKeyInfo(
+        KeyGenerator.CharToByteConverter conv,
+        Password pw,
+        String nickname,
+        PublicKey pubKey,
+        byte[] epkiBytes);
 
     ////////////////////////////////////////////////////////////
     // Certs
