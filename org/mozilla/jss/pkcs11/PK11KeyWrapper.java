@@ -588,6 +588,8 @@ final class PK11KeyWrapper implements KeyWrapper {
             return EncryptionAlgorithm.RC4;
         } else if( type == SymmetricKey.AES ) {
             return EncryptionAlgorithm.AES_128_ECB;
+        } else if( type == SymmetricKey.SHA1_HMAC) {
+            return HMACAlgorithm.SHA1;
         } else  {
             Assert._assert( type == SymmetricKey.RC2 );
             return EncryptionAlgorithm.RC2_CBC;
