@@ -492,6 +492,10 @@ $testname = "HMAC ";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.HMACTest $testdir $pwfile";
 run_test($testname, $command);
 
+$testname = "HMAC Unwrap";
+$command = "$java -cp $jss_classpath org.mozilla.jss.tests.HmacTest $testdir $pwfile";
+run_test($testname, $command);
+
 $testname = "KeyWrapping ";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.JCAKeyWrap $testdir $pwfile";
 run_test($testname, $command);

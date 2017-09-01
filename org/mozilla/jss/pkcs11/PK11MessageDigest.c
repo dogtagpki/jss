@@ -67,19 +67,19 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
     }
 
     /* copy the key, setting the CKA_SIGN attribute */
-    /*
+    
     newKey = PK11_CopySymKeyForSigning(origKey, mech);
+
+    /* For some key on the hsm, this call could fail, but the key may work anyway */
+
     if( newKey == NULL ) {
-        JSS_throwMsg(env, DIGEST_EXCEPTION,
-                        "Unable to set CKA_SIGN attribute on symmetric key");
-        goto finish;
+        newKey = origKey;
     }
-    */
 
     param.data = NULL;
     param.len = 0;
 
-    context = PK11_CreateContextBySymKey(mech, CKA_SIGN, origKey, &param);
+    context = PK11_CreateContextBySymKey(mech, CKA_SIGN, newKey, &param);
     if( context == NULL ) {
         JSS_throwMsg(env, DIGEST_EXCEPTION,
             "Unable to initialize digest context");
@@ -88,7 +88,7 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
 
     contextObj = JSS_PK11_wrapCipherContextProxy(env, &context);
 finish:
-    if(newKey) {
+    if(newKey && (newKey != origKey)) {
         /* SymKeys are ref counted, and the context will free it's ref
          * when it is destroyed */
         PK11_FreeSymKey(newKey);
