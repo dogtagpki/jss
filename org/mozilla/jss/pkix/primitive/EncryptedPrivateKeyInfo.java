@@ -155,6 +155,100 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
 
 
     /**
+     * Export a private key in PBES2 format, using a random PBKDF2 salt.
+     *
+     * Token must support the CKM_PKCS5_PBKD2 mechanism.
+     *
+     * @param saltLen Length of salt in bytes (default: 16)
+     * @param kdfIterations PBKDF2 iterations (default: 2000)
+     * @param encAlg The symmetric encryption algorithm for enciphering the
+     *               private key.  Determines the size of derived key.
+     * @param pwd Password
+     * @param charToByteConverter The mechanism for converting the characters
+     *      in the password into bytes.  If null, the default mechanism
+     *      will be used, which is UTF8.
+     * @param privateKeyInfo The encoded PrivateKeyInfo to be encrypted and
+     *                       stored in the EncryptedContentInfo.
+     */
+    public static EncryptedPrivateKeyInfo createPBES2(
+            int saltLen,
+            int kdfIterations,
+            EncryptionAlgorithm encAlg,
+            Password pwd,
+            KeyGenerator.CharToByteConverter charToByteConverter,
+            PrivateKeyInfo privateKeyInfo)
+        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
+        CharConversionException
+    {
+        if (encAlg == null)
+            throw new IllegalArgumentException("encAlg cannot be null");
+        if (pwd == null)
+            throw new IllegalArgumentException("pwd cannot be null");
+        if (privateKeyInfo == null)
+            throw new IllegalArgumentException("privateKeyInfo cannot be null");
+
+        if (kdfIterations < 1)
+            kdfIterations = 2000;
+        if (saltLen < 1)
+            saltLen = 16;
+
+        try {
+            // generate random PBKDF2 salt
+            SecureRandom random = new SecureRandom();
+            byte salt[] = new byte[saltLen];
+            random.nextBytes(salt);
+
+            // derive symmetric key from passphrase using PBKDF2
+            CryptoManager cm = CryptoManager.getInstance();
+            CryptoToken token = cm.getInternalCryptoToken();
+            KeyGenerator kg = token.getKeyGenerator(
+                PBEAlgorithm.PBE_PKCS5_PBKDF2);
+            PBEKeyGenParams pbekgParams = new PBEKeyGenParams(
+                pwd.getChars(), salt, kdfIterations, encAlg);
+            if (charToByteConverter != null)
+                kg.setCharToByteConverter(charToByteConverter);
+            kg.initialize(pbekgParams);
+            SymmetricKey sk = kg.generate();
+
+            // encrypt PrivateKeyInfo
+            byte iv[] = new byte[encAlg.getBlockSize()];
+            random.nextBytes(iv);
+            Cipher cipher = token.getCipherContext(encAlg);
+            cipher.initEncrypt(sk, new IVParameterSpec(iv));
+            byte[] encData = cipher.doFinal(ASN1Util.encode(privateKeyInfo));
+
+            // construct KDF AlgorithmIdentifier
+            SEQUENCE paramsKdf = new SEQUENCE();
+            paramsKdf.addElement(new OCTET_STRING(salt));
+            paramsKdf.addElement(new INTEGER((long) kdfIterations));
+            paramsKdf.addElement(new INTEGER((long) sk.getLength()));
+            AlgorithmIdentifier algIdKdf = new AlgorithmIdentifier(
+                PBEAlgorithm.PBE_PKCS5_PBKDF2.toOID(), paramsKdf);
+
+            // construct encryption AlgorithmIdentifier
+            AlgorithmIdentifier algIdEnc = new AlgorithmIdentifier(
+                encAlg.toOID(), new OCTET_STRING(iv));
+
+            // construct "composite" PBES2 AlgorithmIdentifier
+            SEQUENCE paramsPBES2 = new SEQUENCE();
+            paramsPBES2.addElement(algIdKdf);
+            paramsPBES2.addElement(algIdEnc);
+            AlgorithmIdentifier algIdPBES2 = new AlgorithmIdentifier(
+                PBEAlgorithm.PBE_PKCS5_PBES2.toOID(), paramsPBES2);
+
+            // construct EncryptedPrivateKeyInfo
+            return new EncryptedPrivateKeyInfo(algIdPBES2, new OCTET_STRING(encData));
+        } catch (IllegalBlockSizeException e) {
+            Assert.notReached("IllegalBlockSizeException in EncryptedContentInfo.createPBES2");
+        } catch (BadPaddingException e) {
+            Assert.notReached("BadPaddingException in EncryptedContentInfo.createPBES2");
+        }
+        return null; // unreachable
+    }
+
+
+    /**
      * Creates a new EncryptedPrivateKeyInfo, where the data is encrypted
      * with a password-based key- 
      *       with wrapping/unwrapping happening on token.
