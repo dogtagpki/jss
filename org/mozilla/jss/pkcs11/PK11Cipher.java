@@ -90,10 +90,13 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         state = ENCRYPT;
 
         if( parameters instanceof RC2ParameterSpec ) {
-            contextProxy = initContextWithKeyBits( true, key, algorithm, IV,
-                ((RC2ParameterSpec)parameters).getEffectiveKeyBits() );
+            contextProxy = initContextWithKeyBits(
+                true, key, algorithm, IV,
+                ((RC2ParameterSpec)parameters).getEffectiveKeyBits(),
+                algorithm.isPadded());
         } else {
-            contextProxy = initContext( true, key, algorithm, IV );
+            contextProxy = initContext(
+                true, key, algorithm, IV, algorithm.isPadded());
         }
     }
 
@@ -112,10 +115,13 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         state = DECRYPT;
 
         if( parameters instanceof RC2ParameterSpec ) {
-            contextProxy = initContextWithKeyBits(false, key, algorithm, IV,
-                ((RC2ParameterSpec)parameters).getEffectiveKeyBits() );
+            contextProxy = initContextWithKeyBits(
+                false, key, algorithm, IV,
+                ((RC2ParameterSpec)parameters).getEffectiveKeyBits(),
+                algorithm.isPadded());
         } else {
-            contextProxy = initContext(false, key, algorithm, IV);
+            contextProxy = initContext(
+                false, key, algorithm, IV, algorithm.isPadded());
         }
     }
 
@@ -182,13 +188,13 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
 
     private static native CipherContextProxy
     initContext(boolean encrypt, SymmetricKey key, EncryptionAlgorithm alg,
-                 byte[] IV)
+                 byte[] IV, boolean padded)
         throws TokenException;
 
     // This version accepts the number of effective key bits for RC2 CBC.
     private static native CipherContextProxy
     initContextWithKeyBits(boolean encrypt, SymmetricKey key,
-                EncryptionAlgorithm alg, byte[] IV, int keyBits)
+                EncryptionAlgorithm alg, byte[] IV, int keyBits, boolean padded)
         throws TokenException;
 
     private static native byte[]

@@ -24,16 +24,16 @@
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11Cipher_initContext
     (JNIEnv *env, jclass clazz, jboolean encrypt, jobject keyObj,
-        jobject algObj, jbyteArray ivBA)
+        jobject algObj, jbyteArray ivBA, jboolean padded)
 {
     return Java_org_mozilla_jss_pkcs11_PK11Cipher_initContextWithKeyBits
-        ( env, clazz, encrypt, keyObj, algObj, ivBA, 0);
+        ( env, clazz, encrypt, keyObj, algObj, ivBA, 0, padded);
 }
 
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11Cipher_initContextWithKeyBits
     (JNIEnv *env, jclass clazz, jboolean encrypt, jobject keyObj,
-        jobject algObj, jbyteArray ivBA, jint keyBits)
+        jobject algObj, jbyteArray ivBA, jint keyBits, jboolean padded)
 {
     CK_MECHANISM_TYPE mech;
     PK11SymKey *key=NULL;
@@ -52,6 +52,9 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_initContextWithKeyBits
             " PKCS #11 mechanism");
         goto finish;
     }
+
+    if (padded)
+        mech = PK11_GetPadMechanism(mech);
 
     /* get operation type */
     if( encrypt ) {
