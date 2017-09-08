@@ -734,7 +734,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo(
         PR_TRUE /* isperm */, PR_TRUE /* isprivate */,
         pubKey->keyType, keyUsage, NULL /* wincx */);
     if (result != SECSuccess) {
-        JSS_throwMsg(
+        JSS_throwMsgPrErr(
             env, TOKEN_EXCEPTION,
             "Failed to import EncryptedPrivateKeyInfo to token");
         goto finish;
