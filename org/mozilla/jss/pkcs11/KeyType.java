@@ -242,4 +242,7 @@ public final class KeyType {
                             "SHA1_HMAC"
                         );
 
+    static public final KeyType GENERIC_SECRET =
+        new KeyType(new Algorithm[] { }, "GENERIC_SECRET");
+
 }

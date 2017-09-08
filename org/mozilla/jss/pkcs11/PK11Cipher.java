@@ -243,8 +243,11 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         }
 
         try {
-            if( ((PK11SymKey)key).getKeyType() !=
-                    KeyType.getKeyTypeFromAlgorithm(algorithm) ) {
+            KeyType keyType = ((PK11SymKey) key).getKeyType();
+            if (
+                keyType != KeyType.GENERIC_SECRET
+                && keyType != KeyType.getKeyTypeFromAlgorithm(algorithm)
+            ) {
                 throw new InvalidKeyException("Key is not the right type for"+
                     " this algorithm: " + ((PK11SymKey)key).getKeyType() + ":" + KeyType.getKeyTypeFromAlgorithm(algorithm) +";");
             }

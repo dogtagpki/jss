@@ -305,6 +305,9 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_getKeyType
           case CKK_DES2:
              typeFieldName = DES3_KEYTYPE_FIELD;
              break;
+          case CKK_GENERIC_SECRET:
+             typeFieldName = GENERIC_SECRET_KEYTYPE_FIELD;
+             break;
           default:
             PR_ASSERT(PR_FALSE);
             typeFieldName = DES_KEYTYPE_FIELD;
