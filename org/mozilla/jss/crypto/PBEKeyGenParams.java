@@ -13,6 +13,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
     private Password pass;
     private byte[] salt;
     private int iterations;
+    private EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.DES3_CBC;
 
     private PBEKeyGenParams() { }
 
@@ -40,7 +41,8 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
     }
 
     /**
-     * Creates PBE parameters.
+     * Creates PBE parameters using default encryption algorithm
+     * (DES3_EDE3_CBC).
      *
      * @param pass The password. It will be cloned, so the
      *      caller is still responsible for clearing it. It must not be null.
@@ -57,6 +59,33 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
         this.pass = new Password( (char[]) pass.clone() );
         this.salt = salt;
         this.iterations = iterations;
+    }
+
+    /**
+     * Creates PBE parameters using default encryption algorithm
+     * (DES3_EDE3_CBC).
+     *
+     * @param pass The password. It will be cloned, so the
+     *      caller is still responsible for clearing it. It must not be null.
+     * @param salt The salt for the PBE algorithm. Will <b>not</b> be cloned.
+     *      Must not be null. It is the responsibility of the caller to
+     *      use the right salt length for the algorithm. Most algorithms
+     *      use 8 bytes of salt.
+     * @param iterations The iteration count for the PBE algorithm.
+     * @param encAlg The encryption algorithm.  This is used with SOME
+     *      PBE algorithms for determining the KDF output length.
+     */
+    public PBEKeyGenParams(
+            char[] pass, byte[] salt, int iterations,
+            EncryptionAlgorithm encAlg) {
+        if (pass == null || salt == null) {
+            throw new NullPointerException();
+        }
+        this.pass = new Password((char[]) pass.clone());
+        this.salt = salt;
+        this.iterations = iterations;
+        if (encAlg != null)
+            this.encryptionAlgorithm = encAlg;
     }
 
     /**
@@ -78,6 +107,14 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      */
     public int getIterations() {
         return iterations;
+    }
+
+    /**
+     * The encryption algorithm is used with SOME PBE algorithms for
+     * determining the KDF output length.
+     */
+    public EncryptionAlgorithm getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
     }
 
     /**
