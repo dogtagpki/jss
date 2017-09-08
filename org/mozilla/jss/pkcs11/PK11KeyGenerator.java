@@ -178,8 +178,9 @@ public final class PK11KeyGenerator implements KeyGenerator {
             byte[] pwbytes=null;
             try {
                 pwbytes = charToByte.convert( kgp.getPassword().getChars() );
-                return generatePBE(token, algorithm, pwbytes,
-                    kgp.getSalt(), kgp.getIterations());
+                return generatePBE(
+                    token, algorithm, kgp.getEncryptionAlgorithm(),
+                    pwbytes, kgp.getSalt(), kgp.getIterations());
             } finally {
                 if( pwbytes!=null ) {
                     Password.wipeBytes(pwbytes);
@@ -296,7 +297,9 @@ public final class PK11KeyGenerator implements KeyGenerator {
      *  be null.
      */
     private static native SymmetricKey
-    generatePBE(PK11Token token, KeyGenAlgorithm algorithm, byte[] pass,
-        byte[] salt, int iterationCount) throws TokenException;
+    generatePBE(
+        PK11Token token, KeyGenAlgorithm algorithm, EncryptionAlgorithm encAlg,
+        byte[] pass, byte[] salt, int iterationCount)
+        throws TokenException;
 
 }

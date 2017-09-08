@@ -246,9 +246,9 @@ finish:
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE
-    (JNIEnv *env, jclass clazz, jobject token, jobject alg, jbyteArray passBA,
-    jbyteArray saltBA, jint iterationCount)
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(
+    JNIEnv *env, jclass clazz, jobject token, jobject alg, jobject encAlg,
+    jbyteArray passBA, jbyteArray saltBA, jint iterationCount)
 {
     PK11SlotInfo *slot=NULL;
     PK11SymKey *skey=NULL;
@@ -299,12 +299,15 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE
         oidTag = JSS_getOidTagFromAlg(env, alg);
         PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
 
+        SECOidTag encAlgOidTag = JSS_getOidTagFromAlg(env, encAlg);
+        PR_ASSERT(encAlgOidTag != SEC_OID_UNKNOWN);
+
         /* create algid */
         algid = PK11_CreatePBEV2AlgorithmID(
             oidTag,
-            SEC_OID_DES_EDE3_CBC,
+            encAlgOidTag,
             SEC_OID_HMAC_SHA1,
-            168/8,
+            0,
             iterationCount,
             salt);
 
