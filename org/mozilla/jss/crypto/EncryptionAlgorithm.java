@@ -359,8 +359,10 @@ public class EncryptionAlgorithm extends Algorithm {
         AES_ROOT_OID.subBranch(2), 128);
 
     public static final EncryptionAlgorithm
-    AES_128_CBC_PAD = new EncryptionAlgorithm(CKM_AES_CBC_PAD, Alg.AES, Mode.CBC,
-        Padding.PKCS5, IVParameterSpecClasses, 16, null, 128); // no oid
+    AES_128_CBC_PAD = new EncryptionAlgorithm(SEC_OID_AES_128_CBC,
+        Alg.AES, Mode.CBC,
+        Padding.PKCS5, IVParameterSpecClasses, 16,
+        AES_ROOT_OID.subBranch(2), 128);
     
     public static final EncryptionAlgorithm
     AES_192_ECB = new EncryptionAlgorithm(SEC_OID_AES_192_ECB,
@@ -374,8 +376,10 @@ public class EncryptionAlgorithm extends Algorithm {
         AES_ROOT_OID.subBranch(22), 192);
     
     public static final EncryptionAlgorithm
-    AES_192_CBC_PAD = new EncryptionAlgorithm(CKM_AES_CBC_PAD, Alg.AES, Mode.CBC,
-        Padding.PKCS5, IVParameterSpecClasses, 16, null, 192); // no oid
+    AES_192_CBC_PAD = new EncryptionAlgorithm(SEC_OID_AES_192_CBC,
+        Alg.AES, Mode.CBC,
+        Padding.PKCS5, IVParameterSpecClasses, 16,
+        AES_ROOT_OID.subBranch(22), 192);
 
     public static final EncryptionAlgorithm
     AES_256_ECB = new EncryptionAlgorithm(SEC_OID_AES_256_ECB,
@@ -393,6 +397,9 @@ public class EncryptionAlgorithm extends Algorithm {
         Padding.PKCS5, IVParameterSpecClasses, 16, null, 256); // no oid
     
     public static final EncryptionAlgorithm
-    AES_256_CBC_PAD = AES_CBC_PAD;
+    AES_256_CBC_PAD = new EncryptionAlgorithm(SEC_OID_AES_256_CBC,
+        Alg.AES, Mode.CBC,
+        Padding.PKCS5, IVParameterSpecClasses, 16,
+        AES_ROOT_OID.subBranch(42), 256);
     
 }
