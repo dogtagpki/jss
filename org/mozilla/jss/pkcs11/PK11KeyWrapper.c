@@ -251,9 +251,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapPrivWithSym
     status = PK11_WrapPrivKey(slot, wrapping, toBeWrapped, mech, param,
                 &wrapped, NULL /* wincx */ );
     if(status != SECSuccess) {
-        char err[256] = {0};
-        PR_snprintf(err, 256, "Wrapping operation failed on token:%d", PR_GetError());
-        JSS_throwMsg(env, TOKEN_EXCEPTION, err);
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Wrapping operation failed on token");
         goto finish;
     }
     PR_ASSERT(wrapped.len>0 && wrapped.data!=NULL);
@@ -450,8 +448,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
                 attribs, numAttribs, NULL /*wincx*/);
     if( privk == NULL ) {
         char err[256] = {0};
-        PR_snprintf(err, 256, "Key Unwrap failed on token:error=%d, keyType=%d", PR_GetError(), keyType);
-        JSS_throwMsg(env, TOKEN_EXCEPTION, err);
+        PR_snprintf(err, 256, "Key Unwrap failed on token; keyType=%d", keyType);
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, err);
         goto finish;
     }
                 
