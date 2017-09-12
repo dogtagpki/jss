@@ -581,6 +581,11 @@ Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo(
     // export the epki
     epki = PK11_ExportEncryptedPrivKeyInfo(
         slot, algTag, pwItem, privk, iterations, NULL /*wincx*/);
+    if (epki == NULL) {
+        JSS_throwMsgPrErr(
+            env, TOKEN_EXCEPTION, "Failed to export EncryptedPrivateKeyInfo");
+        goto finish;
+    }
 
     // DER-encode the epki
     if (SEC_ASN1EncodeItem(NULL, &epkiItem, epki,
