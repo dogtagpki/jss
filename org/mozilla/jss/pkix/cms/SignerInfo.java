@@ -289,7 +289,7 @@ public class SignerInfo implements ASN1Value {
         }
 
         digestEncryptionAlgorithm = new AlgorithmIdentifier(
-            signingAlg.getRawAlg().toOID(),null );
+            signingAlg.toOID(),null );
 
 
         if( signedAttributes != null ) 
@@ -332,7 +332,7 @@ public class SignerInfo implements ASN1Value {
         // encrypt the DER-encoded DigestInfo with the private key
         CryptoToken token = signingKey.getOwningToken();
         Signature sig;
-        sig = token.getSignatureContext( signingAlg.getRawAlg() );
+        sig = token.getSignatureContext( signingAlg );
         sig.initSign(signingKey);
         sig.update(toBeSigned);
         encryptedDigest = new OCTET_STRING(sig.sign());
