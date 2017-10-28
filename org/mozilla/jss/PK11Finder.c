@@ -54,7 +54,9 @@ Java_org_mozilla_jss_CryptoManager_findCertByNicknameNative
     cert = JSS_PK11_findCertAndSlotFromNickname(nick, NULL, &slot);
 
     if(cert == NULL) {
-        JSS_nativeThrow(env, OBJECT_NOT_FOUND_EXCEPTION);
+        char *message = PR_smprintf("Certificate not found: %s", nick);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, message);
+        PR_smprintf_free(message);
         goto finish;
     }
 
@@ -1577,7 +1579,9 @@ SECStatus verifyCertificateNow(JNIEnv *env, jobject self, jstring nickString,
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
 
     if (cert == NULL) {
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        char *message = PR_smprintf("Certificate not found: %s", nickname);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, message);
+        PR_smprintf_free(message);
         goto finish;
     } else {
     /* 0 for certificateUsage in call to CERT_VerifyCertificateNow will
@@ -1640,7 +1644,9 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
 
     if (cert == NULL) {
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        char *message = PR_smprintf("Certificate not found: %s", nickname);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, message);
+        PR_smprintf_free(message);
         goto finish;
     } else {
     /* 0 for certificateUsage in call to CERT_VerifyCertificateNow to
@@ -1801,7 +1807,9 @@ Java_org_mozilla_jss_CryptoManager_verifyCertNowNative(JNIEnv *env,
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
 
     if (cert == NULL) {
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        char *message = PR_smprintf("Certificate not found: %s", nickname);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, message);
+        PR_smprintf_free(message);
         goto finish;
     } else {
         rv = CERT_VerifyCertNow(CERT_GetDefaultCertDB(), cert,
