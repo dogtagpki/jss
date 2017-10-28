@@ -4,17 +4,21 @@
 
 package org.mozilla.jss.ssl;
 
-import java.net.*;
-import java.net.SocketException;
-import java.io.*;
 import java.io.IOException;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.lang.reflect.Constructor;
-import org.mozilla.jss.util.Assert;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.util.Assert;
 
 class SocketBase {
 
@@ -395,13 +399,18 @@ class SocketBase {
      */
     public void setClientCertNickname(String nick) throws SocketException {
         try {
-            setClientCert(CryptoManager.getInstance().findCertByNickname(nick));
+            CryptoManager cm = CryptoManager.getInstance();
+            X509Certificate cert = cm.findCertByNickname(nick);
+            setClientCert(cert);
+
         } catch (CryptoManager.NotInitializedException nie) {
-            throw new SocketException("CryptoManager not initialized");
+            throw new RuntimeException(nie);
+
         } catch (ObjectNotFoundException onfe) {
-            throw new SocketException("Object not found: " + onfe);
+            throw new RuntimeException(onfe);
+
         } catch (TokenException te) {
-            throw new SocketException("Token Exception: " + te);
+            throw new RuntimeException(te);
         }
     }
 
