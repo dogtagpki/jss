@@ -27,6 +27,7 @@ class SocketBase {
     int getTimeout() {
         return timeout;
     }
+
     void setTimeout(int timeout) {
         this.timeout = timeout;
     }
@@ -36,18 +37,17 @@ class SocketBase {
     }
 
     native byte[] socketCreate(Object socketObject,
-        SSLCertificateApprovalCallback certApprovalCallback,
-        SSLClientCertificateSelectionCallback clientCertSelectionCallback,
-        java.net.Socket javaSock, String host,int family)
+            SSLCertificateApprovalCallback certApprovalCallback,
+            SSLClientCertificateSelectionCallback clientCertSelectionCallback,
+            java.net.Socket javaSock, String host, int family)
             throws SocketException;
 
     byte[] socketCreate(Object socketObject,
-        SSLCertificateApprovalCallback certApprovalCallback,
-        SSLClientCertificateSelectionCallback clientCertSelectionCallback, int family)
-            throws SocketException
-    {
+            SSLCertificateApprovalCallback certApprovalCallback,
+            SSLClientCertificateSelectionCallback clientCertSelectionCallback, int family)
+            throws SocketException {
         return socketCreate(socketObject, certApprovalCallback,
-            clientCertSelectionCallback, null, null, family);
+                clientCertSelectionCallback, null, null, family);
     }
 
     native void socketBind(byte[] addrBA, int port) throws SocketException;
@@ -57,7 +57,7 @@ class SocketBase {
      * safer than copying the values of the C constants, which are subject
      * to change, into Java code.
      * Note to developer these constants are not all related! i.e. you cannot
-     * pass in PR_SHUTDOWN_RCV to setSSLOption etc! Check their usage 
+     * pass in PR_SHUTDOWN_RCV to setSSLOption etc! Check their usage
      * in NSS and NSPR before using.
      */
     static final int SSL_ENABLE_SSL2 = 0;
@@ -73,7 +73,7 @@ class SocketBase {
     static final int SSL_POLICY_DOMESTIC = 10;
     static final int SSL_POLICY_EXPORT = 11;
     static final int SSL_POLICY_FRANCE = 12;
-    static final int SSL_ROLLBACK_DETECTION = 13; 
+    static final int SSL_ROLLBACK_DETECTION = 13;
     static final int SSL_NO_STEP_DOWN = 14;
     static final int SSL_ENABLE_FDX = 15;
     static final int SSL_V2_COMPATIBLE_HELLO = 16;
@@ -98,7 +98,7 @@ class SocketBase {
     static final int SSL_Variant_Stream = 33;
     static final int SSL_Variant_Datagram = 34;
 
-    static final int SSL_AF_INET  = 50;
+    static final int SSL_AF_INET = 50;
     static final int SSL_AF_INET6 = 51;
 
     void close() throws IOException {
@@ -106,7 +106,7 @@ class SocketBase {
     }
 
     // SSLServerSocket and SSLSocket close methods
-    // have their own synchronization control that 
+    // have their own synchronization control that
     // protects SocketBase.socketClose.
     native void socketClose() throws IOException;
 
@@ -118,14 +118,13 @@ class SocketBase {
     }
 
     public void requestClientAuthNoExpiryCheck(boolean b)
-        throws SocketException
-    {
+            throws SocketException {
         requestingClientAuth = b;
         requestClientAuthNoExpiryCheckNative(b);
     }
 
     private native void requestClientAuthNoExpiryCheckNative(boolean b)
-        throws SocketException;
+            throws SocketException;
 
     void enableSSL2(boolean enable) throws SocketException {
         setSSLOption(SSL_ENABLE_SSL2, enable);
@@ -144,8 +143,7 @@ class SocketBase {
     }
 
     void enableRenegotiation(int mode)
-            throws SocketException
-    {
+            throws SocketException {
         setSSLOptionMode(SocketBase.SSL_ENABLE_RENEGOTIATION, mode);
     }
 
@@ -168,23 +166,21 @@ class SocketBase {
     void enableV2CompatibleHello(boolean enable) throws SocketException {
         setSSLOption(SSL_V2_COMPATIBLE_HELLO, enable);
     }
-    
+
     void setSSLOption(int option, boolean on)
-        throws SocketException
-    {
+            throws SocketException {
         setSSLOption(option, on ? 1 : 0);
     }
 
-    /** 
-     * Sets SSL options for this socket that have simple 
+    /**
+     * Sets SSL options for this socket that have simple
      * enable/disable values.
      */
     native void setSSLOption(int option, int on)
-        throws SocketException;
+            throws SocketException;
 
     void setSSLVersionRange(org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range)
-        throws SocketException
-    {
+            throws SocketException {
         setSSLVersionRange(range.getMinEnum(), range.getMaxEnum());
     }
 
@@ -192,93 +188,101 @@ class SocketBase {
      * Sets SSL Version Range for this socket to support TLS v1.1 and v1.2
      */
     native void setSSLVersionRange(int min, int max)
-        throws SocketException;
+            throws SocketException;
 
-    /** 
+    /**
      * Sets the SSL option setting mode value use for options
      * that have more values than just enable/disable.
      */
     native void setSSLOptionMode(int option, int option2)
-        throws SocketException; 
+            throws SocketException;
 
-    
     /* return 0 for option disabled 1 for option enabled. */
     native int getSSLOption(int option)
-        throws SocketException;
-    
+            throws SocketException;
+
     public String getSSLOptions() {
         StringBuffer buf = new StringBuffer();
         try {
             buf.append("SSL Options configured for this SSLSocket:");
-            buf.append("\nSSL_ENABLE_SSL2" + 
-                ((getSSLOption(SocketBase.SSL_ENABLE_SSL2) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_ENABLE_SSL3"  + 
-                ((getSSLOption(SocketBase.SSL_ENABLE_SSL3) != 0) 
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_ENABLE_TLS"  + 
-                ((getSSLOption(SocketBase.SSL_ENABLE_TLS) != 0) 
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_REQUIRE_CERTIFICATE"); 
+            buf.append("\nSSL_ENABLE_SSL2" +
+                    ((getSSLOption(SocketBase.SSL_ENABLE_SSL2) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_ENABLE_SSL3" +
+                    ((getSSLOption(SocketBase.SSL_ENABLE_SSL3) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_ENABLE_TLS" +
+                    ((getSSLOption(SocketBase.SSL_ENABLE_TLS) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_REQUIRE_CERTIFICATE");
             switch (getSSLOption(SocketBase.SSL_REQUIRE_CERTIFICATE)) {
-                case 0:
-                    buf.append("=Never");
-                    break;
-                case 1:
-                    buf.append("=Always");
-                    break;
-                case 2:
-                    buf.append("=First Handshake");
-                    break;
-                case 3:
-                    buf.append("=No Error");
-                    break;
-                default:
-                    buf.append("=Report JSS Bug this option has a status.");
-                    break;
+            case 0:
+                buf.append("=Never");
+                break;
+            case 1:
+                buf.append("=Always");
+                break;
+            case 2:
+                buf.append("=First Handshake");
+                break;
+            case 3:
+                buf.append("=No Error");
+                break;
+            default:
+                buf.append("=Report JSS Bug this option has a status.");
+                break;
             } //end switch
-            buf.append("\nSSL_REQUEST_CERTIFICATE"  + 
-                ((getSSLOption(SocketBase.SSL_REQUEST_CERTIFICATE) != 0) 
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_NO_CACHE"  + 
-                ((getSSLOption(SocketBase.SSL_NO_CACHE) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_ROLLBACK_DETECTION"  + 
-                ((getSSLOption(SocketBase.SSL_ROLLBACK_DETECTION) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_NO_STEP_DOWN"  + 
-                ((getSSLOption(SocketBase.SSL_NO_STEP_DOWN) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_ENABLE_FDX"  + 
-                ((getSSLOption(SocketBase.SSL_ENABLE_FDX) != 0)
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_V2_COMPATIBLE_HELLO"  + 
-                ((getSSLOption(SocketBase.SSL_V2_COMPATIBLE_HELLO) != 0) 
-                ? "=on" :  "=off"));
-            buf.append("\nSSL_ENABLE_SESSION_TICKETS"  +
-                ((getSSLOption(SocketBase.SSL_ENABLE_SESSION_TICKETS)
-                != 0) ? "=on" :  "=off"));
+            buf.append("\nSSL_REQUEST_CERTIFICATE" +
+                    ((getSSLOption(SocketBase.SSL_REQUEST_CERTIFICATE) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_NO_CACHE" +
+                    ((getSSLOption(SocketBase.SSL_NO_CACHE) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_ROLLBACK_DETECTION" +
+                    ((getSSLOption(SocketBase.SSL_ROLLBACK_DETECTION) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_NO_STEP_DOWN" +
+                    ((getSSLOption(SocketBase.SSL_NO_STEP_DOWN) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_ENABLE_FDX" +
+                    ((getSSLOption(SocketBase.SSL_ENABLE_FDX) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_V2_COMPATIBLE_HELLO" +
+                    ((getSSLOption(SocketBase.SSL_V2_COMPATIBLE_HELLO) != 0)
+                            ? "=on"
+                            : "=off"));
+            buf.append("\nSSL_ENABLE_SESSION_TICKETS" +
+                    ((getSSLOption(SocketBase.SSL_ENABLE_SESSION_TICKETS) != 0) ? "=on" : "=off"));
             buf.append("\nSSL_ENABLE_RENEGOTIATION");
             switch (getSSLOption(SocketBase.SSL_ENABLE_RENEGOTIATION)) {
-                case 0:
-                    buf.append("=SSL_RENEGOTIATE_NEVER");
-                    break;
-                case 1:
-                    buf.append("=SSL_RENEGOTIATE_UNRESTRICTED");
-                    break;
-                case 2:
-                    buf.append("=SSL_RENEGOTIATE_REQUIRES_XTN");
-                    break;
-                case 3:
-                    buf.append("=SSL_RENEGOTIATE_TRANSITIONAL");
-                    break;
-                default:
-                    buf.append("=Report JSS Bug this option has a status.");
-                    break;
+            case 0:
+                buf.append("=SSL_RENEGOTIATE_NEVER");
+                break;
+            case 1:
+                buf.append("=SSL_RENEGOTIATE_UNRESTRICTED");
+                break;
+            case 2:
+                buf.append("=SSL_RENEGOTIATE_REQUIRES_XTN");
+                break;
+            case 3:
+                buf.append("=SSL_RENEGOTIATE_TRANSITIONAL");
+                break;
+            default:
+                buf.append("=Report JSS Bug this option has a status.");
+                break;
             } //end switch
-            buf.append("\nSSL_REQUIRE_SAFE_NEGOTIATION"  +
-                ((getSSLOption(SocketBase.SSL_REQUIRE_SAFE_NEGOTIATION) != 0)
-                ? "=on" :  "=off"));
+            buf.append("\nSSL_REQUIRE_SAFE_NEGOTIATION" +
+                    ((getSSLOption(SocketBase.SSL_REQUIRE_SAFE_NEGOTIATION) != 0)
+                            ? "=on"
+                            : "=off"));
 
         } catch (SocketException e) {
             buf.append("\ngetSSLOptions exception " + e.getMessage());
@@ -292,19 +296,18 @@ class SocketBase {
      * of construction than getByName(), and it is final.
      *
      * @return The InetAddress corresponding to the given integer,
-     *      or <tt>null</tt> if the InetAddress could not be constructed.
+     *         or <tt>null</tt> if the InetAddress could not be constructed.
      */
-    private static InetAddress
-    convertIntToInetAddress(int intAddr) {
+    private static InetAddress convertIntToInetAddress(int intAddr) {
         InetAddress in;
         int[] addr = new int[4];
         addr[0] = ((intAddr >>> 24) & 0xff);
         addr[1] = ((intAddr >>> 16) & 0xff);
-        addr[2] = ((intAddr >>>  8) & 0xff);
-        addr[3] = ((intAddr       ) & 0xff);
+        addr[2] = ((intAddr >>> 8) & 0xff);
+        addr[3] = ((intAddr) & 0xff);
         try {
             in = InetAddress.getByName(
-                addr[0] + "." + addr[1] + "." + addr[2] + "." + addr[3] );
+                    addr[0] + "." + addr[1] + "." + addr[2] + "." + addr[3]);
         } catch (java.net.UnknownHostException e) {
             in = null;
         }
@@ -312,12 +315,13 @@ class SocketBase {
     }
 
     private native byte[] getLocalAddressByteArrayNative() throws SocketException;
+
     private native byte[] getPeerAddressByteArrayNative() throws SocketException;
+
     /**
      * @return the InetAddress of the peer end of the socket.
      */
-    InetAddress getInetAddress()
-    {
+    InetAddress getInetAddress() {
         try {
             byte[] address = getPeerAddressByteArrayNative();
 
@@ -326,14 +330,15 @@ class SocketBase {
             try {
 
                 iAddr = InetAddress.getByAddress(address);
-            }   catch(UnknownHostException e) {
+            } catch (UnknownHostException e) {
             }
 
             return iAddr;
-        } catch(SocketException e) {
+        } catch (SocketException e) {
             return null;
         }
     }
+
     private native int getPeerAddressNative() throws SocketException;
 
     /**
@@ -348,20 +353,21 @@ class SocketBase {
             try {
 
                 lAddr = InetAddress.getByAddress(address);
-            }   catch(UnknownHostException e) {
+            } catch (UnknownHostException e) {
             }
 
             return lAddr;
-        } catch(SocketException e) {
+        } catch (SocketException e) {
             return null;
         }
     }
+
     private native int getLocalAddressNative() throws SocketException;
 
     public int getLocalPort() {
         try {
             return getLocalPortNative();
-        } catch(SocketException e) {
+        } catch (SocketException e) {
             return 0;
         }
     }
@@ -369,18 +375,16 @@ class SocketBase {
     private native int getLocalPortNative() throws SocketException;
 
     void requireClientAuth(boolean require, boolean onRedo)
-            throws SocketException
-    {
-        if( require && !requestingClientAuth ) {
+            throws SocketException {
+        if (require && !requestingClientAuth) {
             requestClientAuth(true);
         }
         setSSLOption(SSL_REQUIRE_CERTIFICATE, require ? (onRedo ? 1 : 2) : 0);
     }
 
     void requireClientAuth(int mode)
-            throws SocketException
-    {
-        if(mode > 0 && !requestingClientAuth ) {
+            throws SocketException {
+        if (mode > 0 && !requestingClientAuth) {
             requestClientAuth(true);
         }
         setSSLOptionMode(SocketBase.SSL_REQUIRE_CERTIFICATE, mode);
@@ -390,52 +394,52 @@ class SocketBase {
      * Sets the nickname of the certificate to use for client authentication.
      */
     public void setClientCertNickname(String nick) throws SocketException {
-      try {
-        setClientCert( CryptoManager.getInstance().findCertByNickname(nick) );
-      } catch(CryptoManager.NotInitializedException nie) {
-        throw new SocketException("CryptoManager not initialized");
-      } catch(ObjectNotFoundException onfe) {
-        throw new SocketException("Object not found: " + onfe);
-      } catch(TokenException te) {
-        throw new SocketException("Token Exception: " + te);
-      }
+        try {
+            setClientCert(CryptoManager.getInstance().findCertByNickname(nick));
+        } catch (CryptoManager.NotInitializedException nie) {
+            throw new SocketException("CryptoManager not initialized");
+        } catch (ObjectNotFoundException onfe) {
+            throw new SocketException("Object not found: " + onfe);
+        } catch (TokenException te) {
+            throw new SocketException("Token Exception: " + te);
+        }
     }
 
     native void setClientCert(org.mozilla.jss.crypto.X509Certificate cert)
-        throws SocketException;
+            throws SocketException;
 
     void useCache(boolean b) throws SocketException {
         setSSLOption(SSL_NO_CACHE, !b);
     }
 
     static Throwable processExceptions(Throwable topException,
-        Throwable bottomException)
-    {
-      try {
-        StringBuffer strBuf;
-        strBuf = new StringBuffer( topException.toString() );
+            Throwable bottomException) {
+        try {
+            StringBuffer strBuf;
+            strBuf = new StringBuffer(topException.toString());
 
-        if( bottomException != null ) {
-            strBuf.append(" --> ");
-            strBuf.append( bottomException.toString() );
+            if (bottomException != null) {
+                strBuf.append(" --> ");
+                strBuf.append(bottomException.toString());
+            }
+
+            Class excepClass = topException.getClass();
+            Class stringClass = java.lang.String.class;
+            Constructor cons = excepClass.getConstructor(new Class[] { stringClass });
+
+            return (Throwable) cons.newInstance(new Object[] { strBuf.toString() });
+        } catch (Exception e) {
+            Assert.notReached("Problem constructing exception container");
+            return topException;
         }
-
-        Class excepClass = topException.getClass();
-        Class stringClass = java.lang.String.class;
-        Constructor cons = excepClass.getConstructor(new Class[] {stringClass});
-
-        return (Throwable) cons.newInstance(new Object[] { strBuf.toString() });
-      } catch(Exception e ) {
-        Assert.notReached("Problem constructing exception container");
-        return topException;
-      }
     }
 
     static private int supportsIPV6 = -1;
+
     static boolean supportsIPV6() {
 
-        if(supportsIPV6 >= 0) {
-            if(supportsIPV6 > 0) {
+        if (supportsIPV6 >= 0) {
+            if (supportsIPV6 > 0) {
                 return true;
             } else {
                 return false;
@@ -444,28 +448,25 @@ class SocketBase {
 
         Enumeration netInter;
         try {
-                 netInter = NetworkInterface.getNetworkInterfaces();
-        }  catch (SocketException e) {
+            netInter = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
 
-                 return false;
+            return false;
         }
-        while ( netInter.hasMoreElements() )
-        {
-            NetworkInterface ni = (NetworkInterface)netInter.nextElement();
+        while (netInter.hasMoreElements()) {
+            NetworkInterface ni = (NetworkInterface) netInter.nextElement();
             Enumeration addrs = ni.getInetAddresses();
-            while ( addrs.hasMoreElements() )
-            {
-                 Object o = addrs.nextElement();
-                 if ( o.getClass() == InetAddress.class ||
-                     o.getClass() == Inet4Address.class ||
-                     o.getClass() == Inet6Address.class )
-                 {
-                      InetAddress iaddr = (InetAddress) o;
-                      if(o.getClass() == Inet6Address.class) {
-                          supportsIPV6 = 1;
-                          return true;
-                      }
-                 }
+            while (addrs.hasMoreElements()) {
+                Object o = addrs.nextElement();
+                if (o.getClass() == InetAddress.class ||
+                        o.getClass() == Inet4Address.class ||
+                        o.getClass() == Inet6Address.class) {
+                    InetAddress iaddr = (InetAddress) o;
+                    if (o.getClass() == Inet6Address.class) {
+                        supportsIPV6 = 1;
+                        return true;
+                    }
+                }
             }
         }
         supportsIPV6 = 0;
