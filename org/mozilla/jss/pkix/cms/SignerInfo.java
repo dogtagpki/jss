@@ -9,14 +9,10 @@ import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.pkix.primitive.*;
 import org.mozilla.jss.crypto.*;
-import java.util.Vector;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
 import java.security.InvalidKeyException;
 import java.security.SignatureException;
 import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
-import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.pkix.cert.*;
 import org.mozilla.jss.*;
@@ -73,27 +69,11 @@ public class SignerInfo implements ASN1Value {
     }
 
     /**
-     * Low-level method to set the version.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void setVersion(INTEGER version) {
-        this.version = version;
-    }
-     */
-
-    /**
      * Retrieves the SignerIdentifier.
      */
     public SignerIdentifier getSignerIdentifier() {
         return signerIdentifier;
     }
-
-    /**
-     * Low-level method to set the signerIdentifier.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void setSignerIdentifier( SignerIdentifier iasn ) {
-        this.signerIdentifier = iasn;
-    }
-     */
 
     /**
      * Retrieves the DigestAlgorithm used in this SignerInfo.
@@ -116,14 +96,6 @@ public class SignerInfo implements ASN1Value {
     }
 
     /**
-     * Low-level method to set the digest AlgorithmIdentifier.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void setDigestAlgorithmIdentifier(AlgorithmIdentifier algid) {
-        this.digestAlgorithm = algid;
-    }
-     */
-
-    /**
      * Retrieves the signed attributes, if they exist.
      *
      */
@@ -137,14 +109,6 @@ public class SignerInfo implements ASN1Value {
     public boolean hasSignedAttributes() {
         return (signedAttributes != null);
     }
-
-    /**
-     * Low-level method to set the signedAttributes field.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void setSignedAttributes(SET authAttrib) {
-        this.signedAttributes = authAttrib;
-    }
-     */
 
     /**
      * Returns the raw signature (digest encryption) algorithm used in this
@@ -168,28 +132,11 @@ public class SignerInfo implements ASN1Value {
     }
 
     /**
-     * Low-level method to set the digestEncryptionAlgorithm field.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void
-    setDigestEncryptionAlgorithmIdentifier(AlgorithmIdentifier algid) {
-        this.digestEncryptionAlgorithm= algid;
-    }
-     */
-
-    /**
      * Retrieves the encrypted digest.
      */
     public byte[] getEncryptedDigest() {
         return encryptedDigest.toByteArray();
     }
-
-    /**
-     * Low-level method to set the encryptedDigest field.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void setEncryptedDigest(byte[] ed) {
-        this.encryptedDigest = new OCTET_STRING(ed);
-    }
-     */
 
     /**
      * Retrieves the unsigned attributes, if they exist.
@@ -206,30 +153,11 @@ public class SignerInfo implements ASN1Value {
         return (unsignedAttributes!=null);
     }
 
-    /**
-     * Low-level method to set the unsignedAttributes field.
-     * It is not normally necessary to call this.  Use it at your own risk.
-    public void setUnsignedAttributes(SET unauthAttrib) {
-        this.unsignedAttributes = unauthAttrib;
-    }
-     */
-
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
-
-    /**
-     * Low-level default constructor.  All fields are initialized to null.
-     * Before this SignerInfo can be processed or used in any way, all of
-     * the fields except <code>signedAttributes</code> and
-     * <code>unsignedAttributes</code> must be non-null.
-     * <p>It is not normally necessary to call this constructor.Use it at
-     * your own risk.
-    public SignerInfo() {
-    }
-     */
 
     /**
      * A constructor for creating a new SignerInfo from scratch.
@@ -303,36 +231,32 @@ public class SignerInfo implements ASN1Value {
         //////////////////////////////////////////////////
 
         // compute the digest
-        byte[] digest=null;
-        DigestAlgorithm digestAlg = signingAlg.getDigestAlg();
-        if( signedAttributes == null ) {
+        CryptoToken token = signingKey.getOwningToken();
+        Signature sig;
+        byte[] toBeSigned = null;
+        if (signedAttributes == null) {
             // just use the message digest of the content
-            digest = messageDigest;
+            if (signingAlg.getRawAlg() == SignatureAlgorithm.RSASignature) {
+                SEQUENCE digestInfo = createDigestInfo(messageDigest, false);
+                toBeSigned = ASN1Util.encode(digestInfo);
+            } else {
+                toBeSigned = messageDigest;
+            }
+            sig = token.getSignatureContext(signingAlg.getRawAlg()); //data is already digested
         } else {
-            // digest the contents octets of the signed attributes
-            byte[] enc = ASN1Util.encode(signedAttributes);
-            MessageDigest md =
-                        MessageDigest.getInstance(digestAlg.toString());
-            digest = md.digest( enc );
-        }
-
-        byte[] toBeSigned;
-        if( signingAlg.getRawAlg() == SignatureAlgorithm.RSASignature ) {
-            // put the digest in a DigestInfo
-            SEQUENCE digestInfo = new SEQUENCE();
-            AlgorithmIdentifier digestAlgId =
-                    new AlgorithmIdentifier( digestAlg.toOID(),null );
-            digestInfo.addElement( digestAlgId );
-            digestInfo.addElement( new OCTET_STRING( digest ) );
-            toBeSigned = ASN1Util.encode(digestInfo);
-        } else {
-            toBeSigned = digest;
+            byte[] encoding = ASN1Util.encode(signedAttributes);
+            if (signingAlg.getRawAlg() == SignatureAlgorithm.RSASignature) {
+                // put the digest in a DigestInfo
+                SEQUENCE digestInfo = createDigestInfo(encoding, true);
+                toBeSigned = ASN1Util.encode(digestInfo);
+                sig = token.getSignatureContext(SignatureAlgorithm.RSASignature);
+            } else {
+                toBeSigned = encoding;
+                sig = token.getSignatureContext(signingAlg);
+            }
         }
         
         // encrypt the DER-encoded DigestInfo with the private key
-        CryptoToken token = signingKey.getOwningToken();
-        Signature sig;
-        sig = token.getSignatureContext( signingAlg );
         sig.initSign(signingKey);
         sig.update(toBeSigned);
         encryptedDigest = new OCTET_STRING(sig.sign());
@@ -494,21 +418,20 @@ public class SignerInfo implements ASN1Value {
                 digestEncryptionAlgorithm.getOID()
             );
 
+        CryptoToken token = CryptoManager.getInstance()
+                .getInternalCryptoToken();
+        Signature sig;
         byte[] toBeVerified;
-        if( sigAlg.getRawAlg() == SignatureAlgorithm.RSASignature ) {
+        if (sigAlg.getRawAlg() == SignatureAlgorithm.RSASignature) {
             // create DigestInfo structure
-            SEQUENCE digestInfo = new SEQUENCE();
-            digestInfo.addElement(
-                new AlgorithmIdentifier(digestAlgorithm.getOID(), null) );
-            digestInfo.addElement( new OCTET_STRING(messageDigest) );
+            SEQUENCE digestInfo = createDigestInfo(messageDigest, false);
             toBeVerified = ASN1Util.encode(digestInfo);
+            sig = token.getSignatureContext(sigAlg.getRawAlg());
         } else {
             toBeVerified = messageDigest;
+            sig = token.getSignatureContext(sigAlg);
         }
-
-        CryptoToken token = CryptoManager.getInstance()
-                                .getInternalCryptoToken();
-        Signature sig = token.getSignatureContext(sigAlg);
+        
         sig.initVerify(pubkey);
         sig.update(toBeVerified);
         if( sig.verify(encryptedDigest.toByteArray()) ) {
@@ -671,31 +594,22 @@ public class SignerInfo implements ASN1Value {
         // Now verify the signature.
         CryptoToken token =
                     CryptoManager.getInstance().getInternalCryptoToken();
-        Signature sig = token.getSignatureContext( sigAlg );
-        sig.initVerify(pubkey);
+        Signature sig;
 
         // verify the contents octets of the DER encoded signed attribs
-        byte[] toBeDigested = ASN1Util.encode(signedAttributes);
-    
-        MessageDigest md = MessageDigest.getInstance(
-                DigestAlgorithm.fromOID(digestAlgorithm.getOID()).toString() );
-        byte[] digest = md.digest(toBeDigested);
-
+        byte[] encoding = ASN1Util.encode(signedAttributes);
         byte[] toBeVerified;
-        if( sigAlg.getRawAlg() == SignatureAlgorithm.RSASignature ) {
+        if (sigAlg.getRawAlg() == SignatureAlgorithm.RSASignature) {
             // create DigestInfo structure
-            SEQUENCE digestInfo = new SEQUENCE();
-		
-            AlgorithmIdentifier digestAlgId =
-                    new AlgorithmIdentifier( digestAlgorithm.getOID(),null );
-            digestInfo.addElement( digestAlgId );
-		
-            digestInfo.addElement( new OCTET_STRING(digest) );
+            SEQUENCE digestInfo = createDigestInfo(encoding, true);
             toBeVerified = ASN1Util.encode(digestInfo);
+            sig = token.getSignatureContext(SignatureAlgorithm.RSASignature);
         } else {
-            toBeVerified = digest;
+            toBeVerified = encoding;
+            sig = token.getSignatureContext(sigAlg);
         }
  
+        sig.initVerify(pubkey);
         sig.update( toBeVerified );
 
         if( ! sig.verify(encryptedDigest.toByteArray()) ) {
@@ -708,6 +622,25 @@ public class SignerInfo implements ASN1Value {
         // SUCCESSFULLY VERIFIED
 
     }
+        
+    private SEQUENCE createDigestInfo(byte[] data, boolean doDigest) throws NoSuchAlgorithmException {
+        if(data == null || data.length == 0){
+            throw new IllegalArgumentException("Data to digest must be supplied");
+        }
+        SEQUENCE digestInfo = new SEQUENCE();
+        digestInfo.addElement(this.digestAlgorithm);
+        byte[] digest;
+        if (doDigest) {
+            MessageDigest md = MessageDigest.getInstance(
+                    DigestAlgorithm.fromOID(this.digestAlgorithm.getOID()).toString());
+            digest = md.digest(data);
+        } else {
+            digest = data;
+        }
+        digestInfo.addElement(new OCTET_STRING(digest));
+        return digestInfo;
+    }
+
 
     /**
      * Compares two non-null byte arrays.  Returns true if they are identical,
