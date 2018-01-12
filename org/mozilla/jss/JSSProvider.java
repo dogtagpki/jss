@@ -79,21 +79,25 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.Signature.SHA-1/EC", "SHA1withEC");
         put("Alg.Alias.Signature.SHA/ECDSA", "SHA1withEC");
         put("Alg.Alias.Signature.SHA1/ECDSA", "SHA1withEC");
+        put("Alg.Alias.Signature.SHA1withECDSA", "SHA1withEC"); //JCE Standard Name
 
         put("Signature.SHA256withEC",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA256EC");
         put("Alg.Alias.Signature.SHA256/EC", "SHA256withEC");
         put("Alg.Alias.Signature.SHA-256/EC", "SHA256withEC");
+        put("Alg.Alias.Signature.SHA256withECDSA", "SHA256withEC"); //JCE Standard Name
 
         put("Signature.SHA384withEC",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA384EC");
         put("Alg.Alias.Signature.SHA384/EC", "SHA384withEC");
         put("Alg.Alias.Signature.SHA-384/EC", "SHA384withEC");
+        put("Alg.Alias.Signature.SHA384withECDSA", "SHA384withEC"); //JCE Standard Name
 
         put("Signature.SHA512withEC",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA512EC");
         put("Alg.Alias.Signature.SHA512/EC", "SHA512withEC");
         put("Alg.Alias.Signature.SHA-512/EC", "SHA512withEC");
+        put("Alg.Alias.Signature.SHA512withECDSA", "SHA512withEC"); //JCE Standard Name
 
         /////////////////////////////////////////////////////////////
         // Message Digesting
