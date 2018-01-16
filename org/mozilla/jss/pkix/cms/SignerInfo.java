@@ -52,9 +52,6 @@ public class SignerInfo implements ASN1Value {
     private OCTET_STRING encryptedDigest;
     private SET unsignedAttributes; // [1] OPTIONAL
 
-    // we only do CMS in RFC 2630
-    private static final INTEGER VERSION = new INTEGER(3);
-
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     // Accessor methods
@@ -198,8 +195,17 @@ public class SignerInfo implements ASN1Value {
         CryptoManager.NotInitializedException, SignatureException,
         TokenException
     {
-        version = VERSION;
+        if (signerIdentifier == null) {
+            throw new IllegalArgumentException("SignerIdentifier may not be null");
+        }
         this.signerIdentifier = signerIdentifier;
+        if (SignerIdentifier.ISSUER_AND_SERIALNUMBER.equals(this.signerIdentifier.getType())) {
+            this.version = new INTEGER(1);
+        } else if (SignerIdentifier.SUBJECT_KEY_IDENTIFIER.equals(this.signerIdentifier.getType())) {
+            this.version = new INTEGER(3);
+        } else {
+            throw new IllegalArgumentException("Unexpected SignerIdentifier type");
+        }
         this.digestAlgorithm =
                 new AlgorithmIdentifier(signingAlg.getDigestAlg().toOID(),null);
 
