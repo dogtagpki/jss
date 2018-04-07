@@ -11,7 +11,7 @@
         # cd sandbox
         # hg clone https://hg.mozilla.org/projects/nspr
         # hg clone https://hg.mozilla.org/projects/nss
-        # hg clone https://hg.mozilla.org/projects/jss
+        # git clone git@github.com:dogtagpki/jss.git
         # cd ..
 
         (There is no need to clone every time. For additional builds,
