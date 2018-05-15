@@ -4,10 +4,12 @@
 package org.mozilla.jss.pkix.primitive;
 
 import org.mozilla.jss.asn1.*;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.util.Assert;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class AlgorithmIdentifier implements ASN1Value {
 
@@ -100,10 +102,29 @@ public static class Template implements ASN1Template {
         // the template should have enforced this
         Assert._assert( seq.size() == 2 );
 
-        return new AlgorithmIdentifier(
-            (OBJECT_IDENTIFIER)seq.elementAt(0),  // OID
-            seq.elementAt(1)                      // parameters
-        );
+        OBJECT_IDENTIFIER algOID = (OBJECT_IDENTIFIER)seq.elementAt(0);
+        boolean allowParams = true;
+        try {
+            if (algOID.equals(SignatureAlgorithm.ECSignatureWithSHA256Digest.toOID()) ||
+                algOID.equals(SignatureAlgorithm.ECSignatureWithSHA384Digest.toOID()) ||
+                algOID.equals(SignatureAlgorithm.ECSignatureWithSHA512Digest.toOID())) {
+                allowParams = false;
+            }
+        } catch (NoSuchAlgorithmException e) {
+            // System.out.println("JSS: AlgorithmIdentifier:decode: " + e.toString());
+            // unlikely to happen; swallow it. treat it as allowParams;
+        }
+
+        if (!allowParams) {
+            return new AlgorithmIdentifier(
+                algOID  // OID
+            );
+        } else {
+            return new AlgorithmIdentifier(
+                (OBJECT_IDENTIFIER)seq.elementAt(0),  // OID
+                seq.elementAt(1)                      // parameters
+            );
+        }
     }
 } // end of Template
 
