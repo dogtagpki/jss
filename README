@@ -17,7 +17,7 @@
         (There is no need to clone every time. For additional builds,
          simply use:
           cd nspr; hg pull -u -v; cd ..; cd nss; hg pull -u -v; cd ..;
-          cd jss; hg pull -u -v; cd ..
+          cd jss; git pull -u -v; cd ..
         )
 
     (b) Alternatively, for upstream builds which use
@@ -39,7 +39,7 @@
 
         (There is no need to clone every time. For additional builds,
          simply use:
-          cd jss; hg pull -u -v; cd ..
+          cd jss; git pull -u -v; cd ..
         )
 
 
@@ -164,7 +164,7 @@
     good practice to create a "regular tag" to the source code at these
     various points in time using the following format:
 
-        # hg tag -m "message" JSS_<major>_<minor>_YYYYMMDD
+        # git tag -m "message" JSS_<major>_<minor>_YYYYMMDD
 
         where:  <major> = JSS Major Version Number
                 <minor> = JSS Minor Version Number
@@ -174,10 +174,10 @@
     
         For example:
 
-            # hg id
-            b3e864205ff0+ tip
+            # git rev-parse HEAD
+            b3e864205ff0...
 
-            # hg tag -m "Added tag JSS_4_4_20170328 for changeset b3e864205ff0" JSS_4_4_20170328
+            # git tag -m "Added tag JSS_4_4_20170328 for changeset b3e864205ff0" JSS_4_4_20170328
 
     At the appropriate time, a new major.minor version may be created.  At this
     time, it is important to create a maintenance branch for any future changes
@@ -185,10 +185,10 @@
 
     For example:
 
-        # hg id
-        f00f00f00f00+ tip
+        # git rev-parse HEAD
+        f00f00f00f00...
 
-        # hg branch -m "Created branch JSS_4_4_BRANCH for changeset f00f00f00f00" JSS_4_4_BRANCH
+        # git checkout -b JSS_4_4_BRANCH
 
 
 (8) Known Issues
