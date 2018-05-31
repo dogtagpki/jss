@@ -162,8 +162,9 @@ sub setup_vars {
     }
     $jni_header_dir = "$dist_dir/private/jss/_jni";
 
+    $classpath = "-classpath /usr/share/java/slf4j/slf4j-api.jar";
     if( $jce_jar ) {
-        $classpath = "-classpath $jce_jar";
+        $classpath .= ":$jce_jar";
     }
 
     # retrieve present working directory

@@ -3,5 +3,6 @@
 	<classpathentry excluding="samples/" kind="src" path=""/>
 	<classpathentry kind="src" path="samples"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
