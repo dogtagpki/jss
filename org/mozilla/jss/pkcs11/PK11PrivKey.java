@@ -4,15 +4,16 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.Algorithm;
-import org.mozilla.jss.crypto.PrivateKey;
-import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.TokenException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.DSAParameterSpec;
-import java.security.interfaces.DSAParams;
-import org.mozilla.jss.util.*;
 import java.math.BigInteger;
+import java.security.spec.DSAParameterSpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
 	implements PrivateKey {
@@ -116,11 +117,13 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
 
     private native byte[][]
     getDSAParamsNative() throws TokenException;
-    
-        
+
+
 }
 
 class PrivateKeyProxy extends KeyProxy {
+
+    public static Logger logger = LoggerFactory.getLogger(PrivateKeyProxy.class);
 
     public PrivateKeyProxy(byte[] pointer) {
         super(pointer);
@@ -129,7 +132,7 @@ class PrivateKeyProxy extends KeyProxy {
     protected native void releaseNativeResources();
 
     protected void finalize() throws Throwable {
+        logger.debug("Finalizing a PrivateKeyProxy");
         super.finalize();
-		Debug.trace(Debug.OBNOXIOUS, "Finalizing a PrivateKeyProxy");
     }
 }

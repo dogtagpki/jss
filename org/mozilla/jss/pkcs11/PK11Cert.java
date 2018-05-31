@@ -4,12 +4,14 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.*;
-import java.security.*;
-import java.security.cert.*;
-import java.util.*;
 import java.math.BigInteger;
+import java.security.Principal;
+import java.security.cert.CertificateEncodingException;
+
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.util.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PK11Cert implements org.mozilla.jss.crypto.X509Certificate {
 
@@ -74,7 +76,7 @@ public class PK11Cert implements org.mozilla.jss.crypto.X509Certificate {
 
 	public native int getVersion();
 
-    
+
     ///////////////////////////////////////////////////////////////////////
     // PKCS #11 Cert stuff. Must only be called on certs that have
     // an associated slot.
@@ -131,6 +133,8 @@ public class PK11Cert implements org.mozilla.jss.crypto.X509Certificate {
 
 class CertProxy extends org.mozilla.jss.util.NativeProxy {
 
+    public static Logger logger = LoggerFactory.getLogger(CertProxy.class);
+
     public CertProxy(byte[] pointer) {
         super(pointer);
     }
@@ -138,7 +142,7 @@ class CertProxy extends org.mozilla.jss.util.NativeProxy {
     protected native void releaseNativeResources();
 
     protected void finalize() throws Throwable {
-		Debug.trace(Debug.OBNOXIOUS, "finalizing a certificate");
+        logger.debug("finalizing a certificate");
         super.finalize();
     }
 }

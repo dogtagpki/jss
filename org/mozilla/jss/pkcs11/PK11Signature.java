@@ -4,13 +4,24 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.*;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.*;
-import java.security.SecureRandom;
 import java.io.ByteArrayOutputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.SignatureException;
+import java.security.spec.AlgorithmParameterSpec;
+
+import org.mozilla.jss.crypto.Algorithm;
+import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
 import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.NativeProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 
@@ -151,7 +162,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
         }
 
 		key = pubKey;
-			
+
         if( ! raw ) {
             sigContext = null;
             initVfyContext();
@@ -200,7 +211,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 
     protected native void engineUpdateNative(byte[] b, int off, int len)
         throws TokenException;
-    
+
 
     public byte[] engineSign()
         throws SignatureException, TokenException
@@ -250,7 +261,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 			throw new SignatureException(
 					"outbuf is not sufficient to hold signature");
 		}
-		System.arraycopy( (Object)sig, 0, (Object)outbuf, offset, sig.length);
+		System.arraycopy( sig, 0, outbuf, offset, sig.length);
 		return sig.length;
     }
 
@@ -336,12 +347,15 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 }
 
 class SigContextProxy extends NativeProxy {
+
+    public static Logger logger = LoggerFactory.getLogger(SigContextProxy.class);
+
     public SigContextProxy(byte[] pointer) {
         super(pointer);
     }
     protected native void releaseNativeResources();
     protected void finalize() throws Throwable {
-        Debug.trace(Debug.OBNOXIOUS, "Finalizing a SigContextProxy");
+        logger.debug("Finalizing a SigContextProxy");
         super.finalize();
     }
 }
