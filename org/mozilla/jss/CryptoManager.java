@@ -3,20 +3,42 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.asn1.*;
-import java.security.cert.CertificateException;
 import java.security.GeneralSecurityException;
-import org.mozilla.jss.pkcs11.PK11Cert;
-import java.util.*;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.crypto.Algorithm;
+import org.mozilla.jss.crypto.AlreadyInitializedException;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.InternalCertificate;
+import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.TokenSupplier;
+import org.mozilla.jss.crypto.TokenSupplierManager;
+import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.pkcs11.KeyType;
-import org.mozilla.jss.pkcs11.PK11Token;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11Module;
 import org.mozilla.jss.pkcs11.PK11SecureRandom;
-import java.security.cert.CertificateEncodingException;
-import org.mozilla.jss.CRLImportException;
+import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.provider.java.security.JSSMessageDigestSpi;
+import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.ConsolePasswordCallback;
+import org.mozilla.jss.util.InvalidNicknameException;
+import org.mozilla.jss.util.PasswordCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is the starting poing for the crypto package.
@@ -28,6 +50,8 @@ import org.mozilla.jss.provider.java.security.JSSMessageDigestSpi;
  */
 public final class CryptoManager implements TokenSupplier
 {
+    public static Logger logger = LoggerFactory.getLogger(CryptoManager.class);
+
     /**
      * note: this is obsolete in NSS
      * CertUsage options for validation
@@ -1177,18 +1201,15 @@ public final class CryptoManager implements TokenSupplier
         try {
             return importCertPackageNative(certPackage, null, true, false);
         } catch(NicknameConflictException e) {
+            logger.error("importing CA certs caused nickname conflict", e);
             Assert.notReached("importing CA certs caused nickname conflict");
-            Debug.trace(Debug.ERROR,
-                "importing CA certs caused nickname conflict");
         } catch(UserCertConflictException e) {
+            logger.error("importing CA certs caused user cert conflict", e);
             Assert.notReached("importing CA certs caused user cert conflict");
-            Debug.trace(Debug.ERROR,
-                "importing CA certs caused user cert conflict");
         } catch(NoSuchItemOnTokenException e) {
+            logger.error("importing CA certs caused NoSuchItemOnTokenException", e);
             Assert.notReached("importing CA certs caused NoSuchItemOnToken"+
                 "Exception");
-            Debug.trace(Debug.ERROR,
-                "importing CA certs caused NoSuchItemOnTokenException");
         }
         return null;
     }
@@ -1478,20 +1499,20 @@ public final class CryptoManager implements TokenSupplier
         if( ! mNativeLibrariesLoaded ) {
             try { // 64 bit rhel/fedora
                 System.load( "/usr/lib64/jss/libjss4.so" );
-                Debug.trace(Debug.VERBOSE, "64-bit jss library loaded");
+                logger.info("64-bit jss library loaded");
                 mNativeLibrariesLoaded = true;
             } catch( UnsatisfiedLinkError e ) {
                 try { // 32 bit rhel/fedora
                     System.load( "/usr/lib/jss/libjss4.so" );
-                    Debug.trace(Debug.VERBOSE, "32-bit jss library loaded");
+                    logger.info("32-bit jss library loaded");
                     mNativeLibrariesLoaded = true;
                 } catch( UnsatisfiedLinkError f ) {
                     try {// possibly other platforms
                         System.loadLibrary( "jss4" );
-                        Debug.trace(Debug.VERBOSE, "jss library loaded");
+                        logger.info("jss library loaded");
                         mNativeLibrariesLoaded = true;
                     } catch( UnsatisfiedLinkError g ) {
-                        Debug.trace(Debug.VERBOSE, "jss library load failed");
+                        logger.warn("jss library load failed");
                     }
                 }
             }
@@ -1605,7 +1626,7 @@ public final class CryptoManager implements TokenSupplier
             currCertificateUsage = verifyCertificateNowCUNative(nickname,
                 checkSig);
 
-            if (currCertificateUsage == CertificateUsage.basicCertificateUsages){ 
+            if (currCertificateUsage == CertificateUsage.basicCertificateUsages){
                 // cert is good for nothing
                 return false;
             } else
@@ -1748,7 +1769,7 @@ public final class CryptoManager implements TokenSupplier
      *      * @param ocsp_max_cache_entry_duration maximum seconds to next fetch attempt
      */
     public void OCSPCacheSettings(
-        int ocsp_cache_size, 
+        int ocsp_cache_size,
         int ocsp_min_cache_entry_duration,
         int ocsp_max_cache_entry_duration)
     throws GeneralSecurityException
@@ -1759,7 +1780,7 @@ public final class CryptoManager implements TokenSupplier
     }
 
     private native void OCSPCacheSettingsNative(
-        int ocsp_cache_size, 
+        int ocsp_cache_size,
         int ocsp_min_cache_entry_duration,
         int ocsp_max_cache_entry_duration)
                     throws GeneralSecurityException;
