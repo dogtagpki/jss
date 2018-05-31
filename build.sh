@@ -161,7 +161,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | source-tag* | with-pkgs* | without-pkgs* | dist*)
+        work-dir* | source-tag* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
