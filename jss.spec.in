@@ -10,12 +10,21 @@ Version:        4.4.4
 Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 
 # To generate the source tarball:
-#
-# git clone https://github.com/dogtagpki/jss.git
-# cd jss
-# git archive --format=tar.gz --prefix jss-VERSION/jss/ -o jss-VERSION.tar.gz -v HEAD
-#
+# $ git clone https://github.com/dogtagpki/jss.git
+# $ cd jss
+# $ git archive \
+#     --format=tar.gz \
+#     --prefix jss-VERSION/jss/ \
+#     -o jss-VERSION.tar.gz \
+#     <version tag>
 Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
+
+# To create a patch for all changes since a version tag:
+# $ git format-patch \
+#     --stdout \
+#     <version tag> \
+#     > jss-VERSION-RELEASE.patch
+# Patch: jss-VERSION-RELEASE.patch
 
 Conflicts:      idm-console-framework < 1.1.17-4
 Conflicts:      pki-base < 10.4.0
