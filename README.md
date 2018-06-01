@@ -1,8 +1,10 @@
-============================================
-||  Upstream JSS Build/Test Instructions  ||
-============================================
+Network Security Services for Java (JSS)
+========================================
 
-(1) Prepare a work area
+Build/Test Instructions
+-----------------------
+
+### 1. Prepare a work area
 
     (a) For upstream builds which checkout and utilize
         the current NSPR and NSS source repositories:
@@ -42,8 +44,7 @@
           cd jss; git pull -u -v; cd ..
         )
 
-
-(2) Prepare an interactive shell for building:
+### 2. Prepare an interactive shell for building
 
     # export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0_openjdk
     # export USE_64=1
@@ -74,8 +75,7 @@
 
                 #define JSS_BETA     PR_TRUE
 
-
-(3) Build JSS
+### 3. Build JSS
 
     # cd sandbox/jss
     # make clean all
@@ -88,7 +88,7 @@
           already been built, only jss will be built/re-built.
 
 
-(4) Install JSS on the System (Optional)
+### 4. Install JSS on the System (Optional)
 
     If JSS already exists on the system, run something similar to the
     following command(s):
@@ -112,7 +112,7 @@
     # sudo chmod 755 /usr/lib64/jss/libjss4.so
 
 
-(5) Run JSS Tests (Optional, but only if build method (1)(a) was utilized)
+### 5. Run JSS Tests (Optional, but only if build method (1)(a) was utilized)
 
     If build method (1)(a) is being utilized, it is possible to run the
     built-in JSS tests:
@@ -130,7 +130,7 @@
           execution of this command (e.g. - build is separate from test).
 
 
-(6) Restoration of non-Test-Only Systems (Optional)
+### 6. Restoration of non-Test-Only Systems (Optional)
 
     If step (4) above was run, and the system is being used for purposes
     other than test, the user may wish to restore the original system JSS
@@ -150,7 +150,7 @@
                be necessary.
 
 
-(7) Tagging the Source Code for a Release
+### 7. Tagging the Source Code for a Release
 
     During development, several releases may be made.  Consequently, it is
     good practice to create a "regular tag" to the source code at these
@@ -183,7 +183,7 @@
         # git checkout -b JSS_4_4_BRANCH
 
 
-(8) Known Issues
+### 8. Known Issues
 
     * Mozilla Bug #1346410 - Load JSS libraries appropriately
 
