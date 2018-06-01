@@ -6,15 +6,20 @@
 services:
   - docker
 
+env:
+  - FEDORA=27
+  - FEDORA=28
+
 install:
-  - docker pull registry.fedoraproject.org/fedora:28
+  - docker pull registry.fedoraproject.org/fedora:$FEDORA
   - docker run
       --name=container
       --detach
       -i
       -v $(pwd):/root/jss
-      registry.fedoraproject.org/fedora:28
+      registry.fedoraproject.org/fedora:$FEDORA
   - docker exec container dnf install -y dnf-plugins-core gcc make rpm-build
+  - docker exec container dnf copr -y enable @pki/10.6
   - docker exec container dnf builddep -y --spec /root/jss/jss.spec.in
   - docker exec container /root/jss/build.sh --with-timestamp --with-commit-id rpm
 
