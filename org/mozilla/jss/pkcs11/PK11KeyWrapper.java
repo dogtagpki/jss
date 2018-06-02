@@ -4,21 +4,28 @@
 
 package org.mozilla.jss.pkcs11;
 
-import java.util.Arrays;
-
-import org.mozilla.jss.crypto.*;
-import java.security.spec.AlgorithmParameterSpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import org.mozilla.jss.util.Assert;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.interfaces.DSAPublicKey;
-//requires JAVA 1.5
-//import java.security.interfaces.ECPublicKey;
-import javax.crypto.spec.IvParameterSpec;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Arrays;
+
 import javax.crypto.spec.RC2ParameterSpec;
+
+import org.mozilla.jss.crypto.Algorithm;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.HMACAlgorithm;
+import org.mozilla.jss.crypto.IVParameterSpec;
+import org.mozilla.jss.crypto.KeyPairAlgorithm;
+import org.mozilla.jss.crypto.KeyWrapAlgorithm;
+import org.mozilla.jss.crypto.KeyWrapper;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.Assert;
 
 final class PK11KeyWrapper implements KeyWrapper {
 
@@ -147,7 +154,7 @@ final class PK11KeyWrapper implements KeyWrapper {
                     "this algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
-            Assert.notReached("unable to find algorithm from key type");
+            throw new RuntimeException("Unable to find algorithm from key type: " + e.getMessage(), e);
         }
     }
 
@@ -174,9 +181,9 @@ final class PK11KeyWrapper implements KeyWrapper {
                     " this algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
-            Assert.notReached("Unknown algorithm");
+            throw new RuntimeException("Unknown algorithm: " + e.getMessage(), e);
         } catch (Exception e) {
-            Assert.notReached("Exception:"+ e.toString());
+            throw new RuntimeException("Unable to check wrapper: " + e.getMessage(), e);
         }
     }
 
@@ -203,7 +210,7 @@ final class PK11KeyWrapper implements KeyWrapper {
                     " this algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
-            Assert.notReached("Unknown algorithm");
+            throw new RuntimeException("Unknown algorithm: " + e.getMessage(), e);
         }
     }
 
@@ -326,7 +333,7 @@ final class PK11KeyWrapper implements KeyWrapper {
      * Wrap a symmetric with a symmetric
      */
     private static native byte[]
-    nativeWrapSymWithSym(PK11Token token, SymmetricKey toBeWrapped, 
+    nativeWrapSymWithSym(PK11Token token, SymmetricKey toBeWrapped,
         SymmetricKey wrappingKey, KeyWrapAlgorithm alg, byte[] IV)
             throws TokenException;
 
@@ -371,7 +378,7 @@ final class PK11KeyWrapper implements KeyWrapper {
     /**
      * Unwraps a private key, creating a temporary private key object.
      * A temporary
-     * private key is one that does not permanently reside on a token.  
+     * private key is one that does not permanently reside on a token.
      * As soon as it is garbage-collected, it is gone forever.
      */
     public PrivateKey
@@ -450,8 +457,7 @@ final class PK11KeyWrapper implements KeyWrapper {
             }
             return ((DSAPublicKey)publicKey).getY().toByteArray();
         } else {
-            Assert.notReached("Unknown private key type");
-            return new byte[] { };
+            throw new InvalidKeyException("Unknown private key type: " + type);
         }
     }
 

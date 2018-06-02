@@ -35,10 +35,18 @@
  * ***** END LICENSE BLOCK ***** */
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -74,7 +82,7 @@ public class ExtendedFailInfo implements ASN1Value {
             try {
               this.failInfoValue = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
             } catch( InvalidBERException e ) {
-              Assert.notReached("InvalidBERException while decoding as ANY");
+                throw new RuntimeException("InvalidBERException while decoding as ANY: " + e.getMessage(), e);
             }
         }
     }

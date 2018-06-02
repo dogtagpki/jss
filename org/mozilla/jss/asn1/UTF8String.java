@@ -5,7 +5,6 @@ package org.mozilla.jss.asn1;
 
 import java.io.CharConversionException;
 import java.io.UnsupportedEncodingException;
-import org.mozilla.jss.util.Assert;
 
 public class UTF8String extends CharacterString implements ASN1Value {
 
@@ -76,8 +75,7 @@ private static class UTF8Converter implements CharConverter {
 
         } catch( UnsupportedEncodingException e ) {
             String err = "Unable to find UTF8 encoding mechanism";
-            Assert.notReached(err);
-            throw new CharConversionException(err);
+            throw (CharConversionException) new CharConversionException(err).initCause(e);
         }
     }
 
@@ -91,8 +89,7 @@ private static class UTF8Converter implements CharConverter {
 
         } catch( UnsupportedEncodingException e ) {
             String err = "Unable to find UTF8 encoding mechanism";
-            Assert.notReached(err);
-            throw new CharConversionException(err);
+            throw (CharConversionException) new CharConversionException(err).initCause(e);
         }
     }
 } // end of char converter

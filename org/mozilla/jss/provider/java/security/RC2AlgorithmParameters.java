@@ -4,12 +4,12 @@
 
 package org.mozilla.jss.provider.java.security;
 
-import java.security.*;
+import java.io.IOException;
+import java.security.AlgorithmParametersSpi;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidParameterSpecException;
+
 import javax.crypto.spec.RC2ParameterSpec;
-import java.io.IOException;
-import org.mozilla.jss.util.Assert;
 
 /**
  * This class is only intended to be used to implement
@@ -35,22 +35,18 @@ public class RC2AlgorithmParameters extends AlgorithmParametersSpi {
     }
 
     public void engineInit(byte[] params) throws IOException {
-        Assert.notReached("engineInit(byte[]) not supported");
         throw new IOException("engineInit(byte[]) not supported");
     }
 
     public void engineInit(byte[] params, String format) throws IOException {
-        Assert.notReached("engineInit(byte[],String) not supported");
         throw new IOException("engineInit(byte[],String) not supported");
     }
 
     public byte[] engineGetEncoded() throws IOException {
-        Assert.notReached("encoding RC2AlgorithmParameters not supported");
         throw new IOException("encoding RC2AlgorithmParameters not supported");
     }
 
     public byte[] engineGetEncoded(String format) throws IOException {
-        Assert.notReached("encoding RC2AlgorithmParameters not supported");
         throw new IOException("encoding RC2AlgorithmParameters not supported");
     }
 

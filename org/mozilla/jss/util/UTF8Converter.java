@@ -4,7 +4,11 @@
 
 package org.mozilla.jss.util;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.CharConversionException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Class for converting between char arrays and byte arrays.  The conversion
@@ -29,7 +33,7 @@ public class UTF8Converter {
 	 *	characters encoded in UTF-16.  This array must not be null.
 	 * @exception CharConversionException If the input characters are invalid.
 	 */
-	public static byte[] UnicodeToUTF8(char[] unicode) 
+	public static byte[] UnicodeToUTF8(char[] unicode)
 		throws CharConversionException
 	{
 		return UnicodeToUTF8(unicode, false);
@@ -95,7 +99,7 @@ public class UTF8Converter {
 				if( c >= 0xd800 && c <= 0xdbff) {
 					// This is the high half of a UTF-16 char
 					ucs4 = (c-0xd800)<<10;
-	
+
 					// Now get the lower half
 					if(uni == unicode.length-1) {
 						//There is no lower half
@@ -235,16 +239,15 @@ public class UTF8Converter {
 				}
 
 			  } catch(UnsupportedEncodingException e) {
-					// Huh? No UTF8?
-					Assert.notReached("No UTF8 encoding conversion");
+			      // No UTF8 encoding conversion
+			      throw new RuntimeException(e);
 			  } catch(IOException e) {
 					// If it failed with the Java class it should have failed
 					// with mine
 					Assert._assert(utf8 == null);
 			  } catch(Exception e) {
 					// Nothing else should be thrown here
-					Assert.notReached("UTF8Converter validation threw an"+
-						" unexpected exception");
+					throw e;
 			  }
 			}
 		}
@@ -318,11 +321,11 @@ public class UTF8Converter {
 			'\u0800', '\u3167', '\ud7ff', '\ue000', '\uffff'};
 		utf8 = UnicodeToUTF8(unicode);
 		for(i=0; i<10; i++) {
-			System.out.print( Integer.toHexString((int)unicode[i]) + " ");
+			System.out.print( Integer.toHexString(unicode[i]) + " ");
 		}
 		System.out.println();
 		for(i=0; i<utf8.length; i++) {
-			System.out.print( Integer.toHexString((byte)utf8[i]) + " ");
+			System.out.print( Integer.toHexString(utf8[i]) + " ");
 		}
 		System.out.println();
 
@@ -369,7 +372,7 @@ public class UTF8Converter {
 		try {
 			unicode = new char[] {'\ud800'};
 			utf8 = UnicodeToUTF8(unicode);
-			Assert.notReached("should have failed on bad UCS4");
+			throw new RuntimeException("should have failed on bad UCS4");
 		} catch (CharConversionException e) {
 			System.out.println("Correctly caught bad UCS4\n");
 		}
@@ -381,7 +384,7 @@ public class UTF8Converter {
 		try {
 			unicode = new char[] {'\ud800', '\u007f'};
 			utf8 = UnicodeToUTF8(unicode);
-			Assert.notReached("should have failed on bad UCS4");
+			throw new RuntimeException("should have failed on bad UCS4");
 		} catch (CharConversionException e) {
 			System.out.println("Correctly caught bad UCS4\n");
 		}
@@ -393,7 +396,7 @@ public class UTF8Converter {
 		try {
 			unicode = new char[] {'\u0032', '\udc01', '\u0033'};
 			utf8 = UnicodeToUTF8(unicode);
-			Assert.notReached("should have failed on bad UCS4");
+			throw new RuntimeException("should have failed on bad UCS4");
 		} catch (CharConversionException e) {
 			System.out.println("Correctly caught bad UCS4\n");
 		}

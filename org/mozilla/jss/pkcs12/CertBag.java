@@ -4,16 +4,28 @@
 
 package org.mozilla.jss.pkcs12;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
-import org.mozilla.jss.util.Assert;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.IA5String;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * A PKCS #12 cert bag.
  */
 public class CertBag implements ASN1Value {
 
-    
+
     ///////////////////////////////////////////////////////////////////////
     // Cert Type OIDs
     ///////////////////////////////////////////////////////////////////////
@@ -94,7 +106,7 @@ public class CertBag implements ASN1Value {
             byte[] encoded = ASN1Util.encode(cert);
             this.cert = (ANY) ASN1Util.decode( ANY.getTemplate(), encoded);
           } catch(InvalidBERException e) {
-            Assert.notReached("converting ASN1Value to ANY failed");
+            throw new RuntimeException("Unable to convert ASN1Value to ANY: "+ e.getMessage(), e);
           }
         }
         sequence = new SEQUENCE();

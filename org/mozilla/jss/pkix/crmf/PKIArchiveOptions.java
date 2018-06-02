@@ -4,8 +4,18 @@
 
 package org.mozilla.jss.pkix.crmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BOOLEAN;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 public class PKIArchiveOptions implements ASN1Value {
@@ -60,7 +70,7 @@ public class PKIArchiveOptions implements ASN1Value {
     }
 
     /**
-     * Returns the archiveRemGenPrivKey field, which indicates that 
+     * Returns the archiveRemGenPrivKey field, which indicates that
      * the sender wishes the receiver to generate and archive a key pair.
      * Should only be called if the type is
      * <code>ARCHIVE_REM_GEN_PRIV_KEY</code>.
@@ -183,7 +193,6 @@ public class PKIArchiveOptions implements ASN1Value {
                 return new PKIArchiveOptions(arckey.toBoolean());
             } else {
                 String s = "Unrecognized tag in PKIArchiveOptions";
-                Assert.notReached(s);
                 throw new InvalidBERException(s);
             }
         }

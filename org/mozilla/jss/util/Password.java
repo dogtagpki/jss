@@ -192,9 +192,9 @@ public class Password implements PasswordCallback, Cloneable,
 		try {
 			byteArray = UTF8Converter.UnicodeToUTF8NullTerm(charArray);
 		} catch(CharConversionException e) {
-			Assert.notReached("Password could not be converted from"
-				+" Unicode");
-			byteArray = new byte[] {0};
+			throw new RuntimeException("Password could not be converted from"
+				+" Unicode: " + e.getMessage(), e);
+			// byteArray = new byte[] {0};
 		} finally {
 			wipeChars(charArray);
 		}

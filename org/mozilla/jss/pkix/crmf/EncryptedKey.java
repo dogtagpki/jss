@@ -4,9 +4,18 @@
 
 package org.mozilla.jss.pkix.crmf;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
-import java.io.*;
 
 public class EncryptedKey implements ASN1Value {
 
@@ -146,9 +155,9 @@ public class EncryptedKey implements ASN1Value {
          */
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-            Assert.notReached("EncryptedKey, being a CHOICE, cannot be"+
+            throw new RuntimeException("EncryptedKey, being a CHOICE, cannot be"+
                 " implicitly tagged");
-            return decode(istream);
+            // return decode(istream);
         }
     }
 }

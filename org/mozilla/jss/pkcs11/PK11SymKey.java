@@ -4,7 +4,8 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.*;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.util.Assert;
 
 public final class PK11SymKey implements SymmetricKey {
@@ -39,8 +40,8 @@ public final class PK11SymKey implements SymmetricKey {
         } else if(kt == KeyType.SHA1_HMAC) {
             return SHA1_HMAC;
         } else {
-            Assert.notReached("Unrecognized key type");
-            return DES;
+            throw new RuntimeException("Unrecognized key type: " + kt);
+            // return DES;
         }
     }
 

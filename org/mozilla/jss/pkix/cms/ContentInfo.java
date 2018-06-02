@@ -3,12 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.cms;
 
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import java.util.Vector;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
 
 /**
  * A PKCS #7 ContentInfo structure.
@@ -18,19 +27,19 @@ public class ContentInfo implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG; // XXX is this right?
 
 
-    public static OBJECT_IDENTIFIER DATA = 
+    public static OBJECT_IDENTIFIER DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 1  });
-    public static OBJECT_IDENTIFIER SIGNED_DATA = 
+    public static OBJECT_IDENTIFIER SIGNED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 2  });
-    public static OBJECT_IDENTIFIER ENVELOPED_DATA = 
+    public static OBJECT_IDENTIFIER ENVELOPED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 3  });
-    public static OBJECT_IDENTIFIER SIGNED_AND_ENVELOPED_DATA = 
+    public static OBJECT_IDENTIFIER SIGNED_AND_ENVELOPED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 4  });
-    public static OBJECT_IDENTIFIER DIGESTED_DATA = 
+    public static OBJECT_IDENTIFIER DIGESTED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 5  });
-    public static OBJECT_IDENTIFIER ENCRYPTED_DATA = 
+    public static OBJECT_IDENTIFIER ENCRYPTED_DATA =
           new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 113549, 1, 7, 6  });
-          
+
 
 
 
@@ -60,8 +69,8 @@ public class ContentInfo implements ASN1Value {
                 this.content = (ANY) ASN1Util.decode(ANY.getTemplate(),
                                     ASN1Util.encode(content) );
               } catch(InvalidBERException e) {
-                Assert.notReached("InvalidBERException while converting"+
-                    "ASN1Value to ANY");
+                  throw new RuntimeException("Unable to convert "+
+                    "ASN1Value to ANY: " + e.getMessage(), e);
               }
             }
             sequence.addElement(new EXPLICIT(new Tag(0),content) );
@@ -207,7 +216,7 @@ public class ContentInfo implements ASN1Value {
                         ));
         }
 
-        public ASN1Value decode(InputStream istream) 
+        public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(ContentInfo.TAG,istream);

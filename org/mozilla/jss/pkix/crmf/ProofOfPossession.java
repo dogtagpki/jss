@@ -4,8 +4,17 @@
 
 package org.mozilla.jss.pkix.crmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.NULL;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -215,8 +224,8 @@ public class ProofOfPossession implements ASN1Value {
 
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-            Assert.notReached("A CHOICE cannot be implicitly tagged");
-            return decode(istream);
+            throw new RuntimeException("A CHOICE cannot be implicitly tagged");
+            // return decode(istream);
         }
     }
 }

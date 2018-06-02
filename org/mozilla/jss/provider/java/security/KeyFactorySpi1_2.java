@@ -3,24 +3,39 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.provider.java.security;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.math.BigInteger;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.*;
-import org.mozilla.jss.crypto.InvalidKeyFormatException;
+import java.security.spec.DSAPrivateKeySpec;
+import java.security.spec.DSAPublicKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateCrtKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.crypto.PrivateKey;
-import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkcs11.PK11PubKey;
+import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
-import org.mozilla.jss.pkix.primitive.*;
+import org.mozilla.jss.pkcs11.PK11PubKey;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 import org.mozilla.jss.util.Assert;
-import java.security.Key;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.math.BigInteger;
-import java.io.StringWriter;
-import java.io.PrintWriter;
 
 public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
 {
@@ -39,7 +54,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
             return PK11PubKey.fromRaw( PrivateKey.RSA, ASN1Util.encode(seq) );
         } else if( keySpec instanceof DSAPublicKeySpec ) {
             // We need to import both the public value and the PQG parameters.
-            // The only way to get all that information in DER is to send 
+            // The only way to get all that information in DER is to send
             // a full SubjectPublicKeyInfo. So we encode all the information
             // into an SPKI.
 
@@ -52,8 +67,8 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
             OBJECT_IDENTIFIER oid = null;
             try {
                 oid = SignatureAlgorithm.DSASignature.toOID();
-            } catch(NoSuchAlgorithmException ex ) {
-                Assert.notReached("no such algorithm as DSA?");
+            } catch(NoSuchAlgorithmException e ) {
+                throw new RuntimeException("No such algorithm: " + e.getMessage(), e);
             }
             AlgorithmIdentifier algID = new AlgorithmIdentifier( oid, pqg );
             INTEGER publicValue = new INTEGER(spec.getY());
@@ -67,7 +82,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
 	//
         //} else if( keySpec instanceof ECPublicKeySpec ) {
         //   // We need to import both the public value and the curve.
-        //   // The only way to get all that information in DER is to send 
+        //   // The only way to get all that information in DER is to send
         //   // a full SubjectPublicKeyInfo. So we encode all the information
         //   // into an SPKI.
         //
@@ -81,7 +96,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
         //    } catch(NoSuchAlgorithmException ex ) {
         //        Assert.notReached("no such algorithm as DSA?");
         //    }
-        //    AlgorithmIdentifier algID = 
+        //    AlgorithmIdentifier algID =
         //                  new AlgorithmIdentifier(oid, ecParams.getParams() );
         //    INTEGER publicValueX = new INTEGER(spec.getW().getAffineX());
         //    INTEGER publicValueY = new INTEGER(spec.getW().getAffineY());
@@ -173,7 +188,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
                 System.arraycopy(yBA, 1, newBA, 0, newBA.length);
                 yBA = newBA;
             }
-            
+
             return PK11PrivKey.fromPrivateKeyInfo( ASN1Util.encode(pki),
                 TokenSupplierManager.getTokenSupplier().getThreadToken(), yBA );
         } else if( keySpec instanceof PKCS8EncodedKeySpec ) {

@@ -3,19 +3,41 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.cms;
 
-import org.mozilla.jss.pkix.primitive.*;
-
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import java.util.Vector;
-import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
-import org.mozilla.jss.crypto.*;
-import java.security.*;
+import java.io.CharConversionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
-import org.mozilla.jss.util.Password;
+
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.BadPaddingException;
+import org.mozilla.jss.crypto.Cipher;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.IVParameterSpec;
+import org.mozilla.jss.crypto.IllegalBlockSizeException;
+import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.PBEKeyGenParams;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.PBEParameter;
+import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.Password;
 
 /**
  * The PKCS #7 type <i>EncryptedContentInfo</i>, which encapsulates
@@ -55,7 +77,7 @@ public class EncryptedContentInfo implements ASN1Value {
         }
 
     /**
-     * Create a EnvelopedData ASN1 object. 
+     * Create a EnvelopedData ASN1 object.
      */
     public EncryptedContentInfo(
                 OBJECT_IDENTIFIER contentType,
@@ -78,7 +100,7 @@ public class EncryptedContentInfo implements ASN1Value {
         this.contentType = contentType;
         this.contentEncryptionAlgorithm = contentEncryptionAlgorithm;
         this.encryptedContent = encryptedContent;
-  
+
         sequence.addElement(contentType);
         sequence.addElement(contentEncryptionAlgorithm);
         if(encryptedContent != null) {
@@ -90,7 +112,7 @@ public class EncryptedContentInfo implements ASN1Value {
 			}
         }
 	}
-   
+
 	public static EncryptedContentInfo createCRSCompatibleEncryptedContentInfo(OBJECT_IDENTIFIER contentType,
 				 AlgorithmIdentifier contentEncryptionAlgorithm,
 				 OCTET_STRING encryptedContent)
@@ -100,7 +122,7 @@ public class EncryptedContentInfo implements ASN1Value {
 										encryptedContent,
 										true);
 	}
-				   
+
 
     ///////////////////////////////////////////////////////////////////////
     // Crypto shortcuts
@@ -125,7 +147,7 @@ public class EncryptedContentInfo implements ASN1Value {
      */
     public static EncryptedContentInfo
     createPBE(PBEAlgorithm keyGenAlg, Password password, byte[] salt,
-            int iterationCount, 
+            int iterationCount,
             KeyGenerator.CharToByteConverter charToByteConverter,
             byte[] toBeEncrypted)
         throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
@@ -140,7 +162,7 @@ public class EncryptedContentInfo implements ASN1Value {
             throw new NoSuchAlgorithmException("Key generation algorithm"+
                 " is not a PBE algorithm");
         }
-        PBEAlgorithm pbeAlg = (PBEAlgorithm) keyGenAlg;
+        PBEAlgorithm pbeAlg = keyGenAlg;
 
         CryptoManager cman = CryptoManager.getInstance();
 
@@ -167,7 +189,7 @@ public class EncryptedContentInfo implements ASN1Value {
         cipher.initEncrypt( key, params );
         byte[] encrypted = cipher.doFinal( Cipher.pad(
                 toBeEncrypted, encAlg.getBlockSize()) );
-        
+
         // make encryption algorithm identifier
         PBEParameter pbeParam = new PBEParameter( salt, iterationCount );
         AlgorithmIdentifier encAlgID = new AlgorithmIdentifier(
@@ -182,13 +204,12 @@ public class EncryptedContentInfo implements ASN1Value {
         return encCI;
 
       } catch( IllegalBlockSizeException e ) {
-        Assert.notReached("IllegalBlockSizeException in EncryptedContentInfo"
-            +".createPBE");
+          throw new RuntimeException("IllegalBlockSizeException in EncryptedContentInfo"
+            +".createPBE: " + e.getMessage(), e);
       } catch( BadPaddingException e ) {
-        Assert.notReached("BadPaddingException in EncryptedContentInfo"
-            +".createPBE");
+          throw new RuntimeException("BadPaddingException in EncryptedContentInfo"
+            +".createPBE: " + e.getMessage(), e);
       }
-      return null;
     }
 
     /**
@@ -295,7 +316,7 @@ public class EncryptedContentInfo implements ASN1Value {
             return (tag.equals(EncryptedContentInfo.TAG));
         }
 
-        public ASN1Value decode(InputStream istream) 
+        public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(TAG,istream);

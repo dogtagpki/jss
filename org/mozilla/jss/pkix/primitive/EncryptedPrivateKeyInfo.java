@@ -4,15 +4,41 @@
 
 package org.mozilla.jss.pkix.primitive;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.Assert;
-import java.security.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.util.Password;
-import org.mozilla.jss.crypto.PrivateKey;
+import java.io.CharConversionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.BadPaddingException;
+import org.mozilla.jss.crypto.Cipher;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.IVParameterSpec;
+import org.mozilla.jss.crypto.IllegalBlockSizeException;
+import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.KeyWrapAlgorithm;
+import org.mozilla.jss.crypto.KeyWrapper;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.PBEKeyGenParams;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.Password;
 
 /**
  * PKCS #8 <i>EncryptedPrivateKeyInfo</i>.
@@ -103,7 +129,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             throw new NoSuchAlgorithmException("Key generation algorithm"+
                 " is not a PBE algorithm");
         }
-        PBEAlgorithm pbeAlg = (PBEAlgorithm) keyGenAlg;
+        PBEAlgorithm pbeAlg = keyGenAlg;
 
         CryptoManager cman = CryptoManager.getInstance();
 
@@ -144,13 +170,12 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
         return epki;
 
       } catch( IllegalBlockSizeException e ) {
-        Assert.notReached("IllegalBlockSizeException in EncryptedContentInfo"
-            +".createPBE");
+        throw new RuntimeException("IllegalBlockSizeException in EncryptedContentInfo"
+            +".createPBE: " + e.getMessage(), e);
       } catch( BadPaddingException e ) {
-        Assert.notReached("BadPaddingException in EncryptedContentInfo"
-            +".createPBE");
+          throw new RuntimeException("BadPaddingException in EncryptedContentInfo"
+            +".createPBE: " + e.getMessage(), e);
       }
-      return null;
     }
 
 
@@ -221,8 +246,8 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             // construct KDF AlgorithmIdentifier
             SEQUENCE paramsKdf = new SEQUENCE();
             paramsKdf.addElement(new OCTET_STRING(salt));
-            paramsKdf.addElement(new INTEGER((long) kdfIterations));
-            paramsKdf.addElement(new INTEGER((long) sk.getLength()));
+            paramsKdf.addElement(new INTEGER(kdfIterations));
+            paramsKdf.addElement(new INTEGER(sk.getLength()));
             AlgorithmIdentifier algIdKdf = new AlgorithmIdentifier(
                 PBEAlgorithm.PBE_PKCS5_PBKDF2.toOID(), paramsKdf);
 
@@ -240,17 +265,16 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             // construct EncryptedPrivateKeyInfo
             return new EncryptedPrivateKeyInfo(algIdPBES2, new OCTET_STRING(encData));
         } catch (IllegalBlockSizeException e) {
-            Assert.notReached("IllegalBlockSizeException in EncryptedContentInfo.createPBES2");
+            throw new RuntimeException("IllegalBlockSizeException in EncryptedContentInfo.createPBES2: " + e.getMessage(), e);
         } catch (BadPaddingException e) {
-            Assert.notReached("BadPaddingException in EncryptedContentInfo.createPBES2");
+            throw new RuntimeException("BadPaddingException in EncryptedContentInfo.createPBES2: " + e.getMessage(), e);
         }
-        return null; // unreachable
     }
 
 
     /**
      * Creates a new EncryptedPrivateKeyInfo, where the data is encrypted
-     * with a password-based key- 
+     * with a password-based key-
      *       with wrapping/unwrapping happening on token.
      *
      * @param keyGenAlg The algorithm for generating a symmetric key from
@@ -283,7 +307,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
                 " is not a PBE algorithm");
         }
 
-        PBEAlgorithm pbeAlg = (PBEAlgorithm) keyGenAlg;
+        PBEAlgorithm pbeAlg = keyGenAlg;
 
         // generate key
 
@@ -323,11 +347,9 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
 
       } catch (Exception e) {
         System.out.println("createPBE: exception:"+e.toString());
-        Assert.notReached("EncryptedPrivateKeyInfo exception:"
-            +".createPBE");
+        throw new RuntimeException("Exception in EncryptedPrivateKeyInfo"
+            + ".createPBE: " + e.getMessage(), e);
       }
-
-      return null;
     }
 
 

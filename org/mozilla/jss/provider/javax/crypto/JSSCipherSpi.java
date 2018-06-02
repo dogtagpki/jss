@@ -4,39 +4,42 @@
 
 package org.mozilla.jss.provider.javax.crypto;
 
+import java.security.AlgorithmParameters;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidParameterSpecException;
-import java.security.*;
-import java.security.NoSuchAlgorithmException;
-import javax.crypto.Cipher;
-import javax.crypto.ShortBufferException;
-import javax.crypto.IllegalBlockSizeException;
+
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.SecretKey;
-import org.mozilla.jss.crypto.KeyWrapper;
-import org.mozilla.jss.crypto.KeyWrapAlgorithm;
-import org.mozilla.jss.crypto.EncryptionAlgorithm;
-import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.TokenSupplierManager;
-import org.mozilla.jss.crypto.Algorithm;
-import org.mozilla.jss.crypto.SecretKeyFacade;
-import org.mozilla.jss.crypto.SymmetricKey;
-import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.crypto.SecretKeyFacade;
-import org.mozilla.jss.crypto.TokenRuntimeException;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.util.Assert;
 
-import org.mozilla.jss.pkcs11.PK11PubKey;
-import org.mozilla.jss.pkcs11.PK11PrivKey;
-import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.BIT_STRING;
 import org.mozilla.jss.asn1.InvalidBERException;
-import java.security.SecureRandom;
+import org.mozilla.jss.crypto.Algorithm;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.KeyWrapAlgorithm;
+import org.mozilla.jss.crypto.SecretKeyFacade;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.TokenRuntimeException;
+import org.mozilla.jss.crypto.TokenSupplierManager;
+import org.mozilla.jss.pkcs11.PK11PrivKey;
+import org.mozilla.jss.pkcs11.PK11PubKey;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
+import org.mozilla.jss.util.Assert;
 
 class JSSCipherSpi extends javax.crypto.CipherSpi {
     private String algFamily=null;
@@ -51,7 +54,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
     private AlgorithmParameterSpec params = null;
     private int blockSize;
     //keyStrength  is used for RC2ParameterSpec and EncryptionAlgorithm.lookup
-    private int keyStrength;  
+    private int keyStrength;
 
     private JSSCipherSpi() { }
 
@@ -141,7 +144,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                     encAlg.toString() + " is not supported by this token " +
                     token.getName());
             }
-            
+
             cipher = token.getCipherContext(encAlg);
 
             if( opmode == Cipher.ENCRYPT_MODE ) {
@@ -214,14 +217,14 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         try {
             AlgorithmParameterSpec gp = null;
             if (algFamily.compareToIgnoreCase("RC2") == 0) {
-                gp = givenParams.getParameterSpec(                 
+                gp = givenParams.getParameterSpec(
                     javax.crypto.spec.RC2ParameterSpec.class );
             } else if (algMode.compareToIgnoreCase("CBC") == 0) {
-                 gp = givenParams.getParameterSpec(                 
+                 gp = givenParams.getParameterSpec(
                              javax.crypto.spec.IvParameterSpec.class );
-            }            
-            
-            if (gp != null) { 
+            }
+
+            if (gp != null) {
                 engineInit(opmode, key, gp, random);
             } else {
                 throw new InvalidAlgorithmParameterException("Unknown Parameter Spec");
@@ -248,23 +251,23 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         if( paramClasses == null ) {
             // no parameters are needed
             return null;
-        } 
+        }
         // generate an IV
-        byte[] iv = new byte[blockSize];  
+        byte[] iv = new byte[blockSize];
         try {
-            SecureRandom random = SecureRandom.getInstance("pkcs11prng", 
+            SecureRandom random = SecureRandom.getInstance("pkcs11prng",
                                                        "Mozilla-JSS");
             random.nextBytes(iv);
         } catch (Exception e) {
-            Assert.notReached(e.getMessage());
+            throw new RuntimeException(e);
         }
-        
+
         for (int i = 0; i < paramClasses.length; i ++) {
             if( paramClasses[i].equals( javax.crypto.spec.IvParameterSpec.class ) ) {
                 algParSpec = new javax.crypto.spec.IvParameterSpec(iv);
                 break;
             } else if ( paramClasses[i].equals( RC2ParameterSpec.class ) ) {
-                algParSpec = new RC2ParameterSpec(keyStrength, iv);  
+                algParSpec = new RC2ParameterSpec(keyStrength, iv);
                 break;
             }
         }
@@ -295,15 +298,15 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
     public AlgorithmParameters engineGetParameters() {
         AlgorithmParameters algParams = null;
          try {
-            if(( params instanceof IvParameterSpec ) 
+            if(( params instanceof IvParameterSpec )
                || ( params instanceof RC2ParameterSpec )) {
                 algParams = AlgorithmParameters.getInstance(algFamily);
                 algParams.init(params);
             }
-          } catch(NoSuchAlgorithmException nsae) {
-            Assert.notReached(nsae.getMessage());
-          } catch(InvalidParameterSpecException ipse) {
-            Assert.notReached(ipse.getMessage());
+          } catch(NoSuchAlgorithmException e) {
+              throw new RuntimeException("Unable to get parameters: " + e.getMessage(), e);
+          } catch(InvalidParameterSpecException e) {
+              throw new RuntimeException("Unable to get parameters: " + e.getMessage(), e);
           }
         return algParams;
     }

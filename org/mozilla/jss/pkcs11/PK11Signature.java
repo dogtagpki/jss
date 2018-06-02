@@ -86,8 +86,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
                     "Key type is inconsistent with algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
-            Assert.notReached("unknown algorithm: "+algorithm);
-            throw new InvalidKeyException();
+            throw new InvalidKeyException("Unknown algorithm: " + algorithm, e);
         }
 
         // Finally, the key is OK
@@ -111,9 +110,9 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
                     SecureRandom random)
 		throws InvalidKeyException, TokenException
 	{
-		Assert.notReached("This function is not supported");
+		throw new RuntimeException("PK11Signature.engineInitSign() is not supported");
 
-		engineInitSign(privateKey);
+		// engineInitSign(privateKey);
 	}
 
     /*************************************************************
@@ -157,8 +156,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
                     "Key type is inconsistent with algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
-            Assert.notReached("unknown algorithm: "+algorithm);
-            throw new InvalidKeyException();
+            throw new InvalidKeyException("Unknown algorithm: " + algorithm, e);
         }
 
 		key = pubKey;
@@ -186,12 +184,9 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
         Assert._assert(b != null);
         if( (state==SIGN || state==VERIFY) ) {
             if(!raw && sigContext==null) {
-                Assert.notReached("signature has no context");
                 throw new SignatureException("Signature has no context");
             } else if( raw && rawInput==null) {
-                Assert.notReached("raw signature has no input stream");
-                throw new SignatureException("raw signature has no input "+
-                    "stream");
+                throw new SignatureException("Raw signature has no input stream");
             }
         } else {
             Assert._assert(state == UNINITIALIZED);
@@ -284,11 +279,9 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 						"Signature is not initialized properly");
 		}
 		if(!raw && sigContext==null) {
-			Assert.notReached("Signature has no context");
 			throw new SignatureException("Signature has no context");
 		}
         if(raw && rawInput==null) {
-            Assert.notReached("Signature has no input");
             throw new SignatureException("Signature has no input");
         }
 		Assert._assert(token!=null);

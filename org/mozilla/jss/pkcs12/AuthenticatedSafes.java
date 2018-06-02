@@ -3,16 +3,32 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkcs12;
 
-import org.mozilla.jss.util.Debug;
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkcs7.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.util.*;
+import java.io.CharConversionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 import org.mozilla.jss.CryptoManager;
-import java.security.*;
-import java.security.spec.AlgorithmParameterSpec;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.BadPaddingException;
+import org.mozilla.jss.crypto.IllegalBlockSizeException;
+import org.mozilla.jss.crypto.JSSSecureRandom;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkcs7.ContentInfo;
+import org.mozilla.jss.pkcs7.EncryptedContentInfo;
+import org.mozilla.jss.pkcs7.EncryptedData;
+import org.mozilla.jss.util.Debug;
+import org.mozilla.jss.util.Password;
 
 /**
  * An <i>AuthenticatedSafes</i>, which is a <code>SEQUENCE</code> of
@@ -72,7 +88,7 @@ public class AuthenticatedSafes implements ASN1Value {
     /**
      * Returns the raw SEQUENCE which constitutes this
      * <i>AuthenticatedSafes</i>.  The elements of this sequence are some
-     * form of <i>SafeContents</i>, wrapped in a ContentInfo or 
+     * form of <i>SafeContents</i>, wrapped in a ContentInfo or
      * an EncryptedData.
      */
     public SEQUENCE getSequence() {
@@ -142,9 +158,8 @@ public class AuthenticatedSafes implements ASN1Value {
                     "encrypted SafeContents");
             }
 
-            EncryptedContentInfo encCI = (EncryptedContentInfo)
-                    ((EncryptedData)ci.getInterpretedContent()).
-                        getEncryptedContentInfo();
+            EncryptedContentInfo encCI = ((EncryptedData)ci.getInterpretedContent()).
+                getEncryptedContentInfo();
 
             // this should be a BER-encoded SafeContents
             byte[] decrypted = encCI.decrypt(password,
@@ -317,7 +332,7 @@ public class AuthenticatedSafes implements ASN1Value {
             rand.nextBytes(salt);
         }
 
-        EncryptedContentInfo encCI = 
+        EncryptedContentInfo encCI =
                 EncryptedContentInfo.createPBE(keyGenAlg, password, salt,
                     iterationCount, new PasswordConverter(),
                     ASN1Util.encode(safeContents));
@@ -328,7 +343,7 @@ public class AuthenticatedSafes implements ASN1Value {
 
         sequence.addElement( ci );
       } catch( CharConversionException e ) {
-        Assert.notReached("CharConversionException while converting password");
+          throw new RuntimeException("Unable to convert password: " + e.getMessage(), e);
       }
     }
 
@@ -381,7 +396,7 @@ public class AuthenticatedSafes implements ASN1Value {
         cipher.initEncrypt( key, params );
         byte[] encrypted = cipher.doFinal( Cipher.pad(
                 ASN1Util.encode(safeContents), encAlg.getBlockSize()) );
-        
+
         // make encryption algorithm identifier
         PBEParameter pbeParam = new PBEParameter( salt, iterationCount );
         AlgorithmIdentifier encAlgID = new AlgorithmIdentifier(
@@ -396,8 +411,7 @@ public class AuthenticatedSafes implements ASN1Value {
         return encCI;
 
       } catch( CharConversionException e ) {
-        Assert.notReached("Unable to convert password characters");
-        return null;
+        throw new RuntimeException("Unable to convert password: " + e.getMessage(), e);
       }
     }
     */

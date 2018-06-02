@@ -4,12 +4,12 @@
 
 package org.mozilla.jss.provider.java.security;
 
-import java.security.*;
+import java.io.IOException;
+import java.security.AlgorithmParametersSpi;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidParameterSpecException;
+
 import javax.crypto.spec.IvParameterSpec;
-import java.io.IOException;
-import org.mozilla.jss.util.Assert;
 
 /**
  * This class is only intended to be used to implement
@@ -29,34 +29,30 @@ public class IvAlgorithmParameters extends AlgorithmParametersSpi {
         if( clazz != null && !(clazz.isInstance(ivParamSpec)) ) {
             Class paramSpecClass = ivParamSpec.getClass();
             throw new InvalidParameterSpecException(
-                "Mozilla-JSS IvParameter spec class error" 
+                "Mozilla-JSS IvParameter spec class error"
                     + paramSpecClass.getName());
         }
         return ivParamSpec;
     }
 
     public void engineInit(byte[] params) throws IOException {
-        Assert.notReached("engineInit(byte[]) not supported");
         throw new IOException("engineInit(byte[]) not supported");
     }
 
     public void engineInit(byte[] params, String format) throws IOException {
-        Assert.notReached("engineInit(byte[],String) not supported");
         throw new IOException("engineInit(byte[],String) not supported");
     }
 
     public byte[] engineGetEncoded() throws IOException {
-        Assert.notReached("encoding IvAlgorithmParameters not supported");
         throw new IOException("encoding IvAlgorithmParameters not supported");
     }
 
     public byte[] engineGetEncoded(String format) throws IOException {
-        Assert.notReached("encoding IvAlgorithmParameters not supported");
         throw new IOException("encoding IvAlgorithmParameters not supported");
     }
 
     public String engineToString() {
-        Assert.notReached("engineToString() not supported");
-        return getClass().getName();
+        throw new RuntimeException("engineToString() not supported");
+        // return getClass().getName();
     }
 }

@@ -4,14 +4,35 @@
 
 package org.mozilla.jss.pkcs12;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.util.*;
-import java.security.*;
+import java.io.CharConversionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.DigestException;
 import java.security.MessageDigest;
-import org.mozilla.jss.crypto.*;
+import java.security.NoSuchAlgorithmException;
+
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BMPString;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.JSSSecureRandom;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkix.primitive.Attribute;
+import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
+import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
+import org.mozilla.jss.util.AssertionException;
+import org.mozilla.jss.util.Password;
 
 /**
  * A PKCS #12 <i>SafeBag</i> structure.
@@ -165,7 +186,7 @@ public final class SafeBag implements ASN1Value {
                                                         encoded);
             }
         } catch( InvalidBERException e ) {
-            Assert.notReached("failed to convert ASN1Value to ANY");
+            throw new RuntimeException("Unable to convert ASN1Value to ANY: " + e.getMessage(), e);
         }
         this.bagAttributes = bagAttributes;
     }

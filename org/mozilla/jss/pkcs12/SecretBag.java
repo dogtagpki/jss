@@ -4,9 +4,19 @@
 
 package org.mozilla.jss.pkcs12;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.util.Assert;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 public class SecretBag implements ASN1Value {
 
@@ -53,7 +63,7 @@ public class SecretBag implements ASN1Value {
             try {
                 this.secret = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
             } catch(InvalidBERException e) {
-                Assert.notReached("Failed to convert ASN1Value to ANY");
+                throw new RuntimeException("Unable to convert ASN1Value to ANY: " + e.getMessage(), e);
             }
         }
 

@@ -5,7 +5,6 @@ package org.mozilla.jss.asn1;
 
 import java.io.CharConversionException;
 import java.io.UnsupportedEncodingException;
-import org.mozilla.jss.util.Assert;
 
 /**
  * The ASN.1 type <i>BMPString</i>.  BMPStrings use the Unicode character set.
@@ -90,8 +89,7 @@ private static class BMPConverter implements CharConverter {
 
         } catch( UnsupportedEncodingException e ) {
             String err = "Unable to find UnicodeBig encoding mechanism";
-            Assert.notReached(err);
-            throw new CharConversionException(err);
+            throw (CharConversionException) new CharConversionException(err).initCause(e);
         }
     }
 
@@ -105,8 +103,7 @@ private static class BMPConverter implements CharConverter {
 
         } catch( UnsupportedEncodingException e ) {
             String err = "Unable to find UnicodeBigUnmarked encoding mechanism";
-            Assert.notReached(err);
-            throw new CharConversionException(err);
+            throw (CharConversionException) new CharConversionException(err).initCause(e);
         }
     }
 } // end of char converter

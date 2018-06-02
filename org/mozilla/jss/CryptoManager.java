@@ -174,7 +174,7 @@ public final class CryptoManager implements TokenSupplier
      */
     public final static class InitializationValues {
         protected InitializationValues() {
-            Assert.notReached("Default constructor");
+            throw new RuntimeException("Default InitializationValues constructor");
         }
 
         /////////////////////////////////////////////////////////////
@@ -1202,16 +1202,15 @@ public final class CryptoManager implements TokenSupplier
             return importCertPackageNative(certPackage, null, true, false);
         } catch(NicknameConflictException e) {
             logger.error("importing CA certs caused nickname conflict", e);
-            Assert.notReached("importing CA certs caused nickname conflict");
+            throw new RuntimeException("Importing CA certs caused nickname conflict: " + e.getMessage(), e);
         } catch(UserCertConflictException e) {
             logger.error("importing CA certs caused user cert conflict", e);
-            Assert.notReached("importing CA certs caused user cert conflict");
+            throw new RuntimeException("Importing CA certs caused user cert conflict: " + e.getMessage(), e);
         } catch(NoSuchItemOnTokenException e) {
             logger.error("importing CA certs caused NoSuchItemOnTokenException", e);
-            Assert.notReached("importing CA certs caused NoSuchItemOnToken"+
-                "Exception");
+            throw new RuntimeException("Importing CA certs caused NoSuchItemOnToken"+
+                "Exception: " + e.getMessage(), e);
         }
-        return null;
     }
 
     /**
@@ -1366,8 +1365,7 @@ public final class CryptoManager implements TokenSupplier
         return findCertByIssuerAndSerialNumberNative(derIssuer,
             sn.getContents() );
       } catch( InvalidBERException e ) {
-        Assert.notReached("Invalid BER encoding of INTEGER");
-        return null;
+        throw new RuntimeException("Invalid BER encoding of INTEGER: " + e.getMessage(), e);
       }
     }
 
@@ -1431,8 +1429,7 @@ public final class CryptoManager implements TokenSupplier
     {
         Assert._assert(cert!=null);
         if(! (cert instanceof org.mozilla.jss.pkcs11.PK11Cert)) {
-            Assert.notReached("non-pkcs11 cert passed to PK11Finder");
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Non-pkcs11 cert passed to PK11Finder");
         }
         return findPrivKeyByCertNative(cert);
     }

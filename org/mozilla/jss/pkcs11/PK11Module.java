@@ -3,14 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.util.Assert;
 import java.util.Enumeration;
 import java.util.Vector;
+
+import org.mozilla.jss.util.Assert;
 
 public final class PK11Module {
 
     private PK11Module() {
-        Assert.notReached("PK11Module default constructor");
+        throw new RuntimeException("PK11Module default constructor");
     }
 
     /**

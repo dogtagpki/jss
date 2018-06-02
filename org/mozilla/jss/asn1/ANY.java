@@ -3,12 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import org.mozilla.jss.util.Assert;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
+import org.mozilla.jss.util.Assert;
 
 /**
  * Represents an ASN.1 <code>ANY</code> value. An ANY is just an arbitrary
@@ -110,11 +111,10 @@ public class ANY implements ASN1Value {
         return contents;
 
       } catch( IOException e ) {
-            Assert.notReached("IOException reading from byte array");
-            return null;
+          throw new RuntimeException("Unable to read byte array: " + e.getMessage(), e);
       }
     }
-    
+
     public void encode(OutputStream ostream) throws IOException {
         ostream.write(encoded);
     }
@@ -135,9 +135,7 @@ public class ANY implements ASN1Value {
         ByteArrayInputStream bis = new ByteArrayInputStream(encoded);
         return template.decode(bis);
       } catch( IOException e ) {
-        Assert.notReached("IOException while reading from byte array input"+
-            " stream");
-        return null;
+          throw new RuntimeException("Unable to read byte array: " + e.getMessage(), e);
       }
     }
 
@@ -166,7 +164,7 @@ public class ANY implements ASN1Value {
         throws IOException
     {
         if( ! implicitTag.equals(tag) ) {
-            Assert.notReached("No implicit tags allowed for ANY");
+            throw new RuntimeException("No implicit tags allowed for ANY");
         }
         ostream.write(encoded);
     }
@@ -219,7 +217,7 @@ public static class Template implements ASN1Template {
 
             // eat the header off the input stream
             head = new ASN1Header(istream);
-            
+
             // write the header to the recording stream
             recording.write( head.encode() );
 
@@ -234,7 +232,7 @@ public static class Template implements ASN1Template {
             } while( ! any.getTag().equals(Tag.EOC) );
 
             return new ANY( head.getTag(), recording.toByteArray() );
-                
+
         } else {
             // definite length encoding
             byte[] data = new byte[ (int) head.getTotalLength() ];

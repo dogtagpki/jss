@@ -4,14 +4,36 @@
 
 package org.mozilla.jss.pkcs12;
 
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.crypto.*;
+import java.io.CharConversionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.DigestException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.pkcs7.*;
-import org.mozilla.jss.util.*;
-import java.security.*;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.DigestAlgorithm;
+import org.mozilla.jss.crypto.HMACAlgorithm;
+import org.mozilla.jss.crypto.JSSMessageDigest;
+import org.mozilla.jss.crypto.JSSSecureRandom;
+import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.PBEKeyGenParams;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.util.Password;
 
 public class MacData implements ASN1Value {
 
@@ -113,14 +135,14 @@ public class MacData implements ASN1Value {
         this.macIterationCount = new INTEGER(iterations);
 
       } catch( NoSuchAlgorithmException e ) {
-        Assert.notReached("SHA-1 HMAC algorithm not found on internal "+
-            " token ("+ e.toString() + ")");
+          throw new RuntimeException("SHA-1 HMAC algorithm not found on internal " +
+            "token: " + e.getMessage(), e);
       } catch( InvalidAlgorithmParameterException e ) {
-        Assert.notReached("Invalid PBE algorithm parameters");
+          throw new RuntimeException("Invalid PBE algorithm parameters: " + e.getMessage(), e);
       } catch( java.lang.IllegalStateException e ) {
-        Assert.notReached("IllegalStateException");
+          throw new RuntimeException("Illegal state: " + e.getMessage(), e);
       } catch( InvalidKeyException e ) {
-        Assert.notReached("Invalid key exception");
+          throw new RuntimeException("Invalid key: " + e.getMessage(), e);
       }
     }
 

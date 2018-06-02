@@ -4,14 +4,13 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.util.Assert;
-import java.security.interfaces.DSAPublicKey;
-import java.security.interfaces.DSAParams;
-import java.security.spec.DSAParameterSpec;
 import java.math.BigInteger;
+import java.security.interfaces.DSAParams;
+import java.security.interfaces.DSAPublicKey;
+import java.security.spec.DSAParameterSpec;
 
 public final class PK11DSAPublicKey extends PK11PubKey implements DSAPublicKey {
-    
+
     public PK11DSAPublicKey(byte[] pointer) {
         super(pointer);
     }
@@ -24,8 +23,7 @@ public final class PK11DSAPublicKey extends PK11PubKey implements DSAPublicKey {
 
         return new DSAParameterSpec(P, Q, G);
       } catch(NumberFormatException e) {
-        Assert.notReached("Unable to decode DSA parameters");
-        return null;
+          throw new RuntimeException("Unable to decode DSA parameters: " + e.getMessage(), e);
       }
     }
 
@@ -33,8 +31,7 @@ public final class PK11DSAPublicKey extends PK11PubKey implements DSAPublicKey {
       try {
         return new BigInteger( getYByteArray() );
       } catch(NumberFormatException e) {
-        Assert.notReached("Unable to decode DSA public value");
-        return null;
+          throw new RuntimeException("Unable to decode DSA public value: " + e.getMessage(), e);
       }
     }
 

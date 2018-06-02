@@ -18,7 +18,6 @@ import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.X509Certificate;
-import org.mozilla.jss.util.Assert;
 
 class SocketBase {
 
@@ -438,8 +437,8 @@ class SocketBase {
 
             return (Throwable) cons.newInstance(new Object[] { strBuf.toString() });
         } catch (Exception e) {
-            Assert.notReached("Problem constructing exception container");
-            return topException;
+            throw new RuntimeException("Problem constructing exception container: " + e.getMessage(), e);
+            //return topException;
         }
     }
 

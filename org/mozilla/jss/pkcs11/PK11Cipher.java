@@ -4,14 +4,20 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.NativeProxy;
-import java.security.InvalidKeyException;
 import java.security.InvalidAlgorithmParameterException;
-import java.security.spec.AlgorithmParameterSpec;
-import org.mozilla.jss.util.Assert;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import javax.crypto.spec.*;
+import java.security.spec.AlgorithmParameterSpec;
+
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.RC2ParameterSpec;
+
+import org.mozilla.jss.crypto.BadPaddingException;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.IVParameterSpec;
+import org.mozilla.jss.crypto.IllegalBlockSizeException;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
 
 final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
 
@@ -73,7 +79,7 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         }
         return IV;
     }
-        
+
 
     public void initEncrypt(SymmetricKey key, AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
@@ -214,7 +220,7 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
     }
 
     /**
-     * Matches the params against those expected by the algorithm. 
+     * Matches the params against those expected by the algorithm.
      */
     private void checkParams(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException
@@ -228,8 +234,8 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
                 " cannot use a " + name + " parameter");
         }
     }
-    
-            
+
+
 
     /**
      * Checks for null, makes sure the key lives on the correct token,
@@ -258,7 +264,7 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
                     " this algorithm: " + ((PK11SymKey)key).getKeyType() + ":" + KeyType.getKeyTypeFromAlgorithm(algorithm) +";");
             }
         } catch( NoSuchAlgorithmException e ) {
-            Assert.notReached("Unknown algorithm");
+            throw new RuntimeException("Unknown algorithm: " + algorithm, e);
         }
     }
 

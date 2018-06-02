@@ -4,12 +4,21 @@
 
 package org.mozilla.jss.pkcs7;
 
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import java.util.Vector;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
 
 /**
  * A PKCS #7 ContentInfo structure.
@@ -61,8 +70,8 @@ public class ContentInfo implements ASN1Value {
                 this.content = (ANY) ASN1Util.decode(ANY.getTemplate(),
                                     ASN1Util.encode(content) );
               } catch(InvalidBERException e) {
-                Assert.notReached("InvalidBERException while converting"+
-                    "ASN1Value to ANY");
+                  throw new RuntimeException("Unable to convert " +
+                    "ASN1Value to ANY: " + e.getMessage(), e);
               }
             }
             sequence.addElement(new EXPLICIT(new Tag(0),content) );
