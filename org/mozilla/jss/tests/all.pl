@@ -428,6 +428,7 @@ my $result;
 my $command;
 my $serverCommand;
 
+$jss_classpath = "/usr/share/java/slf4j/slf4j-api.jar:$jss_classpath";
 
 $testname = "Setup DBs";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.SetupDBs $testdir $pwfile";
