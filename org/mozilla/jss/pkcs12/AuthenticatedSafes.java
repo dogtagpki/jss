@@ -27,7 +27,6 @@ import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.EncryptedContentInfo;
 import org.mozilla.jss.pkcs7.EncryptedData;
-import org.mozilla.jss.util.Debug;
 import org.mozilla.jss.util.Password;
 
 /**
@@ -74,14 +73,14 @@ public class AuthenticatedSafes implements ASN1Value {
         if( sequence==null) {
             throw new IllegalArgumentException("parameter is null");
         }
-        if( Debug.DEBUG ) {
+
             for( int i = 0; i < sequence.size(); i++ ) {
                 if( ! (sequence.elementAt(i) instanceof ContentInfo) ) {
                     throw new IllegalArgumentException(
                         "element "+i+" of sequence is not a ContentInfo");
                 }
             }
-        }
+
         this.sequence = sequence;
     }
 

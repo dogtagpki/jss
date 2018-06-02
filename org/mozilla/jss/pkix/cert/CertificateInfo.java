@@ -4,18 +4,33 @@
 
 package org.mozilla.jss.pkix.cert;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.util.*;
-import java.security.cert.CertificateException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.security.PublicKey;
+import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.io.OutputStream;
-import java.io.IOException;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.GeneralizedTime;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.TimeBase;
+import org.mozilla.jss.asn1.UTCTime;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.Name;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
+import org.mozilla.jss.util.Assert;
 
 /**
  * A TBSCertificate (to-be-signed certificate), the actual information in
@@ -48,7 +63,7 @@ public class CertificateInfo implements ASN1Value {
         }
 
         /**
-         * Creates a version number from its numeric encoding. 
+         * Creates a version number from its numeric encoding.
          */
         public static Version fromInt(int versionNum)
             throws InvalidBERException
@@ -179,7 +194,7 @@ public class CertificateInfo implements ASN1Value {
      * @exception InvalidBERException If an error occurs decoding the
      *      the information extracted from the public key.
      */
-    public void setSubjectPublicKeyInfo( PublicKey pubk ) 
+    public void setSubjectPublicKeyInfo( PublicKey pubk )
         throws InvalidBERException, IOException
     {
         verifyNotNull(pubk);
@@ -279,12 +294,12 @@ public class CertificateInfo implements ASN1Value {
             throw new CertificateException("extensions can only be added to"+
                 " v3 certificates");
         }
-        if( Debug.DEBUG ) {
+
             int size = extensions.size();
             for(int i=0; i < size; i++) {
                 Assert._assert(extensions.elementAt(i) instanceof Extension);
             }
-        }
+
         verifyNotNull(extensions);
         this.extensions = extensions;
     }
@@ -448,7 +463,7 @@ public class CertificateInfo implements ASN1Value {
             Date notBefore = ((TimeBase)choice.getValue()).toDate();
             choice = (CHOICE)validity.elementAt(1);
             Date notAfter = ((TimeBase)choice.getValue()).toDate();
-            
+
             CertificateInfo cinfo = new CertificateInfo(
                     version,
                     (INTEGER) seq.elementAt(1),     // serial num

@@ -42,9 +42,7 @@ public abstract class NativeProxy
      */
     public NativeProxy(byte[] pointer) {
 		Assert._assert(pointer!=null);
-        if(Debug.DEBUG) {
-            registryIndex = register();
-        }
+        registryIndex = register();
         mPointer = pointer;
     }
 
@@ -98,9 +96,7 @@ public abstract class NativeProxy
      * }
      */
     protected void finalize() throws Throwable {
-        if(Debug.DEBUG) {
-            unregister(registryIndex);
-        }
+        unregister(registryIndex);
         releaseNativeResources();
     }
 

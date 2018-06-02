@@ -3,12 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.tests;
 
-import java.io.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.util.Debug;
+import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.Provider;
 import java.security.Security;
+
+import org.mozilla.jss.CryptoManager;
 
 public class DigestTest {
 
@@ -71,7 +71,7 @@ public class DigestTest {
     public static boolean testJSSDigest(String alg, byte[] toBeDigested)
     throws Exception {
         byte[] mozillaDigestOut;
- 
+
         java.security.MessageDigest mozillaDigest =
                 java.security.MessageDigest.getInstance(alg, MOZ_PROVIDER_NAME);
 
@@ -82,10 +82,10 @@ public class DigestTest {
                     " digest output size is " + mozillaDigestOut.length);
         } else {
             throw new Exception("ERROR: digest output size is "+
-                    mozillaDigestOut.length + ", should be "+ 
+                    mozillaDigestOut.length + ", should be "+
                     mozillaDigest.getDigestLength() );
         }
- 
+
         return true;
     }
 
@@ -108,8 +108,6 @@ public class DigestTest {
 
             CryptoManager.initialize(dbdir);
 
-            Debug.setLevel(Debug.OBNOXIOUS);
-
             /////////////////////////////////////////////////////////////
             // Test all available algorithms
             /////////////////////////////////////////////////////////////
@@ -119,7 +117,7 @@ public class DigestTest {
             for (int i = 0; i < JSS_Digest_Algs.length; i++) {
                 // compare Mozilla-JSS implementation with all providers
                 // that also support the given algorithm
-                if (messageDigestCompare(JSS_Digest_Algs[i], toBeDigested) 
+                if (messageDigestCompare(JSS_Digest_Algs[i], toBeDigested)
                     == false) {
                     // no provider to compare results with
                     testJSSDigest(JSS_Digest_Algs[i], toBeDigested);

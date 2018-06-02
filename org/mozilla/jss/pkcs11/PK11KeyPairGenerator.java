@@ -21,7 +21,6 @@ import org.mozilla.jss.crypto.PQGParams;
 import org.mozilla.jss.crypto.RSAParameterSpec;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.Assert;
-import org.mozilla.jss.util.Debug;
 
 /**
  * A Key Pair Generator implemented using PKCS #11.
@@ -680,7 +679,7 @@ public final class PK11KeyPairGenerator
     private static boolean defaultsTested = false;
     private static synchronized void
     testDefaults() {
-        if(Debug.DEBUG && !defaultsTested) {
+        if(!defaultsTested) {
             Assert._assert(PQG1024.paramsAreValid());
             Assert._assert(PQG768.paramsAreValid());
             Assert._assert(PQG512.paramsAreValid());

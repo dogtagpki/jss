@@ -224,16 +224,6 @@ public class UTF8Converter {
 		byte[] utf8;
 		int i, j;
 
-		Debug.setLevel(Debug.OBNOXIOUS);
-
-		if(!Debug.DEBUG) {
-			System.out.println("***WARNING***");
-			System.out.println("Debugging mode is disabled. This code only"+
-				" checks itself in debug mode. The test is almost worthless"+
-				" in optimized mode."
-			);
-		}
-
 	  try {
 
 		//
@@ -364,14 +354,6 @@ public class UTF8Converter {
 
 	  } catch(CharConversionException e) {
 			System.out.println("Error converting Unicode "+e);
-	  } finally {
-		if(!Debug.DEBUG) {
-			System.out.println("***WARNING***");
-			System.out.println("Debugging mode is disabled. This code only"+
-				" checks itself in debug mode. The test is almost worthless"+
-				" in optimized mode."
-			);
-		}
 	  }
 	}
 }

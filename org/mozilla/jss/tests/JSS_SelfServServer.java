@@ -4,22 +4,26 @@
 
 package org.mozilla.jss.tests;
 
-import java.io.IOException;
-import org.mozilla.jss.ssl.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.PasswordCallback;
-import java.util.Vector;
-import java.net.InetAddress;
-import java.net.SocketTimeoutException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import org.mozilla.jss.util.Debug;
+import java.net.InetAddress;
+import java.net.SocketTimeoutException;
+import java.util.Vector;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedListener;
+import org.mozilla.jss.ssl.SSLSecurityStatus;
+import org.mozilla.jss.ssl.SSLServerSocket;
+import org.mozilla.jss.ssl.SSLSocket;
+import org.mozilla.jss.util.PasswordCallback;
 
 /**************
  * Note on how to use JSS_SelfServServer and JSS_SelfServerClient
@@ -33,14 +37,14 @@ import org.mozilla.jss.util.Debug;
  *
  * Start the server:
  *
- *  java -cp ./jss4.jar org.mozilla.jss.tests.JSS_SelfServServer . passwords localhost 
+ *  java -cp ./jss4.jar org.mozilla.jss.tests.JSS_SelfServServer . passwords localhost
  *             false 2921 verboseoff
  *
  * Start the client with 4 threads using ciphersuite 0x33.
  * Look at the file Constant.java for the ciphersuites values.
  *
- * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 2 0x33 
- * . localhost 2921 verboseoff JSS Client_RSA     
+ * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 2 0x33
+ * . localhost 2921 verboseoff JSS Client_RSA
  *
  * If you envoke the client with a ciphersuite value -1
  * then all current JSS ciphersuites will be tested fox X number of
@@ -48,27 +52,27 @@ import org.mozilla.jss.util.Debug;
  * will closed all client SSLSockets and then tell the server to
  * shutdown. This case is for the nightly automated tests.
  *
- * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 4 -1 
+ * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 4 -1
  * . passwords localhost 2921 verboseoff JSS
  */
 
 public class JSS_SelfServServer  {
-    
+
     private static Vector jssSupportedCiphers = new Vector();
     private static SSLServerSocket serverSock = null;
     private static SSLSocket sock             = null;
-    
+
     public static void main(String[] args) throws Exception {
         try {
             (new JSS_SelfServServer()).doIt(args);
         } catch (Exception e) {
-            System.out.println("JSS_SelfServServer exiting with Exception " + 
+            System.out.println("JSS_SelfServServer exiting with Exception " +
                     e.getMessage());
             System.exit(1);
         }
         System.exit(0);
     }
-    
+
     private String        fServerCertNick = null;
     private String        fServerHost     = "localhost";
     private String        fPasswordFile   = "passwords";
@@ -81,15 +85,15 @@ public class JSS_SelfServServer  {
         " [certdb path] [password file]\n"+
         "[server_host_name] [testInetAddress: true|false]" +
         "<port> <verbose> <cert nickname> ";
-    
+
     public void JSS_SelfServServer() {
         if (Constants.debug_level > 3) {
             bVerbose = true;
         }
     }
-    
+
     public void doIt(String[] args) throws Exception {
-        
+
         if ( args.length < 5  || args[0].toLowerCase().equals("-h")) {
             System.out.println(usage);
             System.exit(1);
@@ -116,20 +120,18 @@ public class JSS_SelfServServer  {
             System.out.println(usage);
             System.exit(1);
         }
-        
+
         if (bVerbose) System.out.println("initializing JSS");
         CryptoManager.initialize(fCertDbPath);
         CryptoManager    cm = CryptoManager.getInstance();
         CryptoToken     tok = cm.getInternalKeyStorageToken();
         PasswordCallback cb = new FilePasswordCallback(fPasswordFile);
         tok.login(cb);
-        if (bVerbose) {
-            Debug.setLevel(Debug.OBNOXIOUS);
-        }
+
         // We have to configure the server session ID cache before
         // creating any server sockets.
         SSLServerSocket.configServerSessionIDCache(10, 100, 100, null);
-        
+
         if (cm.FIPSEnabled()) {
             /* turn on only FIPS ciphersuites */
             /* Disable SSL2 and SSL3 ciphers */
@@ -159,7 +161,7 @@ public class JSS_SelfServServer  {
                     SSLSocket.setCipherPreferenceDefault(ciphers[i], true);
                     if (bVerbose) {
                         System.out.println(Constants.cipher.cipherToString(
-                            ciphers[i])  + " " +  
+                            ciphers[i])  + " " +
                             Integer.toHexString(ciphers[i]));
                     }
                 } catch (Exception ex) {
@@ -170,11 +172,11 @@ public class JSS_SelfServServer  {
             //disable SSL2 ciphersuites
             SSLSocket.enableSSL2Default(false);
         }
-        
+
         // open the server socket and bind to the port
         if (bVerbose)
             System.out.println("JSS_SelfServServ about .... to create socket");
-        
+
         if (TestInetAddress) {
             if (bVerbose)
                 System.out.println("JSS_SelfServServ HostName " + fServerHost +
@@ -187,20 +189,20 @@ public class JSS_SelfServServer  {
                 System.out.println("Inet set to Null");
             serverSock = new SSLServerSocket(port, 5, null , null , true);
         }
-        
+
         if (bVerbose)
             System.out.println("JSS_SelfServServ created socket");
-        
+
         serverSock.setSoTimeout(600*1000);  // Set timeout for 10 minutes
         serverSock.requireClientAuth(SSLSocket.SSL_REQUIRE_NO_ERROR);
-        
+
         serverSock.setServerCertNickname("Server_ECDSA");
         serverSock.setServerCertNickname("Server_RSA");
         serverSock.setServerCertNickname("Server_DSS");
-        
+
         if (bVerbose)
             System.out.println("JSS_SelfServServ specified cert by nickname");
-        
+
         System.out.println("JSS_SelfServServ " + fServerHost +
             " ready to accept connections on " + port);
         int socketCntr = 0;
@@ -221,14 +223,14 @@ public class JSS_SelfServServer  {
                 rwThread.start();
             }
         } catch (SocketTimeoutException ex) {
-            
+
             if (socketCntr == 0) {
                 System.out.println("JSS_SelfServServ No Client attempted to " +
                         "connect! If " +
                         "test ran from all.pl check the client execution " +
                         "for errors.");
             } else {
-                System.out.println("JSS_SelfServServ there has been " + 
+                System.out.println("JSS_SelfServServ there has been " +
                         socketCntr + " client " +
                         " connections but the server Accept has timed out!");
             }
@@ -244,7 +246,7 @@ public class JSS_SelfServServer  {
             System.exit(1);
         }
     }
-    
+
     /**
      * ReadWrite thread class that takes a
      * SSLSocket as input and read then writes
@@ -253,14 +255,14 @@ public class JSS_SelfServServer  {
     private class readWriteThread extends Thread {
         private SSLSocket socket = null;
         private int socketCntr   = 0;
-        
+
         public readWriteThread(SSLSocket sock, int cntr) {
             this.socket     = sock;
             this.socketCntr = cntr;
         }
-        
+
         public void run() {
-            
+
             try {
                 String inputLine   = null;
                 String outputLine  = null;
@@ -270,9 +272,9 @@ public class JSS_SelfServServer  {
                     new InputStreamReader(is));
                 PrintWriter out    = new PrintWriter(new BufferedWriter(
                     new OutputStreamWriter(os)));
-                
+
                 while (true) {
-                    
+
                     try {
                         if ((inputLine = bir.readLine()) != null) {
                             if (inputLine.equalsIgnoreCase("shutdown")) {
@@ -286,7 +288,7 @@ public class JSS_SelfServServer  {
                                 System.exit(0);
                             }
                             outputLine = "ServerSSLSocket- " + socketCntr;
-                            
+
                             if (bVerbose) {
                                 System.out.println("ServerSSLSocket-" +
                                     socketCntr + ": Received " + inputLine);
@@ -306,7 +308,7 @@ public class JSS_SelfServServer  {
                             }
                             break;
                         }
-                        
+
                     } catch (SocketTimeoutException ste) {
                         System.out.println("ServerSSLSocket-" + socketCntr +
                             " timed out: " +  ste.toString());
@@ -315,7 +317,7 @@ public class JSS_SelfServServer  {
                         break;
                     }
                 }
-                
+
                 /* close streams and close socket */
                 is.close();
                 os.close();
@@ -325,13 +327,13 @@ public class JSS_SelfServServer  {
                         " has been Closed.");
                 }
             } catch (IOException e) {
-                
+
                 e.printStackTrace();
             }
-            
+
         }
     }
-    
+
     public static class HandshakeListener
         implements SSLHandshakeCompletedListener {
         private String who;
@@ -356,11 +358,11 @@ public class JSS_SelfServServer  {
             }
         }
     }
-    
+
     public synchronized void setFailure() {
         success = false;
     }
-    
+
     public synchronized boolean getSuccess() {
         return success;
     }

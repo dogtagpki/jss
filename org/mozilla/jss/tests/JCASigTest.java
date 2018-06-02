@@ -4,10 +4,13 @@
 
 package org.mozilla.jss.tests;
 
-import java.security.*;
-import java.io.*;
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.*;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.Provider;
+import java.security.Security;
+import java.security.Signature;
+
+import org.mozilla.jss.CryptoManager;
 
 
 public class JCASigTest {
@@ -27,7 +30,7 @@ public class JCASigTest {
 
             System.out.println("Created a signing context");
             Provider provider = signer.getProvider();
-            System.out.println("The provider used for the signer " 
+            System.out.println("The provider used for the signer "
                  + provider.getName() + " and the algorithm was " + alg);
             if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
                 System.out.println("Mozilla-JSS is supposed to be the " +
@@ -36,7 +39,7 @@ public class JCASigTest {
             }
 
             signer.initSign(
-                   (org.mozilla.jss.crypto.PrivateKey)keyPair.getPrivate());
+                   keyPair.getPrivate());
             System.out.println("initialized the signing operation");
 
             signer.update(data);
@@ -78,7 +81,6 @@ public class JCASigTest {
             manager = CryptoManager.getInstance();
             manager.setPasswordCallback( new FilePasswordCallback(file) );
 
-            Debug.setLevel(Debug.OBNOXIOUS);
             Provider[] providers = Security.getProviders();
             for ( int i=0; i < providers.length; i++ ) {
                 System.out.println("Provider "+i+": "+providers[i].getName());
@@ -90,10 +92,10 @@ public class JCASigTest {
             keyPair = kpgen.generateKeyPair();
             Provider  provider = kpgen.getProvider();
 
-            System.out.println("The provider used to Generate the Keys was " 
+            System.out.println("The provider used to Generate the Keys was "
                                 + provider.getName() );
             System.out.println("provider info " + provider.getInfo() );
-            
+
             if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
                 System.out.println("Mozilla-JSS is supposed to be the " +
                     "default provider for JCASigTest");
@@ -113,10 +115,10 @@ public class JCASigTest {
             keyPair = kpgen.generateKeyPair();
             provider = kpgen.getProvider();
 
-            System.out.println("The provider used to Generate the Keys was " 
+            System.out.println("The provider used to Generate the Keys was "
                                 + provider.getName() );
             System.out.println("provider info " + provider.getInfo() );
-            
+
             if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
                 System.out.println("Mozilla-JSS is supposed to be the " +
                     "default provider for JCASigTest");
@@ -130,10 +132,10 @@ public class JCASigTest {
             keyPair = kpgen.generateKeyPair();
             provider = kpgen.getProvider();
 
-            System.out.println("The provider used to Generate the Keys was " 
+            System.out.println("The provider used to Generate the Keys was "
                                 + provider.getName() );
             System.out.println("provider info " + provider.getInfo() );
-            
+
             if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
                 System.out.println("Mozilla-JSS is supposed to be the " +
                     "default provider for JCASigTest");

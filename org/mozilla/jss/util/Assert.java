@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.util;
 
-import org.mozilla.jss.util.*;
-
 /**
  * C-style assertions in Java.
  * These methods are only active in debug mode
@@ -22,7 +20,7 @@ public class Assert {
      * @param cond The condition that is being tested.
      */
     public static void _assert(boolean cond) {
-        if(Debug.DEBUG && !cond) {
+        if(!cond) {
             throw new org.mozilla.jss.util.AssertionException(
                 "assertion failure!");
         }
@@ -36,7 +34,7 @@ public class Assert {
      * @param msg A message describing what is wrong if the condition is false.
      */
 	public static void _assert(boolean cond, String msg) {
-		if(Debug.DEBUG && !cond) {
+		if(!cond) {
 			throw new org.mozilla.jss.util.AssertionException(msg);
 		}
 	}
@@ -47,18 +45,14 @@ public class Assert {
      * @param msg A message describing what was reached.
      */
     public static void notReached(String msg) {
-        if(Debug.DEBUG) {
-            throw new AssertionException("should not be reached: " + msg);
-        }
+        throw new AssertionException("should not be reached: " + msg);
     }
 
     /**
      * Throw an AssertionException if this statement is reached.
      */
     public static void notReached() {
-        if(Debug.DEBUG) {
-            throw new AssertionException();
-        }
+        throw new AssertionException("should not be reached");
     }
 
     /**
@@ -67,8 +61,6 @@ public class Assert {
      * @param msg A message describing what is not implemented.
      */
     public static void notYetImplemented(String msg) {
-        if(Debug.DEBUG) {
-            throw new AssertionException("not yet implemented: " + msg);
-        }
+        throw new AssertionException("not yet implemented: " + msg);
     }
 }
