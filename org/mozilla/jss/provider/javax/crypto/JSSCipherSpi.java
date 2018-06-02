@@ -317,8 +317,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         if(cipher == null) {
             // Cipher is supposed to catch an illegal state, so we should never
             // get here
-            Assert.notReached();
-            return null;
+            throw new IllegalStateException();
         }
         try {
             return cipher.update(input, inputOffset, inputLen);
@@ -345,8 +344,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         if( cipher == null ) {
             // Cipher is supposed to catch an illegal state, so we should never
             // get here
-            Assert.notReached();
-            return null;
+            throw new IllegalStateException();
         }
         try {
             if( input == null || inputLen == 0) {
@@ -355,8 +353,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                 return cipher.doFinal(input, inputOffset, inputLen);
             }
         } catch(IllegalStateException ise) {
-            Assert.notReached();
-            return null;
+            throw ise;
         } catch(org.mozilla.jss.crypto.IllegalBlockSizeException ibse) {
             throw new IllegalBlockSizeException(ibse.getMessage());
         } catch(org.mozilla.jss.crypto.BadPaddingException bpe) {
@@ -384,8 +381,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         throws IllegalBlockSizeException, InvalidKeyException
     {
         if( wrapper == null ) {
-            Assert.notReached();
-            return null;
+            throw new IllegalStateException();
         }
         try {
             if( key instanceof org.mozilla.jss.crypto.PrivateKey ) {
@@ -398,9 +394,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                     key.getClass().getName());
             }
         } catch(IllegalStateException ise) {
-            // Cipher is supposed to catch this
-            Assert.notReached();
-            return null;
+            throw ise;
         } catch(TokenException te) {
             throw new TokenRuntimeException(te.getMessage());
         }
@@ -411,8 +405,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
         throws InvalidKeyException, NoSuchAlgorithmException
     {
         if( wrapper == null ) {
-            Assert.notReached();
-            return null;
+            throw new IllegalStateException();
         }
         try {
             switch(wrappedKeyType) {
@@ -428,9 +421,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                     "Invalid key type: " + wrappedKeyType);
             }
         } catch(IllegalStateException ise) {
-            // Cipher is supposed to catch this
-            Assert.notReached();
-            return null;
+            throw ise;
         }
     }
 
