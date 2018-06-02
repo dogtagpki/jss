@@ -4,12 +4,36 @@
 
 package org.mozilla.jss.pkcs11;
 
-import java.util.*;
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.crypto.*;
-import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
+
+import org.mozilla.jss.crypto.Algorithm;
+import org.mozilla.jss.crypto.AlreadyInitializedException;
+import org.mozilla.jss.crypto.Cipher;
+import org.mozilla.jss.crypto.CryptoStore;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.DigestAlgorithm;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.JSSMessageDigest;
+import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.KeyPairAlgorithm;
+import org.mozilla.jss.crypto.KeyPairGenerator;
+import org.mozilla.jss.crypto.KeyWrapAlgorithm;
+import org.mozilla.jss.crypto.KeyWrapper;
+import org.mozilla.jss.crypto.PQGParamGenException;
+import org.mozilla.jss.crypto.PQGParams;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.IncorrectPasswordException;
+import org.mozilla.jss.util.NotImplementedException;
+import org.mozilla.jss.util.NullPasswordCallback;
+import org.mozilla.jss.util.Password;
+import org.mozilla.jss.util.PasswordCallback;
+import org.mozilla.jss.util.PasswordCallbackInfo;
 
 /**
  * A PKCS #11 token.  Currently, these can only be obtained from the
@@ -384,8 +408,7 @@ public final class PK11Token implements CryptoToken {
 
 	public java.security.Provider
 	getProvider() {
-		Assert.notYetImplemented("Providers not implemented by PK11Token yet");
-		return null;
+	    throw new RuntimeException("PK11Token.getProvider() is not yet implemented");
 	}
 
 	public CryptoStore

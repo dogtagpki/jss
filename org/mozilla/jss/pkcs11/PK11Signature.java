@@ -328,7 +328,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
     public void engineSetParameter(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException, TokenException
     {
-        Assert.notYetImplemented("PK11Signature.engineSetParameter");
+        throw new RuntimeException("PK11Signature.engineSetParameter() is not yet implemented");
     }
 
 	protected PK11Token token;

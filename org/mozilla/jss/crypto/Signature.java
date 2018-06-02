@@ -3,8 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.util.*;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Provider;
+import java.security.PublicKey;
+import java.security.SignatureException;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
@@ -13,7 +16,7 @@ import java.security.spec.AlgorithmParameterSpec;
  *
  * @see org.mozilla.jss.crypto.CryptoToken#getSignatureContext
  */
-public class Signature { 
+public class Signature {
 
 	protected Signature() { }
 
@@ -26,8 +29,7 @@ public class Signature {
 	 * This is not supported yet.
 	 */
 	public Provider getProvider() {
-		Assert.notYetImplemented("Signature.getProvider");
-        return null;
+	    throw new RuntimeException("Signature.getProvider() is not yet implemented");
 	}
 
 	/**
