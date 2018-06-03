@@ -4,9 +4,10 @@
 
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import java.util.Hashtable;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
  * Algorithms that can be used for generating symmetric keys.
@@ -33,7 +34,7 @@ public class KeyGenAlgorithm extends Algorithm {
 
     protected KeyGenAlgorithm(int oidTag, String name,
             KeyStrengthValidator keyStrengthValidator,
-            OBJECT_IDENTIFIER oid, Class paramClass)
+            OBJECT_IDENTIFIER oid, Class<?> paramClass)
     {
         super(oidTag, name, oid, paramClass);
         this.keyStrengthValidator = keyStrengthValidator;
@@ -108,7 +109,7 @@ public class KeyGenAlgorithm extends Algorithm {
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    AES = new KeyGenAlgorithm(CKM_AES_KEY_GEN, "AES", 
+    AES = new KeyGenAlgorithm(CKM_AES_KEY_GEN, "AES",
             new KeyStrengthValidator() {
                 public boolean isValidKeyStrength(int strength) {
                     return strength==128 || strength==192 || strength==256;
@@ -116,7 +117,7 @@ public class KeyGenAlgorithm extends Algorithm {
             }, null, null);
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    RC2 = new KeyGenAlgorithm(CKM_RC2_KEY_GEN, "RC2", 
+    RC2 = new KeyGenAlgorithm(CKM_RC2_KEY_GEN, "RC2",
             new KeyStrengthValidator() {
                 public boolean isValidKeyStrength(int strength) {
                     // 1 byte - 128 bytes

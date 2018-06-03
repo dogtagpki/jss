@@ -23,15 +23,15 @@ public class RC2AlgorithmParameters extends AlgorithmParametersSpi {
         RC2ParamSpec = (RC2ParameterSpec) paramSpec;
     }
 
-    public AlgorithmParameterSpec engineGetParameterSpec(Class clazz)
+    public <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> clazz)
             throws InvalidParameterSpecException
     {
         if( clazz != null && !clazz.isInstance(RC2ParamSpec) ) {
-            Class paramSpecClass = RC2ParamSpec.getClass();
+            Class<?> paramSpecClass = RC2ParamSpec.getClass();
             throw new InvalidParameterSpecException(
                 "RC2 getParameterSpec has class " + paramSpecClass.getName());
         }
-        return RC2ParamSpec;
+        return clazz.cast(RC2ParamSpec);
     }
 
     public void engineInit(byte[] params) throws IOException {

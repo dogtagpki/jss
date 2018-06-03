@@ -431,9 +431,9 @@ class SocketBase {
                 strBuf.append(bottomException.toString());
             }
 
-            Class excepClass = topException.getClass();
-            Class stringClass = java.lang.String.class;
-            Constructor cons = excepClass.getConstructor(new Class[] { stringClass });
+            Class<?> excepClass = topException.getClass();
+            Class<?> stringClass = java.lang.String.class;
+            Constructor<?> cons = excepClass.getConstructor(new Class[] { stringClass });
 
             return (Throwable) cons.newInstance(new Object[] { strBuf.toString() });
         } catch (Exception e) {

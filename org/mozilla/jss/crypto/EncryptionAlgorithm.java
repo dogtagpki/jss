@@ -5,10 +5,13 @@
 package org.mozilla.jss.crypto;
 
 import java.security.NoSuchAlgorithmException;
-import org.mozilla.jss.asn1.*;
+import java.util.Hashtable;
+import java.util.Vector;
+
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
-import java.util.*;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
  * An algorithm for performing symmetric encryption.
@@ -120,7 +123,7 @@ public class EncryptionAlgorithm extends Algorithm {
     }
 
     protected EncryptionAlgorithm(int oidTag, Alg alg, Mode mode,
-        Padding padding, Class paramClass, int blockSize,
+        Padding padding, Class<?> paramClass, int blockSize,
         OBJECT_IDENTIFIER oid, int keyStrength)
     {
         super(oidTag, makeName(alg, mode, padding), oid, paramClass);
@@ -139,7 +142,7 @@ public class EncryptionAlgorithm extends Algorithm {
     }
 
     protected EncryptionAlgorithm(int oidTag, Alg alg, Mode mode,
-        Padding padding, Class []paramClasses, int blockSize, 
+        Padding padding, Class<?> []paramClasses, int blockSize,
         OBJECT_IDENTIFIER oid, int keyStrength)
     {
         super(oidTag, makeName(alg, mode, padding), oid, paramClasses);
@@ -147,7 +150,7 @@ public class EncryptionAlgorithm extends Algorithm {
         this.mode = mode;
         this.padding = padding;
         this.blockSize = blockSize;
-        
+
         if(oid!=null) {
             oidMap.put(oid, this);
         }
@@ -256,9 +259,9 @@ public class EncryptionAlgorithm extends Algorithm {
         }
         return (EncryptionAlgorithm) algList.elementAt(i);
     }
-        
 
-    /** 
+
+    /**
      * The blocksize of the algorithm in bytes. Stream algorithms (such as
      * RC4) have a blocksize of 1.
      */
@@ -281,7 +284,7 @@ public class EncryptionAlgorithm extends Algorithm {
         return padding;
     }
 
-    private static Class[] IVParameterSpecClasses = null;
+    private static Class<?>[] IVParameterSpecClasses = null;
     static {
         IVParameterSpecClasses = new Class[2];
         IVParameterSpecClasses[0] = IVParameterSpec.class;
@@ -299,11 +302,11 @@ public class EncryptionAlgorithm extends Algorithm {
 
     public static final EncryptionAlgorithm
     RC4 = new EncryptionAlgorithm(SEC_OID_RC4, Alg.RC4, Mode.NONE, Padding.NONE,
-            (Class)null, 1, OBJECT_IDENTIFIER.RSA_CIPHER.subBranch(4), 0);
+            (Class<?>)null, 1, OBJECT_IDENTIFIER.RSA_CIPHER.subBranch(4), 0);
 
     public static final EncryptionAlgorithm
     DES_ECB = new EncryptionAlgorithm(SEC_OID_DES_ECB, Alg.DES, Mode.ECB,
-        Padding.NONE, (Class)null, 8, OBJECT_IDENTIFIER.ALGORITHM.subBranch(6),
+        Padding.NONE, (Class<?>)null, 8, OBJECT_IDENTIFIER.ALGORITHM.subBranch(6),
         56);
 
     public static final EncryptionAlgorithm
@@ -317,7 +320,7 @@ public class EncryptionAlgorithm extends Algorithm {
 
     public static final EncryptionAlgorithm
     DES3_ECB = new EncryptionAlgorithm(CKM_DES3_ECB, Alg.DESede, Mode.ECB,
-        Padding.NONE, (Class)null, 8, null, 168); // no oid
+        Padding.NONE, (Class<?>)null, 8, null, 168); // no oid
 
     public static final EncryptionAlgorithm
     DES3_CBC = new EncryptionAlgorithm(SEC_OID_DES_EDE3_CBC, Alg.DESede,
@@ -342,14 +345,14 @@ public class EncryptionAlgorithm extends Algorithm {
         Padding.PKCS5, RC2ParameterSpec.class, 8,
         OBJECT_IDENTIFIER.RSA_CIPHER.subBranch(2), 0);
 
-    public static final OBJECT_IDENTIFIER AES_ROOT_OID = 
-        new OBJECT_IDENTIFIER( new long[] 
+    public static final OBJECT_IDENTIFIER AES_ROOT_OID =
+        new OBJECT_IDENTIFIER( new long[]
             { 2, 16, 840, 1, 101, 3, 4, 1 } );
 
     public static final EncryptionAlgorithm
     AES_128_ECB = new EncryptionAlgorithm(SEC_OID_AES_128_ECB,
         Alg.AES, Mode.ECB,
-        Padding.NONE, (Class)null, 16,
+        Padding.NONE, (Class<?>)null, 16,
         AES_ROOT_OID.subBranch(1), 128);
 
     public static final EncryptionAlgorithm
@@ -363,18 +366,18 @@ public class EncryptionAlgorithm extends Algorithm {
         Alg.AES, Mode.CBC,
         Padding.PKCS5, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(2), 128);
-    
+
     public static final EncryptionAlgorithm
     AES_192_ECB = new EncryptionAlgorithm(SEC_OID_AES_192_ECB,
         Alg.AES, Mode.ECB,
-        Padding.NONE, (Class)null, 16, AES_ROOT_OID.subBranch(21), 192);
+        Padding.NONE, (Class<?>)null, 16, AES_ROOT_OID.subBranch(21), 192);
 
     public static final EncryptionAlgorithm
     AES_192_CBC = new EncryptionAlgorithm(SEC_OID_AES_192_CBC,
         Alg.AES, Mode.CBC,
         Padding.NONE, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(22), 192);
-    
+
     public static final EncryptionAlgorithm
     AES_192_CBC_PAD = new EncryptionAlgorithm(SEC_OID_AES_192_CBC,
         Alg.AES, Mode.CBC,
@@ -384,22 +387,22 @@ public class EncryptionAlgorithm extends Algorithm {
     public static final EncryptionAlgorithm
     AES_256_ECB = new EncryptionAlgorithm(SEC_OID_AES_256_ECB,
         Alg.AES, Mode.ECB,
-        Padding.NONE, (Class)null, 16, AES_ROOT_OID.subBranch(41), 256);
+        Padding.NONE, (Class<?>)null, 16, AES_ROOT_OID.subBranch(41), 256);
 
     public static final EncryptionAlgorithm
     AES_256_CBC = new EncryptionAlgorithm(SEC_OID_AES_256_CBC,
         Alg.AES, Mode.CBC,
         Padding.NONE, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(42), 256);
-    
+
     public static final EncryptionAlgorithm
     AES_CBC_PAD = new EncryptionAlgorithm(CKM_AES_CBC_PAD, Alg.AES, Mode.CBC,
         Padding.PKCS5, IVParameterSpecClasses, 16, null, 256); // no oid
-    
+
     public static final EncryptionAlgorithm
     AES_256_CBC_PAD = new EncryptionAlgorithm(SEC_OID_AES_256_CBC,
         Alg.AES, Mode.CBC,
         Padding.PKCS5, IVParameterSpecClasses, 16,
         AES_ROOT_OID.subBranch(42), 256);
-    
+
 }

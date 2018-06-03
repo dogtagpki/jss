@@ -208,7 +208,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
       }
     }
 
-    protected KeySpec engineGetKeySpec(Key key, Class keySpec)
+    protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec)
         throws InvalidKeySpecException
     {
         throw new InvalidKeySpecException(

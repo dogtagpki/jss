@@ -4,8 +4,9 @@
 
 package org.mozilla.jss.crypto;
 
-import java.util.Hashtable;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
+
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
 
@@ -13,7 +14,7 @@ import javax.crypto.spec.RC2ParameterSpec;
  *
  */
 public class KeyWrapAlgorithm extends Algorithm {
-    protected KeyWrapAlgorithm(int oidTag, String name, Class paramClass,
+    protected KeyWrapAlgorithm(int oidTag, String name, Class<?> paramClass,
         boolean padded, int blockSize) {
         super(oidTag, name, null, paramClass);
         this.padded = padded;
@@ -23,7 +24,7 @@ public class KeyWrapAlgorithm extends Algorithm {
         }
     }
 
-    protected KeyWrapAlgorithm(int oidTag, String name, Class []paramClasses,
+    protected KeyWrapAlgorithm(int oidTag, String name, Class<?> []paramClasses,
         boolean padded, int blockSize) {
         super(oidTag, name, null, paramClasses);
         this.padded = padded;
@@ -57,7 +58,7 @@ public class KeyWrapAlgorithm extends Algorithm {
         return blockSize;
     }
 
-    private static Class[] IVParameterSpecClasses = null;
+    private static Class<?>[] IVParameterSpecClasses = null;
     static {
         IVParameterSpecClasses = new Class[2];
         IVParameterSpecClasses[0] = IVParameterSpec.class;
@@ -65,7 +66,7 @@ public class KeyWrapAlgorithm extends Algorithm {
     }
 
     public static final KeyWrapAlgorithm
-    DES_ECB = new KeyWrapAlgorithm(SEC_OID_DES_ECB, "DES/ECB", (Class) null,
+    DES_ECB = new KeyWrapAlgorithm(SEC_OID_DES_ECB, "DES/ECB", (Class<?>) null,
         false, 8);
 
     public static final KeyWrapAlgorithm
@@ -77,7 +78,7 @@ public class KeyWrapAlgorithm extends Algorithm {
                         IVParameterSpecClasses, true, 8);
 
     public static final KeyWrapAlgorithm
-    DES3_ECB = new KeyWrapAlgorithm(CKM_DES3_ECB, "DES3/ECB", (Class)null,
+    DES3_ECB = new KeyWrapAlgorithm(CKM_DES3_ECB, "DES3/ECB", (Class<?>)null,
         false, 8);
 
     public static final KeyWrapAlgorithm
@@ -90,15 +91,15 @@ public class KeyWrapAlgorithm extends Algorithm {
 
     public static final KeyWrapAlgorithm
     RSA = new KeyWrapAlgorithm(SEC_OID_PKCS1_RSA_ENCRYPTION, "RSA",
-            (Class) null, false, 0);
+            (Class<?>) null, false, 0);
 
     public static final KeyWrapAlgorithm
-    PLAINTEXT = new KeyWrapAlgorithm(0, "Plaintext", (Class) null,
+    PLAINTEXT = new KeyWrapAlgorithm(0, "Plaintext", (Class<?>) null,
             false, 0);
 
     public static final KeyWrapAlgorithm
     AES_ECB = new KeyWrapAlgorithm(CKM_AES_ECB, "AES/ECB/NoPadding",
-        (Class) null, false, 16);
+        (Class<?>) null, false, 16);
 
     public static final KeyWrapAlgorithm
     AES_CBC = new KeyWrapAlgorithm(CKM_AES_CBC, "AES/CBC/NoPadding",
@@ -111,12 +112,12 @@ public class KeyWrapAlgorithm extends Algorithm {
     public static final KeyWrapAlgorithm
     RC2_CBC_PAD = new KeyWrapAlgorithm(CKM_RC2_CBC_PAD, "RC2/CBC/PKCS5Padding",
                         RC2ParameterSpec.class, true, 8);
-    
+
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP, "AES KeyWrap",
-    		(Class) null, true, 8);
-    
+                (Class<?>) null, true, 8);
+
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
-    		(Class) null, true, 8);
+                (Class<?>) null, true, 8);
 }

@@ -4,8 +4,9 @@
 
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import java.security.NoSuchAlgorithmException;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
  * Represents a cryptographic algorithm.
@@ -36,7 +37,7 @@ public class Algorithm {
     }
 
     protected Algorithm(int oidIndex, String name, OBJECT_IDENTIFIER oid,
-                        Class paramClass)
+                        Class<?> paramClass)
     {
         this(oidIndex, name, oid);
         if( paramClass == null ) {
@@ -48,7 +49,7 @@ public class Algorithm {
     }
 
     protected Algorithm(int oidIndex, String name, OBJECT_IDENTIFIER oid,
-                        Class []paramClasses)
+                        Class<?> []paramClasses)
     {
         this(oidIndex, name, oid);
         if( paramClasses != null ) {
@@ -84,7 +85,7 @@ public class Algorithm {
      *   <tt>getParameterClasses()</tt>.
      * @deprecated Call <tt>getParameterClasses()</tt> instead.
      */
-    public Class getParameterClass() {
+    public Class<?> getParameterClass() {
         if( parameterClasses.length == 0) {
             return null;
         } else {
@@ -96,8 +97,8 @@ public class Algorithm {
      * The types of parameter that this algorithm expects.  Returns
      *   <code>null</code> if this algorithm does not take any parameters.
      */
-    public Class[] getParameterClasses() {
-        return (Class[]) parameterClasses.clone();
+    public Class<?>[] getParameterClasses() {
+        return parameterClasses.clone();
     }
 
     /**
@@ -114,7 +115,7 @@ public class Algorithm {
         if( parameterClasses.length == 0 ){
             return false;
         }
-        Class c = o.getClass();
+        Class<?> c = o.getClass();
         for( int i = 0; i < parameterClasses.length; ++i) {
             if( c.equals( parameterClasses[i] ) ) {
                 return true;
@@ -129,14 +130,14 @@ public class Algorithm {
     protected int oidIndex;
     String name;
     protected OBJECT_IDENTIFIER oid;
-    private Class[] parameterClasses=new Class[0];
+    private Class<?>[] parameterClasses=new Class[0];
 
     //////////////////////////////////////////////////////////////
     // Algorithm OIDs
     //////////////////////////////////////////////////////////////
-    static final OBJECT_IDENTIFIER ANSI_X9_ALGORITHM = 
+    static final OBJECT_IDENTIFIER ANSI_X9_ALGORITHM =
         new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10040, 4 } );
-    static final OBJECT_IDENTIFIER ANSI_X962_OID = 
+    static final OBJECT_IDENTIFIER ANSI_X962_OID =
         new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045 } );
 
     // Algorithm indices.  These must be kept in sync with the

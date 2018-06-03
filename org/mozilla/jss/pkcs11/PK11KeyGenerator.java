@@ -4,13 +4,19 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.*;
-import java.security.InvalidKeyException;
+import java.io.CharConversionException;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.spec.AlgorithmParameterSpec;
+
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.PBEKeyGenParams;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.Password;
 import org.mozilla.jss.util.UTF8Converter;
-import java.io.CharConversionException;
 
 public final class PK11KeyGenerator implements KeyGenerator {
 
@@ -102,7 +108,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
     {
         // if this algorithm only accepts PBE key gen params, it can't
         // use a strength
-        Class[] paramClasses = algorithm.getParameterClasses();
+        Class<?>[] paramClasses = algorithm.getParameterClasses();
         if( paramClasses.length == 1 &&
                 paramClasses[0].equals(PBEKeyGenParams.class) )
         {
@@ -165,7 +171,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
     public SymmetricKey generate()
         throws IllegalStateException, TokenException, CharConversionException
     {
-        Class[] paramClasses = algorithm.getParameterClasses();
+        Class<?>[] paramClasses = algorithm.getParameterClasses();
         if( paramClasses.length == 1 &&
             paramClasses[0].equals(PBEKeyGenParams.class) )
         {
@@ -197,14 +203,14 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * In order to call this method, the algorithm must be a PBE algorithm,
      * and the KeyGenerator must have been initialized with an instance
      * of <code>PBEKeyGenParams</code>.
-     * 
+     *
      * @return The initialization vector derived from the password and salt
      *      using the PBE algorithm.
      */
     public byte[] generatePBE_IV()
         throws TokenException, CharConversionException
     {
-        Class[] paramClasses = algorithm.getParameterClasses();
+        Class<?>[] paramClasses = algorithm.getParameterClasses();
         if( paramClasses.length == 1 &&
             paramClasses[0].equals(PBEKeyGenParams.class) )
         {
@@ -272,7 +278,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
         }
         return nativeClone(token, key);
     }
-    
+
     private static native SymmetricKey
     nativeClone(PK11Token token, SymmetricKey toBeCloned)
         throws SymmetricKey.NotExtractableException, TokenException;

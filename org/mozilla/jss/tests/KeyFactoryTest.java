@@ -4,15 +4,25 @@
 
 package org.mozilla.jss.tests;
 
-import java.security.*;
-import java.security.spec.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.DSAPrivateKeySpec;
+import java.security.spec.DSAPublicKeySpec;
+import java.security.spec.KeySpec;
+import java.security.spec.RSAPrivateCrtKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.util.PasswordCallback;
 
 abstract class TestValues {
     protected TestValues(String keyGenAlg, String sigAlg,
-        Class privateKeySpecClass, Class publicKeySpecClass,
+        Class<? extends KeySpec> privateKeySpecClass, Class<? extends KeySpec> publicKeySpecClass,
         String provider)
     {
         this.keyGenAlg = keyGenAlg;
@@ -24,8 +34,8 @@ abstract class TestValues {
 
     public final String keyGenAlg;
     public final String sigAlg;
-    public final Class privateKeySpecClass;
-    public final Class publicKeySpecClass;
+    public final Class<? extends KeySpec> privateKeySpecClass;
+    public final Class<? extends KeySpec> publicKeySpecClass;
     public final String provider;
 }
 
@@ -81,7 +91,7 @@ public class KeyFactoryTest {
 */
 
         (new KeyFactoryTest()).doTest();
-        
+
       } catch(Throwable e) {
             e.printStackTrace();
             System.exit(1);
@@ -119,7 +129,7 @@ public class KeyFactoryTest {
             }
         } catch (Exception ex) {
             if (Constants.debug_level > 3)
-            System.out.println("Exception caught genPrivKeyFromSpec(rsa): " + 
+            System.out.println("Exception caught genPrivKeyFromSpec(rsa): " +
                 ex.getMessage());
         }
 
@@ -128,12 +138,12 @@ public class KeyFactoryTest {
             genPrivKeyFromSpec(dsa);
         } catch (java.security.spec.InvalidKeySpecException ex) {
             if (Constants.debug_level > 3)
-                System.out.println("InvalidKeySpecException caught " + 
+                System.out.println("InvalidKeySpecException caught " +
                     "genPrivKeyFromSpec(dsa): " + ex.getMessage());
             exception = true;
         } catch (Exception ex) {
             if (Constants.debug_level > 3)
-                System.out.println("Exception caught genPrivKeyFromSpec(dsa): " + 
+                System.out.println("Exception caught genPrivKeyFromSpec(dsa): " +
                 ex.getMessage());
         }
 
@@ -142,7 +152,7 @@ public class KeyFactoryTest {
             genPubKeyFromSpec(rsa);
         } catch (Exception ex) {
             if (Constants.debug_level > 3)
-            System.out.println("Exception caught genPubKeyFromSpec(rsa): " + 
+            System.out.println("Exception caught genPubKeyFromSpec(rsa): " +
                 ex.getMessage());
             exception = true;
         }
@@ -152,7 +162,7 @@ public class KeyFactoryTest {
 	    genPubKeyFromSpec(dsa);
         } catch (Exception ex) {
             if (Constants.debug_level > 3)
-            System.out.println("Exception caught genPubKeyFromSpec(dsa): " + 
+            System.out.println("Exception caught genPubKeyFromSpec(dsa): " +
                 ex.getMessage());
             exception = true;
         }
@@ -174,7 +184,7 @@ public class KeyFactoryTest {
         // get the private key spec
         KeyFactory sunFact = KeyFactory.getInstance(vals.keyGenAlg,
             vals.provider);
-        KeySpec keySpec = 
+        KeySpec keySpec =
             sunFact.getKeySpec(pair.getPrivate(), vals.privateKeySpecClass);
 
         // import it into JSS
@@ -219,7 +229,7 @@ public class KeyFactoryTest {
         // get the public key spec
         KeyFactory sunFact = KeyFactory.getInstance(vals.keyGenAlg,
             vals.provider);
-        KeySpec keySpec = 
+        KeySpec keySpec =
             sunFact.getKeySpec(pair.getPublic(), vals.publicKeySpecClass);
 
         // import it into JSS

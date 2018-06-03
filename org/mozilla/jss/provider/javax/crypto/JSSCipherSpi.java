@@ -246,7 +246,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
 
     private AlgorithmParameterSpec
     generateAlgParams(Algorithm alg, int blockSize) throws InvalidKeyException {
-        Class [] paramClasses = alg.getParameterClasses();
+        Class<?> [] paramClasses = alg.getParameterClasses();
         AlgorithmParameterSpec  algParSpec = null;
         if( paramClasses == null ) {
             // no parameters are needed

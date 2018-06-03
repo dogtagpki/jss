@@ -77,7 +77,7 @@ class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         // PBEKeySpec, we can get the information. The only way I know of
         // to find this out at runtime and be compatible with both
         // versions is to use the reflection API.
-        Class specClass = spec.getClass();
+        Class<?> specClass = spec.getClass();
         try {
             Method getSaltMethod = specClass.getMethod("getSalt",
                                        (java.lang.Class[]) null);
@@ -187,7 +187,7 @@ class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
       }
     }
 
-    public KeySpec engineGetKeySpec(SecretKey key, Class keySpec)
+    public KeySpec engineGetKeySpec(SecretKey key, Class<?> keySpec)
             throws InvalidKeySpecException
     {
       try {

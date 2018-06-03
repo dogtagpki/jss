@@ -9,30 +9,28 @@ import java.security.AlgorithmParametersSpi;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidParameterSpecException;
 
-import javax.crypto.spec.IvParameterSpec;
-
 /**
  * This class is only intended to be used to implement
  * CipherSpi.getAlgorithmParameters().
  */
 public class IvAlgorithmParameters extends AlgorithmParametersSpi {
 
-    private IvParameterSpec ivParamSpec;
+    private AlgorithmParameterSpec ivParamSpec;
 
     public void engineInit(AlgorithmParameterSpec paramSpec) {
-        ivParamSpec = (IvParameterSpec) paramSpec;
+        ivParamSpec = paramSpec;
     }
 
-    public AlgorithmParameterSpec engineGetParameterSpec(Class clazz)
+    public <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> clazz)
             throws InvalidParameterSpecException
     {
         if( clazz != null && !(clazz.isInstance(ivParamSpec)) ) {
-            Class paramSpecClass = ivParamSpec.getClass();
+            Class<?> paramSpecClass = ivParamSpec.getClass();
             throw new InvalidParameterSpecException(
                 "Mozilla-JSS IvParameter spec class error"
                     + paramSpecClass.getName());
         }
-        return ivParamSpec;
+        return clazz.cast(ivParamSpec);
     }
 
     public void engineInit(byte[] params) throws IOException {
