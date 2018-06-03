@@ -4,11 +4,7 @@
 
 package org.mozilla.jss.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.CharConversionException;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Class for converting between char arrays and byte arrays.  The conversion
@@ -74,7 +70,6 @@ public class UTF8Converter {
 		char c; // Unicode character
 		int ucs4; // UCS4 encoding of a character
 		boolean failed = true;
-		boolean orphaned_low = false;
 
 		Assert._assert(unicode != null);
 		if(unicode == null) {
@@ -112,10 +107,13 @@ public class UTF8Converter {
 					}
 					ucs4 |= c-0xdc00;
 					ucs4 += 0x00010000;
+
 				} else if(c >=0xdc00 && c <=0xdfff) {
-					// orphaned low-half char
-					orphaned_low = true;
-					throw new CharConversionException();
+			            // My class rejects orphaned low-half characters, but the Java
+			            // class allows them.  I think they really are bogus, so
+			            // let's pretend the Java class rejects them too.
+				    throw new CharConversionException("Orphaned low-half character: 0x" + Integer.toHexString(c));
+
 				} else {
 					// UCS2 char to UCS4
 					ucs4 = unicode[uni];
@@ -197,59 +195,6 @@ public class UTF8Converter {
 			}
 			ucs4 = 0;
 			c = 0;
-
-			if(Debug.DEBUG) {
-				// Verify this operation by comparing its output
-				// to that of the standard Java conversion routines.
-				// WARNING: This means passwords will be left in memory,
-				// so Ninja is not secure in debugging mode!
-			  try {
-				OutputStreamWriter writer;
-				ByteArrayOutputStream barray;
-				int i;
-				byte[] output;
-
-				barray = new ByteArrayOutputStream();
-
-				writer = new OutputStreamWriter(barray, "UTF8");
-				writer.write(unicode, 0, unicode.length);
-				writer.close();
-
-				output = barray.toByteArray();
-
-				// My class rejects orphaned low-half characters, but the Java
-				// class allows them.  I think they really are bogus, so
-				// let's pretend the Java class rejects them too.
-				if(orphaned_low) {
-					throw new IOException();
-				}
-
-				// It worked with the Java class, so it should have worked
-				// with my class
-				Assert._assert(utf8 != null);
-
-				// Compare the arrays
-				if(nullTerminate) {
-					Assert._assert(utf8.length-1 == output.length);
-				} else {
-					Assert._assert(utf8.length == output.length);
-				}
-				for(i=0; i<output.length; i++) {
-					Assert._assert(utf8[i] == output[i]);
-				}
-
-			  } catch(UnsupportedEncodingException e) {
-			      // No UTF8 encoding conversion
-			      throw new RuntimeException(e);
-			  } catch(IOException e) {
-					// If it failed with the Java class it should have failed
-					// with mine
-					Assert._assert(utf8 == null);
-			  } catch(Exception e) {
-					// Nothing else should be thrown here
-					throw e;
-			  }
-			}
 		}
 	}
 

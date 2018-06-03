@@ -430,6 +430,10 @@ my $serverCommand;
 
 $classpath = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/usr/share/java/apache-commons-lang.jar:$jss_classpath";
 
+$testname = "Test UTF-8 Converter";
+$command = "$java -cp $classpath org.mozilla.jss.tests.UTF8ConverterTest";
+run_test($testname, $command);
+
 $testname = "Setup DBs";
 $command = "$java -cp $classpath org.mozilla.jss.tests.SetupDBs $testdir $pwfile";
 run_test($testname, $command);
