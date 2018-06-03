@@ -88,20 +88,24 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
     private boolean handshakeCompleted   = false;
     private boolean bVerbose             = false;
     private boolean bFipsMode            = false;
+
     /* ciphersuites to test */
-    private ArrayList ciphersToTest      = new ArrayList();
+    private ArrayList<Integer> ciphersToTest      = new ArrayList<>();
 
     private CryptoManager    cm          = null;
     private CryptoToken      tok         = null;
     private PasswordCallback cb          = null;
     private String  fPasswordFile        = "passwords";
     private String  fCertDbPath          = ".";
-    private ArrayList sockList           = new ArrayList();
+    private ArrayList<SSLSocket> sockList           = new ArrayList<>();
+
     /* h_ciphers is for ciphersuite that were able to successfully
      * connect to the server */
-    private ArrayList h_ciphers          = new ArrayList();
+    private ArrayList<String> h_ciphers          = new ArrayList<>();
+
     /* f_ciphers is for ciphersuite that failed to connect to the server */
-    private ArrayList f_ciphers          = new ArrayList();
+    private ArrayList<String> f_ciphers          = new ArrayList<>();
+
     private int sockID                   = 0;
     /* JSS only needs to be initailized for one instance */
     private static boolean bJSS          = false;
@@ -292,10 +296,10 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
      *For every enabled ciphersuite created numOfThreads connections.
      */
     public void testCiphersuites(int numOfThreads) {
-        Iterator iter = ciphersToTest.iterator();
+        Iterator<Integer> iter = ciphersToTest.iterator();
         setTestCiphers(true);
         while (iter.hasNext()) {
-            setCipher(((Integer)iter.next()).intValue());
+            setCipher(iter.next().intValue());
             try {
                 createSSLConnections(numOfThreads);
             } catch (Exception ex) {
@@ -634,9 +638,9 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
         try {
             SSLSocket s;
             long start = System.currentTimeMillis();
-            Iterator sIter = sockList.iterator();
+            Iterator<SSLSocket> sIter = sockList.iterator();
             while (sIter.hasNext()) {
-                s = (SSLSocket) sIter.next();
+                s = sIter.next();
                 s.close();
             }
 
@@ -786,9 +790,9 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                         " ciphersuites successfully connected to the "+
                         "server\n");
             }
-            Iterator iter = h_ciphers.iterator();
+            Iterator<String> iter = h_ciphers.iterator();
             while (iter.hasNext()) {
-                System.out.println((String) iter.next());
+                System.out.println(iter.next());
 
             }
         }
@@ -806,9 +810,9 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             System.out.println(f_ciphers.size() +
                     " ciphersuites that did not connect to the "+
                     "server\n\n");
-            Iterator iter = f_ciphers.iterator();
+            Iterator<String> iter = f_ciphers.iterator();
             while (iter.hasNext()) {
-                System.out.println((String) iter.next());
+                System.out.println(iter.next());
 
             }
             System.out.println("we should have no failed ciphersuites!");
