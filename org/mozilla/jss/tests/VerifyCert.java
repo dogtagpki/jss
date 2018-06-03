@@ -4,14 +4,17 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.pkix.cert.*;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.CryptoManager.CertUsage;
+import org.mozilla.jss.pkix.cert.Certificate;
+import org.mozilla.jss.pkix.cert.CertificateInfo;
+import org.mozilla.jss.util.Password;
+import org.mozilla.jss.util.PasswordCallback;
 
 /**
 * Verify Certificate test.
@@ -78,12 +81,12 @@ public class VerifyCert {
             CryptoManager.InitializationValues vals = new
                                 CryptoManager.InitializationValues(dbdir);
 
-            //enable PKIX verify rather than the old NSS cert library, 
-            //to verify certificates. 
+            //enable PKIX verify rather than the old NSS cert library,
+            //to verify certificates.
             vals.PKIXVerify = true;
-            
-            // as a JSS test set the initialize for cooperate to true 
-            // One would set this to true if one configured NSS with 
+
+            // as a JSS test set the initialize for cooperate to true
+            // One would set this to true if one configured NSS with
             // to use other PKCS11 modules.
             vals.cooperate = true;
 
@@ -98,8 +101,7 @@ public class VerifyCert {
             PasswordCallback pwd = new Password(password.toCharArray());
             cm.setPasswordCallback(pwd);
 
-            try {
-                FileInputStream fin = new FileInputStream(name);
+            try (FileInputStream fin = new FileInputStream(name)) {
                 byte[] pkg = new byte[fin.available()];
                 fin.read(pkg);
                 //display the cert
@@ -119,17 +121,17 @@ public class VerifyCert {
 
 
     public void validateDerCert(byte[] pkg, CryptoManager cm){
-        ArrayList usageList = new ArrayList();
+        ArrayList<String> usageList = new ArrayList<>();
         try {
 
-            Iterator list = CryptoManager.CertUsage.getCertUsages();
-            CryptoManager.CertUsage certUsage;
+            Iterator<CertUsage> list = CertUsage.getCertUsages();
+            CertUsage certUsage;
             while(list.hasNext()) {
-                certUsage = (CryptoManager.CertUsage) list.next();
+                certUsage = list.next();
                 if (
-       !certUsage.equals(CryptoManager.CertUsage.UserCertImport) &&
-       !certUsage.equals(CryptoManager.CertUsage.ProtectedObjectSigner) &&
-       !certUsage.equals(CryptoManager.CertUsage.AnyCA) )
+       !certUsage.equals(CertUsage.UserCertImport) &&
+       !certUsage.equals(CertUsage.ProtectedObjectSigner) &&
+       !certUsage.equals(CertUsage.AnyCA) )
                     {
                         if (cm.isCertValid(pkg, true,
                             certUsage) == true) {
@@ -146,27 +148,27 @@ public class VerifyCert {
         } else {
         System.out.println("The certificate is valid for " +
                            "the following usages:\n");
-            Iterator iterateUsage = usageList.iterator();
+            Iterator<String> iterateUsage = usageList.iterator();
             while (iterateUsage.hasNext()) {
-                System.out.println("                       " 
+                System.out.println("                       "
                 + iterateUsage.next());
             }
         }
     }
 
     public void validateCertInDB(String nickname, CryptoManager cm){
-        ArrayList usageList = new ArrayList();
+        ArrayList<String> usageList = new ArrayList<>();
 
         try {
 
-            Iterator list = CryptoManager.CertUsage.getCertUsages();
-            CryptoManager.CertUsage certUsage;
+            Iterator<CertUsage> list = CertUsage.getCertUsages();
+            CertUsage certUsage;
             while(list.hasNext()) {
-                certUsage = (CryptoManager.CertUsage) list.next();
+                certUsage = list.next();
                 if (
-       !certUsage.equals(CryptoManager.CertUsage.UserCertImport) &&
-       !certUsage.equals(CryptoManager.CertUsage.ProtectedObjectSigner) &&
-       !certUsage.equals(CryptoManager.CertUsage.AnyCA) )
+       !certUsage.equals(CertUsage.UserCertImport) &&
+       !certUsage.equals(CertUsage.ProtectedObjectSigner) &&
+       !certUsage.equals(CertUsage.AnyCA) )
                     {
                         if (cm.isCertValid(nickname, true,
                             certUsage) == true) {
@@ -184,7 +186,7 @@ public class VerifyCert {
         } else {
             System.out.println("The certificate is valid for the " +
                                "following usages:\n");
-            Iterator iterateUsage = usageList.iterator();
+            Iterator<String> iterateUsage = usageList.iterator();
             while (iterateUsage.hasNext()) {
                 System.out.println("                       " +
                                           iterateUsage.next());
