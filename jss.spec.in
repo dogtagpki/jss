@@ -41,6 +41,8 @@ BuildRequires:  slf4j
 %if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:  slf4j-jdk14
 %endif
+BuildRequires:  apache-commons-lang
+
 %if 0%{?fedora} >= 25 || 0%{?rhel} > 7
 BuildRequires:  perl-interpreter
 %endif
@@ -52,6 +54,7 @@ Requires:       slf4j
 %if 0%{?fedora} || 0%{?rhel} > 7
 Requires:       slf4j-jdk14
 %endif
+Requires:       apache-commons-lang
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
