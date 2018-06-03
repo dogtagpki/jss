@@ -4,14 +4,31 @@
 
 package org.mozilla.jss.tests;
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchProviderException;
-import javax.net.ssl.*;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.net.ssl.HandshakeCompletedEvent;
+import javax.net.ssl.HandshakeCompletedListener;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * This program connects to any SSL Server to exercise
@@ -32,31 +49,34 @@ public class JSSE_SSLClient {
     private String  EOF                 = "test";
     private String  keystoreLoc         = "rsa.pfx";
     private SSLSocketFactory    factory  = null;
+
     /* ciphersuites to test */
-    private ArrayList ciphersToTest      = new ArrayList();
+    private ArrayList<String> ciphersToTest      = new ArrayList<>();
+
     /* h_ciphers is for ciphersuite that were able to successfully
      * connect to the server */
-    private ArrayList h_ciphers          = new ArrayList();
+    private ArrayList<String> h_ciphers          = new ArrayList<>();
+
     /* f_ciphers is for ciphersuite that failed to connect to the server */
-    private ArrayList f_ciphers          = new ArrayList();
-    
+    private ArrayList<String> f_ciphers          = new ArrayList<>();
+
     private boolean bVerbose             = false;
     private boolean bFipsMode            = false;
-    
-    
+
+
     /**
      * Set the protocol type and revision
      * @param fSslRevision
      */
     public void setSslRevision(String fSslRevision) {
-        
+
         if (!(fSslRevision.equals("TLS") || fSslRevision.equals("SSLv3"))) {
             System.out.println("type must equal \'TLS\' or \'SSLv3\'\n");
             System.exit(1);
         }
         this.sslRevision = fSslRevision;
     }
-    
+
     /**
      * Set the host name to connect to.
      * @param fHost
@@ -64,7 +84,7 @@ public class JSSE_SSLClient {
     public void setHost(String fHost) {
         this.host = fHost;
     }
-    
+
     /**
      * Set the port number to connect to.
      * @param fPort
@@ -72,7 +92,7 @@ public class JSSE_SSLClient {
     public void setPort(int fPort) {
         this.port = fPort;
     }
-    
+
     /**
      * Set the cipher suite name to use.
      * @param fCipherSuite
@@ -80,7 +100,7 @@ public class JSSE_SSLClient {
     public void setCipherSuite(String fCipherSuite) {
         this.cipherName = fCipherSuite;
     }
-    
+
     /**
      * Set the location of rsa.pfx
      * @param fKeystoreLoc
@@ -88,7 +108,7 @@ public class JSSE_SSLClient {
     public void setKeystoreLoc(String fKeystoreLoc) {
         keystoreLoc = fKeystoreLoc + "/" + keystoreLoc;
     }
-    
+
     /**
      * Get the location of rsa.pfx
      * @return String fKeystoreLoc
@@ -96,14 +116,14 @@ public class JSSE_SSLClient {
     public String getKeystoreLoc() {
         return keystoreLoc;
     }
-    
+
     /**
      * Default constructor.
      */
     public JSSE_SSLClient() {
         //Do nothing.
     }
-    
+
     public boolean isServerAlive() {
         boolean isServerAlive = false;
         SSLSocket           socket   = null;
@@ -153,9 +173,9 @@ public class JSSE_SSLClient {
                     port + " exiting.");
             System.exit(1);
         }
-        Iterator iter = ciphersToTest.iterator();
+        Iterator<String> iter = ciphersToTest.iterator();
         while (iter.hasNext()) {
-            String cs = (String)iter.next();
+            String cs = iter.next();
             String ciphers[] = {cs};
             try {
                 socket = (SSLSocket)factory.createSocket(host, port);
@@ -460,9 +480,9 @@ public class JSSE_SSLClient {
                         " ciphersuites successfully connected to the "+
                         "server\n");
             }
-            Iterator iter = h_ciphers.iterator();
+            Iterator<String> iter = h_ciphers.iterator();
             while (iter.hasNext()) {
-                System.out.println((String) iter.next());
+                System.out.println(iter.next());
 
             }
         }
@@ -480,9 +500,9 @@ public class JSSE_SSLClient {
             System.out.println(f_ciphers.size() +
                     " ciphersuites that did not connect to the "+
                     "server\n\n");
-            Iterator iter = f_ciphers.iterator();
+            Iterator<String> iter = f_ciphers.iterator();
             while (iter.hasNext()) {
-                System.out.println((String) iter.next());
+                System.out.println(iter.next());
 
             }
             System.out.println("we should have no failed ciphersuites!");
@@ -517,20 +537,20 @@ public class JSSE_SSLClient {
             }
 
             if ( args.length >= 1 ) {
-                keystoreLocation = (String)args[0];
+                keystoreLocation = args[0];
             }
             if ( args.length >= 2) {
                 testPort         = new Integer(args[1]).intValue();
                 System.out.println("using port: " + testPort);
             }
             if ( args.length >= 3) {
-                testHost       = (String)args[2];
+                testHost       = args[2];
             }
             if ( args.length == 4) {
-                serverType         = (String)args[3];
+                serverType         = args[3];
             }
             if ( args.length == 5) {
-                testCipher         = (String)args[4];
+                testCipher         = args[4];
             }
         } catch (Exception e) {
             System.out.println(usage);
