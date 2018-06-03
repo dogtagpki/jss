@@ -30,6 +30,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This program connects to any SSL Server to exercise
  * all ciphers supported by JSSE for a given JDK/JRE
@@ -38,6 +41,8 @@ import javax.net.ssl.X509TrustManager;
  *
  */
 public class JSSE_SSLClient {
+
+    public static Logger logger = LoggerFactory.getLogger(JSSE_SSLClient.class);
 
     // Local members
     private String  sslRevision         = "TLS";
@@ -71,7 +76,7 @@ public class JSSE_SSLClient {
     public void setSslRevision(String fSslRevision) {
 
         if (!(fSslRevision.equals("TLS") || fSslRevision.equals("SSLv3"))) {
-            System.out.println("type must equal \'TLS\' or \'SSLv3\'\n");
+            logger.error("type must equal \'TLS\' or \'SSLv3\'\n");
             System.exit(1);
         }
         this.sslRevision = fSslRevision;
@@ -134,13 +139,12 @@ public class JSSE_SSLClient {
             try {
 
                 Thread.sleep(1000);
-                           System.out.println("Testing Connection:" +
-                    host + ":" + port);
+                logger.info("Testing Connection:" + host + ":" + port);
                 socket = (SSLSocket)factory.createSocket(host, port);
                 socket.setEnabledCipherSuites(factory.getDefaultCipherSuites());
 
                 if (socket.isBound()) {
-                               System.out.println("connect isBound");
+                    logger.info("connect isBound");
                     isServerAlive = true;
                     socket.close();
                     break;
@@ -169,8 +173,7 @@ public class JSSE_SSLClient {
         }
 
         if (!isServerAlive()) {
-            System.out.println("Unable to connect to " + host + ":" +
-                    port + " exiting.");
+            logger.error("Unable to connect to " + host + ":" + port + " exiting.");
             System.exit(1);
         }
         Iterator<String> iter = ciphersToTest.iterator();
@@ -182,7 +185,7 @@ public class JSSE_SSLClient {
                 socket.setEnabledCipherSuites(ciphers);
                 testSSLSocket(socket, cs, i++);
             } catch (Exception ex) {
-                System.out.println("failed ciphersuite" + ciphers[0]);
+                logger.warn("failed ciphersuite" + ciphers[0]);
                 f_ciphers.add(ciphers[0]);
             }
         }
@@ -264,9 +267,7 @@ public class JSSE_SSLClient {
 
 
             String javaVendor      = System.getProperty("java.vendor");
-            if (Constants.debug_level > 3)
-                System.out.println("DEBUG: JSSE_SSLClient.java java.vendor=" +
-                        javaVendor);
+            logger.debug("JSSE_SSLClient: java.vendor: " + javaVendor);
 
             // Initialize the system
             if (javaVendor.equals("IBM Corporation")) {
@@ -294,17 +295,14 @@ public class JSSE_SSLClient {
                 kmf = KeyManagerFactory.getInstance(certificate);
                 ks.load(new FileInputStream(getKeystoreLoc()), passphrase);
             } catch (Exception keyEx) {
-                if (Constants.debug_level > 3) {
-                    if(System.getProperty("java.vendor").equals("IBM Corporation")) {
-                        System.out.println("Using IBM JDK: Cannot load keystore due "+
-                                "to strong security encryption settings\nwith limited " +
-                                "Jurisdiction policy files :\n" +
-                                "http://www-1.ibm.com/support/docview.wss?uid=swg21169931");
-                        System.exit(0);
-                    } else {
-                        System.out.println(keyEx.getMessage());
-                        keyEx.printStackTrace();
-                    }
+                if (System.getProperty("java.vendor").equals("IBM Corporation")) {
+                    logger.error("Using IBM JDK: Cannot load keystore due "+
+                            "to strong security encryption settings\nwith limited " +
+                            "Jurisdiction policy files :\n" +
+                            "http://www-1.ibm.com/support/docview.wss?uid=swg21169931");
+                    System.exit(0);
+                } else {
+                    logger.error(keyEx.getMessage(), keyEx);
                 }
                 throw keyEx;
             }
@@ -373,8 +371,9 @@ public class JSSE_SSLClient {
             socket.setEnabledCipherSuites(factory.getDefaultCipherSuites());
 
 
-            if (bVerbose) System.out.println("Sending shutdown message " +
-                    "to server.");
+            if (bVerbose) {
+                logger.info("Sending shutdown message to server.");
+            }
             socket.startHandshake();
             OutputStream os    = socket.getOutputStream();
             PrintWriter out    = new PrintWriter(new BufferedWriter(
@@ -400,19 +399,14 @@ public class JSSE_SSLClient {
                 public void handshakeCompleted(
                         HandshakeCompletedEvent event) {
                     h_ciphers.add(event.getCipherSuite());
-                    System.out.println(event.getCipherSuite());
-                    if ( Constants.debug_level >= 3 ) {
-                        System.out.println(
-                                "SessionId "+ event.getSession() +
+                    logger.info(event.getCipherSuite());
+                    logger.info("SessionId " + event.getSession() +
                                 " Test Status : PASS");
-                        System.out.flush();
-                    }
                 }
             }
             );
         } catch (Exception handshakeEx) {
-            System.out.println(handshakeEx.getMessage());
-            handshakeEx.printStackTrace();
+            logger.error(handshakeEx.getMessage(), handshakeEx);
             System.exit(1);
         }
 
@@ -433,21 +427,20 @@ public class JSSE_SSLClient {
             //write then read on the connection once.
             outputLine = ciphersuite + ":" + socketID + "\n";
             if (bVerbose) {
-                System.out.println("Sending: " + outputLine);
+                logger.info("Sending: " + outputLine);
             }
             out.print(outputLine);
             out.flush();
             inputLine = bir.readLine();
             if (bVerbose) {
-                System.out.println("Received: " + inputLine +
-                        " on Client-" + socketID);
+                logger.info("Received: " + inputLine + " on Client-" + socketID);
             }
             bir.close();
             out.close();
         } catch (SSLHandshakeException ex) {
             f_ciphers.add(ciphersuite);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
             System.exit(1);
         }
         try {
@@ -463,53 +456,52 @@ public class JSSE_SSLClient {
         String banner = new String
                 ("\n----------------------------------------------------------\n");
 
-        System.out.println(banner);
-        System.out.println("JSSE has " +
+        logger.info(banner);
+        logger.info("JSSE has " +
                 factory.getSupportedCipherSuites().length + " ciphersuites and " +
                 ciphersToTest.size() + " were configured and tested.");
 
         if (ciphersToTest.size() == h_ciphers.size()) {
-            System.out.println("All " + ciphersToTest.size() +
+            logger.info("All " + ciphersToTest.size() +
                     " configured ciphersuites tested Successfully!\n");
         }
 
         if (!h_ciphers.isEmpty()) {
             if (!f_ciphers.isEmpty()) {
-                System.out.println(banner);
-                System.out.println(h_ciphers.size() +
+                logger.info(banner);
+                logger.info(h_ciphers.size() +
                         " ciphersuites successfully connected to the "+
                         "server\n");
             }
             Iterator<String> iter = h_ciphers.iterator();
             while (iter.hasNext()) {
-                System.out.println(iter.next());
+                logger.info(iter.next());
 
             }
         }
         if (bFipsMode) {
-            System.out.println("Note: ciphersuites that have the prefix " +
+            logger.info("Note: ciphersuites that have the prefix " +
                     "\"SSL\" or \"SSL3\" were used in TLS mode.");
         }
 
-        if (ciphersToTest.size()
-        != (h_ciphers.size() + f_ciphers.size())) {
-            System.out.println("ERROR: did not test all expected ciphersuites");
+        if (ciphersToTest.size() != (h_ciphers.size() + f_ciphers.size())) {
+            logger.warn("did not test all expected ciphersuites");
         }
         if (!f_ciphers.isEmpty()) {
-            System.out.println(banner);
-            System.out.println(f_ciphers.size() +
+            logger.info(banner);
+            logger.info(f_ciphers.size() +
                     " ciphersuites that did not connect to the "+
                     "server\n\n");
             Iterator<String> iter = f_ciphers.iterator();
             while (iter.hasNext()) {
-                System.out.println(iter.next());
+                logger.info(iter.next());
 
             }
-            System.out.println("we should have no failed ciphersuites!");
+            logger.error("we should have no failed ciphersuites!");
             System.exit(1);
         }
 
-        System.out.println(banner);
+        logger.info(banner);
 
     }
 
@@ -568,9 +560,7 @@ public class JSSE_SSLClient {
         try {
             sslSock.testCiphersuites();
         } catch (Exception e) {
-            System.out.println("Exception caught testing ciphersuites\n" +
-                    e.getMessage());
-            e.printStackTrace();
+            logger.error("Exception caught testing ciphersuites: " + e.getMessage(), e);
             System.exit(1);
         }
         sslSock.sendServerShutdownMsg();
