@@ -57,21 +57,27 @@ public final class CryptoManager implements TokenSupplier
      * CertUsage options for validation
      */
     public final static class CertUsage {
+
+        static private ArrayList<CertUsage> list = new ArrayList<>();
+
         private int usage;
         private String name;
-        static private ArrayList list = new ArrayList();
-        private CertUsage() {};
+
+        private CertUsage() {
+        }
+
         private CertUsage(int usage, String name) {
             this.usage = usage;
             this.name =  name;
-            this.list.add(this);
+            list.add(this);
 
         }
+
         public int getUsage() {
             return usage;
         }
 
-        static public Iterator getCertUsages() {
+        static public Iterator<CertUsage> getCertUsages() {
             return list.iterator();
 
         }
@@ -116,19 +122,22 @@ public final class CryptoManager implements TokenSupplier
         private static final int certificateUsageStatusResponder = 0x0400;
         private static final int certificateUsageAnyCA = 0x0800;
 
-        static private ArrayList list = new ArrayList();
-        private CertificateUsage() {};
+        static private ArrayList<CertificateUsage> list = new ArrayList<>();
+
+        private CertificateUsage() {
+        }
+
         private CertificateUsage(int usage, String name) {
             this.usage = usage;
             this.name =  name;
-            this.list.add(this);
+            list.add(this);
 
         }
         public int getUsage() {
             return usage;
         }
 
-        static public Iterator getCertificateUsages() {
+        static public Iterator<CertificateUsage> getCertificateUsages() {
             return list.iterator();
 
         }
@@ -164,10 +173,21 @@ public final class CryptoManager implements TokenSupplier
                 certificateUsageAnyCA ;
     }
 
-    public final static class NotInitializedException extends Exception {}
-    public final static class NicknameConflictException extends Exception {}
-    public final static class UserCertConflictException extends Exception {}
-    public final static class InvalidLengthException extends Exception {}
+    public final static class NotInitializedException extends Exception {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public final static class NicknameConflictException extends Exception {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public final static class UserCertConflictException extends Exception {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public final static class InvalidLengthException extends Exception {
+        private static final long serialVersionUID = 1L;
+    }
 
     /**
      * The various options that can be used to initialize CryptoManager.
@@ -683,11 +703,11 @@ public final class CryptoManager implements TokenSupplier
     public synchronized CryptoToken getTokenByName(String name)
         throws NoSuchTokenException
     {
-        Enumeration tokens = getAllTokens();
+        Enumeration<CryptoToken> tokens = getAllTokens();
         CryptoToken token;
 
         while(tokens.hasMoreElements()) {
-            token = (CryptoToken) tokens.nextElement();
+            token = tokens.nextElement();
             try {
                 if( name.equals(token.getName()) ) {
                     return token;
@@ -703,14 +723,14 @@ public final class CryptoManager implements TokenSupplier
      * Retrieves all tokens that support the given algorithm.
      *
      */
-    public synchronized Enumeration getTokensSupportingAlgorithm(Algorithm alg)
+    public synchronized Enumeration<CryptoToken> getTokensSupportingAlgorithm(Algorithm alg)
     {
-        Enumeration tokens = getAllTokens();
-        Vector goodTokens = new Vector();
+        Enumeration<CryptoToken> tokens = getAllTokens();
+        Vector<CryptoToken> goodTokens = new Vector<>();
         CryptoToken tok;
 
         while(tokens.hasMoreElements()) {
-            tok = (CryptoToken) tokens.nextElement();
+            tok = tokens.nextElement();
             if( tok.doesAlgorithm(alg) ) {
                 goodTokens.addElement(tok);
             }
@@ -726,13 +746,13 @@ public final class CryptoManager implements TokenSupplier
      *      is a <code>CryptoToken</code>
      * @see org.mozilla.jss.crypto.CryptoToken
      */
-    public synchronized Enumeration getAllTokens() {
-        Enumeration modules = getModules();
-        Enumeration tokens;
-        Vector allTokens = new Vector();
+    public synchronized Enumeration<CryptoToken> getAllTokens() {
+        Enumeration<PK11Module> modules = getModules();
+        Enumeration<CryptoToken> tokens;
+        Vector<CryptoToken> allTokens = new Vector<>();
 
         while(modules.hasMoreElements()) {
-            tokens = ((PK11Module)modules.nextElement()).getTokens();
+            tokens = modules.nextElement().getTokens();
             while(tokens.hasMoreElements()) {
                 allTokens.addElement( tokens.nextElement() );
             }
@@ -748,14 +768,14 @@ public final class CryptoManager implements TokenSupplier
      * @return All tokens accessible from JSS, except for the built-in
      *      internal tokens.
      */
-    public synchronized Enumeration getExternalTokens() {
-        Enumeration modules = getModules();
-        Enumeration tokens;
+    public synchronized Enumeration<CryptoToken> getExternalTokens() {
+        Enumeration<PK11Module> modules = getModules();
+        Enumeration<CryptoToken> tokens;
         PK11Token token;
-        Vector allTokens = new Vector();
+        Vector<CryptoToken> allTokens = new Vector<>();
 
         while(modules.hasMoreElements()) {
-            tokens = ((PK11Module)modules.nextElement()).getTokens();
+            tokens = modules.nextElement().getTokens();
             while(tokens.hasMoreElements()) {
                 token = (PK11Token) tokens.nextElement();
                 if( ! token.isInternalCryptoToken() &&
@@ -775,7 +795,7 @@ public final class CryptoManager implements TokenSupplier
      *      item in the enumeration is a <code>PK11Module</code>.
      * @see org.mozilla.jss.pkcs11.PK11Module
      */
-    public synchronized Enumeration getModules() {
+    public synchronized Enumeration<PK11Module> getModules() {
         return moduleVector.elements();
     }
 
@@ -787,7 +807,7 @@ public final class CryptoManager implements TokenSupplier
      * and updated whenever 1) a new module is added, 2) a module is deleted,
      * or 3) FIPS mode is switched.
      */
-    private Vector moduleVector;
+    private Vector<PK11Module> moduleVector;
 
     /**
      * Re-creates the Vector of modules that is stored by CryptoManager.
@@ -795,11 +815,11 @@ public final class CryptoManager implements TokenSupplier
      * wrap each one in a PK11Module, and storing the PK11Module in the vector.
      */
     private synchronized void reloadModules() {
-        moduleVector = new Vector();
+        moduleVector = new Vector<>();
         putModulesInVector(moduleVector);
 
         // Get the internal tokens
-        Enumeration tokens = getAllTokens();
+        Enumeration<CryptoToken> tokens = getAllTokens();
 
         internalCryptoToken = null;
         internalKeyStorageToken = null;
@@ -832,7 +852,7 @@ public final class CryptoManager implements TokenSupplier
      * Native code to traverse all PKCS #11 modules, wrap each one in
      * a PK11Module, and insert each PK11Module into the given vector.
      */
-    private native void putModulesInVector(Vector vector);
+    private native void putModulesInVector(Vector<PK11Module> vector);
 
 
     ///////////////////////////////////////////////////////////////////////
@@ -1020,14 +1040,20 @@ public final class CryptoManager implements TokenSupplier
         // an infinite loop as the Security manager tries to instantiate the
         // digest to verify its own JAR file.
         JSSMessageDigestSpi mds = new JSSMessageDigestSpi.SHA1();
+        logger.debug("Loaded " + mds);
+
         // Force the KeyType class to load before we can install JSS as a
         // provider.  JSS's signature provider accesses KeyType.
         KeyType kt = KeyType.getKeyTypeFromAlgorithm(
             SignatureAlgorithm.RSASignatureWithSHA1Digest);
+        logger.debug("Loaded " + kt);
 
         if( values.installJSSProvider ) {
             int position = java.security.Security.insertProviderAt(
                             new JSSProvider(), 1);
+            if (position < 0) {
+                logger.warn("JSS provider is already installed");
+            }
             // This returns -1 if the provider was already installed, in which
             // case it is not installed again.  Is this
             // an error? I don't think so, although it might be confusing
@@ -1518,7 +1544,7 @@ public final class CryptoManager implements TokenSupplier
     static private boolean mNativeLibrariesLoaded = false;
 
     // Hashtable is synchronized.
-    private Hashtable perThreadTokenTable = new Hashtable();
+    private Hashtable<Thread, CryptoToken> perThreadTokenTable = new Hashtable<>();
 
     /**
      * Sets the default token for the current thread. This token will
@@ -1554,7 +1580,7 @@ public final class CryptoManager implements TokenSupplier
      */
     public CryptoToken getThreadToken() {
         CryptoToken tok =
-            (CryptoToken) perThreadTokenTable.get(Thread.currentThread());
+            perThreadTokenTable.get(Thread.currentThread());
         if( tok == null ) {
             tok = getInternalKeyStorageToken();
         }
