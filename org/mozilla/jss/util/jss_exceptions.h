@@ -19,7 +19,7 @@ PR_BEGIN_EXTERN_C
 
 #define INDEX_OUT_OF_BOUNDS_EXCEPTION "java/lang/IndexOutOfBoundsException"
 
-#define BAD_PADDING_EXCEPTION "org/mozilla/jss/crypto/BadPaddingException"
+#define BAD_PADDING_EXCEPTION "javax/crypto/BadPaddingException"
 
 #define BIND_EXCEPTION "java/net/BindException"
 

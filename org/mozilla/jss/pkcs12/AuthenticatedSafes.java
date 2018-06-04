@@ -11,6 +11,8 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
@@ -19,7 +21,6 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
-import org.mozilla.jss.crypto.BadPaddingException;
 import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.crypto.PBEAlgorithm;

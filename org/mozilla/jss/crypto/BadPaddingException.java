@@ -6,7 +6,7 @@ package org.mozilla.jss.crypto;
 /**
  * @deprecated Use javax.crypto.BadPaddingException.
  */
-public class BadPaddingException extends Exception {
+public class BadPaddingException extends javax.crypto.BadPaddingException {
     public BadPaddingException() {
         super();
     }

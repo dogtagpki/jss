@@ -359,8 +359,6 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
             throw ise;
         } catch(org.mozilla.jss.crypto.IllegalBlockSizeException ibse) {
             throw new IllegalBlockSizeException(ibse.getMessage());
-        } catch(org.mozilla.jss.crypto.BadPaddingException bpe) {
-            throw new BadPaddingException(bpe.getMessage());
         } catch(TokenException te) {
             throw new TokenRuntimeException(te.getMessage());
         }

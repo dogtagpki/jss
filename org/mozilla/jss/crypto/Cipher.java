@@ -4,9 +4,12 @@
 
 package org.mozilla.jss.crypto;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.spec.AlgorithmParameterSpec;
-import java.security.InvalidAlgorithmParameterException;
+
+import javax.crypto.BadPaddingException;
+
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -111,7 +114,7 @@ public abstract class Cipher {
      *  <i>B</i> is the block size, the padding string consists of
      *  <i>B</i> - (<i>M</i> mod <i>B</i>) octets, each having the value
      *  <i>B</i> - (<i>M</i> mod <i>B</i>).
-     * @param toBePadded The byte array to pad. 
+     * @param toBePadded The byte array to pad.
      * @param blockSize The block size of the encryption algorithm.  Must be greater
      *  than zero.
      * @see #unPad

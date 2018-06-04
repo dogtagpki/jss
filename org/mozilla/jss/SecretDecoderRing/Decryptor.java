@@ -4,16 +4,19 @@
 
 package org.mozilla.jss.SecretDecoderRing;
 
-import java.security.*;
-import javax.crypto.*;
-import javax.crypto.spec.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
-import java.io.*;
 
 /**
  * Decrypts data with the SecretDecoderRing.
@@ -89,8 +92,6 @@ public class Decryptor {
             throw new GeneralSecurityException(ibe.toString());
         } catch(IllegalStateException ise) {
             throw new GeneralSecurityException(ise.toString());
-        } catch(org.mozilla.jss.crypto.BadPaddingException bpe) {
-            throw new javax.crypto.BadPaddingException(bpe.getMessage());
         } finally {
             cm.setThreadToken(savedToken);
         }
