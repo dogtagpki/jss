@@ -112,11 +112,6 @@ sub setup_vars {
         $scriptext = "sh";
     }
 
-    my $jar_dbg_suffix = "_dbg";
-    my $dbg_suffix     = "_DBG";
-    $ENV{BUILD_OPT} and $dbg_suffix = "";
-    $ENV{BUILD_OPT} and $jar_dbg_suffix = "";
-
     $ENV{CLASSPATH}  = "";
     $ENV{$ld_lib_path} = "" if $truncate_lib_path;
 
@@ -125,12 +120,12 @@ sub setup_vars {
         shift @$argv;
         $dist_dir = shift @$argv or usage("did not provide dist_dir");
 
-        $ENV{CLASSPATH} .= "$dist_dir/../xpclass$jar_dbg_suffix.jar";
+        $ENV{CLASSPATH} .= "$dist_dir/../xpclass.jar";
         ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
         $ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$dist_dir/lib";
         $nss_lib_dir   = "$dist_dir/lib";
-        $jss_rel_dir   = "$dist_dir/../classes$dbg_suffix/org";
-        $jss_classpath = "$dist_dir/../xpclass$jar_dbg_suffix.jar";
+        $jss_rel_dir   = "$dist_dir/../classes/org";
+        $jss_classpath = "$dist_dir/../xpclass.jar";
 
     } elsif( $$argv[0] eq "auto" ) {
         my $dist_dir = `make dist_dir`;
@@ -141,10 +136,10 @@ sub setup_vars {
         chomp( $obj_dir = `(cd $obj_dir ; pwd)`);
 
         $nss_lib_dir   = "$obj_dir/lib";
-        $jss_rel_dir   = "$dist_dir/classes$dbg_suffix/org";
-        $jss_classpath = "$dist_dir/xpclass$jar_dbg_suffix.jar";
+        $jss_rel_dir   = "$dist_dir/classes/org";
+        $jss_classpath = "$dist_dir/xpclass.jar";
 
-        $ENV{CLASSPATH} .= "$dist_dir/xpclass$jar_dbg_suffix.jar";
+        $ENV{CLASSPATH} .= "$dist_dir/xpclass.jar";
         ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
         #$ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$obj_dir/lib";
         $ENV{$ld_lib_path} = "$obj_dir/lib";
@@ -155,14 +150,14 @@ sub setup_vars {
         my $nss_rel_dir  = shift @$argv or usage();
         my $nspr_rel_dir = shift @$argv or usage();
 
-        $ENV{CLASSPATH} .= "$jss_rel_dir/../xpclass$jar_dbg_suffix.jar";
+        $ENV{CLASSPATH} .= "$jss_rel_dir/../xpclass.jar";
         $ENV{$ld_lib_path} =
             "$jss_rel_dir/lib$pathsep$nss_rel_dir/lib$pathsep$nspr_rel_dir/lib"
             . $pathsep . $ENV{$ld_lib_path};
         print "LD_LIBRARY_PATH is $ld_lib_path\n";
         print "$ld_lib_path=$ENV{$ld_lib_path}\n";
         $nss_lib_dir = "$nss_rel_dir/lib";
-        $jss_classpath = "$jss_rel_dir/../xpclass$jar_dbg_suffix.jar";
+        $jss_classpath = "$jss_rel_dir/../xpclass.jar";
     } else {
         usage();
     }

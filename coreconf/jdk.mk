@@ -21,11 +21,7 @@ endif
 
 # set default location of the java classes repository
 ifeq ($(JAVA_DESTPATH),)
-ifdef BUILD_OPT
 	JAVA_DESTPATH  = $(SOURCE_CLASSES_DIR)
-else
-	JAVA_DESTPATH  = $(SOURCE_CLASSES_DBG_DIR)
-endif
 endif
 
 # set default location of the package under the java classes repository

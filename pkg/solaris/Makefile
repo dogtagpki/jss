@@ -52,11 +52,7 @@ endif
 OBJ32 = $(shell basename $(DIST32))
 OBJ64 = $(shell basename $(DIST64))
 
-ifeq ($(BUILD_OPT),1)
-  IMPORT_JSS_JAR = jss4.jar
-else
-  IMPORT_JSS_JAR = jss4_dbg.jar
-endif
+IMPORT_JSS_JAR = jss4.jar
 
 awk_pkginfo: bld_awk_pkginfo
 	./bld_awk_pkginfo -m $(MACH) -p "$(PRODUCT_VERSION)" -o $@ -v $(PRODUCT_VERSION)

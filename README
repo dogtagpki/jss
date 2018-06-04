@@ -54,11 +54,10 @@
 
     The following steps are optional, and left to the discretion of the user:
 
-        Debug vs. Optimized jar files:
+        Normal vs. Optimized builds:
 
-            By default, JSS will be built as a debuggable jar
-            (xpclass_dbg.jar - generally recommended for test builds);
-            to create an optimized jar (xpclass.jar), set the following
+            By default, JSS will be built as a normal binaries.
+            To create an optimized build, set the following
             environment variable:
 
                 # export BUILD_OPT=1
@@ -104,14 +103,7 @@
 
             # sudo mv /usr/lib64/jss/libjss4.so /usr/lib64/jss/libjss4.so.orig
 
-    If BUILD_OPT is undefined (default Debuggable Jar):
-
-        # sudo cp sandbox/dist/xpclass_dbg.jar /usr/lib/java/jss4.jar
-
-    else if BUILD_OPT is defined (Optimized Jar):
-
-        # sudo cp sandbox/dist/xpclass.jar /usr/lib/java/jss4.jar
-
+    # sudo cp sandbox/dist/xpclass.jar /usr/lib/java/jss4.jar
     # sudo chown root:root /usr/lib/java/jss4.jar
     # sudo chmod 644 /usr/lib/java/jss4.jar
 

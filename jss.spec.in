@@ -86,10 +86,7 @@ This package contains the API documentation for JSS.
 [ -z "$USE_INSTALLED_NSPR" ] && export USE_INSTALLED_NSPR=1
 [ -z "$USE_INSTALLED_NSS" ] && export USE_INSTALLED_NSS=1
 
-# Enable compiler optimizations and disable debugging code
-# NOTE: If you ever need to create a debug build with optimizations disabled
-# just comment out this line and change in the %%install section below the
-# line that copies jars xpclass.jar to be xpclass_dbg.jar
+# Enable compiler optimizations
 export BUILD_OPT=1
 
 # Generate symbolic info for debuggers
@@ -135,7 +132,6 @@ cp -p jss/lgpl.txt .
 
 # jars
 install -d -m 0755 $RPM_BUILD_ROOT%{_jnidir}
-# NOTE: if doing a debug no opt build change xpclass.jar to xpclass_dbg.jar
 install -m 644 dist/xpclass.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
 
 # We have to use the name libjss4.so because this is dynamically

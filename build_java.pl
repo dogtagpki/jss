@@ -147,16 +147,13 @@ sub setup_vars {
     $jce_jar = $ENV{JCE_JAR};
 
     $class_release_dir = $cmdline_vars{SOURCE_RELEASE_PREFIX};
+    $class_dir = "$dist_dir/classes";
+    $class_jar = "$dist_dir/$cmdline_vars{XPCLASS_JAR}";
+    $class_release_dir .= "/$cmdline_vars{SOURCE_RELEASE_CLASSES_DIR}";
     if( $ENV{BUILD_OPT} ) {
-        $class_dir = "$dist_dir/classes";
-        $class_jar = "$dist_dir/$cmdline_vars{XPCLASS_JAR}";
-        $class_release_dir .= "/$cmdline_vars{SOURCE_RELEASE_CLASSES_DIR}";
         $javac_opt_flag = "-O";
         $debug_source_file = "org/mozilla/jss/util/Debug_ship.jnot";
     } else {
-        $class_dir = "$dist_dir/classes_DBG";
-        $class_jar = "$dist_dir/$cmdline_vars{XPCLASS_DBG_JAR}";
-        $class_release_dir .= "/$cmdline_vars{SOURCE_RELEASE_CLASSES_DBG_DIR}";
         $javac_opt_flag = "-g";
         $debug_source_file = "org/mozilla/jss/util/Debug_debug.jnot";
     }
@@ -374,7 +371,7 @@ sub needs_update {
 # the source file's directory is different from its package, and it
 # doesn't know about nested or inner classes.
 # source_file: the relative path to the source file ("org/mozilla/jss/...")
-# dest_dir: the directory where classes are output ("../../dist/classes_DBG")
+# dest_dir: the directory where classes are output ("../../dist/classes")
 # Returns 1 if the source file is newer than the class file, or the class file
 #   doesn't exist. Returns 0 if the class file is newer than the source file.
 sub java_source_needs_update {

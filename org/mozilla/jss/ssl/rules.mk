@@ -9,10 +9,10 @@ javadoc:
 	@echo End of Steve's Javadoc rule ------------------
 
 runserver:
-	$(DEBUG_CMD) $(SOURCE_BIN_DIR)/jssjava -classpath $(JAVA_HOME)/lib/classes.zip:$(SOURCE_CLASSES_DIR)_DBG org.mozilla.jss.ssl.SSLServer
+	$(DEBUG_CMD) $(SOURCE_BIN_DIR)/jssjava -classpath $(JAVA_HOME)/lib/classes.zip:$(SOURCE_CLASSES_DIR) org.mozilla.jss.ssl.SSLServer
 
 runclient:
-	$(DEBUG_CMD) $(SOURCE_BIN_DIR)/jssjava -classpath $(JAVA_HOME)/lib/classes.zip:$(SOURCE_CLASSES_DIR)_DBG org.mozilla.jss.ssl.SSLClient
+	$(DEBUG_CMD) $(SOURCE_BIN_DIR)/jssjava -classpath $(JAVA_HOME)/lib/classes.zip:$(SOURCE_CLASSES_DIR) org.mozilla.jss.ssl.SSLClient
 
 debugcore:
 	dbx $(SOURCE_BIN_DIR)/jssjava core
