@@ -4,33 +4,39 @@
 
 // This program demonstrates SSL server-side support. It expects
 // (HTTP) clients to connect to it, and will respond to HTTP
-// GET requests 
+// GET requests
 //
 
 // tabstops: 4
 
 package org.mozilla.jss.ssl;
 
-import java.io.*;
-import java.util.*;
-import org.mozilla.jss.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Hashtable;
+
+import org.mozilla.jss.CertDatabaseException;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.KeyDatabaseException;
 
 /**
  * Parameters supported by this socket test:
- * 
+ *
  * filename 	file to be read from https server (default: /index.html)
  * port 	port to connect to (default: 443)
  * clientauth 	do client-auth or not (default: no client-auth)
  *
  * The following parameters are used for regression testing, so
  * we can print success or failure of the test.
- * 
+ *
  * filesize 	size of file to be read
  * status 	security status of connection - this has to be an integer
- * 
+ *
  */
 
-public class SSLServer 
+public class SSLServer
 {
     boolean     handshakeEventHappened = false;
     boolean     doClientAuth = false;
@@ -50,7 +56,7 @@ public class SSLServer
 	"data1k.txt",           // filename
 	"2000",			// port
 	"1024",			// filesize
-	"false",	        // request client auth 
+	"false",	        // request client auth
 	"SSLServer"             // nickname of cert to use
     };
 
@@ -85,7 +91,7 @@ public class SSLServer
     }
 
 
-    public void run() 
+    public void run()
     {
 	try {
 	    SSLServerSocket l;
@@ -103,7 +109,7 @@ public class SSLServer
 	    } else {
 		port = Integer.valueOf(portStr).intValue();
 	    }
-	    
+
 	    results.println("here");
 	    tmpStr = getArgument("clientauth");
 	    if(!isInvalid(tmpStr)) {
@@ -122,7 +128,7 @@ public class SSLServer
 	    l.setServerCertNickname(nickname);
 
 	    if (doClientAuth) {
-	    	l.setNeedClientAuth(true);
+	        l.requestClientAuth(true);
 	    }
 
 	    // wait for and accept a connection.
@@ -164,7 +170,7 @@ public class SSLServer
 	    boolean endFound = false;
 	    while(! endFound && totalBytes < bytes.length) {
 		results.println("Calling Read.");
-		int n = in.read(bytes, totalBytes, 
+		int n = in.read(bytes, totalBytes,
 				bytes.length - totalBytes);
 		if(n == -1) {
 		    results.println("EOF found.");
@@ -193,12 +199,12 @@ public class SSLServer
 	    }
 	} catch (IOException e) {
 	    results.println(
-		"IOException while reading from pipe?  Actually got " + 
+		"IOException while reading from pipe?  Actually got " +
 		totalBytes + " bytes total");
 	    e.printStackTrace(results);
 	    results.println("");
 	    throw e;
-	} 
+	}
 
 	results.println("Number of read() calls: " + numReads );
 	results.println("Total bytes read:       " + totalBytes );
@@ -253,7 +259,7 @@ public class SSLServer
      * from raw characters to escaped characters
      * (&lt; becomes `&amp;lt;', etc.)
      */
-    private String escapeHTML(String s) 
+    private String escapeHTML(String s)
     {
 	StringBuffer result = new StringBuffer();
 
@@ -319,7 +325,7 @@ public class SSLServer
       System.out.println("General security exception while initializing");
       return;
     }
-	  
+
 	SSLServerSocket.configServerSessionIDCache(10, 0, 0, null);
 
 	/* enable all the SSL2 cipher suites */
