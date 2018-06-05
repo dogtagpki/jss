@@ -639,7 +639,7 @@ findKeyCallback
         }
     }
 
-    freeObjectNick(obj, type);
+    freeObjectNick(objNick, type);
     return status;
 }
 
