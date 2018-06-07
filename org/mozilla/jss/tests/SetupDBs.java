@@ -36,7 +36,7 @@ public class SetupDBs {
             new FilePasswordCallback( args[1] )
         );
         
-        Thread.currentThread().sleep(3*1000);
+        Thread.sleep(3*1000);
         
         System.exit(0);
       } catch(Exception e) {

@@ -117,7 +117,7 @@ public static class Template implements ASN1Template {
       try {
         ASN1Header head = new ASN1Header(istream);
 
-        head.validate( implicitTag, FORM.CONSTRUCTED );
+        head.validate( implicitTag, Form.CONSTRUCTED );
 
         ASN1Value val = content.decode(istream);
 

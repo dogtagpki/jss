@@ -442,8 +442,8 @@ public class PFX implements ASN1Value {
                 // Add the new safe contents to the authsafes
                 if( authSafes.safeContentsIsEncrypted(i) ) {
                     newAuthSafes.addEncryptedSafeContents(
-                        authSafes.DEFAULT_KEY_GEN_ALG, newPass,
-                        null, authSafes.DEFAULT_ITERATIONS, safeContents);
+                        AuthenticatedSafes.DEFAULT_KEY_GEN_ALG, newPass,
+                        null, AuthenticatedSafes.DEFAULT_ITERATIONS, safeContents);
                 } else {
                     newAuthSafes.addSafeContents( safeContents );
                 }
