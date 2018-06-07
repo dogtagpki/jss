@@ -79,6 +79,8 @@ PR_BEGIN_EXTERN_C
 
 #define OUT_OF_MEMORY_ERROR "java/lang/OutOfMemoryError"
 
+#define PK11_EXCEPTION "org/mozilla/jss/pkcs11/PK11Exception"
+
 #define PQG_PARAM_GEN_EXCEPTION "org/mozilla/jss/crypto/PQGParamGenException"
 
 /* This is a RuntimeException */
