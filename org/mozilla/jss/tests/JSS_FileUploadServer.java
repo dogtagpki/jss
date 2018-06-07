@@ -19,8 +19,12 @@ import org.mozilla.jss.ssl.SSLSecurityStatus;
 import org.mozilla.jss.ssl.SSLServerSocket;
 import org.mozilla.jss.ssl.SSLSocket;
 import org.mozilla.jss.util.PasswordCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JSS_FileUploadServer  {
+
+    public static Logger logger = LoggerFactory.getLogger(JSS_FileUploadServer.class);
 
     private static Vector<String> jssSupportedCiphers = new Vector<>();
     private static SSLServerSocket serverSock = null;
@@ -90,30 +94,25 @@ public class JSS_FileUploadServer  {
         //Note we will use the NSS default enabled ciphers suites
 
         // open the server socket and bind to the port
-        if ( Constants.debug_level >= 3 )
-            System.out.println("Server about .... to create socket");
+        logger.debug("Server about .... to create socket");
 
         if (TestInetAddress) {
-            if ( Constants.debug_level >= 3 )
-                System.out.println("the HostName " + fServerHost +
+            logger.debug("the HostName " + fServerHost +
                         " the Inet Address " +
                         InetAddress.getByName(fServerHost));
             serverSock = new SSLServerSocket(port, 5,
                     InetAddress.getByName(fServerHost), null , true);
         } else {
-            if ( Constants.debug_level >= 3 )
-                System.out.println("Inet set to Null");
+            logger.debug("Inet set to Null");
             serverSock = new SSLServerSocket(port, 5, null , null , true);
         }
 
-        if ( Constants.debug_level >= 3 )
-            System.out.println("Server created socket");
+        logger.debug("Server created socket");
 
         //serverSock.setSoTimeout(120 * 1000);
         serverSock.requireClientAuth(SSLSocket.SSL_REQUIRE_NO_ERROR);
         serverSock.setServerCertNickname(fServerCertNick);
-        if ( Constants.debug_level >= 3 )
-            System.out.println("Server specified cert by nickname");
+        logger.debug("Server specified cert by nickname");
 
         System.out.println("Server ready to accept connections");
         while ( true ) {
@@ -186,10 +185,9 @@ public class JSS_FileUploadServer  {
                 } else {
                     mesg += "(security is OFF)";
                 }
-                if ( Constants.debug_level >= 3 )
-                    System.out.println(mesg);
+                logger.debug(mesg);
             } catch(Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 boss.setFailure();
             }
         }

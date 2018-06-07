@@ -113,7 +113,7 @@ public class SSLClient
   }
 
 
-  public void run(boolean printHeader)
+  public void run(boolean printHeader, boolean testRegression)
     {
       try {
 	SSLHandshakeCompletedListener listener = null;
@@ -269,7 +269,7 @@ public class SSLClient
 
 	  // now, for the regression testing stuff
 
-	if (false) {
+	if (testRegression) {
 	  results.println("Regression Tests");
 
 	  results.println("Handshake callback event happened: " +
@@ -425,7 +425,7 @@ public class SSLClient
       }
 
       SSLClient x = new SSLClient(System.out, "Stand alone Ver 0.01", argv);
-      x.run(true);
+      x.run(true, false);
     }
 
 }

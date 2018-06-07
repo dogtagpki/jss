@@ -24,6 +24,8 @@ import org.mozilla.jss.ssl.SSLSecurityStatus;
 import org.mozilla.jss.ssl.SSLServerSocket;
 import org.mozilla.jss.ssl.SSLSocket;
 import org.mozilla.jss.util.PasswordCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**************
  * Note on how to use JSS_SelfServServer and JSS_SelfServerClient
@@ -58,6 +60,8 @@ import org.mozilla.jss.util.PasswordCallback;
 
 public class JSS_SelfServServer  {
 
+    public static Logger logger = LoggerFactory.getLogger(JSS_SelfServServer.class);
+
     private static Vector<String> jssSupportedCiphers = new Vector<>();
     private static SSLServerSocket serverSock = null;
     private static SSLSocket sock             = null;
@@ -87,7 +91,7 @@ public class JSS_SelfServServer  {
         "<port> <verbose> <cert nickname> ";
 
     public void JSS_SelfServServer() {
-        if (Constants.debug_level > 3) {
+        if (logger.isDebugEnabled()) {
             bVerbose = true;
         }
     }
@@ -351,9 +355,9 @@ public class JSS_SelfServServer  {
                 } else {
                     mesg += "(security is OFF)";
                 }
-                if (Constants.debug_level > 3) System.out.println(mesg);
+                logger.debug(mesg);
             } catch(Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 boss.setFailure();
             }
         }

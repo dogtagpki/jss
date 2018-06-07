@@ -8,6 +8,8 @@ import java.util.Enumeration;
 
 import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a test implementation of the certificate approval callback which
@@ -19,22 +21,22 @@ import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
 public class TestCertificateApprovalCallback
     implements SSLCertificateApprovalCallback {
 
+    public static Logger logger = LoggerFactory.getLogger(TestCertificateApprovalCallback.class);
+
     public boolean approve(
         org.mozilla.jss.crypto.X509Certificate servercert,
         SSLCertificateApprovalCallback.ValidityStatus status) {
 
         SSLCertificateApprovalCallback.ValidityItem item;
 
-        if (Constants.debug_level > 3) {
-            System.out.println("in TestCertificateApprovalCallback.approve()");
+        logger.debug("in TestCertificateApprovalCallback.approve()");
             /* dump out server cert details */
 
-            System.out.println("Peer cert details: "+
-                "\n     subject: "+servercert.getSubjectDN().toString()+
-                "\n     issuer:  "+servercert.getIssuerDN().toString()+
-                "\n     serial:  "+servercert.getSerialNumber().toString()
-                );
-        }
+        logger.debug("Peer cert details:");
+        logger.debug("     subject: " + servercert.getSubjectDN());
+        logger.debug("     issuer:  " + servercert.getIssuerDN());
+        logger.debug("     serial:  " + servercert.getSerialNumber());
+
         /* iterate through all the problems */
 
         boolean trust_the_server_cert=false;
@@ -44,29 +46,24 @@ public class TestCertificateApprovalCallback
         while (errors.hasMoreElements()) {
             i++;
             item = errors.nextElement();
-            if (Constants.debug_level > 3) {
-                System.out.println("item "+i+
+            logger.debug("item "+i+
                     " reason="+item.getReason()+
                     " depth="+item.getDepth());
-            }
+
             org.mozilla.jss.crypto.X509Certificate cert = item.getCert();
             if (item.getReason() ==
                 SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
                 trust_the_server_cert = true;
             }
-            if (Constants.debug_level > 3) {
-                System.out.println(" cert details: "+
-                    "\n     subject: "+cert.getSubjectDN().toString()+
-                    "\n     issuer:  "+cert.getIssuerDN().toString()+
-                    "\n     serial:  "+cert.getSerialNumber().toString()
-                    );
-            }
+            logger.debug(" cert details:");
+            logger.debug("     subject: " + cert.getSubjectDN());
+            logger.debug("     issuer:  " + cert.getIssuerDN());
+            logger.debug("     serial:  " + cert.getSerialNumber());
         }
 
         if (trust_the_server_cert) {
-            if (Constants.debug_level > 3) {
-                System.out.println("importing certificate.");
-            }
+            logger.debug("importing certificate.");
+
             try {
                 InternalCertificate newcert =
                     org.mozilla.jss.CryptoManager.getInstance().

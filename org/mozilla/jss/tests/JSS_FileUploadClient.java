@@ -4,19 +4,31 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.ssl.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.pkix.cert.*;
-import org.mozilla.jss.util.PasswordCallback;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
 
-import java.security.*;
-import java.net.*;
-import java.io.*;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
+import org.mozilla.jss.ssl.SSLClientCertificateSelectionCallback;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedListener;
+import org.mozilla.jss.ssl.SSLSecurityStatus;
+import org.mozilla.jss.ssl.SSLSocket;
+import org.mozilla.jss.ssl.TestCertApprovalCallback;
+import org.mozilla.jss.ssl.TestClientCertificateSelectionCallback;
+import org.mozilla.jss.util.PasswordCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JSS_FileUploadClient {
+
+    public static Logger logger = LoggerFactory.getLogger(JSS_FileUploadClient.class);
 
     private String  clientCertNick      = null;
     private String  serverHost          = null;
@@ -26,20 +38,20 @@ public class JSS_FileUploadClient {
     private int     port                = 29755;
     private String  EOF                 = "test";
     private boolean handshakeCompleted  = false;
-    
+
     private CryptoManager    cm          = null;
     private CryptoToken      tok         = null;
     private PasswordCallback cb          = null;
     private String  fPasswordFile        = "passwords";
     private String  fCertDbPath          = ".";
     private String  fUploadFile          = "foo.in";
-    
+
     /**
      * Default Constructor, do not use.
      */
     public JSS_FileUploadClient() {
     }
-    
+
     /**
      * Initialize the desired cipher to be set
      * on the socket.
@@ -48,7 +60,7 @@ public class JSS_FileUploadClient {
     public void setCipher(int aCipher) {
         fCipher = aCipher;
     }
-    
+
     /**
      * Initialize the hostname to run the server
      * @param aHostName
@@ -56,7 +68,7 @@ public class JSS_FileUploadClient {
     public void setHostName(String aHostName) {
         serverHost = aHostName;
     }
-    
+
     /**
      * Initialize the port to run the server
      * @param aPort
@@ -64,7 +76,7 @@ public class JSS_FileUploadClient {
     public void setPort(int aPort) {
         port = aPort;
     }
-    
+
     /**
      * Initialize the passwords file name
      * @param aPasswordFile
@@ -72,7 +84,7 @@ public class JSS_FileUploadClient {
     public void setPasswordFile(String aPasswordFile) {
         fPasswordFile = aPasswordFile;
     }
-    
+
     /**
      * Initialize the cert db path name
      * @param aCertDbPath
@@ -80,7 +92,7 @@ public class JSS_FileUploadClient {
     public void setCertDbPath(String aCertDbPath) {
         fCertDbPath = aCertDbPath;
     }
-    
+
     /**
      * Initialize the name of the file to
      * be used for testing along with full path.
@@ -89,7 +101,7 @@ public class JSS_FileUploadClient {
     public void setUploadFile(String aUploadFile) {
         fUploadFile = aUploadFile;
     }
-    
+
     /**
      * Enable/disable Test Cert Callback.
      * @param aTestCertCallback
@@ -97,7 +109,7 @@ public class JSS_FileUploadClient {
     public void setTestCertCallback(boolean aTestCertCallback) {
         TestCertCallBack = aTestCertCallback;
     }
-    
+
     /**
      * Set client certificate
      * @param aClientCertNick Certificate Nick Name
@@ -105,7 +117,7 @@ public class JSS_FileUploadClient {
     public void setClientCertNick(String aClientCertNick) {
         clientCertNick = aClientCertNick;
     }
-    
+
     /**
      * Return true if handshake is completed
      * else return false;
@@ -131,7 +143,7 @@ public class JSS_FileUploadClient {
     public void clearHandshakeCompleted() {
         this.handshakeCompleted = false;
     }
-    
+
     /**
      * Set EOF for closing server socket
      * @param fEof null for closing server socket
@@ -139,35 +151,35 @@ public class JSS_FileUploadClient {
     public void setEOF(String fEof) {
         this.EOF = fEof;
     }
-    
+
     /**
      * ReadWrite thread class that takes a
      * SSLSocket as input and sleeps
      * for 2 sec between sending some test
      * data and receiving.
      * NOTE: If bufferedStream.mark(Integer.MAX_VALUE);
-     * method is invoked then fill method of 
-     * BufferedInputStream class copies lot of data using 
-     * System.arraycopy (which in-turn use memcpy). This 
+     * method is invoked then fill method of
+     * BufferedInputStream class copies lot of data using
+     * System.arraycopy (which in-turn use memcpy). This
      * causes very high CPU usage.
      */
     private class readWriteThread extends Thread {
         private SSLSocket clientSock = null;
         private int socketCntr   = 0;
-        
+
         public readWriteThread(SSLSocket sock, int cntr) {
             clientSock = sock;
             socketCntr = cntr;
         }
-        
+
         public void run() {
-            
+
             try {
                 String socketData  = null;
                 char[] cbuf        = null;
                 int    readLength  = 0;
                 String readString  = null;
-                
+
                 OutputStream   os  = clientSock.getOutputStream();
                 System.out.println("Reading file foo.in");
                 BufferedReader in  = new BufferedReader(
@@ -208,15 +220,12 @@ public class JSS_FileUploadClient {
         }
 
         // connect to the server
-        if ( Constants.debug_level >= 3 )
-            System.out.println("client about to connect...");
+        logger.debug("client about to connect...");
 
         String hostAddr =
                 InetAddress.getByName(serverHost).getHostAddress();
 
-        if ( Constants.debug_level >= 3 )
-            System.out.println("the host " + serverHost +
-                    " and the address " + hostAddr);
+        logger.debug("the host " + serverHost + " and the address " + hostAddr);
 
         SSLCertificateApprovalCallback approvalCallback =
                 new TestCertApprovalCallback();
@@ -226,8 +235,7 @@ public class JSS_FileUploadClient {
         SSLSocket sock = null;
 
         if (TestCertCallBack) {
-            if ( Constants.debug_level >= 3 )
-                System.out.println("calling approvalCallBack");
+            logger.debug("calling approvalCallBack");
             sock = new SSLSocket(InetAddress.getByName(hostAddr),
                     port,
                     null,
@@ -235,22 +243,18 @@ public class JSS_FileUploadClient {
                     new TestCertApprovalCallback(),
                     null);
         } else {
-            if ( Constants.debug_level >= 3 )
-                System.out.println("NOT calling approvalCallBack");
+            logger.debug("NOT calling approvalCallBack");
             sock = new SSLSocket(InetAddress.getByName(hostAddr),
                     port);
         }
 
-        if ( Constants.debug_level >= 3 )
-            System.out.println("clientCertNick=" + clientCertNick);
+        logger.debug("clientCertNick=" + clientCertNick);
         sock.setClientCertNickname(clientCertNick);
         if ( fCipher != -1 ) {
             sock.setCipherPreference(fCipher, true);
         }
-        if ( Constants.debug_level >= 3 ) {
-            System.out.println("Client specified cert by nickname");
-            System.out.println("client connected");
-        }
+        logger.debug("Client specified cert by nickname");
+        logger.debug("client connected");
 
         // Set socket timeout to 10 sec
         //sock.setSoTimeout(10 * 1000);
@@ -282,10 +286,9 @@ public class JSS_FileUploadClient {
                 } else {
                     mesg += "(security is OFF)";
                 }
-                if ( Constants.debug_level >= 3 )
-                    System.out.println(mesg);
+                logger.debug(mesg);
             } catch(Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 boss.setFailure();
             }
             setHandshakeCompleted();
@@ -334,17 +337,17 @@ public class JSS_FileUploadClient {
                 socketCntr = new Integer(args[0]).intValue();
                 System.out.println("Socket Counter = " + socketCntr);
             }
-            testCipher = (String)args[1];
+            testCipher = args[1];
             System.out.println("Test Cipher    = " + testCipher);
 
             if ( args.length >= 3 ) {
-                certDbPath = (String)args[2];
-                passwdFile = (String)args[3];
+                certDbPath = args[2];
+                passwdFile = args[3];
             }
 
             if ( args.length >= 5 ) {
-                uploadFile = (String)args[4];
-                testhost   = (String)args[5];
+                uploadFile = args[4];
+                testhost   = args[5];
                 testport   = new Integer(args[6]).intValue();
             }
         } catch (Exception e) { }

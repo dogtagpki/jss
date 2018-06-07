@@ -32,6 +32,8 @@ import org.mozilla.jss.ssl.SSLSecurityStatus;
 import org.mozilla.jss.ssl.SSLSocket;
 import org.mozilla.jss.util.IncorrectPasswordException;
 import org.mozilla.jss.util.PasswordCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**************
  * Note on how to use JSS_SelfServServer and JSS_SelfServerClient
@@ -73,6 +75,8 @@ interface ConstantsBase {
 
 
 public class JSS_SelfServClient implements ConstantsBase, Constants {
+
+    public static Logger logger = LoggerFactory.getLogger(JSS_SelfServClient.class);
 
     private String  clientCertNick       = "default";
     private String  serverHost           = "localhost";
@@ -122,7 +126,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
      * Default Constructor.
      */
     public JSS_SelfServClient() {
-        if (Constants.debug_level > 3) {
+        if (logger.isDebugEnabled()) {
             bVerbose = true;
         }
         /*

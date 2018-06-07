@@ -19,6 +19,8 @@ import java.security.spec.RSAPublicKeySpec;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.util.PasswordCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class TestValues {
     protected TestValues(String keyGenAlg, String sigAlg,
@@ -65,6 +67,7 @@ class DSATestValues extends TestValues {
 
 public class KeyFactoryTest {
 
+    public static Logger logger = LoggerFactory.getLogger(KeyFactoryTest.class);
 
     public static void main(String argv[]) {
       try {
@@ -117,9 +120,8 @@ public class KeyFactoryTest {
         try {
             genPrivKeyFromSpec(rsa);
         } catch (java.security.spec.InvalidKeySpecException ex) {
-            if (Constants.debug_level > 3)
-               System.out.println("InvalidKeySpecException caught " +
-                   "genPrivKeyFromSpec(rsa): " + ex.getMessage());
+            logger.warn("InvalidKeySpecException caught " +
+                   "genPrivKeyFromSpec(rsa): " + ex.getMessage(), ex);
             if ( javaVendor.equals("IBM Corporation") ) {
                 System.out.println("Could not generated a RSA private key from " +
                     "a\njava.security.spec.RSAPrivateKeySpec. Not supported " +
@@ -128,32 +130,28 @@ public class KeyFactoryTest {
                 exception = true;
             }
         } catch (Exception ex) {
-            if (Constants.debug_level > 3)
-            System.out.println("Exception caught genPrivKeyFromSpec(rsa): " +
-                ex.getMessage());
+            logger.warn("Exception caught genPrivKeyFromSpec(rsa): " +
+                ex.getMessage(), ex);
         }
 
         // Generate DSA private key from spec
         try {
             genPrivKeyFromSpec(dsa);
         } catch (java.security.spec.InvalidKeySpecException ex) {
-            if (Constants.debug_level > 3)
-                System.out.println("InvalidKeySpecException caught " +
-                    "genPrivKeyFromSpec(dsa): " + ex.getMessage());
+            logger.warn("InvalidKeySpecException caught " +
+                    "genPrivKeyFromSpec(dsa): " + ex.getMessage(), ex);
             exception = true;
         } catch (Exception ex) {
-            if (Constants.debug_level > 3)
-                System.out.println("Exception caught genPrivKeyFromSpec(dsa): " +
-                ex.getMessage());
+            logger.warn("Exception caught genPrivKeyFromSpec(dsa): " +
+                ex.getMessage(), ex);
         }
 
         // translate RSA key
         try {
             genPubKeyFromSpec(rsa);
         } catch (Exception ex) {
-            if (Constants.debug_level > 3)
-            System.out.println("Exception caught genPubKeyFromSpec(rsa): " +
-                ex.getMessage());
+            logger.warn("Exception caught genPubKeyFromSpec(rsa): " +
+                ex.getMessage(), ex);
             exception = true;
         }
 
@@ -161,9 +159,8 @@ public class KeyFactoryTest {
         try {
 	    genPubKeyFromSpec(dsa);
         } catch (Exception ex) {
-            if (Constants.debug_level > 3)
-            System.out.println("Exception caught genPubKeyFromSpec(dsa): " +
-                ex.getMessage());
+            logger.warn("Exception caught genPubKeyFromSpec(dsa): " +
+                ex.getMessage(), ex);
             exception = true;
         }
 
