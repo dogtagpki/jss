@@ -4,10 +4,11 @@
 
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import java.util.Hashtable;
-import org.mozilla.jss.util.Assert;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.util.Assert;
 
 /**
  * Private Keys used by JSS.  All the private keys handled by JSS are
@@ -66,7 +67,7 @@ public interface PrivateKey extends java.security.PrivateKey
             Assert._assert( old == null );
         }
 
-        private static Hashtable oidMap = new Hashtable();
+        private static Hashtable<OBJECT_IDENTIFIER, Type> oidMap = new Hashtable<>();
 
 
         public static Type fromOID(OBJECT_IDENTIFIER oid)
@@ -106,15 +107,15 @@ public interface PrivateKey extends java.security.PrivateKey
         private static int CKK_EC = 0x3;
         private static int CKK_X9_42_DH = 0x4;
         private static int CKK_KEA = 0x5;
-        
+
         public static final Type RSA = new Type(
                 OBJECT_IDENTIFIER.PKCS1.subBranch(1), "RSA", CKK_RSA );
         public static final Type DSA = new Type(
-                Algorithm.ANSI_X9_ALGORITHM.subBranch(1), "DSA", CKK_DSA); 
+                Algorithm.ANSI_X9_ALGORITHM.subBranch(1), "DSA", CKK_DSA);
         public static final Type EC = new Type(
-            Algorithm.ANSI_X962_OID.subBranch(2).subBranch(1), "EC", CKK_EC); 
+            Algorithm.ANSI_X962_OID.subBranch(2).subBranch(1), "EC", CKK_EC);
         public static final Type DiffieHellman = new Type(
                 DH_OID, "DiffieHellman", CKK_DH );
-                
+
     }
 }

@@ -4,14 +4,15 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.Algorithm;
-import org.mozilla.jss.crypto.HMACAlgorithm;
-import java.util.Hashtable;
-import org.mozilla.jss.util.*;
 import java.security.NoSuchAlgorithmException;
-import org.mozilla.jss.crypto.SignatureAlgorithm;
-import org.mozilla.jss.crypto.KeyWrapAlgorithm;
+import java.util.Hashtable;
+
+import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.HMACAlgorithm;
+import org.mozilla.jss.crypto.KeyWrapAlgorithm;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.util.Assert;
 
 /**
  * PKCS #11 Key Types
@@ -33,7 +34,7 @@ public final class KeyType {
 
         Assert._assert(algs!=null);
 
-        algorithms = (Algorithm[]) algs.clone();
+        algorithms = algs.clone();
 
         // Register this key as the key type for each of its algorithms
         for(i=0; i < algorithms.length; i++) {
@@ -90,9 +91,9 @@ public final class KeyType {
     //////////////////////////////////////////////////////////////
 
     // A hash table associating a key type with each algorithm
-    static protected Hashtable algHash;
+    static protected Hashtable<Algorithm, KeyType> algHash;
     static {
-        algHash = new Hashtable();
+        algHash = new Hashtable<>();
     }
 
 
@@ -204,10 +205,10 @@ public final class KeyType {
                             EncryptionAlgorithm.AES_192_CBC,
                             EncryptionAlgorithm.AES_256_ECB,
                             EncryptionAlgorithm.AES_256_CBC,
-                            EncryptionAlgorithm.AES_CBC_PAD, 
+                            EncryptionAlgorithm.AES_CBC_PAD,
                             EncryptionAlgorithm.AES_128_CBC_PAD,
                             EncryptionAlgorithm.AES_192_CBC_PAD,
-                            EncryptionAlgorithm.AES_256_CBC_PAD        
+                            EncryptionAlgorithm.AES_256_CBC_PAD
                             },
                             "AES"
                         );

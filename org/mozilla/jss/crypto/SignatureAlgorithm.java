@@ -3,16 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import java.util.Hashtable;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
  * Algorithms that can be used for signing.
  */
 public class SignatureAlgorithm extends Algorithm {
 
-    private static Hashtable oidMap = new Hashtable();
+    private static Hashtable<OBJECT_IDENTIFIER, SignatureAlgorithm> oidMap = new Hashtable<>();
 
     protected SignatureAlgorithm(int oidIndex, String name,
         SignatureAlgorithm signingAlg, DigestAlgorithm digestAlg,
@@ -36,7 +37,7 @@ public class SignatureAlgorithm extends Algorithm {
     public static SignatureAlgorithm fromOID(OBJECT_IDENTIFIER oid)
         throws NoSuchAlgorithmException
     {
-        Object alg = oidMap.get(oid);  
+        Object alg = oidMap.get(oid);
         if( alg == null ) {
             throw new NoSuchAlgorithmException();
         }
@@ -44,7 +45,7 @@ public class SignatureAlgorithm extends Algorithm {
     }
 
     /**
-     * The raw encryption portion of the signature algorithm. For example, 
+     * The raw encryption portion of the signature algorithm. For example,
      * SignatureAlgorithm.RSASignatureWithMD2Digest.getSigningAlg ==
      * SignatureAlgorithm.RSASignature.
      */
@@ -92,7 +93,7 @@ public class SignatureAlgorithm extends Algorithm {
      * operates on its input, which should be a hash.
      */
     public static final SignatureAlgorithm
-    ECSignature = new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST, 
+    ECSignature = new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST,
 	"EC",
         null, null, ANSI_X962_OID.subBranch(2).subBranch(1) );
 
@@ -165,7 +166,7 @@ public class SignatureAlgorithm extends Algorithm {
         new SignatureAlgorithm(SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION,
             "RSASignatureWithSHA384Digest", RSASignature, DigestAlgorithm.SHA384,
             OBJECT_IDENTIFIER.PKCS1.subBranch(12));
-    
+
     //////////////////////////////////////////////////////////////////////
     public static final SignatureAlgorithm
     RSASignatureWithSHA512Digest =

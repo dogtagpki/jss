@@ -21,7 +21,7 @@ public class EncryptionAlgorithm extends Algorithm {
     public static class Mode {
         private String name;
 
-        private static Hashtable nameHash = new Hashtable();
+        private static Hashtable<String, Mode> nameHash = new Hashtable<>();
 
         private Mode() { }
         private Mode(String name) {
@@ -32,7 +32,7 @@ public class EncryptionAlgorithm extends Algorithm {
         public static Mode fromString(String name)
             throws NoSuchAlgorithmException
         {
-            Mode m = (Mode) nameHash.get(name.toLowerCase());
+            Mode m = nameHash.get(name.toLowerCase());
             if( m == null ) {
                 throw new NoSuchAlgorithmException(
                     "Unrecognized mode \"" + name + "\"");
@@ -52,7 +52,7 @@ public class EncryptionAlgorithm extends Algorithm {
     public static class Alg {
         private String name;
 
-        private static Hashtable nameHash = new Hashtable();
+        private static Hashtable<String, Alg> nameHash = new Hashtable<>();
 
         private Alg() { }
         private Alg(String name) {
@@ -63,7 +63,7 @@ public class EncryptionAlgorithm extends Algorithm {
         private static Alg fromString(String name)
             throws NoSuchAlgorithmException
         {
-            Alg a = (Alg) nameHash.get(name.toLowerCase());
+            Alg a = nameHash.get(name.toLowerCase());
             if( a == null ) {
                 throw new NoSuchAlgorithmException("Unrecognized algorithm \""
                     + name + "\"");
@@ -85,7 +85,7 @@ public class EncryptionAlgorithm extends Algorithm {
     public static class Padding {
         private String name;
 
-        private static Hashtable nameHash = new Hashtable();
+        private static Hashtable<String, Padding> nameHash = new Hashtable<>();
 
         private Padding() { }
         private Padding(String name) {
@@ -100,7 +100,7 @@ public class EncryptionAlgorithm extends Algorithm {
         public static Padding fromString(String name)
             throws NoSuchAlgorithmException
         {
-            Padding p = (Padding) nameHash.get(name.toLowerCase());
+            Padding p = nameHash.get(name.toLowerCase());
             if( p == null ) {
                 throw new NoSuchAlgorithmException("Unrecognized Padding " +
                     "type \"" + name + "\"");
@@ -201,9 +201,9 @@ public class EncryptionAlgorithm extends Algorithm {
     ///////////////////////////////////////////////////////////////////////
     // mapping
     ///////////////////////////////////////////////////////////////////////
-    private static Hashtable oidMap = new Hashtable();
-    private static Hashtable nameMap = new Hashtable();
-    private static Vector algList = new Vector();
+    private static Hashtable<OBJECT_IDENTIFIER, EncryptionAlgorithm> oidMap = new Hashtable<>();
+    private static Hashtable<String, EncryptionAlgorithm> nameMap = new Hashtable<>();
+    private static Vector<EncryptionAlgorithm> algList = new Vector<>();
 
     public static EncryptionAlgorithm fromOID(OBJECT_IDENTIFIER oid)
         throws NoSuchAlgorithmException
@@ -245,7 +245,7 @@ public class EncryptionAlgorithm extends Algorithm {
         int i;
         for(i = 0; i < len; ++i ) {
             EncryptionAlgorithm cur =
-                (EncryptionAlgorithm) algList.elementAt(i);
+                algList.elementAt(i);
             if( cur.alg == alg && cur.mode == mode && cur.padding == padding ) {
                 if( cur.keyStrength == 0 || cur.keyStrength == keyStrength ) {
                     break;
@@ -257,7 +257,7 @@ public class EncryptionAlgorithm extends Algorithm {
                 + paddingName + " with key strength " + keyStrength +
                 " not found");
         }
-        return (EncryptionAlgorithm) algList.elementAt(i);
+        return algList.elementAt(i);
     }
 
 

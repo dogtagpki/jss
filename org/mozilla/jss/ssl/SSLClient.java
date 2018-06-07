@@ -7,15 +7,22 @@
 
 package org.mozilla.jss.ssl;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import org.mozilla.jss.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Hashtable;
+
+import org.mozilla.jss.CertDatabaseException;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.KeyDatabaseException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
 
 /**
  * Parameters supported by this socket test:
- * 
+ *
  * filename 	file to be read from https server (default: /index.html)
  * port 	port to connect to (default: 443)
  * ipaddr 	address to connect to (overrides hostname, no default)
@@ -24,23 +31,23 @@ import org.mozilla.jss.crypto.AlreadyInitializedException;
  *
  * The following parameters are used for regression testing, so
  * we can print success or failure of the test.
- * 
+ *
  * filesize 	size of file to be read
  * status 	security status of connection - this has to be an integer
- * cipher 	
+ * cipher
  * sessionKeySize
  * sessionSecretSize
  * issuer
  * subject
  * certSerialNum
- * 
+ *
  */
 
-public class SSLClient 
+public class SSLClient
 {
     boolean     handshakeEventHappened = false;
     boolean     doClientAuth = false;
-    Hashtable   args;
+    Hashtable<String, String>   args;
     PrintStream results;
     String      versionStr;
 
@@ -58,7 +65,7 @@ public class SSLClient
     "subject",
     "certSerialNum",
   };
-  
+
   String values[] = {
     "/index",    	 // filename
     "443",	         // port to connect to
@@ -73,23 +80,23 @@ public class SSLClient
     "CN=hbombsgi.mcom.com, OU=Hardcore, C=US", // expected subject DN of server
     "00C3",		 // serial number
     };
-  
+
   String okay = "okay";
   String failed = "FAILED";
-  
+
   private static String htmlHeader = "SSL Client Tester";
   private static String htmlTail   = "\n";
-  
+
   /* simple helper functions */
 
   private boolean isInvalid(String s) {
     return (s == null) || s.equals("");
   }
-  
+
   private String getArgument(String key) {
-    return (String) args.get(key);
+    return args.get(key);
   }
-  
+
   /*
    * return "okay" or "FAILED" based on equality of
    * the argument strings
@@ -100,28 +107,28 @@ public class SSLClient
     if(s1.equals(s2)) return okay;
     return failed;
   }
-  
+
   private String cmp(String s1, int s2) {
     return cmp(s1, new Integer(s2).toString());
   }
-  
-  
-  public void run(boolean printHeader) 
+
+
+  public void run(boolean printHeader)
     {
       try {
 	SSLHandshakeCompletedListener listener = null;
-	
+
 	if(printHeader)
 	  results.println(htmlHeader);
 	results.println("SSL Client Tester");
 	results.println(
-			"$Id$ " + 
+			"$Id$ " +
 			versionStr );
-	
+
 	SSLSocket s;
 	String    hostname;
 	int       port;
-	
+
 	String    filename = getArgument("filename");
 
 	if(isInvalid(filename)) {
@@ -129,7 +136,7 @@ public class SSLClient
 	}
 
 	String msg = "GET " + filename;
-	
+
 	String portstr = getArgument("port");
 
 	if(isInvalid(portstr)) {
@@ -137,10 +144,10 @@ public class SSLClient
 	} else {
 	  port = Integer.valueOf(portstr).intValue();
 	}
-	
+
 	String addrstr   = getArgument("ipaddr");
 	hostname         = addrstr;    // unless it gets changed
-	
+
 	String tmpStr    = getArgument("clientauth");
 	if(isInvalid(tmpStr))
 	  doClientAuth = false;
@@ -150,10 +157,10 @@ public class SSLClient
 			   tmpStr.equals("false") ||
 			   tmpStr.equals("0"));
 	}
-	
-	
+
+
 	if(isInvalid(addrstr)) {
-	  // check for a host name 
+	  // check for a host name
 	  hostname = getArgument("hostname");
 	  if(isInvalid(hostname)) {
 	    throw new Exception("hostname not specified");
@@ -161,51 +168,51 @@ public class SSLClient
 	}
 	results.println("Connecting to " + hostname +
 			" on port " + port );
-	
+
 	SSLCertificateApprovalCallback approvalCallback = new TestCertApprovalCallback();
 	SSLClientCertificateSelectionCallback certSelectionCallback = new TestClientCertificateSelectionCallback();
     Socket js = new Socket(InetAddress.getByName(hostname), port);
 	//s = new SSLSocket(hostname, port, null, 0,
-	s = new SSLSocket(js, hostname, 
+	s = new SSLSocket(js, hostname,
 						approvalCallback,
 						certSelectionCallback
 					);
-						
+
     s.forceHandshake();
 	results.println("Connected.");
-	
+
 	// select the cert for client auth
         // You will have to provide a certificate with this
         // name if you expect client auth to work.
-	
+
 	//s.setClientCertNickname("JavaSSLTestClientCert");
-	
-	
+
+
         // Setup a handshake callback. This listener will get invoked
         // When the SSL handshake is completed on this socket.
-	
+
 	listener = new ClientHandshakeCB(this);
 	s.addHandshakeCompletedListener(listener);
 
     //s.forceHandshake();
-	
+
 	OutputStream o = s.getOutputStream();
-	
+
 	PrintOutputStreamWriter out = new PrintOutputStreamWriter(o);
-	
+
 	results.println("Sending: " + msg + " to " + hostname +
 			", " + port );
-	
+
 	// send HTTP GET message across SSL connection
 	out.println(msg + "\r");
-	
+
 	InputStream in         = s.getInputStream();
 	byte[]      bytes      = new byte[4096];
 	int         totalBytes = 0;
 	int         numReads   = 0;
 	String      lastBytes  = null;
-	
-	
+
+
 	// now try to read data back from the SSL connection
 	try {
 	  for(;;) {
@@ -215,26 +222,26 @@ public class SSLClient
 	      results.println("EOF found.");
 	      break;
 	    }
-	    
+
 	    if(n == 0) {
 	      results.println("Zero bytes read?");
 	      break;
 	    }
 	    numReads++;
-	    
+
 	    if(totalBytes == 0) {
 	      // don't print forever...
 	      String data = new String(bytes, 0, 30, "8859_1");
 	      results.println("Read " + n + " bytes of data");
 	      results.println("First 30 bytes: " + escapeHTML(data));
 	    }
-	    
+
 	    totalBytes += n;
 	    lastBytes = new String(bytes, n-31, 30, "8859_1");
 	  }
 	} catch (IOException e) {
 	  results.println(
-			  "IOException while reading from pipe?  Actually got " + 
+			  "IOException while reading from pipe?  Actually got " +
 			  totalBytes + " bytes total");
 	  e.printStackTrace(results);
 	  results.println("");
@@ -242,32 +249,32 @@ public class SSLClient
 	} finally {
 	  results.println("Last 30 bytes: " + lastBytes);
 	  results.println("Number of read() calls: " + numReads );
-	  
-	  
+
+
 	  /*
 	   * if you want to test sslimpl.c's nsn_ThrowError(), try
 	   * uncommenting the following line.  This will cause the
 	   * getStatus() call to fail.
 	   */
-	  
+
 	  // in.close();
-	  
+
 	  results.println("Diagnostics");
 	  String tmp;
 	  SSLSecurityStatus status = s.getStatus();
-	  
+
 	  results.println("Total bytes read: " + totalBytes );
 	  results.println("Security status of session:");
 	  results.println(status.toString());
 
 	  // now, for the regression testing stuff
-	  
+
 	if (false) {
 	  results.println("Regression Tests");
-	  
+
 	  results.println("Handshake callback event happened: " +
 			  ((handshakeEventHappened) ? okay : failed));
-	  
+
 	  if(!isInvalid(tmp = getArgument("filesize"))) {
 	    results.println("filesize: " + cmp(tmp, totalBytes));
 	  }
@@ -314,8 +321,8 @@ public class SSLClient
 	    }
 	    s.close();
 	    s = null;
-	    
-	    
+
+
       } catch(Exception e) {
 	results.println("***** TEST FAILED *****");
 	e.printStackTrace(results);
@@ -323,16 +330,16 @@ public class SSLClient
       }
       results.println("END OF TEST");
     }
-  
+
   /**
    * given an input string, convert less-than, greater-than, and ampersand
    * from raw characters to escaped characters
    * (&lt; becomes `&amp;lt;', etc.)
    */
-  private String escapeHTML(String s) 
+  private String escapeHTML(String s)
     {
       StringBuffer result = new StringBuffer();
-      
+
       // this is inefficient, but I don't care
       for(int i=0; i<s.length(); i++) {
 	char c = s.charAt(i);
@@ -343,16 +350,16 @@ public class SSLClient
 	default:	result.append(c);	break;
 	}
       }
-      
+
       return result.toString();
     }
-  
+
   public SSLClient( PrintStream ps, String verStr, String[] argv)
     {
-      this.args       = new Hashtable();
+      this.args       = new Hashtable<>();
       this.results    = ps;
       this.versionStr = verStr;
-      
+
       for(int i=0; i<argNames.length; i++) {
 	String value = values[i];
 	if(value != null)
@@ -362,7 +369,7 @@ public class SSLClient
         this.args.put(argv[i], argv[i+1]);
       }
     }
-  
+
   static final int cipherSuites[] = {
     SSLSocket.SSL3_RSA_WITH_RC4_128_MD5,
     SSLSocket.SSL3_RSA_WITH_3DES_EDE_CBC_SHA,
@@ -372,7 +379,7 @@ public class SSLClient
     SSLSocket.SSL3_RSA_WITH_NULL_MD5,
     0
   };
-  
+
   public static void main(String argv[])  throws Exception
     {
       int i;
@@ -401,7 +408,7 @@ public class SSLClient
 	System.out.println("Exception occurred: "+e.getMessage());
 	return;
       }
-      
+
       /* enable all the SSL2 cipher suites */
       for (i = SSLSocket.SSL2_RC4_128_WITH_MD5;
 	   i <= SSLSocket.SSL2_DES_192_EDE3_CBC_WITH_MD5; ++i) {
@@ -410,27 +417,27 @@ public class SSLClient
             SSLSocket.setCipherPreferenceDefault( i, true);
         }
       }
-      
+
       /* enable all the SSL3 cipher suites */
       for (i = 0; cipherSuites[i] != 0;  ++i) {
 //	SSLSocket.setPermittedByPolicy(cipherSuites[i], SSLSocket.SSL_ALLOWED);
 	SSLSocket.setCipherPreferenceDefault( cipherSuites[i], true);
       }
-      
+
       SSLClient x = new SSLClient(System.out, "Stand alone Ver 0.01", argv);
       x.run(true);
     }
-  
+
 }
 
 
 class ClientHandshakeCB implements SSLHandshakeCompletedListener {
   SSLClient sc;
-  
+
   ClientHandshakeCB(SSLClient sc) {
     this.sc = sc;
   }
-  
+
   public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
   try {
     sc.handshakeEventHappened = true;

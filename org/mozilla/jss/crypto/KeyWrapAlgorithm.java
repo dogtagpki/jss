@@ -37,7 +37,7 @@ public class KeyWrapAlgorithm extends Algorithm {
     private boolean padded;
     private int blockSize;
 
-    private static Hashtable nameMap = new Hashtable();
+    private static Hashtable<String, KeyWrapAlgorithm> nameMap = new Hashtable<>();
 
     public static KeyWrapAlgorithm fromString(String name)
             throws NoSuchAlgorithmException

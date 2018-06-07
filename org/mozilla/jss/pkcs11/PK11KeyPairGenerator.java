@@ -115,7 +115,7 @@ public final class PK11KeyPairGenerator
         // no WTLS curves fo now
     };
 
-    private static Hashtable ECCurve_NameToCode = new Hashtable();
+    private static Hashtable<String, PK11KeyPairGenerator.ECCurve_Code> ECCurve_NameToCode = new Hashtable<>();
     static {
       // NIST, SEC2 Prime curves
         ECCurve_NameToCode.put(
@@ -870,7 +870,7 @@ public final class PK11KeyPairGenerator
 	= SECG_EC_CURVE.subBranch(39);
 
     // the EC curvecode to oid hash table
-    private static Hashtable mECCurve_CodeToCurve = new Hashtable();
+    private static Hashtable<Integer, OBJECT_IDENTIFIER> mECCurve_CodeToCurve = new Hashtable<>();
     static {
       // SEG Prime curves
         mECCurve_CodeToCurve.put(
@@ -1030,7 +1030,7 @@ public final class PK11KeyPairGenerator
         throws InvalidParameterException {
         if (curveName == null)
             throw new InvalidParameterException();
-        ECCurve_Code c = (ECCurve_Code) ECCurve_NameToCode.get(curveName);
+        ECCurve_Code c = ECCurve_NameToCode.get(curveName);
         if (c == null)
             throw new InvalidParameterException(curveName);
         return c.ordinal();
@@ -1046,7 +1046,7 @@ public final class PK11KeyPairGenerator
     {
         OBJECT_IDENTIFIER oid;
 
-        oid = (OBJECT_IDENTIFIER) mECCurve_CodeToCurve.get(curvecode);
+        oid = mECCurve_CodeToCurve.get(curvecode);
         if (oid == null)
             throw new IllegalArgumentException("curvecode ="+curvecode);
         return new PK11ParameterSpec(ASN1Util.encode(oid));

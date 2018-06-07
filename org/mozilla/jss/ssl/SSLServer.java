@@ -40,7 +40,7 @@ public class SSLServer
 {
     boolean     handshakeEventHappened = false;
     boolean     doClientAuth = false;
-    Hashtable   args;
+    Hashtable<String, String>   args;
     PrintStream results;
     String      versionStr;
 
@@ -69,7 +69,7 @@ public class SSLServer
     }
 
     private String getArgument(String key) {
-	return (String) args.get(key);
+	return args.get(key);
     }
 
     String okay = "okay";
@@ -279,7 +279,7 @@ public class SSLServer
 
     public SSLServer( PrintStream ps, String verStr)
     {
-	this.args       = new Hashtable();
+	this.args       = new Hashtable<>();
 	this.results    = ps;
 	this.versionStr = verStr;
 

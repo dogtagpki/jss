@@ -4,9 +4,10 @@
 
 package org.mozilla.jss.crypto;
 
-import java.util.Hashtable;
 import java.security.NoSuchAlgorithmException;
-import org.mozilla.jss.asn1.*;
+import java.util.Hashtable;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 public class DigestAlgorithm extends Algorithm {
 
@@ -30,16 +31,16 @@ public class DigestAlgorithm extends Algorithm {
     ///////////////////////////////////////////////////////////////////////
     // OID mapping
     ///////////////////////////////////////////////////////////////////////
-    private static Hashtable oidMap = new Hashtable();
+    private static Hashtable<OBJECT_IDENTIFIER, DigestAlgorithm> oidMap = new Hashtable<>();
 
     public static DigestAlgorithm fromOID(OBJECT_IDENTIFIER oid)
         throws NoSuchAlgorithmException
     {
-        Object alg = oidMap.get(oid);
+        DigestAlgorithm alg = oidMap.get(oid);
         if( alg == null ) {
             throw new NoSuchAlgorithmException();
         } else {
-            return (DigestAlgorithm) alg;
+            return alg;
         }
     }
 
@@ -69,19 +70,19 @@ public class DigestAlgorithm extends Algorithm {
         (SEC_OID_SHA1, "SHA-1", OBJECT_IDENTIFIER.ALGORITHM.subBranch(26), 20);
 
     /*
-    * The SHA-256 digest Algorithm from FIPS 180-2  
+    * The SHA-256 digest Algorithm from FIPS 180-2
     */
     public static final DigestAlgorithm SHA256 = new DigestAlgorithm
         (SEC_OID_SHA256, "SHA-256", OBJECT_IDENTIFIER.HASH_ALGORITHM.subBranch(1), 32);
 
     /*
-    * The SHA-384 digest Algorithm from FIPS 180-2  
+    * The SHA-384 digest Algorithm from FIPS 180-2
     */
     public static final DigestAlgorithm SHA384 = new DigestAlgorithm
         (SEC_OID_SHA384, "SHA-384", OBJECT_IDENTIFIER.HASH_ALGORITHM.subBranch(2), 48);
 
     /*
-    * The SHA-512 digest Algorithm from FIPS 180-2  
+    * The SHA-512 digest Algorithm from FIPS 180-2
     */
     public static final DigestAlgorithm SHA512 = new DigestAlgorithm
         (SEC_OID_SHA512, "SHA-512", OBJECT_IDENTIFIER.HASH_ALGORITHM.subBranch(3), 64);

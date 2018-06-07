@@ -31,7 +31,7 @@ public class KeyPairAlgorithm extends Algorithm {
         return algFamily;
     }
 
-    private static Hashtable nameMap = new Hashtable();
+    private static Hashtable<String, KeyPairAlgorithm> nameMap = new Hashtable<>();
 
     /**
      * Looks up a key pair generation algorithm from its name. The names
@@ -43,7 +43,7 @@ public class KeyPairAlgorithm extends Algorithm {
     public static KeyPairAlgorithm fromString(String algName)
         throws NoSuchAlgorithmException
     {
-        KeyPairAlgorithm alg = (KeyPairAlgorithm)nameMap.get(algName);
+        KeyPairAlgorithm alg = nameMap.get(algName);
         if( alg == null ) {
             throw new NoSuchAlgorithmException();
         }

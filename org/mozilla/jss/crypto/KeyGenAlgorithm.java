@@ -53,7 +53,7 @@ public class KeyGenAlgorithm extends Algorithm {
     ///////////////////////////////////////////////////////////////////////
     // OID mapping
     ///////////////////////////////////////////////////////////////////////
-    private static Hashtable oidMap = new Hashtable();
+    private static Hashtable<OBJECT_IDENTIFIER, KeyGenAlgorithm> oidMap = new Hashtable<>();
 
     public static KeyGenAlgorithm fromOID(OBJECT_IDENTIFIER oid)
         throws NoSuchAlgorithmException

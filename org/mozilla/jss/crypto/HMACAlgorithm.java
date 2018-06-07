@@ -4,9 +4,10 @@
 
 package org.mozilla.jss.crypto;
 
-import java.util.Hashtable;
-import org.mozilla.jss.asn1.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
  * Algorithms for performing HMACs. These can be used to create
@@ -26,11 +27,11 @@ public class HMACAlgorithm extends DigestAlgorithm {
     ///////////////////////////////////////////////////////////////////////
     // OID mapping
     ///////////////////////////////////////////////////////////////////////
-    private static Hashtable oidMap = new Hashtable();
+    private static Hashtable<OBJECT_IDENTIFIER, HMACAlgorithm> oidMap = new Hashtable<>();
 
     /**
      * Looks up the HMAC algorithm with the given OID.
-     * 
+     *
      * @exception NoSuchAlgorithmException If no registered HMAC algorithm
      *  has the given OID.
      */
