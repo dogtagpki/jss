@@ -477,7 +477,7 @@ public static class Template implements ASN1Template {
                 " IDENTIFIER");
         }
 
-        Vector numberV = new Vector();
+        Vector<Long> numberV = new Vector<>();
 
         // handle first byte, which contains first two numbers
         byte b = readByte(istream);
@@ -510,7 +510,7 @@ public static class Template implements ASN1Template {
         // convert Vector to array
         long numbers[] = new long[ numberV.size() ];
         for(int i = 0; i < numbers.length; i++) {
-            numbers[i] = ((Long)numberV.elementAt(i)).longValue();
+            numbers[i] = numberV.elementAt(i).longValue();
         }
 
         // create OBJECT_IDENTIFIER from array

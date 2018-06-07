@@ -3,15 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.math.BigInteger;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
+
 import org.mozilla.jss.util.Assert;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 
 /**
  * An ASN.1 SET, which is an unordered collection of ASN.1 values.
@@ -28,7 +28,7 @@ public class SET implements ASN1Value {
     protected static final Form FORM = Form.CONSTRUCTED;
 
     // The elements of the set
-    protected Vector elements = new Vector();
+    protected Vector<Element> elements = new Vector<>();
 
     private void addElement( Element e ) {
         elements.addElement(e);
@@ -81,7 +81,7 @@ public class SET implements ASN1Value {
      * Returns the element at the given index in the SET.
      */
     public ASN1Value elementAt( int index ) {
-        return ((Element)elements.elementAt(index)).getValue();
+        return elements.elementAt(index).getValue();
     }
 
     /**
@@ -90,7 +90,7 @@ public class SET implements ASN1Value {
      * underlying type is returned.
      */
      public Tag tagAt( int index ) {
-        Tag implicit = ((Element)elements.elementAt(index)).getImplicitTag();
+        Tag implicit = elements.elementAt(index).getImplicitTag();
         if( implicit != null ) {
             return implicit;
         } else {
@@ -107,7 +107,7 @@ public class SET implements ASN1Value {
 
         int size = elements.size();
         for( int i=0; i < size; i++ ) {
-            Element e = (Element) elements.elementAt(i);
+            Element e = elements.elementAt(i);
             if( e.getTag().equals(tag) ) {
                 return e.getValue();
             }
@@ -169,8 +169,8 @@ public class SET implements ASN1Value {
         // compute and order contents
         int numElements = elements.size();
         int totalBytes = 0;
-        Vector encodings = new Vector(numElements);
-        Vector tags = new Vector(numElements);
+        Vector<byte[]> encodings = new Vector<>(numElements);
+        Vector<Integer> tags = new Vector<>(numElements);
         int i;
         for(i = 0; i < numElements; i++ ) {
 
@@ -194,7 +194,7 @@ public class SET implements ASN1Value {
 
         // write contents in order
         for(i=0; i < numElements; i++ ) {
-            ostream.write( (byte[]) encodings.elementAt(i) );
+            ostream.write( encodings.elementAt(i) );
         }
     }
 
@@ -228,13 +228,13 @@ public class SET implements ASN1Value {
 
     // performs ascending lexicographic ordering
     // linear search, but number of items is usually going to be small.
-    private static void insertInOrder(Vector encs, byte[] enc) {
+    private static void insertInOrder(Vector<byte[]> encs, byte[] enc) {
         int size = encs.size();
 
         // find the lowest item that we are less than or equal to
         int i;
         for(i=0; i < size; i++) {
-            if( compare(enc, (byte[])encs.elementAt(i)) < 1 ) {
+            if( compare(enc, encs.elementAt(i)) < 1 ) {
                 break;
             }
         }
@@ -245,7 +245,7 @@ public class SET implements ASN1Value {
 
     // performs ascending ordering by tag
     // linear search, but number of items is usually going to be small.
-    private static void insertInOrder(Vector encs, byte[] enc, Vector tags,
+    private static void insertInOrder(Vector<byte[]> encs, byte[] enc, Vector<Integer> tags,
                 int tag)
     {
         int size = encs.size();
@@ -253,7 +253,7 @@ public class SET implements ASN1Value {
         // find the lowest item that we are less than or equal to
         int i;
         for(i = 0; i < size; i++) {
-            if( tag <= ((Integer)tags.elementAt(i)).intValue() ) {
+            if( tag <= tags.elementAt(i).intValue() ) {
                 break;
             }
         }
@@ -348,7 +348,7 @@ public class SET implements ASN1Value {
  */
 public static class Template implements ASN1Template {
 
-    private Vector elements = new Vector();
+    private Vector<Element> elements = new Vector<>();
 
     private void addElement( Element e ) {
         elements.addElement(e);
@@ -520,14 +520,14 @@ public static class Template implements ASN1Template {
      * May be NULL if no implicit tag was specified.
      */
     public Tag implicitTagAt(int index) {
-        return ((Element)elements.elementAt(index)).getImplicitTag();
+        return elements.elementAt(index).getImplicitTag();
     }
 
     /**
      * Returns the sub-template stored at the given index.
      */
     public ASN1Template templateAt(int index) {
-        return ((Element)elements.elementAt(index)).getTemplate();
+        return elements.elementAt(index).getTemplate();
     }
 
     /**
@@ -535,11 +535,11 @@ public static class Template implements ASN1Template {
      * is optional.
      */
     public boolean isOptionalAt(int index) {
-        return ((Element)elements.elementAt(index)).isOptional();
+        return elements.elementAt(index).isOptional();
     }
 
     private boolean isRepeatableAt(int index) {
-        return ((Element)elements.elementAt(index)).isRepeatable();
+        return elements.elementAt(index).isRepeatable();
     }
 
     /**
@@ -547,7 +547,7 @@ public static class Template implements ASN1Template {
      * May return NULL if no default value was specified.
      */
     public ASN1Value defaultAt(int index) {
-        return ((Element)elements.elementAt(index)).getDefault();
+        return elements.elementAt(index).getDefault();
     }
 
     /**
@@ -602,7 +602,7 @@ public static class Template implements ASN1Template {
         SET set = new SET();
         ASN1Header lookAhead;
         boolean[] found = new boolean[ elements.size() ];
-        
+
         // while content remains, try to decode it
         while( remainingContent > 0  || remainingContent == -1) {
 
@@ -626,7 +626,7 @@ public static class Template implements ASN1Template {
                 throw new InvalidBERException("Unexpected Tag in SET: "+
                     lookAhead.getTag() );
             }
-            Element e = (Element) elements.elementAt(index);
+            Element e = elements.elementAt(index);
             if( found[index] && ! e.isRepeatable() ) {
                 // element already found, and it's not repeatable
                 throw new InvalidBERException("Duplicate Tag in SET: "+
@@ -706,7 +706,7 @@ public static class Template implements ASN1Template {
         int size = elements.size();
 
         for( int i = 0; i < size ; i++ ) {
-            Element e = (Element) elements.elementAt(i);
+            Element e = elements.elementAt(i);
             if( e.tagMatch( tag ) ) {
                 // match!
                 return i;

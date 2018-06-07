@@ -3,16 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
 import java.util.Vector;
+
 import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 /**
  * An ASN.1 SEQUENCE.  This class is an ordered collection of ASN.1 values.
@@ -59,7 +57,7 @@ public class SEQUENCE extends SET implements ASN1Value {
  */
 public static class Template implements ASN1Template {
 
-    private Vector elements = new Vector();
+    private Vector<Element> elements = new Vector<>();
 
     private void addElement(Element el) {
         elements.addElement( el );
@@ -236,21 +234,21 @@ public static class Template implements ASN1Template {
      * May be NULL if no implicit tag was specified.
      */
     public Tag implicitTagAt( int index ) {
-        return ((Element)elements.elementAt(index)).getImplicitTag();
+        return elements.elementAt(index).getImplicitTag();
     }
 
     /**
      * Returns the sub-template stored at the given index.
      */
     public ASN1Template templateAt( int index ) {
-        return ((Element)elements.elementAt(index)).getTemplate();
+        return elements.elementAt(index).getTemplate();
     }
 
     /**
      * Returns whether the sub-template at the given index is optional.
      */
     public boolean isOptionalAt( int index ) {
-        return ((Element)elements.elementAt(index)).isOptional();
+        return elements.elementAt(index).isOptional();
     }
 
     /**
@@ -258,7 +256,7 @@ public static class Template implements ASN1Template {
      * May return NULL if no default value was specified.
      */
     public ASN1Value defaultAt( int index ) {
-        return ((Element)elements.elementAt(index)).getDefault();
+        return elements.elementAt(index).getDefault();
     }
 
     /**
@@ -334,7 +332,7 @@ public static class Template implements ASN1Template {
 
             // skip over items that don't match.  Hopefully they are
             // optional or have a default.  Otherwise, it's an error.
-            Element e = (Element) elements.elementAt(index);
+            Element e = elements.elementAt(index);
             if( (lookAhead == null) || lookAhead.isEOC() ||
                     ! e.tagMatch( lookAhead.getTag() ) )
             {
@@ -642,7 +640,7 @@ public static class OF_Template implements ASN1Template {
                 } else if(v instanceof EXPLICIT) {
                     EXPLICIT ex = (EXPLICIT) v;
                     INTEGER in = (INTEGER) ex.getContent();
-                    System.out.println("EXPLICIT ["+ex.getTag()+"]: "+ 
+                    System.out.println("EXPLICIT ["+ex.getTag()+"]: "+
                         "INTEGER: "+in);
                 } else if(v instanceof OCTET_STRING) {
                     OCTET_STRING os = (OCTET_STRING) v;
@@ -717,7 +715,7 @@ public static class OF_Template implements ASN1Template {
 
             nested = new SEQUENCE();
             seq.addElement( nested );
-            
+
 
             seq.encode(System.out);
             System.out.flush();

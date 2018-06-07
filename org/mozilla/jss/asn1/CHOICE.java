@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
+
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -46,7 +47,7 @@ public class CHOICE implements ASN1Value {
     }
 
     /**
-     * Returns the chosen value. 
+     * Returns the chosen value.
      */
     public ASN1Value getValue() {
         return val;
@@ -80,14 +81,14 @@ public class CHOICE implements ASN1Value {
         Assert._assert(implicitTag.equals(tag));
         val.encode( tag, ostream );
     }
-    
+
 /**
  * A Template for decoding ASN.1 <code>CHOICE</code>s
  */
 public static class Template implements ASN1Template {
 
     // The the various possibilities in this CHOICE
-    private Vector templates = new Vector();
+    private Vector<Element> templates = new Vector<>();
 
     /**
      *  Creates an empty CHOICE template
@@ -119,7 +120,7 @@ public static class Template implements ASN1Template {
      * Retrieves the element at the specified index.
      */
     public ASN1Template elementAt(int index) {
-        return ((Element)templates.elementAt(index)).getTemplate();
+        return templates.elementAt(index).getTemplate();
     }
 
     /**
@@ -127,7 +128,7 @@ public static class Template implements ASN1Template {
      * Returns null if there is no implicit tag for this element.
      */
     public Tag implicitTagAt(int index) {
-        return ((Element)templates.elementAt(index)).getImplicitTag();
+        return templates.elementAt(index).getImplicitTag();
     }
 
     /**
@@ -175,7 +176,7 @@ public static class Template implements ASN1Template {
     {
         ASN1Header head = ASN1Header.lookAhead(istream);
         Tag tag = head.getTag();
-        
+
         // Loop over all the elements of the CHOICE template until we
         // find one with a matching tag.
         int size = size();

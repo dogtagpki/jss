@@ -11,7 +11,7 @@ import java.util.Vector;
 public class InvalidBERException extends java.lang.Exception {
 
     private InvalidBERException child=null;
-    private Vector mesgList = new Vector();
+    private Vector<String> mesgList = new Vector<>();
 
     public InvalidBERException(String mesg) {
         super(mesg);
@@ -56,7 +56,7 @@ public class InvalidBERException extends java.lang.Exception {
         }
         return sb.toString();
     }
-        
+
     public static class EOF extends InvalidBERException {
         public EOF() {
             super("Unexpected end-of-file encountered");

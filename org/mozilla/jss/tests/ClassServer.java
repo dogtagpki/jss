@@ -4,20 +4,24 @@
 
 package org.mozilla.jss.tests;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Vector;
-import javax.net.*;
 
 /*
  * ClassServer.java -- JSSE_SSLServer implements this
  * class.
  */
 public abstract class ClassServer implements Runnable {
-    
+
     private ServerSocket server             = null;
-    private Vector       supportedCiphers   = new Vector();
-    
+    private Vector<String>       supportedCiphers   = new Vector<>();
+
     /**
      * Constructs a ClassServer based on <b>ss</b>
      */
@@ -25,7 +29,7 @@ public abstract class ClassServer implements Runnable {
         server = ss;
         newListener();
     }
-    
+
     /**
      * The "listen" thread that accepts a connection to the
      * server, parses the header to obtain the file name
@@ -35,7 +39,7 @@ public abstract class ClassServer implements Runnable {
     public void run() {
         Socket  socket             = null;
         boolean socketListenStatus = true;
-        
+
         // accept a connection
         while ( socketListenStatus ) {
             try {
@@ -43,9 +47,9 @@ public abstract class ClassServer implements Runnable {
             } catch (Exception ex) {
                 System.exit(1);
             }
-            
+
             newListener();
-            
+
             //try to read some bytes, to allow the handshake to go through
             try {
                 InputStream is     = socket.getInputStream();
@@ -63,13 +67,13 @@ public abstract class ClassServer implements Runnable {
                 socketListenStatus = false;
             }
         }
-        
+
         try {
             server.close();
         } catch (Exception ex) {
             System.exit(1);
         }
-        
+
         System.out.println("Server exiting");
         System.out.println("-------------------------------------------" +
                            "-------------");
@@ -78,32 +82,32 @@ public abstract class ClassServer implements Runnable {
         System.out.println("-------------------------------------------" +
                            "-------------");
         System.out.println("supportedCiphers.size " + supportedCiphers.size());
-        System.out.println("Constants.jssCiphersSuites "+  
+        System.out.println("Constants.jssCiphersSuites "+
                             Constants.jssCipherSuites.length);
-        
+
         for ( int i=0; i<(supportedCiphers.size()-1); i++ ) {
             System.out.print(i + " SC " +
-            new Integer((String)supportedCiphers.elementAt(i)).intValue()); 
-            
+            new Integer(supportedCiphers.elementAt(i)).intValue());
+
             for ( int j=0; j<(Constants.jssCipherSuites.length); j++ ) {
-               if (new Integer((String)supportedCiphers.elementAt(i)).intValue() 
+               if (new Integer(supportedCiphers.elementAt(i)).intValue()
                    == Constants.jssCipherSuites[j].value ) {
                     System.out.print(" JSSC ");
-                    System.out.println(" ["+ i +"]\t" + 
+                    System.out.println(" ["+ i +"]\t" +
                                        Constants.jssCipherSuites[j].name);
                     System.out.flush();
                 }
-            } 
+            }
         }
         System.out.println("-------------------------------------------" +
                            "-------------");
         System.out.flush();
-        
+
         if( !socketListenStatus ) {
             System.exit(0);
         }
     }
-    
+
     /**
      * Create a new thread to listen.
      */

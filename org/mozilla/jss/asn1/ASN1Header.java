@@ -3,12 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.math.BigInteger;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.util.Vector;
+
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -108,7 +109,7 @@ public class ASN1Header {
         // Get Tag Class
         //
         tagClass = Tag.Class.fromInt( (byte1 & 0xff) >>> 6 );
-        
+
         //
         // Get form
         //
@@ -129,7 +130,7 @@ public class ASN1Header {
             // read all octets into a Vector of Bytes
             //
             byte next;
-            Vector bV = new Vector();
+            Vector<Byte> bV = new Vector<>();
 
             // last byte has MSB == 0.
             do {
@@ -167,7 +168,7 @@ public class ASN1Header {
                 Assert._assert( a < bA.length );
 
                 // MSB is not part of the number
-                byte b = (byte) ( ((Byte)bV.elementAt(v)).byteValue() & 0x7f );
+                byte b = (byte) ( bV.elementAt(v).byteValue() & 0x7f );
                 bA[a] |= b << shift;
                 if( shift > 1 ) {
                     // The byte from the Vector falls across a byte boundary
@@ -212,7 +213,7 @@ public class ASN1Header {
                 // indefinite
                 contentLength = -1;
             } else {
-                // definite 
+                // definite
                 byte[] lenBytes = new byte[ lenByte & 0x7f ];
                 ASN1Util.readFully(lenBytes, istream);
                 encoding.write( lenBytes );
@@ -254,7 +255,7 @@ public class ASN1Header {
         }
 
         ByteArrayOutputStream cache = new ByteArrayOutputStream();
-        
+
         //
         // Identifier octet(s)
         //

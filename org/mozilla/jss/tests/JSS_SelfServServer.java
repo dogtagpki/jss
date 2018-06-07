@@ -58,7 +58,7 @@ import org.mozilla.jss.util.PasswordCallback;
 
 public class JSS_SelfServServer  {
 
-    private static Vector jssSupportedCiphers = new Vector();
+    private static Vector<String> jssSupportedCiphers = new Vector<>();
     private static SSLServerSocket serverSock = null;
     private static SSLSocket sock             = null;
 

@@ -4,12 +4,23 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.*;
 import java.security.PublicKey;
-import java.security.cert.CertificateEncodingException;
 import java.util.Vector;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.Algorithm;
+import org.mozilla.jss.crypto.CryptoStore;
+import org.mozilla.jss.crypto.KeyAlreadyImportedException;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.Password;
 
 public final class PK11Store implements CryptoStore {
 
@@ -36,26 +47,26 @@ public final class PK11Store implements CryptoStore {
 
     public synchronized PrivateKey[]
     getPrivateKeys() throws TokenException {
-        Vector keys = new Vector();
+        Vector<PrivateKey> keys = new Vector<>();
         putKeysInVector(keys);
         PrivateKey[] array = new PrivateKey[keys.size()];
-        keys.copyInto( (Object[]) array );
+        keys.copyInto( array );
         return array;
     }
 
     public synchronized SymmetricKey[]
     getSymmetricKeys() throws TokenException {
 
-        Vector keys = new Vector();
+        Vector<SymmetricKey> keys = new Vector<>();
         putSymKeysInVector(keys);
         SymmetricKey[] array = new SymmetricKey[keys.size()];
-        keys.copyInto( (Object[]) array);
+        keys.copyInto( array);
         return array;
     }
 
-    protected native void putKeysInVector(Vector keys) throws TokenException;
-    
-    protected native void putSymKeysInVector(Vector symKeys) throws TokenException;
+    protected native void putKeysInVector(Vector<PrivateKey> keys) throws TokenException;
+
+    protected native void putSymKeysInVector(Vector<SymmetricKey> symKeys) throws TokenException;
 
 
     public native void deletePrivateKey(PrivateKey key)
@@ -98,16 +109,16 @@ public final class PK11Store implements CryptoStore {
     public X509Certificate[]
     getCertificates() throws TokenException
     {
-        Vector certs = new Vector();
+        Vector<X509Certificate> certs = new Vector<>();
         putCertsInVector(certs);
         X509Certificate[] array = new X509Certificate[certs.size()];
-        certs.copyInto( (Object[]) array );
+        certs.copyInto( array );
         return array;
     }
-    protected native void putCertsInVector(Vector certs) throws TokenException;
+    protected native void putCertsInVector(Vector<X509Certificate> certs) throws TokenException;
 
     /**
-     * Deletes the specified certificate and its associated private 
+     * Deletes the specified certificate and its associated private
      * key from the store.
      *
      * @param cert certificate to be deleted
