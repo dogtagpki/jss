@@ -8,6 +8,7 @@ package org.mozilla.jss.pkix.crmf;
  */
 public class ChallengeResponseException extends java.lang.Exception {
 
+    private static final long serialVersionUID = 1L;
     private ChallengeResponseException child=null;
 
     public ChallengeResponseException(String mesg) {

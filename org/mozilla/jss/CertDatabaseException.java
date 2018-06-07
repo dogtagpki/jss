@@ -8,6 +8,7 @@ package org.mozilla.jss;
  * or if an error occurs while opening it.
  */
 public class CertDatabaseException extends java.lang.Exception {
+    private static final long serialVersionUID = 1L;
     public CertDatabaseException() {}
     public CertDatabaseException(String mesg) {
         super(mesg);

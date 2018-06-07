@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
 	implements java.security.PublicKey {
 
+    private static final long serialVersionUID = 1L;
+
     protected PK11PubKey(byte[] pointer) {
         Assert._assert(pointer!=null);
         keyProxy = new PublicKeyProxy(pointer);

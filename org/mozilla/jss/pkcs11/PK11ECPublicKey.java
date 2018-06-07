@@ -13,6 +13,7 @@ import java.math.BigInteger;
 //public final class PK11ECPublicKey extends PK11PubKey implements ECPublicKey {
 public final class PK11ECPublicKey extends PK11PubKey {
 
+    private static final long serialVersionUID = 1L;
     public PK11ECPublicKey(byte[] pointer) {
         super(pointer);
     }

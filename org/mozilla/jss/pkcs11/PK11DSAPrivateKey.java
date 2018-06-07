@@ -10,6 +10,8 @@ class PK11DSAPrivateKey
     extends PK11PrivKey implements DSAPrivateKey
 {
 
+    private static final long serialVersionUID = 1L;
+
     private PK11DSAPrivateKey() { super(null); }
 
     protected PK11DSAPrivateKey(byte[] pointer) {

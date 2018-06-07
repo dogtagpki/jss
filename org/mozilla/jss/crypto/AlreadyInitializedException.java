@@ -9,6 +9,7 @@ package org.mozilla.jss.crypto;
  * is attempted on something that is already initialized.
  */
 public class AlreadyInitializedException extends java.lang.Exception {
+    private static final long serialVersionUID = 1L;
     public AlreadyInitializedException() {}
     public AlreadyInitializedException(String mesg) {
         super(mesg);

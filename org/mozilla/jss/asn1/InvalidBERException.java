@@ -10,6 +10,7 @@ import java.util.Vector;
  */
 public class InvalidBERException extends java.lang.Exception {
 
+    private static final long serialVersionUID = 1L;
     private InvalidBERException child=null;
     private Vector<String> mesgList = new Vector<>();
 
@@ -58,13 +59,16 @@ public class InvalidBERException extends java.lang.Exception {
     }
 
     public static class EOF extends InvalidBERException {
+        private static final long serialVersionUID = 1L;
+
         public EOF() {
             super("Unexpected end-of-file encountered");
         }
     }
 
-	public static class InvalidChar extends InvalidBERException {
-		public InvalidChar(byte b, int offset) {
+    public static class InvalidChar extends InvalidBERException {
+        private static final long serialVersionUID = 1L;
+        public InvalidChar(byte b, int offset) {
 			super("Invalid character ("+b+") encountered at offset "+offset);
 		}
 		public InvalidChar(char c, int offset) {

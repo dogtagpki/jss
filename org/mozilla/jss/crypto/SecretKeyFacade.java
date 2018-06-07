@@ -6,6 +6,7 @@ package org.mozilla.jss.crypto;
 
 public class SecretKeyFacade implements javax.crypto.SecretKey {
 
+    private static final long serialVersionUID = 1L;
     public SymmetricKey key;
 
     public SecretKeyFacade(SymmetricKey symk) {

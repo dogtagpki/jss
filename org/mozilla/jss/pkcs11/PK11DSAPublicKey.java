@@ -11,6 +11,7 @@ import java.security.spec.DSAParameterSpec;
 
 public final class PK11DSAPublicKey extends PK11PubKey implements DSAPublicKey {
 
+    private static final long serialVersionUID = 1L;
     public PK11DSAPublicKey(byte[] pointer) {
         super(pointer);
     }

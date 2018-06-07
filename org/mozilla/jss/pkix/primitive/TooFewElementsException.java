@@ -5,4 +5,6 @@ package org.mozilla.jss.pkix.primitive;
 
 
 public class TooFewElementsException extends Exception {
+
+    private static final long serialVersionUID = 1L;
 }

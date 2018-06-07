@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 public class Password implements PasswordCallback, Cloneable,
         java.io.Serializable
     {
+    private static final long serialVersionUID = 1L;
+
     public static Logger logger = LoggerFactory.getLogger(Password.class);
 
     /**

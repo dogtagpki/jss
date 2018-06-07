@@ -5,6 +5,7 @@ package org.mozilla.jss;
 
 public final class JSSProvider extends java.security.Provider {
 
+    private static final long serialVersionUID = 1L;
     /********************************************************************/
     /* The VERSION Strings should be updated in the following           */
     /* files everytime a new release of JSS is generated:               */

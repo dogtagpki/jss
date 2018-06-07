@@ -8,6 +8,7 @@ package org.mozilla.jss.crypto;
  * This exception is thrown whenever something isn't implemented.
  */
 public class ObjectNotFoundException extends Exception {
+    private static final long serialVersionUID = 1L;
     public ObjectNotFoundException() { super(); }
     public ObjectNotFoundException(String mesg) { super(mesg); }
 }

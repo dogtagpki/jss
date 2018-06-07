@@ -12,6 +12,7 @@ import java.io.InputStream;
  */
 public class ENUMERATED extends INTEGER implements ASN1Value {
 
+    private static final long serialVersionUID = 1L;
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 10);
     public Tag getTag() {
         return TAG;

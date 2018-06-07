@@ -9,6 +9,7 @@ import org.mozilla.jss.crypto.JSSSecureRandom;
 
 public class JSSSecureRandomSpi extends java.security.SecureRandomSpi {
 
+    private static final long serialVersionUID = 1L;
     JSSSecureRandom engine;
 
     public JSSSecureRandomSpi() {

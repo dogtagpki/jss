@@ -9,6 +9,7 @@ package org.mozilla.jss.crypto;
  * key which is already in the specified token
  */
 public class KeyAlreadyImportedException extends java.lang.Exception {
+    private static final long serialVersionUID = 1L;
     public KeyAlreadyImportedException() {}
     public KeyAlreadyImportedException(String mesg) {
         super(mesg);

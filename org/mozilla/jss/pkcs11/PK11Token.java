@@ -55,6 +55,7 @@ public final class PK11Token implements CryptoToken {
     static public class NotInitializedException
 		extends IncorrectPasswordException
 	{
+        private static final long serialVersionUID = 1L;
         public NotInitializedException() {}
         public NotInitializedException(String mesg) {super(mesg);}
     }

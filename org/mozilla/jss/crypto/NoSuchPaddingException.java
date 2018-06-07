@@ -7,4 +7,6 @@ package org.mozilla.jss.crypto;
  * This class is a stub for javax.crypto.NoSuchPaddingException until we
  * move to JDK 1.2.
  */
-public class NoSuchPaddingException extends Exception { }
+public class NoSuchPaddingException extends Exception {
+    private static final long serialVersionUID = 1L;
+}

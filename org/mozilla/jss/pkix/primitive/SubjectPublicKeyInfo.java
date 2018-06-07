@@ -20,6 +20,7 @@ import org.mozilla.jss.pkcs11.PK11PubKey;
 public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
     implements ASN1Value, java.security.PublicKey {
 
+    private static final long serialVersionUID = 1L;
     private AlgorithmIdentifier algorithm;
     private BIT_STRING subjectPublicKey;
 

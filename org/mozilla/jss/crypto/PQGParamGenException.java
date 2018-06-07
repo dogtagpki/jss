@@ -5,6 +5,7 @@
 package org.mozilla.jss.crypto;
 
 public class PQGParamGenException extends Exception {
+    private static final long serialVersionUID = 1L;
     public PQGParamGenException() {}
     public PQGParamGenException(String msg) { super(msg); }
 }

@@ -10,6 +10,8 @@ package org.mozilla.jss.crypto;
  */
 public class NoSuchItemOnTokenException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     public
     NoSuchItemOnTokenException() {}
 

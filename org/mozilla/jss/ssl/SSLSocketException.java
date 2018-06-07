@@ -13,6 +13,7 @@ package org.mozilla.jss.ssl;
  */
 public class SSLSocketException extends java.net.SocketException {
 
+    private static final long serialVersionUID = 1L;
     private int errcode = -1;
 
     public SSLSocketException() {

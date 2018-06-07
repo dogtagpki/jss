@@ -7,4 +7,6 @@ package org.mozilla.jss.crypto;
  * This class is a placeholder for javax.crypto.ShortBufferException until
  * we move to JDK 1.2.
  */
-public class ShortBufferException extends Exception { }
+public class ShortBufferException extends Exception {
+
+    private static final long serialVersionUID = 1L; }

@@ -22,6 +22,7 @@ import org.mozilla.jss.crypto.PrivateKey;
 public class PrivateKeyInfo
     implements ASN1Value, java.security.PrivateKey {
 
+    private static final long serialVersionUID = 1L;
     ///////////////////////////////////////////////////////////////////////
     // members and member access
     ///////////////////////////////////////////////////////////////////////

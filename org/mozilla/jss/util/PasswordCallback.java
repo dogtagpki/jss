@@ -21,6 +21,7 @@ public interface PasswordCallback {
      * wants to stop guessing passwords.
      */
     public static class GiveUpException extends Exception {
+        private static final long serialVersionUID = 1L;
         public GiveUpException() { super(); }
         public GiveUpException(String mesg) { super(mesg); }
     }

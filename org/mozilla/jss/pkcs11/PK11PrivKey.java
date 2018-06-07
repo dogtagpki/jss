@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
 	implements PrivateKey {
 
+    private static final long serialVersionUID = 1L;
+
     private PK11PrivKey() { }
 
     protected PK11PrivKey(byte[] pointer) {

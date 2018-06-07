@@ -8,6 +8,7 @@ package org.mozilla.jss;
  * an error occurs while opening it.
  */
 public class KeyDatabaseException extends java.lang.Exception {
+    private static final long serialVersionUID = 1L;
     public KeyDatabaseException() {}
     public KeyDatabaseException(String mesg) {
         super(mesg);

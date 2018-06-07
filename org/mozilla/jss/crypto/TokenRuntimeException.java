@@ -10,6 +10,8 @@ package org.mozilla.jss.crypto;
  * of a cryptographic operation.
  */
 public class TokenRuntimeException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
     public TokenRuntimeException() { super(); }
 
     public TokenRuntimeException(String mesg) {

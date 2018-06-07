@@ -11,6 +11,7 @@ package org.mozilla.jss.crypto;
 public class InvalidKeyFormatException
         extends java.security.spec.InvalidKeySpecException
 {
+    private static final long serialVersionUID = 1L;
     public InvalidKeyFormatException() {
         super();
     }

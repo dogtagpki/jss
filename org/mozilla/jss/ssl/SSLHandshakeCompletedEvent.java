@@ -22,6 +22,8 @@ import java.util.*;
  * operation is complete.
  */
 public class SSLHandshakeCompletedEvent extends EventObject {
+    private static final long serialVersionUID = 1L;
+
     public SSLHandshakeCompletedEvent(SSLSocket socket) {
 	super(socket);
     }

@@ -5,6 +5,7 @@
 package org.mozilla.jss.util;
 
 public class InvalidNicknameException extends Exception {
+    private static final long serialVersionUID = 1L;
     public InvalidNicknameException() { super(); }
     public InvalidNicknameException(String mesg) { super(mesg); }
 }

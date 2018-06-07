@@ -7,6 +7,8 @@ class PK11ECPrivateKey
     extends PK11PrivKey 
 {
 
+    private static final long serialVersionUID = 1L;
+
     private PK11ECPrivateKey() { super(null); }
 
     protected PK11ECPrivateKey(byte[] pointer) {

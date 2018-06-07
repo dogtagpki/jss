@@ -8,6 +8,7 @@ package org.mozilla.jss.util;
  * This exception is thrown whenever something isn't implemented.
  */
 public class NotImplementedException extends Exception {
+    private static final long serialVersionUID = 1L;
     public NotImplementedException() { super(); }
     public NotImplementedException(String mesg) { super(mesg); }
 }

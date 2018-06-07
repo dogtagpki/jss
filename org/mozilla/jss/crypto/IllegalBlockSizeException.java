@@ -3,4 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.crypto;
 
-public class IllegalBlockSizeException extends Exception { }
+public class IllegalBlockSizeException extends Exception {
+    private static final long serialVersionUID = 1L;
+}

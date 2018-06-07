@@ -25,6 +25,7 @@ public interface SymmetricKey {
     public byte[] getKeyData() throws NotExtractableException;
 
     public static class NotExtractableException extends Exception {
+        private static final long serialVersionUID = 1L;
         public NotExtractableException() {
             super();
         }

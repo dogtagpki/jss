@@ -9,6 +9,7 @@ import java.math.BigInteger;
 
 public class PK11RSAPublicKey extends PK11PubKey implements RSAPublicKey {
     
+    private static final long serialVersionUID = 1L;
     public PK11RSAPublicKey(byte[] pointer) {
         super(pointer);
     }

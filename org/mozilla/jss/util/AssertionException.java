@@ -14,6 +14,8 @@ package org.mozilla.jss.util;
  * @version $Revision$ $Date$
  */
 public class AssertionException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
     public AssertionException() {}
 
     public AssertionException(String msg) {

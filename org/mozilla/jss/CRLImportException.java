@@ -7,6 +7,7 @@ package org.mozilla.jss;
  * Thrown if a CRL cannot be imported
  */
 public class CRLImportException extends java.lang.Exception {
+    private static final long serialVersionUID = 1L;
     public CRLImportException() {}
     public CRLImportException(String mesg) {
         super(mesg);

@@ -16,6 +16,7 @@ import java.util.Random;
  */
 public class INTEGER extends BigInteger implements ASN1Value {
 
+    private static final long serialVersionUID = 1L;
     private byte[] encodedContents = null;
     private byte[] getEncodedContents() {
         if( encodedContents == null ) {

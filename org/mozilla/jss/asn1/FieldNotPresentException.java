@@ -9,6 +9,8 @@ package org.mozilla.jss.asn1;
  */
 public class FieldNotPresentException extends java.lang.Exception
 {
+    private static final long serialVersionUID = 1L;
+
     public FieldNotPresentException() {
         super();
     }
