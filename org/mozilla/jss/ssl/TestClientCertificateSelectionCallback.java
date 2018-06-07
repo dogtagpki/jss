@@ -4,10 +4,8 @@
 
 package org.mozilla.jss.ssl;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.net.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * This interface is what you should implement if you want to
@@ -33,13 +31,13 @@ public class TestClientCertificateSelectionCallback
 	 *    wish to use. You can return null if you do not wish to send
      *    a certificate.
 	 */
-	public String select(Vector nicknames) {
-		Enumeration e = nicknames.elements();
+	public String select(Vector<String> nicknames) {
+		Enumeration<String> e = nicknames.elements();
 		String s="",first=null;
 
 		System.out.println("in TestClientCertificateSelectionCallback.select()  "+s);
 		while (e.hasMoreElements()) {
-			s = (String)e.nextElement();
+			s = e.nextElement();
 			if (first == null) {
 				first = s;
 			}
@@ -49,6 +47,6 @@ public class TestClientCertificateSelectionCallback
 
 	}
 
-} 
+}
 
 

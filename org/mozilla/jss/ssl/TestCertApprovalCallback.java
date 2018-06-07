@@ -4,11 +4,9 @@
 
 package org.mozilla.jss.ssl;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.net.*;
-import java.util.*;
-import org.mozilla.jss.crypto.*;
+import java.util.Enumeration;
+
+import org.mozilla.jss.crypto.InternalCertificate;
 
 /**
  * This is a test implementation of the certificate approval callback which
@@ -38,20 +36,20 @@ public class TestCertApprovalCallback
 
 		boolean trust_the_server_cert=false;
 
-		Enumeration errors = status.getReasons();
+		Enumeration<ValidityItem> errors = status.getReasons();
 		int i=0;
 		while (errors.hasMoreElements()) {
 			i++;
-			item = (SSLCertificateApprovalCallback.ValidityItem) errors.nextElement();
+			item = errors.nextElement();
 			System.out.println("item "+i+
 					" reason="+item.getReason()+
 					" depth="+item.getDepth());
 			org.mozilla.jss.crypto.X509Certificate cert = item.getCert();
-			if (item.getReason() == 
+			if (item.getReason() ==
 				SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
 				trust_the_server_cert = true;
 			}
-				
+
 			System.out.println(" cert details: "+
 				"\n     subject: "+cert.getSubjectDN().toString()+
 				"\n     issuer:  "+cert.getIssuerDN().toString()+
@@ -63,7 +61,7 @@ public class TestCertApprovalCallback
 		if (trust_the_server_cert) {
 			System.out.println("importing certificate.");
 			try {
-				InternalCertificate newcert = 
+				InternalCertificate newcert =
 						org.mozilla.jss.CryptoManager.getInstance().
 							importCertToPerm(servercert,"testnick");
 				newcert.setSSLTrust(InternalCertificate.TRUSTED_PEER |
@@ -73,10 +71,10 @@ public class TestCertApprovalCallback
 			}
 		}
 
-		
+
 		/* allow the connection to continue.
 			returning false here would abort the connection */
-		return true;    
+		return true;
 	}
 
 }

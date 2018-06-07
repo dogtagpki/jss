@@ -6,7 +6,6 @@ package org.mozilla.jss.ssl;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -454,7 +453,7 @@ class SocketBase {
             }
         }
 
-        Enumeration netInter;
+        Enumeration<NetworkInterface> netInter;
         try {
             netInter = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e) {
@@ -462,18 +461,13 @@ class SocketBase {
             return false;
         }
         while (netInter.hasMoreElements()) {
-            NetworkInterface ni = (NetworkInterface) netInter.nextElement();
-            Enumeration addrs = ni.getInetAddresses();
+            NetworkInterface ni = netInter.nextElement();
+            Enumeration<InetAddress> addrs = ni.getInetAddresses();
             while (addrs.hasMoreElements()) {
-                Object o = addrs.nextElement();
-                if (o.getClass() == InetAddress.class ||
-                        o.getClass() == Inet4Address.class ||
-                        o.getClass() == Inet6Address.class) {
-                    InetAddress iaddr = (InetAddress) o;
-                    if (o.getClass() == Inet6Address.class) {
-                        supportsIPV6 = 1;
-                        return true;
-                    }
+                InetAddress o = addrs.nextElement();
+                if (o.getClass() == Inet6Address.class) {
+                    supportsIPV6 = 1;
+                    return true;
                 }
             }
         }

@@ -4,6 +4,8 @@
 
 package org.mozilla.jss.tests;
 
+import java.util.Enumeration;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NoSuchTokenException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
@@ -22,7 +24,6 @@ public class SelfTest {
         CryptoManager manager;
         Password pass1=null, pass2=null;
         java.security.KeyPair keyPair;
-		java.util.Enumeration items;
 		char[] passchar1 = {'f', 'o', 'o', 'b', 'a', 'r'};
 		char[] passchar2 = {'n', 'e', 't', 's', 'c', 'a', 'p', 'e'};
 
@@ -50,25 +51,25 @@ public class SelfTest {
 
         try {
 
-			items = manager.getModules();
+			Enumeration<PK11Module> modules = manager.getModules();
 			System.out.println("Modules:");
-			while(items.hasMoreElements()) {
+			while(modules.hasMoreElements()) {
 				System.out.println("\t"+
-					((PK11Module)items.nextElement()).getName() );
+					modules.nextElement().getName() );
 			}
 
-			items = manager.getAllTokens();
+			Enumeration<CryptoToken> tokens = manager.getAllTokens();
 			System.out.println("All Tokens:");
-			while(items.hasMoreElements()) {
+			while(tokens.hasMoreElements()) {
 				System.out.println("\t"+
-					((CryptoToken)items.nextElement()).getName() );
+					tokens.nextElement().getName() );
 			}
 
-			items = manager.getExternalTokens();
+			Enumeration<CryptoToken> extTokens = manager.getExternalTokens();
 			System.out.println("External Tokens:");
-			while(items.hasMoreElements()) {
+			while(extTokens.hasMoreElements()) {
 				System.out.println("\t"+
-					((CryptoToken)items.nextElement()).getName() );
+					extTokens.nextElement().getName() );
 			}
 
 

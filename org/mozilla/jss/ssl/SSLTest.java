@@ -4,10 +4,13 @@
 
 package org.mozilla.jss.ssl;
 
-import java.net.*;
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import org.mozilla.jss.CryptoManager;
-import java.util.*;
 
 public class SSLTest {
 
@@ -15,7 +18,7 @@ public class SSLTest {
         new SSLTest(args);
     }
 
-    private Hashtable params = new Hashtable();
+    private Hashtable<String, String> params = new Hashtable<>();
 
     private String[] defaults = {
         "port", "443",
@@ -37,11 +40,11 @@ public class SSLTest {
     }
 
     private void dumpParams() {
-        Enumeration _enum = params.keys();
+        Enumeration<String> _enum = params.keys();
         System.out.println("Parameters:");
         while (_enum.hasMoreElements() ) {
-            String key = (String) _enum.nextElement();
-            System.out.println(key + "=" + (String)params.get(key));
+            String key = _enum.nextElement();
+            System.out.println(key + "=" + params.get(key));
         }
     }
 
@@ -53,11 +56,11 @@ public class SSLTest {
         dumpParams();
         CryptoManager.initialize(".");
 
-        int port = (new Integer( (String) params.get("port") )).intValue();
+        int port = (new Integer( params.get("port") )).intValue();
 
-        Socket s = new Socket((String)params.get("host"), port);
+        Socket s = new Socket(params.get("host"), port);
 
-        SSLSocket ss = new SSLSocket(s, (String)params.get("remotehost"),
+        SSLSocket ss = new SSLSocket(s, params.get("remotehost"),
             null, null);
 
         ss.setSoTimeout(5000);

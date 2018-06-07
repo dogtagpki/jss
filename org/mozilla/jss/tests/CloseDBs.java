@@ -4,11 +4,13 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.CryptoManager;
-import java.util.Enumeration;
 import java.math.BigInteger;
-import java.security.PrivateKey;
+import java.util.Enumeration;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.CryptoStore;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.X509Certificate;
 
 public final class CloseDBs extends org.mozilla.jss.DatabaseCloser {
 
@@ -28,12 +30,12 @@ public final class CloseDBs extends org.mozilla.jss.DatabaseCloser {
 
         CryptoManager manager = CryptoManager.getInstance();
 
-        Enumeration tokens = manager.getAllTokens();
+        Enumeration<CryptoToken> tokens = manager.getAllTokens();
         CryptoStore store;
         X509Certificate certs[];
         java.security.PrivateKey keys[];
-        while(tokens.hasMoreElements()) {
-            CryptoToken token = (CryptoToken) tokens.nextElement();
+        while (tokens.hasMoreElements()) {
+            CryptoToken token = tokens.nextElement();
             store = token.getCryptoStore();
             System.out.println("Token: "+token.getName());
 

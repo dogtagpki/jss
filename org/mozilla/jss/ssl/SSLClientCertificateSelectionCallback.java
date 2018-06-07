@@ -3,16 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /*
  * SSLSecurityStatus.java
- * 
- * 
+ *
+ *
  */
 
 package org.mozilla.jss.ssl;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.Vector;
-import java.net.*;
 
 /**
  * Implement this if you want to specify dynamically which certificate
@@ -36,8 +33,8 @@ public interface SSLClientCertificateSelectionCallback {
 	 *    wish to use. You can return null if you do not wish to send
      *    a certificate.
 	 */
-	public String select(Vector nicknames);
+	public String select(Vector<String> nicknames);
 
-} 
+}
 
 

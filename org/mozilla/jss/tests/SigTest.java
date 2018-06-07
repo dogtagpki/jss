@@ -10,15 +10,18 @@
  */
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.crypto.Signature;
+import java.security.KeyPair;
+import java.security.PublicKey;
+import java.util.Enumeration;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyPairGenerator;
 import org.mozilla.jss.crypto.KeyPairGeneratorSpi;
-import java.security.*;
-import java.util.*;
-import org.mozilla.jss.pkcs11.*;
-import org.mozilla.jss.*;
-import org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage;
+import org.mozilla.jss.crypto.Signature;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.pkcs11.PK11Token;
 
 public class SigTest {
 
@@ -46,21 +49,21 @@ public class SigTest {
             String dbdir = args[0];
 
 
-            CryptoManager.InitializationValues vals = 
+            CryptoManager.InitializationValues vals =
                     new CryptoManager.InitializationValues(args[0]);
             CryptoManager.initialize(vals);
             manager = CryptoManager.getInstance();
             manager.setPasswordCallback(new FilePasswordCallback(args[1]));
-            
+
 
             /* Print out list of available tokens */
-            Enumeration en = manager.getAllTokens();
+            Enumeration<CryptoToken> en = manager.getAllTokens();
             System.out.println("Available tokens:");
             while (en.hasMoreElements()) {
                 PK11Token p = (PK11Token) en.nextElement();
                 System.out.println(" token : " + p.getName());
             }
-            
+
             if (args.length >= 3) {
                 token = manager.getTokenByName(args[2]);
             } else {

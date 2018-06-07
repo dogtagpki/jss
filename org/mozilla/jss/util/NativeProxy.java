@@ -118,11 +118,11 @@ public abstract class NativeProxy
      * releaseNativeResources() gets called.
      */
     private long registryIndex;
-    static Hashtable registry;
+    static Hashtable<Long, Long> registry;
     static Random indexGenerator;
 
     static {
-        registry = new Hashtable();
+        registry = new Hashtable<>();
         indexGenerator = new Random();
     }
 
@@ -153,7 +153,7 @@ public abstract class NativeProxy
         Long Lindex = new Long(index);
         Long element;
 
-        element = (Long) registry.remove(Lindex);
+        element = registry.remove(Lindex);
         Assert._assert(element != null);
     }
 
@@ -161,7 +161,7 @@ public abstract class NativeProxy
      * @return A list of the indices in the registry. Each element is a Long.
      * @see NativeProxy#getRegistryIndex
      */
-    public synchronized static Enumeration getRegistryIndices() {
+    public synchronized static Enumeration<Long> getRegistryIndices() {
         return registry.keys();
     }
 

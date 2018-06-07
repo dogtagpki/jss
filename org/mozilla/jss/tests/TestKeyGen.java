@@ -12,23 +12,25 @@
  * To create a database with a password, you can:
  *   use the modutil or keyutil tool,
  *   use the JSS API CryptoToken.changePassword() to set the password
- *   run the test 'TokenAccessTest' 
+ *   run the test 'TokenAccessTest'
  *            which will create db with a password.
  */
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.pkcs11.*;
-
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.*;
-import org.mozilla.jss.pkcs11.PK11KeyPairGenerator;
-import java.io.*;
-import java.awt.*;
-import java.security.cert.*;
-import java.security.interfaces.*;
 import java.math.BigInteger;
+import java.security.interfaces.DSAParams;
+import java.security.interfaces.DSAPublicKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Enumeration;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.KeyPairAlgorithm;
+import org.mozilla.jss.crypto.RSAParameterSpec;
+import org.mozilla.jss.pkcs11.PK11KeyPairGenerator;
+import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.Base64OutputStream;
 
 public class TestKeyGen {
 
@@ -48,18 +50,18 @@ public class TestKeyGen {
         manager = CryptoManager.getInstance();
         manager.setPasswordCallback( new FilePasswordCallback(args[1]) );
 
-        java.util.Enumeration tokens =
+        Enumeration<CryptoToken> tokens =
                 manager.getTokensSupportingAlgorithm(KeyPairAlgorithm.RSA);
         System.out.println("The following tokens support RSA keygen:");
         while(tokens.hasMoreElements()) {
             System.out.println("\t"+
-                ((CryptoToken)tokens.nextElement()).getName() );
+                tokens.nextElement().getName() );
         }
         tokens = manager.getTokensSupportingAlgorithm(KeyPairAlgorithm.DSA);
         System.out.println("The following tokens support DSA keygen:");
         while(tokens.hasMoreElements()) {
             System.out.println("\t"+
-                ((CryptoToken)tokens.nextElement()).getName() );
+                tokens.nextElement().getName() );
         }
 
         RSAPublicKey rsaPubKey;

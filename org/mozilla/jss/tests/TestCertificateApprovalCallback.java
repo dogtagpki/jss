@@ -4,8 +4,9 @@
 
 package org.mozilla.jss.tests;
 
-import java.util.*;
-import org.mozilla.jss.crypto.*;
+import java.util.Enumeration;
+
+import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
 
 /**
@@ -17,17 +18,17 @@ import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
  */
 public class TestCertificateApprovalCallback
     implements SSLCertificateApprovalCallback {
-    
+
     public boolean approve(
         org.mozilla.jss.crypto.X509Certificate servercert,
         SSLCertificateApprovalCallback.ValidityStatus status) {
-        
+
         SSLCertificateApprovalCallback.ValidityItem item;
-        
+
         if (Constants.debug_level > 3) {
             System.out.println("in TestCertificateApprovalCallback.approve()");
             /* dump out server cert details */
-            
+
             System.out.println("Peer cert details: "+
                 "\n     subject: "+servercert.getSubjectDN().toString()+
                 "\n     issuer:  "+servercert.getIssuerDN().toString()+
@@ -35,14 +36,14 @@ public class TestCertificateApprovalCallback
                 );
         }
         /* iterate through all the problems */
-        
+
         boolean trust_the_server_cert=false;
-        
-        Enumeration errors = status.getReasons();
+
+        Enumeration<ValidityItem> errors = status.getReasons();
         int i=0;
         while (errors.hasMoreElements()) {
             i++;
-            item = (SSLCertificateApprovalCallback.ValidityItem) errors.nextElement();
+            item = errors.nextElement();
             if (Constants.debug_level > 3) {
                 System.out.println("item "+i+
                     " reason="+item.getReason()+
@@ -61,7 +62,7 @@ public class TestCertificateApprovalCallback
                     );
             }
         }
-        
+
         if (trust_the_server_cert) {
             if (Constants.debug_level > 3) {
                 System.out.println("importing certificate.");
@@ -76,13 +77,13 @@ public class TestCertificateApprovalCallback
                 System.out.println("thrown exception: "+e);
             }
         }
-        
-        
+
+
         /* allow the connection to continue.                 */
         /*   returning false here would abort the connection */
         /* don't do this in production code!                 */
         return true;
     }
-    
+
 }
 

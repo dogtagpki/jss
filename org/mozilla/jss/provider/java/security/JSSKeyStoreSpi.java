@@ -5,63 +5,64 @@
 package org.mozilla.jss.provider.java.security;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Key;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import org.mozilla.jss.pkcs11.PK11Token;
-import org.mozilla.jss.pkcs11.TokenProxy;
+
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
-import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenRuntimeException;
-import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.TokenSupplierManager;
+import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkcs11.PK11Token;
+import org.mozilla.jss.pkcs11.TokenProxy;
 
 /**
  * The JSS implementation of the JCA KeyStore SPI.
- * 
+ *
  * <p>Implementation notes
  * <ol>
  * <li>deleteEntry will delete all entries with that label. If the entry is a
  * cert with a matching private key, it will also delete the private key.
- * 
+ *
  * <li>getCertificate returns first cert with matching nickname. Converts it
  * into a java.security.cert.X509Certificate (not a JSS cert).
- * 
+ *
  * <li>getCertificateChain only returns a single certificate. That's because
  * we don't have a way to build a chain from a specific slot--only from
- * the set of all slots. 
- * 
+ * the set of all slots.
+ *
  * <li>getCreationDate is unsupported because NSS doesn't store that
  * information.
- * 
+ *
  * <li>getKey first looks for a private/symmetric key with the given label.
  * It returns the first one it finds. If it doesn't find one, it looks for a
  * cert with the given nickname. If it finds one, it returns the private key
  * for that cert.
- * 
+ *
  * <li>isCertificateEntry returns true if there is a cert with this nickname,
  * but it doesn't have a private key. isKeyEntry returns true if there is a key
  * with this nickname, or if there is a cert with this nickname and the cert
  * has an associated private key.
- * 
+ *
  * <li>load and store are no-ops.
- * 
+ *
  * <li>setCertificateEntry doesn't work.NSS doesn't have a way of storing a
  * certificate on a specific token unless it has an associated private key.
  * That rules out trusted certificate entries.
- * 
+ *
  * <li>setKeyEntry not supported yet. Need to convert a temporary key
  * into a permanent key.
  * </ol>
@@ -80,10 +81,10 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     /**
      * Converts an Iterator into an Enumeration.
      */
-    private static class IteratorEnumeration implements Enumeration {
-        private Iterator iter;
+    private static class IteratorEnumeration<T> implements Enumeration<T> {
+        private Iterator<T> iter;
 
-        public IteratorEnumeration(Iterator iter) {
+        public IteratorEnumeration(Iterator<T> iter) {
             this.iter = iter;
         }
 
@@ -91,18 +92,18 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             return iter.hasNext();
         }
 
-        public Object nextElement() {
+        public T nextElement() {
             return iter.next();
         }
     }
 
-    private native HashSet getRawAliases();
+    private native HashSet<String> getRawAliases();
 
     /**
      * Returns a list of unique aliases.
      */
-    public Enumeration engineAliases() {
-        return new IteratorEnumeration( getRawAliases().iterator() );
+    public Enumeration<String> engineAliases() {
+        return new IteratorEnumeration<String>( getRawAliases().iterator() );
     }
 
     public boolean engineContainsAlias(String alias) {
@@ -153,7 +154,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     }
 
     private native String getCertNickname(byte[] derCert);
-        
+
     public Certificate[] engineGetCertificateChain(String alias) {
       try {
         X509Certificate leaf = getCertObject(alias);
@@ -216,7 +217,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     {
     }
 
-    /** 
+    /**
      * NSS doesn't have a way of storing a certificate on a specific token
      * unless it has an associated private key.  That rules out
      * trusted certificate entries, so we can't supply this method currently.

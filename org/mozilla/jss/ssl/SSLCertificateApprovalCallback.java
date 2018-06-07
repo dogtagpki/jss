@@ -3,18 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /*
  * SSLSecurityStatus.java
- * 
+ *
  */
 
 package org.mozilla.jss.ssl;
 
-import org.mozilla.jss.pkcs11.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.util.*;
-import java.net.*;
-import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkcs11.PK11Cert;
 
 /**
  * This interface is what you should implement if you want to
@@ -25,7 +22,7 @@ public interface SSLCertificateApprovalCallback {
 
 	/**
 	 * This method is called when the server sends it's certificate to
-     * the client. 
+     * the client.
      *
      * The 'status' argument passed to this method is constructed by
 	 * NSS. It's a list of things 'wrong' with the certificate (which
@@ -97,12 +94,12 @@ class ValidityStatus {
 	/** this indicates common-name mismatch */
 	public static final int  BAD_CERT_DOMAIN        = -12288 + 12;
 
-	private Vector reasons = new Vector();
+	private Vector<ValidityItem> reasons = new Vector<>();
 
 	/**
 	 * add a new failure reason to this enumeration. This is called from the
 	 * native code callback when it does a verify on the cert chain
-	 * 
+	 *
 	 * @param newReason sslerr.h error code - see constants defined above;
 	 * @param cert      a reference to the cert - so you can see the subject name, etc
      * @param depth     the index of this cert in the chain. 0 is the server cert.
@@ -119,7 +116,7 @@ class ValidityStatus {
 	 * returns an enumeration. The elements in the enumeration are
 	 * all of type 'ValidityItem'
 	 */
-	public Enumeration getReasons() {
+	public Enumeration<ValidityItem> getReasons() {
 		return reasons.elements();
 	}
 }
@@ -130,7 +127,7 @@ class ValidityItem {
 	private int depth;
 	private PK11Cert cert;
 
-	public ValidityItem(int reason, 
+	public ValidityItem(int reason,
 							PK11Cert cert,
 							int depth) {
 		this.reason = reason;
@@ -156,7 +153,7 @@ class ValidityItem {
 	}
 
 	/**
-	 * @return the certificate associated with this error. You can use 
+	 * @return the certificate associated with this error. You can use
 	 *     the X509Certificate functions to get details such as issuer/subject
 	 *     name, serial number, etc.
 	 */
@@ -165,7 +162,7 @@ class ValidityItem {
 	}
 
 }
-	
+
 
 
 }
