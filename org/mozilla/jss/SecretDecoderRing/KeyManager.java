@@ -7,7 +7,6 @@ package org.mozilla.jss.SecretDecoderRing;
 import java.security.*;
 import javax.crypto.*;
 import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.Assert;
 
 /**
  * Creates, finds, and deletes keys for SecretDecoderRing.

@@ -4,10 +4,6 @@
 
 package org.mozilla.jss.pkcs11;
 
-import java.util.*;
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.crypto.*;
-
 /**
  * A random number generator for PKCS #11.
  *

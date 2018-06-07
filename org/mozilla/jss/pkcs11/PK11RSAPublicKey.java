@@ -4,7 +4,6 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.util.Assert;
 import java.security.interfaces.RSAPublicKey;
 import java.math.BigInteger;
 

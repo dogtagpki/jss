@@ -4,7 +4,6 @@
 
 package org.mozilla.jss.ssl;
 
-import java.util.*;
 import java.net.InetAddress;
 import java.io.IOException;
 import java.net.Socket;

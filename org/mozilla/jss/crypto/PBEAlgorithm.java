@@ -5,8 +5,6 @@
 package org.mozilla.jss.crypto;
 
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import java.util.Hashtable;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Algorithms that can be used for generating symmetric keys from passwords.

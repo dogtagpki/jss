@@ -6,7 +6,6 @@ package org.mozilla.jss.pkix.cert;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.util.Assert;
 

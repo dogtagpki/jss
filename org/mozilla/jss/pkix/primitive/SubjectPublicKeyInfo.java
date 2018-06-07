@@ -7,7 +7,6 @@ import org.mozilla.jss.asn1.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
-import org.mozilla.jss.util.Assert;
 import java.security.PublicKey;
 import java.security.NoSuchAlgorithmException;
 import org.mozilla.jss.crypto.PrivateKey;

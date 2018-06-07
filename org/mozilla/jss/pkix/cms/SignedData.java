@@ -4,10 +4,7 @@
 package org.mozilla.jss.pkix.cms;
 
 import java.io.*;
-import java.util.Vector;
 import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.primitive.*;
 import org.mozilla.jss.pkix.cert.Certificate;

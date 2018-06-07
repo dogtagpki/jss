@@ -3,13 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
-import org.mozilla.jss.util.Assert;
 
 /**
  * The ASN.1 type <code>GeneralizedTime</code>

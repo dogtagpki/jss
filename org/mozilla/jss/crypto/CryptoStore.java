@@ -7,8 +7,6 @@ package org.mozilla.jss.crypto;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.util.*;
 import java.security.*;
-import java.security.cert.CertificateEncodingException;
-import java.io.Serializable;
 
 /**
  * This is an interface for a permanent repository of cryptographic objects,

@@ -1,11 +1,6 @@
 package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.crypto.PrivateKey;
-import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-// requires JAVA 1.5
-//import java.security.interfaces.ECPrivateKey;
 
 class PK11ECPrivateKey
 //    extends PK11PrivKey implements ECPrivateKey

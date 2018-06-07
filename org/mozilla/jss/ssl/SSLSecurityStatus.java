@@ -4,9 +4,6 @@
 
 package org.mozilla.jss.ssl;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.net.*;
 import org.mozilla.jss.crypto.X509Certificate;
 
 /**

@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.tests;
 
-import java.io.*;
 import java.security.MessageDigest;
 import org.mozilla.jss.CryptoManager;
 import java.security.Security;

@@ -5,12 +5,7 @@ package org.mozilla.jss.pkcs10;
 
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.util.*;
-import java.security.cert.CertificateException;
 import java.security.PublicKey;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.OutputStream;

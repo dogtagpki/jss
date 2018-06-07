@@ -8,7 +8,6 @@ import java.security.*;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.SecretDecoderRing.*;
-import java.io.*;
 import javax.crypto.*;
 
 /**

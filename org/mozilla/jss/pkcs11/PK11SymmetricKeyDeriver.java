@@ -37,8 +37,6 @@
 package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.Assert;
-import sun.security.pkcs11.wrapper.*;
 import java.security.InvalidKeyException;
 
 

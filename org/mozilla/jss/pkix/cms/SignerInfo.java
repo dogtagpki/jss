@@ -14,7 +14,6 @@ import java.security.SignatureException;
 import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
 import org.mozilla.jss.crypto.X509Certificate;
-import org.mozilla.jss.pkix.cert.*;
 import org.mozilla.jss.*;
 import java.security.PublicKey;
 

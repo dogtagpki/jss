@@ -1,7 +1,6 @@
 package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.crypto.PrivateKey;
-import org.mozilla.jss.util.Assert;
 import java.math.BigInteger;
 
 class PK11RSAPrivateKey

@@ -7,7 +7,6 @@ package org.mozilla.jss.pkix.crmf;
 import org.mozilla.jss.asn1.*;
 import java.io.*;
 import org.mozilla.jss.pkix.primitive.AVA;
-import org.mozilla.jss.util.Assert;
 
 /**
  * A CRMF <code>Control</code>.

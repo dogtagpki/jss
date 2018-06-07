@@ -6,7 +6,6 @@ package org.mozilla.jss.tests;
 
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.util.*;
 

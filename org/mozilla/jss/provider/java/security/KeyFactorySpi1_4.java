@@ -6,12 +6,9 @@ package org.mozilla.jss.provider.java.security;
 
 import java.security.PublicKey;
 import java.security.spec.*;
-import org.mozilla.jss.crypto.InvalidKeyFormatException;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkcs11.PK11PubKey;
-import java.security.Key;
-import java.security.InvalidKeyException;
 import javax.crypto.spec.DHPublicKeySpec;
 
 public class KeyFactorySpi1_4 extends KeyFactorySpi1_2

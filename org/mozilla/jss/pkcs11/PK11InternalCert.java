@@ -5,11 +5,6 @@
 package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.util.*;
-import java.security.*;
-import java.security.cert.*;
-import java.util.*;
-import java.math.BigInteger;
 
 /**
  * A certificate that lives in the internal cert database.

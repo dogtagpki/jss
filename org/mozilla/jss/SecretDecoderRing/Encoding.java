@@ -4,14 +4,8 @@
 
 package org.mozilla.jss.SecretDecoderRing;
 
-import java.security.*;
-import javax.crypto.*;
-import javax.crypto.spec.*;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import java.io.*;
 
 /**

@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.io.IOException;
 import java.util.Date;
 
 public class UTCTime extends TimeBase implements ASN1Value {

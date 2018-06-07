@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.IOException;
-import org.mozilla.jss.util.Assert;
 import java.util.Date;
 import org.mozilla.jss.pkix.primitive.*;
 import org.mozilla.jss.pkix.cert.Extension;

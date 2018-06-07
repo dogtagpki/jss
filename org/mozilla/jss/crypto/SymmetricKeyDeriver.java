@@ -36,9 +36,6 @@
 
 package org.mozilla.jss.crypto;
 
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.PublicKey;
 import java.security.InvalidKeyException;
 
 public interface SymmetricKeyDeriver {

@@ -7,7 +7,6 @@ package org.mozilla.jss.pkix.cmmf;
 import org.mozilla.jss.asn1.*;
 import java.io.OutputStream;
 import java.io.IOException;
-import org.mozilla.jss.util.Assert;
 
 public class CertifiedKeyPair implements ASN1Value {
 

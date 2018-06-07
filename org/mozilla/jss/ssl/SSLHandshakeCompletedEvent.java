@@ -9,7 +9,6 @@
 
 package org.mozilla.jss.ssl;
 
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
