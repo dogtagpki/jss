@@ -3,8 +3,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.cmmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.pkix.crmf.CertId;
 
 /**
@@ -52,7 +60,7 @@ public class RevRepContent implements ASN1Value {
 
     /**
      * The <code>crls</code> field, which is a <code>SEQUENCE</code> of
-     *  <code>ANY</code>.  Returns <code>null</code> if this field 
+     *  <code>ANY</code>.  Returns <code>null</code> if this field
      *  is not present.
      */
     public SEQUENCE getCrls() {
@@ -62,8 +70,6 @@ public class RevRepContent implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-
-    private RevRepContent() { }
 
     /**
      * Creates a new <code>RevRepContent</code> from its components.
@@ -137,7 +143,7 @@ public class RevRepContent implements ASN1Value {
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
 
-            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);   
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new RevRepContent(   (SEQUENCE) seq.elementAt(0),
                                         (SEQUENCE) seq.elementAt(1),

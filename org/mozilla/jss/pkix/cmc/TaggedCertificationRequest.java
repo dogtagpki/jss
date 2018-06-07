@@ -4,18 +4,26 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkcs10.CertificationRequest;
 import org.mozilla.jss.util.Assert;
-import org.mozilla.jss.pkcs10.*;
 
 /**
  * CMC <i>TaggedCertificationRequest</i>:
  * <pre>
- *   TaggedCertificationRequest ::= SEQUENCE { 
- *       bodyPartID            BodyPartID, 
- *       certificationRequest  CertificationRequest 
- *   } 
+ *   TaggedCertificationRequest ::= SEQUENCE {
+ *       bodyPartID            BodyPartID,
+ *       certificationRequest  CertificationRequest
+ *   }
  *   bodyIdMax INTEGER ::= 4294967295
  *
  *   BodyPartID ::= INTEGER(0..bodyIdMax)
@@ -29,16 +37,13 @@ public class TaggedCertificationRequest implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private INTEGER bodyPartID;
-	private CertificationRequest certificationRequest; 
+	private CertificationRequest certificationRequest;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
     ///////////////////////////////////////////////////////////////////////
 
-    // no default constructor
-    private TaggedCertificationRequest() { }
-
-    /** 
+    /**
      * Constructs a TaggedCertificationRequest from its components.
      *
      * @param bodyPartID the identifier.

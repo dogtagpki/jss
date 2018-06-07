@@ -3,17 +3,28 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.provider.java.security;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.InvalidParameterException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.SignatureException;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.X509EncodedKeySpec;
+
+import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.PrivateKey;
-import java.security.*;
-import java.security.spec.*;
-import org.mozilla.jss.crypto.*;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.TokenSupplierManager;
 
 class JSSSignatureSpi extends java.security.SignatureSpi {
 
     org.mozilla.jss.crypto.Signature sig;
     SignatureAlgorithm alg;
-
-    private JSSSignatureSpi() { }
 
     protected JSSSignatureSpi(SignatureAlgorithm alg) {
         this.alg = alg;

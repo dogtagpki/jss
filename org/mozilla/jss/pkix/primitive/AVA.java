@@ -36,8 +36,6 @@ public class AVA implements ASN1Value {
         return TAG;
     }
 
-    private AVA() { }
-
     public AVA(OBJECT_IDENTIFIER oid, ASN1Value value) {
         this.oid = oid;
         if( value instanceof ANY ) {

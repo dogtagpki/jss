@@ -56,8 +56,6 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
     //keyStrength  is used for RC2ParameterSpec and EncryptionAlgorithm.lookup
     private int keyStrength;
 
-    private JSSCipherSpi() { }
-
     protected JSSCipherSpi(String algFamily) {
         this.algFamily = algFamily;
         token = TokenSupplierManager.getTokenSupplier().getThreadToken();

@@ -36,9 +36,18 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
 /**
  * CMC <i>DecryptedPOP</i>:
@@ -80,7 +89,6 @@ public class DecryptedPOP implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // constructors
     ///////////////////////////////////////////////////////////////////////
-    private DecryptedPOP() { }
 
     public DecryptedPOP(
             INTEGER bodyPartID,

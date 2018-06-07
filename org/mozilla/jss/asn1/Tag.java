@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.math.BigInteger;
-
 /**
  * Represents an ASN.1 Tag.  A tag consists of a class and a number.
  */
@@ -25,8 +23,6 @@ public class Tag {
     public Class getTagClass() {
         return tClass;
     }
-
-    private Tag() { }
 
     /**
      * A tag class.

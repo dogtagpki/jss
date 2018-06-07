@@ -4,8 +4,18 @@
 
 package org.mozilla.jss.pkix.cmmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.GeneralizedTime;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMMF <i>GetCRL</i>.
@@ -91,8 +101,6 @@ public class GetCRL implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-
-    private GetCRL() { }
 
     /**
      * Constructs a <code>GetCRL</code> from its components.

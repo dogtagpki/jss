@@ -83,7 +83,6 @@ public class PKIArchiveOptions implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // constructors
     ///////////////////////////////////////////////////////////////////////
-    private PKIArchiveOptions() { }
 
     public PKIArchiveOptions( EncryptedKey eKey ) {
         encryptedPrivKey = eKey;

@@ -3,10 +3,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkcs7;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -27,8 +35,6 @@ public class Attribute implements ASN1Value {
     public Tag getTag() {
         return TAG;
     }
-
-    private Attribute() { }
 
     public Attribute(OBJECT_IDENTIFIER type, SET values) {
         this.type = type;

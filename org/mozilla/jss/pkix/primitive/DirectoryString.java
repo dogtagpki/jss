@@ -4,12 +4,23 @@
 
 package org.mozilla.jss.pkix.primitive;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.util.Assert;
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BMPString;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.CharacterString;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.PrintableString;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.TeletexString;
+import org.mozilla.jss.asn1.UTF8String;
+import org.mozilla.jss.asn1.UniversalString;
+import org.mozilla.jss.util.Assert;
 
 /**
  * An X.500 <i>DirectoryString</i>.
@@ -24,8 +35,6 @@ import java.io.OutputStream;
  * </pre>
  */
 public class DirectoryString implements ASN1Value {
-
-    private DirectoryString() { }
 
     private CharacterString asn1String;
 

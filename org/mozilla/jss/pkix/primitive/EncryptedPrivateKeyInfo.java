@@ -70,8 +70,6 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private EncryptedPrivateKeyInfo() { }
-
     /**
      * Creates an EncryptedPrivateKeyInfo from its components.
      *

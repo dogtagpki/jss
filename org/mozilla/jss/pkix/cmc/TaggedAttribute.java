@@ -4,10 +4,19 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -15,9 +24,9 @@ import org.mozilla.jss.util.Assert;
  *      definition :
  * <pre>
  *   TaggedAttribute ::= SEQUENCE {
- *      bodyPartID         BodyPartId, 
- *      attrType           OBJECT IDENTIFIER, 
- *      attrValues         SET OF AttributeValue 
+ *      bodyPartID         BodyPartId,
+ *      attrType           OBJECT IDENTIFIER,
+ *      attrValues         SET OF AttributeValue
  *   bodyIdMax INTEGER ::= 4294967295
  *
  *   BodyPartID ::= INTEGER(0..bodyIdMax)
@@ -38,8 +47,6 @@ public class TaggedAttribute implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Construction
     ///////////////////////////////////////////////////////////////////////
-
-    private TaggedAttribute() { }
 
     public TaggedAttribute(INTEGER bodyPartID, OBJECT_IDENTIFIER type, SET values) {
         sequence = new SEQUENCE();

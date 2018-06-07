@@ -65,8 +65,6 @@ public class EncryptedKey implements ASN1Value {
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private EncryptedKey() { }
-
     public EncryptedKey(EncryptedValue encryptedValue) {
         this.type = ENCRYPTED_VALUE;
         this.encryptedValue = encryptedValue;

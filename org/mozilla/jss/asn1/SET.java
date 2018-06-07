@@ -797,8 +797,6 @@ public static class Template implements ASN1Template {
  */
 public static class OF_Template implements ASN1Template {
 
-    private OF_Template() { }
-
     private Template template;  // a normal SET template
 
     /**

@@ -47,8 +47,6 @@ public class PKIStatusInfo implements ASN1Value {
     public static final int incorrectData = 0x01000000;
     public static final int missingTimeStamp = 0x00800000;
 
-    private PKIStatusInfo() { }
-
     /**
      * @param status A PKIStatus constant.
      * @param failInfo The bitwise AND of the PKIFailureInfo constants.

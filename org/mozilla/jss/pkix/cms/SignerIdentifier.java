@@ -4,9 +4,17 @@
 
 package org.mozilla.jss.pkix.cms;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.cert.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -67,8 +75,6 @@ public class SignerIdentifier implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-
-    private SignerIdentifier() { }
 
     public SignerIdentifier(Type type, IssuerAndSerialNumber
 							 issuerAndSerialNumber,

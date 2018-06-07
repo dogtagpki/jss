@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.io.OutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * An ASN.1 <code>BOOLEAN</code> value.
@@ -41,8 +41,6 @@ public class BOOLEAN implements ASN1Value {
             ostream.write( 0x00 );
         }
     }
-
-    private BOOLEAN() { }
 
     private boolean val;
     /**

@@ -5,22 +5,24 @@
 package org.mozilla.jss.provider.javax.crypto;
 
 import java.io.CharConversionException;
-import java.security.*;
-import java.security.spec.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+
+import javax.crypto.SecretKey;
+
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenRuntimeException;
-import org.mozilla.jss.crypto.KeyGenerator;
-import org.mozilla.jss.crypto.SymmetricKey;
-import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.TokenSupplierManager;
-import javax.crypto.*;
 
 class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
     private KeyGenerator keyGenerator= null;
-
-    private JSSKeyGeneratorSpi() {}
 
     protected JSSKeyGeneratorSpi(KeyGenAlgorithm alg) {
       try {

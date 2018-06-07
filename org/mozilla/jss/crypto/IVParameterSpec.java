@@ -13,8 +13,6 @@ public class IVParameterSpec implements AlgorithmParameterSpec {
 
     private byte[] iv;
 
-    private IVParameterSpec() { }
-
     public IVParameterSpec(byte[] iv) {
         this.iv = iv;
     }

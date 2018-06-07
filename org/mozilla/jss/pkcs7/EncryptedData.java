@@ -4,8 +4,16 @@
 
 package org.mozilla.jss.pkcs7;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * The PKCS #7 structure <i>EncryptedData</i>.
@@ -28,11 +36,10 @@ public class EncryptedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-    private EncryptedData() { }
 
     /**
      * Creates a new EncryptedData.
-     * 
+     *
      * @param version Should usually be DEFAULT_VERSION unless you are being
      *      very clever.
      */
@@ -69,7 +76,7 @@ public class EncryptedData implements ASN1Value {
         return encryptedContentInfo;
     }
 
-    
+
     ///////////////////////////////////////////////////////////////////////
     //  DER encoding
     ///////////////////////////////////////////////////////////////////////

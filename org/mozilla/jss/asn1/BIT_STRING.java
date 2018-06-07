@@ -3,13 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.BitSet;
+
+import org.mozilla.jss.util.Assert;
 
 /**
  * An ASN.1 <code>BIT STRING</code>, which is an ordered sequence of bits.
@@ -17,8 +17,6 @@ import java.util.BitSet;
  * of bytes with 0-7 unused bits at the end.
  */
 public class BIT_STRING implements ASN1Value {
-
-    private BIT_STRING() { }
 
     private byte[] bits;
     private int padCount;
@@ -262,7 +260,7 @@ public static class Template implements ASN1Template {
             ahead = new ASN1Header(istream);
 
             return new BIT_STRING( bos.toByteArray(), padCount );
-        }   
+        }
 
         // First octet is the number of unused bits in last octet
         int padCount = istream.read();

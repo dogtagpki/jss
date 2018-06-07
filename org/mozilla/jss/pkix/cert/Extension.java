@@ -4,11 +4,18 @@
 
 package org.mozilla.jss.pkix.cert;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import org.mozilla.jss.util.Assert;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BOOLEAN;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 public class Extension implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG;
@@ -33,8 +40,6 @@ public class Extension implements ASN1Value {
     public OCTET_STRING getExtnValue() {
         return extnValue;
     }
-
-    private Extension() { }
 
     public Extension( OBJECT_IDENTIFIER extnId, boolean critical,
         OCTET_STRING extnValue )

@@ -37,34 +37,40 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.util.Assert;
-import org.mozilla.jss.asn1.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.BitSet;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.UTF8String;
+import org.mozilla.jss.util.Assert;
 
 /**
  * CMCStatusInfoV2 replaces CMCStatusInfo in rfc 5272
  * CMC <i>CMCStatusInfoV2</i>:
  * <pre>
- *     CMCStatusInfoV2 ::= SEQUENCE { 
- *          cMCStatus           CMCStatus, 
+ *     CMCStatusInfoV2 ::= SEQUENCE {
+ *          cMCStatus           CMCStatus,
  *          bodyList            SEQUENCE SIZE (1..MAX)
  *                                       BodyPartReference,
- *          statusString        UTF8String OPTIONAL, 
+ *          statusString        UTF8String OPTIONAL,
  *          otherInfo           CHOICE {  // defined in updated OtherInfo
- *            failInfo            CMCFailInfo, 
+ *            failInfo            CMCFailInfo,
  *            pendInfo            PendInfo,
  *            extendedFailInfo       SEQUENCE {
  *              failInfoOID            OBJECT IDENTIFIER,
  *              failInfoValue          AttributeValue
- *            } OPTIONAL 
+ *            } OPTIONAL
  *         }
- *     } 
- *     PendInfo ::= SEQUENCE { 
- *          pendToken           OCTET STRING, 
- *          pendTime            GeneralizedTime 
+ *     }
+ *     PendInfo ::= SEQUENCE {
+ *          pendToken           OCTET STRING,
+ *          pendTime            GeneralizedTime
  *     }
  *
  * @author Christina Fu (cfu)
@@ -77,7 +83,7 @@ public class CMCStatusInfoV2 implements ASN1Value {
     // Members
     ///////////////////////////////////////////////////////////////////////
     private INTEGER status;
-    private SEQUENCE bodyList; 
+    private SEQUENCE bodyList;
     private UTF8String statusString;
     private OtherInfo otherInfo;
 
@@ -103,8 +109,6 @@ public class CMCStatusInfoV2 implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-
-    private CMCStatusInfoV2() { }
 
     /**
      * @param status A CMCStatus constant.
@@ -180,7 +184,7 @@ public class CMCStatusInfoV2 implements ASN1Value {
     public int getStatus() {
         return status.intValue();
     }
-    
+
     public SEQUENCE getBodyList() {
         return bodyList;
     }

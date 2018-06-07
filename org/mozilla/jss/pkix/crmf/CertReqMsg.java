@@ -3,25 +3,34 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.crmf;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.util.Assert;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.security.SignatureException;
 import java.security.NoSuchAlgorithmException;
-import org.mozilla.jss.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.crypto.*;
 import java.security.PublicKey;
-import java.io.FileOutputStream;
+import java.security.SignatureException;
+import java.text.DateFormat;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.InvalidKeyFormatException;
+import org.mozilla.jss.crypto.Signature;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkix.primitive.AVA;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
+import org.mozilla.jss.util.Assert;
 
 /**
  * This class models a CRMF <i>CertReqMsg</i> structure.
@@ -75,9 +84,6 @@ public class CertReqMsg implements ASN1Value {
     }
     private ProofOfPossession pop = null;
 
-    // no default constructor
-    private CertReqMsg() { }
-
     /**
      * Constructs a <i>CertReqmsg</i> from a <i>CertRequest</i> and, optionally,
      * a <i>pop</i> and a <i>regInfo</i>.
@@ -124,7 +130,7 @@ public class CertReqMsg implements ASN1Value {
 			CertTemplate ct = certReq.getCertTemplate();
 			if (ct.hasPublicKey()) {
 				SubjectPublicKeyInfo spi = ct.getPublicKey();
-				pubkey = (PublicKey) spi.toPublicKey();
+				pubkey = spi.toPublicKey();
 			}
 
 			SignatureAlgorithm sigAlg =
@@ -148,7 +154,7 @@ public class CertReqMsg implements ASN1Value {
 				//BIT_STRING thisMessage = keyEnc.getThisMessage();
 				//This should be the same as from the archive control
 				//It's verified by DRM.
-				
+
 			} else if (ptype == POPOPrivKey.SUBSEQUENT_MESSAGE) {
 				new ChallengeResponseException("requested");
 			}

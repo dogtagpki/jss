@@ -44,7 +44,6 @@ public class SecretBag implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-    private SecretBag() { }
 
     /**
      * Creates a SecretBag with the given secret type and secret.  Neither

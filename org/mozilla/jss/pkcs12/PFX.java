@@ -4,17 +4,37 @@
 
 package org.mozilla.jss.pkcs12;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkcs7.*;
-import org.mozilla.jss.pkix.cert.*;
-import java.io.*;
-import org.mozilla.jss.util.Password;
+import java.io.BufferedInputStream;
+import java.io.CharConversionException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.DigestException;
+
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.pkix.primitive.Attribute;
-import org.mozilla.jss.crypto.*;
-import java.security.*;
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BMPString;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.JSSSecureRandom;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkcs7.ContentInfo;
+import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.cert.Certificate;
+import org.mozilla.jss.pkix.primitive.Attribute;
+import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
+import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
+import org.mozilla.jss.util.Password;
 
 /**
  * The top level ASN.1 structure for a PKCS #12 blob.
@@ -159,7 +179,6 @@ public class PFX implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-    private PFX() { }
 
     /**
      * Creates a PFX with the given parameters.
@@ -195,7 +214,7 @@ public class PFX implements ASN1Value {
      * Computes the macData field and adds it to the PFX. The macData field
      *   is a Message Authentication Code of the AuthenticatedSafes, and
      *   is used to prove the authenticity of the PFX.
-     * 
+     *
      * @param password The password to be used to create the password-based MAC.
      * @param salt The salt to be used.  If null is passed in, a new salt
      *      will be created from a random source.
@@ -438,7 +457,7 @@ public class PFX implements ASN1Value {
             newPfx.encode(fos);
             fos.close();
 
-            
+
         } catch( Exception e ) {
             e.printStackTrace();
         }

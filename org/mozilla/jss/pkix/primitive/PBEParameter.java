@@ -4,8 +4,17 @@
 
 package org.mozilla.jss.pkix.primitive;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * PKCS #5 <i>PBEParameter</i>, and PKCS #12 <i>pkcs-12PbeParams</i>. The only
@@ -34,7 +43,6 @@ public class PBEParameter implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // constructors
     ///////////////////////////////////////////////////////////////////////
-    private PBEParameter() { }
 
     /**
      * Creates a PBEParameter from a salt and iteration count. Neither

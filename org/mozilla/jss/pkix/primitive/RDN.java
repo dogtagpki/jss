@@ -3,10 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.primitive;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import org.mozilla.jss.asn1.*;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * A RelativeDistinguishedName, whose ASN.1 is:
@@ -17,8 +22,6 @@ import org.mozilla.jss.asn1.*;
 public class RDN implements ASN1Value {
 
     private SET avas;
-
-    private RDN() { }
 
     /**
      * An RDN must have at least one element at all times, so an initial

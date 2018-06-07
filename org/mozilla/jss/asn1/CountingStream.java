@@ -4,7 +4,8 @@
 
 package org.mozilla.jss.asn1;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This class keeps track of the number of bytes that have been read from
@@ -19,8 +20,6 @@ class CountingStream extends InputStream {
     private InputStream source;
 
     private static final boolean DEBUG = false;
-
-    private CountingStream() { }
 
     public CountingStream(InputStream source) {
         this.source = source;

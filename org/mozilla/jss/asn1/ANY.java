@@ -24,8 +24,6 @@ import org.mozilla.jss.util.Assert;
  */
 public class ANY implements ASN1Value {
 
-    private ANY() { }
-
     // The complete encoding of header + contents
     private byte[] encoded;
     private Tag tag;

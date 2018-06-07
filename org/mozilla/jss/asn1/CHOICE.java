@@ -17,7 +17,6 @@ import org.mozilla.jss.util.Assert;
  * to just write out the chosen element.
  */
 public class CHOICE implements ASN1Value {
-    private CHOICE() { }
 
     private Tag tag;
     private ASN1Value val;

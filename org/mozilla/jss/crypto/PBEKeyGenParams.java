@@ -6,6 +6,7 @@ package org.mozilla.jss.crypto;
 
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
+
 import org.mozilla.jss.util.Password;
 
 public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
@@ -14,8 +15,6 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
     private byte[] salt;
     private int iterations;
     private EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.DES3_CBC;
-
-    private PBEKeyGenParams() { }
 
     static private final int DEFAULT_SALT_LENGTH = 8;
     static private final int DEFAULT_ITERATIONS = 1;
@@ -56,7 +55,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
         if(pass==null || salt==null) {
             throw new NullPointerException();
         }
-        this.pass = new Password( (char[]) pass.clone() );
+        this.pass = new Password( pass.clone() );
         this.salt = salt;
         this.iterations = iterations;
     }
@@ -81,7 +80,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
         if (pass == null || salt == null) {
             throw new NullPointerException();
         }
-        this.pass = new Password((char[]) pass.clone());
+        this.pass = new Password(pass.clone());
         this.salt = salt;
         this.iterations = iterations;
         if (encAlg != null)

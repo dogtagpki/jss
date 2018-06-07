@@ -4,8 +4,21 @@
 
 package org.mozilla.jss.pkix.cmmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.ENUMERATED;
+import org.mozilla.jss.asn1.GeneralizedTime;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.UTF8String;
 
 /**
  * CMMF <i>RevRequest</i>.
@@ -165,9 +178,6 @@ public class RevRequest implements ASN1Value {
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private RevRequest() { }
-
-
     /**
      * Constructs a new <code>RevRequest</code> from its components,
      *  omitting the <tt>invalidityDate</tt> field.
@@ -284,7 +294,7 @@ public class RevRequest implements ASN1Value {
 
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-            
+
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new RevRequest(  (ANY) seq.elementAt(0),

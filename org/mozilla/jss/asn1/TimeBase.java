@@ -3,12 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
 import org.mozilla.jss.util.Assert;
 
 public abstract class TimeBase implements ASN1Value {
@@ -23,8 +24,6 @@ public abstract class TimeBase implements ASN1Value {
     }
 
     abstract protected boolean isUTC();
-
-    private TimeBase() { }
 
     public TimeBase(Date date) {
         this.date = date;
@@ -46,7 +45,7 @@ public abstract class TimeBase implements ASN1Value {
             // length will always be 15
             (new ASN1Header(implicit, FORM, 15)).encode(ostream);
         }
-        
+
         int i=0, val;
 
         // DER-encoding mandates GMT time zone
@@ -146,7 +145,7 @@ public abstract class TimeBase implements ASN1Value {
                 checkRange(year, 0, 9999, "year");
                 i += 4;
             }
-            
+
             //////////////////////////////////////////
             // get month
             //
@@ -262,7 +261,7 @@ public abstract class TimeBase implements ASN1Value {
             // Create a calendar object from the date and time zone.
             Calendar cal = Calendar.getInstance( tz );
             cal.set(year, month, day, hour, minute, second);
-            
+
             return generateInstance(cal.getTime());
         }
 

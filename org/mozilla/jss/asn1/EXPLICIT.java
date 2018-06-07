@@ -3,10 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
+
 import org.mozilla.jss.util.Assert;
 
 /**
@@ -18,8 +19,6 @@ public class EXPLICIT implements ASN1Value {
 
     private ASN1Value content;
     private Tag tag;
-
-    private EXPLICIT() { }
 
     /**
      * Creates an EXPLICIT tag wrapping some other ASN1Value.  For example,
@@ -80,8 +79,6 @@ public static class Template implements ASN1Template {
 
     private ASN1Template content;
     private Tag tag;
-
-    private Template() { }
 
     /**
      * Creates a template for unwrapping an object wrapped in an explicit tag.

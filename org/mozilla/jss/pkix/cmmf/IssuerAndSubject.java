@@ -4,8 +4,17 @@
 
 package org.mozilla.jss.pkix.cmmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMMF <i>IssuerAndSubject</i>.
@@ -50,8 +59,6 @@ public class IssuerAndSubject implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-
-    private IssuerAndSubject() { }
 
     public IssuerAndSubject(ANY issuer, ANY subject, INTEGER certReqId) {
         if( issuer==null || subject==null ) {

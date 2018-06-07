@@ -4,21 +4,26 @@
 
 package org.mozilla.jss.pkix.cmc;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
 
 /**
  * A PKIData for CMC full enrollment request.
- *  PKIData ::= SEQUENCE { 
- *        controlSequence    SEQUENCE SIZE(0..MAX) OF TaggedAttribute, 
- *        reqSequence        SEQUENCE SIZE(0..MAX) OF TaggedRequest, 
- *        cmsSequence        SEQUENCE SIZE(0..MAX) OF TaggedContentInfo, 
- *        otherMsgSequence   SEQUENCE SIZE(0..MAX) OF OtherMsg 
- *  } 
+ *  PKIData ::= SEQUENCE {
+ *        controlSequence    SEQUENCE SIZE(0..MAX) OF TaggedAttribute,
+ *        reqSequence        SEQUENCE SIZE(0..MAX) OF TaggedRequest,
+ *        cmsSequence        SEQUENCE SIZE(0..MAX) OF TaggedContentInfo,
+ *        otherMsgSequence   SEQUENCE SIZE(0..MAX) OF OtherMsg
+ *  }
  */
 public class PKIData implements ASN1Value {
 
@@ -35,10 +40,7 @@ public class PKIData implements ASN1Value {
     // Construction
     ///////////////////////////////////////////////////////////////////////
 
-    // no default constructor
-    private PKIData() { }
-
-    /** 
+    /**
      * Constructs a PKIData from its components.
      *
      * @param controlSequence Sequence of TagggedAttribute.

@@ -37,20 +37,26 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.util.Assert;
-import org.mozilla.jss.asn1.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.BitSet;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.util.Assert;
 
 /**
  * CMC <i>BodyPartReference</i>:
  * <pre>
- *      BodyPartReference::= CHOICE { 
+ *      BodyPartReference::= CHOICE {
  *          bodyPartID       BodyPartID
- *          bodyPartPath     SEQUENCE SIZE (1..MAX) OF BodyPartID, 
- *     } 
+ *          bodyPartPath     SEQUENCE SIZE (1..MAX) OF BodyPartID,
+ *     }
  *
  * @author Christina Fu (cfu)
  * </pre>
@@ -75,17 +81,15 @@ public class BodyPartReference implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     private Type type;
     private INTEGER bodyPartID;
-    private SEQUENCE bodyPartPath; 
+    private SEQUENCE bodyPartPath;
 
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private BodyPartReference() { }
-
     /**
      * @param type The type of the BodyPartReference
-     * @param bodyPartID A BodyPartID. 
+     * @param bodyPartID A BodyPartID.
      * @param bodyPartPath The sequence of bodyPartIDs.
      */
     public BodyPartReference(Type type,

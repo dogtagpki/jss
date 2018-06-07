@@ -3,14 +3,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.cms;
 
-import org.mozilla.jss.pkix.primitive.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import java.util.Vector;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
 
 public class RecipientInfo implements ASN1Value {
 
@@ -23,7 +28,7 @@ public class RecipientInfo implements ASN1Value {
     private IssuerAndSerialNumber issuerAndSerialNumber;
     private AlgorithmIdentifier   keyEncryptionAlgorithmID;
     private OCTET_STRING          encryptedKey;
-    
+
     private SEQUENCE sequence = new SEQUENCE();
 
     public INTEGER getVersion() {
@@ -41,14 +46,10 @@ public class RecipientInfo implements ASN1Value {
 
 
     private static final Template templateInstance = new Template();
-    
+
     public static Template getTemplate() {
 	return templateInstance;
     }
-
-
-    private RecipientInfo() {
-        }
 
     /**
      * Create a RecipientInfo ASN1 object.
@@ -74,7 +75,7 @@ public class RecipientInfo implements ASN1Value {
         sequence.addElement(issuerAndSerialNumber);
         sequence.addElement(keyEncryptionAlgorithmID);
         sequence.addElement(encryptedKey);
-        
+
     }
 
     public void encode(OutputStream ostream) throws IOException {
@@ -123,7 +124,7 @@ public class RecipientInfo implements ASN1Value {
                     (IssuerAndSerialNumber) seq.elementAt(1),
                     (AlgorithmIdentifier)   seq.elementAt(2),
                     (OCTET_STRING)          seq.elementAt(3)
-                  
+
                     );
             }
     } // end of template

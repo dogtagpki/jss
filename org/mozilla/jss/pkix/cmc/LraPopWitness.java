@@ -5,20 +5,25 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.util.Assert;
-import org.mozilla.jss.asn1.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.BitSet;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.util.Assert;
 
 /**
  * CMC <i>LraPopWitness</i>:
  * <pre>
- *      LraPopWitness::= SEQUENCE { 
+ *      LraPopWitness::= SEQUENCE {
  *          pkiDataBodyid       BodyPartID
- *          bodyids             SEQUENCE SIZE (1..MAX) OF BodyPartID, 
- *     } 
+ *          bodyids             SEQUENCE SIZE (1..MAX) OF BodyPartID,
+ *     }
  * </pre>
  */
 public class LraPopWitness implements ASN1Value {
@@ -28,21 +33,19 @@ public class LraPopWitness implements ASN1Value {
     // Members
     ///////////////////////////////////////////////////////////////////////
     private INTEGER pkiDataBodyid;
-    private SEQUENCE bodyIds; 
+    private SEQUENCE bodyIds;
     private SEQUENCE sequence;
 
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private LraPopWitness() { }
-
     /**
-     * @param pkiDataBodyid A PKI data BodyPartID. 
+     * @param pkiDataBodyid A PKI data BodyPartID.
      * @param bodyIds The sequence of bodyPartIDs.
      */
     public LraPopWitness(INTEGER pkiDataBodyid, SEQUENCE bodyIds) {
-        if (pkiDataBodyid == null || bodyIds == null) 
+        if (pkiDataBodyid == null || bodyIds == null)
             throw new IllegalArgumentException(
                "parameter to LraPopWitness constructor is null");
         sequence = new SEQUENCE();

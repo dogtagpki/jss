@@ -15,8 +15,6 @@ import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
  */
 public class Algorithm {
 
-    private Algorithm() { }
-
     /**
      * @param oidIndex Index of the oid that this algorithm represents.
      * @param name A String representation of the Algorithm.

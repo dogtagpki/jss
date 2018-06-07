@@ -4,9 +4,17 @@
 
 package org.mozilla.jss.pkix.cms;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.util.Assert;
 
 public class DigestInfo implements ASN1Value {
@@ -14,8 +22,6 @@ public class DigestInfo implements ASN1Value {
     private AlgorithmIdentifier digestAlgorithm;
     private OCTET_STRING digest;
     private SEQUENCE sequence;
-
-    private DigestInfo() { }
 
     public DigestInfo(AlgorithmIdentifier digestAlgorithm, OCTET_STRING digest){
         if( digestAlgorithm==null || digest==null ) {

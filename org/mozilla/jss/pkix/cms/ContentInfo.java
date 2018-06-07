@@ -48,8 +48,6 @@ public class ContentInfo implements ASN1Value {
     private ANY content;
     private SEQUENCE sequence = new SEQUENCE();
 
-    private ContentInfo() {}
-
     /**
      * Creates a ContentInfo with the given type and content.
      *

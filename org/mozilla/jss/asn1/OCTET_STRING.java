@@ -3,10 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 
 public class OCTET_STRING implements ASN1Value {
 
@@ -17,8 +17,6 @@ public class OCTET_STRING implements ASN1Value {
     public static final Form FORM = Form.PRIMITIVE;
 
     byte[] data;
-
-    private OCTET_STRING() { }
 
     public OCTET_STRING( byte[] data ) {
         this.data = data;
@@ -60,7 +58,7 @@ public static class Template implements ASN1Template {
 
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
-    {   
+    {
         return decode(getTag(), istream);
     }
 

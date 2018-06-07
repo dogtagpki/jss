@@ -3,13 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.crmf;
 
-import java.util.Date;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.util.Assert;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import org.mozilla.jss.pkix.primitive.*;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkix.primitive.AVA;
 
 /**
  * A PKIX <i>CertRequest</i>.  Currently can only be decoded from its BER
@@ -20,8 +24,6 @@ public class CertRequest implements ASN1Value {
     private INTEGER certReqId;
     private CertTemplate certTemplate;
     private SEQUENCE controls; // may be null
-
-    private CertRequest() { }
 
     /**
      * @param certReqId May NOT be null.

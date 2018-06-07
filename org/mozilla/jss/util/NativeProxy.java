@@ -25,13 +25,6 @@ public abstract class NativeProxy
     public static Logger logger = LoggerFactory.getLogger(NativeProxy.class);
 
     /**
-     * Default constructor. Should not be called.
-     */
-    private NativeProxy() {
-        Assert._assert(false);
-    }
-
-    /**
      * Create a NativeProxy from a byte array representing a C pointer.
      * This is the only way to create a NativeProxy, it should be called
      * from the constructor of your subclass.

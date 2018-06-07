@@ -158,8 +158,6 @@ public final class SafeBag implements ASN1Value {
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private SafeBag() { }
-
     /**
      * Creates a new SafeBag from its components.
      *

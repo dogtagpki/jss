@@ -71,8 +71,6 @@ public class ExtendedFailInfo implements ASN1Value {
         return TAG;
     }
 
-    private ExtendedFailInfo() { }
-
     public ExtendedFailInfo(OBJECT_IDENTIFIER failInfoOID, ASN1Value failInfoValue) {
         this.failInfoOID = failInfoOID;
         if( failInfoValue instanceof ANY ) {

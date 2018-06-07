@@ -41,8 +41,6 @@ class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
     private KeyGenAlgorithm alg = null;
     private CryptoToken token = null;
 
-    private JSSSecretKeyFactorySpi() { }
-
     protected JSSSecretKeyFactorySpi(KeyGenAlgorithm alg) {
         this.alg = alg;
         token = TokenSupplierManager.getTokenSupplier().getThreadToken();

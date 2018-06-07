@@ -4,11 +4,17 @@
 
 package org.mozilla.jss.provider.java.security;
 
-import org.mozilla.jss.crypto.*;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
-import java.security.InvalidAlgorithmParameterException;
+
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.KeyPairAlgorithm;
+import org.mozilla.jss.crypto.KeyPairGenerator;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.TokenRuntimeException;
+import org.mozilla.jss.crypto.TokenSupplierManager;
 
 
 class JSSKeyPairGeneratorSpi
@@ -16,8 +22,6 @@ class JSSKeyPairGeneratorSpi
 {
 
     private KeyPairGenerator kpg;
-
-    private JSSKeyPairGeneratorSpi() { super(); }
 
     protected JSSKeyPairGeneratorSpi(KeyPairAlgorithm alg) {
         super();
@@ -45,11 +49,11 @@ class JSSKeyPairGeneratorSpi
     public void initialize(int keysize, SecureRandom random) {
         kpg.initialize(keysize, random);
     }
-        
+
     public KeyPair generateKeyPair()  {
       try {
         return kpg.genKeyPair();
-      } catch(TokenException e) { 
+      } catch(TokenException e) {
         throw new TokenRuntimeException(e.getMessage());
       }
     }

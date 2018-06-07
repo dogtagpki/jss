@@ -3,12 +3,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.cms;
 
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import java.util.Vector;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.util.Assert;
-import java.math.BigInteger;
-import java.io.ByteArrayInputStream;
 
 /**
  * A CMS EncapsulatedContentInfo structure.
@@ -21,8 +29,6 @@ public class EncapsulatedContentInfo implements ASN1Value {
     private OBJECT_IDENTIFIER contentType;
     private OCTET_STRING content;
     private SEQUENCE sequence = new SEQUENCE();
-
-    private EncapsulatedContentInfo() {}
 
     /**
      * Creates a EncapsulatedContentInfo with the given type and content.
@@ -39,7 +45,7 @@ public class EncapsulatedContentInfo implements ASN1Value {
                 this.content = (OCTET_STRING) content;
             } else {
                 // convert content to OCTET_STRING
-                this.content = (OCTET_STRING) new OCTET_STRING(
+                this.content = new OCTET_STRING(
                                     ASN1Util.encode(content) );
             }
             sequence.addElement(new EXPLICIT(new Tag(0), this.content) );
@@ -48,7 +54,7 @@ public class EncapsulatedContentInfo implements ASN1Value {
 
     /**
      * Returns the contentType field, which determines what kind of content
-     * is contained in this EncapsulatedContentInfo.  
+     * is contained in this EncapsulatedContentInfo.
      */
     public OBJECT_IDENTIFIER getContentType() {
         return contentType;
@@ -111,7 +117,7 @@ public class EncapsulatedContentInfo implements ASN1Value {
                         ));
         }
 
-        public ASN1Value decode(InputStream istream) 
+        public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(EncapsulatedContentInfo.TAG,istream);

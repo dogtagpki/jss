@@ -4,22 +4,24 @@
 
 package org.mozilla.jss.provider.javax.crypto;
 
-import java.security.*;
-import java.security.spec.*;
-import org.mozilla.jss.crypto.JSSMessageDigest;
+import java.security.DigestException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
+
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.TokenSupplierManager;
+import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.JSSMessageDigest;
 import org.mozilla.jss.crypto.SecretKeyFacade;
-import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.TokenRuntimeException;
+import org.mozilla.jss.crypto.TokenSupplierManager;
 
 class JSSMacSpi extends javax.crypto.MacSpi {
 
     private JSSMessageDigest digest=null;
     private HMACAlgorithm alg;
-
-    private JSSMacSpi() { }
 
     protected JSSMacSpi(HMACAlgorithm alg) {
       try {

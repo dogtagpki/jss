@@ -4,25 +4,40 @@
 
 package org.mozilla.jss.pkix.cert;
 
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.CryptoManager;
-import java.security.cert.CertificateException;
-import java.security.NoSuchAlgorithmException;
-import java.security.InvalidKeyException;
-import java.security.SignatureException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.security.PublicKey;
-import java.security.KeyPair;
-import java.util.Date;
-import java.util.Calendar;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.util.Calendar;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.InvalidKeyFormatException;
+import org.mozilla.jss.crypto.KeyPairAlgorithm;
+import org.mozilla.jss.crypto.KeyPairGenerator;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.Signature;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.Name;
 
 /**
  * An X.509 signed certificate.
@@ -35,8 +50,6 @@ public class Certificate implements ASN1Value
     private byte[] signature;
     private AlgorithmIdentifier algId;
     SEQUENCE sequence;
-
-    private Certificate() { }
 
     Certificate(CertificateInfo info, byte[] infoEncoding,
             AlgorithmIdentifier algId, byte[] signature) throws IOException
@@ -102,7 +115,7 @@ public class Certificate implements ASN1Value
         // encode the cert info
         this.info = info;
         infoEncoding = ASN1Util.encode(info);
-        
+
         // sign the info encoding
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken token = priv.getOwningToken();
@@ -312,7 +325,7 @@ public class Certificate implements ASN1Value
         info.setNotBefore( cal.getTime() );
         cal.set(2010, Calendar.APRIL, 1);
         info.setNotAfter( cal.getTime() );
-        
+
         System.out.println("About to create a new cert...");
         // create a new cert from this certinfo
         Certificate genCert = new Certificate(info, kp.getPrivate(),

@@ -4,18 +4,27 @@
 
 package org.mozilla.jss.pkix.cmc;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
-import org.mozilla.jss.util.Assert;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.GeneralizedTime;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.util.Assert;
 
 /**
  * CMC <i>PendInfo</i>:
  * <pre>
- *   PendInfo ::= SEQUENCE { 
- *       pendToken            OCTET STRING, 
- *       pendTime             GeneralizedTime 
- *   } 
+ *   PendInfo ::= SEQUENCE {
+ *       pendToken            OCTET STRING,
+ *       pendTime             GeneralizedTime
+ *   }
  * </pre>
  */
 public class PendInfo implements ASN1Value {
@@ -24,16 +33,13 @@ public class PendInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private OCTET_STRING pendToken;
-	private GeneralizedTime pendTime; 
+	private GeneralizedTime pendTime;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
     ///////////////////////////////////////////////////////////////////////
 
-    // no default constructor
-    private PendInfo() { }
-
-    /** 
+    /**
      * Constructs a PendInfo from its components.
      *
      * @param pendToken the identifier.
@@ -47,7 +53,7 @@ public class PendInfo implements ASN1Value {
         sequence.addElement(pendTime);
 	}
 
-    /** 
+    /**
      * Constructs a PendInfo from requestId and date.
      *
      * @param reqId the request Id
