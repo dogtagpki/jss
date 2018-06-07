@@ -665,3 +665,67 @@ finish:
 
     return pqgArray;
 }
+
+/**********************************************************************
+ * PK11RSAPrivateKey.getModulusByteArray
+ */
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_pkcs11_PK11RSAPrivateKey_getModulusByteArray
+    (JNIEnv *env, jobject this)
+{
+    SECKEYPrivateKey *privateKey = NULL;
+    SECKEYPublicKey *publicKey = NULL;
+    PK11SlotInfo *slot = NULL;
+    int rv;
+    jbyte *value = NULL;
+    jint length;
+    jbyteArray array = NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL);
+
+    // get private key
+    rv = JSS_PK11_getPrivKeyPtr(env, this, &privateKey);
+
+    // check return code
+    if (rv != PR_SUCCESS) {
+        char *message = PR_smprintf("Unable to get RSA private key (rc: %d)", rv);
+        JSS_throwMsg(env, PK11_EXCEPTION, message);
+        PR_smprintf_free(message);
+        goto finish;
+    }
+
+    // get slot from private key
+    slot = PK11_GetSlotFromPrivateKey(privateKey);
+    PR_ASSERT(slot!=NULL);
+
+    // login to token if necessary
+    PK11_Authenticate(slot, PR_TRUE, NULL);
+
+    // convert private key to public key
+    publicKey = SECKEY_ConvertToPublicKey(privateKey);
+
+    // get modulus from public key
+    value = (jbyte*)publicKey->u.rsa.modulus.data;
+    length = (jint)publicKey->u.rsa.modulus.len;
+
+    // create byte array
+    array = (*env)->NewByteArray(env, length);
+
+    // check byte array creation
+    if (array == NULL) {
+        JSS_throw(env, OUT_OF_MEMORY_ERROR);
+        goto finish;
+    }
+
+    // copy modulus into byte array
+    (*env)->SetByteArrayRegion(env, array, 0, length, value);
+
+finish:
+    if (publicKey) {
+        SECKEY_DestroyPublicKey(publicKey);
+    }
+    if (slot) {
+        PK11_FreeSlot(slot);
+    }
+    return array;
+}
