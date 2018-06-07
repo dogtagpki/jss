@@ -254,14 +254,18 @@ public class CertReqMsg implements ASN1Value {
             System.err.println("Give an arg");
             System.exit(0);
         }
-        FileInputStream fis = new FileInputStream(args[0]);
 
         SEQUENCE.OF_Template seqt = new SEQUENCE.OF_Template(
                 new CertReqMsg.Template() );
 
         SEQUENCE seq=null;
-        byte[] bytes = new byte[ fis.available() ];
-        fis.read(bytes);
+        byte[] bytes;
+
+        try (FileInputStream fis = new FileInputStream(args[0])) {
+            bytes = new byte[fis.available()];
+            fis.read(bytes);
+        }
+
         for(int i=0; i < 1; i++) {
             seq = (SEQUENCE) seqt.decode(new ByteArrayInputStream(bytes));
         }

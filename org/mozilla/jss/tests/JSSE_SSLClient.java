@@ -293,7 +293,11 @@ public class JSSE_SSLClient {
 
             try {
                 kmf = KeyManagerFactory.getInstance(certificate);
-                ks.load(new FileInputStream(getKeystoreLoc()), passphrase);
+
+                try (FileInputStream in = new FileInputStream(getKeystoreLoc())) {
+                    ks.load(in, passphrase);
+                }
+
             } catch (Exception keyEx) {
                 if (System.getProperty("java.vendor").equals("IBM Corporation")) {
                     logger.error("Using IBM JDK: Cannot load keystore due "+

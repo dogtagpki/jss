@@ -272,12 +272,14 @@ public class Certificate implements ASN1Value
         CryptoManager.initialize( argv[0] );
         CryptoManager cm = CryptoManager.getInstance();
 
-        // read in a cert
-        BufferedInputStream bis = new BufferedInputStream(
-                new FileInputStream(argv[1]) );
+        Certificate cert;
 
-        Certificate cert = (Certificate)
-                Certificate.getTemplate().decode(bis);
+        // read in a cert
+        FileInputStream fis = new FileInputStream(argv[1]);
+
+        try (BufferedInputStream bis = new BufferedInputStream(fis)) {
+            cert = (Certificate) Certificate.getTemplate().decode(bis);
+        }
 
         CertificateInfo info = cert.getInfo();
 

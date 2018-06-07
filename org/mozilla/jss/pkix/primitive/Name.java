@@ -3,14 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.primitive;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.CharConversionException;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.CharConversionException;
-import java.io.ByteArrayInputStream;
-import org.mozilla.jss.asn1.*;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.PrintableString;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 /**
  * An X.500 Name.
@@ -59,7 +66,7 @@ public class Name implements ASN1Value {
         rdns.insertElementAt( name, idx);
     }
 
-    /** 
+    /**
      * Returns the RDN at the given index in the Name.
      */
     public RDN elementAt( int idx ) {
@@ -222,9 +229,7 @@ public class Name implements ASN1Value {
         if( type == null ) {
             return "";
         } else {
-            return type + "=" +
-                (DirectoryString) (((ANY)ava.getValue()).
-                    decodeWith(DirectoryString.getTemplate()));
+            return type + "=" + ava.getValue().decodeWith(DirectoryString.getTemplate());
         }
     }
 
@@ -263,12 +268,13 @@ public class Name implements ASN1Value {
             name.encode(System.out);
         } else {
 
-            BufferedInputStream bis = new BufferedInputStream(
-                    new FileInputStream(args[0]) );
-
             Name.Template temp = new Name.Template();
+            Name name;
 
-            Name name = (Name) temp.decode(bis);
+            FileInputStream fis = new FileInputStream(args[0]);
+            try (BufferedInputStream bis = new BufferedInputStream(fis)) {
+                name = (Name) temp.decode(bis);
+            }
 
             System.out.println("Got name.");
 
@@ -277,7 +283,7 @@ public class Name implements ASN1Value {
                 PrintableString.Template pst = new PrintableString.Template();
                 PrintableString ps = (PrintableString)
                     pst.decode( new ByteArrayInputStream(
-                        ((ANY)a.getValue()).getEncoded() ) );
+                        a.getValue().getEncoded() ) );
                 System.out.println("OID: "+a.getOID()+", String: "+ps);
             }
             System.out.println("End of name");

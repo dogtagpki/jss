@@ -140,14 +140,16 @@ public class KeyStoreTest {
     public static void getCertByDER(KeyStore ks, String derCertFilename)
             throws Throwable {
 
-        FileInputStream fis = new FileInputStream(derCertFilename);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buf = new byte[1024];
         int numRead;
 
-        while( (numRead = fis.read(buf)) != -1 ) {
-            bos.write(buf, 0, numRead);
+        try (FileInputStream fis = new FileInputStream(derCertFilename)) {
+            while ((numRead = fis.read(buf)) != -1) {
+                bos.write(buf, 0, numRead);
+            }
         }
+
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
         CertificateFactory fact = CertificateFactory.getInstance("X.509");

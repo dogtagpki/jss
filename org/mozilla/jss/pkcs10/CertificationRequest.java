@@ -259,12 +259,13 @@ public class CertificationRequest implements ASN1Value {
         CryptoManager.initialize( argv[0] );
         CryptoManager cm = CryptoManager.getInstance();
 
-        // read in a cert
-        BufferedInputStream bis = new BufferedInputStream(
-                new FileInputStream(argv[1]) );
+        CertificationRequest cert;
 
-        CertificationRequest cert = (CertificationRequest)
-                CertificationRequest.getTemplate().decode(bis);
+        // read in a cert
+        FileInputStream fis = new FileInputStream(argv[1]);
+        try (BufferedInputStream bis = new BufferedInputStream(fis)) {
+            cert = (CertificationRequest) CertificationRequest.getTemplate().decode(bis);
+        }
 
         CertificationRequestInfo info = cert.getInfo();
 

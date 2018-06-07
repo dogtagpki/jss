@@ -4,9 +4,13 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.util.*;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
+
+import org.mozilla.jss.util.Password;
+import org.mozilla.jss.util.PasswordCallback;
+import org.mozilla.jss.util.PasswordCallbackInfo;
 
 /**
  */
@@ -16,7 +20,9 @@ public class FilePasswordCallback implements PasswordCallback {
 
     public FilePasswordCallback(String filename) throws IOException {
         passwords = new Properties();
-        passwords.load( new FileInputStream(filename) );
+        try (FileInputStream in = new FileInputStream(filename)) {
+            passwords.load(in);
+        }
     }
 
     /**

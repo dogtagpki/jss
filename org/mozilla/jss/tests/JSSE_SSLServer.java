@@ -370,7 +370,10 @@ public class JSSE_SSLServer {
             kmf = KeyManagerFactory.getInstance(certificate);
             ks = KeyStore.getInstance("PKCS12");
 
-            ks.load(new FileInputStream(getKeystore()), passphrase);
+            try (FileInputStream in = new FileInputStream(getKeystore())) {
+                ks.load(in, passphrase);
+            }
+
             kmf.init(ks, passphrase);
             ctx.init(kmf.getKeyManagers(), null, null);
 

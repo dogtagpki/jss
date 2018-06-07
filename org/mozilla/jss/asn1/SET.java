@@ -639,23 +639,26 @@ public static class Template implements ASN1Template {
             // Decode this element
             ASN1Template t = e.getTemplate();
             ASN1Value val;
-            CountingStream countstream = new CountingStream(istream);
-            if( e.getImplicitTag() == null ) {
-                val = t.decode(countstream);
-            } else {
-                val = t.decode(e.getImplicitTag(), countstream);
-            }
 
-            // Decrement remaining count
-            long len = countstream.getNumRead();
-            if( remainingContent != -1 ) {
-                if( remainingContent < len ) {
-                    // this item went past the end of the SET
-                    throw new InvalidBERException("Item went "+
-                        (len-remainingContent)+" bytes past the end of"+
-                        " the SET");
+            try (CountingStream countstream = new CountingStream(istream)) {
+
+                if (e.getImplicitTag() == null) {
+                    val = t.decode(countstream);
+                } else {
+                    val = t.decode(e.getImplicitTag(), countstream);
                 }
-                remainingContent -= len;
+
+                // Decrement remaining count
+                long len = countstream.getNumRead();
+                if (remainingContent != -1) {
+                    if (remainingContent < len) {
+                        // this item went past the end of the SET
+                        throw new InvalidBERException("Item went "+
+                            (len-remainingContent) + " bytes past the end of" +
+                            " the SET");
+                    }
+                    remainingContent -= len;
+                }
             }
 
             // Store this element in the SET
@@ -848,8 +851,6 @@ public static class OF_Template implements ASN1Template {
 
         if(args.length > 0) {
 
-        FileInputStream fin = new FileInputStream( args[0] );
-
         Template t = new SET.Template();
 
         t.addElement(new Tag(0), new INTEGER.Template() );
@@ -861,7 +862,12 @@ public static class OF_Template implements ASN1Template {
         t.addElement( new Tag(1), new INTEGER.Template() );
         t.addElement( new Tag(2), new INTEGER.Template() );
 
-        SET st = (SET) t.decode(new BufferedInputStream(fin) );
+        SET st;
+
+        FileInputStream fin = new FileInputStream(args[0]);
+        try (BufferedInputStream is = new BufferedInputStream(fin)) {
+            st = (SET) t.decode(is);
+        }
 
         for(int i=0; i < st.size(); i++) {
             ASN1Value v = st.elementAt(i);

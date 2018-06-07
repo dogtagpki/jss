@@ -101,9 +101,14 @@ public class DigestTest {
                 System.exit(1);
             }
             String dbdir = argv[0];
-            FileInputStream fis = new FileInputStream(argv[1]);
-            byte[] toBeDigested = new byte[ fis.available() ];
-            int read = fis.read( toBeDigested );
+            byte[] toBeDigested;
+            int read;
+
+            try (FileInputStream fis = new FileInputStream(argv[1])) {
+                toBeDigested = new byte[fis.available()];
+                read = fis.read(toBeDigested);
+            }
+
             System.out.println(read + " bytes to be digested");
 
             CryptoManager.initialize(dbdir);

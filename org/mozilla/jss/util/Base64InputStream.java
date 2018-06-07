@@ -5,7 +5,14 @@
 package org.mozilla.jss.util;
 
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 
@@ -221,7 +228,6 @@ public class Base64InputStream extends FilterInputStream {
         String b64file = infile.concat(".b64");
         String newfile = infile.concat(".recov");
 
-        FileInputStream fis = new FileInputStream(infile);
         ByteArrayOutputStream origStream = new ByteArrayOutputStream();
         ByteArrayOutputStream b64OStream = new ByteArrayOutputStream();
 
@@ -230,21 +236,24 @@ public class Base64InputStream extends FilterInputStream {
 
         int numread;
         byte []data = new byte[1024];
-        while( (numread = fis.read(data, 0, 1024)) != -1 ) {
-            origStream.write(data, 0, numread);
-            b64Stream.write(data, 0, numread);
+
+        try (FileInputStream fis = new FileInputStream(infile)) {
+            while ((numread = fis.read(data, 0, 1024)) != -1) {
+                origStream.write(data, 0, numread);
+                b64Stream.write(data, 0, numread);
+            }
         }
 
         b64Stream.close();
         origStream.close();
 
-        Base64InputStream bis = new Base64InputStream(
-            new ByteArrayInputStream(b64OStream.toByteArray()));
-
         ByteArrayOutputStream newStream = new ByteArrayOutputStream();
 
-        while( (numread = bis.read(data, 0, 1024)) != -1 ) {
-            newStream.write(data, 0, numread);
+        ByteArrayInputStream bais = new ByteArrayInputStream(b64OStream.toByteArray());
+        try (Base64InputStream bis = new Base64InputStream(bais)) {
+            while ((numread = bis.read(data, 0, 1024)) != -1) {
+                newStream.write(data, 0, numread);
+            }
         }
 
         newStream.close();

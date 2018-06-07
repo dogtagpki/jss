@@ -119,16 +119,15 @@ public class CertRepContent implements ASN1Value {
 
     public static void main(String argv[]) {
 
-      try {
-
         if(argv.length != 2) {
             System.out.println("Usage: CertRepContent <certfile> <outputfile>");
             System.out.println("certfile should contain a DER-encoded X.509 "+
                     "certificate");
             System.exit(-1);
         }
-        FileInputStream certfile = new FileInputStream(argv[0]);
-        FileOutputStream fos = new FileOutputStream(argv[1]);
+
+        try (FileInputStream certfile = new FileInputStream(argv[0]);
+                FileOutputStream fos = new FileOutputStream(argv[1])) {
 
         byte[][] certs = new byte[2][];
         certs[0] = new byte[ certfile.available() ];

@@ -4,11 +4,14 @@
 
 package org.mozilla.jss.tests;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.SecretDecoderRing;
 import org.mozilla.jss.util.ConsolePasswordCallback;
-import java.io.*;
 
 public class SDR {
 
@@ -27,14 +30,17 @@ public class SDR {
 
         SecretDecoderRing sdr = new SecretDecoderRing();
 
-        FileInputStream fis = new FileInputStream(infile);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         int numread;
         byte[] data = new byte[1024];
-        while( (numread = fis.read(data)) != -1 ) {
-            bos.write(data, 0, numread);
+
+        try (FileInputStream fis = new FileInputStream(infile)) {
+            while ((numread = fis.read(data)) != -1) {
+                bos.write(data, 0, numread);
+            }
         }
+
         byte[] inputBytes = bos.toByteArray();
 
         byte[] outputBytes;
@@ -44,8 +50,9 @@ public class SDR {
                 outputBytes = sdr.decrypt(inputBytes);
         }
 
-        FileOutputStream fos = new FileOutputStream(outfile);
-        fos.write(outputBytes);
+        try (FileOutputStream fos = new FileOutputStream(outfile)) {
+            fos.write(outputBytes);
+        }
 
       } catch(Exception e) {
         e.printStackTrace();

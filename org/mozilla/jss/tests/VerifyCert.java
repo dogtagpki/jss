@@ -23,10 +23,8 @@ public class VerifyCert {
 
     public void showCert( String certFile) {
         //Read the cert
-        try {
-
-            BufferedInputStream bis = new BufferedInputStream(
-                                new FileInputStream(certFile) );
+        try (FileInputStream fis = new FileInputStream(certFile);
+                BufferedInputStream bis = new BufferedInputStream(fis)) {
 
             Certificate cert = (Certificate)
                  Certificate.getTemplate().decode(bis);

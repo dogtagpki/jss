@@ -324,14 +324,20 @@ public class PFX implements ASN1Value {
                 System.out.println("Usage: PFX <dbdir> <infile>");
                 System.exit(-1);
             }
-            FileInputStream fis = new FileInputStream(args[1]);
+
             int certfile = 0;
 
             CryptoManager.initialize( args[0] );
 
             // Decode the P12 file
             PFX.Template pfxt = new PFX.Template();
-            PFX pfx = (PFX) pfxt.decode(new BufferedInputStream(fis, 2048));
+            PFX pfx;
+
+            FileInputStream fis = new FileInputStream(args[1]);
+            try (BufferedInputStream in = new BufferedInputStream(fis, 2048)) {
+                pfx = (PFX) pfxt.decode(in);
+            }
+
             System.out.println("Decoded PFX");
 
             // now peruse it for interesting info

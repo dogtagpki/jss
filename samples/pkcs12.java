@@ -8,19 +8,41 @@
  * is encrypted and MACed with a new, different password.
  */
 
-/* note that this code still has some problems reading PKCS12 file 
+/* note that this code still has some problems reading PKCS12 file
  * generated with Communicator.
  */
 
 
-import java.io.*;
-import org.mozilla.jss.*;
-import org.mozilla.jss.pkcs12.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.util.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.pkix.cert.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BMPString;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.crypto.CryptoStore;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.JSSSecureRandom;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.pkcs12.AuthenticatedSafes;
+import org.mozilla.jss.pkcs12.CertBag;
+import org.mozilla.jss.pkcs12.PFX;
+import org.mozilla.jss.pkcs12.PasswordConverter;
+import org.mozilla.jss.pkcs12.SafeBag;
+import org.mozilla.jss.pkix.cert.Certificate;
+import org.mozilla.jss.pkix.primitive.Attribute;
+import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
+import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
+import org.mozilla.jss.util.ConsolePasswordCallback;
+import org.mozilla.jss.util.Password;
 
 
 public class pkcs12 {
@@ -54,7 +76,12 @@ public class pkcs12 {
 
         // Decode the P12 file
         PFX.Template pfxt = new PFX.Template();
-        PFX pfx = (PFX) pfxt.decode(new BufferedInputStream(infile, 2048));
+        PFX pfx;
+
+        try (BufferedInputStream is = new BufferedInputStream(infile, 2048)) {
+            pfx = (PFX) pfxt.decode(is);
+        }
+
         System.out.println("Decoded PFX");
 
         // print out information about the top-level PFX structure
@@ -190,7 +217,7 @@ public class pkcs12 {
 
                     // Overwrite the previous EncryptedPrivateKeyInfo with
                     // this new one we just created using the new password.
-                    // This is what will get put in the new PKCS #12 file 
+                    // This is what will get put in the new PKCS #12 file
                     // we are creating.
                     safeContents.insertElementAt(
                         new SafeBag( safeBag.getBagType(),
@@ -236,12 +263,12 @@ public class pkcs12 {
         newPfx.encode(fos);
         fos.close();
 
-        
+
      } catch( Exception e ) {
         e.printStackTrace();
      }
   }
-	
+
 
 
 }
