@@ -13,11 +13,8 @@ public final class TokenProxy extends NativeProxy {
     public static Logger logger = LoggerFactory.getLogger(TokenProxy.class);
 
     public TokenProxy(byte[] pointer) {
-            super(pointer);
-        }
-        protected native void releaseNativeResources();
-        protected void finalize() throws Throwable {
-            logger.debug("Finalizing a TokenProxy");
-            super.finalize();
-        }
+        super(pointer);
     }
+
+    protected native void releaseNativeResources();
+}

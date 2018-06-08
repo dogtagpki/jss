@@ -140,9 +140,4 @@ class CertProxy extends org.mozilla.jss.util.NativeProxy {
     }
 
     protected native void releaseNativeResources();
-
-    protected void finalize() throws Throwable {
-        logger.debug("finalizing a certificate");
-        super.finalize();
-    }
 }

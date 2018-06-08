@@ -347,8 +347,4 @@ class SigContextProxy extends NativeProxy {
         super(pointer);
     }
     protected native void releaseNativeResources();
-    protected void finalize() throws Throwable {
-        logger.debug("Finalizing a SigContextProxy");
-        super.finalize();
-    }
 }

@@ -105,9 +105,4 @@ class PublicKeyProxy extends KeyProxy {
     }
 
     protected native void releaseNativeResources();
-
-    protected void finalize() throws Throwable {
-        logger.debug("Releasing a PublicKeyProxy");
-        super.finalize();
-    }
 }
