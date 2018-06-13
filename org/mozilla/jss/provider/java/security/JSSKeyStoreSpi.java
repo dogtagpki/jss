@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Key;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -59,7 +60,9 @@ import org.slf4j.LoggerFactory;
  * with this nickname, or if there is a cert with this nickname and the cert
  * has an associated private key.
  *
- * <li>load and store are no-ops.
+ * <li>load updates the token in the keystore.
+ *
+ * <li>store is a no-op.
  *
  * <li>setCertificateEntry doesn't work.NSS doesn't have a way of storing a
  * certificate on a specific token unless it has an associated private key.
@@ -73,6 +76,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
     public static Logger logger = LoggerFactory.getLogger(JSSKeyStoreSpi.class);
 
+    CryptoToken token;
     protected TokenProxy proxy;
 
     public JSSKeyStoreSpi() {
@@ -246,7 +250,26 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     public void engineLoad(InputStream stream, char[] password)
         throws IOException
     {
-        logger.debug("JSSKeyStoreSpi: engineLoad()");
+        logger.debug("JSSKeyStoreSpi: engineLoad(stream, password)");
+    }
+
+    public void engineLoad(KeyStore.LoadStoreParameter param)
+        throws IOException
+    {
+        logger.debug("JSSKeyStoreSpi: engineLoad(param)");
+
+        if (!(param instanceof JSSLoadStoreParameter)) {
+            throw new IOException("Invalid keystore parameter type: " + param.getClass().getName());
+        }
+
+        JSSLoadStoreParameter jssParam = (JSSLoadStoreParameter) param;
+        token = jssParam.getToken();
+
+        try {
+            logger.debug("JSSKeyStoreSpi: token: " + token.getName());
+        } catch (TokenException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
