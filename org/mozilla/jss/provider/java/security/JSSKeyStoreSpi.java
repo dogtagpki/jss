@@ -15,12 +15,22 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.CryptoManager.NotInitializedException;
+import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
@@ -114,17 +124,90 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
      * Returns a list of unique aliases.
      */
     public Enumeration<String> engineAliases() {
-
         logger.debug("JSSKeyStoreSpi: engineAliases()");
+        return Collections.enumeration(getAliases());
+    }
 
-        return new IteratorEnumeration<String>( getRawAliases().iterator() );
+    public Collection<String> getAliases() {
+
+        logger.debug("JSSKeyStoreSpi: getAliases()");
+        Set<String> aliases = new HashSet<>();
+
+        try {
+            List<CryptoToken> tokens = new ArrayList<>();
+            CryptoManager cm = CryptoManager.getInstance();
+
+            if (token == null) {
+                logger.debug("JSSKeyStoreSpi: getting aliases from all tokens");
+
+                Enumeration<CryptoToken> e = cm.getAllTokens();
+
+                while (e.hasMoreElements()) {
+                    CryptoToken t = e.nextElement();
+
+                    if (t == cm.getInternalCryptoToken()) {
+                        continue; // exclude crypto token
+                    }
+
+                    tokens.add(t);
+                }
+
+            } else {
+                logger.debug("JSSKeyStoreSpi: getting aliases from keystore token");
+                tokens.add(token);
+            }
+
+            for (CryptoToken token : tokens) {
+
+                String tokenName;
+                if (token == cm.getInternalKeyStorageToken()) {
+                    tokenName = null;
+                    logger.debug("JSSKeyStoreSpi: token: internal");
+
+                } else {
+                    tokenName = token.getName();
+                    logger.debug("JSSKeyStoreSpi: token: " + tokenName);
+                }
+
+                CryptoStore store = token.getCryptoStore();
+
+                logger.debug("JSSKeyStoreSpi: - certificates:");
+                for (X509Certificate cert : store.getCertificates()) {
+                    String nickname = cert.getNickname();
+                    logger.debug("JSSKeyStoreSpi:   - " + nickname);
+                    aliases.add(nickname);
+                }
+
+                logger.debug("JSSKeyStoreSpi: - private keys:");
+                for (PrivateKey privateKey : store.getPrivateKeys()) {
+                    // convert key ID into hexadecimal
+                    String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
+                    String nickname;
+                    if (tokenName == null) {
+                        nickname = keyID;
+                    } else {
+                        nickname = tokenName + ":" + keyID;
+                    }
+                    logger.debug("JSSKeyStoreSpi:   - " + nickname);
+                    aliases.add(nickname);
+                }
+            }
+
+            return aliases;
+
+        } catch (NotInitializedException e) {
+            throw new RuntimeException(e);
+
+        } catch (TokenException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean engineContainsAlias(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineContainsAlias(" + alias + ")");
 
-        return getRawAliases().contains(alias);
+        return getAliases().contains(alias);
     }
 
     public native void engineDeleteEntry(String alias);
@@ -320,7 +403,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
         logger.debug("JSSKeyStoreSpi: engineSize()");
 
-        return getRawAliases().size();
+        return getAliases().size();
     }
 
     public void engineStore(OutputStream stream, char[] password)
