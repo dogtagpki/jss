@@ -30,6 +30,7 @@ import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.CryptoManager.NotInitializedException;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
@@ -229,19 +230,33 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificate(" + alias + ")");
 
-        byte[] derCert = getDERCert(alias);
-        if( derCert == null ) {
+        try {
+            CryptoManager cm = CryptoManager.getInstance();
+            X509Certificate cert = cm.findCertByNickname(alias);
+
+            logger.debug("JSSKeyStoreSpi: cert found: " + alias);
+
+            byte[] bytes = cert.getEncoded();
+            InputStream is = new ByteArrayInputStream(bytes);
+
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            return certFactory.generateCertificate(is);
+
+        } catch (ObjectNotFoundException e) {
+            logger.debug("JSSKeyStoreSpi: cert not found: " + alias);
             return null;
-        } else {
-            try {
-                return
-                    certFactory.generateCertificate(
-                        new ByteArrayInputStream(derCert)
-                    );
-            } catch( CertificateException e ) {
-                e.printStackTrace();
-                return null;
-            }
+
+        } catch (NotInitializedException e) {
+            throw new RuntimeException(e);
+
+        } catch (TokenException e) {
+            throw new RuntimeException(e);
+
+        } catch (CertificateEncodingException e) {
+            throw new RuntimeException(e);
+
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -316,7 +331,28 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
      * Returns true if there is a cert with this nickname but there is no
      * key associated with the cert.
      */
-    public native boolean engineIsCertificateEntry(String alias);
+    public boolean engineIsCertificateEntry(String alias) {
+
+        logger.debug("JSSKeyStoreSpi: engineIsCertificateEntry(" + alias + ")");
+
+        try {
+            CryptoManager cm = CryptoManager.getInstance();
+            cm.findCertByNickname(alias);
+
+            logger.debug("JSSKeyStoreSpi: cert found: " + alias);
+            return true;
+
+        } catch (ObjectNotFoundException e) {
+            logger.debug("JSSKeyStoreSpi: cert not found: " + alias);
+            return false;
+
+        } catch (NotInitializedException e) {
+            throw new RuntimeException(e);
+
+        } catch (TokenException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Returns true if there is a key with this alias, or if
