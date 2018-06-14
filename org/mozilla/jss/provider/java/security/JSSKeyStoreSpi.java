@@ -26,8 +26,10 @@ import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.lang.StringUtils;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.CryptoManager.NotInitializedException;
+import org.mozilla.jss.NoSuchTokenException;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
@@ -318,13 +320,92 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
         logger.debug("JSSKeyStoreSpi: engineGetKey(" + alias + ")");
 
-        Object o = engineGetKeyNative(alias, password);
-        if( o instanceof SymmetricKey ) {
-            return new SecretKeyFacade((SymmetricKey)o);
-        } else {
-            return (Key) o;
+        try {
+            CryptoManager cm = CryptoManager.getInstance();
+
+            logger.debug("JSSKeyStoreSpi: searching for cert");
+
+            try {
+                X509Certificate cert = cm.findCertByNickname(alias);
+                logger.debug("JSSKeyStoreSpi: found cert: " + alias);
+
+                PrivateKey privateKey = cm.findPrivKeyByCert(cert);
+                logger.debug("JSSKeyStoreSpi: found private key: " + alias);
+
+                return privateKey;
+
+            } catch (ObjectNotFoundException e) {
+                logger.debug("JSSKeyStoreSpi: cert/key not found, searching for key");
+            }
+
+            String nickname;
+            String tokenName;
+
+            String[] parts = StringUtils.splitPreserveAllTokens(alias, ':');
+            if (parts.length == 1) {
+                tokenName = null;
+                nickname = parts[0];
+
+            } else if (parts.length == 2) {
+                tokenName = StringUtils.defaultIfEmpty(parts[0], null);
+                nickname = parts[1];
+
+            } else {
+                throw new RuntimeException("Invalid alias: " + alias);
+            }
+
+            logger.debug("JSSKeyStoreSpi: token: " + tokenName);
+            logger.debug("JSSKeyStoreSpi: nickname: " + nickname);
+
+            CryptoToken token;
+            if (tokenName == null) {
+                token = cm.getInternalKeyStorageToken();
+            } else {
+                token = cm.getTokenByName(tokenName);
+            }
+
+            CryptoStore store = token.getCryptoStore();
+
+            logger.debug("JSSKeyStoreSpi: searching for private key");
+
+            for (PrivateKey privateKey : store.getPrivateKeys()) {
+
+                // convert key ID into hexadecimal
+                String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
+                logger.debug("JSSKeyStoreSpi: - " + keyID);
+
+                if (nickname.equals(keyID)) {
+                    logger.debug("JSSKeyStoreSpi: found private key: " + nickname);
+                    return privateKey;
+                }
+            }
+
+            logger.debug("JSSKeyStoreSpi: searching for symmetric key");
+
+            for (SymmetricKey symmetricKey : store.getSymmetricKeys()) {
+
+                logger.debug("JSSKeyStoreSpi: - " + symmetricKey.getNickName());
+
+                if (nickname.equals(symmetricKey.getNickName())) {
+                    logger.debug("JSSKeyStoreSpi: found symmetric key: " + nickname);
+                    return new SecretKeyFacade(symmetricKey);
+                }
+            }
+
+            logger.debug("JSSKeyStoreSpi: key not found: " + nickname);
+            return null;
+
+        } catch (NoSuchTokenException e) {
+            throw new RuntimeException(e);
+
+        } catch (NotInitializedException e) {
+            throw new RuntimeException(e);
+
+        } catch (TokenException e) {
+            throw new RuntimeException(e);
         }
     }
+
     public native Object engineGetKeyNative(String alias, char[] password);
 
     /**
@@ -363,7 +444,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         logger.debug("JSSKeyStoreSpi: engineIsKeyEntry(" + alias + ")");
 
         /* this is somewhat wasteful but we can speed it up later */
-        return ( engineGetKey(alias, null) != null );
+        return engineGetKey(alias, null) != null;
     }
 
     public void engineLoad(InputStream stream, char[] password)
