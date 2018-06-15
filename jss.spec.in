@@ -14,7 +14,7 @@ Release:        0.1%{?_timestamp}%{?_commit_id}%{?dist}
 # $ cd jss
 # $ git archive \
 #     --format=tar.gz \
-#     --prefix jss-VERSION/jss/ \
+#     --prefix jss-VERSION/ \
 #     -o jss-VERSION.tar.gz \
 #     <version tag>
 Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
@@ -116,44 +116,39 @@ export USE_64
 %endif
 
 # The Makefile is not thread-safe
-make -C jss/coreconf
-make -C jss
-make -C jss javadoc
+make -C coreconf
+make
+make javadoc
 
 ################################################################################
 %install
-
-# Copy the license files here so we can include them in %%doc
-cp -p jss/MPL-1.1.txt .
-cp -p jss/gpl.txt .
-cp -p jss/lgpl.txt .
 
 # There is no install target so we'll do it by hand
 
 # jars
 install -d -m 0755 $RPM_BUILD_ROOT%{_jnidir}
-install -m 644 dist/xpclass.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
+install -m 644 ../dist/xpclass.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
 
 # We have to use the name libjss4.so because this is dynamically
 # loaded by the jar file.
 install -d -m 0755 $RPM_BUILD_ROOT%{_libdir}/jss
-install -m 0755 dist/Linux*.OBJ/lib/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
+install -m 0755 ../dist/Linux*.OBJ/lib/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
 pushd  ${RPM_BUILD_ROOT}%{_libdir}/jss
     ln -fs %{_jnidir}/jss4.jar jss4.jar
 popd
 
 # javadoc
 install -d -m 0755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -rp dist/jssdoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -p jss/jss.html $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -p jss/*.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -rp ../dist/jssdoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -p jss.html $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 
 # No ldconfig is required since this library is loaded by Java itself.
 ################################################################################
 %files
 
 %defattr(-,root,root,-)
-%doc jss/jss.html jss/MPL-1.1.txt jss/gpl.txt jss/lgpl.txt
+%doc jss.html MPL-1.1.txt gpl.txt lgpl.txt
 %{_libdir}/jss/*
 %{_jnidir}/*
 %{_libdir}/jss/lib*.so
