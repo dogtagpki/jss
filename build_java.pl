@@ -1,4 +1,5 @@
 #use strict;
+use Cwd qw(abs_path);
 use File::Find;
 use File::Compare;
 use File::Basename;
@@ -143,7 +144,7 @@ sub setup_vars {
     $javah = "$ENV{JAVA_HOME}/bin/javah";
     $javadoc = "$ENV{JAVA_HOME}/bin/javadoc";
 
-    $dist_dir = $cmdline_vars{SOURCE_PREFIX};
+    $dist_dir = abs_path($cmdline_vars{SOURCE_PREFIX});
     $jce_jar = $ENV{JCE_JAR};
 
     $class_release_dir = $cmdline_vars{SOURCE_RELEASE_PREFIX};
@@ -264,19 +265,23 @@ sub build {
     }
 
     #
-    # generate manifest.mf file in lib dir
+    # generate MANIFEST.MF file in dist dir
     #
-    my $manifest_file   = "MANIFEST.MF";
+    my $manifest_file  = "$dist_dir/MANIFEST.MF";
+    print "Creating $manifest_file\n";
+
     my $jss_revision   = `grep JSS_VERSION org/mozilla/jss/util/jssver.h`;
     chop($jss_revision);
     $jss_revision      = substr($jss_revision, 22, 3);
     my $build_revision = $jss_revision;
     $append = 0;
 
+    ensure_dir_exists($dist_dir);
+
     if ($append) {
-        open(MYOUTFILE, ">MANIFEST.MF");  #open for write, overwrite
+        open(MYOUTFILE, ">$manifest_file");  #open for write, overwrite
     } else {
-        open(MYOUTFILE, ">>MANIFEST.MF"); #open for write, append
+        open(MYOUTFILE, ">>$manifest_file"); #open for write, append
     }
 
     #*** Print freeform text, semicolon required ***
@@ -330,8 +335,7 @@ MyLabel
         ensure_dir_exists($class_dir);
         print_do("$javac $javac_opt_flag -sourcepath . -d $class_dir " .
             "$classpath " . join(" ",@source_list));
-        print_do("sh -c 'pwd && cd $class_dir && pwd && rm -f $class_jar && pwd && ls -al && ls -al ../../dist && $jar -cvmf ../../jss/$manifest_file ../$class_jar *'");
-        print_do("rm -f $manifest_file");
+        print_do("sh -c 'cd $dist_dir/classes && $jar cvmf $dist_dir/MANIFEST.MF $dist_dir/xpclass.jar *'");
         print "Exit status was " . ($?>>8) . "\n";
     }
 
