@@ -40,10 +40,18 @@ BuildRequires:  jpackage-utils
 %if 0%{?fedora} >= 25 || 0%{?rhel} > 7
 BuildRequires:  perl-interpreter
 %endif
+BuildRequires:  apache-commons-lang
+BuildRequires:  apache-commons-codec
+BuildRequires:  ldapjdk
+
 
 Requires:       nss >= 3.28.4-6
 Requires:       java-headless
 Requires:       jpackage-utils
+Requires:       apache-commons-lang
+Requires:       apache-commons-codec
+Requires:       ldapjdk
+
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
