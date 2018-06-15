@@ -8,6 +8,7 @@ License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 Version:        4.5.0
 Release:        0.1%{?_timestamp}%{?_commit_id}%{?dist}
+%global         _phase -a1
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -17,7 +18,7 @@ Release:        0.1%{?_timestamp}%{?_commit_id}%{?dist}
 #     --prefix jss-VERSION/ \
 #     -o jss-VERSION.tar.gz \
 #     <version tag>
-Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
+Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phase}/%{name}-%{version}%{?_phase}.tar.gz
 
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
@@ -75,7 +76,7 @@ This package contains the API documentation for JSS.
 ################################################################################
 %prep
 
-%autosetup -n %{name}-%{version} -p 1 -S git
+%autosetup -n %{name}-%{version}%{?_phase} -p 1 -S git
 
 ################################################################################
 %build
