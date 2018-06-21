@@ -440,10 +440,11 @@ sub test {
         die "make test_jss is only available on upstream builds of Linux and MacOS platforms.";
     } elsif( $os eq 'Linux' || $os eq 'Darwin' ) {
         # Test JSS presuming that it has already been built
+
         if(( -d $dist_dir )  &&
            ( -l $jss_symlink )) {
             my $cmd = "cd $pwd/org/mozilla/jss/tests;"
-                    . "perl all.pl dist $jss_symlink;"
+                    . "perl all.pl dist $dist_dir $jss_symlink;"
                     . "cd $pwd";
 
             print("#######################\n" .

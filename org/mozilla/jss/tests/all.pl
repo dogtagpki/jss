@@ -10,13 +10,13 @@ use Cwd 'abs_path';
 use POSIX 'uname';
 
                                                                                                   
-# dist <dist_dir>
+# dist <dist_dir> <obj_dir>
 # release <java release dir> <nss release dir> <nspr release dir>
 # auto   (test the current build directory)
 
 sub usage {
     print "Usage:\n";
-    print "$0 dist <dist_dir>\n";
+    print "$0 dist <dist_dir> <obj_dir>\n";
     print "$0 release <jss release dir> <nss release dir> "
         . "<nspr release dir>\n";
     print "$0 auto\n";
@@ -33,7 +33,6 @@ my $testdir        = "";
 my $testrun        = 0;
 my $testpass       = 0;
 my $nss_lib_dir    = "";
-my $dist_dir       = "";
 my $pathsep        = ":";
 my $scriptext      = "sh";
 my $exe_suffix     = "";
@@ -115,17 +114,17 @@ sub setup_vars {
     $ENV{CLASSPATH}  = "";
     $ENV{$ld_lib_path} = "" if $truncate_lib_path;
 
-
     if( $$argv[0] eq "dist" ) {
         shift @$argv;
-        $dist_dir = shift @$argv or usage("did not provide dist_dir");
+        my $dist_dir = shift @$argv or usage("did not provide dist_dir");
+        my $obj_dir = shift @$argv or usage("did not provide obj_dir");
 
-        $ENV{CLASSPATH} .= "$dist_dir/../xpclass.jar";
+        $ENV{CLASSPATH} .= "$dist_dir/xpclass.jar";
         ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
-        $ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$dist_dir/lib";
-        $nss_lib_dir   = "$dist_dir/lib";
-        $jss_rel_dir   = "$dist_dir/../classes/org";
-        $jss_classpath = "$dist_dir/../xpclass.jar";
+        $ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$obj_dir/lib";
+        $nss_lib_dir   = "$obj_dir/lib";
+        $jss_rel_dir   = "$dist_dir/classes/org";
+        $jss_classpath = "$dist_dir/xpclass.jar";
 
     } elsif( $$argv[0] eq "auto" ) {
         my $dist_dir = `make dist_dir`;
