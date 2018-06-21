@@ -170,7 +170,7 @@ public class Password implements PasswordCallback, Cloneable,
      */
     protected void finalize() throws Throwable {
         if(!cleared) {
-            logger.error("Password was garbage collected before it was cleared.");
+            logger.warn("Password was garbage collected before it was cleared.");
         }
         clear();
     }
