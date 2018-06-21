@@ -3,53 +3,44 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.tests;
 
-import java.io.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.util.Debug;
-import java.security.MessageDigest;
-import java.security.Provider;
-import java.security.Security;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Calendar;
+import java.util.Date;
 
-
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.KeyPairGenerator;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
-
-import org.mozilla.jss.pkcs11.PK11ECPublicKey;
-
+import org.mozilla.jss.crypto.KeyPairGenerator;
+import org.mozilla.jss.netscape.security.util.BigInt;
+import org.mozilla.jss.netscape.security.util.DerValue;
+import org.mozilla.jss.netscape.security.x509.AlgorithmId;
+import org.mozilla.jss.netscape.security.x509.CertificateAlgorithmId;
+import org.mozilla.jss.netscape.security.x509.CertificateExtensions;
+import org.mozilla.jss.netscape.security.x509.CertificateIssuerName;
+import org.mozilla.jss.netscape.security.x509.CertificateSerialNumber;
+import org.mozilla.jss.netscape.security.x509.CertificateSubjectName;
+import org.mozilla.jss.netscape.security.x509.CertificateValidity;
+import org.mozilla.jss.netscape.security.x509.CertificateVersion;
+import org.mozilla.jss.netscape.security.x509.CertificateX509Key;
+import org.mozilla.jss.netscape.security.x509.X500Name;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.mozilla.jss.netscape.security.x509.X509CertInfo;
 import org.mozilla.jss.netscape.security.x509.X509Key;
-import org.mozilla.jss.netscape.security.x509.CertificateIssuerName;
-import org.mozilla.jss.netscape.security.x509.CertificateVersion;
-import org.mozilla.jss.netscape.security.x509.CertificateSerialNumber;
-import org.mozilla.jss.netscape.security.x509.CertificateValidity;
-import org.mozilla.jss.netscape.security.x509.CertificateSubjectName;
-import org.mozilla.jss.netscape.security.x509.CertificateAlgorithmId;
-import org.mozilla.jss.netscape.security.x509.AlgorithmId;
-import org.mozilla.jss.netscape.security.x509.CertificateX509Key;
-import org.mozilla.jss.netscape.security.x509.X500Name;
-import org.mozilla.jss.netscape.security.x509.CertificateExtensions;
-
-import org.mozilla.jss.netscape.security.util.BigInt;
-import org.mozilla.jss.netscape.security.util.DerValue;
-
-import java.util.Date;
-import java.util.Calendar;
-import java.math.BigInteger;
+import org.mozilla.jss.pkcs11.PK11ECPublicKey;
 
 public class X509CertTest {
 
     public static String subjectDN = "CN = 8a99f98342b97d130142ba2cc30f07d3";
     public static String issuerDN= "C = US, ST = North Carolina, O = Red Hat Inc., OU = Red Hat Network, CN = Red Hat Candlepin Authority, E = ca-support@redhat.com ";
 
-    /* Just some sample code to exercise the new classes */ 
+    /* Just some sample code to exercise the new classes */
     public static void main(String []args) {
 
         X509CertImpl certImpl = null;
@@ -80,7 +71,7 @@ public class X509CertTest {
             KeyPair keypairCA = gen.genKeyPair();
             PublicKey pubCA = keypairCA.getPublic();
 
-            
+
             gen.initialize(2048);
             KeyPair keypairUser = gen.genKeyPair();
             PublicKey pubUser = keypairUser.getPublic();
@@ -89,7 +80,7 @@ public class X509CertTest {
                     new CertificateIssuerName(new X500Name(issuerDN));
 
             certInfo = createX509CertInfo(convertPublicKeyToX509Key(pubUser),
-                BigInteger.valueOf((long) 1),issuernameObj,subjectDN,
+                BigInteger.valueOf(1),issuernameObj,subjectDN,
                 notBefore, notAfter, "SHA256withRSA");
 
            certImpl = new X509CertImpl(certInfo);
@@ -149,7 +140,7 @@ public class X509CertTest {
             byte encoded[] = pubk.getEncoded();
 
             xKey = X509Key.parse(new DerValue(encoded));
-        } 
+        }
         return xKey;
     }
 }

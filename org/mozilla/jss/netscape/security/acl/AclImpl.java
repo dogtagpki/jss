@@ -15,7 +15,7 @@
 // (C) 2007 Red Hat, Inc.
 // All rights reserved.
 // --- END COPYRIGHT BLOCK ---
-package netscape.security.acl;
+package org.mozilla.jss.netscape.security.acl;
 
 import java.security.Principal;
 import java.security.acl.Acl;
