@@ -37,7 +37,6 @@ import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.pkcs11.PK11Token;
@@ -282,28 +281,44 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificateChain(" + alias + ")");
 
-      try {
-        X509Certificate leaf = getCertObject(alias);
-        if( leaf == null ) {
-            return null;
-        }
-        CryptoManager cm = CryptoManager.getInstance();
-        X509Certificate[] jssChain = cm.buildCertificateChain(leaf);
+        try {
+            logger.debug("JSSKeyStoreSpi: searching for leaf cert");
 
-        Certificate[] chain = new Certificate[jssChain.length];
-        for( int i=0; i < chain.length; ++i) {
-            chain[i] = certFactory.generateCertificate(
-                        new ByteArrayInputStream(jssChain[i].getEncoded()) );
+            CryptoManager cm = CryptoManager.getInstance();
+            X509Certificate leaf = getCertObject(alias);
+
+            if (leaf == null) {
+                logger.debug("leaf cert not found: " + alias);
+                return null;
+            }
+
+            logger.debug("JSSKeyStoreSpi: building cert chain");
+
+            X509Certificate[] certs = cm.buildCertificateChain(leaf);
+            Certificate[] chain = new Certificate[certs.length];
+
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+
+            for (int i = 0; i < certs.length; i++) {
+                X509Certificate cert = certs[i];
+                logger.debug("JSSKeyStoreSpi: - " + cert.getSubjectDN());
+
+                byte[] bytes = cert.getEncoded();
+                InputStream is = new ByteArrayInputStream(bytes);
+                chain[i] = certFactory.generateCertificate(is);
+            }
+
+            return chain;
+
+        } catch (NotInitializedException e) {
+            throw new RuntimeException(e);
+
+        } catch (TokenException e) {
+            throw new RuntimeException(e);
+
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
         }
-        return chain;
-      } catch(TokenException te ) {
-            throw new TokenRuntimeException(te.toString());
-      } catch(CryptoManager.NotInitializedException e) {
-            throw new RuntimeException("CryptoManager not initialized");
-      } catch(CertificateException ce) {
-            ce.printStackTrace();
-            return null;
-      }
     }
 
     /*
