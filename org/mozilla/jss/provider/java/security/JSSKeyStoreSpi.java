@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -101,30 +100,6 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         proxy = pk11tok.getProxy();
     }
 
-    /**
-     * Converts an Iterator into an Enumeration.
-     */
-    private static class IteratorEnumeration<T> implements Enumeration<T> {
-        private Iterator<T> iter;
-
-        public IteratorEnumeration(Iterator<T> iter) {
-            this.iter = iter;
-        }
-
-        public boolean hasMoreElements() {
-            return iter.hasNext();
-        }
-
-        public T nextElement() {
-            return iter.next();
-        }
-    }
-
-    private native HashSet<String> getRawAliases();
-
-    /**
-     * Returns a list of unique aliases.
-     */
     public Enumeration<String> engineAliases() {
         logger.debug("JSSKeyStoreSpi: engineAliases()");
         return Collections.enumeration(getAliases());
@@ -214,19 +189,6 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
     public native void engineDeleteEntry(String alias);
 
-    /*
-     * XXX-!!! Is shared cert factory thread safe?
-     */
-    private CertificateFactory certFactory=null;
-    {
-      try {
-        certFactory = CertificateFactory.getInstance("X.509");
-      } catch(CertificateException e) {
-        e.printStackTrace();
-        throw new RuntimeException(e.getMessage());
-      }
-    }
-
     public Certificate engineGetCertificate(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificate(" + alias + ")");
@@ -260,9 +222,6 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             throw new RuntimeException(e);
         }
     }
-
-    private native byte[] getDERCert(String alias);
-    private native X509Certificate getCertObject(String alias);
 
     public String engineGetCertificateAlias(Certificate cert) {
 
@@ -419,8 +378,6 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             throw new RuntimeException(e);
         }
     }
-
-    public native Object engineGetKeyNative(String alias, char[] password);
 
     /**
      * Returns true if there is a cert with this nickname but there is no
