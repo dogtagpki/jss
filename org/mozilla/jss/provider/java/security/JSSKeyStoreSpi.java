@@ -285,12 +285,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             logger.debug("JSSKeyStoreSpi: searching for leaf cert");
 
             CryptoManager cm = CryptoManager.getInstance();
-            X509Certificate leaf = getCertObject(alias);
-
-            if (leaf == null) {
-                logger.debug("leaf cert not found: " + alias);
-                return null;
-            }
+            X509Certificate leaf = cm.findCertByNickname(alias);
 
             logger.debug("JSSKeyStoreSpi: building cert chain");
 
@@ -309,6 +304,10 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             }
 
             return chain;
+
+        } catch (ObjectNotFoundException e) {
+            logger.debug("leaf cert not found: " + alias);
+            return null;
 
         } catch (NotInitializedException e) {
             throw new RuntimeException(e);
