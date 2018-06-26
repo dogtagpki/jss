@@ -14,6 +14,7 @@ SRC_DIR=`dirname "$SCRIPT_PATH"`
 WORK_DIR="$HOME/build/$NAME"
 
 SOURCE_TAG=
+SPEC_TEMPLATE=
 
 WITH_TIMESTAMP=
 WITH_COMMIT_ID=
@@ -28,6 +29,7 @@ usage() {
     echo "Options:"
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
+    echo "    --spec=<file>          Use the specified RPM spec."
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
@@ -141,6 +143,9 @@ while getopts v-: arg ; do
         source-tag=?*)
             SOURCE_TAG="$LONG_OPTARG"
             ;;
+        spec=?*)
+            SPEC_TEMPLATE="$LONG_OPTARG"
+            ;;
         with-timestamp)
             WITH_TIMESTAMP=true
             ;;
@@ -164,7 +169,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | source-tag* | dist*)
+        work-dir* | source-tag* | spec* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -202,7 +207,10 @@ if [ "$BUILD_TARGET" != "src" ] &&
     exit 1
 fi
 
-SPEC_TEMPLATE="$SRC_DIR/$NAME.spec.in"
+if [ "$SPEC_TEMPLATE" = "" ] ; then
+    SPEC_TEMPLATE="$SRC_DIR/$NAME.spec.in"
+fi
+
 VERSION="`rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}'`"
 
 if [ "$DEBUG" = true ] ; then
