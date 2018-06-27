@@ -103,19 +103,8 @@ public static class Template implements ASN1Template {
         Assert._assert( seq.size() == 2 );
 
         OBJECT_IDENTIFIER algOID = (OBJECT_IDENTIFIER)seq.elementAt(0);
-        boolean allowParams = true;
-        try {
-            if (algOID.equals(SignatureAlgorithm.ECSignatureWithSHA256Digest.toOID()) ||
-                algOID.equals(SignatureAlgorithm.ECSignatureWithSHA384Digest.toOID()) ||
-                algOID.equals(SignatureAlgorithm.ECSignatureWithSHA512Digest.toOID())) {
-                allowParams = false;
-            }
-        } catch (NoSuchAlgorithmException e) {
-            // System.out.println("JSS: AlgorithmIdentifier:decode: " + e.toString());
-            // unlikely to happen; swallow it. treat it as allowParams;
-        }
 
-        if (!allowParams) {
+        if (seq.elementAt(1) == null) {
             return new AlgorithmIdentifier(
                 algOID  // OID
             );
