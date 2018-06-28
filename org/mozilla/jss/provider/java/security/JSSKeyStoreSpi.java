@@ -31,10 +31,12 @@ import org.mozilla.jss.CryptoManager.NotInitializedException;
 import org.mozilla.jss.NoSuchTokenException;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.TokenCertificate;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.X509Certificate;
@@ -187,7 +189,93 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return getAliases().contains(alias);
     }
 
-    public native void engineDeleteEntry(String alias);
+    public void engineDeleteEntry(String alias) throws KeyStoreException {
+
+        try {
+            CryptoManager manager = CryptoManager.getInstance();
+
+            try {
+                logger.debug("JSSKeyStoreSpi: searching for cert");
+                X509Certificate cert = manager.findCertByNickname(alias);
+
+                CryptoToken token;
+                if (cert instanceof TokenCertificate) {
+                    TokenCertificate tokenCert = (TokenCertificate) cert;
+                    token = tokenCert.getOwningToken();
+
+                } else {
+                    token = manager.getInternalKeyStorageToken();
+                }
+
+                CryptoStore store = token.getCryptoStore();
+
+                logger.debug("JSSKeyStoreSpi: deleting cert: " + alias);
+                store.deleteCert(cert);
+                return;
+
+            } catch (ObjectNotFoundException e) {
+                logger.debug("JSSKeyStoreSpi: cert not found, searching for key");
+            }
+
+            String nickname;
+            String tokenName;
+
+            String[] parts = StringUtils.splitPreserveAllTokens(alias, ':');
+            if (parts.length == 1) {
+                tokenName = null;
+                nickname = parts[0];
+
+            } else if (parts.length == 2) {
+                tokenName = StringUtils.defaultIfEmpty(parts[0], null);
+                nickname = parts[1];
+
+            } else {
+                throw new RuntimeException("Invalid alias: " + alias);
+            }
+
+            logger.debug("JSSKeyStoreSpi: token: " + tokenName);
+            logger.debug("JSSKeyStoreSpi: nickname: " + nickname);
+
+            CryptoToken token;
+            if (tokenName == null) {
+                token = manager.getInternalKeyStorageToken();
+            } else {
+                token = manager.getTokenByName(tokenName);
+            }
+
+            CryptoStore store = token.getCryptoStore();
+
+            logger.debug("JSSKeyStoreSpi: searching for private key");
+
+            for (PrivateKey privateKey : store.getPrivateKeys()) {
+
+                // convert key ID into hexadecimal
+                String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
+                logger.debug("JSSKeyStoreSpi: - " + keyID);
+
+                if (nickname.equals(keyID)) {
+                    logger.debug("JSSKeyStoreSpi: deleting private key: " + nickname);
+                    store.deletePrivateKey(privateKey);
+                    return;
+                }
+            }
+
+            logger.debug("JSSKeyStoreSpi: entry not found: " + alias);
+            throw new KeyStoreException("Entry not found: " + alias);
+
+        } catch (NotInitializedException e) {
+            throw new KeyStoreException(e);
+
+        } catch (NoSuchTokenException e) {
+            throw new KeyStoreException(e);
+
+        } catch (TokenException e) {
+            throw new KeyStoreException(e);
+
+        } catch (NoSuchItemOnTokenException e) {
+            throw new KeyStoreException(e);
+        }
+    }
 
     public Certificate engineGetCertificate(String alias) {
 
