@@ -745,6 +745,10 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo(
         goto finish;
     }
 
+    // Attempt to store the public key in the token.
+    // Failure is non-fatal (some tokens cannot store the public key).
+    PK11_ImportPublicKey(slot, pubKey, PR_TRUE /* isToken (permanent) */);
+
 finish:
     if (epkiItem != NULL) {
         SECITEM_FreeItem(epkiItem, PR_TRUE /*freeit*/);
