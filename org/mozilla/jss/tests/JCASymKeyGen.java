@@ -5,29 +5,31 @@
 package org.mozilla.jss.tests;
 
 import java.io.IOException;
+import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import org.mozilla.jss.CertDatabaseException;
-import org.mozilla.jss.KeyDatabaseException;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.util.IncorrectPasswordException;
-import org.mozilla.jss.util.PasswordCallback;
 import java.security.Provider;
+import java.security.SecureRandom;
 import java.security.Security;
-
-import java.security.AlgorithmParameters;
 import java.security.spec.AlgorithmParameterSpec;
-import javax.crypto.spec.RC2ParameterSpec;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.SecureRandom;
+import javax.crypto.spec.RC2ParameterSpec;
+
+import org.mozilla.jss.CertDatabaseException;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.KeyDatabaseException;
+import org.mozilla.jss.crypto.AlreadyInitializedException;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.IncorrectPasswordException;
+import org.mozilla.jss.util.PasswordCallback;
 
 /**
  *
@@ -83,7 +85,7 @@ public class JCASymKeyGen {
         }
     }
     /**
-     * 
+     *
      * @param keyType
      * @param provider
      * @return javax.crypto.SecretKey key
@@ -92,13 +94,13 @@ public class JCASymKeyGen {
         javax.crypto.SecretKey key = null;
         javax.crypto.KeyGenerator kg = null;
         try {
-            
+
             kg = KeyGenerator.getInstance(keyType,
                     provider);
             if (keyType.equals("AES") || keyType.equals("RC2")) {
                 kg.init(128); //JDK 1.4 and 1.5 only supports 128 keys for AES
             }
-            
+
             System.out.println("Key " + keyType + " generation done by "
                     + kg.getProvider().toString());
             key = kg.generateKey();
@@ -118,11 +120,11 @@ public class JCASymKeyGen {
         }
         return key;
     }
-    
+
     /**
-     * 
-     * @param keyType 
-     * @param provider 
+     *
+     * @param keyType
+     * @param provider
      * @return javax.crypto.SecretKey key
      */
     public javax.crypto.SecretKey genPBESecretKey(String keyType,
@@ -140,7 +142,7 @@ public class JCASymKeyGen {
             kf = SecretKeyFactory.getInstance(keyType,
                     provider);
             PBEKeySpec keySpec = new PBEKeySpec(pw, salt, iterationCount);
-            key = (SecretKeyFacade) kf.generateSecret(keySpec);
+            key = kf.generateSecret(keySpec);
 
             //todo this should work as well
             //PBEKeySpec pbeKeySpec = new PBEKeySpec(pw));
@@ -161,7 +163,7 @@ public class JCASymKeyGen {
         }
         return key;
     }
-    
+
     /**
      *
      * @param sKey
@@ -174,20 +176,20 @@ public class JCASymKeyGen {
             String algType, String providerForEncrypt, String providerForDecrypt)
             throws Exception {
         try {
-            
+
             // if no padding is used plainText needs to be fixed length
             // block divisable by 8 bytes
             byte[] plaintext = plainText;
             if (algType.endsWith("PKCS5Padding")) {
                 plaintext = plainTextPad;
             }
-            
+
             //encypt
             Cipher cipher = Cipher.getInstance(algType, providerForEncrypt);
             AlgorithmParameters ap = null;
             byte[] encodedAlgParams = null;
             AlgorithmParameterSpec RC2ParSpec = null;
-            
+
             if (algFamily.compareToIgnoreCase("RC2")==0) {
                 //JDK 1.4 requires you to pass in generated algorithm
                 //parameters for RC2 (JDK 1.5 does not).
@@ -283,7 +285,7 @@ public class JCASymKeyGen {
             String algType, String providerForEncrypt, String providerForDecrypt)
             throws Exception {
         try {
-            
+
             // if no padding is used plainText needs to be fixed length
             // block divisable by 8 bytes
             byte[] plaintext = plainText;
@@ -532,38 +534,5 @@ public class JCASymKeyGen {
             status = true;
         }
         return status;
-    }
-
-    /**
-     * Validate if the key length of a given SecretKey
-     * is the same as expected.
-     * @param SecretKey k
-     * @param int key length
-     * @return boolean status
-     */
-    private boolean checkKeyLength(SecretKey k, int len) {
-        boolean status = false;
-        byte[] keyData = k.getEncoded();
-        if( keyData.length == len ) {
-            status = true;
-        }
-        return status;
-    }
-    /**
-     * Turns array of bytes into string
-     *
-     * @param buf Array of bytes to convert to hex string
-     * @return Generated hex string
-     */
-    private String asHex(byte buf[]) {
-        StringBuffer strbuf = new StringBuffer(buf.length * 2);
-        int i;
-
-        for (i = 0; i < buf.length; i++) {
-            if (((int) buf[i] & 0xff) < 0x10)
-                strbuf.append("0");
-            strbuf.append(Long.toString((int) buf[i] & 0xff, 16));
-        }
-        return strbuf.toString();
     }
 }

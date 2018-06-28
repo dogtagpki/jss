@@ -64,12 +64,4 @@ public class SDR {
     private static char[] hex = new char[]
         { '0', '1', '2', '3', '4', '5', '6', '7',
           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-    private static void dumpBytes(byte[] bytes) {
-        for(int i=0; i < bytes.length; ++i) {
-            System.out.print(hex[(bytes[i] & 0xf0)>>4] +
-                hex[(bytes[i] & 0xf)] + " ");
-        }
-        System.out.println();
-    }
 }

@@ -315,18 +315,6 @@ public class JSSE_SSLClient {
             // trust manager that trusts all certificates
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
-                    public boolean checkClientTrusted(
-                            java.security.cert.X509Certificate[] chain){
-                        return true;
-                    }
-                    public boolean isServerTrusted(
-                            java.security.cert.X509Certificate[] chain){
-                        return true;
-                    }
-                    public boolean isClientTrusted(
-                            java.security.cert.X509Certificate[] chain){
-                        return true;
-                    }
                     public java.security.cert.X509Certificate[]
                             getAcceptedIssuers() {
                         return null;

@@ -90,7 +90,7 @@ public class JSS_SelfServServer  {
         "[server_host_name] [testInetAddress: true|false]" +
         "<port> <verbose> <cert nickname> ";
 
-    public void JSS_SelfServServer() {
+    public JSS_SelfServServer() {
         if (logger.isDebugEnabled()) {
             bVerbose = true;
         }

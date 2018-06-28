@@ -75,22 +75,6 @@ public class SSLServer
     String okay = "okay";
     String failed = "FAILED";
 
-    /*
-     * return "okay" or "FAILED" based on equality of
-     * the argument strings
-     */
-    private String cmp(String s1, String s2) {
-	if(s1 == s2) return okay;
-	if(s1 == null) return failed;
-	if(s1.equals(s2)) return okay;
-	return failed;
-    }
-
-    private String cmp(String s1, int s2) {
-	return cmp(s1, new Integer(s2).toString());
-    }
-
-
     public void run()
     {
 	try {
@@ -252,29 +236,6 @@ public class SSLServer
 
 	s.close();
 	s = null;
-    }
-
-    /**
-     * given an input string, convert less-than, greater-than, and ampersand
-     * from raw characters to escaped characters
-     * (&lt; becomes `&amp;lt;', etc.)
-     */
-    private String escapeHTML(String s)
-    {
-	StringBuffer result = new StringBuffer();
-
-	// this is inefficient, but I don't care
-	for(int i=0; i<s.length(); i++) {
-	    char c = s.charAt(i);
-	    switch(c) {
-	    case '<':	result.append("&lt;");	break;
-	    case '>':	result.append("&gt;");	break;
-	    case '&':	result.append("&amp;"); break;
-	    default:	result.append(c);	break;
-	    }
-	}
-
-	return result.toString();
     }
 
     public SSLServer( PrintStream ps, String verStr)

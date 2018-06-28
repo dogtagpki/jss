@@ -19,10 +19,6 @@ public class BOOLEAN implements ASN1Value {
         return TAG;
     }
 
-    private ASN1Header getHeader() {
-        return getHeader(TAG);
-    }
-
     private ASN1Header getHeader(Tag implicitTag) {
         return new ASN1Header(implicitTag, FORM, 1 );
     }
