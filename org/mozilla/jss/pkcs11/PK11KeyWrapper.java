@@ -404,8 +404,24 @@ final class PK11KeyWrapper implements KeyWrapper {
 
         if( symKey != null ) {
             Assert._assert(pubKey==null && privKey==null);
-            return nativeUnwrapPrivWithSym(token, symKey, wrapped, algorithm,
-                        algFromType(type), publicValue, IV, temporary );
+            PrivateKey importedKey = nativeUnwrapPrivWithSym(
+                token, symKey, wrapped, algorithm, algFromType(type),
+                publicValue, IV, temporary);
+
+            if (!temporary
+                    && publicKey instanceof org.mozilla.jss.pkcs11.PK11PubKey) {
+                try {
+                    token.importPublicKey(
+                        (org.mozilla.jss.pkcs11.PK11PubKey) publicKey,
+                        true /* permanent */
+                    );
+                } catch (Exception e) {
+                    // squash all exceptions
+                    // (some tokens cannot store the public key)
+                }
+            }
+
+            return importedKey;
         } else {
             throw new InvalidKeyException("Unwrapping a private key with"
                 + " a private key is not supported");

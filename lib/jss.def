@@ -330,3 +330,9 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo;
 ;+    local:
 ;+       *;
 ;+};
+;+JSS_4.4.5 {     # JSS 4.4.5 release
+;+    global:
+Java_org_mozilla_jss_pkcs11_PK11Token_importPublicKey;
+;+    local:
+;+       *;
+;+};

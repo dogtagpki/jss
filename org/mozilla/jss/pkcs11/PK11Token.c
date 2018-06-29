@@ -1169,3 +1169,35 @@ finish:
 	}
 	return req;
 }
+
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Token_importPublicKey(
+    JNIEnv *env, jobject tokenObj, jobject pubKeyObj, jboolean permanent)
+{
+    PK11SlotInfo *slot;
+    SECKEYPublicKey *pubKey = NULL;
+
+    PR_ASSERT(env != NULL && tokenObj != NULL && pubKeyObj != NULL);
+
+    if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+        /* an exception was thrown */
+        return;
+    }
+    PR_ASSERT(slot != NULL);
+
+    if (PK11_IsLoggedIn(slot, NULL) != PR_TRUE) {
+      JSS_nativeThrowMsg(env, TOKEN_EXCEPTION, "token not logged in");
+      return;
+    }
+
+    if (PR_SUCCESS != JSS_PK11_getPubKeyPtr(env, pubKeyObj, &pubKey)) {
+        return;  // exception was thrown!
+    }
+
+    if (PK11_ImportPublicKey(slot, pubKey, permanent) == CK_INVALID_HANDLE) {
+      JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "failed to import public key");
+      return;
+    }
+}
