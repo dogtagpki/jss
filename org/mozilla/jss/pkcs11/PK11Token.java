@@ -583,6 +583,11 @@ public final class PK11Token implements CryptoToken {
     protected TokenProxy tokenProxy;
 
     protected PK11Store cryptoStore;
+
+    public native void importPublicKey(
+        org.mozilla.jss.pkcs11.PK11PubKey pubKey,
+        boolean permanent)
+        throws TokenException;
 }
 
 /**
