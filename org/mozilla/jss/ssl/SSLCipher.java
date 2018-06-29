@@ -258,8 +258,11 @@ public enum SSLCipher {
     TLS_RSA_WITH_SEED_CBC_SHA                    (0x0096),
 
     TLS_RSA_WITH_AES_128_GCM_SHA256              (0x009C),
+    TLS_RSA_WITH_AES_256_GCM_SHA384              (0x009D),
     TLS_DHE_RSA_WITH_AES_128_GCM_SHA256          (0x009E),
+    TLS_DHE_RSA_WITH_AES_256_GCM_SHA384          (0x009F),
     TLS_DHE_DSS_WITH_AES_128_GCM_SHA256          (0x00A2),
+    TLS_DHE_DSS_WITH_AES_256_GCM_SHA384          (0x00A3),
 
     TLS_ECDH_ECDSA_WITH_NULL_SHA                 (0xc001, true),
     TLS_ECDH_ECDSA_WITH_RC4_128_SHA              (0xc002, true),
@@ -292,11 +295,15 @@ public enum SSLCipher {
     TLS_ECDH_anon_WITH_AES_256_CBC_SHA           (0xc019, true),
 
     TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256      (0xc023, true),
+    TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384      (0xc024, true),
     TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256        (0xc027, true),
+    TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384        (0xc028, true),
 
     TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256      (0xc02B, true),
+    TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384      (0xc02C, true),
     TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256       (0xc02D, true),
     TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256        (0xc02F, true),
+    TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384        (0xc030, true),
     TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256         (0xc031, true);
 
     private int id;

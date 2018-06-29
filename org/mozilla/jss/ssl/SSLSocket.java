@@ -268,8 +268,11 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_RSA_WITH_SEED_CBC_SHA                    = 0x0096;
 
     public final static int TLS_RSA_WITH_AES_128_GCM_SHA256              = 0x009C;
+    public final static int TLS_RSA_WITH_AES_256_GCM_SHA384              = 0x009D;
     public final static int TLS_DHE_RSA_WITH_AES_128_GCM_SHA256          = 0x009E;
+    public final static int TLS_DHE_RSA_WITH_AES_256_GCM_SHA384          = 0x009F;
     public final static int TLS_DHE_DSS_WITH_AES_128_GCM_SHA256          = 0x00A2;
+    public final static int TLS_DHE_DSS_WITH_AES_256_GCM_SHA384          = 0x00A3;
 
     public final static int TLS_ECDH_ECDSA_WITH_NULL_SHA                 = 0xc001;
     public final static int TLS_ECDH_ECDSA_WITH_RC4_128_SHA              = 0xc002;
@@ -302,11 +305,15 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_ECDH_anon_WITH_AES_256_CBC_SHA           = 0xc019;
 
     public final static int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256      = 0xc023;
+    public final static int TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384      = 0xc024;
     public final static int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256        = 0xc027;
+    public final static int TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384        = 0xc028;
 
     public final static int TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256      = 0xc02B;
+    public final static int TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384      = 0xc02C;
     public final static int TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256       = 0xc02D;
     public final static int TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256        = 0xc02F;
+    public final static int TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384       = 0xc030;
     public final static int TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256         = 0xc031;
 
     /*

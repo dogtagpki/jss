@@ -148,6 +148,8 @@ public class SSLClientAuth implements Runnable {
             
         }
         configureDefaultSSLoptions();
+
+        testSpecificCiphers();
         
         useNickname = false;
         testConnection();
@@ -261,6 +263,49 @@ public class SSLClientAuth implements Runnable {
             }
         } catch (SocketException ex) {
             System.out.println("Error configuring default SSL options.");
+            ex.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    // test one or more specific ciphers
+    //   -- normally for newly added ciphers
+    private void testSpecificCiphers() {
+        try {
+            //Disable SSL2 and SSL3 ciphers
+            SSLSocket.enableSSL2Default(false);
+            SSLSocket.enableSSL3Default(false);
+            /* TLS is enabled by default */
+
+            /* Enable Session tickets by default */
+            SSLSocket.enableSessionTicketsDefault(true);
+
+            /*
+             *  when testing specific ciphers:
+             *  1. flip this to true
+             *  2. change the ciphers comparison (the code below was from
+             *     the latest test
+             */
+            if (false) {
+                System.out.println("testing new TLS_*SHA384 ciphers");
+                System.out.println("Enable ony two new ciphers.");
+                int ciphers[] =
+                        org.mozilla.jss.ssl.SSLSocket.getImplementedCipherSuites();
+                for (int i = 0; i < ciphers.length;  ++i) {
+                    if (ciphers[i] == 157 || ciphers[i] == 159) {
+                        System.out.println("enabling cipher: " + ciphers[i]);
+                        /* enable a couple SHA384 ciphers */
+                        SSLSocket.setCipherPreferenceDefault(ciphers[i], true);
+                    } else {
+                        System.out.println("disabling cipher: " + ciphers[i]);
+                        /* disable the non SHA384 ciphers */
+                        SSLSocket.setCipherPreferenceDefault(ciphers[i], false);
+                    }
+                }
+            }
+
+        } catch (SocketException ex) {
+            System.out.println("Error configuring ciphers.");
             ex.printStackTrace();
             System.exit(1);
         }
