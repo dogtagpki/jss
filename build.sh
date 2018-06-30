@@ -55,7 +55,7 @@ generate_rpm_sources() {
         git -C "$SRC_DIR" \
             archive \
             --format=tar.gz \
-            --prefix $NAME-$VERSION/$NAME/ \
+            --prefix $NAME-$VERSION/ \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
             $SOURCE_TAG
 
@@ -77,7 +77,7 @@ generate_rpm_sources() {
     fi
 
     tar czf "$WORK_DIR/SOURCES/$TARBALL" \
-        --transform "s,^./,$NAME-$VERSION/$NAME/," \
+        --transform "s,^./,$NAME-$VERSION/," \
         --exclude .git \
         --exclude bin \
         -C "$SRC_DIR" \

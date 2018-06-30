@@ -6,7 +6,7 @@ Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
-Version:        4.4.4
+Version:        4.4.5
 Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 
 # To generate the source tarball:
@@ -14,7 +14,7 @@ Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 # $ cd jss
 # $ git archive \
 #     --format=tar.gz \
-#     --prefix jss-VERSION/jss/ \
+#     --prefix jss-VERSION/ \
 #     -o jss-VERSION.tar.gz \
 #     <version tag>
 Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
@@ -44,14 +44,12 @@ BuildRequires:  apache-commons-lang
 BuildRequires:  apache-commons-codec
 BuildRequires:  ldapjdk
 
-
 Requires:       nss >= 3.28.4-6
 Requires:       java-headless
 Requires:       jpackage-utils
 Requires:       apache-commons-lang
 Requires:       apache-commons-codec
 Requires:       ldapjdk
-
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
@@ -73,6 +71,17 @@ This package contains the API documentation for JSS.
 %prep
 
 %autosetup -n %{name}-%{version} -p 1 -S git
+
+# Prior to version 4.4.5, the source code were stored under "jss-<version>/jss"
+# path in the source tarball. Starting from version 4.4.5, the files will be
+# stored under "jss-<version>" path. However, since the spec file is still using
+# the old path, the unpacked source code has to be moved to the old path with
+# the following commands.
+
+cd ..
+mv %{name}-%{version} jss
+mkdir %{name}-%{version}
+mv jss %{name}-%{version}
 
 ################################################################################
 %build
