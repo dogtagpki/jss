@@ -102,6 +102,31 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         proxy = pk11tok.getProxy();
     }
 
+    String[] parseAlias(String alias) {
+
+        String tokenName;
+        String nickname;
+
+        String[] parts = StringUtils.splitPreserveAllTokens(alias, ':');
+
+        if (parts.length == 1) {
+            tokenName = null;
+            nickname = parts[0];
+
+        } else if (parts.length == 2) {
+            tokenName = StringUtils.defaultIfEmpty(parts[0], null);
+            nickname = parts[1];
+
+        } else {
+            throw new RuntimeException("Invalid alias: " + alias);
+        }
+
+        logger.debug("JSSKeyStoreSpi: token: " + tokenName);
+        logger.debug("JSSKeyStoreSpi: nickname: " + nickname);
+
+        return new String[] { tokenName, nickname };
+    }
+
     public Enumeration<String> engineAliases() {
         logger.debug("JSSKeyStoreSpi: engineAliases()");
         return Collections.enumeration(getAliases());
@@ -217,24 +242,9 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
                 logger.debug("JSSKeyStoreSpi: cert not found, searching for key");
             }
 
-            String nickname;
-            String tokenName;
-
-            String[] parts = StringUtils.splitPreserveAllTokens(alias, ':');
-            if (parts.length == 1) {
-                tokenName = null;
-                nickname = parts[0];
-
-            } else if (parts.length == 2) {
-                tokenName = StringUtils.defaultIfEmpty(parts[0], null);
-                nickname = parts[1];
-
-            } else {
-                throw new RuntimeException("Invalid alias: " + alias);
-            }
-
-            logger.debug("JSSKeyStoreSpi: token: " + tokenName);
-            logger.debug("JSSKeyStoreSpi: nickname: " + nickname);
+            String[] parts = parseAlias(alias);
+            String tokenName = parts[0];
+            String nickname = parts[1];
 
             CryptoToken token;
             if (tokenName == null) {
@@ -399,24 +409,9 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
                 logger.debug("JSSKeyStoreSpi: cert/key not found, searching for key");
             }
 
-            String nickname;
-            String tokenName;
-
-            String[] parts = StringUtils.splitPreserveAllTokens(alias, ':');
-            if (parts.length == 1) {
-                tokenName = null;
-                nickname = parts[0];
-
-            } else if (parts.length == 2) {
-                tokenName = StringUtils.defaultIfEmpty(parts[0], null);
-                nickname = parts[1];
-
-            } else {
-                throw new RuntimeException("Invalid alias: " + alias);
-            }
-
-            logger.debug("JSSKeyStoreSpi: token: " + tokenName);
-            logger.debug("JSSKeyStoreSpi: nickname: " + nickname);
+            String[] parts = parseAlias(alias);
+            String tokenName = parts[0];
+            String nickname = parts[1];
 
             CryptoToken token;
             if (tokenName == null) {
