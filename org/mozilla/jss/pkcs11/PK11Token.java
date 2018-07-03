@@ -7,6 +7,7 @@ package org.mozilla.jss.pkcs11;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
@@ -585,9 +586,9 @@ public final class PK11Token implements CryptoToken {
     protected PK11Store cryptoStore;
 
     public native void importPublicKey(
-        org.mozilla.jss.pkcs11.PK11PubKey pubKey,
-        boolean permanent)
-        throws TokenException;
+            PublicKey pubKey,
+            boolean permanent)
+            throws TokenException;
 }
 
 /**

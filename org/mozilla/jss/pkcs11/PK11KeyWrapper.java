@@ -419,7 +419,7 @@ final class PK11KeyWrapper implements KeyWrapper {
                     && publicKey instanceof org.mozilla.jss.pkcs11.PK11PubKey) {
                 try {
                     token.importPublicKey(
-                        (org.mozilla.jss.pkcs11.PK11PubKey) publicKey,
+                        publicKey,
                         true /* permanent */
                     );
                 } catch (Exception e) {

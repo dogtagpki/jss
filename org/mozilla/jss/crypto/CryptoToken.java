@@ -309,4 +309,9 @@ public interface CryptoToken {
      * removed from its slot.
      */
     public boolean isPresent();
+
+    public void importPublicKey(
+            PublicKey pubKey,
+            boolean permanent)
+            throws TokenException;
 }
