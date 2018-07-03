@@ -7,8 +7,8 @@ URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 Version:        4.5.0
-Release:        0.2%{?_timestamp}%{?_commit_id}%{?dist}
-%global         _phase -a2
+Release:        0.3%{?_timestamp}%{?_commit_id}%{?dist}
+%global         _phase -a3
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -28,8 +28,8 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Patch: jss-VERSION-RELEASE.patch
 
 Conflicts:      idm-console-framework < 1.1.17-4
-Conflicts:      pki-base < 10.4.0
-Conflicts:      tomcatjss < 7.2.1
+Conflicts:      pki-base < 10.6.3
+Conflicts:      tomcatjss < 7.3.2
 
 # autosetup
 BuildRequires:  git
@@ -168,6 +168,6 @@ cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 ################################################################################
 %changelog
 
-* Tue May 29 2018 Dogtag PKI Team <pki-devel@redhat.com> 4.4.0-0
+* Tue May 29 2018 Dogtag PKI Team <pki-devel@redhat.com> 4.5.0-0
 - To list changes in <branch> since <tag>:
   $ git log --pretty=oneline --abbrev-commit --no-decorate <tag>..<branch>
