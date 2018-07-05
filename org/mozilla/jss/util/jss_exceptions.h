@@ -63,7 +63,7 @@ PR_BEGIN_EXTERN_C
 
 #define KEYSTORE_EXCEPTION "java/security/KeyStoreException"
 
-#define NICKNAME_CONFLICT_EXCEPTION "org/mozilla/jss/CryptoManager$NicknameConflictException"
+#define NICKNAME_CONFLICT_EXCEPTION "org/mozilla/jss/NicknameConflictException"
 
 #define NO_SUCH_ALG_EXCEPTION "java/security/NoSuchAlgorithmException"
 

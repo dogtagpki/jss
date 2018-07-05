@@ -100,10 +100,6 @@ public final class CryptoManager implements TokenSupplier
         public static final CertUsage AnyCA = new CertUsage(11, "AnyCA");
     }
 
-    public final static class NicknameConflictException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
-
     public final static class UserCertConflictException extends Exception {
         private static final long serialVersionUID = 1L;
     }
