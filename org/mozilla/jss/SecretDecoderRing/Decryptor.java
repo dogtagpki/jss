@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.crypto.CryptoToken;
@@ -47,7 +48,7 @@ public class Decryptor {
      *  keyID.
      */
     public byte[] decrypt(byte[] ciphertext)
-        throws CryptoManager.NotInitializedException,
+        throws NotInitializedException,
         GeneralSecurityException, TokenException
     {
         CryptoManager cm = CryptoManager.getInstance();

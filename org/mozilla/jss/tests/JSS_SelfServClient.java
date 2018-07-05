@@ -22,6 +22,7 @@ import java.util.Iterator;
 import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.KeyDatabaseException;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.TokenException;
@@ -550,7 +551,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
         } catch (CertDatabaseException ex) {
             ex.printStackTrace();
             System.exit(1);
-        } catch (CryptoManager.NotInitializedException ex) {
+        } catch (NotInitializedException ex) {
             ex.printStackTrace();
             System.exit(1);
         } catch (IOException ex) {

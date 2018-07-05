@@ -8,6 +8,7 @@ import java.security.DigestException;
 import java.security.MessageDigestSpi;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.JSSMessageDigest;
@@ -41,7 +42,7 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
             throw new TokenRuntimeException(e.getMessage());
         } catch(DigestException e1) {
             throw new TokenRuntimeException(e1.getMessage());
-        } catch(CryptoManager.NotInitializedException e2) {
+        } catch(NotInitializedException e2) {
             throw new TokenRuntimeException(e2.getMessage());
         }
     }

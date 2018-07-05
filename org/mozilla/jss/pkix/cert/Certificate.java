@@ -19,6 +19,7 @@ import java.security.cert.CertificateException;
 import java.util.Calendar;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ANY;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
@@ -75,7 +76,7 @@ public class Certificate implements ASN1Value
      *      It must match the algorithm specified in the CertificateInfo.
      * @exception IOException If an error occurred while encoding the
      *      certificate.
-     * @exception CryptoManager.NotInitializedException Because this
+     * @exception NotInitializedException Because this
      *      operation involves cryptography (signing), CryptoManager must
      *      be initialized before calling it.
      * @exception TokenException If an error occurs on a PKCS #11 token.
@@ -90,7 +91,7 @@ public class Certificate implements ASN1Value
      */
     public Certificate(CertificateInfo info, java.security.PrivateKey privKey,
                 SignatureAlgorithm signingAlg)
-        throws IOException, CryptoManager.NotInitializedException,
+        throws IOException, NotInitializedException,
             TokenException, NoSuchAlgorithmException, CertificateException,
             InvalidKeyException, SignatureException
     {
@@ -136,7 +137,7 @@ public class Certificate implements ASN1Value
      * that the certificate is valid at any specific time.
      */
     public void verify()
-        throws InvalidKeyException, CryptoManager.NotInitializedException,
+        throws InvalidKeyException, NotInitializedException,
         NoSuchAlgorithmException, CertificateException,
         SignatureException, InvalidKeyFormatException
     {
@@ -155,7 +156,7 @@ public class Certificate implements ASN1Value
       try {
         CryptoManager cm = CryptoManager.getInstance();
         verify(key, cm.getInternalCryptoToken());
-      } catch( CryptoManager.NotInitializedException e ) {
+      } catch( NotInitializedException e ) {
         throw new SignatureException("CryptoManager not initialized");
       }
     }

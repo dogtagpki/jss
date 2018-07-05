@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.BadPaddingException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.ASN1Value;
@@ -141,7 +142,7 @@ public class AuthenticatedSafes implements ASN1Value {
      *      but the SafeContents is encrypted.
      */
     public SEQUENCE getSafeContentsAt(Password password, int index)
-        throws IllegalStateException, CryptoManager.NotInitializedException,
+        throws IllegalStateException, NotInitializedException,
         NoSuchAlgorithmException, InvalidBERException, IOException,
         InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
         IllegalBlockSizeException, BadPaddingException
@@ -316,7 +317,7 @@ public class AuthenticatedSafes implements ASN1Value {
     public void addEncryptedSafeContents(PBEAlgorithm keyGenAlg,
                 Password password, byte[] salt, int iterationCount,
                 SEQUENCE safeContents)
-        throws CryptoManager.NotInitializedException, InvalidKeyException,
+        throws NotInitializedException, InvalidKeyException,
             InvalidAlgorithmParameterException, TokenException,
             NoSuchAlgorithmException, BadPaddingException,
             IllegalBlockSizeException

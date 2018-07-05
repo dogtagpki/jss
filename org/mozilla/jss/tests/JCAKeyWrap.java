@@ -5,7 +5,7 @@ package org.mozilla.jss.tests;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import org.mozilla.jss.CryptoManager.NotInitializedException;
+
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.crypto.CryptoToken;
@@ -30,6 +30,7 @@ import java.util.Arrays;
 import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.KeyDatabaseException;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.util.IncorrectPasswordException;
 import org.mozilla.jss.util.PasswordCallback;
 

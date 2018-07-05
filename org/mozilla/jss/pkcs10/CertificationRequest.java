@@ -18,6 +18,7 @@ import java.security.SignatureException;
 import java.security.cert.CertificateException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.ASN1Value;
@@ -73,7 +74,7 @@ public class CertificationRequest implements ASN1Value {
      *      It must match the algorithm specified in the CertificationRequestInfo.
      * @exception IOException If an error occurred while encoding the
      *      CertificationRequest.
-     * @exception CryptoManager.NotInitializedException Because this
+     * @exception NotInitializedException Because this
      *      operation involves cryptography (signing), CryptoManager must
      *      be initialized before calling it.
      * @exception TokenException If an error occurs on a PKCS #11 token.
@@ -88,7 +89,7 @@ public class CertificationRequest implements ASN1Value {
      */
     public CertificationRequest(CertificationRequestInfo info, java.security.PrivateKey privKey,
                 SignatureAlgorithm signingAlg)
-        throws IOException, CryptoManager.NotInitializedException,
+        throws IOException, NotInitializedException,
             TokenException, NoSuchAlgorithmException, CertificateException,
             InvalidKeyException, SignatureException
     {
@@ -130,7 +131,7 @@ public class CertificationRequest implements ASN1Value {
      * that the CertificationRequest is valid at any specific time.
      */
     public void verify()
-        throws InvalidKeyException, CryptoManager.NotInitializedException,
+        throws InvalidKeyException, NotInitializedException,
         NoSuchAlgorithmException, CertificateException, TokenException,
         SignatureException, InvalidKeyFormatException
     {
@@ -142,7 +143,7 @@ public class CertificationRequest implements ASN1Value {
      * Does not indicate the CertificationRequest is valid at any specific time.
      */
     public void verify(PublicKey key)
-        throws InvalidKeyException, CryptoManager.NotInitializedException,
+        throws InvalidKeyException, NotInitializedException,
         NoSuchAlgorithmException, CertificateException, TokenException,
         SignatureException
     {

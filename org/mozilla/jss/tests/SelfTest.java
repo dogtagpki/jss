@@ -8,6 +8,7 @@ import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NoSuchTokenException;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.TokenException;
@@ -37,7 +38,7 @@ public class SelfTest {
         CryptoManager.initialize(vals);
         try {
             manager = CryptoManager.getInstance();
-        } catch( CryptoManager.NotInitializedException e ) {
+        } catch( NotInitializedException e ) {
             System.out.println("CryptoManager not initialized");
             return;
         }

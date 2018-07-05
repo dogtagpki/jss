@@ -16,6 +16,7 @@ import java.security.SignatureException;
 import java.text.DateFormat;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.BIT_STRING;
@@ -105,7 +106,7 @@ public class CertReqMsg implements ASN1Value {
 
 	public void verify() throws SignatureException,
         InvalidKeyFormatException, NoSuchAlgorithmException,
-        org.mozilla.jss.CryptoManager.NotInitializedException,
+        org.mozilla.jss.NotInitializedException,
         TokenException, java.security.InvalidKeyException, IOException{
 
         CryptoToken token = CryptoManager.getInstance()
@@ -115,7 +116,7 @@ public class CertReqMsg implements ASN1Value {
 
     public void verify(CryptoToken token) throws SignatureException,
 		InvalidKeyFormatException, NoSuchAlgorithmException,
-		org.mozilla.jss.CryptoManager.NotInitializedException,
+		org.mozilla.jss.NotInitializedException,
 		TokenException, java.security.InvalidKeyException, IOException{
 		ProofOfPossession.Type type = pop.getType();
 		if (type == ProofOfPossession.SIGNATURE) {

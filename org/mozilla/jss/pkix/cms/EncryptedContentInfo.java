@@ -15,6 +15,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.BadPaddingException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.ASN1Value;
@@ -149,7 +150,7 @@ public class EncryptedContentInfo implements ASN1Value {
             int iterationCount,
             KeyGenerator.CharToByteConverter charToByteConverter,
             byte[] toBeEncrypted)
-        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        throws NotInitializedException, NoSuchAlgorithmException,
         InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
         CharConversionException
     {
@@ -223,7 +224,7 @@ public class EncryptedContentInfo implements ASN1Value {
      */
     public byte[]
     decrypt(Password pass, KeyGenerator.CharToByteConverter charToByteConverter)
-        throws IllegalStateException,CryptoManager.NotInitializedException,
+        throws IllegalStateException,NotInitializedException,
         NoSuchAlgorithmException, InvalidBERException, IOException,
         InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
         IllegalBlockSizeException, BadPaddingException

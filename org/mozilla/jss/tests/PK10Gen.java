@@ -6,6 +6,7 @@ package org.mozilla.jss.tests;
 
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.util.*;
 
@@ -37,7 +38,7 @@ public class PK10Gen {
 			*/
         try {
             manager = CryptoManager.getInstance();
-        } catch( CryptoManager.NotInitializedException e ) {
+        } catch( NotInitializedException e ) {
             System.out.println("CryptoManager not initialized");
             return;
         }

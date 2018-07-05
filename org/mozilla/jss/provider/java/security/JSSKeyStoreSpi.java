@@ -27,8 +27,8 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.StringUtils;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.CryptoManager.NotInitializedException;
 import org.mozilla.jss.NoSuchTokenException;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.NoSuchItemOnTokenException;

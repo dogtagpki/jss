@@ -8,6 +8,7 @@ import java.security.PublicKey;
 import java.util.Vector;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.KeyAlreadyImportedException;
@@ -77,7 +78,7 @@ public final class PK11Store implements CryptoStore {
             PBEAlgorithm pbeAlg,
             Password pw,
             int iteration)
-            throws CryptoManager.NotInitializedException,
+            throws NotInitializedException,
                 ObjectNotFoundException, TokenException {
         return getEncryptedPrivateKeyInfo(
             null,

@@ -17,6 +17,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.BadPaddingException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.ASN1Value;
@@ -117,7 +118,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             int iterationCount,
             KeyGenerator.CharToByteConverter charToByteConverter,
             PrivateKeyInfo pki)
-        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        throws NotInitializedException, NoSuchAlgorithmException,
         InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
         CharConversionException
     {
@@ -201,7 +202,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             Password pwd,
             KeyGenerator.CharToByteConverter charToByteConverter,
             PrivateKeyInfo privateKeyInfo)
-        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        throws NotInitializedException, NoSuchAlgorithmException,
         InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
         CharConversionException
     {
@@ -293,7 +294,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             int iterationCount,
             KeyGenerator.CharToByteConverter charToByteConverter,
             PrivateKey pri, CryptoToken token)
-        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        throws NotInitializedException, NoSuchAlgorithmException,
         InvalidKeyException, InvalidAlgorithmParameterException, TokenException,
         CharConversionException
     {
@@ -363,7 +364,7 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
      */
     public PrivateKeyInfo
     decrypt(Password pass, KeyGenerator.CharToByteConverter charToByteConverter)
-        throws CryptoManager.NotInitializedException, NoSuchAlgorithmException,
+        throws NotInitializedException, NoSuchAlgorithmException,
         InvalidBERException, InvalidKeyException,
         InvalidAlgorithmParameterException, TokenException,
         IllegalBlockSizeException, BadPaddingException, CharConversionException

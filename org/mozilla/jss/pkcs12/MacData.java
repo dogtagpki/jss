@@ -14,6 +14,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.INTEGER;
@@ -92,13 +93,13 @@ public class MacData implements ASN1Value {
 	 *		mechanism. If null is passed in, new random salt will be created.
      * @param iterations The iteration count for creating the PBE key.
 	 * @param toBeMACed The data on which the HMAC will be computed.
-     * @exception CryptoManager.NotInitializedException If the crypto subsystem
+     * @exception NotInitializedException If the crypto subsystem
      *      has not been initialized yet.
      * @exception TokenException If an error occurs on a crypto token.
 	 */
     public MacData( Password password, byte[] macSalt,
                     int iterations, byte[] toBeMACed )
-        throws CryptoManager.NotInitializedException,
+        throws NotInitializedException,
             DigestException, TokenException, CharConversionException
     {
       try {

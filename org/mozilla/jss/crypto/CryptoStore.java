@@ -4,7 +4,7 @@
 
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.util.*;
 import java.security.*;
 
@@ -90,7 +90,7 @@ public interface CryptoStore {
      */
     public byte[] getEncryptedPrivateKeyInfo(X509Certificate cert,
         PBEAlgorithm pbeAlg, Password pw, int iteration)
-        throws CryptoManager.NotInitializedException,
+        throws NotInitializedException,
             ObjectNotFoundException, TokenException;
 
     /**

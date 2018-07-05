@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.security.DigestException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ANY;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
@@ -127,7 +128,7 @@ public class PFX implements ASN1Value {
      *      this PFX does not contain a MacData, returns false.
      */
     public boolean verifyAuthSafes(Password password, StringBuffer reason)
-        throws CryptoManager.NotInitializedException
+        throws NotInitializedException
     {
       try {
 
@@ -223,7 +224,7 @@ public class PFX implements ASN1Value {
      */
     public void computeMacData(Password password,
             byte[] salt, int iterationCount)
-        throws CryptoManager.NotInitializedException, DigestException,
+        throws NotInitializedException, DigestException,
         TokenException, CharConversionException
     {
         macData = new MacData( password, salt, iterationCount,

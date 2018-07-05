@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ANY;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
@@ -280,7 +281,7 @@ public final class SafeBag implements ASN1Value {
     public static SafeBag
     createEncryptedPrivateKeyBag(PrivateKeyInfo privk, String friendlyName,
             byte[] localKeyID, Password password)
-            throws CryptoManager.NotInitializedException, TokenException
+            throws NotInitializedException, TokenException
     {
       try {
 

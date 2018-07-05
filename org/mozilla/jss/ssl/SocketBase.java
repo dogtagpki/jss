@@ -14,6 +14,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.X509Certificate;
@@ -401,7 +402,7 @@ class SocketBase {
             X509Certificate cert = cm.findCertByNickname(nick);
             setClientCert(cert);
 
-        } catch (CryptoManager.NotInitializedException nie) {
+        } catch (NotInitializedException nie) {
             throw new RuntimeException(nie);
 
         } catch (ObjectNotFoundException onfe) {

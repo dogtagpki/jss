@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.TokenException;
 
@@ -272,7 +273,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     {
       try {
         setServerCert( CryptoManager.getInstance().findCertByNickname(nick) );
-      } catch(CryptoManager.NotInitializedException nie) {
+      } catch(NotInitializedException nie) {
         throw new SocketException("CryptoManager not initialized");
       } catch(ObjectNotFoundException onfe) {
         throw new SocketException("Object not found: " + onfe);
