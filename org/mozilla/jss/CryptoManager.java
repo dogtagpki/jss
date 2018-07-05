@@ -100,10 +100,6 @@ public final class CryptoManager implements TokenSupplier
         public static final CertUsage AnyCA = new CertUsage(11, "AnyCA");
     }
 
-    public final static class InvalidLengthException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
-
     /**
      * The various options that can be used to initialize CryptoManager.
      */
