@@ -15,6 +15,7 @@ import java.security.PublicKey;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyPairGenerator;
@@ -49,8 +50,8 @@ public class SigTest {
             String dbdir = args[0];
 
 
-            CryptoManager.InitializationValues vals =
-                    new CryptoManager.InitializationValues(args[0]);
+            InitializationValues vals =
+                    new InitializationValues(args[0]);
             CryptoManager.initialize(vals);
             manager = CryptoManager.getInstance();
             manager.setPasswordCallback(new FilePasswordCallback(args[1]));

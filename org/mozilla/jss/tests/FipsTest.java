@@ -7,6 +7,7 @@ package org.mozilla.jss.tests;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.pkcs11.PK11Module;
 import org.mozilla.jss.pkcs11.PK11Token;
@@ -34,8 +35,8 @@ public class FipsTest {
            System.out.println("The password file " +password);
         }
 
-        CryptoManager.InitializationValues vals = new
-                CryptoManager.InitializationValues(dbdir);
+        InitializationValues vals = new
+                InitializationValues(dbdir);
 
         System.out.println("output of Initilization values ");
         System.out.println("Manufacturer ID: " + vals.getManufacturerID());
@@ -55,13 +56,13 @@ public class FipsTest {
 
 
         if (fipsmode.equalsIgnoreCase("enable")) {
-            vals.fipsMode = CryptoManager.InitializationValues.FIPSMode.ENABLED;
+            vals.fipsMode = InitializationValues.FIPSMode.ENABLED;
         } else if (fipsmode.equalsIgnoreCase("disable")){
             vals.fipsMode =
-                    CryptoManager.InitializationValues.FIPSMode.DISABLED;
+                    InitializationValues.FIPSMode.DISABLED;
         } else {
             vals.fipsMode =
-                    CryptoManager.InitializationValues.FIPSMode.UNCHANGED;
+                    InitializationValues.FIPSMode.UNCHANGED;
         }
 
         CryptoManager.initialize(vals);

@@ -11,6 +11,7 @@ import java.security.Security;
 import java.security.Signature;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 
 
 public class JCASigTest {
@@ -74,8 +75,8 @@ public class JCASigTest {
         String dbdir = args[0];
         String file = args[1];
         try {
-            CryptoManager.InitializationValues vals = new
-                                CryptoManager.InitializationValues (dbdir );
+            InitializationValues vals = new
+                                InitializationValues (dbdir );
             vals.removeSunProvider = true;
             CryptoManager.initialize(vals);
             manager = CryptoManager.getInstance();

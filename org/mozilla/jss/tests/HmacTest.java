@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.SymmetricKey;
 
@@ -17,7 +18,7 @@ import org.mozilla.jss.crypto.SymmetricKey;
 public class HmacTest {
 
   private static final String INTERNAL_KEY_STORAGE_TOKEN =
-    new CryptoManager.InitializationValues("").getInternalKeyStorageTokenDescription().trim();
+    new InitializationValues("").getInternalKeyStorageTokenDescription().trim();
 
   private static final String NSS_DATABASE_DIR = "sql:data";
   private static final String PROVIDER = "Mozilla-JSS";
@@ -51,8 +52,8 @@ public class HmacTest {
   private static void configureCrypto(String[] args)
     throws Exception {
 
-    CryptoManager.InitializationValues initializationValues =
-      new CryptoManager.InitializationValues(args[0]);
+    InitializationValues initializationValues =
+      new InitializationValues(args[0]);
 
     CryptoManager.initialize(initializationValues);
 

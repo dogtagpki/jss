@@ -28,6 +28,7 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 
 /**
  * JSSE SSLServer class that acts as SSL Server
@@ -148,8 +149,8 @@ public class JSSE_SSLServer {
                 }
 
                 System.out.println("Initializing " + args[5]);
-                CryptoManager.InitializationValues vals = new
-                    CryptoManager.InitializationValues(configDir);
+                InitializationValues vals = new
+                    InitializationValues(configDir);
                 vals.removeSunProvider = false;
                 CryptoManager.initialize(vals);
                 manager = CryptoManager.getInstance();

@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.KeyDatabaseException;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
@@ -531,8 +532,8 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             return; /* JSS already initialized */
         }
         try {
-            CryptoManager.InitializationValues vals = new
-                    CryptoManager.InitializationValues(fCertDbPath);
+            InitializationValues vals = new
+                    InitializationValues(fCertDbPath);
             CryptoManager.initialize(vals);
             cm  = CryptoManager.getInstance();
 

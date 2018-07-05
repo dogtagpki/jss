@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.CryptoManager.CertUsage;
+import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.pkix.cert.Certificate;
 import org.mozilla.jss.pkix.cert.CertificateInfo;
 import org.mozilla.jss.util.Password;
@@ -76,8 +77,8 @@ public class VerifyCert {
             }
 
             //initialize JSS
-            CryptoManager.InitializationValues vals = new
-                                CryptoManager.InitializationValues(dbdir);
+            InitializationValues vals = new
+                                InitializationValues(dbdir);
 
             //enable PKIX verify rather than the old NSS cert library,
             //to verify certificates.

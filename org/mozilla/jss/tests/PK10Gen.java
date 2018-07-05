@@ -4,11 +4,10 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.pkcs11.PK11Token;
-import org.mozilla.jss.util.*;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.util.Password;
 
 public class PK10Gen {
     public static void main(String args[]) {
@@ -30,8 +29,8 @@ public class PK10Gen {
 			PK11Token token = (PK11Token)cm.getInternalCryptoToken();
 			*/
 			/*
-        CryptoManager.InitializationValues vals = new
-            CryptoManager.InitializationValues( args[0]+"/secmodule.db",
+        InitializationValues vals = new
+            InitializationValues( args[0]+"/secmodule.db",
                                                 args[0]+"/key3.db",
 				                                args[0]+"/cert7.db");
         CryptoManager.initialize(vals);
@@ -43,7 +42,7 @@ public class PK10Gen {
             return;
         }
 
-		CryptoToken token = (PK11Token) manager.getInternalKeyStorageToken();
+		CryptoToken token = manager.getInternalKeyStorageToken();
             if(token.isLoggedIn() == false) {
                 System.out.println("Good, isLoggedIn correctly says we're"+
                     " not logged in");
@@ -52,7 +51,7 @@ public class PK10Gen {
                     " logged in");
             }
 
-			pass1 = new Password( (char[]) passchar1.clone());
+			pass1 = new Password( passchar1.clone());
 			pass2 = new Password( new char[]{0} );
             token.initPassword(pass2, pass1);
 			pass1.clear();

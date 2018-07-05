@@ -17,6 +17,7 @@ import java.util.Hashtable;
 
 import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.KeyDatabaseException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
 
@@ -385,8 +386,8 @@ public class SSLClient
       int i;
 
       try {
-	CryptoManager.InitializationValues vals =
-		new CryptoManager.InitializationValues(".");
+	InitializationValues vals =
+		new InitializationValues(".");
 	CryptoManager.initialize(vals);
 
 
