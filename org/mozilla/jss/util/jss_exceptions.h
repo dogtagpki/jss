@@ -98,7 +98,7 @@ PR_BEGIN_EXTERN_C
 
 #define TOKEN_NOT_INITIALIZED_EXCEPTION "org/mozilla/jss/pkcs11/PK11Token$NotInitializedException"
 
-#define USER_CERT_CONFLICT_EXCEPTION "org/mozilla/jss/CryptoManager$UserCertConflictException"
+#define USER_CERT_CONFLICT_EXCEPTION "org/mozilla/jss/UserCertConflictException"
 
 PR_END_EXTERN_C
 
