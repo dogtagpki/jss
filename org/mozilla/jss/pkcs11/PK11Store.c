@@ -390,55 +390,44 @@ JSS_PK11_getStoreSlotPtr(JNIEnv *env, jobject store, PK11SlotInfo **slot)
  */
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_pkcs11_PK11Store_deletePrivateKey
-    (JNIEnv *env, jobject this, jobject key)
+    (JNIEnv *env, jobject this, jobject privateKeyObj)
 {
     PK11SlotInfo *slot;
-    SECKEYPrivateKey *privk;
+    SECKEYPrivateKey *privateKey;
 
     PR_ASSERT(env!=NULL && this!=NULL);
-    if(key == NULL) {
+
+    if (privateKeyObj == NULL) {
         JSS_throw(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION);
         goto finish;
     }
 
-    /**************************************************
-     * Get the C structures
-     **************************************************/
-    if( JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
         goto finish;
     }
 
-    if( JSS_PK11_getPrivKeyPtr(env, key, &privk) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+    if (JSS_PK11_getPrivKeyPtr(env, privateKeyObj, &privateKey) != PR_SUCCESS) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
         goto finish;
     }
-
-    /***************************************************
-     * Validate structures
-     ***************************************************/
 
     /* A private key may be temporary, but you can't use this function
      * to delete it.  Instead, just let it be garbage collected */
-    if( privk->pkcs11IsTemp ) {
+    if (privateKey->pkcs11IsTemp) {
         PR_ASSERT(PR_FALSE);
         JSS_throwMsg(env, TOKEN_EXCEPTION,
             "Private Key is not a permanent PKCS #11 object");
         goto finish;
     }
 
-    if( slot != privk->pkcs11Slot) {
+    if (slot != privateKey->pkcs11Slot) {
         JSS_throw(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION);
         goto finish;
     }
 
-    /***************************************************
-     * Perform the destruction
-     ***************************************************/
-    if( PK11_DestroyTokenObject(privk->pkcs11Slot, privk->pkcs11ID)
-        != SECSuccess)
-    {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to actually destroy object");
+    if (PK11_DestroyTokenObject(privateKey->pkcs11Slot, privateKey->pkcs11ID) != SECSuccess) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to remove private key");
         goto finish;
     }
 

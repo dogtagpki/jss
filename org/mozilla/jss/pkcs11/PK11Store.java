@@ -87,7 +87,7 @@ public final class PK11Store implements CryptoStore {
     protected native void putSymKeysInVector(Vector<SymmetricKey> symKeys) throws TokenException;
 
 
-    public native void deletePrivateKey(PrivateKey key)
+    public native void deletePrivateKey(PrivateKey privateKey)
         throws NoSuchItemOnTokenException, TokenException;
 
     public byte[] getEncryptedPrivateKeyInfo(

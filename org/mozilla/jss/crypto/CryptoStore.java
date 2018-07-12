@@ -73,19 +73,15 @@ public interface CryptoStore {
     public SymmetricKey[] getSymmetricKeys() throws TokenException;
 
     /**
-     * Deletes the given PrivateKey from the CryptoToken.
-     * This is a very dangerous call: it deletes the key from the underlying
-     * token. After calling this, the PrivateKey passed in must no longer
-     * be used, or a TokenException will occur.
+     * Permanently deletes a private key from the token.
      *
-     * @param key A PrivateKey to be permanently deleted.  It must reside
-     *      on this token.
+     * @param privateKey A private key to be permanently deleted.
      * @exception NoSuchItemOnTokenException If the given private key does
      *      not reside on this token.
      * @exception TokenException If an error occurs on the token while
      *      deleting the key.
      */
-    public void deletePrivateKey(PrivateKey key)
+    public void deletePrivateKey(PrivateKey privateKey)
         throws NoSuchItemOnTokenException, TokenException;
 
     /**
