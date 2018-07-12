@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -235,7 +236,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
                 CryptoStore store = token.getCryptoStore();
 
                 logger.debug("JSSKeyStoreSpi: deleting cert: " + alias);
-                store.deleteCert(cert);
+                store.deleteCertOnly(cert);
                 return;
 
             } catch (ObjectNotFoundException e) {
@@ -263,11 +264,25 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
                 String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
                 logger.debug("JSSKeyStoreSpi: - " + keyID);
 
-                if (nickname.equals(keyID)) {
-                    logger.debug("JSSKeyStoreSpi: deleting private key: " + nickname);
-                    store.deletePrivateKey(privateKey);
-                    return;
+                if (!nickname.equals(keyID)) {
+                    continue;
                 }
+
+                try {
+                    logger.debug("JSSKeyStoreSpi: searching for public key: " + nickname);
+                    PublicKey publicKey = store.findPublicKey(privateKey);
+
+                    logger.debug("JSSKeyStoreSpi: deleting public key: " + nickname);
+                    store.deletePublicKey(publicKey);
+
+                } catch (ObjectNotFoundException e) {
+                    logger.debug("JSSKeyStoreSpi: public key not found: " + nickname);
+                }
+
+                logger.debug("JSSKeyStoreSpi: deleting private key: " + nickname);
+                store.deletePrivateKey(privateKey);
+
+                return;
             }
 
             logger.debug("JSSKeyStoreSpi: entry not found: " + alias);
