@@ -4,7 +4,10 @@
 
 package org.mozilla.jss.pkcs11;
 
+import java.math.BigInteger;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
@@ -24,8 +27,12 @@ import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.Password;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class PK11Store implements CryptoStore {
+
+    public static Logger logger = LoggerFactory.getLogger(PK11Store.class);
 
     ////////////////////////////////////////////////////////////
     // Private Keys
@@ -73,6 +80,44 @@ public final class PK11Store implements CryptoStore {
     }
 
     protected native void loadPublicKeys(Collection<PublicKey> privateKeys) throws TokenException;
+
+    public PublicKey findPublicKey(PrivateKey privateKey) throws TokenException, ObjectNotFoundException {
+
+        // NSS does not provide a function to find the public key of a private key,
+        // so it has to be done manually.
+
+        if (privateKey instanceof RSAPrivateKey) {
+
+            logger.debug("PKCS11Store: searching for RSA public key");
+
+            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) privateKey;
+            BigInteger modulus = rsaPrivateKey.getModulus();
+
+            // Find the RSA public key by comparing the modulus.
+
+            for (PublicKey publicKey : getPublicKeys()) {
+
+                if (!(publicKey instanceof RSAPublicKey)) {
+                    // not an RSA public key
+                    continue;
+                }
+
+                RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
+                if (!modulus.equals(rsaPublicKey.getModulus())) {
+                    // modulus doesn't match
+                    continue;
+                }
+
+                logger.debug("PKCS11Store: found RSA public key");
+                return publicKey;
+            }
+
+        } else {
+            // TODO: add support for non-RSA keys
+        }
+
+        throw new ObjectNotFoundException("Unable to find public key");
+    }
 
     public synchronized SymmetricKey[]
     getSymmetricKeys() throws TokenException {

@@ -64,6 +64,17 @@ public interface CryptoStore {
     public PublicKey[] getPublicKeys() throws TokenException;
 
     /**
+     * Returns the public key corresponding to the private key.
+     *
+     * @param privateKey
+     * @return The corresponding public key.
+     * @throws ObjectNotFoundException If the corresponding public key is not found.
+     * @throws TokenException If an error occurs on the token.
+     */
+    public PublicKey findPublicKey(PrivateKey privateKey)
+            throws ObjectNotFoundException, TokenException;
+
+    /**
      * Returns all symmetric keys stored on this token.
      *
      * @return An array of all symmetric keys stored on this token.
