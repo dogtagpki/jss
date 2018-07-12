@@ -55,6 +55,15 @@ public interface CryptoStore {
     public PrivateKey[] getPrivateKeys() throws TokenException;
 
     /**
+     * Returns all public keys stored on this token.
+     *
+     * @return An array of all public keys stored on this token.
+     * @exception TokenException If an error occurs on the token while
+     *      gathering the keys.
+     */
+    public PublicKey[] getPublicKeys() throws TokenException;
+
+    /**
      * Returns all symmetric keys stored on this token.
      *
      * @return An array of all symmetric keys stored on this token.

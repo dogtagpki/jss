@@ -193,6 +193,90 @@ finish:
 }
 
 /**********************************************************************
+ * PK11Store.loadPublicKeys
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_loadPublicKeys
+    (JNIEnv *env, jobject this, jobject collection)
+{
+    PK11SlotInfo *slot;
+    SECKEYPublicKeyList *list = NULL;
+    SECKEYPublicKeyListNode *node = NULL;
+    SECKEYPublicKey* key = NULL;
+    jobject publicKey = NULL;
+    jclass collectionClass;
+    jmethodID collectionAdd;
+
+    PR_ASSERT(env!=NULL && this!=NULL && collection!=NULL);
+
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    PR_ASSERT(slot!=NULL);
+
+    /*
+     * Most, if not all, tokens have to be logged in before they allow
+     * access to their public keys, so try to log in here.  If we're already
+     * logged in, this is a no-op.
+     * If the login fails, go ahead and try to get the keys anyway, in case
+     * this is an exceptionally promiscuous token.
+     */
+    PK11_Authenticate(slot, PR_TRUE /*load certs*/, NULL /*wincx*/);
+
+    // get the list of keys on this token
+    list = PK11_ListPublicKeysInSlot(slot, NULL /*nickname*/);
+
+    if (list == NULL) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "PK11_ListPublicKeysInSlot "
+            "returned an error");
+        goto finish;
+    }
+
+    // get Collection class
+    collectionClass = (*env)->FindClass(env, COLLECTION_CLASS_NAME);
+
+    if (collectionClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    // get Collection.add() method
+    collectionAdd = (*env)->GetMethodID(env,
+                                     collectionClass,
+                                     COLLECTION_ADD_NAME,
+                                     COLLECTION_ADD_SIG);
+
+    if (collectionAdd == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    for(    node = PUBKEY_LIST_HEAD(list);
+            !PUBKEY_LIST_END(node, list);
+            node = PUBKEY_LIST_NEXT(node) )
+    {
+        // wrap public key
+        key = SECKEY_CopyPublicKey(node->key);
+        publicKey = JSS_PK11_wrapPubKey(env, &key);
+        if (publicKey == NULL) {
+            PR_ASSERT((*env)->ExceptionOccurred(env));
+            goto finish;
+        }
+
+        // add public key into collection
+        (*env)->CallBooleanMethod(env, collection, collectionAdd, publicKey);
+    }
+
+finish:
+    if (list != NULL) {
+        SECKEY_DestroyPublicKeyList(list);
+    }
+    return;
+}
+
+/**********************************************************************
  * PK11Store.putCertsInVector
  */
 JNIEXPORT void JNICALL

@@ -61,6 +61,19 @@ public final class PK11Store implements CryptoStore {
 
     protected native void loadPrivateKeys(Collection<PrivateKey> privateKeys) throws TokenException;
 
+    public synchronized PublicKey[] getPublicKeys() throws TokenException {
+
+        ArrayList<PublicKey> list = new ArrayList<>();
+        loadPublicKeys(list);
+
+        PublicKey[] array = new PublicKey[list.size()];
+        list.toArray(array);
+
+        return array;
+    }
+
+    protected native void loadPublicKeys(Collection<PublicKey> privateKeys) throws TokenException;
+
     public synchronized SymmetricKey[]
     getSymmetricKeys() throws TokenException {
 
