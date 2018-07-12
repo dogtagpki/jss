@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -135,7 +135,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     public Collection<String> getAliases() {
 
         logger.debug("JSSKeyStoreSpi: getAliases()");
-        Set<String> aliases = new HashSet<>();
+        Set<String> aliases = new LinkedHashSet<>();
 
         try {
             List<CryptoToken> tokens = new ArrayList<>();

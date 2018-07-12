@@ -4,9 +4,10 @@
 
 package org.mozilla.jss.crypto;
 
+import java.security.PublicKey;
+
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.util.*;
-import java.security.*;
+import org.mozilla.jss.util.Password;
 
 /**
  * This is an interface for a permanent repository of cryptographic objects,
@@ -51,8 +52,7 @@ public interface CryptoStore {
      * @exception TokenException If an error occurs on the token while
      *      gathering the keys.
      */
-    public PrivateKey[]
-    getPrivateKeys() throws TokenException;
+    public PrivateKey[] getPrivateKeys() throws TokenException;
 
     /**
      * Returns all symmetric keys stored on this token.
@@ -61,8 +61,7 @@ public interface CryptoStore {
      * @exception TokenException If an error occurs on the token while
      *      gathering the keys.
      */
-    public SymmetricKey[]
-    getSymmetricKeys() throws TokenException;
+    public SymmetricKey[] getSymmetricKeys() throws TokenException;
 
     /**
      * Deletes the given PrivateKey from the CryptoToken.
@@ -72,12 +71,12 @@ public interface CryptoStore {
      *
      * @param key A PrivateKey to be permanently deleted.  It must reside
      *      on this token.
-     * @exception NoSuchItemOnTokenException If the given private key does 
+     * @exception NoSuchItemOnTokenException If the given private key does
      *      not reside on this token.
      * @exception TokenException If an error occurs on the token while
      *      deleting the key.
      */
-    public void deletePrivateKey(org.mozilla.jss.crypto.PrivateKey key)
+    public void deletePrivateKey(PrivateKey key)
         throws NoSuchItemOnTokenException, TokenException;
 
     /**
@@ -136,11 +135,10 @@ public interface CryptoStore {
      * @exception TokenException If an error occurs on the token while
      *      gathering the certificates.
      */
-    public X509Certificate[]
-    getCertificates() throws TokenException;
+    public X509Certificate[] getCertificates() throws TokenException;
 
     /**
-     * Deletes a certificate from a token.
+     * Deletes a certificate and the corresponding keys.
      *
      * @param cert A certificate to be deleted from this token. The cert
      *      must actually reside on this token.
@@ -151,4 +149,17 @@ public interface CryptoStore {
      */
     public void deleteCert(X509Certificate cert)
         throws NoSuchItemOnTokenException, TokenException;
+
+    /**
+     * Deletes a certificate without deleting the corresponding keys.
+     *
+     * @param cert A certificate to be deleted from this token. The cert
+     *      must actually reside on this token.
+     * @exception NoSuchItemOnTokenException If the given cert does not
+     *      reside on this token.
+     * @exception TokenException If an error occurred on the token while
+     *      deleting the certificate.
+     */
+    public void deleteCertOnly(X509Certificate cert)
+            throws NoSuchItemOnTokenException, TokenException;
 }
