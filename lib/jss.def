@@ -336,6 +336,7 @@ Java_org_mozilla_jss_pkcs11_PK11RSAPrivateKey_getModulusByteArray;
 Java_org_mozilla_jss_pkcs11_PK11Token_importPublicKey;
 Java_org_mozilla_jss_pkcs11_PK11Store_loadPrivateKeys;
 Java_org_mozilla_jss_pkcs11_PK11Store_loadPublicKeys;
+Java_org_mozilla_jss_pkcs11_PK11Store_deletePublicKey;
 ;+    local:
 ;+       *;
 ;+};

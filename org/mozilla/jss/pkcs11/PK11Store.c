@@ -436,6 +436,47 @@ finish:
 }
 
 /**********************************************************************
+ * PK11Store.deletePublicKey
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_deletePublicKey
+    (JNIEnv *env, jobject this, jobject publicKeyObj)
+{
+    PK11SlotInfo *slot;
+    SECKEYPublicKey *publicKey;
+
+    PR_ASSERT(env != NULL && this != NULL);
+
+    if (publicKeyObj == NULL) {
+        JSS_throw(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION);
+        goto finish;
+    }
+
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+        goto finish;
+    }
+
+    if (JSS_PK11_getPubKeyPtr(env, publicKeyObj, &publicKey) != PR_SUCCESS) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+        goto finish;
+    }
+
+    if (slot != publicKey->pkcs11Slot) {
+        JSS_throw(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION);
+        goto finish;
+    }
+
+    if (PK11_DestroyTokenObject(publicKey->pkcs11Slot, publicKey->pkcs11ID) != SECSuccess) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to remove public key");
+        goto finish;
+    }
+
+finish:
+    return;
+}
+
+/**********************************************************************
  * PK11Store.deleteCert
  *
  * This function deletes the specified certificate and its associated 
