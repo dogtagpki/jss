@@ -5,6 +5,8 @@
 package org.mozilla.jss.pkcs11;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
 
 import org.mozilla.jss.CryptoManager;
@@ -46,14 +48,18 @@ public final class PK11Store implements CryptoStore {
         byte[] key, PrivateKey.Type type, boolean temporary)
         throws TokenException,KeyAlreadyImportedException;
 
-    public synchronized PrivateKey[]
-    getPrivateKeys() throws TokenException {
-        Vector<PrivateKey> keys = new Vector<>();
-        putKeysInVector(keys);
-        PrivateKey[] array = new PrivateKey[keys.size()];
-        keys.copyInto( array );
+    public synchronized PrivateKey[] getPrivateKeys() throws TokenException {
+
+        ArrayList<PrivateKey> list = new ArrayList<>();
+        loadPrivateKeys(list);
+
+        PrivateKey[] array = new PrivateKey[list.size()];
+        list.toArray(array);
+
         return array;
     }
+
+    protected native void loadPrivateKeys(Collection<PrivateKey> privateKeys) throws TokenException;
 
     public synchronized SymmetricKey[]
     getSymmetricKeys() throws TokenException {
@@ -64,8 +70,6 @@ public final class PK11Store implements CryptoStore {
         keys.copyInto( array);
         return array;
     }
-
-    protected native void putKeysInVector(Vector<PrivateKey> keys) throws TokenException;
 
     protected native void putSymKeysInVector(Vector<SymmetricKey> symKeys) throws TokenException;
 

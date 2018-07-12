@@ -38,6 +38,13 @@ PR_BEGIN_EXTERN_C
 #define CIPHER_CONTEXT_PROXY_CONSTRUCTOR_SIG "([B)V"
 
 /*
+ * Collection
+ */
+#define COLLECTION_CLASS_NAME "java/util/Collection"
+#define COLLECTION_ADD_NAME "add"
+#define COLLECTION_ADD_SIG "(Ljava/lang/Object;)Z"
+
+/*
  * Debug
  */
 #define DEBUG_CLASS_NAME "org/mozilla/jss/util/Debug"

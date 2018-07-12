@@ -109,26 +109,27 @@ finish:
 }
 
 /**********************************************************************
- * PK11Store.putKeysInVector
+ * PK11Store.loadPrivateKeys
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Store_putKeysInVector
-    (JNIEnv *env, jobject this, jobject keyVector)
+Java_org_mozilla_jss_pkcs11_PK11Store_loadPrivateKeys
+    (JNIEnv *env, jobject this, jobject collection)
 {
     PK11SlotInfo *slot;
-    SECKEYPrivateKeyList *keyList = NULL;
-    SECKEYPrivateKey* keyCopy = NULL;
-    jobject object = NULL;
-    jclass vectorClass;
-    jmethodID addElement;
+    SECKEYPrivateKeyList *list = NULL;
     SECKEYPrivateKeyListNode *node = NULL;
+    SECKEYPrivateKey* key = NULL;
+    jobject privateKey = NULL;
+    jclass collectionClass;
+    jmethodID collectionAdd;
 
-    PR_ASSERT(env!=NULL && this!=NULL && keyVector!=NULL);
+    PR_ASSERT(env!=NULL && this!=NULL && collection!=NULL);
 
-    if( JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
+
     PR_ASSERT(slot!=NULL);
 
     /*
@@ -140,56 +141,53 @@ Java_org_mozilla_jss_pkcs11_PK11Store_putKeysInVector
      */
     PK11_Authenticate(slot, PR_TRUE /*load certs*/, NULL /*wincx*/);
 
-    /*
-     * Get the list of keys on this token
-     */
-    keyList = PK11_ListPrivateKeysInSlot(slot);
-    if( keyList == NULL ) {
+    // get the list of keys on this token
+    list = PK11_ListPrivateKeysInSlot(slot);
+
+    if (list == NULL) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "PK11_ListPrivateKeysInSlot "
             "returned an error");
         goto finish;
     }
 
-    /**************************************************
-     * Get JNI ids
-     **************************************************/
-    vectorClass = (*env)->GetObjectClass(env, keyVector);
-    if(vectorClass == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    addElement = (*env)->GetMethodID(env,
-                                     vectorClass,
-                                     VECTOR_ADD_ELEMENT_NAME,
-                                     VECTOR_ADD_ELEMENT_SIG);
-    if(addElement == NULL) {
+    // get Collection class
+    collectionClass = (*env)->FindClass(env, COLLECTION_CLASS_NAME);
+
+    if (collectionClass == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
 
-    for(    node = PRIVKEY_LIST_HEAD(keyList);
-            !PRIVKEY_LIST_END(node, keyList);
+    // get Collection.add() method
+    collectionAdd = (*env)->GetMethodID(env,
+                                     collectionClass,
+                                     COLLECTION_ADD_NAME,
+                                     COLLECTION_ADD_SIG);
+
+    if (collectionAdd == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    for(    node = PRIVKEY_LIST_HEAD(list);
+            !PRIVKEY_LIST_END(node, list);
             node = PRIVKEY_LIST_NEXT(node) )
     {
-        /***************************************************
-        * Wrap the object
-        ***************************************************/
-        keyCopy = SECKEY_CopyPrivateKey(node->key);
-        object = JSS_PK11_wrapPrivKey(env, &keyCopy);
-        if(object == NULL) {
-            PR_ASSERT( (*env)->ExceptionOccurred(env) );
+        // wrap private key
+        key = SECKEY_CopyPrivateKey(node->key);
+        privateKey = JSS_PK11_wrapPrivKey(env, &key);
+        if (privateKey == NULL) {
+            PR_ASSERT((*env)->ExceptionOccurred(env));
             goto finish;
         }
 
-        /***************************************************
-        * Insert the key into the vector
-        ***************************************************/
-        (*env)->CallVoidMethod(env, keyVector, addElement, object);
+        // add private key into collection
+        (*env)->CallBooleanMethod(env, collection, collectionAdd, privateKey);
     }
 
 finish:
-    if( keyList != NULL ) {
-        SECKEY_DestroyPrivateKeyList(keyList);
+    if (list != NULL) {
+        SECKEY_DestroyPrivateKeyList(list);
     }
     return;
 }
