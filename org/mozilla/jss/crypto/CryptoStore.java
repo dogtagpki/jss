@@ -96,6 +96,18 @@ public interface CryptoStore {
         throws NoSuchItemOnTokenException, TokenException;
 
     /**
+     * Permanently deletes a public key from the token.
+     *
+     * @param publicKey A public key to be permanently deleted.
+     * @exception NoSuchItemOnTokenException If the given public key does
+     *      not reside on this token.
+     * @exception TokenException If an error occurs on the token while
+     *      deleting the key.
+     */
+    public void deletePublicKey(PublicKey publicKey)
+            throws NoSuchItemOnTokenException, TokenException;
+
+    /**
      * Get an encrypted private key for the given cert.
      *
      * @param cert Certificate of key to be exported

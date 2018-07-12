@@ -135,6 +135,9 @@ public final class PK11Store implements CryptoStore {
     public native void deletePrivateKey(PrivateKey privateKey)
         throws NoSuchItemOnTokenException, TokenException;
 
+    public native void deletePublicKey(PublicKey publicKey)
+            throws NoSuchItemOnTokenException, TokenException;
+
     public byte[] getEncryptedPrivateKeyInfo(
             X509Certificate cert,
             PBEAlgorithm pbeAlg,
