@@ -33,6 +33,7 @@ my $testdir        = "";
 my $testrun        = 0;
 my $testpass       = 0;
 my $nss_lib_dir    = "";
+my $jss_lib_dir    = "";
 my $pathsep        = ":";
 my $scriptext      = "sh";
 my $exe_suffix     = "";
@@ -118,6 +119,7 @@ sub setup_vars {
         shift @$argv;
         my $dist_dir = shift @$argv or usage("did not provide dist_dir");
         my $obj_dir = shift @$argv or usage("did not provide obj_dir");
+        $jss_lib_dir = shift @$argv or usage("did not provide jss_lib_dir");
 
         $ENV{CLASSPATH} .= "$dist_dir/xpclass.jar";
         ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
@@ -135,6 +137,7 @@ sub setup_vars {
         chomp( $obj_dir = `(cd $obj_dir ; pwd)`);
 
         $nss_lib_dir   = "$obj_dir/lib";
+        $jss_lib_dir   = "$obj_dir/lib";
         $jss_rel_dir   = "$dist_dir/classes/org";
         $jss_classpath = "$dist_dir/xpclass.jar";
 
@@ -142,6 +145,7 @@ sub setup_vars {
         ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
         #$ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$obj_dir/lib";
         $ENV{$ld_lib_path} = "$obj_dir/lib";
+
     } elsif( $$argv[0] eq "release" ) {
         shift @$argv;
 
@@ -156,7 +160,9 @@ sub setup_vars {
         print "LD_LIBRARY_PATH is $ld_lib_path\n";
         print "$ld_lib_path=$ENV{$ld_lib_path}\n";
         $nss_lib_dir = "$nss_rel_dir/lib";
+        $jss_lib_dir = "$nss_rel_dir/lib";
         $jss_classpath = "$jss_rel_dir/../xpclass.jar";
+
     } else {
         usage();
     }
@@ -209,7 +215,7 @@ sub setup_vars {
 
     #MAC OS X have the -Djava.library.path for the JSS JNI library
     if ($osname =~ /Darwin/) {
-        $java = $java . " -Djava.library.path=$nss_lib_dir";        
+        $java = $java . " -Djava.library.path=$jss_lib_dir";
     } 
 
     $pwfile = "passwords";
@@ -647,16 +653,16 @@ my $LIB = "$lib_jss"."4"."$lib_suffix";
 my $strings_exist = `which strings`;
 chomp($strings_exist);
 if ($strings_exist ne "") {
-    (-f "$nss_lib_dir/$LIB") or die "$nss_lib_dir/$LIB does not exist\n";
-    my $jsslibver = `strings $nss_lib_dir/$LIB | grep Header`;
+    (-f "$jss_lib_dir/$LIB") or die "$jss_lib_dir/$LIB does not exist\n";
+    my $jsslibver = `strings $jss_lib_dir/$LIB | grep Header`;
     chomp($jsslibver);
     if ($jsslibver ne "") {
         print "$LIB = $jsslibver\n";
     } else {
-        print "Could not fetch Header information from $nss_lib_dir/$LIB\n";
+        print "Could not fetch Header information from $jss_lib_dir/$LIB\n";
     }
 } else {
-    print "Could not fetch Header information from $nss_lib_dir/$LIB\n";
+    print "Could not fetch Header information from $jss_lib_dir/$LIB\n";
     $result=1;
 }
 

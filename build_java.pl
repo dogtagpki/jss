@@ -248,9 +248,13 @@ sub setup_vars {
                         . "cd $jss_dir";
                 print_do($cmd);
             }
-            print "jss_symlink=$jss_symlink\n"
+
+            $jss_lib_dir = "$jss_symlink/lib";
         }
     }
+
+    print "jss_symlink=$jss_symlink\n";
+    print "jss_lib_dir=$jss_lib_dir\n";
 }
 
 sub clean {
@@ -448,7 +452,7 @@ sub test {
         if(( -d $dist_dir )  &&
            ( -l $jss_symlink )) {
             my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
-                    . "perl all.pl dist $dist_dir $jss_symlink;"
+                    . "perl all.pl dist $dist_dir $jss_symlink $jss_lib_dir;"
                     . "cd $jss_dir";
 
             print("#######################\n" .
