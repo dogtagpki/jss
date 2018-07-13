@@ -167,8 +167,12 @@ sub setup_vars {
 
 
     # retrieve present working directory
-    $pwd = `pwd`;
-    $pwd =~ chomp $pwd;
+    $jss_dir = `pwd`;
+    $jss_dir =~ chomp $jss_dir;
+    print "JSS directory: $jss_dir\n";
+
+    $work_dir = dirname($jss_dir);
+    print "Working directory: $work_dir\n";
 
     # retrieve architecture
     $arch = `uname -m`;
@@ -182,9 +186,9 @@ sub setup_vars {
         print "Using the NSPR and NSS installed on the system to build JSS.\n";
     } else {
         # Verify existence of work area
-        if(( ! -d "$pwd/../nspr" ) ||
-           ( ! -d "$pwd/../nss" )  ||
-           ( ! -d "$pwd/../jss" )) {
+        if(( ! -d "$work_dir/nspr" ) ||
+           ( ! -d "$work_dir/nss" )  ||
+           ( ! -d "$jss_dir" )) {
             my $workarea = "\nA work area must first be prepared; for example:\n\n"
                          . "    mkdir sandbox\n"
                          . "    cd sandbox\n"
@@ -201,7 +205,7 @@ sub setup_vars {
             print("########################\n" .
                   "# BEGIN:  Building NSS #\n" .
                   "########################\n");
-            print_do("cd ../nss;make clean nss_build_all;cd ../jss");
+            print_do("cd $work_dir/nss;make clean nss_build_all;cd $jss_dir");
             print("######################\n" .
                   "# END:  Building NSS #\n" .
                   "######################\n");
@@ -237,11 +241,11 @@ sub setup_vars {
             }
             
             # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME in $dist_dir
-            $jss_symlink = "$pwd/../dist/$jss_objdir_name";
+            $jss_symlink = "$work_dir/dist/$jss_objdir_name";
             if( ! -l $jss_symlink ) {
-                my $cmd = "cd ../dist;"
+                my $cmd = "cd $work_dir/dist;"
                         . "ln -s $nss_objdir_name $jss_objdir_name;"
-                        . "cd ../jss";
+                        . "cd $jss_dir";
                 print_do($cmd);
             }
             print "jss_symlink=$jss_symlink\n"
@@ -443,9 +447,9 @@ sub test {
 
         if(( -d $dist_dir )  &&
            ( -l $jss_symlink )) {
-            my $cmd = "cd $pwd/org/mozilla/jss/tests;"
+            my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
                     . "perl all.pl dist $dist_dir $jss_symlink;"
-                    . "cd $pwd";
+                    . "cd $jss_dir";
 
             print("#######################\n" .
                   "# BEGIN:  Testing JSS #\n" .
