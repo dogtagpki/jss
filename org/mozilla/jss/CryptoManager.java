@@ -51,6 +51,27 @@ public final class CryptoManager implements TokenSupplier
 {
     public static Logger logger = LoggerFactory.getLogger(CryptoManager.class);
 
+    static {
+
+        logger.info("CryptoManager: loading JSS library");
+
+        try {
+            System.loadLibrary("jss4");
+            logger.info("CryptoManager: loaded JSS library from java.library.path");
+
+        } catch (UnsatisfiedLinkError e) {
+
+            try {
+                System.load("/usr/lib64/jss/libjss4.so");
+                logger.info("CryptoManager: loaded JSS library from /usr/lib64/jss/libjss4.so");
+
+            } catch (UnsatisfiedLinkError e1) {
+                System.load("/usr/lib/jss/libjss4.so");
+                logger.info("CryptoManager: loaded JSS library from /usr/lib/jss/libjss4.so");
+            }
+        }
+    }
+
     /**
      * note: this is obsolete in NSS
      * CertUsage options for validation
@@ -427,7 +448,7 @@ public final class CryptoManager implements TokenSupplier
         if(instance != null) {
             throw new AlreadyInitializedException();
         }
-        loadNativeLibraries();
+
         if (values.ocspResponderURL != null) {
             if (values.ocspResponderCertNickname == null) {
                 throw new GeneralSecurityException(
@@ -949,36 +970,6 @@ public final class CryptoManager implements TokenSupplier
     JAR_DBM_VERSION     = "DBM_VERSION = N/A";
     public static final String
     JAR_NSPR_VERSION    = "NSPR_VERSION = N/A";
-
-    /**
-     * Loads the JSS dynamic library if necessary.
-     * <p>This method is idempotent.
-     */
-    synchronized static void loadNativeLibraries()
-    {
-        if( ! mNativeLibrariesLoaded ) {
-            try { // 64 bit rhel/fedora
-                System.load( "/usr/lib64/jss/libjss4.so" );
-                logger.info("64-bit jss library loaded");
-                mNativeLibrariesLoaded = true;
-            } catch( UnsatisfiedLinkError e ) {
-                try { // 32 bit rhel/fedora
-                    System.load( "/usr/lib/jss/libjss4.so" );
-                    logger.info("32-bit jss library loaded");
-                    mNativeLibrariesLoaded = true;
-                } catch( UnsatisfiedLinkError f ) {
-                    try {// possibly other platforms
-                        System.loadLibrary( "jss4" );
-                        logger.info("jss library loaded");
-                        mNativeLibrariesLoaded = true;
-                    } catch( UnsatisfiedLinkError g ) {
-                        logger.warn("jss library load failed");
-                    }
-                }
-            }
-        }
-    }
-    static private boolean mNativeLibrariesLoaded = false;
 
     // Hashtable is synchronized.
     private Hashtable<Thread, CryptoToken> perThreadTokenTable = new Hashtable<>();
