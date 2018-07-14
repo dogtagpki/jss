@@ -159,16 +159,14 @@ cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 
 %defattr(-,root,root,-)
 %doc jss.html MPL-1.1.txt gpl.txt lgpl.txt
-%{_libdir}/jss/*
+%{_libdir}/*
 %{_jnidir}/*
-%{_libdir}/jss/lib*.so
 
 ################################################################################
 %files javadoc
 
 %defattr(-,root,root,-)
-%dir %{_javadocdir}/%{name}-%{version}
-%{_javadocdir}/%{name}-%{version}/*
+%{_javadocdir}/%{name}-%{version}/
 
 ################################################################################
 %changelog
