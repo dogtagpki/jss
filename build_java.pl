@@ -211,7 +211,9 @@ sub setup_vars {
         }
         
         # Build NSS if not already built
-        if( ! -d $dist_dir ) {
+        my $nss_latest_objdir = "$dist_dir/latest";
+
+        if( ! -e $nss_latest_objdir ) {
             print("########################\n" .
                   "# BEGIN:  Building NSS #\n" .
                   "########################\n");
@@ -220,47 +222,25 @@ sub setup_vars {
                   "# END:  Building NSS #\n" .
                   "######################\n");
         }
-        
-        if( $os eq 'Linux' || $os eq 'Darwin' ) {
-            # set major and minor release numbers
-            $majorrel = `uname -r | cut -f1 -d.`;
-            $majorrel =~ chomp $majorrel;
-            $minorrel = `uname -r | cut -f2 -d.`;
-            $minorrel =~ chomp $minorrel;
-            
-            # read the contents of the $dist_dir into an array
-            opendir DIR, $dist_dir or die "Cannot open directory: $!";
-            my @files = readdir DIR;
-            closedir DIR;
-            
-            # process the array to obtain the NSS OBJDIR_NAME
-            my $prefix = "$os$majorrel.$minorrel";
-            foreach my $file (@files) {
-                if ((index($file, $prefix) != -1) &&
-                    (index($file, "_cc") != -1)) {
-                    $nss_objdir_name = $file;
-                    print "NSS OBJDIR_NAME=$nss_objdir_name\n";
-                    
-                    # craft JSS OBJDIR_NAME based upon value of NSS OBJDIR_NAME
-                    $jss_objdir_name = $nss_objdir_name;
-                    $jss_objdir_name =~ s/_cc//;
-                    print "JSS OBJDIR_NAME=$jss_objdir_name\n";
-                    
-                    break;
-                }
-            }
-            
-            # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME in $dist_dir
-            $jss_symlink = "$work_dir/dist/$jss_objdir_name";
-            if( ! -l $jss_symlink ) {
-                my $cmd = "cd $work_dir/dist;"
-                        . "ln -s $nss_objdir_name $jss_objdir_name;"
-                        . "cd $jss_dir";
-                print_do($cmd);
-            }
 
-            $jss_lib_dir = "$jss_symlink/lib";
+        $nss_objdir_name = `cat $nss_latest_objdir`;
+        chomp($nss_objdir_name);
+        print "NSS OBJDIR_NAME=$nss_objdir_name\n";
+
+        $jss_objdir_name = $nss_objdir_name;
+        $jss_objdir_name =~ s/_cc//;
+        print "JSS OBJDIR_NAME=$jss_objdir_name\n";
+
+        # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME
+        $jss_symlink = "$work_dir/dist/$jss_objdir_name";
+        if( ! -l $jss_symlink ) {
+            my $cmd = "cd $work_dir/dist;"
+                    . "ln -s $nss_objdir_name $jss_objdir_name;"
+                    . "cd $jss_dir";
+            print_do($cmd);
         }
+
+        $jss_lib_dir = "$jss_symlink/lib";
     }
 
     print "jss_symlink=$jss_symlink\n";
