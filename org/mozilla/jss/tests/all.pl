@@ -428,7 +428,13 @@ my $result;
 my $command;
 my $serverCommand;
 
-$classpath = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/usr/share/java/apache-commons-lang.jar:$jss_classpath";
+if( $ENV{DEBIAN_BUILD} ) {
+    $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/slf4j-jdk14.jar:/usr/share/java/commons-lang.jar";
+} else {
+    $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/usr/share/java/commons-lang.jar";
+}
+
+$classpath = "$jarFiles:$jss_classpath";
 
 $testname = "Test UTF-8 Converter";
 $command = "$java -cp $classpath org.mozilla.jss.tests.UTF8ConverterTest";

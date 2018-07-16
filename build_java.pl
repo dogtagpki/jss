@@ -160,11 +160,21 @@ sub setup_vars {
     }
     $jni_header_dir = "$dist_dir/private/jss/_jni";
 
-    $classpath = "-classpath /usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/apache-commons-codec.jar:/usr/share/java/commons-lang.jar:/usr/share/java/ldapjdk.jar:";
+    if( $ENV{DEBIAN_BUILD} ) {
+        $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar";
+    } else {
+        $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar";
+    }
+    $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar:/usr/share/java/ldapjdk.jar:";
     if( $jce_jar ) {
         $classpath .= ":$jce_jar";
     }
 
+    if( $ENV{CHECK_DEPRECATION} ) {
+        $javac_deprecation_flag = "-Xlint:deprecation";
+    } else {
+        $javac_deprecation_flag = "";
+    }
 
     # retrieve present working directory
     $jss_dir = `pwd`;
@@ -342,7 +352,7 @@ MyLabel
     #
     if( scalar(@source_list) > 0 ) {
         ensure_dir_exists($class_dir);
-        print_do("$javac $javac_opt_flag -sourcepath . -d $class_dir " .
+        print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir " .
             "$classpath " . join(" ",@source_list));
         print_do("sh -c 'cd $dist_dir/classes && $jar cvmf $dist_dir/MANIFEST.MF $dist_dir/xpclass.jar *'");
         print "Exit status was " . ($?>>8) . "\n";
