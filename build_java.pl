@@ -192,8 +192,12 @@ sub setup_vars {
     $os = `uname`;
     $os =~ chomp $os;
 
+    $jss_objdir = "$work_dir/dist/$cmdline_vars{JSS_OBJDIR_NAME}";
+    print "jss_objdir=$jss_objdir\n";
+
     if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
         print "Using the NSPR and NSS installed on the system to build JSS.\n";
+
     } else {
         # Verify existence of work area
         if(( ! -d "$work_dir/nspr" ) ||
@@ -225,31 +229,26 @@ sub setup_vars {
 
         $nss_objdir_name = `cat $nss_latest_objdir`;
         chomp($nss_objdir_name);
-        print "NSS OBJDIR_NAME=$nss_objdir_name\n";
 
         $nss_bin_dir = "$dist_dir/$nss_objdir_name/bin";
         $nss_lib_dir = "$dist_dir/$nss_objdir_name/lib";
 
         $jss_objdir_name = $nss_objdir_name;
         $jss_objdir_name =~ s/_cc//;
-        print "JSS OBJDIR_NAME=$jss_objdir_name\n";
 
         # create a JSS OBJDIR_NAME symlink to NSS OBJDIR_NAME
-        $jss_symlink = "$work_dir/dist/$jss_objdir_name";
-        if( ! -l $jss_symlink ) {
+        if( ! -l $jss_objdir ) {
             my $cmd = "cd $work_dir/dist;"
                     . "ln -s $nss_objdir_name $jss_objdir_name;"
                     . "cd $jss_dir";
             print_do($cmd);
         }
-
-        $jss_lib_dir = "$jss_symlink/lib";
     }
 
     print "nss_bin_dir=$nss_bin_dir\n";
     print "nss_lib_dir=$nss_lib_dir\n";
 
-    print "jss_symlink=$jss_symlink\n";
+    $jss_lib_dir = "$jss_objdir/lib";
     print "jss_lib_dir=$jss_lib_dir\n";
 }
 
@@ -446,7 +445,7 @@ sub test {
         # Test JSS presuming that it has already been built
 
         if(( -d $dist_dir )  &&
-           ( -l $jss_symlink )) {
+           ( -d $jss_objdir || -l $jss_objdir )) {
             my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
                     . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\";"
                     . "cd $jss_dir";
@@ -459,7 +458,7 @@ sub test {
                   "# END:  Testing JSS #\n" .
                   "#####################\n");
         } else {
-            die "JSS builds are not available at $jss_symlink.";
+            die "JSS builds are not available at $jss_objdir.";
         }
     } else {
         die "make test_jss is only available on Linux and MacOS platforms.";
