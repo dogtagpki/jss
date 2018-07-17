@@ -227,6 +227,9 @@ sub setup_vars {
         chomp($nss_objdir_name);
         print "NSS OBJDIR_NAME=$nss_objdir_name\n";
 
+        $nss_bin_dir = "$dist_dir/$nss_objdir_name/bin";
+        $nss_lib_dir = "$dist_dir/$nss_objdir_name/lib";
+
         $jss_objdir_name = $nss_objdir_name;
         $jss_objdir_name =~ s/_cc//;
         print "JSS OBJDIR_NAME=$jss_objdir_name\n";
@@ -242,6 +245,9 @@ sub setup_vars {
 
         $jss_lib_dir = "$jss_symlink/lib";
     }
+
+    print "nss_bin_dir=$nss_bin_dir\n";
+    print "nss_lib_dir=$nss_lib_dir\n";
 
     print "jss_symlink=$jss_symlink\n";
     print "jss_lib_dir=$jss_lib_dir\n";
@@ -442,7 +448,7 @@ sub test {
         if(( -d $dist_dir )  &&
            ( -l $jss_symlink )) {
             my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
-                    . "perl all.pl dist $dist_dir $jss_symlink $jss_lib_dir;"
+                    . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\";"
                     . "cd $jss_dir";
 
             print("#######################\n" .

@@ -10,13 +10,13 @@ use Cwd 'abs_path';
 use POSIX 'uname';
 
                                                                                                   
-# dist <dist_dir> <obj_dir>
+# dist <dist_dir> <NSS bin dir> <NSS lib dir> <JSS lib dir>
 # release <java release dir> <nss release dir> <nspr release dir>
 # auto   (test the current build directory)
 
 sub usage {
     print "Usage:\n";
-    print "$0 dist <dist_dir> <obj_dir>\n";
+    print "$0 dist <dist_dir> <NSS bin_dir> <NSS lib dir> <JSS lib dir>\n";
     print "$0 release <jss release dir> <nss release dir> "
         . "<nspr release dir>\n";
     print "$0 auto\n";
@@ -117,16 +117,23 @@ sub setup_vars {
 
     if( $$argv[0] eq "dist" ) {
         shift @$argv;
-        my $dist_dir = shift @$argv or usage("did not provide dist_dir");
-        my $obj_dir = shift @$argv or usage("did not provide obj_dir");
-        $jss_lib_dir = shift @$argv or usage("did not provide jss_lib_dir");
 
-        $ENV{CLASSPATH} .= "$dist_dir/xpclass.jar";
-        ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
-        $ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$obj_dir/lib";
-        $nss_lib_dir   = "$obj_dir/lib";
+        if (scalar @$argv != 4) {
+            usage("incorrect dist parameters");
+        }
+
+        my $dist_dir = shift @$argv;
+        $nss_bin_dir = shift @$argv;
+        $nss_lib_dir = shift @$argv;
+        $jss_lib_dir = shift @$argv;
+
         $jss_rel_dir   = "$dist_dir/classes/org";
         $jss_classpath = "$dist_dir/xpclass.jar";
+
+        ( -f $jss_classpath ) or die "$jss_classpath does not exist";
+
+        $ENV{CLASSPATH} .= "$jss_classpath";
+        $ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$nss_lib_dir";
 
     } elsif( $$argv[0] eq "auto" ) {
         my $dist_dir = `make dist_dir`;
@@ -136,6 +143,7 @@ sub setup_vars {
         chomp( $dist_dir = `(cd $dist_dir ; pwd)`);
         chomp( $obj_dir = `(cd $obj_dir ; pwd)`);
 
+        $nss_bin_dir   = "$obj_dir/bin";
         $nss_lib_dir   = "$obj_dir/lib";
         $jss_lib_dir   = "$obj_dir/lib";
         $jss_rel_dir   = "$dist_dir/classes/org";
@@ -159,6 +167,7 @@ sub setup_vars {
             . $pathsep . $ENV{$ld_lib_path};
         print "LD_LIBRARY_PATH is $ld_lib_path\n";
         print "$ld_lib_path=$ENV{$ld_lib_path}\n";
+        $nss_bin_dir = "$nss_rel_dir/bin";
         $nss_lib_dir = "$nss_rel_dir/lib";
         $jss_lib_dir = "$nss_rel_dir/lib";
         $jss_classpath = "$jss_rel_dir/../xpclass.jar";
@@ -436,6 +445,11 @@ if( $ENV{DEBIAN_BUILD} ) {
 
 $classpath = "$jarFiles:$jss_classpath";
 
+$pk12util = "pk12util$exe_suffix";
+if ($nss_bin_dir) {
+    $pk12util = "$nss_bin_dir/$pk12util";
+}
+
 $testname = "Test UTF-8 Converter";
 $command = "$java -cp $classpath org.mozilla.jss.tests.UTF8ConverterTest";
 run_test($testname, $command);
@@ -460,15 +474,15 @@ $command = "$java -cp $classpath org.mozilla.jss.tests.GenerateTestCert $testdir
 run_test($testname, $command);
 
 $testname = "Create PKCS11 cert to PKCS12 rsa.pfx";
-$command = "$nss_lib_dir/../bin/pk12util$exe_suffix -o $testdir/rsa.pfx -n CA_RSA -d $testdir -K $dbPwd -W $dbPwd";
+$command = "$pk12util -o $testdir/rsa.pfx -n CA_RSA -d $testdir -K $dbPwd -W $dbPwd";
 run_test($testname, $command);
 
 $testname = "Create PKCS11 cert to PKCS12 ecdsa.pfx";
-$command = "$nss_lib_dir/../bin/pk12util$exe_suffix -o $testdir/ecdsa.pfx -n CA_ECDSA -d $testdir -K $dbPwd -W $dbPwd";
+$command = "$pk12util -o $testdir/ecdsa.pfx -n CA_ECDSA -d $testdir -K $dbPwd -W $dbPwd";
 run_test($testname, $command);
 
 $testname = "Create PKCS11 cert to PKCS12 dss.pfx";
-$command = "$nss_lib_dir/../bin/pk12util$exe_suffix -o $testdir/dss.pfx -n CA_DSS -d $testdir -K $dbPwd -W $dbPwd";
+$command = "$pk12util -o $testdir/dss.pfx -n CA_DSS -d $testdir -K $dbPwd -W $dbPwd";
 run_test($testname, $command);
 
 #$testname = "Convert nss db  to Java keystore";
