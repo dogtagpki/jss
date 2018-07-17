@@ -131,6 +131,7 @@ export USE_64
 make -C coreconf
 make
 make javadoc
+make test_jss
 
 ################################################################################
 %install

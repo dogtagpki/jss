@@ -426,8 +426,9 @@ if( ! -d $testdir ) {
     my @dbfiles = 
         ("$testdir/cert8.db", "$testdir/key3.db", "$testdir/secmod.db", "$testdir/rsa.pfx");
     (grep{ -f } @dbfiles)  and die "There is already an old database in $testdir";
-    my $result = system("cp $nss_lib_dir/*nssckbi* $testdir"); $result >>= 8;
-    $result and die "Failed to copy built-ins library";
+    my $result = system("cp $nss_lib_dir/*nssckbi* $testdir");
+    $result >>= 8;
+    # $result and die "Failed to copy built-ins library";
 }
 
 print "creating pkcs11config file\n";

@@ -439,9 +439,7 @@ sub javadoc {
 }
 
 sub test {
-    if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
-        die "make test_jss is only available on upstream builds of Linux and MacOS platforms.";
-    } elsif( $os eq 'Linux' || $os eq 'Darwin' ) {
+    if( $os eq 'Linux' || $os eq 'Darwin' ) {
         # Test JSS presuming that it has already been built
 
         if(( -d $dist_dir )  &&
