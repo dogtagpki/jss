@@ -28,7 +28,9 @@ import java.security.MessageDigest;
 import java.security.Principal;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
+import java.util.List;
 import java.util.Collection;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.mozilla.jss.CryptoManager;
@@ -55,8 +57,9 @@ import org.mozilla.jss.pkcs12.SafeBag;
 import org.mozilla.jss.pkix.primitive.Attribute;
 import org.mozilla.jss.util.Password;
 
-import netscape.ldap.LDAPDN;
-import netscape.ldap.util.DN;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
+import javax.naming.InvalidNameException;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 
 public class PKCS12Util {
@@ -465,8 +468,19 @@ public class PKCS12Util {
         }
 
         if (certInfo.nickname == null) {
-            DN dn = new DN(subjectDN.getName());
-            String[] values = dn.explodeDN(true);
+            LdapName dn = new LdapName(subjectDN.getName());
+
+            ArrayList<String> values = new ArrayList<String>();
+
+            // The getRdns method returns the list in reverse order
+            // therefore, we must traverse in reverse order.
+
+            List<Rdn> rdns = dn.getRdns();
+            for (int i = rdns.size() - 1; i >= 0; i--) {
+                Rdn rdn = rdns.get(i);
+                values.add(rdn.getValue().toString());
+            }
+
             certInfo.nickname = StringUtils.join(values, " - ");
         }
 
@@ -561,7 +575,15 @@ public class PKCS12Util {
 
         for (PKCS12CertInfo certInfo : pkcs12.getCertInfos()) {
             Principal certSubjectDN = certInfo.cert.getSubjectDN();
-            if (LDAPDN.equals(certSubjectDN.toString(), subjectDN)) return certInfo;
+
+            try {
+                LdapName certSubjdn  = new LdapName(certSubjectDN.toString());
+                LdapName subjDn = new LdapName(subjectDN);
+                if(certSubjdn.equals(subjDn)) return certInfo;
+            } catch (InvalidNameException e) {
+                return null;
+            }
+
         }
 
         return null;
