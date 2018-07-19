@@ -88,6 +88,7 @@ public class ASN1Util {
      *
      * @param X509PubKeyBytes byte array of an X509PubKey
      * @param withHeader tells if the return byes should inclulde the tag and size header or not
+     * @return ECC curve byte array.
      */
     public static byte[] getECCurveBytesByX509PublicKeyBytes(byte[] X509PubKeyBytes,
         boolean withHeader)
@@ -136,6 +137,8 @@ public class ASN1Util {
      *     from OID byte array
      * the OID byte array is expected to be without the OID Tag (6) and size
      *    (together 2 bytes)
+     * @param oidBA OID byte array.
+     * @return OID description.
      */
     public static String
     getOIDdescription(byte[] oidBA) {

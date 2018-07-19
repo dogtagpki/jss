@@ -46,6 +46,7 @@ public class ANY implements ASN1Value {
      * Creates an ANY value, which is just a generic ASN.1 value.
      * @param encoded The complete BER encoding of this value, including
      *      tag, form, length, and contents.
+     * @throws InvalidBERException If there is an invalid BER encoding.
      */
     public ANY(byte[] encoded) throws InvalidBERException {
       try {
@@ -70,6 +71,8 @@ public class ANY implements ASN1Value {
     /**
      * Returns the complete encoding of header and contents, as passed into
      * the constructor or read from a BER input stream.
+     *
+     * @return Encoded header and contents.
      */
     public byte[] getEncoded() {
         return encoded;
@@ -77,6 +80,10 @@ public class ANY implements ASN1Value {
 
     /**
      * Returns the ASN.1 header from the encoding.
+     *
+     * @return ASN.1 header.
+     * @throws InvalidBERException If there is an invalid BER encoding.
+     * @throws IOException If other error occurred.
      */
     public ASN1Header getHeader() throws InvalidBERException, IOException {
         if( header == null ) {
@@ -125,6 +132,7 @@ public class ANY implements ASN1Value {
      * @param template The template to use to decode this ANY.
      * @return The output of the given template when it is fed the
      *      encoding of this ANY.
+     * @throws InvalidBERException If there is an invalid BER encoding.
      */
     public ASN1Value decodeWith(ASN1Template template)
         throws InvalidBERException
@@ -146,6 +154,8 @@ public class ANY implements ASN1Value {
      * @param template The template to use to decode this ANY.
      * @return The output of the given template when it is fed the
      *      encoding of this ANY.
+     * @throws InvalidBERException If there is an invalid BER encoding.
+     * @throws IOException If other error occurred.
      */
     public ASN1Value decodeWith(Tag implicitTag, ASN1Template template)
         throws IOException, InvalidBERException
@@ -157,6 +167,7 @@ public class ANY implements ASN1Value {
     /**
      * @param implicitTag <b>This parameter is ignored</b>, because
      * ANY values cannot have implicit tags.
+     * @throws IOException If an error occurred.
      */
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
@@ -170,6 +181,11 @@ public class ANY implements ASN1Value {
     /**
      * Extracts the contents from the ANY and encodes them with
      * the provided tag.
+     *
+     * @param alternateTag Alternate tag.
+     * @param ostream Output stream.
+     * @throws InvalidBERException If there is an invalid BER encoding.
+     * @throws IOException If other error occurred.
      */
     public void encodeWithAlternateTag(Tag alternateTag, OutputStream ostream)
         throws IOException, InvalidBERException
@@ -186,6 +202,8 @@ public class ANY implements ASN1Value {
 
     /**
      * Returns a singleton instance of a decoding template.
+     *
+     * @return Decoding template.
      */
     public static Template getTemplate() {
         return templateInstance;
