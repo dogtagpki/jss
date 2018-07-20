@@ -63,7 +63,7 @@ public class Algorithm {
     }
 
     /**
-     * Returns the object identifier for this algorithm.
+     * @return The object identifier for this algorithm.
      * @exception NoSuchAlgorithmException If no OID is registered for this
      *      algorithm.
      */
@@ -81,6 +81,7 @@ public class Algorithm {
      * If the algorithm can accept more than one type of parameter,
      *   this method returns only one of them. It is better to call
      *   <tt>getParameterClasses()</tt>.
+     * @return Parameter type.
      * @deprecated Call <tt>getParameterClasses()</tt> instead.
      */
     public Class<?> getParameterClass() {
@@ -94,17 +95,20 @@ public class Algorithm {
     /**
      * The types of parameter that this algorithm expects.  Returns
      *   <code>null</code> if this algorithm does not take any parameters.
+     * @return Parameter types.
      */
     public Class<?>[] getParameterClasses() {
         return parameterClasses.clone();
     }
 
     /**
-     * Returns <tt>true</tt> if the given Object can be used as a parameter
+     * Validates if the given Object can be used as a parameter
      * for this algorithm.
      * <p>If <tt>null</tt> is passed in, this method will return <tt>true</tt>
      *      if this algorithm takes no parameters, and <tt>false</tt>
      *      if this algorithm does take parameters.
+     * @param o Object.
+     * @return Returns <tt>true</tt> if the given Object can be used as a parameter.
      */
     public boolean isValidParameterObject(Object o) {
         if( o == null ) {

@@ -10,7 +10,7 @@ public class Tag {
 
     private long num;
     /**
-     * Returns the tag number.
+     * @return The tag number.
      */
     public long getNum() {
         return num;
@@ -18,7 +18,7 @@ public class Tag {
 
     private Class tClass;
     /**
-     * Returns the tag class.
+     * @return The tag class.
      */
     public Class getTagClass() {
         return tClass;
@@ -88,6 +88,8 @@ public class Tag {
      * Returns an instance of a context-specific tag with the given number.
      * The returned instance may be singleton.  It is usually more efficient to
      * call this method than create your own context-specific tag.
+     * @param num Number.
+     * @return Tag.
      */
     public static Tag get(long num) {
         if( num >= 0 && num < numTagInstances ) {
@@ -104,6 +106,8 @@ public class Tag {
     /**
      * Compares two tags for equality.  Tags are equal if they have
      * the same class and tag number.
+     * @param obj Tag.
+     * @return True if equal.
      */
     public boolean equals(Object obj) {
         if(obj == null) {
@@ -158,6 +162,8 @@ public class Tag {
         }
 
         /**
+         * @param i Tag encoding.
+         * @return Tag class.
          * @exception InvalidBERException If the given int does not correspond
          *      to any tag class.
          */

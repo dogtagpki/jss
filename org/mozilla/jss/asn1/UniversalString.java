@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
-import java.io.CharConversionException;
-import java.io.CharArrayWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
+import java.io.CharConversionException;
 
 /**
  * A UCS4 string.
@@ -31,6 +31,7 @@ public class UniversalString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
+     * @return Template.
      */
     public static Template getTemplate() {
         return templateInstance;
