@@ -165,7 +165,7 @@ sub setup_vars {
     } else {
         $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar";
     }
-    $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar:/usr/share/java/ldapjdk.jar:";
+    $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar";
     if( $jce_jar ) {
         $classpath .= ":$jce_jar";
     }
