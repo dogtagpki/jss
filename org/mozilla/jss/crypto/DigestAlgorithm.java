@@ -45,7 +45,7 @@ public class DigestAlgorithm extends Algorithm {
     }
 
     /**
-     * Returns the output size in bytes for this algorithm.
+     * @return The output size in bytes for this algorithm.
      */
     public int getOutputSize() {
         return outputSize;

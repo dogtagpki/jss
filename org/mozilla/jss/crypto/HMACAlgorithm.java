@@ -32,6 +32,8 @@ public class HMACAlgorithm extends DigestAlgorithm {
     /**
      * Looks up the HMAC algorithm with the given OID.
      *
+     * @param oid OID.
+     * @return HMAC algorithm.
      * @exception NoSuchAlgorithmException If no registered HMAC algorithm
      *  has the given OID.
      */

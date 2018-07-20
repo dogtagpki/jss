@@ -24,6 +24,7 @@ public class KeyPairAlgorithm extends Algorithm {
      * on the token even if it doesn't support the keypair gen algorithm.
      * We do this by doing the keypair gen on the internal module and then
      * moving the key out to the other token.
+     * @return Algorithm family.
      */
     public Algorithm
     getAlgFamily()
@@ -37,6 +38,8 @@ public class KeyPairAlgorithm extends Algorithm {
      * Looks up a key pair generation algorithm from its name. The names
      * are those specified in the JCA spec. For example, "RSA" and "DSA".
      *
+     * @param algName Algorithm name.
+     * @return Key pair generation algorithm.
      * @throws NoSuchAlgorithmException If the name of the algorithm is not
      *  recognized as a supported algorithm.
      */
