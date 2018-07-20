@@ -14,6 +14,8 @@ public class BMPString extends CharacterString implements ASN1Value {
 
     /**
      * Creates a new BMPString from an array of Java characters.
+     * @param chars Input characters.
+     * @throws CharConversionException If an error occurred.
      */
     public BMPString(char[] chars) throws CharConversionException {
         super(chars);
@@ -21,6 +23,8 @@ public class BMPString extends CharacterString implements ASN1Value {
 
     /**
      * Creates a new BMPString from a Java String.
+     * @param s Input string.
+     * @throws CharConversionException If an error occurred.
      */
     public BMPString(String s) throws CharConversionException {
         super(s);
@@ -29,6 +33,7 @@ public class BMPString extends CharacterString implements ASN1Value {
     /**
      * Returns the conversion object for converting between an encoded byte
      * array an an array of Java characters.
+     * @return Character converter.
      */
     CharConverter getCharConverter() {
         return converterInstance;
@@ -45,6 +50,7 @@ public class BMPString extends CharacterString implements ASN1Value {
     /**
      * Returns a singleton instance of BMPString.Template. This is more
      * efficient than creating a new BMPString.Template.
+     * @return BMSString template.
      */
     public static Template getTemplate() {
         return templateInstance;

@@ -28,6 +28,7 @@ public class PrintableString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
+     * @return The template.
      */
     public static Template getTemplate() {
         return templateInstance;

@@ -41,13 +41,14 @@ public class BOOLEAN implements ASN1Value {
     private boolean val;
     /**
      * Creates a <code>BOOLEAN</code> with the given value.
+     * @param val Boolean value.
      */
     public BOOLEAN(boolean val) {
         this.val = val;
     }
 
     /**
-     * Returns the boolean value of this <code>BOOLEAN</code>.
+     * @return The boolean value of this <code>BOOLEAN</code>.
      */
     public boolean toBoolean() {
         return val;

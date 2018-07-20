@@ -184,6 +184,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
     /**
      * Creates an OBJECT_IDENTIFIER from an array of longs, which constitute
      * the numbers that make up the OBJECT IDENTIFIER.
+     * @param numbers Numbers.
      */
     public OBJECT_IDENTIFIER( long[] numbers ) {
         checkLongArray(numbers);
@@ -215,6 +216,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * allow that format, for example:
      * "<code>{3 2 456 53 23 64}</code>".
      *
+     * @param dottedOID OID string.
      * @exception NumberFormatException If the given string cannot be
      *      parsed into an OID.
      */
@@ -263,6 +265,8 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * { 1 3 5 6 },
      * then calling <code>oid.subBranch(4)</code> would return a new
      * OBJECT_IDENTIFIER with the value { 1 3 5 6 4 }.
+     * @param num Number.
+     * @return New sub-branch.
      */
     public OBJECT_IDENTIFIER subBranch(long num) {
         long[] nums = new long[ numbers.length + 1];
@@ -278,6 +282,8 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * then calling <code>oid.subBranch(new long[]{ 4, 3})</code>
      * would return a new
      * OBJECT_IDENTIFIER with the value { 1 3 5 6 4 3}.
+     * @param newNums New numbers.
+     * @return New sub-branch.
      */
     public OBJECT_IDENTIFIER subBranch(long[] newNums) {
         long[] nums = new long[ numbers.length + newNums.length];

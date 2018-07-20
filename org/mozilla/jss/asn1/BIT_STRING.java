@@ -80,6 +80,7 @@ public class BIT_STRING implements ASN1Value {
      * zeroes be removed when the bitstring is used to hold flags, but
      * not when it is used to hold binary data (such as a public key).
      * The default is <tt>false</tt>.
+     * @return True if trailing zeroes are to be removed.
      */
     public boolean getRemoveTrailingZeroes() {
         return this.removeTrailingZeroes;
@@ -92,6 +93,7 @@ public class BIT_STRING implements ASN1Value {
      * not when it is used to hold binary data (such as a public key).
      * The default is <tt>false</tt>. If this bit string is used to hold
      * flags, you should set this to <tt>true</tt>.
+     * @param removeTrailingZeroes True if trailing zeroes are to be removed.
      */
     public void setRemoveTrailingZeroes(boolean removeTrailingZeroes) {
         this.removeTrailingZeroes = removeTrailingZeroes;
@@ -102,6 +104,7 @@ public class BIT_STRING implements ASN1Value {
      *      at the end. The array may be empty (but not null), in which case
      *      <code>padCount</code> must be zero. The array is referenced,
      *      not cloned.
+     * @return BIT STRING as byte array.
      */
     public byte[] getBits() {
         return bits;
@@ -112,6 +115,7 @@ public class BIT_STRING implements ASN1Value {
      * will not accurately reflect the number of bits in the BIT STRING,
      * because the size of a BitSet is always rounded up to the next multiple
      * of 64. The extra bits will be set to 0.
+     * @return BIT STRING as BitSet.
      */
     public BitSet toBitSet() {
         BitSet bs = new BitSet();
@@ -130,6 +134,7 @@ public class BIT_STRING implements ASN1Value {
      * Copies this BIT STRING into a boolean array.  Each element of the array
      * represents one bit with <code>true</code> for 1 and <code>false</code>
      * for 0.
+     * @return BIT STRING as boolean array.
      */
     public boolean[] toBooleanArray() {
         boolean[] array = new boolean[(bits.length*8) - padCount];
@@ -146,6 +151,7 @@ public class BIT_STRING implements ASN1Value {
     /**
      * Returns the number of padding bits at the end of the array.
      *      Must be in the range <code>[0,7]</code>.
+     * @return Number of padding.
      */
     public int getPadCount() {
         return padCount;

@@ -31,6 +31,8 @@ public class EXPLICIT implements ASN1Value {
      * <pre>
      *  EXPLICIT myValue = new EXPLICIT( new Tag(3), new INTEGER(5) );
      * </pre>
+     * @param tag Tag.
+     * @param content Content.
      */
     public EXPLICIT( Tag tag, ASN1Value content ) {
         Assert._assert(tag!=null && content!=null);
@@ -39,7 +41,7 @@ public class EXPLICIT implements ASN1Value {
     }
 
     /**
-     * Returns the ASN1Value that is wrapped by this EXPLICIT tag.
+     * @return the ASN1Value that is wrapped by this EXPLICIT tag.
      */
     public ASN1Value getContent() {
         return content;

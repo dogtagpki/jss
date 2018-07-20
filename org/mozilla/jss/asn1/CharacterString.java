@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.asn1;
 
+import java.io.ByteArrayOutputStream;
 import java.io.CharConversionException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 
 /**
  * An abstract base class for all character string types in ASN.1.
@@ -23,6 +23,7 @@ public abstract class CharacterString implements ASN1Value {
 
     /**
      * Converts this ASN.1 character string to a Java String.
+     * @return ASN.1 character string as String.
      */
     public String toString() {
         return new String(chars);
@@ -30,6 +31,7 @@ public abstract class CharacterString implements ASN1Value {
 
     /**
      * Converts this ASN.1 character string to an array of Java characters.
+     * @return ASN.1 character string as character array.
      */
     public char[] toCharArray() {
         return chars;
@@ -78,6 +80,7 @@ public abstract static class Template implements ASN1Template {
 
     /**
      * Must be overridden to return the tag for the subclass.
+     * @return Tag.
      */
     protected abstract Tag getTag();
 
@@ -86,12 +89,16 @@ public abstract static class Template implements ASN1Template {
     /**
      * Must be overridden to return the correct character converter
      * for the subclass.
+     * @return Character converter.
      */
     protected abstract CharConverter getCharConverter();
 
     /**
      * Must be overridden to create an instance of the subclass given
      * a char array.
+     * @param chars Input characters.
+     * @return Character string.
+     * @throws CharConversionException If an error occurred.
      */
     protected abstract CharacterString generateInstance(char[] chars)
         throws CharConversionException;
@@ -99,6 +106,7 @@ public abstract static class Template implements ASN1Template {
     /**
      * Must be overridden to provide the name of the subclass, for including
      * into error messages.
+     * @return Name of the subclass.
      */
     protected abstract String typeName();
 
