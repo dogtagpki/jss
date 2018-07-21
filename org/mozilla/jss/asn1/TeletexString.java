@@ -29,6 +29,7 @@ public class TeletexString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
+     * @return Template.
      */
     public static Template getTemplate() {
         return templateInstance;

@@ -4,7 +4,9 @@
 
 package org.mozilla.jss.crypto;
 
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidParameterException;
+import java.security.KeyPair;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
@@ -40,7 +42,7 @@ public abstract class KeyPairGeneratorSpi {
      * is desired set the value for that usage. If it is not set, let NSS
      * behave in it's default fashion.  If a behavior is desired, also set
      * that behavior in the mask as well as the flags.
-     * 
+     *
      */
     public final static class Usage {
         private Usage() { }
@@ -49,7 +51,7 @@ public abstract class KeyPairGeneratorSpi {
 
         public int getVal() { return val; }
 
-        // these enums must match the 
+        // these enums must match the
         // opFlagForUsage listed in PK11KeyPairGenerator.java
         public static final Usage ENCRYPT = new Usage(0);
         public static final Usage DECRYPT = new Usage(1);
@@ -64,8 +66,8 @@ public abstract class KeyPairGeneratorSpi {
 
     /**
      * setKeyPairUsages
-     * @param usages
-     * @param usages_mask
+     * @param usages Usages.
+     * @param usages_mask Usages mask.
      */
     public abstract void setKeyPairUsages(KeyPairGeneratorSpi.Usage[] usages,
                                           KeyPairGeneratorSpi.Usage[] usages_mask);

@@ -108,6 +108,8 @@ public final class InitializationValues {
     /**
      * Returns the Manufacturer ID of the internal PKCS #11 module.
      * <p>The default is <code>"mozilla.org                     "</code>.
+     *
+     * @return Manufacturer ID.
      */
     public String getManufacturerID() { return manufacturerID; }
 
@@ -115,6 +117,8 @@ public final class InitializationValues {
      * Sets the Manufacturer ID of the internal PKCS #11 module.
      * This value must be exactly <code>MANUFACTURER_LENGTH</code>
      * characters long.
+     *
+     * @param s Manufacturer ID.
      * @exception InvalidLengthException If <code>s.length()</code> is not
      *      exactly <code>MANUFACTURER_LENGTH</code>.
      */
@@ -133,6 +137,8 @@ public final class InitializationValues {
     /**
      * Returns the description of the internal PKCS #11 module.
      * <p>The default is <code>"Internal Crypto Services         "</code>.
+     *
+     * @return Library description.
      */
     public String getLibraryDescription() { return libraryDescription; }
 
@@ -140,6 +146,8 @@ public final class InitializationValues {
      * Sets the description of the internal PKCS #11 module.
      * This value must be exactly <code>LIBRARY_LENGTH</code>
      *  characters long.
+     *
+     * @param s Library description.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>LIBRARY_LENGTH</code>.
      */
@@ -160,6 +168,8 @@ public final class InitializationValues {
     /**
      * Returns the description of the internal PKCS #11 token.
      * <p>The default is <code>"Internal Crypto Services Token   "</code>.
+     *
+     * @return Description of internal PKCS #11 token.
      */
     public String getInternalTokenDescription() {
         return internalTokenDescription;
@@ -168,6 +178,8 @@ public final class InitializationValues {
     /**
      * Sets the description of the internal PKCS #11 token.
      * This value must be exactly <code>TOKEN_LENGTH</code> characters long.
+     *
+     * @param s Description of internal PKCS #11 token.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>TOKEN_LENGTH</code>.
      */
@@ -188,6 +200,8 @@ public final class InitializationValues {
     /**
      * Returns the description of the internal PKCS #11 key storage token.
      * <p>The default is <code>"Internal Key Storage Token       "</code>.
+     *
+     * @return Description of internal PKCS #11 key storage token.
      */
     public String getInternalKeyStorageTokenDescription() {
         return internalKeyStorageTokenDescription;
@@ -196,6 +210,8 @@ public final class InitializationValues {
     /**
      * Sets the description of the internal PKCS #11 key storage token.
      * This value must be exactly <code>TOKEN_LENGTH</code> characters long.
+     *
+     * @param s Description of internal PKCS #11 key storage token.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>TOKEN_LENGTH</code>.
      */
@@ -216,6 +232,8 @@ public final class InitializationValues {
     /**
      * Returns the description of the internal PKCS #11 slot.
      * <p>The default is <code>"NSS Internal Cryptographic Services                              "</code>.
+     *
+     * @return Description of internal PKCS #11 slot.
      */
     public String getInternalSlotDescription() {
         return internalSlotDescription;
@@ -225,6 +243,8 @@ public final class InitializationValues {
      * Sets the description of the internal PKCS #11 slot.
      * This value must be exactly <code>SLOT_LENGTH</code> characters
      * long.
+     *
+     * @param s Description of internal PKCS #11 slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>SLOT_LENGTH</code>.
      */
@@ -245,7 +265,8 @@ public final class InitializationValues {
     /**
      * Returns the description of the internal PKCS #11 key storage slot.
      * <p>The default is <code>"NSS Internal Private Key and Certificate Storage                 "</code>.
-
+     *
+     * @return Description of internal PKCS #11 key storage slot.
      */
     public String getInternalKeyStorageSlotDescription() {
         return internalKeyStorageSlotDescription;
@@ -255,6 +276,8 @@ public final class InitializationValues {
      * Sets the description of the internal PKCS #11 key storage slot.
      * This value must be exactly <code>SLOT_LENGTH</code> characters
      * long.
+     *
+     * @param s Description of internal PKCS #11 key storage slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>SLOT_LENGTH</code>.
      */
@@ -276,6 +299,8 @@ public final class InitializationValues {
      * Returns the description of the internal PKCS #11 FIPS slot.
      * <p>The default is
      * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
+     *
+     * @return Description of internal PKCS #11 FIPS slot.
      */
     public String getFIPSSlotDescription() {
         return FIPSSlotDescription;
@@ -285,6 +310,8 @@ public final class InitializationValues {
      * Sets the description of the internal PKCS #11 FIPS slot.
      * This value must be exactly <code>SLOT_LENGTH</code> characters
      * long.
+     *
+     * @param s Description of internal PKCS #11 FIPS slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>SLOT_LENGTH</code>.
      */
@@ -307,6 +334,8 @@ public final class InitializationValues {
      * Key Storage slot.
      * <p>The default is
      * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
+     *
+     * @return Description of internal PKCS #11 FIPS key storage slot.
      */
     public String getFIPSKeyStorageSlotDescription() {
         return FIPSKeyStorageSlotDescription;
@@ -316,6 +345,8 @@ public final class InitializationValues {
      * Sets the description of the internal PKCS #11 FIPS Key Storage slot.
      * This value must be exactly <code>SLOT_LENGTH</code> characters
      * long.
+     *
+     * @param s Description of internal PKCS #11 FIPS key storage slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
      *      not exactly <code>SLOT_LENGTH</code>.
      */

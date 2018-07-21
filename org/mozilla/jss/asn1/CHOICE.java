@@ -23,6 +23,8 @@ public class CHOICE implements ASN1Value {
 
     /**
      * Create a CHOICE whose chosen element has an implicit tag.
+     * @param implicitTag Implicit tag.
+     * @param val The value.
      */
     public CHOICE(Tag implicitTag, ASN1Value val) {
         tag = implicitTag;
@@ -31,6 +33,7 @@ public class CHOICE implements ASN1Value {
 
     /**
      * Create a CHOICE whose chosen element has no implicit tag.
+     * @param val The value.
      */
     public CHOICE(ASN1Value val) {
         this.tag = val.getTag();
@@ -46,7 +49,7 @@ public class CHOICE implements ASN1Value {
     }
 
     /**
-     * Returns the chosen value.
+     * @return The chosen value.
      */
     public ASN1Value getValue() {
         return val;
@@ -96,6 +99,7 @@ public static class Template implements ASN1Template {
 
     /**
      * Adds a new sub-template to this CHOICE template with no implicit tag.
+     * @param template Sub-template.
      */
     public void addElement( ASN1Template template ) {
         templates.addElement( new Element( template ) );
@@ -103,20 +107,23 @@ public static class Template implements ASN1Template {
 
     /**
      * Adds a new sub-template to this CHOICE template with an implicit tag.
+     * @param implicitTag Implicit tag.
+     * @param template Sub-template.
      */
     public void addElement( Tag implicitTag, ASN1Template template) {
         templates.addElement( new Element( implicitTag, template) );
     }
 
     /**
-     * Returns the number of elements in this CHOICE template.
+     * @return The number of elements in this CHOICE template.
      */
     public int size() {
         return templates.size();
     }
 
     /**
-     * Retrieves the element at the specified index.
+     * @param index Element index.
+     * @return The element at the specified index.
      */
     public ASN1Template elementAt(int index) {
         return templates.elementAt(index).getTemplate();
@@ -125,6 +132,8 @@ public static class Template implements ASN1Template {
     /**
      * Retrieves the implicit tag of the element at the specified index.
      * Returns null if there is no implicit tag for this element.
+     * @param index Element index.
+     * @return The implicit tag.
      */
     public Tag implicitTagAt(int index) {
         return templates.elementAt(index).getImplicitTag();
@@ -139,6 +148,7 @@ public static class Template implements ASN1Template {
 
     /**
      * Removes the element at the specified index.
+     * @param index Element index.
      */
     public void removeElementAt(int index) {
         templates.removeElementAt(index);
@@ -146,7 +156,8 @@ public static class Template implements ASN1Template {
 
     /**
      * Determines whether the given tag will satisfy this template.
-     * For a CHOICE, this is true if the tag satisfies any sub-template.
+     * @param t The tag.
+     * @return True if the tag satisfies any sub-template.
      */
     public boolean tagMatch(Tag t) {
         int size = size();

@@ -31,6 +31,7 @@ public class UTF8String extends CharacterString implements ASN1Value {
     /**
      * Returns a singleton instance of UTF8String.Template. This is more
      * efficient than creating a new UTF8String.Template.
+     * @return Template.
      */
     public static Template getTemplate() {
         return templateInstance;

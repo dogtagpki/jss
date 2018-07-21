@@ -18,7 +18,7 @@ public class IVParameterSpec implements AlgorithmParameterSpec {
     }
 
     /**
-     * Returns a reference to an internal copy of the initialization vector.
+     * @return Reference to an internal copy of the initialization vector.
      */
     public byte[] getIV() {
         return iv;

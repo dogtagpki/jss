@@ -4,7 +4,8 @@
 
 package org.mozilla.jss.crypto;
 
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidParameterException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
@@ -39,7 +40,7 @@ public class KeyPairGenerator {
     /**
      * Generates a new key pair.
      *
-     * @return A new key pair. The keys reside on the CryptoToken that 
+     * @return A new key pair. The keys reside on the CryptoToken that
      *      provided this <code>KeyPairGenerator</code>.
      * @exception TokenException If an error occurs on the CryptoToken
      *      in the process of generating the key pair.
@@ -114,7 +115,7 @@ public class KeyPairGenerator {
 	}
 
     /**
-     * @return true if the keypair generation will take place on the 
+     * @return true if the keypair generation will take place on the
      *      internal token rather than the current token.  This will
      *      happen if the token does not support keypair generation
      *      but does support this algorithm and is writable.  In this
@@ -130,7 +131,7 @@ public class KeyPairGenerator {
      * Temporary keys are not written permanently to the token.  They
      * are destroyed by the garbage collector.  If this method is not
      * called, the default is permanent keypairs.
-     * @param temp
+     * @param temp True to generate temporary keypairs.
      */
     public void temporaryPairs(boolean temp) {
         engine.temporaryPairs(temp);
@@ -144,7 +145,7 @@ public class KeyPairGenerator {
      * compatibility.  The default is sensitive keypairs if the
      * temporaryPairs mode is false, or insensitive keypairs if the
      * temporaryPairs mode is true.
-     * @param sensitive
+     * @param sensitive To generate sensitive keypairs.
      */
     public void sensitivePairs(boolean sensitive) {
         engine.sensitivePairs(sensitive);
@@ -155,7 +156,7 @@ public class KeyPairGenerator {
      * keypairs.  Extractable keys can be extracted from the token after
      * wrapping.  If this method is not called, the default is token
      * dependent.
-     * @param extractable 
+     * @param extractable True to generate extractable keypairs.
      */
     public void extractablePairs(boolean extractable) {
         engine.extractablePairs(extractable);

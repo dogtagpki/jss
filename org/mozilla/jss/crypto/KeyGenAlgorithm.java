@@ -69,7 +69,8 @@ public class KeyGenAlgorithm extends Algorithm {
     private KeyStrengthValidator keyStrengthValidator;
 
     /**
-     * Returns <code>true</code> if the given strength is valid for this
+     * @param strength Key strength.
+     * @return <code>true</code> if the given strength is valid for this
      * key generation algorithm. Note that PBE algorithms require
      * PBEParameterSpecs rather than strengths.  It is the responsibility
      * of the caller to verify this.

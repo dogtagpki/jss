@@ -17,6 +17,7 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
 
     /**
      * Creates a <code>GeneralizedTime</code> from a Date.
+     * @param date Input date.
      */
     public GeneralizedTime(Date date) {
         super(date);

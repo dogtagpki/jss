@@ -4,10 +4,10 @@
 
 package org.mozilla.jss.crypto;
 
-import java.security.spec.AlgorithmParameterSpec;
+import java.io.CharConversionException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.io.CharConversionException;
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * Generates symmetric keys for encryption and decryption.
@@ -16,6 +16,7 @@ public interface KeyGenerator {
 
     /**
      * @param strength Key size in bits. Must be evenly divisible by 8.
+     * @throws InvalidAlgorithmParameterException If parameter is invalid.
      */
     public void initialize(int strength)
         throws InvalidAlgorithmParameterException;
@@ -38,6 +39,7 @@ public interface KeyGenerator {
      * Temporary keys are not written permanently to the token.  They
      * are destroyed by the garbage collector.  If this method is not
      * called, the default is temporary keys.
+     * @param temp True to generate temporary key.
      */
     public void temporaryKeys(boolean temp);
 
@@ -46,11 +48,16 @@ public interface KeyGenerator {
      * Certain attributes of a sensitive key cannot be revealed in
      * plaintext outside the token.  If this method is not called, the
      * default is token dependent.
+     * @param sensitive True to generate sensitive.
      */
     public void sensitiveKeys(boolean sensitive);
 
     /**
      * Generates a symmetric key.
+     * @return Symmetric key.
+     * @throws IllegalStateException If key generation failed.
+     * @throws TokenException If an error occurred in the token.
+     * @throws CharConversionException If an encoding error occurred.
      */
     public SymmetricKey generate()
         throws IllegalStateException, TokenException, CharConversionException;
@@ -68,6 +75,7 @@ public interface KeyGenerator {
      *      an instance of <code>PBEKeyGenParams</code>.
      * @exception TokenException If an error occurs on the CryptoToken while
      *      generating the IV.
+     * @exception CharConversionException If an encoding error occurred.
      */
     public byte[] generatePBE_IV()
         throws IllegalStateException, TokenException, CharConversionException;
@@ -75,10 +83,13 @@ public interface KeyGenerator {
     /**
      * Allows a SymmetricKey to be cloned on a different token.
      *
+     * @param key Symmetric key.
+     * @return Cloned symmetric key.
      * @exception SymmetricKey.NotExtractableException If the key material
      *      cannot be extracted from the current token.
      * @exception InvalidKeyException If the owning token cannot process
      *      the key to be cloned.
+     * @exception TokenException If an error occurred in the token.
      */
     public SymmetricKey clone(SymmetricKey key)
         throws SymmetricKey.NotExtractableException,
@@ -98,6 +109,9 @@ public interface KeyGenerator {
          * Converts a password of Java characters into a password of
          * bytes, using some encoding scheme.  The input char array must
          * not be modified.
+         * @param chars Password characters.
+         * @return Password as byte array.
+         * @throws CharConversionException If an error occurred.
          */
         public byte[] convert(char[] chars) throws CharConversionException;
     }
@@ -105,6 +119,7 @@ public interface KeyGenerator {
     /**
      * Sets the character to byte converter for passwords. The default
      * conversion is UTF8 with no null termination.
+     * @param charToByte Character-to-byte converter.
      */
     public void setCharToByteConverter(CharToByteConverter charToByte);
 

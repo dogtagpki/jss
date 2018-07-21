@@ -16,6 +16,7 @@ public abstract class JSSMessageDigest {
      * Initializes an HMAC digest with the given symmetric key. This also
      *  has the effect of resetting the digest.
      *
+     * @param key Symmetric key.
      * @exception DigestException If this algorithm is not an HMAC algorithm.
      * @exception InvalidKeyException If the given key is not valid.
      */
@@ -24,6 +25,8 @@ public abstract class JSSMessageDigest {
 
     /**
      * Updates the digest with a single byte of input.
+     * @param input Input byte.
+     * @throws DigestException If an error occurred.
      */
     public void update(byte input) throws DigestException {
         byte[] in = { input };
@@ -53,7 +56,7 @@ public abstract class JSSMessageDigest {
 
     /**
      * Completes digestion.
-     * 
+     *
      * @return The, ahem, output of the digest operation.
      * @exception DigestException If an error occurs while digesting.
      */
@@ -94,11 +97,12 @@ public abstract class JSSMessageDigest {
      * Resets this digest for further use.  This clears all input and
      * output streams. If this is an HMAC digest, the HMAC key is not
      * cleared.
+     * @throws DigestException If an error occurred.
      */
     public abstract void reset() throws DigestException;
 
     /**
-     * Returns the algorithm that this digest uses.
+     * @return The algorithm that this digest uses.
      */
     public abstract DigestAlgorithm getAlgorithm();
 

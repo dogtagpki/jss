@@ -40,6 +40,7 @@ public class SET implements ASN1Value {
 
     /**
      * Adds an element to this SET.
+     * @param v Element.
      */
     public void addElement( ASN1Value v ) {
         addElement( new Element(v) );
@@ -58,6 +59,8 @@ public class SET implements ASN1Value {
      * <pre>
      * myTypeInstance.addElement( new Tag(0), new INTEGER(45) );
      * </pre>
+     * @param implicitTag Implicit tag.
+     * @param v Element.
      */
     public void addElement( Tag implicitTag, ASN1Value v ) {
         addElement( new Element(implicitTag, v) );
@@ -65,6 +68,8 @@ public class SET implements ASN1Value {
 
     /**
      * Inserts an element at the given index.
+     * @param v Element.
+     * @param index Index.
      */
     public void insertElementAt( ASN1Value v, int index ) {
         insertElementAt( new Element(v), index );
@@ -72,6 +77,9 @@ public class SET implements ASN1Value {
 
     /**
      * Inserts an element with the given implicit tag at the given index.
+     * @param implicitTag Implicit tag.
+     * @param v Element.
+     * @param index Index.
      */
     public void insertElementAt( Tag implicitTag, ASN1Value v, int index ) {
         insertElementAt( new Element(implicitTag, v), index );
@@ -79,6 +87,8 @@ public class SET implements ASN1Value {
 
     /**
      * Returns the element at the given index in the SET.
+     * @param index Index.
+     * @return Element.
      */
     public ASN1Value elementAt( int index ) {
         return elements.elementAt(index).getValue();
@@ -88,6 +98,8 @@ public class SET implements ASN1Value {
      * Returns the tag of the element at the given index. If the element
      * has an implicit tag, that is returned.  Otherwise, the tag of the
      * underlying type is returned.
+     * @param index Index.
+     * @return Tag.
      */
      public Tag tagAt( int index ) {
         Tag implicit = elements.elementAt(index).getImplicitTag();
@@ -101,6 +113,8 @@ public class SET implements ASN1Value {
     /**
      * Returns the element with the given Tag, or null if no element exists
      * with the given tag.
+     * @param tag Tag.
+     * @return Element.
      */
     public ASN1Value elementWithTag( Tag tag ) {
         // hmmm...linear search for now, should use hashtable later
@@ -116,7 +130,7 @@ public class SET implements ASN1Value {
     }
 
     /**
-     * Returns the number of elements in this SET.
+     * @return The number of elements in this SET.
      */
     public int size() {
         return elements.size();
@@ -131,6 +145,7 @@ public class SET implements ASN1Value {
 
     /**
      * Removes the element from the specified index.
+     * @param index Index.
      */
     public void removeElementAt(int index) {
         elements.removeElementAt(index);
@@ -138,6 +153,7 @@ public class SET implements ASN1Value {
 
     /**
      * Writes the DER encoding to the given output stream.
+     * @param ostream Output stream.
      */
     public void encode(OutputStream ostream)
         throws IOException
@@ -149,6 +165,8 @@ public class SET implements ASN1Value {
      * Writes the DER encoding to the given output stream,
      * using the given implicit tag. To satisfy DER encoding rules,
      * the elements will be re-ordered either by tag or lexicographically.
+     * @param implicitTag Implicit tag.
+     * @param ostream Output stream.
      */
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
@@ -201,6 +219,9 @@ public class SET implements ASN1Value {
     /**
      * Encodes this SET without re-ordering it.  This may violate
      * DER, but it is within BER.
+     * @param implicitTag Implicit tag.
+     * @param ostream Output stream.
+     * @throws IOException If an error occurred.
      */
     public void BERencode(Tag implicitTag, OutputStream ostream)
         throws IOException
@@ -370,6 +391,7 @@ public static class Template implements ASN1Template {
      * <pre>
      *  mySet.addElement( new SubType.Template() );
      * </pre>
+     * @param t Sub-template.
      */
     public void addElement( ASN1Template t ) {
         addElement( new Element(TAG, t, false) );
@@ -377,6 +399,8 @@ public static class Template implements ASN1Template {
 
     /**
      * Inserts the template at the given index.
+     * @param t Sub-template.
+     * @param index Index.
      */
     public void insertElementAt( ASN1Template t, int index )
     {
@@ -395,6 +419,8 @@ public static class Template implements ASN1Template {
      * <pre>
      *  mySet.addElement( new Tag(0), new SubType.Template() );
      * </pre>
+     * @param implicit Implicit tag.
+     * @param t Sub-template.
      */
     public void addElement( Tag implicit, ASN1Template t ) {
         addElement( new Element(implicit, t, false) );
@@ -402,6 +428,9 @@ public static class Template implements ASN1Template {
 
     /**
      * Inserts the template with the given implicit tag at the given index.
+     * @param implicit Implicit tag.
+     * @param t Sub-template.
+     * @param index Index.
      */
     public void insertElementAt( Tag implicit, ASN1Template t,
         int index )
@@ -421,6 +450,7 @@ public static class Template implements ASN1Template {
      * <pre>
      *  mySet.addOptionalElement( new SubType.Template() );
      * </pre>
+     * @param t Optional sub-template.
      */
     public void addOptionalElement( ASN1Template t ) {
         addElement( new Element(TAG, t, true) );
@@ -428,6 +458,8 @@ public static class Template implements ASN1Template {
 
     /**
      * Inserts the optional template at the given index.
+     * @param t Optional sub-template.
+     * @param index Index.
      */
     public void insertOptionalElementAt( ASN1Template t, int index )
     {
@@ -446,6 +478,8 @@ public static class Template implements ASN1Template {
      * <pre>
      *  mySet.addOptionalElement( new Tag(0), new SubType.Template() );
      * </pre>
+     * @param implicit Implicit tag.
+     * @param t Optional sub-template.
      */
     public void addOptionalElement( Tag implicit, ASN1Template t ) {
         addElement( new Element(implicit, t, true) );
@@ -454,6 +488,9 @@ public static class Template implements ASN1Template {
     /**
      * Inserts the optional template with the given default
      * value at the given index.
+     * @param implicit Implicit tag.
+     * @param t Optional sub-template.
+     * @param index Index.
      */
     public void insertOptionalElementAt( Tag implicit, ASN1Template t,
         int index )
@@ -474,6 +511,8 @@ public static class Template implements ASN1Template {
      * <pre>
      *  mySet.addElement( new SubType.Template(), new INTEGER(5) );
      * </pre>
+     * @param t Sub-template.
+     * @param def Default value.
      */
     public void addElement( ASN1Template t, ASN1Value def ) {
         addElement( new Element(TAG, t, def) );
@@ -482,6 +521,9 @@ public static class Template implements ASN1Template {
     /**
      * Inserts the template with the given default
      * value at the given index.
+     * @param t Sub-template.
+     * @param def Default value.
+     * @param index Index.
      */
     public void insertElementAt( ASN1Template t, ASN1Value def, int index )
     {
@@ -500,6 +542,9 @@ public static class Template implements ASN1Template {
      * <pre>
      *  mySet.addElement( new Tag(0), new SubType.Template(), new INTEGER(5) );
      * </pre>
+     * @param implicit Implicit tag.
+     * @param t Sub-template.
+     * @param def Default value.
      */
     public void addElement( Tag implicit, ASN1Template t, ASN1Value def ) {
         addElement( new Element(implicit, t, def) );
@@ -508,6 +553,10 @@ public static class Template implements ASN1Template {
     /**
      * Inserts the template with the given implicit tag and given default
      * value at the given index.
+     * @param implicit Implicit tag.
+     * @param t Sub-template.
+     * @param def Default value.
+     * @param index Index.
      */
     public void insertElementAt( Tag implicit, ASN1Template t, ASN1Value def,
         int index )
@@ -518,6 +567,8 @@ public static class Template implements ASN1Template {
     /**
      * Returns the implicit tag of the item stored at the given index.
      * May be NULL if no implicit tag was specified.
+     * @param index Index.
+     * @return Implicit tag.
      */
     public Tag implicitTagAt(int index) {
         return elements.elementAt(index).getImplicitTag();
@@ -525,6 +576,8 @@ public static class Template implements ASN1Template {
 
     /**
      * Returns the sub-template stored at the given index.
+     * @param index Index.
+     * @return Sub-template.
      */
     public ASN1Template templateAt(int index) {
         return elements.elementAt(index).getTemplate();
@@ -533,6 +586,8 @@ public static class Template implements ASN1Template {
     /**
      * Returns <code>true</code> if the sub-template at the given index
      * is optional.
+     * @param index Index.
+     * @return True if sub-template is optional.
      */
     public boolean isOptionalAt(int index) {
         return elements.elementAt(index).isOptional();
@@ -545,13 +600,15 @@ public static class Template implements ASN1Template {
     /**
      * Returns the default value for the sub-template at the given index.
      * May return NULL if no default value was specified.
+     * @param index Index.
+     * @return Default value.
      */
     public ASN1Value defaultAt(int index) {
         return elements.elementAt(index).getDefault();
     }
 
     /**
-     * Returns the number of elements in the SET.
+     * @return The number of elements in the SET.
      */
     public int size() {
         return elements.size();
@@ -571,6 +628,8 @@ public static class Template implements ASN1Template {
 
     /**
      * Determines whether the given tag satisfies this template.
+     * @param tag Tag.
+     * @return True if tag satisfies this template.
      */
     public boolean tagMatch(Tag tag) {
         return( tag.equals(SET.TAG) );
@@ -578,6 +637,8 @@ public static class Template implements ASN1Template {
 
     /**
      * Decodes the input stream into a SET value.
+     * @param istream Input stream.
+     * @return Decoded SET value.
      */
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
@@ -588,6 +649,9 @@ public static class Template implements ASN1Template {
     /**
      * Decodes the input stream into a SET value with the given implicit
      *  tag.
+     * @param tag Implicit tag.
+     * @param istream Input stream.
+     * @return Decoded SET value.
      */
     public ASN1Value decode(Tag tag, InputStream istream)
         throws IOException, InvalidBERException
@@ -704,6 +768,7 @@ public static class Template implements ASN1Template {
      * or -1 if not found.
      * lame linear search - but we're dealing with small numbers of elements,
      * so it's probably not worth it to use a hashtable
+     * @param tag Tag.
      */
     private int findElementByTag(Tag tag) {
         int size = elements.size();
@@ -762,6 +827,8 @@ public static class Template implements ASN1Template {
 
         /**
          * Determines whether the given tag satisfies this SET element.
+         * @param tag Tag.
+         * @return True if tag satisfies SET.
          */
         public boolean tagMatch(Tag tag) {
             if( implicitTag != null ) {
@@ -773,7 +840,7 @@ public static class Template implements ASN1Template {
 
         private ASN1Template type;
         /**
-         * Returns the template for this element.
+         * @return The template for this element.
          */
         public ASN1Template getTemplate() {
             return type;
@@ -783,6 +850,7 @@ public static class Template implements ASN1Template {
         /**
          * Returns the default value for this element, if one exists.
          * Otherwise, returns null.
+         * @return Default value.
          */
         public ASN1Value getDefault() {
             return defaultVal;
@@ -812,6 +880,7 @@ public static class OF_Template implements ASN1Template {
      * SET.OF_Template mySetTemplate = new SET.OF_Template( new
      *                                          INTEGER.Template() );
      * </pre>
+     * @param type Type.
      */
     public OF_Template(ASN1Template type) {
         template = new Template();

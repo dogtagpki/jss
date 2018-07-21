@@ -155,6 +155,7 @@ public final class CryptoManager implements TokenSupplier
      * loaded cryptographic modules for the token.
      *
      * @param name The name of the token.
+     * @return The token.
      * @exception org.mozilla.jss.NoSuchTokenException If no token
      *  is found with the given name.
      */
@@ -180,6 +181,8 @@ public final class CryptoManager implements TokenSupplier
     /**
      * Retrieves all tokens that support the given algorithm.
      *
+     * @param alg Algorithm.
+     * @return Enumeration of tokens.
      */
     public synchronized Enumeration<CryptoToken> getTokensSupportingAlgorithm(Algorithm alg)
     {
@@ -333,6 +336,7 @@ public final class CryptoManager implements TokenSupplier
      * @exception NotInitializedException If
      *      <code>initialize(InitializationValues</code> has not yet been
      *      called.
+     * @return CryptoManager instance.
      */
     public synchronized static CryptoManager getInstance()
         throws NotInitializedException
@@ -380,6 +384,8 @@ public final class CryptoManager implements TokenSupplier
      * not thread-safe to change this.
      * <p>The callback may be NULL, in which case password callbacks will
      * fail gracefully.
+     *
+     * @param pwcb Password callback.
      */
     public synchronized void setPasswordCallback(PasswordCallback pwcb) {
         passwordCallback = pwcb;
@@ -389,6 +395,8 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * Returns the currently registered password callback.
+     *
+     * @return Password callback.
      */
     public synchronized PasswordCallback getPasswordCallback() {
         return passwordCallback;
@@ -414,6 +422,8 @@ public final class CryptoManager implements TokenSupplier
      *  the key database, or it was currupted.
      * @exception org.mozilla.jss.CertDatabaseException Unable
      *  to open the certificate database, or it was currupted.
+     * @exception AlreadyInitializedException If the security subsystem is already initialized.
+     * @exception GeneralSecurityException If other security error occurred.
      **/
     public static synchronized void initialize( String configDir )
         throws  KeyDatabaseException,
@@ -437,6 +447,8 @@ public final class CryptoManager implements TokenSupplier
      *  the key database, or it was corrupted.
      * @exception org.mozilla.jss.CertDatabaseException Unable
      *  to open the certificate database, or it was currupted.
+     * @exception AlreadyInitializedException If security subsystem is already initialized.
+     * @exception GeneralSecurityException If other security error occurred.
      **/
     public static synchronized void initialize( InitializationValues values )
         throws
@@ -704,6 +716,9 @@ public final class CryptoManager implements TokenSupplier
      * @param cert the certificate you want to add
      * @param nickname the nickname you want to refer to the certificate as
      *        (must not be null)
+     * @return Certificate object.
+     * @throws TokenException If an error occurred in the token.
+     * @throws InvalidNicknameException If the nickname is invalid.
      */
 
     public InternalCertificate
@@ -751,6 +766,7 @@ public final class CryptoManager implements TokenSupplier
      *    [ note that CRLs are not retrieved automatically ]. Can be null
      * @exception CRLImportException If the package encoding
      *      was not recognized.
+     * @exception TokenException If an error occurred in the token.
      */
      public void
     importCRL(byte[] crl,String url)
@@ -835,6 +851,7 @@ public final class CryptoManager implements TokenSupplier
      *      The issuer name has ASN.1 type <i>Name</i>, which is defined in
      *      X.501.
      * @param serialNumber The certificate serial number.
+     * @return Certificate object.
      * @exception ObjectNotFoundException If the certificate is not found
      *      in the internal certificate database or on any PKCS #11 token.
      * @exception TokenException If an error occurs in the security library.
@@ -880,6 +897,7 @@ public final class CryptoManager implements TokenSupplier
      *      with the highest certificate on the chain that was found.
      * @throws CertificateException If the certificate is not recognized
      *      by the underlying provider.
+     * @throws TokenException If an error occurred in the token.
      */
     public org.mozilla.jss.crypto.X509Certificate[]
     buildCertificateChain(org.mozilla.jss.crypto.X509Certificate leaf)
@@ -903,6 +921,8 @@ public final class CryptoManager implements TokenSupplier
     /**
      * Looks up the PrivateKey matching the given certificate.
      *
+     * @param cert Certificate.
+     * @return Private key.
      * @exception ObjectNotFoundException If no private key can be
      *      found matching the given certificate.
      * @exception TokenException If an error occurs in the security library.
@@ -1191,10 +1211,11 @@ public final class CryptoManager implements TokenSupplier
      * previously set values.ocspCheckingEnabled and
      * values.ocspResponderURL/values.ocspResponderCertNickname
      * configureOCSP will allow changing of the the OCSPResponder at runtime.
-     *      * @param ocspChecking true or false to enable/disable OCSP
-     *      * @param ocspResponderURL - url of the OCSP responder
-     *      * @param ocspResponderCertNickname - the nickname of the OCSP
+     * @param ocspCheckingEnabled true or false to enable/disable OCSP
+     * @param ocspResponderURL - url of the OCSP responder
+     * @param ocspResponderCertNickname - the nickname of the OCSP
      *        signer certificate or the CA certificate found in the cert DB
+     * @throws GeneralSecurityException If a security error has occurred.
      */
 
     public void configureOCSP(
@@ -1215,9 +1236,10 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * change OCSP cache settings
-     *      * @param ocsp_cache_size max cache entries
-     *      * @param ocsp_min_cache_entry_duration minimum seconds to next fetch attempt
-     *      * @param ocsp_max_cache_entry_duration maximum seconds to next fetch attempt
+     * @param ocsp_cache_size max cache entries
+     * @param ocsp_min_cache_entry_duration minimum seconds to next fetch attempt
+     * @param ocsp_max_cache_entry_duration maximum seconds to next fetch attempt
+     * @throws GeneralSecurityException If a security error has occurred.
      */
     public void OCSPCacheSettings(
         int ocsp_cache_size,
@@ -1238,7 +1260,8 @@ public final class CryptoManager implements TokenSupplier
 
     /**
      * set OCSP timeout value
-     *      * @param ocspTimeout OCSP timeout in seconds
+     * @param ocsp_timeout OCSP timeout in seconds
+     * @throws GeneralSecurityException If a security error has occurred.
      */
     public void setOCSPTimeout(
         int ocsp_timeout )

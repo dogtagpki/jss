@@ -168,7 +168,7 @@ public class EncryptionAlgorithm extends Algorithm {
     private int keyStrength;
 
     /**
-     * Returns the base algorithm, without the parameters. For example,
+     * @return The base algorithm, without the parameters. For example,
      * the base algorithm of "AES/CBC/NoPadding" is "AES".
      */
     public Alg getAlg() {
@@ -176,21 +176,21 @@ public class EncryptionAlgorithm extends Algorithm {
     }
 
     /**
-     * Returns the mode of this algorithm.
+     * @return The mode of this algorithm.
      */
     public Mode getMode() {
         return mode;
     }
 
     /**
-     * Returns the padding type of this algorithm.
+     * @return The padding type of this algorithm.
      */
     public Padding getPadding() {
         return padding;
     }
 
     /**
-     * Returns the key strength of this algorithm in bits. Algorithms that
+     * @return The key strength of this algorithm in bits. Algorithms that
      * use continuously variable key sizes (such as RC4) will return 0 to
      * indicate they can use any key size.
      */
@@ -219,6 +219,9 @@ public class EncryptionAlgorithm extends Algorithm {
     // Note: after we remove this deprecated method, we can remove
     // nameMap.
     /**
+     * @param name Algorithm name.
+     * @return Encryption algorithm.
+     * @throws NoSuchAlgorithmException If the algorithm is not found.
      * @deprecated This method is deprecated because algorithm strings
      *  don't contain key length, which is necessary to distinguish between
      *  AES algorithms.
@@ -262,7 +265,7 @@ public class EncryptionAlgorithm extends Algorithm {
 
 
     /**
-     * The blocksize of the algorithm in bytes. Stream algorithms (such as
+     * @return The blocksize of the algorithm in bytes. Stream algorithms (such as
      * RC4) have a blocksize of 1.
      */
     public int getBlockSize() {
@@ -270,7 +273,7 @@ public class EncryptionAlgorithm extends Algorithm {
     }
 
     /**
-     * Returns <code>true</code> if this algorithm performs padding.
+     * @return <code>true</code> if this algorithm performs padding.
      * @deprecated Call <tt>getPaddingType()</tt> instead.
      */
     public boolean isPadded() {
@@ -278,7 +281,7 @@ public class EncryptionAlgorithm extends Algorithm {
     }
 
     /**
-     * Returns the type of padding for this algorithm.
+     * @return The type of padding for this algorithm.
      */
     public Padding getPaddingType() {
         return padding;

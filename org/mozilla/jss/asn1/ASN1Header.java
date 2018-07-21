@@ -29,6 +29,7 @@ public class ASN1Header {
      * Returns the length of the header plus the length of the contents;
      *  the total length of the DER encoding of an ASN1 value. Returns
      *  -1 if indefinite length encoding was used.
+     * @return Total length.
      */
     public long getTotalLength() {
         if( contentLength == -1 ) {
@@ -47,6 +48,7 @@ public class ASN1Header {
     private long contentLength;
     /**
      * Returns -1 for indefinite length encoding.
+     * @return Content length.
      */
     public long getContentLength() {
         return contentLength;
@@ -59,6 +61,7 @@ public class ASN1Header {
 
     /**
      * Returns the Form, PRIMITIVE or CONSTRUCTED.
+     * @return The form.
      */
     public Form getForm() {
         return form;
@@ -71,6 +74,9 @@ public class ASN1Header {
     /**
      * Returns information about the next item in the stream, but does not
      *  consume any octets.
+     * @param derStream DER stream.
+     * @return ASN.1 header.
+     * @throws InvalidBERException If there is an invalid BER encoding.
      * @exception IOException If the input stream does not support look ahead.
      */
     public static ASN1Header lookAhead(InputStream derStream)
@@ -90,6 +96,9 @@ public class ASN1Header {
     /**
      * Gets info about the next item in the DER stream, consuming the
      * identifier and length octets.
+     * @param istream Input stream.
+     * @throws InvalidBERException If there is an invalid BER encoding.
+     * @throws IOException If other error occurred.
      */
     public ASN1Header(InputStream istream)
         throws InvalidBERException, IOException
@@ -228,6 +237,8 @@ public class ASN1Header {
     /**
      * This constructor is to be called when we are constructing an ASN1Value
      * rather than decoding it.
+     * @param tag Tag.
+     * @param form Form.
      * @param contentLength Must be &ge;0. Although indefinite length
      *      <i>decoding</i> is supported, indefinite length <i>encoding</i>
      *      is not.
@@ -317,6 +328,8 @@ public class ASN1Header {
      * This is necessary because BigInteger.toByteArray() attaches an extra
      * sign bit, which could cause the size of the byte representation to
      * be bumped up by an extra byte.
+     * @param bi Input BigInteger.
+     * @return Byte array.
      */
     public static byte[] unsignedBigIntToByteArray(BigInteger bi) {
         // make sure it is not negative
@@ -348,6 +361,8 @@ public class ASN1Header {
 
     /**
      * Verifies that this header has the given tag and form.
+     * @param expectedTag Expected tag.
+     * @param expectedForm Expected form.
      * @exception InvalidBERException If the header's tag or form
      *  differ from those passed in.
      */
@@ -363,6 +378,7 @@ public class ASN1Header {
 
     /**
      * Verifies that this head has the given tag.
+     * @param expectedTag Expected tag.
      * @exception InvalidBERException If the header's tag differs from that
      *      passed in.
      */
@@ -374,7 +390,7 @@ public class ASN1Header {
     }
 
     /**
-     * Returns <code>true</code> if this is a BER end-of-contents marker.
+     * @return <code>true</code> if this is a BER end-of-contents marker.
      */
     public boolean isEOC() {
         return( tag.equals(Tag.EOC) );

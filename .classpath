@@ -6,6 +6,5 @@
 	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/commons-lang.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/commons-codec.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/ldapjdk.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

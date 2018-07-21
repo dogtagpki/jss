@@ -3,8 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.crypto;
 
-import java.security.Principal;
 import java.math.BigInteger;
+import java.security.Principal;
+import java.security.cert.CertificateEncodingException;
 
 /**
  * Certificates handled by JSS.  All certificates handled by JSS are
@@ -13,35 +14,36 @@ import java.math.BigInteger;
 public interface X509Certificate
 {
     /**
-     * Returns the DER encoding of this certificate.
+     * @return The DER encoding of this certificate.
+     * @throws CertificateEncodingException If an error occurred.
      */
     public byte[] getEncoded()
-		throws java.security.cert.CertificateEncodingException;
+		throws CertificateEncodingException;
 
     /**
-     * Returns the possibly-null nickname of this certificate.
+     * @return The nickname of this certificate (could be null).
      */
     public abstract String getNickname();
 
     /**
-     * Extracts the Public Key from this certificate.
+     * @return The Public Key from this certificate.
      */
     public abstract java.security.PublicKey getPublicKey();
 
     /**
-     * Returns the RFC 1485 ASCII encoding of the Subject Name.
+     * @return The RFC 1485 ASCII encoding of the Subject Name.
      */
     public abstract Principal
     getSubjectDN();
 
     /**
-     * Returns the RFC 1485 ASCII encoding of the issuer's Subject Name.
+     * @return The RFC 1485 ASCII encoding of the issuer's Subject Name.
      */
     public abstract Principal
     getIssuerDN();
 
     /**
-     * Returns the serial number of this certificate.
+     * @return The serial number of this certificate.
      */
     public abstract BigInteger
     getSerialNumber();
