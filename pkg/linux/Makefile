@@ -38,15 +38,9 @@ publish:
 	find $(CORE_DEPTH)/../dist/$(OBJDIR)/lib -type l \
 		\( -name "*jss*.so" \) \
 	-exec cp {} opt/sun/private/$(RPMLIBDIR) \;
-ifdef JSS3_LOCATION
-	cp $(JSS3_LOCATION)/$(OBJDIR)/lib/libjss3.so opt/sun/private/$(RPMLIBDIR)
-endif
 	mkdir -p opt/sun/private/share/lib 
 	cp $(CORE_DEPTH)/../dist/release/no-policy/classes/jss4.jar \
 		opt/sun/private/share/lib/jss4.jar
-ifdef JSS3_LOCATION
-	cp $(JSS3_LOCATION)/xpclass.jar opt/sun/private/share/lib/jss3.jar
-endif
 	tar czvf $(NAME)-$(VERSION).tar.gz opt 
 	echo "AutoReq: 0" > temp.spec
 	echo "%define _topdir `pwd`" >>temp.spec

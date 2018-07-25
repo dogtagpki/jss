@@ -71,17 +71,11 @@ $(ROOT):
 $(ROOT)/usr/lib/mps/sparcv9:
 	mkdir -p $@
 	$(CP) -r $(DIST64)/lib/*.so $@ 
-ifdef JSS3_LOCATION
-	$(CP) $(JSS3_LOCATION)/$(OBJ64)/lib/libjss3.so $@
-endif
 
 $(ROOT)/usr/share/lib/mps/sparcv9:
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_JSS_JAR)"
 	mkdir -p $@
 	$(CP) $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_JSS_JAR) $@/jss4.jar
-ifdef JSS3_LOCATION
-	$(CP) $(JSS3_LOCATION)/$(IMPORT_XPCLASS_JAR) $@/jss3.jar
-endif
 
 $(ROOT)/usr/lib/mps/amd64:
 	mkdir -p $@
@@ -95,15 +89,9 @@ $(ROOT)/usr/share/lib/mps/amd64:
 $(ROOT)/usr/lib/mps:
 	mkdir -p $@
 	$(CP) -r $(DIST32)/lib/*.so $@
-ifdef JSS3_LOCATION
-	$(CP) $(JSS3_LOCATION)/$(OBJ32)/lib/libjss3.so $@
-endif
 
 $(ROOT)/usr/share/lib/mps:
 	echo "target=$(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_JSS_JAR)"
 	mkdir -p $@
 	$(CP) $(SOURCE_RELEASE_XP_DIR)/$(SOURCE_RELEASE_XP_CLASSES_DIR)/$(IMPORT_JSS_JAR) $@/jss4.jar
-ifdef JSS3_LOCATION
-	$(CP) $(JSS3_LOCATION)/$(IMPORT_XPCLASS_JAR) $@/jss3.jar
-endif
 
