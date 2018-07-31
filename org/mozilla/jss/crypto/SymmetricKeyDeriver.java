@@ -37,6 +37,7 @@
 package org.mozilla.jss.crypto;
 
 import java.security.InvalidKeyException;
+import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 public interface SymmetricKeyDeriver {
 
