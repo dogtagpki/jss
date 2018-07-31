@@ -303,6 +303,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * @deprecated As of JSS 3.0. This method is misnamed. Use
      *  <code>requestClientAuth</code> instead.
      */
+    @Deprecated
     public void setNeedClientAuth(boolean b) throws SocketException {
         base.requestClientAuth(b);
     }
@@ -324,6 +325,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * @deprecated As of JSS 3.0. This method is misnamed. Use
      *  <code>requestClientAuthNoExpiryCheck</code> instead.
      */
+    @Deprecated
     public void setNeedClientAuthNoExpiryCheck(boolean b)
         throws SocketException
     {
@@ -477,6 +479,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      *  it.
      * @deprecated use requireClientAuth(int)
      */
+    @Deprecated
     public void requireClientAuth(boolean require, boolean onRedo)
             throws SocketException
     {

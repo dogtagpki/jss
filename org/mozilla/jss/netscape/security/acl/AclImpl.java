@@ -32,7 +32,11 @@ import java.util.Vector;
  * An Access Control List (ACL) is encapsulated by this class.
  *
  * @author Satish Dharmaraj
+ *
+ * @deprecated Owner in java.security.acl has been deprecated and marked for removal
+ *
  */
+@Deprecated
 public class AclImpl extends OwnerImpl implements Acl {
     //
     // Maintain four tables. one each for positive and negative
@@ -165,7 +169,9 @@ public class AclImpl extends OwnerImpl implements Acl {
      *
      * @param user the principal for which the ACL entry is returned.
      * @return The resulting permission set that the principal is allowed.
+     * @deprecated Permission in java.security.acl has been deprecated and marked for removal
      */
+    @Deprecated
     public synchronized Enumeration<Permission> getPermissions(Principal user) {
 
         Enumeration<Permission> individualPositive;
@@ -313,6 +319,10 @@ public class AclImpl extends OwnerImpl implements Acl {
         return v.elements();
     }
 
+    /**
+     * @deprecated Permission in java.security.acl has been deprecated and marked for removal
+     */
+    @Deprecated
     private Enumeration<Permission> getGroupPositive(Principal user) {
         Enumeration<Permission> groupPositive = zeroSet.elements();
         Enumeration<Principal> e = allowedGroupsTable.keys();
@@ -326,6 +336,10 @@ public class AclImpl extends OwnerImpl implements Acl {
         return groupPositive;
     }
 
+    /**
+     * @deprecated Permission in java.security.acl has been deprecated and marked for removal
+     */
+    @Deprecated
     private Enumeration<Permission> getGroupNegative(Principal user) {
         Enumeration<Permission> groupNegative = zeroSet.elements();
         Enumeration<Principal> e = deniedGroupsTable.keys();
@@ -339,6 +353,10 @@ public class AclImpl extends OwnerImpl implements Acl {
         return groupNegative;
     }
 
+    /**
+     * @deprecated Permission in java.security.acl has been deprecated and marked for removal
+     */
+    @Deprecated
     private Enumeration<Permission> getIndividualPositive(Principal user) {
         Enumeration<Permission> individualPositive = zeroSet.elements();
         AclEntry ae = allowedUsersTable.get(user);
@@ -347,6 +365,10 @@ public class AclImpl extends OwnerImpl implements Acl {
         return individualPositive;
     }
 
+    /**
+     * @deprecated Permission in java.security.acl has been deprecated and marked for removal
+     */
+    @Deprecated
     private Enumeration<Permission> getIndividualNegative(Principal user) {
         Enumeration<Permission> individualNegative = zeroSet.elements();
         AclEntry ae = deniedUsersTable.get(user);
@@ -356,10 +378,21 @@ public class AclImpl extends OwnerImpl implements Acl {
     }
 }
 
+/**
+ *
+ * @deprecated Acl in java.security.acl has been deprecated and marked for removal
+ * @deprecated AclEntry in java.security.acl has been deprecated and marked for removal
+ */
+@Deprecated
 final class AclEnumerator implements Enumeration<AclEntry> {
-    Acl acl;
+    @Deprecated Acl acl;
     Enumeration<AclEntry> u1, u2, g1, g2;
 
+    /**
+     * @deprecated AclEntry in java.security.acl has been deprecated and marked for removal
+     * @deprecated Acl in java.security.acl has been deprecated and marked for removal
+     */
+    @Deprecated
     AclEnumerator(Acl acl, Hashtable<Principal, AclEntry> u1, Hashtable<Principal, AclEntry> g1,
             Hashtable<Principal, AclEntry> u2, Hashtable<Principal, AclEntry> g2) {
         this.acl = acl;

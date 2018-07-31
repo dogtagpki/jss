@@ -437,6 +437,7 @@ public final class DSA extends Signature {
      *
      * @deprecated
      */
+    @Deprecated
     protected void engineSetParameter(String key, Object param) {
 
         if (key.equals("KSEED")) {
@@ -469,8 +470,6 @@ public final class DSA extends Signature {
      * </dl>
      *
      * @return the value of the requested parameter.
-     *
-     * @deprecated
      */
     protected Object engineGetParameter(String key) {
         if (key.equals("KSEED")) {
