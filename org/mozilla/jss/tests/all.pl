@@ -149,10 +149,11 @@ sub setup_vars {
         $jss_rel_dir   = "$dist_dir/classes/org";
         $jss_classpath = "$dist_dir/xpclass.jar";
 
-        $ENV{CLASSPATH} .= "$dist_dir/xpclass.jar";
-        ( -f $ENV{CLASSPATH} ) or die "$ENV{CLASSPATH} does not exist";
-        #$ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$obj_dir/lib";
-        $ENV{$ld_lib_path} = "$obj_dir/lib";
+        ( -f $jss_classpath ) or die "$jss_classpath does not exist";
+
+        $ENV{CLASSPATH} .= "$jss_classpath";
+        #$ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$nss_lib_dir";
+        $ENV{$ld_lib_path} = "$nss_lib_dir";
 
     } elsif( $$argv[0] eq "release" ) {
         shift @$argv;
@@ -161,16 +162,18 @@ sub setup_vars {
         my $nss_rel_dir  = shift @$argv or usage();
         my $nspr_rel_dir = shift @$argv or usage();
 
-        $ENV{CLASSPATH} .= "$jss_rel_dir/../xpclass.jar";
-        $ENV{$ld_lib_path} =
-            "$jss_rel_dir/lib$pathsep$nss_rel_dir/lib$pathsep$nspr_rel_dir/lib"
-            . $pathsep . $ENV{$ld_lib_path};
-        print "LD_LIBRARY_PATH is $ld_lib_path\n";
-        print "$ld_lib_path=$ENV{$ld_lib_path}\n";
+        $nspr_lib_dir = "$nspr_rel_dir/lib";
         $nss_bin_dir = "$nss_rel_dir/bin";
         $nss_lib_dir = "$nss_rel_dir/lib";
-        $jss_lib_dir = "$nss_rel_dir/lib";
+        $jss_lib_dir = "$jss_rel_dir/lib";
         $jss_classpath = "$jss_rel_dir/../xpclass.jar";
+
+        $ENV{CLASSPATH} .= "$jss_classpath";
+        $ENV{$ld_lib_path} =
+                "$jss_lib_dir" . $pathsep .
+                "$nss_lib_dir" . $pathsep .
+                "$nspr_lib_dir" . $pathsep .
+                $ENV{$ld_lib_path};
 
     } else {
         usage();
@@ -426,8 +429,9 @@ if( ! -d $testdir ) {
     my @dbfiles = 
         ("$testdir/cert8.db", "$testdir/key3.db", "$testdir/secmod.db", "$testdir/rsa.pfx");
     (grep{ -f } @dbfiles)  and die "There is already an old database in $testdir";
-    my $result = system("cp $nss_lib_dir/*nssckbi* $testdir"); $result >>= 8;
-    $result and die "Failed to copy built-ins library";
+    my $result = system("cp $nss_lib_dir/*nssckbi* $testdir");
+    $result >>= 8;
+    # $result and die "Failed to copy built-ins library";
 }
 
 print "creating pkcs11config file\n";

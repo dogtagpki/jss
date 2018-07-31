@@ -198,6 +198,9 @@ sub setup_vars {
     if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
         print "Using the NSPR and NSS installed on the system to build JSS.\n";
 
+        $nss_lib_dir = $ENV{NSS_LIB_DIR};
+        $nss_lib_dir =~ s/^\s+|\s+$//g;  # trim spaces
+
     } else {
         # Verify existence of work area
         if(( ! -d "$work_dir/nspr" ) ||
@@ -439,9 +442,7 @@ sub javadoc {
 }
 
 sub test {
-    if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
-        die "make test_jss is only available on upstream builds of Linux and MacOS platforms.";
-    } elsif( $os eq 'Linux' || $os eq 'Darwin' ) {
+    if( $os eq 'Linux' || $os eq 'Darwin' ) {
         # Test JSS presuming that it has already been built
 
         if(( -d $dist_dir )  &&
