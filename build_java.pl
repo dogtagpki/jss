@@ -167,7 +167,7 @@ sub setup_vars {
     $jni_header_dir = "$dist_dir/private/jss/_jni";
 
     if( $ENV{DEBIAN_BUILD} ) {
-        $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar:/usr/share/java/libjaxb-api-java.jar";
+        $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar:/usr/share/java/jaxb-api.jar";
     } else {
         $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar:/usr/share/java/jaxb-api.jar";
     }
