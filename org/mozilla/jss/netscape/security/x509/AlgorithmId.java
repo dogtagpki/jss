@@ -190,7 +190,6 @@ public class AlgorithmId implements Serializable, DerEncoder {
      *
      * @deprecated use one of the other constructors.
      */
-    @Deprecated
     public AlgorithmId() {
     }
 

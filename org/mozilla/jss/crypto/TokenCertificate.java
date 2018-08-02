@@ -22,7 +22,6 @@ public interface TokenCertificate extends X509Certificate {
      *      another way, such as a function that directly matches a cert and
      *      key.
      */
-    @Deprecated
     public abstract byte[] getUniqueID();
 
     /**

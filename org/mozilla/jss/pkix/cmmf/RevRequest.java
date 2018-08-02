@@ -154,7 +154,6 @@ public class RevRequest implements ASN1Value {
      * @deprecated The <tt>passphrase</tt> field has been renamed
      *  <tt>sharedSecret</tt>. Call <tt>getSharedSecret</tt> instead.
      */
-    @Deprecated
     public OCTET_STRING getPassphrase() {
         return sharedSecret;
     }
@@ -195,7 +194,6 @@ public class RevRequest implements ASN1Value {
      * @param comment The <code>comment</code> field.  This field is optional,
      *      so <code>null</code> may be used.
      */
-    @Deprecated
     public RevRequest(ANY issuerName, INTEGER serialNumber,
                     ENUMERATED reason, OCTET_STRING sharedSecret,
                     UTF8String comment)

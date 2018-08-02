@@ -218,7 +218,6 @@ public class RevokeRequest implements ASN1Value {
      * @param comment The <code>comment</code> field.  This field is optional,
      *      so <code>null</code> may be used.
      */
-    @Deprecated
     public RevokeRequest(ANY issuerName, INTEGER serialNumber,
                     ENUMERATED reason, OCTET_STRING passphrase,
                     UTF8String comment)

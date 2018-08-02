@@ -13,57 +13,51 @@ org/mozilla/jss/pkix/cert/X509Certificate\.java
 samples/
 );
 
-# source list equivalent to the old @javah_classes
-@wanted_sources = qw(
-org/mozilla/jss/DatabaseCloser.java
-org/mozilla/jss/CryptoManager.java
-org/mozilla/jss/crypto/EncryptionAlgorithm.java
-org/mozilla/jss/crypto/PQGParams.java
-org/mozilla/jss/crypto/SecretDecoderRing.java
-org/mozilla/jss/asn1/ASN1Util.java
-org/mozilla/jss/pkcs11/CipherContextProxy.java
-org/mozilla/jss/pkcs11/PK11Module.java
-org/mozilla/jss/pkcs11/ModuleProxy.java
-org/mozilla/jss/pkcs11/PK11Cert.java
-org/mozilla/jss/pkcs11/PK11Cipher.java
-org/mozilla/jss/pkcs11/PK11KeyWrapper.java
-org/mozilla/jss/pkcs11/PK11MessageDigest.java
-org/mozilla/jss/pkcs11/PK11PrivKey.java
-org/mozilla/jss/pkcs11/PK11PubKey.java
-org/mozilla/jss/pkcs11/PK11SymKey.java
-org/mozilla/jss/pkcs11/PK11KeyPairGenerator.java
-org/mozilla/jss/pkcs11/PK11SymmetricKeyDeriver.java
-org/mozilla/jss/pkcs11/PK11KeyGenerator.java
-org/mozilla/jss/pkcs11/PK11Token.java
-org/mozilla/jss/pkcs11/PK11Token.java
-org/mozilla/jss/pkcs11/TokenProxy.java
-org/mozilla/jss/pkcs11/PK11Signature.java
-org/mozilla/jss/pkcs11/PK11Store.java
-org/mozilla/jss/pkcs11/PK11KeyPairGenerator.java
-org/mozilla/jss/pkcs11/PK11RSAPublicKey.java
-org/mozilla/jss/pkcs11/PK11DSAPublicKey.java
-org/mozilla/jss/pkcs11/PK11ECPublicKey.java
-org/mozilla/jss/pkcs11/PK11SecureRandom.java
-org/mozilla/jss/provider/java/security/JSSKeyStoreSpi.java
-org/mozilla/jss/SecretDecoderRing/KeyManager.java
-org/mozilla/jss/ssl/SSLSocket.java
-org/mozilla/jss/ssl/SSLServerSocket.java
-org/mozilla/jss/ssl/SocketBase.java
-org/mozilla/jss/util/Debug.java
-org/mozilla/jss/util/Password.java
+@javah_classes = qw(
+org.mozilla.jss.DatabaseCloser        
+org.mozilla.jss.CryptoManager          
+org.mozilla.jss.crypto.Algorithm        
+org.mozilla.jss.crypto.EncryptionAlgorithm      
+org.mozilla.jss.crypto.PQGParams     
+org.mozilla.jss.crypto.SecretDecoderRing
+org.mozilla.jss.asn1.ASN1Util
+org.mozilla.jss.pkcs11.CertProxy        
+org.mozilla.jss.pkcs11.CipherContextProxy 
+org.mozilla.jss.pkcs11.PK11Module 
+org.mozilla.jss.pkcs11.ModuleProxy 
+org.mozilla.jss.pkcs11.PK11Cert     
+org.mozilla.jss.pkcs11.PK11Cipher     
+org.mozilla.jss.pkcs11.PK11KeyWrapper  
+org.mozilla.jss.pkcs11.PK11MessageDigest 
+org.mozilla.jss.pkcs11.PK11PrivKey   
+org.mozilla.jss.pkcs11.PK11PubKey     
+org.mozilla.jss.pkcs11.PK11SymKey      
+org.mozilla.jss.pkcs11.PK11KeyPairGenerator 
+org.mozilla.jss.pkcs11.PK11SymmetricKeyDeriver
+org.mozilla.jss.pkcs11.PK11KeyGenerator
+org.mozilla.jss.pkcs11.PK11Token
+org.mozilla.jss.pkcs11.PrivateKeyProxy  
+org.mozilla.jss.pkcs11.PublicKeyProxy    
+org.mozilla.jss.pkcs11.SymKeyProxy
+org.mozilla.jss.pkcs11.KeyProxy    
+org.mozilla.jss.pkcs11.PK11Token    
+org.mozilla.jss.pkcs11.TokenProxy    
+org.mozilla.jss.pkcs11.PK11Signature  
+org.mozilla.jss.pkcs11.PK11Store       
+org.mozilla.jss.pkcs11.PK11KeyPairGenerator 
+org.mozilla.jss.pkcs11.SigContextProxy
+org.mozilla.jss.pkcs11.PK11RSAPublicKey
+org.mozilla.jss.pkcs11.PK11DSAPublicKey
+org.mozilla.jss.pkcs11.PK11ECPublicKey
+org.mozilla.jss.pkcs11.PK11SecureRandom 
+org.mozilla.jss.provider.java.security.JSSKeyStoreSpi
+org.mozilla.jss.SecretDecoderRing.KeyManager
+org.mozilla.jss.ssl.SSLSocket 
+org.mozilla.jss.ssl.SSLServerSocket 
+org.mozilla.jss.ssl.SocketBase 
+org.mozilla.jss.util.Debug
+org.mozilla.jss.util.Password       
 );
-
-# Removed the followinh from the list:
-# error: file not found: org/mozilla/jss/crypto.Algorithm.java
-# error: file not found: org/mozilla/jss/pkcs11/CertProxy.java
-# error: file not found: org/mozilla/jss/pkcs11/PrivateKeyProxy.java
-# error: file not found: org/mozilla/jss/pkcs11/PublicKeyProxy.java
-# error: file not found: org/mozilla/jss/pkcs11/SymKeyProxy.java
-# error: file not found: org/mozilla/jss/pkcs11/SigContextProxy.java
-#
-# Additinally Password has no native methos
-# no .c file and grep native on it comes empty
-#  org/mozilla/jss/util/Password.java
 
 @packages = qw(
 org.mozilla.jss
@@ -167,9 +161,9 @@ sub setup_vars {
     $jni_header_dir = "$dist_dir/private/jss/_jni";
 
     if( $ENV{DEBIAN_BUILD} ) {
-        $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar:/usr/share/java/jaxb-api.jar";
+        $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar";
     } else {
-        $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar:/usr/share/java/jaxb-api.jar";
+        $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar";
     }
     $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar";
     if( $jce_jar ) {
@@ -182,11 +176,6 @@ sub setup_vars {
         $javac_deprecation_flag = "";
     }
 
-    if( $ENV{ADD_MODULES} ) {
-        $add_modules_flags = "--add-modules java.se.ee jdk.crypto.cryptoki/sun.security.pkcs11.wrapper jdk.crypto.cryptoki java.xml.bind";
-    } else {
-        $add_modules_flags = "";
-    }
     # retrieve present working directory
     $jss_dir = `pwd`;
     $jss_dir =~ chomp $jss_dir;
@@ -351,21 +340,18 @@ MyLabel
     #
     if( scalar(@source_list) > 0 ) {
         ensure_dir_exists($class_dir);
-        ensure_dir_exists($jni_header_dir);
-        print_do("$javac $javac_opt_flag $add_modules_flag $javac_deprecation_flag -sourcepath . -d $class_dir " .
+        print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir " .
             "$classpath " . join(" ",@source_list));
-
-        #
-        # create the JNI header files
-        # by compiling the ones we want with "-h $jni_header_dir" flag
-        #
-        ensure_dir_exists($jni_header_dir);
-        print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir -h $jni_header_dir " .
-            "$classpath " . join(" ", @wanted_sources) );
-
         print_do("sh -c 'cd $dist_dir/classes && $jar cvmf $dist_dir/MANIFEST.MF $dist_dir/xpclass.jar *'");
         print "Exit status was " . ($?>>8) . "\n";
     }
+
+    #
+    # create the JNI header files
+    #
+    ensure_dir_exists($jni_header_dir);
+    print_do("$javah -classpath $class_dir -d $jni_header_dir " .
+        (join " ", @javah_classes) );
 }
 
 sub print_do {

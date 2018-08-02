@@ -86,7 +86,6 @@ public final class CertAndKeyGen {
      *
      * @deprecated All random numbers come from PKCS #11 now.
      */
-    @Deprecated
     public void setRandom(SecureRandom generator) {
     }
 
@@ -167,7 +166,6 @@ public final class CertAndKeyGen {
      * @param myname X.500 name of the subject (who is also the issuer)
      * @param validity how long the certificate should be valid, in seconds
      */
-    @Deprecated
     public X509Cert getSelfCert(X500Name myname, long validity)
             throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
         X509Certificate cert;

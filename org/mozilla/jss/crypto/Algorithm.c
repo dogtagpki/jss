@@ -13,6 +13,7 @@
 
 #include <jssutil.h>
 
+#include "_jni/org_mozilla_jss_crypto_Algorithm.h"
 #include "Algorithm.h"
 
 static PRStatus

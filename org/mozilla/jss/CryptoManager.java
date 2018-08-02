@@ -1082,7 +1082,6 @@ public final class CryptoManager implements TokenSupplier
      *      with the given nickname.
      * @deprecated Use verifyCertificate() instead
      */
-    @Deprecated
     public boolean isCertValid(String nickname, boolean checkSig,
             CertificateUsage certificateUsage)
         throws ObjectNotFoundException, InvalidNicknameException

@@ -195,7 +195,7 @@ sub setup_vars {
     if ($osname =~ /Darwin/) {
         $java = "$ENV{JAVA_HOME}/bin/java";
     } else {
-        $java = "$ENV{JAVA_HOME}/bin/java$exe_suffix";
+        $java = "$ENV{JAVA_HOME}/jre/bin/java$exe_suffix";
     }
 
     #
@@ -220,6 +220,10 @@ sub setup_vars {
 
     (-f $java) or die "'$java' does not exist\n";
     $java = $java . $ENV{NATIVE_FLAG};
+
+    if ($ENV{USE_64} && !$java_64bit) {
+        $java = $java . " -d64";
+    }
 
     #MAC OS X have the -Djava.library.path for the JSS JNI library
     if ($osname =~ /Darwin/) {
