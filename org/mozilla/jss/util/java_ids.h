@@ -370,6 +370,14 @@ PR_BEGIN_EXTERN_C
  */
 #define X509_CERT_CLASS "org/mozilla/jss/crypto/X509Certificate"
 
+
+/*
+ * SSLVersionRange
+ */
+#define SSL_VERSION_RANGE_CLASS_NAME "org/mozilla/jss/ssl/SSLSocket$SSLVersionRange"
+#define SSL_VERSION_RANGE_CONSTRUCTOR_NAME "<init>"
+#define SSL_VERSION_RANGE_CONSTRUCTOR_SIG "(II)V"
+
 PR_END_EXTERN_C
 
 #endif

@@ -1416,6 +1416,7 @@ public class SSLSocket extends java.net.Socket {
         }
 
         /**
+         * Used by the C code, do not use it directly
          * @deprecated Replaced with SSLVersionRange(SSLVersion minVersion, SSLVersion maxVersion).
          * @param min_enum
          * @param max_enum
@@ -1469,10 +1470,28 @@ public class SSLSocket extends java.net.Socket {
                 range.getMaxVersion().value());
     }
 
+    public static SSLVersionRange boundSSLVersionRange(SSLProtocolVariant ssl_variant, SSLVersionRange range)
+        throws SocketException
+    {
+        if (range == null)
+            throw new SocketException("setSSLVersionRangeDefault: range null");
+
+        return boundSSLVersionRange(
+                ssl_variant.getEnum(),
+                range.getMinVersion().value(),
+                range.getMaxVersion().value());
+    }
+
     /**
      * Sets SSL Version Range Default
      */
     private static native void setSSLVersionRangeDefault(int ssl_variant, int min, int max)
+        throws SocketException;
+
+    /**
+     * Checks SSL Version Range against Default
+     */
+    private static native SSLVersionRange boundSSLVersionRange(int ssl_variant, int min, int max)
         throws SocketException;
 
     private static void setSSLDefaultOption(int option, boolean on)

@@ -13,7 +13,7 @@
 #include <pk11util.h>
 #include "_jni/org_mozilla_jss_ssl_SSLSocket.h"
 #include "jssl.h"
-
+#include <sys/param.h>
 
 #ifdef WINNT
 #include <private/pprio.h>
@@ -27,7 +27,87 @@
 
 
 /*
- * support TLS v1.1 and v1.2
+ * support TLS v1.1, v1.2, and v1.3
+ * returns SSL version range bound by the version range provided by the system.
+ * Doesn't change the defaults.
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_boundSSLVersionRange(JNIEnv *env,
+    jclass clazz, jint ssl_variant, jint min, jint max)
+{
+    SECStatus status;
+    SSLVersionRange vrange;
+    SSLVersionRange supported_range;
+    jobject versionRange = NULL;
+    jclass versionRangeClass;
+    jmethodID versionRangeCons;
+
+    if (ssl_variant <0 || ssl_variant >= JSSL_enums_size||
+            min <0 || min >= JSSL_enums_size ||
+            max <0 || max >= JSSL_enums_size) {
+        char buf[128];
+        PR_snprintf(buf, 128, "JSS checkSSLVersionRangeDefault(): for variant=%d min=%d max=%d failed - out of range for array JSSL_enums size: %d", JSSL_enums[ssl_variant], min, max, JSSL_enums_size);
+        JSSL_throwSSLSocketException(env, buf);
+        goto finish;
+    }
+
+    vrange.min = JSSL_enums[min];
+    vrange.max = JSSL_enums[max];
+
+    /* get supported range */
+    status = SSL_VersionRangeGetSupported(JSSL_enums[ssl_variant],
+                &supported_range);
+    if( status != SECSuccess ) {
+        char buf[128];
+        PR_snprintf(buf, 128, "SSL_VersionRangeGetSupported() for variant=%d failed: %d", JSSL_enums[ssl_variant], PR_GetError());
+        JSSL_throwSSLSocketException(env, buf);
+        goto finish;
+    }
+
+    /* bind the min and max */
+    supported_range.min = MAX(supported_range.min, vrange.min);
+    supported_range.max = MIN(supported_range.max, vrange.max);
+
+    /* convert new min/max values back to the JSSL_enums indexes */
+    for (int i = 0; i < JSSL_enums_size; i++) {
+        if (JSSL_enums[i] == supported_range.min) {
+            supported_range.min = i;
+            break;
+        }
+    }
+    for (int i = 0; i < JSSL_enums_size; i++) {
+        if (JSSL_enums[i] == supported_range.max) {
+            supported_range.max = i;
+            break;
+        }
+    }
+
+    /*
+     * package the status into a new SSLVersionRange object
+     */
+    versionRangeClass = (*env)->FindClass(env, SSL_VERSION_RANGE_CLASS_NAME);
+    PR_ASSERT(versionRangeClass != NULL);
+    if( versionRangeClass == NULL ) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    versionRangeCons = (*env)->GetMethodID(env, versionRangeClass,
+                            SSL_VERSION_RANGE_CONSTRUCTOR_NAME,
+                            SSL_VERSION_RANGE_CONSTRUCTOR_SIG);
+    PR_ASSERT(versionRangeCons != NULL);
+    if(versionRangeCons == NULL ) {
+        /* exception was thrown */
+        goto finish;
+    }
+    versionRange = (*env)->NewObject(env, versionRangeClass, versionRangeCons,
+            supported_range.min, supported_range.max);
+finish:
+    return versionRange;
+}
+
+/*
+ * support TLS v1.1, v1.2, and v1.3
  *   sets default SSL version range for sockets created after this call
  */
 JNIEXPORT void JNICALL
@@ -38,7 +118,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSSLVersionRangeDefault(JNIEnv *env,
     SSLVersionRange vrange;
     SSLVersionRange supported_range;
 
-    if (ssl_variant <0 || ssl_variant >= JSSL_enums_size|| 
+    if (ssl_variant <0 || ssl_variant >= JSSL_enums_size||
             min <0 || min >= JSSL_enums_size ||
             max <0 || max >= JSSL_enums_size) {
         char buf[128];
@@ -59,11 +139,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_setSSLVersionRangeDefault(JNIEnv *env,
         JSSL_throwSSLSocketException(env, buf);
         goto finish;
     }
+
     /* now check the min and max */
     if (vrange.min < supported_range.min  ||
                 vrange.max > supported_range.max) {
         char buf[128];
-        PR_snprintf(buf, 128, "SSL_VersionRangeSetDefault() for variant=%d with min=%d max=%d out of range (%d:%d): %d", JSSL_enums[ssl_variant], vrange.min, vrange.max, supported_range.min, supported_range.max, PR_GetError());
+        PR_snprintf(buf, 128, "JSS setSSLVersionRangeDefault() for variant=%d with min=%d max=%d out of range (%d:%d): %d", JSSL_enums[ssl_variant], vrange.min, vrange.max, supported_range.min, supported_range.max, PR_GetError());
         JSSL_throwSSLSocketException(env, buf);
         goto finish;
     }
@@ -83,8 +164,8 @@ finish:
 }
 
 /*
- * support TLS v1.1 and v1.2
- *   sets SSL version range for this socket
+ * support TLS v1.1, v1.2, and v1.3
+ * sets SSL version range for this socket
  */
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_setSSLVersionRange
