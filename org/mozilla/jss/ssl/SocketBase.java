@@ -185,11 +185,11 @@ class SocketBase {
 
     void setSSLVersionRange(org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range)
             throws SocketException {
-        setSSLVersionRange(range.getMinEnum(), range.getMaxEnum());
+        setSSLVersionRange(range.getMinVersion().value(), range.getMaxVersion().value());
     }
 
     /**
-     * Sets SSL Version Range for this socket to support TLS v1.1 and v1.2
+     * Sets SSL Version Range for this socket to support TLS v1.1 to v1.3
      */
     native void setSSLVersionRange(int min, int max)
             throws SocketException;

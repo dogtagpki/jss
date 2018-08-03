@@ -1361,27 +1361,73 @@ public class SSLSocket extends java.net.Socket {
     *     SocketBase.SSL_LIBRARY_VERSION_TLS_1_2
     */
     public static class SSLVersionRange {
-        private int _min_enum;
-        private int _max_enum;
+
+        private SSLVersion minVersion;
+        private SSLVersion maxVersion;
+
+        /**
+         * @deprecated Replaced with SSLVersion.SSL_3_0.
+         */
+        @Deprecated
         public static final int ssl3 = SocketBase.SSL_LIBRARY_VERSION_3_0;
+
+        /**
+         * @deprecated Replaced with SSLVersion.TLS_1_0.
+         */
+        @Deprecated
         public static final int tls1_0 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_0;
+
+        /**
+         * @deprecated Replaced with SSLVersion.TLS_1_1.
+         */
+        @Deprecated
         public static final int tls1_1 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_1;
+
+        /**
+         * @deprecated Replaced with SSLVersion.TLS_1_2.
+         */
+        @Deprecated
         public static final int tls1_2 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_2;
-        public SSLVersionRange(int min_enum, int max_enum)
-          throws IllegalArgumentException {
-            if ((min_enum >= SocketBase.SSL_LIBRARY_VERSION_3_0) &&
-                (max_enum <= SocketBase.SSL_LIBRARY_VERSION_TLS_1_2) &&
-                (min_enum <= max_enum)) {
-                _min_enum = min_enum;
-                _max_enum = max_enum;
-            } else {
+
+        public SSLVersionRange(SSLVersion minVersion, SSLVersion maxVersion) throws IllegalArgumentException {
+
+            if (minVersion.value() > maxVersion.value()) {
                 throw new IllegalArgumentException("JSS SSLSocket SSLVersionRange: arguments out of range");
             }
+
+            this.minVersion = minVersion;
+            this.maxVersion = maxVersion;
         }
 
-        int getMinEnum() { return _min_enum; }
-        int getMaxEnum() { return _max_enum; }
+        /**
+         * @deprecated Replaced with SSLVersionRange(SSLVersion minVersion, SSLVersion maxVersion).
+         * @param min_enum
+         * @param max_enum
+         * @throws IllegalArgumentException
+         */
+        public SSLVersionRange(int min_enum, int max_enum) throws IllegalArgumentException {
+            this(SSLVersion.valueOf(min_enum), SSLVersion.valueOf(max_enum));
+        }
 
+        public SSLVersion getMinVersion() {
+            return minVersion;
+        }
+
+        public SSLVersion getMaxVersion() {
+            return maxVersion;
+        }
+
+        /**
+         * @deprecated Replaced with SSLVersion.getMinVersion().
+         * @return enumeration value
+         */
+        int getMinEnum() { return minVersion.value(); }
+
+        /**
+         * @deprecated Replaced with SSLVersion.getMaxVersion().
+         * @return enumeration value
+         */
+        int getMaxEnum() { return maxVersion.value(); }
     }
 
     public static class SSLProtocolVariant {
@@ -1402,7 +1448,11 @@ public class SSLSocket extends java.net.Socket {
     {
         if (range == null)
             throw new SocketException("setSSLVersionRangeDefault: range null");
-        setSSLVersionRangeDefault(ssl_variant.getEnum(), range.getMinEnum(), range.getMaxEnum());
+
+        setSSLVersionRangeDefault(
+                ssl_variant.getEnum(),
+                range.getMinVersion().value(),
+                range.getMaxVersion().value());
     }
 
     /**
