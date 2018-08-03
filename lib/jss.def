@@ -340,3 +340,9 @@ Java_org_mozilla_jss_pkcs11_PK11Store_deletePublicKey;
 ;+    local:
 ;+       *;
 ;+};
+;+JSS_4.5.1 {       # JSS 4.5.1 release
+;+    global:
+Java_org_mozilla_jss_ssl_SSLSocket_boundSSLVersionRange;
+;+    local:
+;+       *;
+;+};
