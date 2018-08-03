@@ -97,6 +97,7 @@ class SocketBase {
     static final int SSL_LIBRARY_VERSION_TLS_1_0 = 30;
     static final int SSL_LIBRARY_VERSION_TLS_1_1 = 31;
     static final int SSL_LIBRARY_VERSION_TLS_1_2 = 32;
+    static final int SSL_LIBRARY_VERSION_TLS_1_3 = 35;
     /* ssl/sslt.h */
     static final int SSL_Variant_Stream = 33;
     static final int SSL_Variant_Datagram = 34;
