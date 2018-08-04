@@ -97,6 +97,7 @@ class SocketBase {
     static final int SSL_LIBRARY_VERSION_TLS_1_0 = 30;
     static final int SSL_LIBRARY_VERSION_TLS_1_1 = 31;
     static final int SSL_LIBRARY_VERSION_TLS_1_2 = 32;
+    static final int SSL_LIBRARY_VERSION_TLS_1_3 = 35;
     /* ssl/sslt.h */
     static final int SSL_Variant_Stream = 33;
     static final int SSL_Variant_Datagram = 34;
@@ -184,11 +185,11 @@ class SocketBase {
 
     void setSSLVersionRange(org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range)
             throws SocketException {
-        setSSLVersionRange(range.getMinEnum(), range.getMaxEnum());
+        setSSLVersionRange(range.getMinVersion().value(), range.getMaxVersion().value());
     }
 
     /**
-     * Sets SSL Version Range for this socket to support TLS v1.1 and v1.2
+     * Sets SSL Version Range for this socket to support TLS v1.1 to v1.3
      */
     native void setSSLVersionRange(int min, int max)
             throws SocketException;
