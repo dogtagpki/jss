@@ -1418,16 +1418,14 @@ public class SSLSocket extends java.net.Socket {
         }
 
         /**
-         * @deprecated Replaced with SSLVersion.getMinVersion().
          * @return enumeration value
          */
-        int getMinEnum() { return minVersion.value(); }
+        public int getMinEnum() { return minVersion.value(); }
 
         /**
-         * @deprecated Replaced with SSLVersion.getMaxVersion().
          * @return enumeration value
          */
-        int getMaxEnum() { return maxVersion.value(); }
+        public int getMaxEnum() { return maxVersion.value(); }
     }
 
     public static class SSLProtocolVariant {
