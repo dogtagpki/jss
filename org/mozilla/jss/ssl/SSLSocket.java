@@ -316,6 +316,16 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384       = 0xc030;
     public final static int TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256         = 0xc031;
 
+    /* draft-ietf-tls-chacha20-poly1305-04 */
+    public final static int TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256   = 0xCCA8;
+    public final static int TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCA9;
+    public final static int TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256     = 0xCCAA;
+
+    /* Special TLS 1.3 cipher suites that really just specify AEAD */
+    public final static int TLS_AES_128_GCM_SHA256                        = 0x1301;
+    public final static int TLS_AES_256_GCM_SHA384                        = 0x1302;
+    public final static int TLS_CHACHA20_POLY1305_SHA256                  = 0x1303;
+
     /*
      * Locking strategy of SSLSocket
      *
@@ -1388,6 +1398,12 @@ public class SSLSocket extends java.net.Socket {
          */
         @Deprecated
         public static final int tls1_2 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_2;
+
+        /**
+         * @deprecated Replaced with SSLVersion.TLS_1_2.
+         */
+        @Deprecated
+        public static final int tls1_3 = SocketBase.SSL_LIBRARY_VERSION_TLS_1_3;
 
         public SSLVersionRange(SSLVersion minVersion, SSLVersion maxVersion) throws IllegalArgumentException {
 
