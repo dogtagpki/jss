@@ -45,13 +45,6 @@ PR_BEGIN_EXTERN_C
 #define COLLECTION_ADD_SIG "(Ljava/lang/Object;)Z"
 
 /*
- * Debug
- */
-#define DEBUG_CLASS_NAME "org/mozilla/jss/util/Debug"
-#define DEBUG_TRACE_NAME "trace"
-#define DEBUG_TRACE_SIG "(ILjava/lang/String;)V"
-
-/*
  * InetAddress
  */
 #define GET_ADDR_NAME "getAddress"

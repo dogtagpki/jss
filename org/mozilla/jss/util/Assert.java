@@ -5,10 +5,7 @@ package org.mozilla.jss.util;
 
 /**
  * C-style assertions in Java.
- * These methods are only active in debug mode
- * (org.mozilla.jss.Debug.DEBUG==true).
  *
- * @see org.mozilla.jss.util.Debug
  * @see org.mozilla.jss.util.AssertionException
  * @version $Revision$ $Date$
  */

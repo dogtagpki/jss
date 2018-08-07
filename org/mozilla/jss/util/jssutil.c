@@ -476,7 +476,7 @@ static int debugLevel = JSS_TRACE_ERROR;
  *
  * INPUTS
  *      level
- *          The trace level, from org.mozilla.jss.util.Debug.
+ *          The trace level.
  *      mesg
  *          The trace message.  Must not be NULL.
  */
@@ -523,19 +523,6 @@ JSS_assertOutOfMem(JNIEnv *env)
 
     /* Re-throw the exception */
     (*env)->Throw(env, excep);
-}
-
-/***********************************************************************
- * Debug.setNativeLevel
- *
- * If the debug level is changed in Java code, change it in native
- * code as well.
- */
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_util_Debug_setNativeLevel
-    (JNIEnv *env, jclass clazz, jint level)
-{
-    debugLevel = level;
 }
 
 /***********************************************************************
