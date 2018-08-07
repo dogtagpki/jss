@@ -1533,21 +1533,6 @@ public class SSLSocket extends java.net.Socket {
         close(); /* in case user did not call close */
     }
 
-    public static class CipherPolicy {
-        private int _enum;
-        private CipherPolicy(int _enum) { }
-
-        int getEnum() { return _enum; }
-
-        public static final CipherPolicy DOMESTIC =
-            new CipherPolicy(SocketBase.SSL_POLICY_DOMESTIC);
-        public static final CipherPolicy EXPORT =
-            new CipherPolicy(SocketBase.SSL_POLICY_EXPORT);
-        public static final CipherPolicy FRANCE =
-            new CipherPolicy(SocketBase.SSL_POLICY_FRANCE);
-
-    }
-
     /**
      * Sets the SSL cipher policy. This must be called before creating any
      *  SSL sockets.
