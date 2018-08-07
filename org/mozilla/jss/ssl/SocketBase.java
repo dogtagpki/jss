@@ -183,7 +183,7 @@ class SocketBase {
     native void setSSLOption(int option, int on)
             throws SocketException;
 
-    void setSSLVersionRange(org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range)
+    void setSSLVersionRange(SSLVersionRange range)
             throws SocketException {
         setSSLVersionRange(range.getMinVersion().value(), range.getMaxVersion().value());
     }

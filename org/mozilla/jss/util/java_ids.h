@@ -374,7 +374,7 @@ PR_BEGIN_EXTERN_C
 /*
  * SSLVersionRange
  */
-#define SSL_VERSION_RANGE_CLASS_NAME "org/mozilla/jss/ssl/SSLSocket$SSLVersionRange"
+#define SSL_VERSION_RANGE_CLASS_NAME "org/mozilla/jss/ssl/SSLVersionRange"
 #define SSL_VERSION_RANGE_CONSTRUCTOR_NAME "<init>"
 #define SSL_VERSION_RANGE_CONSTRUCTOR_SIG "(II)V"
 
