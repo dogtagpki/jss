@@ -1363,19 +1363,6 @@ public class SSLSocket extends java.net.Socket {
         setSSLDefaultOption(SocketBase.SSL_NO_CACHE, !b);
     }
 
-    public static class SSLProtocolVariant {
-        private int _enum;
-        private SSLProtocolVariant(int val) { _enum = val; }
-
-        int getEnum() { return _enum; }
-
-        public static final SSLProtocolVariant STREAM =
-            new SSLProtocolVariant(SocketBase.SSL_Variant_Stream);
-        public static final SSLProtocolVariant DATA_GRAM =
-            new SSLProtocolVariant(SocketBase.SSL_Variant_Datagram);
-
-    }
-
     public static void setSSLVersionRangeDefault(SSLProtocolVariant ssl_variant, SSLVersionRange range)
         throws SocketException
     {
