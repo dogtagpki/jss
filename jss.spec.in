@@ -7,8 +7,8 @@ URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 Version:        4.5.0
-Release:        0.4%{?_timestamp}%{?_commit_id}%{?dist}
-%global         _phase -a4
+Release:        0.6%{?_timestamp}%{?_commit_id}%{?dist}
+%global         _phase -b1
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -35,8 +35,9 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 BuildRequires:  git
 
 BuildRequires:  gcc-c++
-BuildRequires:  nss-devel >= 3.28.4-6
 BuildRequires:  nspr-devel >= 4.13.1
+BuildRequires:  nss-devel >= 3.28.4-6
+BuildRequires:  nss-tools >= 3.28.4-6
 BuildRequires:  java-devel
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
@@ -65,8 +66,8 @@ Requires:       apache-commons-lang
 Requires:       apache-commons-codec
 
 Conflicts:      idm-console-framework < 1.1.17-4
-Conflicts:      pki-base < 10.6.3
-Conflicts:      tomcatjss < 7.3.2
+Conflicts:      pki-base < 10.6.5
+Conflicts:      tomcatjss < 7.3.4
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
@@ -173,7 +174,6 @@ cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 
 ################################################################################
 %changelog
-
 * Tue May 29 2018 Dogtag PKI Team <pki-devel@redhat.com> 4.5.0-0
 - To list changes in <branch> since <tag>:
   $ git log --pretty=oneline --abbrev-commit --no-decorate <tag>..<branch>
