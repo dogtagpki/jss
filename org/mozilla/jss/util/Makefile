@@ -28,8 +28,6 @@ include $(CORE_DEPTH)/config/config.mk
 
 include config.mk
 
-ALL_TRASH += Debug.java
-
 #######################################################################
 # (5) Execute "global" rules. (OPTIONAL)                              #
 #######################################################################

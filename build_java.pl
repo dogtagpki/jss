@@ -55,7 +55,6 @@ org.mozilla.jss.SecretDecoderRing.KeyManager
 org.mozilla.jss.ssl.SSLSocket 
 org.mozilla.jss.ssl.SSLServerSocket 
 org.mozilla.jss.ssl.SocketBase 
-org.mozilla.jss.util.Debug
 org.mozilla.jss.util.Password       
 );
 
@@ -153,10 +152,8 @@ sub setup_vars {
     $class_release_dir .= "/$cmdline_vars{SOURCE_RELEASE_CLASSES_DIR}";
     if( $ENV{BUILD_OPT} ) {
         $javac_opt_flag = "-O";
-        $debug_source_file = "org/mozilla/jss/util/Debug_ship.jnot";
     } else {
         $javac_opt_flag = "-g";
-        $debug_source_file = "org/mozilla/jss/util/Debug_debug.jnot";
     }
     $jni_header_dir = "$dist_dir/private/jss/_jni";
 
@@ -262,14 +259,6 @@ sub clean {
 }
 
 sub build {
-
-    #
-    # copy the appropriate debug file
-    #
-    my $debug_target_file = "org/mozilla/jss/util/Debug.java";
-    if( compare($debug_source_file, $debug_target_file) ) {
-        copy($debug_source_file, $debug_target_file) or die "Copying file: $!";
-    }
 
     #
     # generate MANIFEST.MF file in dist dir

@@ -177,7 +177,6 @@ Java_org_mozilla_jss_ssl_SocketBase_setSSLOption;
 Java_org_mozilla_jss_ssl_SocketBase_socketBind;
 Java_org_mozilla_jss_ssl_SocketBase_socketClose;
 Java_org_mozilla_jss_ssl_SocketBase_socketCreate;
-Java_org_mozilla_jss_util_Debug_setNativeLevel;
 Java_org_mozilla_jss_util_Password_readPasswordFromConsole;
 ;+#
 ;+# Data objects (NONE)
@@ -337,6 +336,7 @@ Java_org_mozilla_jss_pkcs11_PK11Token_importPublicKey;
 Java_org_mozilla_jss_pkcs11_PK11Store_loadPrivateKeys;
 Java_org_mozilla_jss_pkcs11_PK11Store_loadPublicKeys;
 Java_org_mozilla_jss_pkcs11_PK11Store_deletePublicKey;
+Java_org_mozilla_jss_ssl_SSLSocket_boundSSLVersionRange;
 ;+    local:
 ;+       *;
 ;+};

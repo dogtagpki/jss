@@ -226,7 +226,7 @@ sub setup_vars {
     }
 
     #MAC OS X have the -Djava.library.path for the JSS JNI library
-    if ($osname =~ /Darwin/) {
+    if ($osname =~ /Darwin/ || $osname =~ /Linux/) {
         $java = $java . " -Djava.library.path=$jss_lib_dir";
     } 
 

@@ -231,7 +231,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
             throws IOException {
 
         /**
-         * Debug.trace("NSCertTypeExtension");
+         * logger.trace("NSCertTypeExtension");
          * this.mBitString = new byte[1];
          * this.mBitString[0] = (byte)0x00;
          * return;
