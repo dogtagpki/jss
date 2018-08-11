@@ -467,6 +467,9 @@ public final class CryptoManager implements TokenSupplier
                     "Must set ocspResponderCertNickname");
             }
         }
+
+        logger.info("CryptoManager: initializing NSS database at " + values.configDir);
+
         initializeAllNative2(values.configDir,
                             values.certPrefix,
                             values.keyPrefix,

@@ -208,7 +208,7 @@ if [ "$BUILD_TARGET" != "src" ] &&
 fi
 
 if [ "$SPEC_TEMPLATE" = "" ] ; then
-    SPEC_TEMPLATE="$SRC_DIR/$NAME.spec.in"
+    SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
 fi
 
 VERSION="`rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}'`"
