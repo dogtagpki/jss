@@ -20,7 +20,7 @@ install:
       registry.fedoraproject.org/fedora:$FEDORA
   - docker exec container dnf install -y dnf-plugins-core gcc make rpm-build
   - docker exec container dnf copr -y enable ${JSS_4_5_REPO:-@pki/10.6}
-  - docker exec container dnf builddep -y --spec /root/jss/jss.spec.in
+  - docker exec container dnf builddep -y --spec /root/jss/jss.spec
   - docker exec container /root/jss/build.sh --with-timestamp --with-commit-id rpm
 
 script:
