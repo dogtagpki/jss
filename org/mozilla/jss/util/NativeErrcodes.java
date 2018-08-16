@@ -111,6 +111,7 @@ public class NativeErrcodes {
      * SSL_ERROR_FORTEZZA_PQG is a placeholder for backward
      * compatibility.
      */
+    @Deprecated
     public static final int SSL_ERROR_FORTEZZA_PQG = 97;
     public static final int SSL_ERROR_UNKNOWN_CIPHER_SUITE = 98;
     public static final int SSL_ERROR_NO_CIPHERS_SUPPORTED = 99;
@@ -310,6 +311,7 @@ public class NativeErrcodes {
      * SEC_ERROR_NOT_FORTEZZA_ISSUER is a placeholder for backward
      * compatibility.
      */
+    @Deprecated
     public static final int SEC_ERROR_NOT_FORTEZZA_ISSUER = 283;
     public static final int SEC_ERROR_CANNOT_MOVE_SENSITIVE_KEY = 284;
     public static final int SEC_ERROR_JS_INVALID_MODULE_NAME = 285;

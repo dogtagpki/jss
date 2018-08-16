@@ -45,6 +45,7 @@ public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
      *      fromSPKI() instead.
      * @see #fromSPKI(byte[])
      */
+    @Deprecated
     public static PK11PubKey fromRaw(PrivateKey.Type type, byte[] rawKey)
         throws InvalidKeyFormatException
     {

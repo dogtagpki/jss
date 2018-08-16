@@ -6,6 +6,7 @@ package org.mozilla.jss.crypto;
 /**
  * @deprecated Use javax.crypto.BadPaddingException.
  */
+@Deprecated
 public class BadPaddingException extends javax.crypto.BadPaddingException {
     private static final long serialVersionUID = 1L;
     public BadPaddingException() {

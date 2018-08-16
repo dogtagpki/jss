@@ -28,6 +28,7 @@ public class SSLSecurityStatus {
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
      * STATUS_FORTEZZA is a placeholder for backward compatibility.
      */
+    @Deprecated
     final public int STATUS_FORTEZZA = 3;
 
 	/**
