@@ -226,6 +226,7 @@ public class EncryptionAlgorithm extends Algorithm {
      *  don't contain key length, which is necessary to distinguish between
      *  AES algorithms.
      */
+    @Deprecated
     public static EncryptionAlgorithm fromString(String name)
         throws NoSuchAlgorithmException
     {
@@ -276,6 +277,7 @@ public class EncryptionAlgorithm extends Algorithm {
      * @return <code>true</code> if this algorithm performs padding.
      * @deprecated Call <tt>getPaddingType()</tt> instead.
      */
+    @Deprecated
     public boolean isPadded() {
         return ! Padding.NONE.equals(padding);
     }

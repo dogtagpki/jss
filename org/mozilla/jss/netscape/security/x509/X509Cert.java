@@ -46,6 +46,7 @@ import org.mozilla.jss.netscape.security.util.DerValue;
  * @deprecated Use the new X509Certificate class.
  *             This class is only restored for backwards compatibility.
  */
+@Deprecated
 public class X509Cert implements Certificate, Serializable {
 
     /**

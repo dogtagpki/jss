@@ -167,7 +167,10 @@ public class Password implements PasswordCallback, Cloneable,
      * The finalizer clears the sensitive information before releasing
      * it to the garbage collector, but it should have been cleared manually
      * before this point anyway.
+     *
+     * @deprecated finalize() in Object has been deprecated
      */
+    @Deprecated
     protected void finalize() throws Throwable {
         if(!cleared) {
             logger.warn("Password was garbage collected before it was cleared.");

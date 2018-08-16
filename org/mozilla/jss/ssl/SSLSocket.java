@@ -490,6 +490,7 @@ public class SSLSocket extends java.net.Socket {
      * @deprecated As of JSS 3.0. The stream parameter is ignored, because
      *      only stream sockets are supported.
      */
+    @Deprecated
     public SSLSocket(InetAddress address, int port, InetAddress localAddr,
         int localPort, boolean stream,
         SSLCertificateApprovalCallback certApprovalCallback,
@@ -1178,6 +1179,7 @@ public class SSLSocket extends java.net.Socket {
      *  it.
      * @deprecated use requireClientAuth(int)
      */
+    @Deprecated
     public void requireClientAuth(boolean require, boolean onRedo)
             throws SocketException
     {
@@ -1213,6 +1215,7 @@ public class SSLSocket extends java.net.Socket {
      *  All subsequently created sockets will use this default setting.
      * @deprecated use requireClientAuthDefault(int)
      */
+    @Deprecated
     public void requireClientAuthDefault(boolean require, boolean onRedo)
             throws SocketException
     {
@@ -1321,6 +1324,7 @@ public class SSLSocket extends java.net.Socket {
      * @deprecated As of JSS 3.0. This method is misnamed. Use
      *  <code>requestClientAuth</code> instead.
      */
+    @Deprecated
     public void setNeedClientAuth(boolean b) throws SocketException {
         base.requestClientAuth(b);
     }
@@ -1342,6 +1346,7 @@ public class SSLSocket extends java.net.Socket {
      * @deprecated As of JSS 3.0. This method is misnamed. Use
      *  <code>requestClientAuthNoExpiryCheck</code> instead.
      */
+    @Deprecated
     public void setNeedClientAuthNoExpiryCheck(boolean b)
         throws SocketException
     {
@@ -1529,6 +1534,10 @@ public class SSLSocket extends java.net.Socket {
      */
     public native void redoHandshake(boolean flushCache) throws SocketException;
 
+    /**
+     * @deprecated finalize() in Object has been deprecated
+     */
+    @Deprecated
     protected void finalize() throws Throwable {
         close(); /* in case user did not call close */
     }
