@@ -30,9 +30,11 @@ import java.util.Enumeration;
  * part of the constructor.
  *
  * @author Satish Dharmaraj
+ * @deprecated Owner in java.security.acl has been deprecated and marked for removal
  */
+@Deprecated
 public class OwnerImpl implements Owner {
-    private Group ownerGroup;
+    @Deprecated private Group ownerGroup;
 
     public OwnerImpl(Principal owner) {
         ownerGroup = new GroupImpl("AclOwners");
@@ -51,7 +53,9 @@ public class OwnerImpl implements Owner {
      * @return true if success, false if already an owner.
      * @exception NotOwnerException if the caller principal is not on
      *                the owners list of the Acl.
+     * @deprecated LastOwnerException in java.security.acl has been deprecated and marked for removal
      */
+    @Deprecated
     public synchronized boolean addOwner(Principal caller, Principal owner)
             throws NotOwnerException {
         if (!isOwner(caller))
@@ -75,7 +79,9 @@ public class OwnerImpl implements Owner {
      *                the owners list of the Acl.
      * @exception LastOwnerException if there is only one owner left in the group, then
      *                deleteOwner would leave the ACL owner-less. This exception is raised in such a case.
+     * @deprecated LastOwnerException in java.security.acl has been deprecated and marked for removal
      */
+    @Deprecated
     public synchronized boolean deleteOwner(Principal caller, Principal owner)
             throws NotOwnerException, LastOwnerException {
         if (!isOwner(caller))
@@ -89,8 +95,7 @@ public class OwnerImpl implements Owner {
         if (e.hasMoreElements())
             return ownerGroup.removeMember(owner);
         else
-            throw new LastOwnerException();
-
+           throw new LastOwnerException();
     }
 
     /**

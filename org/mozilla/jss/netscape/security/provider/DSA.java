@@ -435,8 +435,9 @@ public final class DSA extends Signature {
      *
      * </dl>
      *
-     * @deprecated
+     * @deprecated Replaced by engineSetParameter(AlgorithmParameterSpec params)
      */
+    @Deprecated
     protected void engineSetParameter(String key, Object param) {
 
         if (key.equals("KSEED")) {
@@ -470,8 +471,10 @@ public final class DSA extends Signature {
      *
      * @return the value of the requested parameter.
      *
-     * @deprecated
+     * @deprecated no replacent given
+     * @see https://docs.oracle.com/javase/10/docs/api/java/security/SignatureSpi.html#engineGetParameter(java.lang.String)
      */
+    @Deprecated
     protected Object engineGetParameter(String key) {
         if (key.equals("KSEED")) {
             return KseedAsByteArray;

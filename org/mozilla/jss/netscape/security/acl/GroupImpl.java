@@ -26,7 +26,9 @@ import java.util.Vector;
  * This class implements a group of principals.
  *
  * @author Satish Dharmaraj
+ * @deprecated Group in java.security.acl has been deprecated and marked for removal
  */
+@Deprecated
 public class GroupImpl implements Group {
     private Vector<Principal> groupMembers = new Vector<Principal>(50, 100);
     private String group;
@@ -82,7 +84,9 @@ public class GroupImpl implements Group {
      * the group represented in this interface.
      *
      * @param another The group to compare this group to.
+     * @deprecated Group in java.security.acl has been deprecated and marked for removal
      */
+    @Deprecated
     public boolean equals(Group another) {
         return group.equals(another.toString());
     }
@@ -107,7 +111,9 @@ public class GroupImpl implements Group {
      * @param member The principal whose membership must be checked for.
      * @return true if the principal is a member of this group,
      *         false otherwise
+     * @deprecated Group in java.security.acl has been deprecated and marked for removal
      */
+    @Deprecated
     public boolean isMember(Principal member) {
 
         //
@@ -130,12 +136,15 @@ public class GroupImpl implements Group {
         return group;
     }
 
-    //
-    // This function is the recursive search of groups for this
-    // implementation of the Group. The search proceeds building up
-    // a vector of already seen groups. Only new groups are considered,
-    // thereby avoiding loops.
-    //
+    /**
+     * This function is the recursive search of groups for this
+     * implementation of the Group. The search proceeds building up
+     * a vector of already seen groups. Only new groups are considered,
+     * thereby avoiding loops.
+     *
+     * @deprecated Group in java.security.acl has been deprecated and marked for removal
+     */
+    @Deprecated
     boolean isMemberRecurse(Principal member, Vector<Group> alreadySeen) {
         Enumeration<Principal> e = members();
         while (e.hasMoreElements()) {
@@ -155,12 +164,12 @@ public class GroupImpl implements Group {
                 // case rather than clutter the interface by forcing the
                 // implementation of this method.)
                 //
-                GroupImpl g = (GroupImpl) p;
+                @Deprecated GroupImpl g = (GroupImpl) p;
                 alreadySeen.addElement(this);
                 if (!alreadySeen.contains(g))
                     mem = g.isMemberRecurse(member, alreadySeen);
             } else if (p instanceof Group) {
-                Group g = (Group) p;
+                @Deprecated Group g = (Group) p;
                 if (!alreadySeen.contains(g))
                     mem = g.isMember(member);
             }

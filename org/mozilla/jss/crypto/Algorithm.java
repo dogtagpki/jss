@@ -84,6 +84,7 @@ public class Algorithm {
      * @return Parameter type.
      * @deprecated Call <tt>getParameterClasses()</tt> instead.
      */
+    @Deprecated
     public Class<?> getParameterClass() {
         if( parameterClasses.length == 0) {
             return null;

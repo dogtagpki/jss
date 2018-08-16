@@ -124,6 +124,10 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
         pass.clear();
     }
 
+    /**
+     * @deprecated finalize() in Object has been deprecated
+     */
+    @Deprecated
     protected void finalize() throws Throwable {
         pass.clear();
     }

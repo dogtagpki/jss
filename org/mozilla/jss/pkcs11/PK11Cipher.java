@@ -81,6 +81,10 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
     }
 
 
+    /**
+     * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
+     */
+    @Deprecated
     public void initEncrypt(SymmetricKey key, AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
         TokenException
@@ -106,6 +110,10 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         }
     }
 
+    /**
+     * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
+     */
+    @Deprecated
     public void initDecrypt(SymmetricKey key, AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
         TokenException
@@ -151,6 +159,10 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         return update(sub);
     }
 
+    /**
+     * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
+     */
+    @Deprecated
     public byte[] doFinal(byte[] bytes)
         throws IllegalStateException, IllegalBlockSizeException,
         BadPaddingException, TokenException
@@ -181,6 +193,10 @@ final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         return doFinal(sub);
     }
 
+    /**
+     * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
+     */
+    @Deprecated
     public byte[] doFinal()
         throws IllegalStateException, IllegalBlockSizeException,
         BadPaddingException, TokenException
