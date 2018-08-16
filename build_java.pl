@@ -275,9 +275,9 @@ sub build {
     ensure_dir_exists($dist_dir);
 
     if ($append) {
-        open(MYOUTFILE, ">$manifest_file");  #open for write, overwrite
-    } else {
         open(MYOUTFILE, ">>$manifest_file"); #open for write, append
+    } else {
+        open(MYOUTFILE, ">$manifest_file");  #open for write, overwrite
     }
 
     #*** Print freeform text, semicolon required ***
