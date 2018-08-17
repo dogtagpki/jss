@@ -84,7 +84,7 @@ public class GroupImpl implements Group {
      * the group represented in this interface.
      *
      * @param another The group to compare this group to.
-     * @deprecation Group in java.security.acl has been deprecated and marked for removal
+     * @deprecated Group in java.security.acl has been deprecated and marked for removal
      */
     @Deprecated
     public boolean equals(Group another) {

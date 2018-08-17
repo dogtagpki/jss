@@ -37,7 +37,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
      * Returns a new CryptoToken where this key resides.
      *
      * @return The PK11Token that owns this key.
-     * @deprecation getUniqueID() in PrivateKey has been deprecated
+     * @deprecated getUniqueID() in PrivateKey has been deprecated
      */
     @Deprecated
     public native CryptoToken getOwningToken();
