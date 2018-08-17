@@ -37,6 +37,7 @@ public interface PrivateKey extends java.security.PrivateKey
      *      another way, such as a function that directly matches a cert and
      *      key.
      */
+    @Deprecated
     public byte[] getUniqueID() throws TokenException;
 
     /**

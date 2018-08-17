@@ -215,6 +215,10 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return getAliases().contains(alias);
     }
 
+    /**
+     * @deprecated getUniqueID() in PrivateKey has been deprecated
+     */
+    @Deprecated
     public void engineDeleteEntry(String alias) throws KeyStoreException {
 
         try {
@@ -402,6 +406,10 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return null;
     }
 
+    /**
+     * @deprecated getUniqueID() in PrivateKey has been deprecated
+     */
+    @Deprecated
     public Key engineGetKey(String alias, char[] password) {
 
         logger.debug("JSSKeyStoreSpi: engineGetKey(" + alias + ")");

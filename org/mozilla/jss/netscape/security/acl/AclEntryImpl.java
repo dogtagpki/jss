@@ -138,7 +138,9 @@ public class AclEntryImpl implements AclEntry {
 
     /**
      * Return a string representation of the contents of the ACL entry.
+     * @deprecated Group and Permission in java.security.acl have been deprecated and marked for removal
      */
+    @Deprecated
     public String toString() {
         StringBuffer s = new StringBuffer();
         if (negative)
@@ -152,7 +154,7 @@ public class AclEntryImpl implements AclEntry {
         s.append(user + "=");
         Enumeration<Permission> e = permissions();
         while (e.hasMoreElements()) {
-            Permission p = e.nextElement();
+            @Deprecated Permission p = e.nextElement();
             s.append(p);
             if (e.hasMoreElements())
                 s.append(",");

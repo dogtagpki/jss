@@ -87,7 +87,10 @@ public abstract class NativeProxy
      *          super.finalize();
      *      }
      * }
+     *
+     * @deprecated finalize() in Object has been deprecated
      */
+    @Deprecated
     protected void finalize() throws Throwable {
         unregister(registryIndex);
         releaseNativeResources();

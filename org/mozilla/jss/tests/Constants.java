@@ -54,7 +54,26 @@ public interface Constants {
         }
         
     }
-    
+
+    /**
+     * The following have been deprecated
+     *
+     * SSL3_RSA_WITH_RC4_128_MD5
+     * SSL3_RSA_WITH_RC4_128_SHA
+     * SSL3_DHE_RSA_WITH_3DES_EDE_CBC_SHA
+     * SSL3_DHE_DSS_WITH_3DES_EDE_CBC_SHA
+     * SL3_RSA_WITH_3DES_EDE_CBC_SHA
+     * SSL3_DHE_RSA_WITH_DES_CBC_SHA
+     * SSL3_DHE_DSS_WITH_DES_CBC_SHA
+     * SSL3_RSA_WITH_DES_CBC_SHA
+     * SSL3_RSA_WITH_NULL_SHA
+     * SSL3_RSA_WITH_NULL_MD5
+     * SSL3_RSA_WITH_RC4_128_MD5
+     * SSL3_RSA_WITH_3DES_EDE_CBC_SHA
+     * SSL3_RSA_WITH_DES_CBC_SHA
+     * SSL3_RSA_WITH_NULL_MD5
+     */
+
     /* cipherSuites Supported by JSS */
     public static final cipher jssCipherSuites[] = {
 /*0 */  new cipher(SSLSocket.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA"),
