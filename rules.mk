@@ -3,8 +3,14 @@
 .PHONY: releaseJava
 .PHONY: testJava
 
+distclean:: cleanJava
 clean:: cleanJava
+
+dist:: releaseJava
 release_classes:: releaseJava
+
+check:: testJava
+test_jss:: testJava
 
 # always do a private_export
 export:: private_export
