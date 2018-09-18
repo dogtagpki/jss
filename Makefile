@@ -34,8 +34,6 @@ include $(CORE_DEPTH)/coreconf/config.mk
 # built first
 all:: buildJava
 
-test_jss: testJava
-
 include $(CORE_DEPTH)/coreconf/rules.mk
 
 #######################################################################
