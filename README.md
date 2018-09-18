@@ -11,6 +11,26 @@ JSS also provides a pure Java interface for ASN.1 types and BER/DER encoding.
 * Website: http://www.dogtagpki.org/wiki/JSS
 * Issues: https://pagure.io/jss/issues
 
+Dependencies
+------------
+
+This project has the following build dependencies:
+
+ - [nspr](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSPR)
+ - [nss](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS)
+    - A c and c++ compiler such as [gcc](ttps://gcc.gnu.org/)
+    - [zlib](https://zlib.net/)
+ - [OpenJDK 1.8.0](http://openjdk.java.net/)
+ - [Perl](https://www.perl.org/)
+ - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
+ - [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
+ - [SLF4J](https://www.slf4j.org/)
+
+To install these dependencies on Fedora, execute the following:
+
+    sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
+                     java-devel jpackage-utils slf4j zlib-devel
+
 Build/Test Instructions
 -----------------------
 
@@ -227,7 +247,7 @@ where:
 * YYYY  = 4-digit year (e. g. - 2017)
 * MM    = 2-digit month (e. g. - 01, ..., 12)
 * DD    = 2-digit day of the month (e. g. - 01, ..., 31)
-    
+
 For example:
 
 ```
