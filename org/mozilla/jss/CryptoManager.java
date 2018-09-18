@@ -172,10 +172,10 @@ public final class CryptoManager implements TokenSupplier
                     return token;
                 }
             } catch( TokenException e ) {
-                Assert._assert(false, "Got a token exception");
+                throw new RuntimeException(e);
             }
         }
-        throw new NoSuchTokenException();
+        throw new NoSuchTokenException("No such token: " + name);
     }
 
     /**
