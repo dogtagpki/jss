@@ -1,5 +1,5 @@
 #use strict;
-use Cwd qw(abs_path);
+use Cwd qw(abs_path cwd);
 use File::Find;
 use File::Compare;
 use File::Basename;
@@ -80,20 +80,29 @@ org.mozilla.jss.tests
 org.mozilla.jss.util
 );
 
+my %commands = (
+    "clean" => \&clean,
+    "build" => \&build,
+    "javadoc" => \&javadoc,
+    "test" => \&test,
+    "release" => \&release
+);
+
 # setup environment
 setup_env();
 
 # setup variables
 setup_vars(\@ARGV);
 
-# run the command with its arguments
-my $cmd = (shift || "build");   # first argument is command
-grep { s/(.*)/"$1"/ } @ARGV;    # enclose remaining arguments in quotes
-my $args = join(",",@ARGV);     # and comma-separate them
-eval "$cmd($args)";             # now run the command
-if( $@ ) {
-    die $@;                     # errors in eval will be put in $@
+# run the command with its arguments, defaulting to "build" if no command is
+# specified.
+my $cmd = shift;
+if (!exists $commands{$cmd}) {
+    $cmd = "build"
 }
+
+# Call the relevant function implementing the command.
+$commands{$cmd}->();
 
 # END
 
@@ -176,8 +185,7 @@ sub setup_vars {
     }
 
     # retrieve present working directory
-    our $jss_dir = `pwd`;
-    $jss_dir =~ chomp $jss_dir;
+    our $jss_dir = cwd;
     print "JSS directory: $jss_dir\n";
 
     my $work_dir = dirname($jss_dir);
@@ -257,6 +265,10 @@ sub clean {
     our $class_dir;
     our $class_jar;
     our $jni_header_dir;
+
+    if ($class_dir eq '' || $class_jar eq '' || $jni_header_dir eq '') {
+        die "Refusing to clean; environment not set up.";
+    }
 
     print_do("rm -rf $class_dir");
     print_do("rm -f $class_jar");
