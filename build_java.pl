@@ -6,14 +6,14 @@ use File::Basename;
 use File::stat;
 use File::Copy;
 
-@excluded_sources = qw(
+my @excluded_sources = qw(
 provider\.new/
 org/mozilla/jss/provider/java/security/KeyFactorySpi1_4\.java
 org/mozilla/jss/pkix/cert/X509Certificate\.java
 samples/
 );
 
-@javah_classes = qw(
+my @javah_classes = qw(
 org.mozilla.jss.DatabaseCloser        
 org.mozilla.jss.CryptoManager          
 org.mozilla.jss.crypto.Algorithm        
@@ -58,7 +58,7 @@ org.mozilla.jss.ssl.SocketBase
 org.mozilla.jss.util.Password       
 );
 
-@packages = qw(
+my @packages = qw(
 org.mozilla.jss
 org.mozilla.jss.asn1
 org.mozilla.jss.crypto
@@ -97,6 +97,7 @@ if( $@ ) {
 
 # END
 
+my %cmdline_vars;
 sub grab_cmdline_vars {
     my $argv = shift;
 
@@ -123,7 +124,7 @@ sub setup_env {
 
     # check that USE_64 environment variable has been set externally
     # for 64-bit architectures (when applicable)
-    $bitsize = `getconf LONG_BIT`;
+    my $bitsize = `getconf LONG_BIT`;
     if( $bitsize == 64 ) {
         $ENV{USE_64} or
         die "\nMust specify USE_64 environment variable!\n"
@@ -138,60 +139,60 @@ sub setup_vars {
     grab_cmdline_vars($argv);
     dump_cmdline_vars();
 
-    $jar = "$ENV{JAVA_HOME}/bin/jar";
-    $javac = "$ENV{JAVA_HOME}/bin/javac";
-    $javah = "$ENV{JAVA_HOME}/bin/javah";
-    $javadoc = "$ENV{JAVA_HOME}/bin/javadoc";
+    our $jar = "$ENV{JAVA_HOME}/bin/jar";
+    our $javac = "$ENV{JAVA_HOME}/bin/javac";
+    our $javah = "$ENV{JAVA_HOME}/bin/javah";
+    our $javadoc = "$ENV{JAVA_HOME}/bin/javadoc";
 
-    $dist_dir = abs_path($cmdline_vars{SOURCE_PREFIX});
-    $jce_jar = $ENV{JCE_JAR};
+    our $dist_dir = abs_path($cmdline_vars{SOURCE_PREFIX});
 
-    $class_release_dir = $cmdline_vars{SOURCE_RELEASE_PREFIX};
-    $class_dir = "$dist_dir/classes";
-    $class_jar = "$dist_dir/$cmdline_vars{XPCLASS_JAR}";
+    our $class_dir = "$dist_dir/classes";
+    our $class_jar = "$dist_dir/$cmdline_vars{XPCLASS_JAR}";
+
+    our $class_release_dir = $cmdline_vars{SOURCE_RELEASE_PREFIX};
     $class_release_dir .= "/$cmdline_vars{SOURCE_RELEASE_CLASSES_DIR}";
+
+    our $javac_opt_flag = "-g";
     if( $ENV{BUILD_OPT} ) {
         $javac_opt_flag = "-O";
-    } else {
-        $javac_opt_flag = "-g";
     }
-    $jni_header_dir = "$dist_dir/private/jss/_jni";
 
+    our $jni_header_dir = "$dist_dir/private/jss/_jni";
+
+    our $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar";
     if( $ENV{DEBIAN_BUILD} ) {
         $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar";
-    } else {
-        $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar";
     }
-    $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar";
+
+    our $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar";
+    my $jce_jar = $ENV{JCE_JAR};
     if( $jce_jar ) {
         $classpath .= ":$jce_jar";
     }
 
+    our $javac_deprecation_flag = "";
     if( $ENV{CHECK_DEPRECATION} ) {
         $javac_deprecation_flag = "-Xlint:deprecation";
-    } else {
-        $javac_deprecation_flag = "";
     }
 
     # retrieve present working directory
-    $jss_dir = `pwd`;
+    our $jss_dir = `pwd`;
     $jss_dir =~ chomp $jss_dir;
     print "JSS directory: $jss_dir\n";
 
-    $work_dir = dirname($jss_dir);
+    my $work_dir = dirname($jss_dir);
     print "Working directory: $work_dir\n";
 
-    # retrieve architecture
-    $arch = `uname -m`;
-    $arch =~ chomp $arch;
-
     # retrieve operating system
-    $os = `uname`;
+    our $os = `uname`;
     $os =~ chomp $os;
 
-    $jss_objdir = "$work_dir/dist/$cmdline_vars{JSS_OBJDIR_NAME}";
+    our $jss_objdir = "$work_dir/dist/$cmdline_vars{JSS_OBJDIR_NAME}";
     print "jss_objdir=$jss_objdir\n";
 
+    my $jss_objdir_name;
+    our $nss_bin_dir;
+    our $nss_lib_dir;
     if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
         print "Using the NSPR and NSS installed on the system to build JSS.\n";
 
@@ -227,7 +228,7 @@ sub setup_vars {
                   "######################\n");
         }
 
-        $nss_objdir_name = `cat $nss_latest_objdir`;
+        my $nss_objdir_name = `cat $nss_latest_objdir`;
         chomp($nss_objdir_name);
 
         $nss_bin_dir = "$dist_dir/$nss_objdir_name/bin";
@@ -248,17 +249,22 @@ sub setup_vars {
     print "nss_bin_dir=$nss_bin_dir\n";
     print "nss_lib_dir=$nss_lib_dir\n";
 
-    $jss_lib_dir = "$jss_objdir/lib";
+    our $jss_lib_dir = "$jss_objdir/lib";
     print "jss_lib_dir=$jss_lib_dir\n";
 }
 
 sub clean {
+    our $class_dir;
+    our $class_jar;
+    our $jni_header_dir;
+
     print_do("rm -rf $class_dir");
     print_do("rm -f $class_jar");
     print_do("rm -rf $jni_header_dir");
 }
 
 sub build {
+    our $dist_dir;
 
     #
     # generate MANIFEST.MF file in dist dir
@@ -270,7 +276,7 @@ sub build {
     chop($jss_revision);
     $jss_revision      = substr($jss_revision, 22, 3);
     my $build_revision = $jss_revision;
-    $append = 0;
+    my $append = 0;
 
     ensure_dir_exists($dist_dir);
 
@@ -311,6 +317,7 @@ MyLabel
     # weed out files that are excluded or don't need to be updated
     #
     my $file;
+    our $class_dir;
     foreach $file (keys %source_list) {
         my $pattern;
         foreach $pattern (@excluded_sources) {
@@ -327,6 +334,11 @@ MyLabel
     #
     # build the java sources
     #
+    our $javac;
+    our $javac_opt_flag;
+    our $javac_deprecation_flag;
+    our $classpath;
+    our $jar;
     if( scalar(@source_list) > 0 ) {
         ensure_dir_exists($class_dir);
         print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir " .
@@ -338,6 +350,8 @@ MyLabel
     #
     # create the JNI header files
     #
+    our $jni_header_dir;
+    our $javah;
     ensure_dir_exists($jni_header_dir);
     print_do("$javah -classpath $class_dir -d $jni_header_dir " .
         (join " ", @javah_classes) );
@@ -413,15 +427,22 @@ sub ensure_dir_exists {
 
 sub release {
     # copy all class files into release directory
+    our $class_release_dir;
+    our $class_dir;
     ensure_dir_exists("$class_release_dir");
     print_do("cp -r $class_dir/* $class_release_dir");
 }
 
 sub javadoc {
+    our $dist_dir;
+    our $javadoc;
+    our $classpath;
+
     my $html_header_opt;
     if( $ENV{HTML_HEADER} ) {
         $html_header_opt = "-header '$ENV{HTML_HEADER}'";
     }
+
     ensure_dir_exists("$dist_dir/jssdoc");
     my $targets = join(" ", @packages);
     print "$targets\n";
@@ -431,6 +452,16 @@ sub javadoc {
 }
 
 sub test {
+    our $os;
+    our $dist_dir;
+
+    our $jss_dir;
+    our $jss_lib_dir;
+    our $jss_objdir;
+
+    our $nss_bin_dir;
+    our $nss_lib_dir;
+
     if( $os eq 'Linux' || $os eq 'Darwin' ) {
         # Test JSS presuming that it has already been built
 
