@@ -726,7 +726,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo(
         goto finish;
     }
     SECItem nickItem;
-    nickItem.data = nicknameChars;
+    nickItem.data = (unsigned char *) nicknameChars;
     nickItem.len = (*env)->GetStringUTFLength(env, nickname);
 
     // if keyUsage = 0, defaults to signing and encryption/key agreement.
