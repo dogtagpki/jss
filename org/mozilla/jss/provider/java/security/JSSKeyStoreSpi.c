@@ -617,7 +617,7 @@ findKeyCallback
 {
     JSSTraversalStatus status = INIT_TRAVSTAT;
     FindKeyCBInfo *cbinfo = (FindKeyCBInfo*)data;
-    const char *objNick = getObjectNick(obj, type);
+    char *objNick = getObjectNick(obj, type);
 
     status.status = PR_SUCCESS;
 
