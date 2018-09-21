@@ -474,26 +474,24 @@ sub test {
     our $nss_bin_dir;
     our $nss_lib_dir;
 
-    if( $os eq 'Linux' || $os eq 'Darwin' ) {
-        # Test JSS presuming that it has already been built
-
-        if(( -d $dist_dir )  &&
-           ( -d $jss_objdir || -l $jss_objdir )) {
-            my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
-                    . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\";"
-                    . "cd $jss_dir";
-
-            print("#######################\n" .
-                  "# BEGIN:  Testing JSS #\n" .
-                  "#######################\n");
-            print_do($cmd);
-            print("#####################\n" .
-                  "# END:  Testing JSS #\n" .
-                  "#####################\n");
-        } else {
-            die "JSS builds are not available at $jss_objdir.";
-        }
-    } else {
+    if( $os ne 'Linux' && $os eq 'Darwin' ) {
         die "make test_jss is only available on Linux and MacOS platforms.";
     }
+
+    # Ensure that JSS is built prior to tests.
+    if (( ! -d $dist_dir )  && ( ! -d $jss_objdir && ! -l $jss_objdir )) {
+        die "JSS builds are not available at $jss_objdir.";
+    }
+
+    my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
+            . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\";"
+            . "cd $jss_dir";
+
+    print("#######################\n" .
+          "# BEGIN:  Testing JSS #\n" .
+          "#######################\n");
+    print_do($cmd);
+    print("#####################\n" .
+          "# END:  Testing JSS #\n" .
+          "#####################\n");
 }
