@@ -288,15 +288,11 @@ sub build {
     chop($jss_revision);
     $jss_revision      = substr($jss_revision, 22, 3);
     my $build_revision = $jss_revision;
-    my $append = 0;
 
     ensure_dir_exists($dist_dir);
 
-    if ($append) {
-        open(MYOUTFILE, ">>$manifest_file"); #open for write, append
-    } else {
-        open(MYOUTFILE, ">$manifest_file");  #open for write, overwrite
-    }
+    # Always overwrite the manifest file.
+    open(MYOUTFILE, ">$manifest_file");
 
     #*** Print freeform text, semicolon required ***
 print MYOUTFILE <<"MyLabel";
