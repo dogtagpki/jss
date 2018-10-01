@@ -42,12 +42,16 @@ my $lib_jss        = "libjss";
 my $jss_rel_dir    = "";
 my $jss_classpath  = "";
 my $serverPort     = 2876;
-my $hostname       = localhost;
+my $localhost      = "localhost";
+my $hostname       = $localhost;
 my $dbPwd          = "m1oZilla";
 my $configfile     = "";
 my $keystore       = "";
 my $certSN_file    = "";
 my $certSN         = 0;
+my $osname         = "";
+my $host           = "";
+my $release        = "";
 ($osname,$host,$release)    = uname;
 
 # checkPort will return a free Port number
@@ -76,6 +80,14 @@ sub checkPort {
    return $p;
 }
 
+
+# used in all test invocations
+my $run_shell    = "";
+my $pwfile       = "";
+my $nss_bin_dir  = "";
+my $jarFiles     = "";
+my $ld_lib_path  = "";
+my $nspr_lib_dir = "";
 
 sub setup_vars {
     my $argv = shift;
@@ -239,16 +251,19 @@ sub setup_vars {
     my $base_mozilla = $all_dir . "/../../../../..";
     my $abs_base_mozilla = abs_path($base_mozilla);
     # $result_dir = Directory where the results are (mozilla/tests_results/jss)
+    # First check the one above
     my $result_dir =  $abs_base_mozilla . "/tests_results";
     if (! -d $result_dir) {
        mkdir( $result_dir, 0755 ) or die;
     }
-    my $result_dir =  $abs_base_mozilla . "/tests_results/jss";
+    # Now the one for jss
+    $result_dir =  $abs_base_mozilla . "/tests_results/jss";
     if( ! -d $result_dir ) {
       mkdir( $result_dir, 0755 ) or die;
     }
     # $host = hostname
     # $version = test run number (first = 1). Stored in $result_dir/$host
+    my $version = "";
     my $version_file = $result_dir ."/" . $host;
     if ( -f $version_file) {
       open (VERSION, "< $version_file") || die "couldn't open " . $version_file . " for read";
@@ -314,6 +329,7 @@ sub outputEnv {
    system ("perl -version | grep \"This is perl\"");
    system ("$java -version");
 }
+
 sub createpkcs11_cfg {
    
     $configfile = $testdir . "/" . "nsspkcs11.cfg";
@@ -372,7 +388,7 @@ sub run_ssl_test {
 
     print "\n============= $testname \n";
     print "$serverCommand \n";
-    $result = system("$serverCommand");
+    my $result = system("$serverCommand");
     if ($result != 0) {
         print "launching server FAILED with return value $result\n";
         return;
@@ -394,7 +410,7 @@ sub run_test {
 
     print "\n============= $testname \n";
     print "$command \n";
-    $result = system("$command");
+    my $result = system("$command");
     $result >>=8;
     print_case_result ($result, $testname);
 }
@@ -437,9 +453,9 @@ if( ! -d $testdir ) {
 print "creating pkcs11config file\n";
 createpkcs11_cfg;
 
-my $result;
-my $command;
 my $serverCommand;
+
+$jarFiles = "";
 
 if( $ENV{DEBIAN_BUILD} ) {
     $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/slf4j-jdk14.jar:/usr/share/java/commons-lang.jar";
@@ -447,12 +463,15 @@ if( $ENV{DEBIAN_BUILD} ) {
     $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/usr/share/java/commons-lang.jar";
 }
 
-$classpath = "$jarFiles:$jss_classpath";
+my $classpath = "$jarFiles:$jss_classpath";
 
-$pk12util = "pk12util$exe_suffix";
+my $pk12util = "pk12util$exe_suffix";
 if ($nss_bin_dir) {
     $pk12util = "$nss_bin_dir/$pk12util";
 }
+
+my $testname = "";
+my $command  = "";
 
 $testname = "Test UTF-8 Converter";
 $command = "$java -cp $classpath org.mozilla.jss.tests.UTF8ConverterTest";
@@ -676,6 +695,7 @@ run_test($testname, $command);
 my $LIB = "$lib_jss"."4"."$lib_suffix";
 my $strings_exist = `which strings`;
 chomp($strings_exist);
+my $result = 0;
 if ($strings_exist ne "") {
     (-f "$jss_lib_dir/$LIB") or die "$jss_lib_dir/$LIB does not exist\n";
     my $jsslibver = `strings $jss_lib_dir/$LIB | grep Header`;
@@ -687,7 +707,7 @@ if ($strings_exist ne "") {
     }
 } else {
     print "Could not fetch Header information from $jss_lib_dir/$LIB\n";
-    $result=1;
+    $result = 1;
 }
 
 print "\n================= Test Results\n";
