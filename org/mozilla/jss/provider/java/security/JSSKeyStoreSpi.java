@@ -24,8 +24,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.DatatypeConverter;
-
 import org.apache.commons.lang.StringUtils;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NoSuchTokenException;
@@ -41,6 +39,7 @@ import org.mozilla.jss.crypto.TokenCertificate;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.pkcs11.TokenProxy;
 import org.slf4j.Logger;
@@ -186,7 +185,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
                 logger.debug("JSSKeyStoreSpi: - private keys:");
                 for (PrivateKey privateKey : store.getPrivateKeys()) {
                     // convert key ID into hexadecimal
-                    String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
+                    String keyID = Utils.HexEncode(privateKey.getUniqueID());
                     String nickname;
                     if (tokenName == null) {
                         nickname = keyID;
@@ -261,7 +260,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             for (PrivateKey privateKey : store.getPrivateKeys()) {
 
                 // convert key ID into hexadecimal
-                String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
+                String keyID = Utils.HexEncode(privateKey.getUniqueID());
                 logger.debug("JSSKeyStoreSpi: - " + keyID);
 
                 if (!nickname.equals(keyID)) {
@@ -442,7 +441,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             for (PrivateKey privateKey : store.getPrivateKeys()) {
 
                 // convert key ID into hexadecimal
-                String keyID = DatatypeConverter.printHexBinary(privateKey.getUniqueID()).toLowerCase();
+                String keyID = Utils.HexEncode(privateKey.getUniqueID());
                 logger.debug("JSSKeyStoreSpi: - " + keyID);
 
                 if (nickname.equals(keyID)) {
