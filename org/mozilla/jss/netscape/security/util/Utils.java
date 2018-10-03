@@ -152,6 +152,17 @@ public class Utils {
         return sb.toString().toUpperCase();
     }
 
+    public static String HexEncode(byte data[]) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < data.length; i++) {
+            if ((data[i] & 0xff) < 16) {
+                sb.append("0");
+            }
+            sb.append(Integer.toHexString((data[i] & 0xff)));
+        }
+        return sb.toString();
+    }
+
     public static void checkHost(String hostname) throws UnknownHostException {
         InetAddress.getByName(hostname);
     }
