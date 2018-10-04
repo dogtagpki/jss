@@ -3,25 +3,31 @@
 # All rights reserved.
 # END COPYRIGHT BLOCK
 
+language: java
+
 services:
   - docker
 
-env:
-  - FEDORA=27
-  - FEDORA=28
+stages:
+  - validate
+  - test
 
-install:
-  - docker pull registry.fedoraproject.org/fedora:$FEDORA
-  - docker run
-      --name=container
-      --detach
-      -i
-      -v $(pwd):/root/jss
-      registry.fedoraproject.org/fedora:$FEDORA
-  - docker exec container dnf install -y dnf-plugins-core gcc make rpm-build
-  - docker exec container dnf copr -y enable ${JSS_4_5_REPO:-@pki/10.6}
-  - docker exec container dnf builddep -y --spec /root/jss/jss.spec
-  - docker exec container /root/jss/build.sh --with-timestamp --with-commit-id rpm
+env:
+  - BASE_IMAGE="fedora_27"
+  - BASE_IMAGE="fedora_28"
+  - BASE_IMAGE="ubuntu_jdk8"
+
+before_install:
+  - docker build --no-cache --tag jss_$BASE_IMAGE:latest -f tools/Dockerfiles/$BASE_IMAGE .
 
 script:
-  - docker exec container rpm -Uvh /root/build/jss/RPMS/*
+  - docker run jss_$BASE_IMAGE:latest
+
+matrix:
+  fast_finish: true
+  include:
+    - stage: validate
+      env: BASE_IMAGE="stylecheck"
+  allow_failures:
+    - env: BASE_IMAGE="ubuntu_jdk8"
+

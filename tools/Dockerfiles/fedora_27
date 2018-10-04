@@ -1,0 +1,30 @@
+FROM fedora:27
+
+# Install generic dependencies to build jss
+RUN true \
+        && dnf update -y --refresh \
+        && dnf install -y dnf-plugins-core gcc make rpm-build \
+        && dnf copr -y enable ${JSS_4_5_REPO:-@pki/10.6} \
+        && dnf build-dep -y jss \
+        && mkdir -p /home/sandbox \
+        && dnf clean -y all \
+        && rm -rf /usr/share/doc /usr/share/doc-base \
+                  /usr/share/man /usr/share/locale /usr/share/zoneinfo \
+        && true
+
+# Link in the current version of jss from the git repository
+WORKDIR /home/sandbox
+COPY . /home/sandbox/jss
+
+# Install dependencies from the spec file in case they've changed
+# since the last release on this platform.
+RUN true \
+        && dnf build-dep -y --spec /home/sandbox/jss/jss.spec \
+        && true
+
+# Perform the actual RPM build
+WORKDIR /home/sandbox/jss
+CMD true \
+        && bash ./build.sh --with-timestamp --with-commit-id rpm \
+        && dnf install -y /root/build/jss/RPMS/*.rpm \
+        && true
