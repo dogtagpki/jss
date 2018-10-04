@@ -1,0 +1,37 @@
+FROM ubuntu:latest
+
+# Install generic dependencies to build jss
+RUN true \
+        && apt-get update \
+        && apt-get dist-upgrade -y \
+        && apt-get install -y debhelper libnss3-dev openjdk-8-jdk pkg-config \
+                              quilt g++ mercurial zlib1g-dev libslf4j-java \
+                              liblog4j2-java libcommons-lang-java \
+        && mkdir -p /home/sandbox \
+        && apt-get autoremove -y \
+        && apt-get clean -y \
+        && apt-get autoclean -y \
+        && rm -rf /usr/share/doc /usr/share/doc-base \
+                  /usr/share/man /usr/share/locale /usr/share/zoneinfo \
+        && true
+
+# Link in the current version of jss from the git repository
+WORKDIR /home/sandbox
+COPY . /home/sandbox/jss
+
+# Add build dependencies and make sure JDK8 is used
+RUN true \
+        && hg clone https://hg.mozilla.org/projects/nspr \
+        && hg clone https://hg.mozilla.org/projects/nss \
+        && bash -c 'for bin in /usr/lib/jvm/java-8-openjdk-amd64/bin/*; do update-alternatives --install /usr/bin/$(basename $bin) $(basename $bin) $bin 100; done' \
+        && bash -c 'for bin in /usr/lib/jvm/java-8-openjdk-amd64/bin/*; do update-alternatives --set $(basename $bin) $bin; done' \
+        && true
+
+# Perform the actual RPM build
+WORKDIR /home/sandbox/jss
+CMD true \
+        && export DEBIAN_BUILD=1 \
+        && export JAVA_HOME="$(dirname "$(dirname "$(readlink -f /etc/alternatives/javac)")")" \
+        && export USE_64=1 \
+        && make clean all check \
+        && true
