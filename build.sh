@@ -7,10 +7,10 @@
 
 NAME=jss
 
-SCRIPT_PATH=`readlink -f "$0"`
-SCRIPT_NAME=`basename "$SCRIPT_PATH"`
+SCRIPT_PATH="$(readlink -f "$0")"
+SCRIPT_NAME="$(basename "$SCRIPT_PATH")"
 
-SRC_DIR=`dirname "$SCRIPT_PATH"`
+SRC_DIR="$(dirname "$SCRIPT_PATH")"
 WORK_DIR="$HOME/build/$NAME"
 
 SOURCE_TAG=
@@ -57,14 +57,14 @@ generate_rpm_sources() {
         git -C "$SRC_DIR" \
             archive \
             --format=tar.gz \
-            --prefix $NAME-$VERSION${_PHASE}/ \
+            --prefix "$NAME-$VERSION${_PHASE}/" \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
             $SOURCE_TAG
 
         if [ "$SOURCE_TAG" != "HEAD" ] ; then
 
-            TAG_ID=`git -C "$SRC_DIR" rev-parse $SOURCE_TAG`
-            HEAD_ID=`git -C "$SRC_DIR" rev-parse HEAD`
+            TAG_ID="$(git -C "$SRC_DIR" rev-parse $SOURCE_TAG)"
+            HEAD_ID="$(git -C "$SRC_DIR" rev-parse HEAD)"
 
             if [ "$TAG_ID" != "$HEAD_ID" ] ; then
                 generate_patch
@@ -138,7 +138,7 @@ while getopts v-: arg ; do
 
         case $OPTARG in
         work-dir=?*)
-            WORK_DIR=`readlink -f "$LONG_OPTARG"`
+            WORK_DIR="$(readlink -f "$LONG_OPTARG")"
             ;;
         source-tag=?*)
             SOURCE_TAG="$LONG_OPTARG"
@@ -211,13 +211,13 @@ if [ "$SPEC_TEMPLATE" = "" ] ; then
     SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
 fi
 
-VERSION="`rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}'`"
+VERSION="$(rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}')"
 
 if [ "$DEBUG" = true ] ; then
     echo "VERSION: $VERSION"
 fi
 
-RELEASE="`rpmspec -P "$SPEC_TEMPLATE" --undefine dist | grep "^Release:" | awk '{print $2;}'`"
+RELEASE="$(rpmspec -P "$SPEC_TEMPLATE" --undefine dist | grep "^Release:" | awk '{print $2;}')"
 
 if [ "$DEBUG" = true ] ; then
     echo "RELEASE: $RELEASE"
@@ -234,7 +234,7 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 if [ "$WITH_TIMESTAMP" = true ] ; then
-    TIMESTAMP="`date +"%Y%m%d%H%M%S"`"
+    TIMESTAMP="$(date +"%Y%m%d%H%M%S")"
     _TIMESTAMP=".$TIMESTAMP"
 fi
 
@@ -243,7 +243,7 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 if [ "$WITH_COMMIT_ID" = true ]; then
-    COMMIT_ID="`git -C "$SRC_DIR" rev-parse --short=8 HEAD`"
+    COMMIT_ID="$(git -C "$SRC_DIR" rev-parse --short=8 HEAD)"
     _COMMIT_ID=".$COMMIT_ID"
 fi
 
@@ -261,8 +261,8 @@ if [ "$VERBOSE" = true ] ; then
     echo "Initializing $WORK_DIR"
 fi
 
-mkdir -p $WORK_DIR
-cd $WORK_DIR
+mkdir -p "$WORK_DIR"
+cd "$WORK_DIR"
 
 rm -rf BUILD
 rm -rf RPMS
@@ -283,7 +283,7 @@ mkdir SRPMS
 generate_rpm_sources
 
 echo "RPM sources:"
-find "$WORK_DIR/SOURCES" -type f -printf " %p\n"
+find "$WORK_DIR/SOURCES" -type f -printf " %p\\n"
 
 if [ "$BUILD_TARGET" = "src" ] ; then
     exit
@@ -296,7 +296,7 @@ fi
 generate_rpm_spec
 
 echo "RPM spec:"
-find "$WORK_DIR/SPECS" -type f -printf " %p\n"
+find "$WORK_DIR/SPECS" -type f -printf " %p\\n"
 
 if [ "$BUILD_TARGET" = "spec" ] ; then
     exit
@@ -324,7 +324,7 @@ if [ "$DIST" != "" ] ; then
 fi
 
 if [ "$DEBUG" = true ] ; then
-    echo "rpmbuild -bs ${OPTIONS[@]} $WORK_DIR/SPECS/$RPM_SPEC"
+    echo rpmbuild -bs "${OPTIONS[@]}" "$WORK_DIR/SPECS/$RPM_SPEC"
 fi
 
 # build SRPM with user-provided options
@@ -337,7 +337,7 @@ if [ $rc != 0 ]; then
     exit 1
 fi
 
-SRPM=`find "$WORK_DIR/SRPMS" -type f`
+SRPM="$(find "$WORK_DIR/SRPMS" -type f)"
 
 echo "SRPM package:"
 echo " $SRPM"
@@ -359,7 +359,7 @@ fi
 OPTIONS+=(--define "_topdir ${WORK_DIR}")
 
 if [ "$DEBUG" = true ] ; then
-    echo "rpmbuild --rebuild ${OPTIONS[@]} $SRPM"
+    echo rpmbuild --rebuild "${OPTIONS[@]}" "$SRPM"
 fi
 
 # rebuild RPM with hard-coded options in SRPM
@@ -382,4 +382,4 @@ find "$WORK_DIR/RPMS" -mindepth 2 -type f -exec mv -i '{}' "$WORK_DIR/RPMS" ';'
 find "$WORK_DIR/RPMS" -mindepth 1 -type d -delete
 
 echo "RPM packages:"
-find "$WORK_DIR/RPMS" -type f -printf " %p\n"
+find "$WORK_DIR/RPMS" -type f -printf " %p\\n"
