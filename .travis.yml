@@ -3,25 +3,44 @@
 # All rights reserved.
 # END COPYRIGHT BLOCK
 
+language: java
+
 services:
   - docker
 
-env:
-  - FEDORA=27
-  - FEDORA=28
+stages:
+  - validate
+  - build_rpm
 
-install:
-  - docker pull registry.fedoraproject.org/fedora:$FEDORA
-  - docker run
-      --name=container
-      --detach
-      -i
-      -v $(pwd):/root/jss
-      registry.fedoraproject.org/fedora:$FEDORA
-  - docker exec container dnf install -y dnf-plugins-core gcc make rpm-build
-  - docker exec container dnf copr -y enable ${JSS_4_5_REPO:-@pki/10.6}
-  - docker exec container dnf builddep -y --spec /root/jss/jss.spec
-  - docker exec container /root/jss/build.sh --with-timestamp --with-commit-id rpm
+jobs:
+  include:
+    # Validate style of scripts
+    - stage: validate
+      install:
+        - docker pull registry.fedoraproject.org/fedora:28
+        - docker run --name=validate --detach -i -v $(pwd):/root/jss registry.fedoraproject.org/fedora:28
+        - docker exec validate dnf install -y perl ShellCheck
+      script:
+        - docker exec validate /root/jss/tools/test_perl_style.sh /root/jss
+        - docker exec validate /root/jss/tools/test_shell_style.sh /root/jss
 
-script:
-  - docker exec container rpm -Uvh /root/build/jss/RPMS/*
+    # Build RPMs on Fedora
+    - stage: build_rpm
+      env:
+        - FEDORA=27
+        - FEDORA=28
+      install:
+        - docker pull registry.fedoraproject.org/fedora:$FEDORA
+        - docker run
+            --name=container
+            --detach
+            -i
+            -v $(pwd):/root/jss
+            registry.fedoraproject.org/fedora:$FEDORA
+        - docker exec container dnf install -y dnf-plugins-core gcc make rpm-build
+        - docker exec container dnf copr -y enable ${JSS_4_5_REPO:-@pki/10.6}
+        - docker exec container dnf builddep -y --spec /root/jss/jss.spec
+        - docker exec container /root/jss/build.sh --with-timestamp --with-commit-id rpm
+
+      script:
+        - docker exec container rpm -Uvh /root/build/jss/RPMS/*
