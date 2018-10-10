@@ -3,12 +3,19 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+use strict;
+use warnings;
+
 use Socket;
 use File::Basename;
-use Cwd;
-use Cwd 'abs_path';
+use Cwd qw(abs_path);
 use POSIX 'uname';
 
+# change the line below if we reorganize the code; must
+# point to the location with Common.pm
+use lib dirname(dirname abs_path $0) . '/../../../lib';
+
+use Common qw(get_jar_files);
 
 # dist <dist_dir> <NSS bin dir> <NSS lib dir> <JSS lib dir>
 # release <java release dir> <nss release dir> <nspr release dir>
@@ -207,7 +214,7 @@ sub setup_vars {
     if ($osname =~ /Darwin/) {
         $java = "$ENV{JAVA_HOME}/bin/java";
     } else {
-        $java = "$ENV{JAVA_HOME}/jre/bin/java$exe_suffix";
+        $java = "$ENV{JAVA_HOME}/bin/java$exe_suffix";
     }
 
     #
@@ -232,10 +239,6 @@ sub setup_vars {
 
     (-f $java) or die "'$java' does not exist\n";
     $java = $java . $ENV{NATIVE_FLAG};
-
-    if ($ENV{USE_64} && !$java_64bit) {
-        $java = $java . " -d64";
-    }
 
     #MAC OS X have the -Djava.library.path for the JSS JNI library
     if ($osname =~ /Darwin/ || $osname =~ /Linux/) {
@@ -455,14 +458,9 @@ createpkcs11_cfg;
 
 my $serverCommand;
 
-$jarFiles = "";
-
-if( $ENV{DEBIAN_BUILD} ) {
-    $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/slf4j-jdk14.jar:/usr/share/java/commons-lang.jar";
-} else {
-    $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/usr/share/java/commons-lang.jar";
-}
-
+$jarFiles = Common::get_jar_files;
+$jarFiles = "$jarFiles:/usr/share/java/slf4j/jdk14.jar";
+# Note: jdk14.jar required for testing though not for building
 my $classpath = "$jarFiles:$jss_classpath";
 
 my $pk12util = "pk12util$exe_suffix";
