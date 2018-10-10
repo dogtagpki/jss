@@ -1,4 +1,6 @@
-#use strict;
+use strict;
+use warnings;
+
 use Cwd qw(abs_path cwd);
 use File::Find;
 use File::Compare;
@@ -6,78 +8,77 @@ use File::Basename;
 use File::stat;
 use File::Copy;
 
+use lib (dirname abs_path $0) . '/lib';
+# change the line below if we reorganize the code; must
+# point to the location with Common.pm
+use Common qw(get_jar_files);
+
 my @excluded_sources = qw(
-provider\.new/
-org/mozilla/jss/provider/java/security/KeyFactorySpi1_4\.java
-org/mozilla/jss/pkix/cert/X509Certificate\.java
-samples/
+    provider\.new/
+    org/mozilla/jss/provider/java/security/KeyFactorySpi1_4\.java
+    org/mozilla/jss/pkix/cert/X509Certificate\.java
+    samples/
 );
 
-my @javah_classes = qw(
-org.mozilla.jss.DatabaseCloser
-org.mozilla.jss.CryptoManager
-org.mozilla.jss.crypto.Algorithm
-org.mozilla.jss.crypto.EncryptionAlgorithm
-org.mozilla.jss.crypto.PQGParams
-org.mozilla.jss.crypto.SecretDecoderRing
-org.mozilla.jss.asn1.ASN1Util
-org.mozilla.jss.pkcs11.CertProxy
-org.mozilla.jss.pkcs11.CipherContextProxy
-org.mozilla.jss.pkcs11.PK11Module
-org.mozilla.jss.pkcs11.ModuleProxy
-org.mozilla.jss.pkcs11.PK11Cert
-org.mozilla.jss.pkcs11.PK11Cipher
-org.mozilla.jss.pkcs11.PK11KeyWrapper
-org.mozilla.jss.pkcs11.PK11MessageDigest
-org.mozilla.jss.pkcs11.PK11PrivKey
-org.mozilla.jss.pkcs11.PK11PubKey
-org.mozilla.jss.pkcs11.PK11SymKey
-org.mozilla.jss.pkcs11.PK11KeyPairGenerator
-org.mozilla.jss.pkcs11.PK11SymmetricKeyDeriver
-org.mozilla.jss.pkcs11.PK11KeyGenerator
-org.mozilla.jss.pkcs11.PK11Token
-org.mozilla.jss.pkcs11.PrivateKeyProxy
-org.mozilla.jss.pkcs11.PublicKeyProxy
-org.mozilla.jss.pkcs11.SymKeyProxy
-org.mozilla.jss.pkcs11.KeyProxy
-org.mozilla.jss.pkcs11.PK11Token
-org.mozilla.jss.pkcs11.TokenProxy
-org.mozilla.jss.pkcs11.PK11Signature
-org.mozilla.jss.pkcs11.PK11Store
-org.mozilla.jss.pkcs11.PK11KeyPairGenerator
-org.mozilla.jss.pkcs11.SigContextProxy
-org.mozilla.jss.pkcs11.PK11RSAPublicKey
-org.mozilla.jss.pkcs11.PK11DSAPublicKey
-org.mozilla.jss.pkcs11.PK11ECPublicKey
-org.mozilla.jss.pkcs11.PK11SecureRandom
-org.mozilla.jss.provider.java.security.JSSKeyStoreSpi
-org.mozilla.jss.SecretDecoderRing.KeyManager
-org.mozilla.jss.ssl.SSLSocket
-org.mozilla.jss.ssl.SSLServerSocket
-org.mozilla.jss.ssl.SocketBase
-org.mozilla.jss.util.Password
+# Source list equivalent to the old @javah_classes; passed to javac to
+# generate headers for JNI calls. These classes are used in jni includes
+# from C and thus need headers headers generated for them; all of the
+# following have functions with native implementations.
+my @jni_sources = qw(
+    org/mozilla/jss/CryptoManager.java
+    org/mozilla/jss/DatabaseCloser.java
+    org/mozilla/jss/SecretDecoderRing/KeyManager.java
+    org/mozilla/jss/asn1/ASN1Util.java
+    org/mozilla/jss/crypto/EncryptionAlgorithm.java
+    org/mozilla/jss/crypto/PQGParams.java
+    org/mozilla/jss/crypto/SecretDecoderRing.java
+    org/mozilla/jss/pkcs11/CipherContextProxy.java
+    org/mozilla/jss/pkcs11/ModuleProxy.java
+    org/mozilla/jss/pkcs11/PK11Cert.java
+    org/mozilla/jss/pkcs11/PK11Cipher.java
+    org/mozilla/jss/pkcs11/PK11DSAPublicKey.java
+    org/mozilla/jss/pkcs11/PK11ECPublicKey.java
+    org/mozilla/jss/pkcs11/PK11KeyGenerator.java
+    org/mozilla/jss/pkcs11/PK11KeyPairGenerator.java
+    org/mozilla/jss/pkcs11/PK11KeyWrapper.java
+    org/mozilla/jss/pkcs11/PK11MessageDigest.java
+    org/mozilla/jss/pkcs11/PK11Module.java
+    org/mozilla/jss/pkcs11/PK11PrivKey.java
+    org/mozilla/jss/pkcs11/PK11PubKey.java
+    org/mozilla/jss/pkcs11/PK11RSAPublicKey.java
+    org/mozilla/jss/pkcs11/PK11SecureRandom.java
+    org/mozilla/jss/pkcs11/PK11Signature.java
+    org/mozilla/jss/pkcs11/PK11Store.java
+    org/mozilla/jss/pkcs11/PK11SymKey.java
+    org/mozilla/jss/pkcs11/PK11SymmetricKeyDeriver.java
+    org/mozilla/jss/pkcs11/PK11Token.java
+    org/mozilla/jss/pkcs11/TokenProxy.java
+    org/mozilla/jss/provider/java/security/JSSKeyStoreSpi.java
+    org/mozilla/jss/ssl/SSLServerSocket.java
+    org/mozilla/jss/ssl/SSLSocket.java
+    org/mozilla/jss/ssl/SocketBase.java
 );
 
 my @packages = qw(
-org.mozilla.jss
-org.mozilla.jss.asn1
-org.mozilla.jss.crypto
-org.mozilla.jss.pkcs7
-org.mozilla.jss.pkcs10
-org.mozilla.jss.pkcs11
-org.mozilla.jss.pkcs12
-org.mozilla.jss.pkix.primitive
-org.mozilla.jss.pkix.cert
-org.mozilla.jss.pkix.cmc
-org.mozilla.jss.pkix.cmmf
-org.mozilla.jss.pkix.cms
-org.mozilla.jss.pkix.crmf
-org.mozilla.jss.provider.java.security
-org.mozilla.jss.provider.javax.crypto
-org.mozilla.jss.SecretDecoderRing
-org.mozilla.jss.ssl
-org.mozilla.jss.tests
-org.mozilla.jss.util
+    org.mozilla.jss
+    org.mozilla.jss.asn1
+    org.mozilla.jss.crypto
+    org.mozilla.jss.pkcs7
+    org.mozilla.jss.pkcs10
+    org.mozilla.jss.pkcs11
+    org.mozilla.jss.pkcs12
+    org.mozilla.jss.pkix.primitive
+    org.mozilla.jss.pkix.cert
+    org.mozilla.jss.pkix.cmc
+    org.mozilla.jss.pkix.cmmf
+    org.mozilla.jss.pkix.cms
+    org.mozilla.jss.pkix.crmf
+    org.mozilla.jss.provider.java.security
+    org.mozilla.jss.provider.javax.crypto
+    org.mozilla.jss.SecretDecoderRing
+    org.mozilla.jss.ssl
+    org.mozilla.jss.tests
+    org.mozilla.jss.util
 );
 
 my %commands = (
@@ -150,7 +151,6 @@ sub setup_vars {
 
     our $jar = "$ENV{JAVA_HOME}/bin/jar";
     our $javac = "$ENV{JAVA_HOME}/bin/javac";
-    our $javah = "$ENV{JAVA_HOME}/bin/javah";
     our $javadoc = "$ENV{JAVA_HOME}/bin/javadoc";
 
     our $dist_dir = abs_path($cmdline_vars{SOURCE_PREFIX});
@@ -168,12 +168,9 @@ sub setup_vars {
 
     our $jni_header_dir = "$dist_dir/private/jss/_jni";
 
-    our $jarFiles = "/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/commons-codec.jar";
-    if( $ENV{DEBIAN_BUILD} ) {
-        $jarFiles = "/usr/share/java/slf4j-api.jar:/usr/share/java/commons-codec.jar";
-    }
+    our $jarFiles = Common::get_jar_files;
 
-    our $classpath = "-classpath $jarFiles:/usr/share/java/commons-lang.jar";
+    our $classpath = "-classpath $jarFiles";
     my $jce_jar = $ENV{JCE_JAR};
     if( $jce_jar ) {
         $classpath .= ":$jce_jar";
@@ -351,18 +348,20 @@ MyLabel
         ensure_dir_exists($class_dir);
         print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir " .
             "$classpath " . join(" ",@source_list));
+
+        #
+        # create the JNI header files
+        # by compiling the ones we want with "-h $jni_header_dir" flag
+        #
+        our $jni_header_dir;
+
+        ensure_dir_exists($jni_header_dir);
+        print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir -h $jni_header_dir " .
+            "$classpath " . join(" ", @jni_sources) );
+
         print_do("sh -c 'cd $dist_dir/classes && $jar cvmf $dist_dir/MANIFEST.MF $dist_dir/xpclass.jar *'");
         print "Exit status was " . ($?>>8) . "\n";
     }
-
-    #
-    # create the JNI header files
-    #
-    our $jni_header_dir;
-    our $javah;
-    ensure_dir_exists($jni_header_dir);
-    print_do("$javah -classpath $class_dir -d $jni_header_dir " .
-        (join " ", @javah_classes) );
 }
 
 sub print_do {
@@ -479,9 +478,8 @@ sub test {
         die "JSS builds are not available at $jss_objdir.";
     }
 
-    my $cmd = "cd $jss_dir/org/mozilla/jss/tests;"
-            . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\";"
-            . "cd $jss_dir";
+    my $cmd = "cd $jss_dir/org/mozilla/jss/tests; "
+            . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\"";
 
     print("#######################\n" .
           "# BEGIN:  Testing JSS #\n" .
