@@ -31,6 +31,12 @@ To install these dependencies on Fedora, execute the following:
     sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
                      java-devel jpackage-utils slf4j zlib-devel
 
+To install these dependencies on Debian, execute the following:
+
+    sudo apt-get install build-essential libcommons-codec-java \
+                         libcommons-lang-java libnss3-dev libslf4j-java \
+                         openjdk-8-jdk pkg-config zlib1g-dev
+
 Build/Test Instructions
 -----------------------
 
