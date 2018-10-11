@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 #
 # Usage:
@@ -22,6 +23,8 @@ shell_check() {
     target_file="$1"
 
     shellcheck "$root_source_dir/$target_file"
+    [ -x "$root_source_dir/$target_file" ]
+    echo "$root_source_dir/$target_file OK"
 }
 
 
