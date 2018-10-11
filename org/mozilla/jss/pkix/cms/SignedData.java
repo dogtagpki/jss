@@ -23,7 +23,7 @@ import org.mozilla.jss.pkix.cert.Certificate;
 */
 
 /**
- * A CMS <i>SignedData</i> structure. 
+ * A CMS <i>SignedData</i> structure.
  * <p>The certificates field should only contain X.509 certificates.
  * PKCS #6 extended certificates will fail to decode properly.
  * @author stevep
@@ -167,7 +167,7 @@ public class SignedData implements ASN1Value {
 
     /**
      * Returns the signerInfos field, which is a SET of
-     *  org.mozilla.jss.pkcs7.SignerInfo.
+     *  org.mozilla.jss.pkix.cms.SignerInfo.
      */
     public SET getSignerInfos() {
         return signerInfos;
@@ -375,7 +375,7 @@ public class SignedData implements ASN1Value {
             return TAG.equals(tag);
         }
 
-        public ASN1Value decode(InputStream istream) 
+        public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(TAG, istream);
