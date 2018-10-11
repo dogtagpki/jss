@@ -10,6 +10,7 @@ JSS also provides a pure Java interface for ASN.1 types and BER/DER encoding.
 
 * Website: http://www.dogtagpki.org/wiki/JSS
 * Issues: https://pagure.io/jss/issues
+* Archive: https://github.com/dogtagpki/jss-archive
 
 Dependencies
 ------------
