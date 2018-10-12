@@ -37,6 +37,7 @@ $| = 1;
 
 # Global variables
 my $java           = "";
+my $java_version   = "";
 my $testdir        = "";
 my $testrun        = 0;
 my $testpass       = 0;
@@ -241,6 +242,9 @@ sub setup_vars {
         $java = $java . " -Djava.library.path=$jss_lib_dir";
     }
 
+    # Check the java version
+    $java_version = `$java -version 2>&1`;
+
     my $jarFiles = Common::get_jar_files;
     $jarFiles = "$jarFiles:" . Common::detect_jar_file "slf4j-jdk14.jar", "slf4j/jdk14.jar";
     $classpath = "$jarFiles:$jss_classpath";
@@ -355,7 +359,7 @@ sub createpkcs11_cfg {
     }
     #the test for java 1.5 or 1.6 relies on the JAVA_HOME path to have the version
     #this is the case for all the build machines and tinderboxes.
-    if ( $java =~ /1.6/i) {
+    if ( $java_version =~ /1.6/i) {
        # java 6
        # http://java.sun.com/javase/6/docs/technotes/guides/security/p11guide.html
        # note some OS can read the 1.5 configuration but not all can.
@@ -470,7 +474,7 @@ my $testname = "";
 my $command  = "";
 
 $testname = "Test UTF-8 Converter";
-$command = "$java -cp $classpath org.mozilla.jss.tests.UTF8ConverterTest";
+$command = "$java -ea -cp $classpath org.mozilla.jss.tests.UTF8ConverterTest";
 run_test($testname, $command);
 
 $testname = "Setup DBs";
@@ -521,7 +525,7 @@ run_test($testname, $command);
 
 
 $testname = "Key Generation";
-$command = "$java -cp $classpath org.mozilla.jss.tests.TestKeyGen $testdir $pwfile";
+$command = "$java -ea -cp $classpath org.mozilla.jss.tests.TestKeyGen $testdir $pwfile";
 run_test($testname, $command);
 
 $testname = "Key Factory";
@@ -607,7 +611,7 @@ $command = "$java -cp $classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $
 #run_ssl_test($testname, $serverCommand, $command);
 
 
-if ($java =~ /1.4/i || $osname =~ /HP/ || ( ($osname =~ /Linux/)  && $java =~ /1.5/i && ($ENV{USE_64}) )) {
+if ($java_version =~ /1.4/i || $osname =~ /HP/ || ( ($osname =~ /Linux/)  && $java_version =~ /1.5/i && ($ENV{USE_64}) )) {
     print "don't run the SunJSSE with Mozilla-JSS provider with Java4 need java5 or higher";
     print "don't run the JSSE Server tests on HP or Linux  64 bit with java5.\n";
     print "Java 5 on HP does not have SunPKCS11 class\n";
@@ -680,6 +684,14 @@ $command = "$java -cp $classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $
 $testname = "Disable FipsMODE";
 $command = "$java -cp $classpath org.mozilla.jss.tests.FipsTest $testdir disable";
 run_test($testname, $command);
+
+if ($java_version =~ /1.8/i) {
+    # Only run the PKCS11Constants test on JDK 8. Newer versions do not
+    # expose the interface we are testing against.
+    $testname = "Test PKCS11Constants.java for compatibility with Sun's interface";
+    $command = "$java -ea -cp $classpath org.mozilla.jss.tests.TestPKCS11Constants";
+    run_test($testname, $command);
+}
 
 #
 # Test for JSS jar and library revision
