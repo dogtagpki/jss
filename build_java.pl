@@ -454,7 +454,7 @@ sub javadoc {
     ensure_dir_exists("$dist_dir/jssdoc");
     my $targets = join(" ", @packages);
     print "$targets\n";
-    print_do("$javadoc -breakiterator $classpath -sourcepath . -d $dist_dir/jssdoc $html_header_opt $targets");
+    print_do("$javadoc -notimestamp -breakiterator $classpath -sourcepath . -d $dist_dir/jssdoc $html_header_opt $targets");
     print_do("cp $dist_dir/jssdoc/index.html $dist_dir/jssdoc/index.html.bak");
     print_do("cp $dist_dir/jssdoc/overview-summary.html $dist_dir/jssdoc/index.html");
 }
