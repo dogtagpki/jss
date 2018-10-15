@@ -22,12 +22,16 @@ fi
 shell_check() {
     target_file="$1"
 
-    shellcheck "$root_source_dir/$target_file"
-    [ -x "$root_source_dir/$target_file" ]
+    shellcheck -x "$root_source_dir/$target_file"
+    if [ ! -x "$root_source_dir/$target_file" ]; then
+        echo "$root_source_dir/$target_file must be executable!"
+        return 1
+    fi
     echo "$root_source_dir/$target_file OK"
 }
 
 
 shell_check "build.sh"
+shell_check "tools/autoenv.sh"
 shell_check "tools/test_perl_style.sh"
 shell_check "tools/test_shell_style.sh"
