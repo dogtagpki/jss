@@ -14,48 +14,48 @@ samples/
 );
 
 my @javah_classes = qw(
-org.mozilla.jss.DatabaseCloser        
-org.mozilla.jss.CryptoManager          
-org.mozilla.jss.crypto.Algorithm        
-org.mozilla.jss.crypto.EncryptionAlgorithm      
-org.mozilla.jss.crypto.PQGParams     
+org.mozilla.jss.DatabaseCloser
+org.mozilla.jss.CryptoManager
+org.mozilla.jss.crypto.Algorithm
+org.mozilla.jss.crypto.EncryptionAlgorithm
+org.mozilla.jss.crypto.PQGParams
 org.mozilla.jss.crypto.SecretDecoderRing
 org.mozilla.jss.asn1.ASN1Util
-org.mozilla.jss.pkcs11.CertProxy        
-org.mozilla.jss.pkcs11.CipherContextProxy 
-org.mozilla.jss.pkcs11.PK11Module 
-org.mozilla.jss.pkcs11.ModuleProxy 
-org.mozilla.jss.pkcs11.PK11Cert     
-org.mozilla.jss.pkcs11.PK11Cipher     
-org.mozilla.jss.pkcs11.PK11KeyWrapper  
-org.mozilla.jss.pkcs11.PK11MessageDigest 
-org.mozilla.jss.pkcs11.PK11PrivKey   
-org.mozilla.jss.pkcs11.PK11PubKey     
-org.mozilla.jss.pkcs11.PK11SymKey      
-org.mozilla.jss.pkcs11.PK11KeyPairGenerator 
+org.mozilla.jss.pkcs11.CertProxy
+org.mozilla.jss.pkcs11.CipherContextProxy
+org.mozilla.jss.pkcs11.PK11Module
+org.mozilla.jss.pkcs11.ModuleProxy
+org.mozilla.jss.pkcs11.PK11Cert
+org.mozilla.jss.pkcs11.PK11Cipher
+org.mozilla.jss.pkcs11.PK11KeyWrapper
+org.mozilla.jss.pkcs11.PK11MessageDigest
+org.mozilla.jss.pkcs11.PK11PrivKey
+org.mozilla.jss.pkcs11.PK11PubKey
+org.mozilla.jss.pkcs11.PK11SymKey
+org.mozilla.jss.pkcs11.PK11KeyPairGenerator
 org.mozilla.jss.pkcs11.PK11SymmetricKeyDeriver
 org.mozilla.jss.pkcs11.PK11KeyGenerator
 org.mozilla.jss.pkcs11.PK11Token
-org.mozilla.jss.pkcs11.PrivateKeyProxy  
-org.mozilla.jss.pkcs11.PublicKeyProxy    
+org.mozilla.jss.pkcs11.PrivateKeyProxy
+org.mozilla.jss.pkcs11.PublicKeyProxy
 org.mozilla.jss.pkcs11.SymKeyProxy
-org.mozilla.jss.pkcs11.KeyProxy    
-org.mozilla.jss.pkcs11.PK11Token    
-org.mozilla.jss.pkcs11.TokenProxy    
-org.mozilla.jss.pkcs11.PK11Signature  
-org.mozilla.jss.pkcs11.PK11Store       
-org.mozilla.jss.pkcs11.PK11KeyPairGenerator 
+org.mozilla.jss.pkcs11.KeyProxy
+org.mozilla.jss.pkcs11.PK11Token
+org.mozilla.jss.pkcs11.TokenProxy
+org.mozilla.jss.pkcs11.PK11Signature
+org.mozilla.jss.pkcs11.PK11Store
+org.mozilla.jss.pkcs11.PK11KeyPairGenerator
 org.mozilla.jss.pkcs11.SigContextProxy
 org.mozilla.jss.pkcs11.PK11RSAPublicKey
 org.mozilla.jss.pkcs11.PK11DSAPublicKey
 org.mozilla.jss.pkcs11.PK11ECPublicKey
-org.mozilla.jss.pkcs11.PK11SecureRandom 
+org.mozilla.jss.pkcs11.PK11SecureRandom
 org.mozilla.jss.provider.java.security.JSSKeyStoreSpi
 org.mozilla.jss.SecretDecoderRing.KeyManager
-org.mozilla.jss.ssl.SSLSocket 
-org.mozilla.jss.ssl.SSLServerSocket 
-org.mozilla.jss.ssl.SocketBase 
-org.mozilla.jss.util.Password       
+org.mozilla.jss.ssl.SSLSocket
+org.mozilla.jss.ssl.SSLServerSocket
+org.mozilla.jss.ssl.SocketBase
+org.mozilla.jss.util.Password
 );
 
 my @packages = qw(
@@ -219,10 +219,10 @@ sub setup_vars {
                          . "    hg clone https://hg.mozilla.org/projects/nss\n"
                          . "    hg clone https://hg.mozilla.org/projects/jss\n"
                          . "    cd ..\n\n";
-            
+
             die "$workarea";
         }
-        
+
         # Build NSS if not already built
         my $nss_latest_objdir = "$dist_dir/latest";
 
@@ -297,7 +297,7 @@ sub build {
     #*** Print freeform text, semicolon required ***
 print MYOUTFILE <<"MyLabel";
 Manifest-Version: 1.0
-    
+
 Name: org/mozilla/jss/
 Specification-Title: Network Security Services for Java (JSS)
 Specification-Version: $jss_revision
@@ -316,7 +316,7 @@ MyLabel
     my %source_list;
     find sub {
         my $name = $File::Find::name;
-        if( $name =~ /\.java$/) { 
+        if( $name =~ /\.java$/) {
             $source_list{$File::Find::name} = 1;
         }
     }, ".";

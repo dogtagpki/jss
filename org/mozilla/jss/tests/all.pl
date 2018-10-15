@@ -9,7 +9,7 @@ use Cwd;
 use Cwd 'abs_path';
 use POSIX 'uname';
 
-                                                                                                  
+
 # dist <dist_dir> <NSS bin dir> <NSS lib dir> <JSS lib dir>
 # release <java release dir> <nss release dir> <nspr release dir>
 # auto   (test the current build directory)
@@ -55,15 +55,15 @@ my $release        = "";
 ($osname,$host,$release)    = uname;
 
 # checkPort will return a free Port number
-# otherwise it will die after trying 10 times. 
+# otherwise it will die after trying 10 times.
 sub checkPort {
-   my ($p) = @_; 
+   my ($p) = @_;
    my $localhost = inet_aton("localhost");
    my $max = $p + 20; # try to find a port 10 times
    my $port = sockaddr_in($p, $localhost);
 
-   #create a socket 
-   socket(SOCKET, PF_INET, SOCK_STREAM, getprotobyname('tcp')) 
+   #create a socket
+   socket(SOCKET, PF_INET, SOCK_STREAM, getprotobyname('tcp'))
    || die "Unable to create socket: $!\n";
 
    #loop until you find a free port
@@ -73,7 +73,7 @@ sub checkPort {
          $port = sockaddr_in($p, $localhost);
    }
    close SOCKET || die "Unable to close socket: $!\n";
-   if ($p == $max) { 
+   if ($p == $max) {
       die "Unable to find a free port..\n";
    }
 
@@ -101,7 +101,7 @@ sub setup_vars {
     } elsif( $osname =~ /Darwin/) {
         $ld_lib_path = "DYLD_LIBRARY_PATH";
         $lib_suffix = ".jnilib";
-    } elsif( $osname =~ /mingw/i ) { 
+    } elsif( $osname =~ /mingw/i ) {
     	print "We are mingw\n";
         $ld_lib_path = "PATH";
         $truncate_lib_path = 0;
@@ -111,7 +111,7 @@ sub setup_vars {
         $lib_jss    = "jss";
         $scriptext = "sh";
         $run_shell = "sh.exe";
-    } elsif( $osname =~ /win/i ) { 
+    } elsif( $osname =~ /win/i ) {
         $ld_lib_path = "PATH";
         $truncate_lib_path = 0;
         $pathsep = ";";
@@ -195,7 +195,7 @@ sub setup_vars {
        $serverPort = $ENV{PORT_JSSE_SERVER};
     }
 
-    if ($ENV{PORT_JSS_SERVER}) { 
+    if ($ENV{PORT_JSS_SERVER}) {
        $serverPort = $ENV{PORT_JSS_SERVER};
     }
 
@@ -240,7 +240,7 @@ sub setup_vars {
     #MAC OS X have the -Djava.library.path for the JSS JNI library
     if ($osname =~ /Darwin/ || $osname =~ /Linux/) {
         $java = $java . " -Djava.library.path=$jss_lib_dir";
-    } 
+    }
 
     $pwfile = "passwords";
 
@@ -281,9 +281,9 @@ sub setup_vars {
     # Finally, set $testdir
     $testdir = $result_dir . "/" . $host . "." . $version;
 
-    #in case multiple tests are being run on the same machine increase  
+    #in case multiple tests are being run on the same machine increase
     #the port numbers with version number * 10
-    
+
     $serverPort = $serverPort + ($version * 10);
 
     outputEnv();
@@ -322,7 +322,7 @@ sub outputEnv {
    print "testdir=$testdir\n";
    print "serverPort=$serverPort\n";
    print "LIB_SUFFIX=$lib_suffix\n";
-   print "osname=$osname\n";  
+   print "osname=$osname\n";
    print "release=$release\n";
    print "which perl=";
    system ("which perl");
@@ -331,17 +331,17 @@ sub outputEnv {
 }
 
 sub createpkcs11_cfg {
-   
+
     $configfile = $testdir . "/" . "nsspkcs11.cfg";
     $keystore = $testdir . "/" . "keystore";
     if ( -f $configfile ) {
         print "configfile all ready exists";
        return;
-    } 
- 
+    }
+
     my $nsslibdir = $nss_lib_dir;
     my $tdir = $testdir;
-    
+
     #On windows make sure the path starts with c:
     if ($osname =~ /_NT/i) {
        substr($nsslibdir, 0, 2) = 'c:';
@@ -361,7 +361,7 @@ sub createpkcs11_cfg {
        print CONFIG "nssModule=keystore\n";
        close (CONFIG);
 
-    } else { # default 
+    } else { # default
 
        # java 5
        #http://java.sun.com/j2se/1.5.0/docs/guide/security/p11guide.html
@@ -393,7 +393,7 @@ sub run_ssl_test {
         print "launching server FAILED with return value $result\n";
         return;
     }
-    sleep 5;                                    
+    sleep 5;
     print "\nSSL Server is invoked using port $serverPort \n" ;
     print "$clientCommand \n";
     $result = system("$clientCommand");
@@ -442,7 +442,7 @@ if( ! -d $testdir ) {
     mkdir( $testdir, 0755 ) or die;
 }
 {
-    my @dbfiles = 
+    my @dbfiles =
         ("$testdir/cert8.db", "$testdir/key3.db", "$testdir/secmod.db", "$testdir/rsa.pfx");
     (grep{ -f } @dbfiles)  and die "There is already an old database in $testdir";
     my $result = system("cp $nss_lib_dir/*nssckbi* $testdir");
@@ -614,7 +614,7 @@ $command = "$java -cp $classpath org.mozilla.jss.tests.JSS_SelfServClient 2 -1 $
 if ($java =~ /1.4/i || $osname =~ /HP/ || ( ($osname =~ /Linux/)  && $java =~ /1.5/i && ($ENV{USE_64}) )) {
     print "don't run the SunJSSE with Mozilla-JSS provider with Java4 need java5 or higher";
     print "don't run the JSSE Server tests on HP or Linux  64 bit with java5.\n";
-    print "Java 5 on HP does not have SunPKCS11 class\n"; 
+    print "Java 5 on HP does not have SunPKCS11 class\n";
 } else {
 #with JSS is being build with JDK 1.5 add the Sunpkcs11-NSS support back in!
 #$serverPort = checkPort($serverPort);
