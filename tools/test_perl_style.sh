@@ -27,4 +27,5 @@ perl_check() {
 
 
 perl_check "build_java.pl"
+perl_check "lib/Common.pm"
 perl_check "org/mozilla/jss/tests/all.pl"

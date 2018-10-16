@@ -1,38 +1,46 @@
-#!/bin/bash
+#!/bin/sh
 
 # This script attempts to detect the correct environmental variables required
 # to build JSS from source.
 
-# Load OS information.
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-elif [ -f /usr/lib/os-release ];then
-    . /usr/lib/os-release
-else
-    echo "Cannot determine OS information. Exiting..." 1>&2
-    exit 1
-fi
-
 # Try and detect a JDK installation.
-if [ -d "/etc/alternatives/java_sdk" ]; then
+if [ "x$JAVA_HOME" = "x" ] && [ -e "/etc/alternatives/java_sdk" ]; then
     export JAVA_HOME="/etc/alternatives/java_sdk"
-else
+fi
+if [ "x$JAVA_HOME" = "x" ]; then
+    # Prefer JDK 8 installation, if present...
     java8_jdk="$(find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | grep '\(\-8\-\|-1\.8\.\)' | sort | tail -n 1)"
     if [ -d "$java8_jdk" ]; then
         export JAVA_HOME="$java8_jdk"
     fi
 fi
+if [ "x$JAVA_HOME" = "x" ]; then
+    # Attempt to automatically detect it from java program...
+    system_java="$(java -XshowSettings:properties -version 2>&1 > /dev/null | grep 'java.home' | sed 's/^.* = //g')"
+    dirname_system_java="$(dirname "$system_java")"
 
-# Check if we're running in 64-bit mode.
-if [ "x$(getconf LONG_BIT)" == "x64" ]; then
-    export USE_64=1
+    if [ -e "$system_java/bin/javac" ]; then
+        export JAVA_HOME="$system_java"
+    elif [ -e "$dirname_system_java/bin/javac" ]; then
+	export JAVA_HOME="$dirname_system_java"
+    fi
 fi
 
-# Export distro-specific build flags.
-if [ "x$ID"  = "xubuntu" ] || [ "x$ID" = "xdebian" ] || [ "x$ID" = "xlinuxmint" ]; then
-    export DEBIAN_BUILD=1
-elif [[ "x$ID" =~ "suse" ]]; then
-    export OPENSUSE_BUILD=1
+# Validate that JAVA_HOME was set; otherwise, exit.
+if [ "x$JAVA_HOME" = "x" ]; then
+    echo "Unable to detect JAVA_HOME installation automatically!" 1>&2
+    exit 1
+fi
+
+# Check if the JDK version is 9 or greater...
+java9_check="$(jrunscript -e "print(java.lang.Double.parseDouble(java.lang.System.getProperty('java.specification.version')) >= java.lang.Double.parseDouble('1.9'))" 2>/dev/null)"
+if [ "x$java9_check" = "xtrue" ]; then
+    export JDK9_BUILD=1
+fi
+
+# Check if we're running in 64-bit mode.
+if [ "x$(getconf LONG_BIT)" = "x64" ]; then
+    export USE_64=1
 fi
 
 # Check if we're in a location with nss/nspr above us; if not, use the system

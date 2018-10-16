@@ -249,10 +249,11 @@ sub setup_vars {
                     . "cd $jss_dir";
             print_do($cmd);
         }
-    }
 
-    print "nss_bin_dir=$nss_bin_dir\n";
+        print "nss_bin_dir=$nss_bin_dir\n";
+    }
     print "nss_lib_dir=$nss_lib_dir\n";
+
 
     our $jss_lib_dir = "$jss_objdir/lib";
     print "jss_lib_dir=$jss_lib_dir\n";
