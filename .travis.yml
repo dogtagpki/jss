@@ -17,11 +17,8 @@ env:
   - BASE_IMAGE="fedora_28"
   - BASE_IMAGE="ubuntu_jdk8"
 
-before_install:
-  - docker build --no-cache --tag jss_$BASE_IMAGE:latest -f tools/Dockerfiles/$BASE_IMAGE .
-
 script:
-  - docker run jss_$BASE_IMAGE:latest
+  - bash tools/run_container.sh "$BASE_IMAGE"
 
 matrix:
   fast_finish: true
