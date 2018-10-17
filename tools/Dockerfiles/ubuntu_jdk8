@@ -30,8 +30,6 @@ RUN true \
 # Perform the actual RPM build
 WORKDIR /home/sandbox/jss
 CMD true \
-        && export DEBIAN_BUILD=1 \
-        && export JAVA_HOME="$(dirname "$(dirname "$(readlink -f /etc/alternatives/javac)")")" \
-        && export USE_64=1 \
+        && . tools/autoenv.sh \
         && make clean all check \
         && true
