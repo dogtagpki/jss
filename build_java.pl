@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use warnings FATAL => 'all';
 
 use Cwd qw(abs_path cwd);
 use File::Find;
@@ -196,8 +197,8 @@ sub setup_vars {
     print "jss_objdir=$jss_objdir\n";
 
     my $jss_objdir_name;
-    our $nss_bin_dir;
-    our $nss_lib_dir;
+    our $nss_bin_dir = "";
+    our $nss_lib_dir = "";
     if( ( $ENV{USE_INSTALLED_NSPR} ) && ( $ENV{USE_INSTALLED_NSS} ) ) {
         print "Using the NSPR and NSS installed on the system to build JSS.\n";
 
@@ -446,8 +447,8 @@ sub javadoc {
     our $javadoc;
     our $classpath;
 
-    my $html_header_opt;
-    if( $ENV{HTML_HEADER} ) {
+    my $html_header_opt = "";
+    if( defined $ENV{HTML_HEADER} && $ENV{HTML_HEADER} ) {
         $html_header_opt = "-header '$ENV{HTML_HEADER}'";
     }
 
@@ -477,6 +478,10 @@ sub test {
     # Ensure that JSS is built prior to tests.
     if (( ! -d $dist_dir )  && ( ! -d $jss_objdir && ! -l $jss_objdir )) {
         die "JSS builds are not available at $jss_objdir.";
+    }
+
+    if (!defined $nss_bin_dir) {
+        $nss_bin_dir = "";
     }
 
     my $cmd = "cd $jss_dir/org/mozilla/jss/tests; "
