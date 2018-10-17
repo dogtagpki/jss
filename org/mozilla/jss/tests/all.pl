@@ -5,6 +5,7 @@
 
 use strict;
 use warnings;
+use warnings FATAL => 'all';
 
 use Socket;
 use File::Basename;
@@ -92,7 +93,7 @@ sub checkPort {
 my $run_shell    = "";
 my $pwfile       = "";
 my $nss_bin_dir  = "";
-my $jarFiles     = "";
+my $classpath    = "";
 my $ld_lib_path  = "";
 my $nspr_lib_dir = "";
 
@@ -131,7 +132,6 @@ sub setup_vars {
         $scriptext = "sh";
     }
 
-    $ENV{CLASSPATH}  = "";
     $ENV{$ld_lib_path} = "" if $truncate_lib_path;
 
     if( $$argv[0] eq "dist" ) {
@@ -151,7 +151,6 @@ sub setup_vars {
 
         ( -f $jss_classpath ) or die "$jss_classpath does not exist";
 
-        $ENV{CLASSPATH} .= "$jss_classpath";
         $ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$nss_lib_dir";
 
     } elsif( $$argv[0] eq "auto" ) {
@@ -170,7 +169,6 @@ sub setup_vars {
 
         ( -f $jss_classpath ) or die "$jss_classpath does not exist";
 
-        $ENV{CLASSPATH} .= "$jss_classpath";
         #$ENV{$ld_lib_path} = $ENV{$ld_lib_path} . $pathsep . "$nss_lib_dir";
         $ENV{$ld_lib_path} = "$nss_lib_dir";
 
@@ -187,7 +185,6 @@ sub setup_vars {
         $jss_lib_dir = "$jss_rel_dir/lib";
         $jss_classpath = "$jss_rel_dir/../xpclass.jar";
 
-        $ENV{CLASSPATH} .= "$jss_classpath";
         $ENV{$ld_lib_path} =
                 "$jss_lib_dir" . $pathsep .
                 "$nss_lib_dir" . $pathsep .
@@ -198,11 +195,11 @@ sub setup_vars {
         usage();
     }
 
-    if ($ENV{PORT_JSSE_SERVER}) {
+    if (defined $ENV{PORT_JSSE_SERVER} && $ENV{PORT_JSSE_SERVER}) {
        $serverPort = $ENV{PORT_JSSE_SERVER};
     }
 
-    if ($ENV{PORT_JSS_SERVER}) {
+    if (defined $ENV{PORT_JSS_SERVER} && $ENV{PORT_JSS_SERVER}) {
        $serverPort = $ENV{PORT_JSS_SERVER};
     }
 
@@ -238,12 +235,15 @@ sub setup_vars {
     }
 
     (-f $java) or die "'$java' does not exist\n";
-    $java = $java . $ENV{NATIVE_FLAG};
 
     #MAC OS X have the -Djava.library.path for the JSS JNI library
     if ($osname =~ /Darwin/ || $osname =~ /Linux/) {
         $java = $java . " -Djava.library.path=$jss_lib_dir";
     }
+
+    my $jarFiles = Common::get_jar_files;
+    $jarFiles = "$jarFiles:" . Common::detect_jar_file "slf4j-jdk14.jar", "slf4j/jdk14.jar";
+    $classpath = "$jarFiles:$jss_classpath";
 
     $pwfile = "passwords";
 
@@ -317,11 +317,14 @@ sub outputEnv {
 
    print "*****ENVIRONMENT*****\n";
    print "java=$java\n";
-   print "NATIVE_FLAG=$ENV{NATIVE_FLAG}\n";
    print "$ld_lib_path=$ENV{$ld_lib_path}\n";
-   print "CLASSPATH=$ENV{CLASSPATH}\n";
-   print "BUILD_OPT=$ENV{BUILD_OPT}\n";
-   print "USE_64=$ENV{USE_64}\n";
+   print "CLASSPATH=$classpath\n";
+   if (defined $ENV{BUILD_OPT}) {
+      print "BUILD_OPT=$ENV{BUILD_OPT}\n";
+   }
+   if (defined $ENV{USE_64}) {
+      print "USE_64=$ENV{USE_64}\n";
+   }
    print "testdir=$testdir\n";
    print "serverPort=$serverPort\n";
    print "LIB_SUFFIX=$lib_suffix\n";
@@ -457,11 +460,6 @@ print "creating pkcs11config file\n";
 createpkcs11_cfg;
 
 my $serverCommand;
-
-$jarFiles = Common::get_jar_files;
-$jarFiles = "$jarFiles:/usr/share/java/slf4j/jdk14.jar";
-# Note: jdk14.jar required for testing though not for building
-my $classpath = "$jarFiles:$jss_classpath";
 
 my $pk12util = "pk12util$exe_suffix";
 if ($nss_bin_dir) {
@@ -711,14 +709,14 @@ if ($strings_exist ne "") {
 print "\n================= Test Results\n";
 print "JSSTEST_SUITE: $testpass / $testrun\n";
 my $rate = $testpass / $testrun * 100;
-printf "JSSTEST_RATE: %.0f %\n",$rate;
+printf "JSSTEST_RATE: %.0f %%\n",$rate;
 
 if ($testpass ne $testrun) {
     printf "Test Status: FAILURE\n";
-    system("false");
     printf "to test failed tests set the classpath and run the command(s)\n";
     outputEnv();
+    exit 1;
 } else {
     printf "Test Status: SUCCESS\n";
-    system("true");
+    exit 0;
 }
