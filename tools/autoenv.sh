@@ -32,9 +32,31 @@ if [ "x$JAVA_HOME" = "x" ]; then
     exit 1
 fi
 
-# Check if the JDK version is 9 or greater...
-java9_check="$(jrunscript -e "print(java.lang.Double.parseDouble(java.lang.System.getProperty('java.specification.version')) >= java.lang.Double.parseDouble('1.9'))" 2>/dev/null)"
-if [ "x$java9_check" = "xtrue" ]; then
+# Check if the JDK version is 9 or greater via feature detection on
+# sun.security.pkcs11.wrapper...
+java9_check() {
+    tmp_dir="$(mktemp -d)"
+    if [ "x$tmp_dir" = "x" ]; then
+        echo "Cannot create temp directory!" 1>&2
+        exit 1
+    fi
+
+    tmp_file="$tmp_dir/Main.java"
+
+    echo "import sun.security.pkcs11.wrapper.PKCS11Constants;" > "$tmp_file"
+    echo "public class Main {" > "$tmp_file"
+    echo "public static void main() {" > "$tmp_file"
+    echo "System.out.println(PKCS11Constants.CKN_SURRENDER);}}" > "$tmp_file"
+
+    javac="$JAVA_HOME/bin/javac"
+    $javac "$tmp_file" 2>/dev/null >/dev/null
+    ret="$?"
+
+    rm -rf "$tmp_dir"
+
+    return $ret
+}
+if java9_check; then
     export JDK9_BUILD=1
 fi
 
