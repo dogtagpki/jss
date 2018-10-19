@@ -37,15 +37,11 @@ sub get_jar_files {
     my $slf4j = detect_jar_file("slf4j-api.jar", "slf4j/api.jar");
     my $codec = detect_jar_file("apache-commons-codec.jar", "commons-codec.jar");
     my $lang = detect_jar_file("apache-commons-lang.jar", "commons-lang.jar");
+    my $jaxb = detect_jar_file("jaxb-api.jar");
     push(@jarFiles, $slf4j);
     push(@jarFiles, $codec);
     push(@jarFiles, $lang);
-
-    if (defined $ENV{JDK9_BUILD} and $ENV{JDK9_BUILD}) {
-        my $jaxb = detect_jar_file("jaxb-api.jar", "jboss-jaxb-2.2-api.jar");
-        push(@jarFiles, $jaxb);
-    }
-
+    push(@jarFiles, $jaxb);
 
     return join(':', @jarFiles);
 }

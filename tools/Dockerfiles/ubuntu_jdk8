@@ -7,6 +7,7 @@ RUN true \
         && apt-get install -y debhelper libnss3-dev openjdk-8-jdk pkg-config \
                               quilt g++ mercurial zlib1g-dev libslf4j-java \
                               liblog4j2-java libcommons-lang-java \
+                              libjaxb-api-java \
         && mkdir -p /home/sandbox \
         && apt-get autoremove -y \
         && apt-get clean -y \
