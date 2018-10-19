@@ -41,6 +41,7 @@ BuildRequires:  nss-tools >= 3.28.4-6
 BuildRequires:  java-devel
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
+BuildRequires:  glassfish-jaxb-api
 %if 0%{?rhel} && 0%{?rhel} <= 7
 # no slf4j-jdk14
 %else
@@ -57,6 +58,7 @@ Requires:       nss >= 3.28.4-6
 Requires:       java-headless
 Requires:       jpackage-utils
 Requires:       slf4j
+Requires:       glassfish-jaxb-api
 %if 0%{?rhel} && 0%{?rhel} <= 7
 # no slf4j-jdk14
 %else

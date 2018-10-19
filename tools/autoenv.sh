@@ -32,12 +32,6 @@ if [ "x$JAVA_HOME" = "x" ]; then
     exit 1
 fi
 
-# Check if the JDK version is 9 or greater...
-java9_check="$(jrunscript -e "print(java.lang.Double.parseDouble(java.lang.System.getProperty('java.specification.version')) >= java.lang.Double.parseDouble('1.9'))" 2>/dev/null)"
-if [ "x$java9_check" = "xtrue" ]; then
-    export JDK9_BUILD=1
-fi
-
 # Check if we're running in 64-bit mode.
 if [ "x$(getconf LONG_BIT)" = "x64" ]; then
     export USE_64=1

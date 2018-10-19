@@ -25,18 +25,21 @@ This project has the following build dependencies:
  - [Perl](https://www.perl.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
+ - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
  - [SLF4J](https://www.slf4j.org/)
 
 To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
-                     java-devel jpackage-utils slf4j zlib-devel
+                     java-devel jpackage-utils slf4j zlib-devel \
+                     glassfish-jaxb-api
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-codec-java \
                          libcommons-lang-java libnss3-dev libslf4j-java \
-                         openjdk-8-jdk pkg-config zlib1g-dev
+                         openjdk-8-jdk pkg-config zlib1g-dev \
+                         libjaxb-api-java
 
 Build/Test Instructions
 -----------------------
