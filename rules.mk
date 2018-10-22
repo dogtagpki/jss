@@ -12,6 +12,8 @@ release_classes:: releaseJava
 check:: testJava
 test_jss:: testJava
 
+html:: javadoc
+
 # always do a private_export
 export:: private_export
 
