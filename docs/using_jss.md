@@ -1,5 +1,7 @@
 # Using JSS
 
+## Classpath Dependencies
+
 To use JSS in your project after installation, you'll need to ensure the
 following dependencies are available in your `CLASSPATH`:
 
@@ -11,3 +13,16 @@ following dependencies are available in your `CLASSPATH`:
    and installed to `/usr/share/java/apache-commons-lang.jar`.
  - `apache-commons-codec.jar` -- provided by the `apache-commons-codec`
    package and installed to `/usr/share/java/apache-commons-codec.jar`.
+ - `jaxb-api.jar` -- provided by the `glassfish-jaxb-api` package
+   and installed to `/usr/share/java/jaxb-api.jar`.
+
+Note that the above paths and packages are for Fedora; for a list of packages
+in Debian, please see the [dependencies document](dependencies.md). Note that
+paths might differ between various platforms and versions of Fedora.
+
+## Developing against JSS
+
+We recommend referring to the javadoc distribution generated when JSS was
+installed. On Fedora-like systems, this is provided by the `jss-javadoc`
+package; for an online version tracking master, please refer to our
+[live instance](https://dogtagpki.github.io/jss/javadoc/index.html).
