@@ -31,6 +31,12 @@ matrix:
       env: BASE_IMAGE="debian_jdk11"
     - stage: extra
       env: BASE_IMAGE="ubuntu_jdk8"
+    - stage: extra
+      env: BASE_IMAGE="fedora_29"
+    - stage: extra
+      env: BASE_IMAGE="fedora_29_jdk11"
+    - stage: extra
+      env: BASE_IMAGE="fedora_rawhide"
   allow_failures:
     - stage: extra
       env: BASE_IMAGE="pkcs11check"
@@ -38,3 +44,9 @@ matrix:
       env: BASE_IMAGE="debian_jdk11"
     - stage: extra
       env: BASE_IMAGE="ubuntu_jdk8"
+    - stage: extra
+      env: BASE_IMAGE="fedora_29"
+    - stage: extra
+      env: BASE_IMAGE="fedora_29_jdk11"
+    - stage: extra
+      env: BASE_IMAGE="fedora_rawhide"
