@@ -1,0 +1,26 @@
+FROM fedora:rawhide
+
+# Install generic dependencies to build jss
+RUN true \
+        && dnf update -y --refresh \
+        && dnf install -y dnf-plugins-core gcc make rpm-build \
+                          glassfish-jaxb-api java-11-openjdk nss-tools \
+                          apache-commons-codec apache-commons-lang gcc-c++ \
+                          java-11-openjdk-devel jpackage-utils slf4j nss \
+                          zlib-devel nss-devel nspr-devel perl slf4j-jdk14 \
+        && mkdir -p /home/sandbox \
+        && dnf clean -y all \
+        && rm -rf /usr/share/doc /usr/share/doc-base \
+                  /usr/share/man /usr/share/locale /usr/share/zoneinfo \
+        && true
+
+# Link in the current version of jss from the git repository
+WORKDIR /home/sandbox
+COPY . /home/sandbox/jss
+
+# Perform the actual RPM build
+WORKDIR /home/sandbox/jss
+CMD true \
+        && . tools/autoenv.sh \
+        && make clean all check \
+        && true
