@@ -35,7 +35,6 @@ The build is affected by several environment variables:
  - `BUILD_OPT` -- whether or not to build optimized binaries (`-O` as a
    compiler flag; by default (if not present or false), binaries are
    built with debug flags (`-g`).
- - `DEBIAN_BUILD` -- whether or not to use Debian dependency locations.
  - `CHECK_DEPRECATION` -- if set, checks for use of deprecated objects
    during the Java build.
  - `USE_INSTALLED_NSPR` -- if set, use the system NSPR instead of the
@@ -69,4 +68,4 @@ exposes several targets similar to `build_java.pl`:
  - `check` or `test_jss` -- run jss test suite on built objects; note that
    jss must be built prior to running the test suite.
  - `dist` or `release_classes` -- build jss for release.
- - `javadoc` -- build java documentation.
+ - `javadoc` or `html` -- build java documentation.
