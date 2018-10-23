@@ -455,7 +455,7 @@ sub javadoc {
     ensure_dir_exists("$dist_dir/jssdoc");
     my $targets = join(" ", @packages);
     print "$targets\n";
-    print_do("$javadoc -overview ./overview.html -windowtitle 'JSS: Java Security Services' -notimestamp -breakiterator $classpath -sourcepath . -d $dist_dir/jssdoc $html_header_opt $targets");
+    print_do("$javadoc -overview ./tools/javadoc/overview.html -windowtitle 'JSS: Java Security Services' -notimestamp -breakiterator $classpath -sourcepath . -d $dist_dir/jssdoc $html_header_opt $targets");
 }
 
 sub test {
