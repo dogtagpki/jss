@@ -33,6 +33,7 @@ shell_check() {
 
 shell_check "build.sh"
 shell_check "tools/autoenv.sh"
+shell_check "tools/reproducible_jar.sh"
 shell_check "tools/run_container.sh"
 shell_check "tools/test_perl_style.sh"
 shell_check "tools/test_python_style.sh"

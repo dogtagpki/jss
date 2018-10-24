@@ -17,12 +17,19 @@ html:: javadoc
 # always do a private_export
 export:: private_export
 
-PERL_VARIABLES=     \
+CORE_VARIABLES=     \
     "JSS_OBJDIR_NAME=$(OBJDIR_NAME)" \
     "SOURCE_PREFIX=$(SOURCE_PREFIX)" \
     "SOURCE_RELEASE_PREFIX=$(SOURCE_RELEASE_PREFIX)" \
     "SOURCE_RELEASE_CLASSES_DIR=$(SOURCE_RELEASE_CLASSES_DIR)" \
+
+PERL_VARIABLES= \
+    $(CORE_VARIABLES) \
     "XPCLASS_JAR=$(XPCLASS_JAR)"
+
+REPRODUCIBLE_VARIABLES= \
+    $(CORE_VARIABLES) \
+    "XPCLASS_JAR=reproducible-$(XPCLASS_JAR)"
 
 buildJava:
 	perl build_java.pl $(PERL_VARIABLES) build
@@ -38,3 +45,9 @@ releaseJava:
 
 javadoc:
 	perl build_java.pl $(PERL_VARIABLES) javadoc
+
+reproducible:
+	bash tools/reproducible_jar.sh "$(SOURCE_PREFIX)/$(XPCLASS_JAR)" "$(SOURCE_PREFIX)/reproducible" "$(SOURCE_PREFIX)/reproducible-$(XPCLASS_JAR)"
+
+reproducibleCheck:
+	perl build_java.pl $(REPRODUCIBLE_VARIABLES) test

@@ -135,7 +135,8 @@ export USE_64
 make -C coreconf
 make
 make javadoc
-make test_jss
+make reproducible
+make reproducibleCheck
 
 ################################################################################
 %install
@@ -144,7 +145,7 @@ make test_jss
 
 # jars
 install -d -m 0755 $RPM_BUILD_ROOT%{_jnidir}
-install -m 644 ../dist/xpclass.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
+install -m 644 ../dist/reproducible-xpclass.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
 
 # We have to use the name libjss4.so because this is dynamically
 # loaded by the jar file.
