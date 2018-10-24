@@ -24,9 +24,9 @@ use Common qw(get_jar_files);
 
 sub usage {
     print "Usage:\n";
-    print "$0 dist <dist_dir> <NSS bin_dir> <NSS lib dir> <JSS lib dir>\n";
+    print "$0 dist <dist_dir> <NSS bin_dir> <NSS lib dir> <JSS lib dir> <jss jar>\n";
     print "$0 release <jss release dir> <nss release dir> "
-        . "<nspr release dir>\n";
+        . "<nspr release dir> <jss jar>\n";
     print "$0 auto\n";
     exit(1);
 }
@@ -138,7 +138,7 @@ sub setup_vars {
     if( $$argv[0] eq "dist" ) {
         shift @$argv;
 
-        if (scalar @$argv != 4) {
+        if (scalar @$argv != 5) {
             usage("incorrect dist parameters");
         }
 
@@ -146,9 +146,9 @@ sub setup_vars {
         $nss_bin_dir = shift @$argv;
         $nss_lib_dir = shift @$argv;
         $jss_lib_dir = shift @$argv;
+        $jss_classpath = shift @$argv;
 
         $jss_rel_dir   = "$dist_dir/classes/org";
-        $jss_classpath = "$dist_dir/xpclass.jar";
 
         ( -f $jss_classpath ) or die "$jss_classpath does not exist";
 
@@ -179,12 +179,12 @@ sub setup_vars {
         $jss_rel_dir     = shift @$argv or usage();
         my $nss_rel_dir  = shift @$argv or usage();
         my $nspr_rel_dir = shift @$argv or usage();
+        $jss_classpath   = shift @$argv or usage();
 
         $nspr_lib_dir = "$nspr_rel_dir/lib";
         $nss_bin_dir = "$nss_rel_dir/bin";
         $nss_lib_dir = "$nss_rel_dir/lib";
         $jss_lib_dir = "$jss_rel_dir/lib";
-        $jss_classpath = "$jss_rel_dir/../xpclass.jar";
 
         $ENV{$ld_lib_path} =
                 "$jss_lib_dir" . $pathsep .

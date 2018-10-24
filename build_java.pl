@@ -346,6 +346,8 @@ MyLabel
     our $javac_deprecation_flag;
     our $classpath;
     our $jar;
+    our $class_jar;
+
     if( scalar(@source_list) > 0 ) {
         ensure_dir_exists($class_dir);
         print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir " .
@@ -361,7 +363,7 @@ MyLabel
         print_do("$javac $javac_opt_flag $javac_deprecation_flag -sourcepath . -d $class_dir -h $jni_header_dir " .
             "$classpath " . join(" ", @jni_sources) );
 
-        print_do("sh -c 'cd $dist_dir/classes && $jar cvmf $dist_dir/MANIFEST.MF $dist_dir/xpclass.jar *'");
+        print_do("sh -c 'cd $dist_dir/classes && $jar cvmf $dist_dir/MANIFEST.MF $class_jar *'");
         print "Exit status was " . ($?>>8) . "\n";
     }
 }
@@ -461,6 +463,7 @@ sub javadoc {
 sub test {
     our $os;
     our $dist_dir;
+    our $class_jar;
 
     our $jss_dir;
     our $jss_lib_dir;
@@ -483,7 +486,7 @@ sub test {
     }
 
     my $cmd = "cd $jss_dir/org/mozilla/jss/tests; "
-            . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\"";
+            . "perl all.pl dist \"$dist_dir\" \"$nss_bin_dir\" \"$nss_lib_dir\" \"$jss_lib_dir\" \"$class_jar\"";
 
     print("#######################\n" .
           "# BEGIN:  Testing JSS #\n" .
