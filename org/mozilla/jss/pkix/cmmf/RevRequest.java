@@ -141,7 +141,7 @@ public class RevRequest implements ASN1Value {
     }
 
     /**
-     * Returns the <tt>invalidityDate</tt> field. Returns <tt>null</tt>
+     * Returns the <code>invalidityDate</code> field. Returns null
      * if the field is not present.
      */
     public GeneralizedTime getInvalidityDate() {
@@ -151,8 +151,8 @@ public class RevRequest implements ASN1Value {
     /**
      * Returns the <code>passphrase</code> field.  Returns
      *  <code>null</code> if the field is not present.
-     * @deprecated The <tt>passphrase</tt> field has been renamed
-     *  <tt>sharedSecret</tt>. Call <tt>getSharedSecret</tt> instead.
+     * @deprecated The <code>passphrase</code> field has been renamed
+     *  <code>sharedSecret</code>. Call <code>getSharedSecret</code> instead.
      */
     @Deprecated
     public OCTET_STRING getPassphrase() {
@@ -181,10 +181,10 @@ public class RevRequest implements ASN1Value {
 
     /**
      * Constructs a new <code>RevRequest</code> from its components,
-     *  omitting the <tt>invalidityDate</tt> field.
+     *  omitting the <code>invalidityDate</code> field.
      *
      * @deprecated This constructor is obsolete now that
-     *      <tt>invalidityDate</tt> has been added to the class.
+     *      <code>invalidityDate</code> has been added to the class.
      *
      * @param issuerName The <code>issuerName</code> field.
      * @param serialNumber The <code>serialNumber</code> field.
@@ -211,7 +211,7 @@ public class RevRequest implements ASN1Value {
      * @param reason The <code>reason</code> field.  The constants defined
      *      in this class may be used.
      * @param invalidityDate The suggested value for the Invalidity Date
-     *      CRL extension. This field is optional, so <tt>null</tt> may be
+     *      CRL extension. This field is optional, so <code>null</code> may be
      *      used.
      * @param sharedSecret The <code>sharedSecret</code> field.  This field is
      *      optional, so <code>null</code> may be used.

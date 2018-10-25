@@ -58,7 +58,7 @@ public class KeyPairGenerator {
 
     /**
      * Initializes the generator with algorithm-specific parameters.
-     *  The <tt>SecureRandom</tt> parameters is ignored.
+     *  The <code>SecureRandom</code> parameters is ignored.
      *
      * @param params Algorithm-specific parameters for the key pair generation.
      * @param random <b>This parameter is ignored.</b> NSS does not accept
@@ -93,7 +93,7 @@ public class KeyPairGenerator {
 
     /**
      * Initializes the generator with the strength of the keys.
-     *      The <tt>SecureRandom</tt> parameter is ignored.
+     *      The <code>SecureRandom</code> parameter is ignored.
      *
      * @param strength The strength of the keys that will be generated.
      *      Usually this is the length of the key in bits.

@@ -402,13 +402,13 @@ public final class InitializationValues {
     public boolean removeSunProvider = false;
 
     /**
-     * If <tt>true</tt>, none of the underlying NSS components will
+     * If <code>true</code>, none of the underlying NSS components will
      * be initialized. Only the Java portions of JSS will be
      * initialized. This should only be used if NSS has been initialized
      * elsewhere.
      *
      * <p>Specifically, the following components will <b>not</b> be
-     *  configured by <tt>CryptoManager.initialize</tt> if this flag is set:
+     *  configured by <code>CryptoManager.initialize</code> if this flag is set:
      * <ul>
      * <li>The NSS databases.
      * <li>OCSP checking.
@@ -421,7 +421,7 @@ public final class InitializationValues {
      * <li>The cipher strength policy (export/domestic).
      * </ul>
      *
-     * <p>The default is <tt>false</tt>.
+     * <p>The default is <code>false</code>.
      */
     public boolean initializeJavaOnly = false;
 

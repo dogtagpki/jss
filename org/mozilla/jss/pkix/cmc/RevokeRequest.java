@@ -175,7 +175,7 @@ public class RevokeRequest implements ASN1Value {
     }
 
     /**
-     * Returns the <tt>invalidityDate</tt> field. Returns <tt>null</tt>
+     * Returns the <code>invalidityDate</code> field. Returns <code>null</code>
      * if the field is not present.
      */
     public GeneralizedTime getInvalidityDate() {
@@ -204,10 +204,10 @@ public class RevokeRequest implements ASN1Value {
 
     /**
      * Constructs a new <code>RevokeRequest</code> from its components,
-     *  omitting the <tt>invalidityDate</tt> field.
+     *  omitting the <code>invalidityDate</code> field.
      *
      * @deprecated This constructor is obsolete now that
-     *      <tt>invalidityDate</tt> has been added to the class.
+     *      <code>invalidityDate</code> has been added to the class.
      *
      * @param issuerName The <code>issuerName</code> field.
      * @param serialNumber The <code>serialNumber</code> field.
@@ -234,7 +234,7 @@ public class RevokeRequest implements ASN1Value {
      * @param reason The <code>reason</code> field.  The constants defined
      *      in this class may be used.
      * @param invalidityDate The suggested value for the Invalidity Date
-     *      CRL extension. This field is optional, so <tt>null</tt> may be
+     *      CRL extension. This field is optional, so <code>null</code> may be
      *      used.
      * @param passphrase The <code>passphrase</code> field.  This field is
      *      optional, so <code>null</code> may be used.
