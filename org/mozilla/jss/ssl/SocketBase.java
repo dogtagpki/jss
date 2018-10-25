@@ -300,7 +300,7 @@ class SocketBase {
      * of construction than getByName(), and it is final.
      *
      * @return The InetAddress corresponding to the given integer,
-     *         or <tt>null</tt> if the InetAddress could not be constructed.
+     *         or <code>null</code> if the InetAddress could not be constructed.
      */
     private static InetAddress convertIntToInetAddress(int intAddr) {
         InetAddress in;

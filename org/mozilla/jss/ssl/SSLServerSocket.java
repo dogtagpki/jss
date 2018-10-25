@@ -91,8 +91,8 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * @param certApprovalCallback Will get called to approve any certificate
      *      presented by the client.
      * @param reuseAddr Reuse the local bind port; this parameter sets
-     *      the <tt>SO_REUSEADDR</tt> option on the socket before calling
-     *      <tt>bind()</tt>. The default is <tt>false</tt> for backward
+     *      the <code>SO_REUSEADDR</code> option on the socket before calling
+     *      <code>bind()</code>. The default is <code>false</code> for backward
      *      compatibility.
      */
     public SSLServerSocket(int port, int backlog, InetAddress bindAddr,

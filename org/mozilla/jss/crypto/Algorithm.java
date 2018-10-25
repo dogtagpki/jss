@@ -80,9 +80,9 @@ public class Algorithm {
      *   <code>null</code> if this algorithm does not take any parameters.
      * If the algorithm can accept more than one type of parameter,
      *   this method returns only one of them. It is better to call
-     *   <tt>getParameterClasses()</tt>.
+     *   <code>getParameterClasses()</code>.
      * @return Parameter type.
-     * @deprecated Call <tt>getParameterClasses()</tt> instead.
+     * @deprecated Call <code>getParameterClasses()</code> instead.
      */
     @Deprecated
     public Class<?> getParameterClass() {
@@ -105,11 +105,11 @@ public class Algorithm {
     /**
      * Validates if the given Object can be used as a parameter
      * for this algorithm.
-     * <p>If <tt>null</tt> is passed in, this method will return <tt>true</tt>
-     *      if this algorithm takes no parameters, and <tt>false</tt>
+     * <p>If <code>null</code> is passed in, this method will return true
+     *      if this algorithm takes no parameters, and false
      *      if this algorithm does take parameters.
      * @param o Object.
-     * @return Returns <tt>true</tt> if the given Object can be used as a parameter.
+     * @return Returns <code>true</code> if the given Object can be used as a parameter.
      */
     public boolean isValidParameterObject(Object o) {
         if( o == null ) {

@@ -1003,11 +1003,11 @@ public final class CryptoManager implements TokenSupplier
      * no means of specifying which token to use.
      *
      * <p>If no token is set, the InternalKeyStorageToken will be used. Setting
-     * this thread's token to <tt>null</tt> will also cause the
+     * this thread's token to <code>null</code> will also cause the
      * InternalKeyStorageToken to be used.
      *
      * @param token The token to use for crypto operations. Specifying
-     * <tt>null</tt> will cause the InternalKeyStorageToken to be used.
+     * <code>null</code> will cause the InternalKeyStorageToken to be used.
      */
     public void setThreadToken(CryptoToken token) {
         if( token != null ) {
@@ -1023,7 +1023,7 @@ public final class CryptoManager implements TokenSupplier
      * no means of specifying which token to use.
      *
      * <p>If no token is set, the InternalKeyStorageToken will be used. Setting
-     * this thread's token to <tt>null</tt> will also cause the
+     * this thread's token to <code>null</code> will also cause the
      * InternalKeyStorageToken to be used.
      *
      * @return The default token for this thread. If it has not been specified,

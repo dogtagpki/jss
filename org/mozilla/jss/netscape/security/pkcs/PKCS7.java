@@ -47,9 +47,9 @@ import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 
 /**
  * PKCS7 as defined in RSA Laboratories PKCS7 Technical Note. Profile
- * Supports only <tt>SignedData</tt> ContentInfo
+ * Supports only <code>SignedData</code> ContentInfo
  * type, where to the type of data signed is plain Data.
- * For signedData, <tt>crls</tt>, <tt>attributes</tt> and
+ * For signedData, <code>crls</code>, <code>attributes</code> and
  * PKCS#6 Extended Certificates are not supported.
  *
  * @version 1.33 97/12/10

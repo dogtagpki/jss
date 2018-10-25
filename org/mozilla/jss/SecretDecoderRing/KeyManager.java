@@ -176,7 +176,7 @@ public class KeyManager {
      * the actual algorithm of the key you are looking for. If you 
      * pass in a different algorithm and try to use the key that is returned,
      * the results are undefined.
-     * @return The key, or <tt>null</tt> if the key is not found.
+     * @return The key, or <code>null</code> if the key is not found.
      */
     public SecretKey lookupKey(EncryptionAlgorithm alg, byte[] keyid)
         throws TokenException
@@ -212,7 +212,7 @@ public class KeyManager {
      * the results are undefined.
      * @param nickname the name of the symmetric key. Duplicate keynames
      *  will be checked for, and are not allowed.
-     * @return The key, or <tt>null</tt> if the key is not found.
+     * @return The key, or <code>null</code> if the key is not found.
      */
     public SecretKey lookupUniqueNamedKey(EncryptionAlgorithm alg,
                                           String nickname)

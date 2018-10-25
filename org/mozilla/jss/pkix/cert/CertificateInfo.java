@@ -262,8 +262,8 @@ public class CertificateInfo implements ASN1Value {
 
     /**
      * Linearly searches the extension list for an extension with the given
-     * object identifier. If it finds one, returns <tt>true</tt>. Otherwise,
-     * returns <tt>false</tt>.
+     * object identifier. If it finds one, returns <code>true</code>. Otherwise,
+     * returns <code>false</code>.
      */
     public boolean isExtensionPresent(OBJECT_IDENTIFIER oid) {
         return ( getExtension(oid) != null );
@@ -272,7 +272,7 @@ public class CertificateInfo implements ASN1Value {
     /**
      * Linearly searches the extension list for an extension with the given
      * object identifier. It returns the first one it finds. If none are found,
-     * returns <tt>null</tt>.
+     * returns <code>null</code>.
      */
     public Extension getExtension(OBJECT_IDENTIFIER oid) {
         int numExtensions = extensions.size();

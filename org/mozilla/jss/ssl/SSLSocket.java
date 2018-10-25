@@ -1596,7 +1596,7 @@ public class SSLSocket extends java.net.Socket {
      * Returns a list of cipher suites that are implemented by NSS.
      * Each element in the array will be one of the cipher suite constants
      * defined in this class (for example,
-     * <tt>TLS_RSA_WITH_AES_128_CBC_SHA</tt>).
+     * <code>TLS_RSA_WITH_AES_128_CBC_SHA</code>).
      */
     public static native int[] getImplementedCipherSuites();
 }

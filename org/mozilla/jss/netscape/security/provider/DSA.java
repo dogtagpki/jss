@@ -429,7 +429,7 @@ public final class DSA extends Signature {
      * This implementation recognizes the following parameter:
      * <dl>
      *
-     * <dt><tt>Kseed</tt>
+     * <dt><code>Kseed</code>
      *
      * <dd>a byte array.
      *
@@ -463,7 +463,7 @@ public final class DSA extends Signature {
      *
      * <dl>
      *
-     * <dt><tt>Kseed</tt>
+     * <dt><code>Kseed</code>
      *
      * <dd>a byte array.
      *

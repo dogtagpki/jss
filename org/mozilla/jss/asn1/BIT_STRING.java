@@ -79,7 +79,7 @@ public class BIT_STRING implements ASN1Value {
      * its trailing zeroes removed. Generally, DER requires that trailing
      * zeroes be removed when the bitstring is used to hold flags, but
      * not when it is used to hold binary data (such as a public key).
-     * The default is <tt>false</tt>.
+     * The default is <code>false</code>.
      * @return True if trailing zeroes are to be removed.
      */
     public boolean getRemoveTrailingZeroes() {
@@ -91,8 +91,8 @@ public class BIT_STRING implements ASN1Value {
      * its trailing zeroes removed. Generally, DER requires that trailing
      * zeroes be removed when the bitstring is used to hold flags, but
      * not when it is used to hold binary data (such as a public key).
-     * The default is <tt>false</tt>. If this bit string is used to hold
-     * flags, you should set this to <tt>true</tt>.
+     * The default is <code>false</code>. If this bit string is used to hold
+     * flags, you should set this to <code>true</code>.
      * @param removeTrailingZeroes True if trailing zeroes are to be removed.
      */
     public void setRemoveTrailingZeroes(boolean removeTrailingZeroes) {
