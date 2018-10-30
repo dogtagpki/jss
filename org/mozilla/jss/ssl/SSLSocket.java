@@ -34,6 +34,8 @@ public class SSLSocket extends java.net.Socket {
     public final static int SSL2_DES_64_CBC_WITH_MD5                     = 0xFF06;
     public final static int SSL2_DES_192_EDE3_CBC_WITH_MD5               = 0xFF07;
 
+    public final static int TLS_NULL_WITH_NULL_NULL                      = 0x0000;
+
     /**
      * @deprecated Replaced with TLS_RSA_WITH_NULL_MD5.
      */
@@ -49,6 +51,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_RSA_WITH_NULL_SHA                        = 0x0002;
 
     public final static int SSL3_RSA_EXPORT_WITH_RC4_40_MD5              = 0x0003;
+    public final static int TLS_RSA_EXPORT_WITH_RC4_40_MD5               = 0x0003;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_RC4_128_MD5.
@@ -65,6 +68,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_RSA_WITH_RC4_128_SHA                     = 0x0005;
 
     public final static int SSL3_RSA_EXPORT_WITH_RC2_CBC_40_MD5          = 0x0006;
+    public final static int TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5           = 0x0006;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_IDEA_CBC_SHA.
@@ -74,6 +78,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_RSA_WITH_IDEA_CBC_SHA                    = 0x0007;
 
     public final static int SSL3_RSA_EXPORT_WITH_DES40_CBC_SHA           = 0x0008;
+    public final static int TLS_RSA_EXPORT_WITH_DES40_CBC_SHA            = 0x0008;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_DES_CBC_SHA.
@@ -90,6 +95,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_RSA_WITH_3DES_EDE_CBC_SHA                = 0x000a;
 
     public final static int SSL3_DH_DSS_EXPORT_WITH_DES40_CBC_SHA        = 0x000b;
+    public final static int TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA         = 0x000b;
 
     /**
      * @deprecated Replaced with TLS_DH_DSS_WITH_DES_CBC_SHA.
@@ -106,6 +112,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA             = 0x000d;
 
     public final static int SSL3_DH_RSA_EXPORT_WITH_DES40_CBC_SHA        = 0x000e;
+    public final static int TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA         = 0x000e;
 
     /**
      * @deprecated Replaced with TLS_DH_RSA_WITH_DES_CBC_SHA.
@@ -122,6 +129,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA             = 0x0010;
 
     public final static int SSL3_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA       = 0x0011;
+    public final static int TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA        = 0x0011;
 
     /**
      * @deprecated Replaced with TLS_DHE_DSS_WITH_DES_CBC_SHA.
@@ -138,6 +146,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA            = 0x0013;
 
     public final static int SSL3_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA       = 0x0014;
+    public final static int TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA        = 0x0014;
 
     /**
      * @deprecated Replaced with TLS_DHE_RSA_WITH_DES_CBC_SHA.
@@ -154,6 +163,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA            = 0x0016;
 
     public final static int SSL3_DH_ANON_EXPORT_WITH_RC4_40_MD5          = 0x0017;
+    public final static int TLS_DH_anon_EXPORT_WITH_RC4_40_MD5           = 0x0017;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_RC4_128_MD5.
@@ -163,6 +173,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DH_anon_WITH_RC4_128_MD5                 = 0x0018;
 
     public final static int SSL3_DH_ANON_EXPORT_WITH_DES40_CBC_SHA       = 0x0019;
+    public final static int TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA        = 0x0019;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_DES_CBC_SHA.
@@ -206,6 +217,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA       = 0x0065;
     public final static int TLS_DHE_DSS_WITH_RC4_128_SHA                 = 0x0066;
     public final static int TLS_DHE_RSA_WITH_AES_128_CBC_SHA256          = 0x0067;
+    public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA256          = 0x006A;
     public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA256          = 0x006B;
 
     // New TLS cipher suites in NSS 3.4
@@ -239,6 +251,7 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_RSA_WITH_AES_128_CBC_SHA256              = 0x003C;
     public final static int TLS_RSA_WITH_AES_256_CBC_SHA256              = 0x003D;
 
+    public final static int TLS_DHE_DSS_WITH_AES_128_CBC_SHA256          = 0x0040;
     public final static int TLS_RSA_WITH_CAMELLIA_128_CBC_SHA            = 0x0041;
     public final static int TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA         = 0x0042;
     public final static int TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA         = 0x0043;
@@ -273,6 +286,12 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_DHE_RSA_WITH_AES_256_GCM_SHA384          = 0x009F;
     public final static int TLS_DHE_DSS_WITH_AES_128_GCM_SHA256          = 0x00A2;
     public final static int TLS_DHE_DSS_WITH_AES_256_GCM_SHA384          = 0x00A3;
+    public final static int TLS_DHE_PSK_WITH_AES_128_GCM_SHA256          = 0x00AA;
+    public final static int TLS_DHE_PSK_WITH_AES_256_GCM_SHA384          = 0x00AB;
+
+    public final static int TLS_EMPTY_RENEGOTIATION_INFO_SCSV            = 0x00FF;
+
+    public final static int TLS_FALLBACK_SCSV                            = 0x5600;
 
     public final static int TLS_ECDH_ECDSA_WITH_NULL_SHA                 = 0xc001;
     public final static int TLS_ECDH_ECDSA_WITH_RC4_128_SHA              = 0xc002;
@@ -320,6 +339,11 @@ public class SSLSocket extends java.net.Socket {
     public final static int TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256   = 0xCCA8;
     public final static int TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCA9;
     public final static int TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256     = 0xCCAA;
+    public final static int TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256   = 0xCCAC;
+    public final static int TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256     = 0xCCAD;
+
+    public final static int TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256         = 0xD001;
+    public final static int TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384         = 0xD002;
 
     /* Special TLS 1.3 cipher suites that really just specify AEAD */
     public final static int TLS_AES_128_GCM_SHA256                        = 0x1301;
