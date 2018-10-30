@@ -24,6 +24,8 @@ public enum SSLCipher {
     SSL2_DES_64_CBC_WITH_MD5                     (0xFF06),
     SSL2_DES_192_EDE3_CBC_WITH_MD5               (0xFF07),
 
+    TLS_NULL_WITH_NULL_NULL                      (0x0000),
+
     /**
      * @deprecated Replaced with TLS_RSA_WITH_NULL_MD5.
      */
@@ -39,6 +41,7 @@ public enum SSLCipher {
     TLS_RSA_WITH_NULL_SHA                        (0x0002),
 
     SSL3_RSA_EXPORT_WITH_RC4_40_MD5              (0x0003),
+    TLS_RSA_EXPORT_WITH_RC4_40_MD5               (0x0003),
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_RC4_128_MD5.
@@ -55,6 +58,7 @@ public enum SSLCipher {
     TLS_RSA_WITH_RC4_128_SHA                     (0x0005),
 
     SSL3_RSA_EXPORT_WITH_RC2_CBC_40_MD5          (0x0006),
+    TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5           (0x0006),
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_IDEA_CBC_SHA.
@@ -64,6 +68,7 @@ public enum SSLCipher {
     TLS_RSA_WITH_IDEA_CBC_SHA                    (0x0007),
 
     SSL3_RSA_EXPORT_WITH_DES40_CBC_SHA           (0x0008),
+    TLS_RSA_EXPORT_WITH_DES40_CBC_SHA            (0x0008),
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_DES_CBC_SHA.
@@ -80,6 +85,8 @@ public enum SSLCipher {
     TLS_RSA_WITH_3DES_EDE_CBC_SHA                (0x000a),
 
     SSL3_DH_DSS_EXPORT_WITH_DES40_CBC_SHA        (0x000b),
+    TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA         (0x000b),
+
 
     /**
      * @deprecated Replaced with TLS_DH_DSS_WITH_DES_CBC_SHA.
@@ -96,6 +103,7 @@ public enum SSLCipher {
     TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA             (0x000d),
 
     SSL3_DH_RSA_EXPORT_WITH_DES40_CBC_SHA        (0x000e),
+    TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA         (0x000e),
 
     /**
      * @deprecated Replaced with TLS_DH_RSA_WITH_DES_CBC_SHA.
@@ -112,6 +120,7 @@ public enum SSLCipher {
     TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA             (0x0010),
 
     SSL3_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA       (0x0011),
+    TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA        (0x0011),
 
     /**
      * @deprecated Replaced with TLS_DHE_DSS_WITH_DES_CBC_SHA.
@@ -128,6 +137,7 @@ public enum SSLCipher {
     TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA            (0x0013),
 
     SSL3_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA       (0x0014),
+    TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA        (0x0014),
 
     /**
      * @deprecated Replaced with TLS_DHE_RSA_WITH_DES_CBC_SHA.
@@ -144,6 +154,7 @@ public enum SSLCipher {
     TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA            (0x0016),
 
     SSL3_DH_ANON_EXPORT_WITH_RC4_40_MD5          (0x0017),
+    TLS_DH_anon_EXPORT_WITH_RC4_40_MD5           (0x0017),
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_RC4_128_MD5.
@@ -153,6 +164,7 @@ public enum SSLCipher {
     TLS_DH_anon_WITH_RC4_128_MD5                 (0x0018),
 
     SSL3_DH_ANON_EXPORT_WITH_DES40_CBC_SHA       (0x0019),
+    TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA        (0x0019),
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_DES_CBC_SHA.
@@ -196,6 +208,7 @@ public enum SSLCipher {
     TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA       (0x0065),
     TLS_DHE_DSS_WITH_RC4_128_SHA                 (0x0066),
     TLS_DHE_RSA_WITH_AES_128_CBC_SHA256          (0x0067),
+    TLS_DHE_DSS_WITH_AES_256_CBC_SHA256          (0x006A),
     TLS_DHE_RSA_WITH_AES_256_CBC_SHA256          (0x006B),
 
     // New TLS cipher suites in NSS 3.4
@@ -229,6 +242,7 @@ public enum SSLCipher {
     TLS_RSA_WITH_AES_128_CBC_SHA256              (0x003C),
     TLS_RSA_WITH_AES_256_CBC_SHA256              (0x003D),
 
+    TLS_DHE_DSS_WITH_AES_128_CBC_SHA256          (0x0041),
     TLS_RSA_WITH_CAMELLIA_128_CBC_SHA            (0x0041),
     TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA         (0x0042),
     TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA         (0x0043),
@@ -263,6 +277,12 @@ public enum SSLCipher {
     TLS_DHE_RSA_WITH_AES_256_GCM_SHA384          (0x009F),
     TLS_DHE_DSS_WITH_AES_128_GCM_SHA256          (0x00A2),
     TLS_DHE_DSS_WITH_AES_256_GCM_SHA384          (0x00A3),
+    TLS_DHE_PSK_WITH_AES_128_GCM_SHA256          (0x00AA),
+    TLS_DHE_PSK_WITH_AES_256_GCM_SHA384          (0x00AB),
+
+    TLS_EMPTY_RENEGOTIATION_INFO_SCSV            (0x00FF),
+
+    TLS_FALLBACK_SCSV                            (0x5600),
 
     TLS_ECDH_ECDSA_WITH_NULL_SHA                 (0xc001, true),
     TLS_ECDH_ECDSA_WITH_RC4_128_SHA              (0xc002, true),
@@ -313,6 +333,12 @@ public enum SSLCipher {
     TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256   (0xCCA8, true),
     TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xCCA9, true),
     TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256     (0xCCAA),
+    TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256   (0xCCAC, true),
+    TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256     (0xCCAD),
+
+
+    TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256         (0xD001, true),
+    TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384         (0xD002, true),
 
     /* Special TLS 1.3 cipher suites that really just specify AEAD */
     TLS_AES_128_GCM_SHA256                        (0x1301),
