@@ -14,8 +14,8 @@ stages:
   - extra
 
 env:
-  - BASE_IMAGE="fedora_27"
   - BASE_IMAGE="fedora_28"
+  - BASE_IMAGE="fedora_29"
 
 script:
   - bash tools/run_container.sh "$BASE_IMAGE"
@@ -32,8 +32,6 @@ matrix:
     - stage: extra
       env: BASE_IMAGE="ubuntu_jdk8"
     - stage: extra
-      env: BASE_IMAGE="fedora_29"
-    - stage: extra
       env: BASE_IMAGE="fedora_29_jdk11"
     - stage: extra
       env: BASE_IMAGE="fedora_rawhide"
@@ -44,8 +42,6 @@ matrix:
       env: BASE_IMAGE="debian_jdk11"
     - stage: extra
       env: BASE_IMAGE="ubuntu_jdk8"
-    - stage: extra
-      env: BASE_IMAGE="fedora_29"
     - stage: extra
       env: BASE_IMAGE="fedora_29_jdk11"
     - stage: extra
