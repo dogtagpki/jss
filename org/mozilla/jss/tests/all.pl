@@ -697,6 +697,10 @@ $testname = "JSS DER Encoding of Enumeration regression test";
 $command = "$java -cp $classpath org.mozilla.jss.tests.EnumerationZeroTest";
 run_test($testname, $command);
 
+$testname = "JSS Test DER Encoding Functionality";
+$command = "$java -ea -cp $classpath org.mozilla.jss.tests.DEROutputStreamTests";
+run_test($testname, $command);
+
 #
 # Test for JSS jar and library revision
 #
