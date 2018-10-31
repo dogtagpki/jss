@@ -206,7 +206,7 @@ public class DerOutputStream
             }
         } else {
             // positive case
-            for (length = 4; length > 0; --length) {
+            for (length = 4; length > 1; --length) {
                 if ((i & bytemask) != 0)
                     break;
                 bytemask = bytemask >>> 8;
