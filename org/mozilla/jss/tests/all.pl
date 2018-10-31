@@ -693,6 +693,10 @@ if ($java_version =~ /1.8/i) {
     run_test($testname, $command);
 }
 
+$testname = "JSS DER Encoding of Enumeration regression test";
+$command = "$java -cp $classpath org.mozilla.jss.tests.EnumerationZeroTest";
+run_test($testname, $command);
+
 #
 # Test for JSS jar and library revision
 #
