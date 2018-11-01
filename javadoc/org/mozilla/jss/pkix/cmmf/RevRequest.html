@@ -268,7 +268,7 @@ implements <a href="../../../../../org/mozilla/jss/asn1/ASN1Value.html" title="i
           <a href="../../../../../org/mozilla/jss/asn1/UTF8String.html" title="class in org.mozilla.jss.asn1">UTF8String</a>&nbsp;comment)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
 <div class="block"><span class="deprecationComment">This constructor is obsolete now that
-      <tt>invalidityDate</tt> has been added to the class.</span></div>
+      <code>invalidityDate</code> has been added to the class.</span></div>
 </div>
 </td>
 </tr>
@@ -311,7 +311,7 @@ implements <a href="../../../../../org/mozilla/jss/asn1/ASN1Value.html" title="i
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/mozilla/jss/asn1/GeneralizedTime.html" title="class in org.mozilla.jss.asn1">GeneralizedTime</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/pkix/cmmf/RevRequest.html#getInvalidityDate--">getInvalidityDate</a></span>()</code>
-<div class="block">Returns the <tt>invalidityDate</tt> field.</div>
+<div class="block">Returns the <code>invalidityDate</code> field.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -324,8 +324,8 @@ implements <a href="../../../../../org/mozilla/jss/asn1/ASN1Value.html" title="i
 <td class="colFirst"><code><a href="../../../../../org/mozilla/jss/asn1/OCTET_STRING.html" title="class in org.mozilla.jss.asn1">OCTET_STRING</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/pkix/cmmf/RevRequest.html#getPassphrase--">getPassphrase</a></span>()</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">The <tt>passphrase</tt> field has been renamed
-  <tt>sharedSecret</tt>. Call <tt>getSharedSecret</tt> instead.</span></div>
+<div class="block"><span class="deprecationComment">The <code>passphrase</code> field has been renamed
+  <code>sharedSecret</code>. Call <code>getSharedSecret</code> instead.</span></div>
 </div>
 </td>
 </tr>
@@ -508,9 +508,9 @@ public&nbsp;RevRequest(<a href="../../../../../org/mozilla/jss/asn1/ANY.html" ti
                               <a href="../../../../../org/mozilla/jss/asn1/OCTET_STRING.html" title="class in org.mozilla.jss.asn1">OCTET_STRING</a>&nbsp;sharedSecret,
                               <a href="../../../../../org/mozilla/jss/asn1/UTF8String.html" title="class in org.mozilla.jss.asn1">UTF8String</a>&nbsp;comment)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">This constructor is obsolete now that
-      <tt>invalidityDate</tt> has been added to the class.</span></div>
+      <code>invalidityDate</code> has been added to the class.</span></div>
 <div class="block">Constructs a new <code>RevRequest</code> from its components,
-  omitting the <tt>invalidityDate</tt> field.</div>
+  omitting the <code>invalidityDate</code> field.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>issuerName</code> - The <code>issuerName</code> field.</dd>
@@ -544,7 +544,7 @@ public&nbsp;RevRequest(<a href="../../../../../org/mozilla/jss/asn1/ANY.html" ti
 <dd><code>reason</code> - The <code>reason</code> field.  The constants defined
       in this class may be used.</dd>
 <dd><code>invalidityDate</code> - The suggested value for the Invalidity Date
-      CRL extension. This field is optional, so <tt>null</tt> may be
+      CRL extension. This field is optional, so <code>null</code> may be
       used.</dd>
 <dd><code>sharedSecret</code> - The <code>sharedSecret</code> field.  This field is
       optional, so <code>null</code> may be used.</dd>
@@ -613,7 +613,7 @@ public&nbsp;RevRequest(<a href="../../../../../org/mozilla/jss/asn1/ANY.html" ti
 <li class="blockList">
 <h4>getInvalidityDate</h4>
 <pre>public&nbsp;<a href="../../../../../org/mozilla/jss/asn1/GeneralizedTime.html" title="class in org.mozilla.jss.asn1">GeneralizedTime</a>&nbsp;getInvalidityDate()</pre>
-<div class="block">Returns the <tt>invalidityDate</tt> field. Returns <tt>null</tt>
+<div class="block">Returns the <code>invalidityDate</code> field. Returns null
  if the field is not present.</div>
 </li>
 </ul>
@@ -625,8 +625,8 @@ public&nbsp;RevRequest(<a href="../../../../../org/mozilla/jss/asn1/ANY.html" ti
 <h4>getPassphrase</h4>
 <pre>@Deprecated
 public&nbsp;<a href="../../../../../org/mozilla/jss/asn1/OCTET_STRING.html" title="class in org.mozilla.jss.asn1">OCTET_STRING</a>&nbsp;getPassphrase()</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">The <tt>passphrase</tt> field has been renamed
-  <tt>sharedSecret</tt>. Call <tt>getSharedSecret</tt> instead.</span></div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">The <code>passphrase</code> field has been renamed
+  <code>sharedSecret</code>. Call <code>getSharedSecret</code> instead.</span></div>
 <div class="block">Returns the <code>passphrase</code> field.  Returns
   <code>null</code> if the field is not present.</div>
 </li>

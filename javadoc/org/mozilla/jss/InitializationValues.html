@@ -180,7 +180,7 @@ extends java.lang.Object</pre>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#initializeJavaOnly">initializeJavaOnly</a></span></code>
-<div class="block">If <tt>true</tt>, none of the underlying NSS components will
+<div class="block">If <code>true</code>, none of the underlying NSS components will
  be initialized.</div>
 </td>
 </tr>
@@ -685,13 +685,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>initializeJavaOnly</h4>
 <pre>public&nbsp;boolean initializeJavaOnly</pre>
-<div class="block">If <tt>true</tt>, none of the underlying NSS components will
+<div class="block">If <code>true</code>, none of the underlying NSS components will
  be initialized. Only the Java portions of JSS will be
  initialized. This should only be used if NSS has been initialized
  elsewhere.
 
  <p>Specifically, the following components will <b>not</b> be
-  configured by <tt>CryptoManager.initialize</tt> if this flag is set:
+  configured by <code>CryptoManager.initialize</code> if this flag is set:
  <ul>
  <li>The NSS databases.
  <li>OCSP checking.
@@ -704,7 +704,7 @@ extends java.lang.Object</pre>
  <li>The cipher strength policy (export/domestic).
  </ul>
 
- <p>The default is <tt>false</tt>.</div>
+ <p>The default is <code>false</code>.</div>
 </li>
 </ul>
 <a name="PKIXVerify">

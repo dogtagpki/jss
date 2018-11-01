@@ -466,7 +466,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Algorithm.html#getParameterClass--">getParameterClass</a></span>()</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">Call <tt>getParameterClasses()</tt> instead.</span></div>
+<div class="block"><span class="deprecationComment">Call <code>getParameterClasses()</code> instead.</span></div>
 </div>
 </td>
 </tr>
@@ -1490,12 +1490,12 @@ extends java.lang.Object</pre>
 <h4>getParameterClass</h4>
 <pre>@Deprecated
 public&nbsp;java.lang.Class&lt;?&gt;&nbsp;getParameterClass()</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Call <tt>getParameterClasses()</tt> instead.</span></div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Call <code>getParameterClasses()</code> instead.</span></div>
 <div class="block">The type of parameter that this algorithm expects.  Returns
    <code>null</code> if this algorithm does not take any parameters.
  If the algorithm can accept more than one type of parameter,
    this method returns only one of them. It is better to call
-   <tt>getParameterClasses()</tt>.</div>
+   <code>getParameterClasses()</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Parameter type.</dd>
@@ -1526,14 +1526,14 @@ public&nbsp;java.lang.Class&lt;?&gt;&nbsp;getParameterClass()</pre>
 <pre>public&nbsp;boolean&nbsp;isValidParameterObject(java.lang.Object&nbsp;o)</pre>
 <div class="block">Validates if the given Object can be used as a parameter
  for this algorithm.
- <p>If <tt>null</tt> is passed in, this method will return <tt>true</tt>
-      if this algorithm takes no parameters, and <tt>false</tt>
+ <p>If <code>null</code> is passed in, this method will return true
+      if this algorithm takes no parameters, and false
       if this algorithm does take parameters.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>o</code> - Object.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>Returns <tt>true</tt> if the given Object can be used as a parameter.</dd>
+<dd>Returns <code>true</code> if the given Object can be used as a parameter.</dd>
 </dl>
 </li>
 </ul>
