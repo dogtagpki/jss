@@ -293,19 +293,15 @@ class ConstantDefinition(object):
                 comment_info += "     *\n"
                 comment_info += "     * check stdout:\n"
                 for line in self.stdout.split("\n"):
-                    if line.strip():
-                        comment_info += "     * %s\n" % line
-                    else:
-                        comment_info += "     *\n"
+                    comment_line = "     * %s" % line.strip()
+                    comment_info += comment_line.rstrip() + "\n"
 
             if self.stderr:
                 comment_info += "     *\n"
                 comment_info += "     * check stderr:\n"
                 for line in self.stderr.split("\n"):
-                    if line.strip():
-                        comment_info += "     * %s\n" % line
-                    else:
-                        comment_info += "     *\n"
+                    comment_line = "     * %s" % line.strip()
+                    comment_info += comment_line.rstrip() + "\n"
 
         comment_footer = "     */\n"
         comment = comment_header + comment_info + comment_footer

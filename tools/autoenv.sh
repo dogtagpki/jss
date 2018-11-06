@@ -29,7 +29,7 @@ fi
 # Validate that JAVA_HOME was set; otherwise, exit.
 if [ "x$JAVA_HOME" = "x" ]; then
     echo "Unable to detect JAVA_HOME installation automatically!" 1>&2
-    exit 1
+    return 1
 fi
 
 # Check if we're running in 64-bit mode.
