@@ -133,7 +133,7 @@ int ConfigureOCSP(
             JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
                     "OCSP invalid URL");
             result = SECFailure;
-            goto loser;
+            goto finish;
         }
     }
 
@@ -144,7 +144,7 @@ int ConfigureOCSP(
             JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
                     "OCSP invalid nickname");
             result = SECFailure;
-            goto loser;
+            goto finish;
         }
     }
 
@@ -162,7 +162,7 @@ int ConfigureOCSP(
                 JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
                 "if OCSP responderURL is set, the Responder Cert nickname must be set");
                         result = SECFailure;
-                        goto loser;
+                        goto finish;
                 } else {
                         CERTCertificate *cert;
                         /* if the nickname is set */
@@ -177,7 +177,7 @@ int ConfigureOCSP(
                                 JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
                     "Unable to find the OCSP Responder Certificate nickname.");
                         result = SECFailure;
-                        goto loser;
+                        goto finish;
 	               }
                         CERT_DestroyCertificate(cert);
 	}
@@ -191,7 +191,7 @@ int ConfigureOCSP(
             JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
                     "OCSP Could not set responder");
             result = SECFailure;
-            goto loser;
+            goto finish;
         }
         CERT_EnableOCSPDefaultResponder(certdb);
     }
@@ -207,7 +207,7 @@ int ConfigureOCSP(
         CERT_EnableOCSPChecking(certdb);
     }
     
-loser:
+finish:
         
     if (ocspResponderURL_string)  {
         (*env)->ReleaseStringUTFChars(env,

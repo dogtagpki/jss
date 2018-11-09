@@ -507,14 +507,14 @@ collect_der_certs(void *arg, SECItem **certs, int numcerts)
     for(itemsCopied=0; itemsCopied < numcerts; itemsCopied++) {
         rv=SECITEM_CopyItem(NULL, &certCopies[itemsCopied], certs[itemsCopied]);
         if( rv == SECFailure ) {
-            goto loser;
+            goto finish;
         }
     }
     PR_ASSERT(itemsCopied == numcerts);
 
     return SECSuccess;
 
-loser:
+finish:
     for(; itemsCopied >= 0; itemsCopied--) {
         SECITEM_FreeItem( &certCopies[itemsCopied], PR_FALSE /*freeit*/);
     }

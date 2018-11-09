@@ -72,7 +72,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
     if( baseKeyObj == 0) {
         PR_fprintf(PR_STDOUT,"baseKeyObj can not be null!\n");
-        goto loser;
+        goto finish;
     }
 
     if( param != NULL) {
@@ -107,12 +107,12 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
     
             if( ivValue == NULL) {
                PR_fprintf(PR_STDOUT, "Need iv param for CKM_DES_CBC_ENCRYPT_DATA or CKM_DES3_CBC_ENCRYPT_DATA. \n");
-               goto loser;
+               goto finish;
             }
 
              if( ivLength != 8) {
                PR_fprintf(PR_STDOUT, "Need iv param for CKM_DES_CBC_ENCRYPT_DATA  structure to be 8 bytes!. \n");
-               goto loser;
+               goto finish;
             }
 
             des.pData = (unsigned char *) paramValue;
@@ -130,12 +130,12 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
             
             if ( ivValue == NULL ) {
                 PR_fprintf(PR_STDOUT, "Need iv param for CBC encrypt derive for AES, or CAMELLIA or SEED. \n");
-                goto loser;
+                goto finish;
             }
 
             if( ivLength != 16) {
                 PR_fprintf(PR_STDOUT, "Need iv param for CK_AES_CBC_ENCRYPT_DATA_PARAMS structure to be 16 bytes!. \n");
-                goto loser;
+                goto finish;
             }
 
             aes.pData = (unsigned char *) paramValue;
@@ -152,14 +152,14 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
     /* Get slot */
     if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
-        goto loser;
+        goto finish;
     }
 
     /* Get base key */
 
     if( JSS_PK11_getSymKeyPtr(env, baseKeyObj, &baseKey) != PR_SUCCESS) {
         PR_fprintf(PR_STDOUT, "PK11SymmetricKeyDeriver.nativeDeriveSymKey: Unable to extract symmetric base key!");
-        goto loser;
+        goto finish;
     }
 
     /* Ask NSS what the best slot for the given mechanism */
@@ -168,7 +168,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
     if( bestSlot == NULL) {
         PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey: Can't find suitable slot for sym key derivation! \n");
-        goto loser;
+        goto finish;
     }
 
     slotForKey = PK11_GetSlotFromKey(baseKey);
@@ -189,7 +189,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
             bestBaseKey = PK11_MoveSymKey( slot, CKA_ENCRYPT, 0, PR_FALSE, baseKey );
             if(bestBaseKey == NULL) {
                 PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey:  Can't move Base Key to requested slot!\n");
-                goto loser;
+                goto finish;
             }
             finalBaseKey = bestBaseKey;
             finalBaseKeySlot = slot;
@@ -199,7 +199,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
             bestBaseKey = PK11_MoveSymKey( bestSlot, CKA_ENCRYPT, 0, PR_FALSE, baseKey );
             if(bestBaseKey == NULL) {
                 PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey:  Can't move Base Key to best slot!\n");
-                goto loser;
+                goto finish;
             }
             finalBaseKey = bestBaseKey;
             finalBaseKeySlot = bestSlot;
@@ -210,7 +210,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
     if( secondaryKeyObj != NULL) {
         if( JSS_PK11_getSymKeyPtr(env, secondaryKeyObj, &secondaryKey) != PR_SUCCESS) {
             PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey:  Can't find secondary sym key!\n");
-            goto loser;
+            goto finish;
         }
 
         /* Make sure the secondary key is in the proper slot to do concatenation */
@@ -223,7 +223,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
             if( finalSecondaryKey == NULL) {
                 PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey, Problem moving secondary key to proper slot.\n");
-                goto loser;
+                goto finish;
             }
         } else {
             finalSecondaryKey = secondaryKey;
@@ -234,7 +234,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
             if( keyhandle == 0) {
                 PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey, can't get handle for secondary sym key.\n");
-                goto loser;
+                goto finish;
             }
 
             paramsItem.data=(unsigned char *) &keyhandle;
@@ -242,7 +242,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
         } else {
             PR_fprintf(PR_STDOUT,"PK11SymmetricKeyDeriver.nativeDeriveSymKey: incorrect input parameter provided!\n");
-            goto loser;
+            goto finish;
         }
     }
 
@@ -251,7 +251,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
     if(derivedKey == NULL) {
         PR_fprintf(PR_STDOUT,
                     "ERROR: Can't derive symmetric key, error: %d \n",PR_GetError());
-        goto loser;
+        goto finish;
     }
 
     if ( (finalSlot =  PK11_GetSlotFromKey(derivedKey )) != slot) {
@@ -270,7 +270,7 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
 
     keyObj = JSS_PK11_wrapSymKey(env, &newKey);
 
-loser:
+finish:
 
     if ( bestBaseKey != NULL ) {
        PK11_FreeSymKey ( bestBaseKey );

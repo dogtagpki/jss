@@ -124,7 +124,7 @@ JSSL_CallCertSelectionCallback(    void * arg,
 
     if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0){
         PR_ASSERT(PR_FALSE);
-        goto loser;
+        return SECFailure;
     }
     PR_ASSERT(env != NULL);
     
@@ -227,8 +227,7 @@ JSSL_CallCertSelectionCallback(    void * arg,
             );
 
     if (chosen_nickname == NULL) {
-        rv = SECFailure;
-        goto loser;
+        return SECFailure;
     }
 
     chosen_nickname_for_c = (char*)(*env)->GetStringUTFChars(env,
@@ -250,16 +249,14 @@ JSSL_CallCertSelectionCallback(    void * arg,
             
 
     if (cert == NULL) {
-        rv = SECFailure;
-        goto loser;
+        return SECFailure;
     }
 
         privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
         PK11_FreeSlot(slot);
         if ( privkey == NULL )  {
         CERT_DestroyCertificate(cert);
-        rv = SECFailure;
-        goto loser;
+        return SECFailure;
     }
     if (debug_cc) { PR_fprintf(PR_STDOUT,"  found privkey. returning\n"); }
 
@@ -267,7 +264,6 @@ JSSL_CallCertSelectionCallback(    void * arg,
     *pRetKey  = privkey;
     rv = SECSuccess;
 
-loser:
     return rv;
 }
 

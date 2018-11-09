@@ -107,7 +107,7 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed
     slot = PK11_GetBestSlot( CKM_FAKE_RANDOM, NULL );
     if( slot == NULL ) {
         PR_ASSERT( PR_FALSE );
-        goto loser;
+        goto finish;
     }
 
 
@@ -135,11 +135,11 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed
     status = PK11_SeedRandom( slot, ( unsigned char* ) jdata, ( int ) jlen );
     if( status != SECSuccess ) {
         PR_ASSERT( PR_FALSE );
-        goto loser;
+        goto finish;
     }
 
 
-loser:
+finish:
 
     /*
      * Copy back the contents of the "JNI jbyte*" and
@@ -272,11 +272,11 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_nextBytes
 
     status = PK11_GenerateRandom( ( unsigned char* ) jdata, ( int ) jlen );
     if( status != SECSuccess ) {
-        goto loser;
+        goto finish;
     }
 
 
-loser:
+finish:
 
     /*
      * Copy back the contents of the "JNI jbyte*" and
