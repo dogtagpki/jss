@@ -4,14 +4,14 @@
 # images. If present, it'll use them to run the specified container image.
 
 function rc_buildah() {
-    buildah_path="$(which buildah)"
-    podman_path="$(which podman)"
+    buildah_path="$(command -v buildah)"
+    podman_path="$(command -v podman)"
 
     [ "x$buildah_path" != "x" ] && [ "x$podman_path" != "x" ]
 }
 
 function rc_docker() {
-    docker_path="$(which docker)"
+    docker_path="$(command -v docker)"
 
     [ "x$docker_path" != "x" ]
 }
