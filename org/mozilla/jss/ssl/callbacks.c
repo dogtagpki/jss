@@ -276,7 +276,6 @@ JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *aler
 {
     JSSL_SocketData *socket = (JSSL_SocketData*) arg;
 
-    jint rc;
     JNIEnv *env;
     jclass socketClass, eventClass;
     jmethodID eventConstructor, eventSetLevel, eventSetDescription;
@@ -336,7 +335,6 @@ JSSL_AlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *alert)
 {
     JSSL_SocketData *socket = (JSSL_SocketData*) arg;
 
-    jint rc;
     JNIEnv *env;
     jclass socketClass, eventClass;
     jmethodID eventConstructor, eventSetLevel, eventSetDescription;
