@@ -17,6 +17,5 @@ COPY . /home/sandbox/jss
 # Perform the style checks
 WORKDIR /home/sandbox/jss
 CMD true \
-        && bash ./tools/test_perl_style.sh \
         && bash ./tools/test_shell_style.sh \
         && true
