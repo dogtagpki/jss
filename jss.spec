@@ -33,6 +33,8 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 
 # autosetup
 BuildRequires:  git
+BuildRequires:  make
+BuildRequires:  cmake
 
 BuildRequires:  gcc-c++
 BuildRequires:  nspr-devel >= 4.13.1
@@ -99,44 +101,22 @@ This package contains the API documentation for JSS.
 %set_build_flags
 
 [ -z "$JAVA_HOME" ] && export JAVA_HOME=%{_jvmdir}/java
-[ -z "$USE_INSTALLED_NSPR" ] && export USE_INSTALLED_NSPR=1
-[ -z "$USE_INSTALLED_NSS" ] && export USE_INSTALLED_NSS=1
 
 # Enable compiler optimizations
 export BUILD_OPT=1
 
 # Generate symbolic info for debuggers
-XCFLAGS="-g $RPM_OPT_FLAGS"
-export XCFLAGS
-
-PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
-PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
-
-export PKG_CONFIG_ALLOW_SYSTEM_LIBS
-export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS
-
-NSPR_INCLUDE_DIR=`/usr/bin/pkg-config --cflags-only-I nspr | sed 's/-I//'`
-NSPR_LIB_DIR=`/usr/bin/pkg-config --libs-only-L nspr | sed 's/-L//'`
-
-NSS_INCLUDE_DIR=`/usr/bin/pkg-config --cflags-only-I nss | sed 's/-I//'`
-NSS_LIB_DIR=`/usr/bin/pkg-config --libs-only-L nss | sed 's/-L//'`
-
-export NSPR_INCLUDE_DIR
-export NSPR_LIB_DIR
-export NSS_INCLUDE_DIR
-export NSS_LIB_DIR
-
-%if 0%{?__isa_bits} == 64
-USE_64=1
-export USE_64
-%endif
+CFLAGS="-g $RPM_OPT_FLAGS"
+export CFLAGS
 
 # The Makefile is not thread-safe
-make -C coreconf
-make
-make javadoc
-make reproducible
-make reproducibleCheck
+rm -rf build && mkdir -p build && cd build
+%cmake \
+    -DJAVA_HOME=%{java_home} \
+    -DJAVA_LIB_INSTALL_DIR=%{_jnidir} \
+    ..
+
+%{__make} all test javadoc
 
 ################################################################################
 %install
@@ -145,19 +125,19 @@ make reproducibleCheck
 
 # jars
 install -d -m 0755 $RPM_BUILD_ROOT%{_jnidir}
-install -m 644 ../dist/reproducible-xpclass.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
+install -m 644 build/jss4.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
 
 # We have to use the name libjss4.so because this is dynamically
 # loaded by the jar file.
 install -d -m 0755 $RPM_BUILD_ROOT%{_libdir}/jss
-install -m 0755 ../dist/Linux*.OBJ/lib/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
+install -m 0755 build/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
 pushd  ${RPM_BUILD_ROOT}%{_libdir}/jss
     ln -fs %{_jnidir}/jss4.jar jss4.jar
 popd
 
 # javadoc
 install -d -m 0755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -rp ../dist/jssdoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -rp build/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -p jss.html $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 
