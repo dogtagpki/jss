@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+
+Name: org/mozilla/jss/
+Specification-Title: Network Security Services for Java (JSS)
+Specification-Version: ${JSS_VERSION_MANIFEST}
+Specification-Vendor: Mozilla Foundation
+Implementation-Title: org.mozilla.jss
+Implementation-Version: ${JSS_VERSION_MANIFEST}
+Implementation-Vendor: Mozilla Foundation
