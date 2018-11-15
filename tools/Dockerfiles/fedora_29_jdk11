@@ -3,7 +3,7 @@ FROM fedora:29
 # Install generic dependencies to build jss
 RUN true \
         && dnf update -y --refresh \
-        && dnf install -y dnf-plugins-core gcc make rpm-build \
+        && dnf install -y dnf-plugins-core gcc make rpm-build cmake \
                           glassfish-jaxb-api java-11-openjdk nss-tools \
                           apache-commons-codec apache-commons-lang gcc-c++ \
                           java-11-openjdk-devel jpackage-utils slf4j nss \
@@ -21,6 +21,10 @@ COPY . /home/sandbox/jss
 # Perform the actual RPM build
 WORKDIR /home/sandbox/jss
 CMD true \
-        && . tools/autoenv.sh \
-        && make clean all check \
+        && export JAVA_HOME=/usr/lib/jvm/jre-11-openjdk \
+        && rm -rf build \
+        && mkdir build \
+        && cd build \
+        && cmake .. \
+        && make all test \
         && true
