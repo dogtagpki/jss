@@ -971,12 +971,9 @@ public final class CryptoManager implements TokenSupplier
     }
 
     /********************************************************************/
-    /* The VERSION Strings should be updated in the following           */
-    /* files everytime a new release of JSS is generated:               */
-    /*                                                                  */
-    /* lib/manifest.mn                                                  */
-    /* org/mozilla/jss/util/jssver.h                                    */
-    /*                                                                  */
+    /* The VERSION Strings should be updated everytime a new release    */
+    /* of JSS is generated. Note that this is done by changing          */
+    /* cmake/JSSConfig.cmake.                                           */
     /********************************************************************/
 
 

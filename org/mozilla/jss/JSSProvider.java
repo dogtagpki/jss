@@ -7,12 +7,9 @@ public final class JSSProvider extends java.security.Provider {
 
     private static final long serialVersionUID = 1L;
     /********************************************************************/
-    /* The VERSION Strings should be updated in the following           */
-    /* files everytime a new release of JSS is generated:               */
-    /*                                                                  */
-    /* lib/manifest.mn                                                  */
-    /* org/mozilla/jss/util/jssver.h                                    */
-    /*                                                                  */
+    /* The VERSION Strings should be updated everytime a new release    */
+    /* of JSS is generated. Note that this is done by changing          */
+    /* cmake/JSSConfig.cmake.                                           */
     /********************************************************************/
     private static int JSS_MAJOR_VERSION  = CryptoManager.getJSSMajorVersion();
     private static int JSS_MINOR_VERSION  = CryptoManager.getJSSMinorVersion();

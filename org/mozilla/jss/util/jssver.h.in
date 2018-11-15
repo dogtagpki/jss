@@ -14,18 +14,15 @@
  */
 
 /********************************************************************/
-/* The VERSION Strings should be updated in the following           */
-/* files everytime a new release of JSS is generated:               */
-/*                                                                  */
-/* lib/manifest.mn                                                  */
-/* org/mozilla/jss/util/jssver.h                                    */
-/*                                                                  */
+/* The VERSION Strings should be updated everytime a new release    */
+/* of JSS is generated. Note that this is done by changing          */
+/* cmake/JSSConfig.cmake.                                           */
 /********************************************************************/
 
-#define JSS_VERSION  "4.5.0"
-#define JSS_VMAJOR   4
-#define JSS_VMINOR   5
-#define JSS_VPATCH   0
-#define JSS_BETA     PR_FALSE
+#define JSS_VERSION  "${JSS_VERSION}"
+#define JSS_VMAJOR   ${JSS_VERSION_MAJOR}
+#define JSS_VMINOR   ${JSS_VERSION_MINOR}
+#define JSS_VPATCH   ${JSS_VERSION_PATCH}
+#define JSS_BETA     ${JSS_VERSION_BETA}
 
 #endif
