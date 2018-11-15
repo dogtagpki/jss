@@ -11,16 +11,12 @@ public final class JSSProvider extends java.security.Provider {
     /* files everytime a new release of JSS is generated:               */
     /*                                                                  */
     /* lib/manifest.mn                                                  */
-    /* org/mozilla/jss/CryptoManager.c                                  */
-    /* org/mozilla/jss/CryptoManager.java                               */
-    /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
     /*                                                                  */
     /********************************************************************/
-    /* QUESTION: When do we change MINOR and PATCH to 4 and 0? */
-    private static int JSS_MAJOR_VERSION  = 4;
-    private static int JSS_MINOR_VERSION  = 5;
-    private static int JSS_PATCH_VERSION  = 0;
+    private static int JSS_MAJOR_VERSION  = CryptoManager.getJSSMajorVersion();
+    private static int JSS_MINOR_VERSION  = CryptoManager.getJSSMinorVersion();
+    private static int JSS_PATCH_VERSION  = CryptoManager.getJSSPatchVersion();
     private static double JSS_VERSION     = JSS_MAJOR_VERSION +
                                            (JSS_MINOR_VERSION * 100 +
                                             JSS_PATCH_VERSION)/10000.0;

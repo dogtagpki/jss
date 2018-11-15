@@ -975,24 +975,19 @@ public final class CryptoManager implements TokenSupplier
     /* files everytime a new release of JSS is generated:               */
     /*                                                                  */
     /* lib/manifest.mn                                                  */
-    /* org/mozilla/jss/CryptoManager.c                                  */
-    /* org/mozilla/jss/CryptoManager.java                               */
-    /* org/mozilla/jss/JSSProvider.java                                 */
     /* org/mozilla/jss/util/jssver.h                                    */
     /*                                                                  */
     /********************************************************************/
 
 
+    public native static int getJSSMajorVersion();
+    public native static int getJSSMinorVersion();
+    public native static int getJSSPatchVersion();
+
     public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_4_5";
-    public static final String
-    JAR_JDK_VERSION     = "JDK_VERSION = N/A";
-    public static final String
-    JAR_NSS_VERSION     = "NSS_VERSION = N/A";
-    public static final String
-    JAR_DBM_VERSION     = "DBM_VERSION = N/A";
-    public static final String
-    JAR_NSPR_VERSION    = "NSPR_VERSION = N/A";
+    JAR_JSS_VERSION     = "JSS_VERSION = JSS_" + getJSSMajorVersion() +
+                          "_" + getJSSMinorVersion() +
+                          "_" + getJSSPatchVersion();
 
     // Hashtable is synchronized.
     private Hashtable<Thread, CryptoToken> perThreadTokenTable = new Hashtable<>();

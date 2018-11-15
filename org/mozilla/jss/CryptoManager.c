@@ -50,9 +50,6 @@ const char * jss_sccsid() {
 /* files everytime a new release of JSS is generated:               */
 /*                                                                  */
 /* lib/manifest.mn                                                  */
-/* org/mozilla/jss/CryptoManager.c                                  */
-/* org/mozilla/jss/CryptoManager.java                               */
-/* org/mozilla/jss/JSSProvider.java                                 */
 /* org/mozilla/jss/util/jssver.h                                    */
 /*                                                                  */
 /********************************************************************/
@@ -1059,5 +1056,26 @@ Java_org_mozilla_jss_CryptoManager_setOCSPTimeoutNative(
                      GENERAL_SECURITY_EXCEPTION,
                      "Failed to set OCSP timeout: error "+ PORT_GetError());
     }
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_CryptoManager_getJSSMajorVersion(
+        JNIEnv *env, jobject this)
+{
+    return JSS_VMAJOR;
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_CryptoManager_getJSSMinorVersion(
+        JNIEnv * env, jobject this)
+{
+    return JSS_VMINOR;
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_CryptoManager_getJSSPatchVersion(
+        JNIEnv *env, jobject this)
+{
+    return JSS_VPATCH;
 }
 
