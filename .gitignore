@@ -1,2 +1,8 @@
 bin
 *.OBJ/
+
+# CMake build directory
+build/
+
+# These files are automatically generated from their .in equivalents
+org/mozilla/jss/util/jssver.h
