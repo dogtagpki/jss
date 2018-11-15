@@ -27,14 +27,10 @@ public class JSSPackageTest {
             System.out.println("\n\tFetching version information " +
                                "from CryptoManager");
             System.out.println("\n\t" + org.mozilla.jss.CryptoManager.JAR_JSS_VERSION);
-            System.out.println("\n\tSuggested NSS/NSPR version to use " +
-                               "with this JSS:");
-            System.out.println("\n\t" + org.mozilla.jss.CryptoManager.JAR_NSS_VERSION);
-            System.out.println("\t" + org.mozilla.jss.CryptoManager.JAR_NSPR_VERSION);
 
-            System.out.println("\n\tTo check the JNI version in libjss4.so:"); 
-            System.out.println("\n\ttry: strings libjss4.so | grep -i header"); 
-            System.out.println("\n\tor : ident libjss4.so");         
+            System.out.println("\n\tTo check the JNI version in libjss4.so:");
+            System.out.println("\n\ttry: strings libjss4.so | grep -i header");
+            System.out.println("\n\tor : ident libjss4.so");
             System.exit(0);
 
         } catch (Exception e) {

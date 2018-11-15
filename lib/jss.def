@@ -340,3 +340,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_boundSSLVersionRange;
 ;+    local:
 ;+       *;
 ;+};
+;+JSS_4.5.1 {       # JSS 4.5.1 release
+;+    global:
+Java_org_mozilla_jss_CryptoManager_getJSSMajorVersion;
+Java_org_mozilla_jss_CryptoManager_getJSSMinorVersion;
+Java_org_mozilla_jss_CryptoManager_getJSSPatchVersion;
+;+    local:
+;+       *;
+;+};
+
