@@ -12,7 +12,9 @@ JSS also provides a pure Java interface for ASN.1 types and BER/DER encoding.
 * Issues: https://pagure.io/jss/issues
 * Archive: https://github.com/dogtagpki/jss-archive
 * Javadocs: https://dogtagpki.github.io/jss
-* Legacy build instructions: [`docs/legacy_building.md`](docs/legacy_building.md)
+
+**NOTICE:** As of JSS version 4.5.1, the legacy build instructions will not
+            work; the build system has been completely replaced with CMake.
 
 Dependencies
 ------------
@@ -23,8 +25,8 @@ This project has the following dependencies:
  - [NSS](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS)
     - A c and c++ compiler such as [gcc](ttps://gcc.gnu.org/)
     - [zlib](https://zlib.net/)
- - [OpenJDK 1.8.0](http://openjdk.java.net/)
- - [Perl](https://www.perl.org/)
+ - [OpenJDK 1.8.0](https://openjdk.java.net/)
+ - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
  - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
@@ -34,14 +36,14 @@ To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
                      java-devel jpackage-utils slf4j zlib-devel \
-                     glassfish-jaxb-api nss-tools nss-devel
+                     glassfish-jaxb-api nss-tools nss-devel cmake
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-codec-java \
                          libcommons-lang-java libnss3-dev libslf4j-java \
                          openjdk-8-jdk pkg-config zlib1g-dev \
-                         libjaxb-api-java libnss3-tools
+                         libjaxb-api-java libnss3-tools cmake
 
 
 Building
@@ -49,11 +51,9 @@ Building
 
 To build JSS and make a best effort to detect environment variables:
 
-    mkdir sandbox/ && cd sandbox
     git clone https://github.com/dogtagpki/jss
-    cd jss
-    source tools/autoenv.sh
-    make clean all check
+    cd jss/build && cmake ..
+    make all check
 
 Alternatively, to build a RPM distribution of JSS:
 
