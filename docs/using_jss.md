@@ -1,5 +1,12 @@
 # Using JSS
 
+Please make sure `libjss4.so` is included in your library path or set it via
+the `LD_LIBRARY_PATH` environment variable. See `man 8 ld.so` for more
+information. Alternatively, this can be done by setting `-Djava.library.path`
+to the directory with `libjss4.so` on the command line of all Java programs
+using JSS. Note that without `libjss4.so`, using JSS in nearly any capacity
+will fail.
+
 ## Classpath Dependencies
 
 To use JSS in your project after installation, you'll need to ensure the
