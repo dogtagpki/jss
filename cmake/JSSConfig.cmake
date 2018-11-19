@@ -1,12 +1,17 @@
 macro(jss_config)
-    # Set the current JSS release number. Arguments are MAJOR MINOR PATCH.
+    # Set the current JSS release number. Arguments are:
+    #   MAJOR MINOR PATCH BETA
+    # When BETA is zero, it isn't a beta release.
     jss_config_version(4 5 0 0)
 
+    # Configure output directories
     jss_config_outputs()
 
+    # Configure flags for compiling and linking
     jss_config_cflags()
     jss_config_ldflags()
 
+    # Configure java-related flags
     jss_config_java()
 endmacro()
 
@@ -14,15 +19,15 @@ macro(jss_config_version MAJOR MINOR PATCH BETA)
     # This sets the JSS Version for use in CMake and propagates it to the
     # necessary source locations. These are:
     #
-    #   org/mozilla/jss/CryptoManager.java{.in,}
-    #   org/mozilla/jss/JSSProvider.java{.in,}
     #   org/mozilla/jss/util/jssver.h{.in,}
     #   lib/MANIFEST.MF.in -> build/MANIFEST.MF
     #
     # On a build, these automatically get generated with the correct versions
     # included. Note that all "sets" are of global scope, so these variables
-    # can be used anywhere that is necessary, hence why
+    # can be used anywhere that is necessary. Some uses are for setting the
+    # version number in the library and jar file, etc.
 
+    # Define variables from passed arguments
     set(JSS_VERSION_MAJOR "${MAJOR}")
     set(JSS_VERSION_MINOR "${MINOR}")
     set(JSS_VERSION_PATCH "${PATCH}")
@@ -41,6 +46,7 @@ macro(jss_config_version MAJOR MINOR PATCH BETA)
         set(JSS_VERSION_STR "${JSS_VERSION_STR}_b${JSS_VERSION_BETA}")
     endif()
 
+    # Template files
     configure_file(
         "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h.in"
         "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h"
@@ -53,7 +59,7 @@ endmacro()
 
 macro(jss_config_outputs)
     # Global variables representing various output files; note that these are
-    # created here.
+    # created at the end of this macro.
     set(CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes")
     set(DOCS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/docs")
     set(JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/jss/_jni")
@@ -82,8 +88,11 @@ macro(jss_config_outputs)
 endmacro()
 
 macro(jss_config_cflags)
+    # We check that the C compiler can handle each of the C flags below
     include(CheckCCompilerFlag)
 
+    # This list of C flags was taken from the original build scripts for
+    # debug and release builds.
     list(APPEND JSS_RAW_C_FLAGS "-c")
     list(APPEND JSS_RAW_C_FLAGS "-g")
     list(APPEND JSS_RAW_C_FLAGS "-fPIC")
@@ -109,6 +118,7 @@ macro(jss_config_cflags)
         endif()
     endforeach()
 
+    # Handle passed-in C flags as well; assume they are valid.
     separate_arguments(PASSED_C_FLAGS UNIX_COMMAND "${CMAKE_C_FLAGS}")
     foreach(PASSED_C_FLAG ${PASSED_C_FLAGS})
         list(APPEND JSS_C_FLAGS "${PASSED_C_FLAG}")
@@ -118,6 +128,9 @@ macro(jss_config_cflags)
 endmacro()
 
 macro(jss_config_ldflags)
+    # This list of C linker flags was taken from the original build scripts
+    # for debug and release builds. We lack a "check_c_linker_flag" macro,
+    # so no effort is made to validate these flags.
     list(APPEND JSS_LD_FLAGS "-shared")
     list(APPEND JSS_LD_FLAGS "-Wl,-z,defs")
     list(APPEND JSS_LD_FLAGS "-Wl,-soname")
@@ -135,6 +148,7 @@ macro(jss_config_ldflags)
 endmacro()
 
 macro(jss_config_java)
+    # Find various JARs required by JSS build and test suite
     find_jar(
         SLF4J_API_JAR
         NAMES api slf4j/api slf4j-api
@@ -156,6 +170,7 @@ macro(jss_config_java)
         NAMES jdk14 slf4j/jdk14 slf4j-jdk14
     )
 
+    # Validate that we've found the required JARs
     if(SLF4J_API_JAR STREQUAL "SLF4J_API_JAR-NOTFOUND")
         message(FATAL_ERROR "Required dependency sfl4j-api.jar not found by find_jar!")
     endif()
@@ -176,9 +191,12 @@ macro(jss_config_java)
         message(WARNING "Test dependency sfl4j-jdk14.jar not found by find_jar! Tests might not run properly.")
     endif()
 
+    # Set class paths
     set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${CODEC_JAR}:${LANG_JAR}:${JAXB_JAR}")
     set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}")
 
+    # Variables for javadoc building. Note that JSS_PACKAGES needs to be
+    # updated whenever a new package is created.
     set(JSS_WINDOW_TITLE "JSS: Java Security Services")
     set(JSS_PACKAGES "org.mozilla.jss;org.mozilla.jss.asn1;org.mozilla.jss.crypto;org.mozilla.jss.pkcs7;org.mozilla.jss.pkcs10;org.mozilla.jss.pkcs11;org.mozilla.jss.pkcs12;org.mozilla.jss.pkix.primitive;org.mozilla.jss.pkix.cert;org.mozilla.jss.pkix.cmc;org.mozilla.jss.pkix.cmmf;org.mozilla.jss.pkix.cms;org.mozilla.jss.pkix.crmf;org.mozilla.jss.provider.java.security;org.mozilla.jss.provider.javax.crypto;org.mozilla.jss.SecretDecoderRing;org.mozilla.jss.ssl;org.mozilla.jss.tests;org.mozilla.jss.util")
 endmacro()
