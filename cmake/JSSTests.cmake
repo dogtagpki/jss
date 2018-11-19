@@ -1,6 +1,7 @@
 macro(jss_tests)
     enable_testing()
 
+    # Common variables used as arguments to several tests
     set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests")
     set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")
     set(DB_PWD "m1oZilla")
@@ -13,6 +14,8 @@ macro(jss_tests)
         NAME "Setup_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
     )
+    # Various FIPS related tests depend on FIPS being enabled; since this
+    # affects the entire NSS DB, create a separate database for them.
     jss_test_java(
         NAME "Setup_FIPS_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
@@ -122,6 +125,8 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_OUTPUT_DIR}"
         DEPENDS "Setup_DBs"
     )
+
+    # FIPS-related tests
     jss_test_java(
         NAME "Enable_FipsMODE"
         COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "enable"
@@ -135,28 +140,34 @@ macro(jss_tests)
     jss_test_java(
         NAME "HMAC_FIPSMODE"
         COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "check_FipsMODE"
+        DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "KeyWrapping_FIPSMODE"
         COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "HMAC_FIPSMODE"
+        DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
         COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "KeyWrapping_FIPSMODE"
+        DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "JSS_Signature_test_FipsMODE"
         COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Mozilla_JSS_JCA_Signature_FIPSMODE"
+        DEPENDS "Enable_FipsMODE"
     )
+
+    # Since we need to disable FIPS mode _after_ all FIPS-mode tests have
+    # run, we have to add a strict dependency from Disable_FipsMODE onto all
+    # FIPS-related checks.
     jss_test_java(
         NAME "Disable_FipsMODE"
         COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "disable"
-        DEPENDS "JSS_Signature_test_FipsMODE"
+        DEPENDS "check_FipsMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
     )
+
+    # For compliance with several
     add_custom_target(
       check
       DEPENDS test
