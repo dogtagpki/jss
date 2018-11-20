@@ -9,7 +9,7 @@ This project has the following dependencies:
     - A c and c++ compiler such as [gcc](ttps://gcc.gnu.org/)
     - [zlib](https://zlib.net/)
  - [OpenJDK 1.8.0](http://openjdk.java.net/)
- - [Perl](https://www.perl.org/)
+ - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
  - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
@@ -19,14 +19,14 @@ To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
                      java-devel jpackage-utils slf4j zlib-devel \
-                     glassfish-jaxb-api
+                     glassfish-jaxb-api cmake
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-codec-java \
                          libcommons-lang-java libnss3-dev libslf4j-java \
                          openjdk-8-jdk pkg-config zlib1g-dev \
-                         libjaxb-api-java
+                         libjaxb-api-java cmake
 
 ## Test Suite Dependencies:
 
