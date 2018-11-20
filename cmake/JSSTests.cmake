@@ -162,6 +162,11 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH}" "50"
         DEPENDS "List_CA_certs"
     )
+    jss_test_exec(
+        NAME "TestBufferPRFD"
+        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}"
+        DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
+    )
     jss_test_java(
         NAME "Key_Generation"
         COMMAND "org.mozilla.jss.tests.TestKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
@@ -306,6 +311,7 @@ endmacro()
 macro(jss_tests_compile)
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_1.c" "${BIN_OUTPUT_DIR}/buffer_size_1" "buffer_size_1")
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_4.c" "${BIN_OUTPUT_DIR}/buffer_size_4" "buffer_size_4")
+    jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/TestBufferPRFD.c" "${BIN_OUTPUT_DIR}/TestBufferPRFD" "TestBufferPRFD")
 endmacro()
 
 macro(jss_tests_compile_c C_FILE C_OUTPUT C_TARGET)
