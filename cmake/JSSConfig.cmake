@@ -199,4 +199,8 @@ macro(jss_config_java)
     # updated whenever a new package is created.
     set(JSS_WINDOW_TITLE "JSS: Java Security Services")
     set(JSS_PACKAGES "org.mozilla.jss;org.mozilla.jss.asn1;org.mozilla.jss.crypto;org.mozilla.jss.pkcs7;org.mozilla.jss.pkcs10;org.mozilla.jss.pkcs11;org.mozilla.jss.pkcs12;org.mozilla.jss.pkix.primitive;org.mozilla.jss.pkix.cert;org.mozilla.jss.pkix.cmc;org.mozilla.jss.pkix.cmmf;org.mozilla.jss.pkix.cms;org.mozilla.jss.pkix.crmf;org.mozilla.jss.provider.java.security;org.mozilla.jss.provider.javax.crypto;org.mozilla.jss.SecretDecoderRing;org.mozilla.jss.ssl;org.mozilla.jss.tests;org.mozilla.jss.util")
+
+    set(JSS_BASE_PORT 2876)
+    math(EXPR JSS_TEST_PORT_CLIENTAUTH ${JSS_BASE_PORT}+0)
+    math(EXPR JSS_TEST_PORT_CLIENTAUTH_FIPS ${JSS_BASE_PORT}+1)
 endmacro()

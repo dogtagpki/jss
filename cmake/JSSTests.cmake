@@ -64,6 +64,11 @@ macro(jss_tests)
         DEPENDS "Generate_known_DSS_cert_pair"
     )
     jss_test_java(
+        NAME "SSLClientAuth"
+        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH}" "50"
+        DEPENDS "List_CA_certs"
+    )
+    jss_test_java(
         NAME "Key_Generation"
         COMMAND "org.mozilla.jss.tests.TestKeyGen" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
@@ -146,6 +151,11 @@ macro(jss_tests)
         DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
+        NAME "SSLClientAuth_FIPSMODE"
+        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
+        DEPENDS "Enable_FipsMODE"
+    )
+    jss_test_java(
         NAME "HMAC_FIPSMODE"
         COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Enable_FipsMODE"
@@ -172,7 +182,7 @@ macro(jss_tests)
     jss_test_java(
         NAME "Disable_FipsMODE"
         COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "disable"
-        DEPENDS "check_FipsMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
+        DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
     )
 
     # For compliance with several
