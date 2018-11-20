@@ -93,13 +93,10 @@ macro(jss_config_cflags)
 
     # This list of C flags was taken from the original build scripts for
     # debug and release builds.
-    list(APPEND JSS_RAW_C_FLAGS "-c")
     list(APPEND JSS_RAW_C_FLAGS "-g")
-    list(APPEND JSS_RAW_C_FLAGS "-fPIC")
     list(APPEND JSS_RAW_C_FLAGS "-Wall")
     list(APPEND JSS_RAW_C_FLAGS "-Werror-implicit-function-declaration")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-switch")
-    list(APPEND JSS_RAW_C_FLAGS "-pipe")
     list(APPEND JSS_RAW_C_FLAGS "-I${NSPR_INCLUDE_DIR}")
     list(APPEND JSS_RAW_C_FLAGS "-I${NSS_INCLUDE_DIR}")
     list(APPEND JSS_RAW_C_FLAGS "-I${INCLUDE_OUTPUT_DIR}")
@@ -131,11 +128,6 @@ macro(jss_config_ldflags)
     # This list of C linker flags was taken from the original build scripts
     # for debug and release builds. We lack a "check_c_linker_flag" macro,
     # so no effort is made to validate these flags.
-    list(APPEND JSS_LD_FLAGS "-shared")
-    list(APPEND JSS_LD_FLAGS "-Wl,-z,defs")
-    list(APPEND JSS_LD_FLAGS "-Wl,-soname")
-    list(APPEND JSS_LD_FLAGS "-Wl,${JSS_SO}")
-    list(APPEND JSS_LD_FLAGS "-Wl,--version-script,${PROJECT_SOURCE_DIR}/lib/jss.map")
     list(APPEND JSS_LD_FLAGS "-lsmime3")
     list(APPEND JSS_LD_FLAGS "-lssl3")
     list(APPEND JSS_LD_FLAGS "-lnss3")
@@ -145,6 +137,13 @@ macro(jss_config_ldflags)
     list(APPEND JSS_LD_FLAGS "-lnspr4")
     list(APPEND JSS_LD_FLAGS "-lpthread")
     list(APPEND JSS_LD_FLAGS "-ldl")
+
+    # This set of flags is specific to building the libjss library.
+    list(APPEND JSS_LIBRARY_FLAGS "-shared")
+    list(APPEND JSS_LIBRARY_FLAGS "-Wl,-z,defs")
+    list(APPEND JSS_LIBRARY_FLAGS "-Wl,-soname")
+    list(APPEND JSS_LIBRARY_FLAGS "-Wl,${JSS_SO}")
+    list(APPEND JSS_LIBRARY_FLAGS "-Wl,--version-script,${PROJECT_SOURCE_DIR}/lib/jss.map")
 endmacro()
 
 macro(jss_config_java)
