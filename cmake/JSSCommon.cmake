@@ -79,7 +79,7 @@ macro(jss_build_c_file C_FILE C_OUTPUT C_TARGET C_DIR)
     # finished, else many headers wouldn't exist.
     add_custom_command(
         OUTPUT "${C_OUTPUT}"
-        COMMAND ${CMAKE_C_COMPILER} ${JSS_C_FLAGS} -o ${C_OUTPUT} ${C_FILE}
+        COMMAND ${CMAKE_C_COMPILER} -fPIC ${JSS_C_FLAGS} -o ${C_OUTPUT} -c ${C_FILE}
         WORKING_DIRECTORY ${C_DIR}
         DEPENDS ${C_FILE}
         DEPENDS generate_java
@@ -118,7 +118,7 @@ macro(jss_build_c)
 
     add_custom_command(
         OUTPUT "${JSS_SO_PATH}"
-        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS}
+        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_LIBRARY_FLAGS}
         DEPENDS generate_c
     )
 
