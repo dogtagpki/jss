@@ -11,6 +11,14 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.UTF8ConverterTest"
     )
     jss_test_java(
+        NAME "JSS_DER_Encoding_of_Enumeration_regression_test"
+        COMMAND "org.mozilla.jss.tests.EnumerationZeroTest"
+    )
+    jss_test_java(
+        NAME "JSS_Test_DER_Encoding_Functionality"
+        COMMAND "org.mozilla.jss.tests.DEROutputStreamTests"
+    )
+    jss_test_java(
         NAME "Setup_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
     )
