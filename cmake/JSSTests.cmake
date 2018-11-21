@@ -19,6 +19,10 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.DEROutputStreamTests"
     )
     jss_test_java(
+        NAME "JSS_Test_Empty_DER_Value"
+        COMMAND "org.mozilla.jss.tests.EmptyDerValue"
+    )
+    jss_test_java(
         NAME "Setup_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
     )
