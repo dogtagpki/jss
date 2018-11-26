@@ -52,7 +52,7 @@ values.
 After this, rebuild JSS and run the test suite on a JDK8 machine:
 
     source ./tools/autoenv.sh
-    make clean all check
+    cd build && cmake .. && make clean all check
 
 This will trigger the interoperability tests against the Sun values.
 
