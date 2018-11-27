@@ -34,7 +34,7 @@ public class GenerateTestCert {
     static final private String SERVERCERT_NICKNAME = "JSSTestServerCert";
     static final private String CLIENTCERT_NICKNAME = "JSSTestClientCert";
     private String keyType = "RSA";
-    private int keyLength = 1024;
+    private int keyLength = 4096;
     private SignatureAlgorithm sigAlg =
         SignatureAlgorithm.RSASignatureWithSHA256Digest;
     
@@ -100,13 +100,11 @@ public class GenerateTestCert {
             sigAlg = SignatureAlgorithm.ECSignatureWithSHA512Digest;
         } else { usage(); }
         
-        //For keyLength we are going to use default 1024 key for RSA/DSA
-        //and 256 key for ECDSA
-        
         if (alg.endsWith("RSA")) {
             keyType = "RSA";
         } else if (alg.endsWith("DSA")) {
             keyType = "DSA";
+            keyLength = 1024;
         } else if (alg.endsWith("EC")) {
             keyType = "EC";
             keyLength = 256;

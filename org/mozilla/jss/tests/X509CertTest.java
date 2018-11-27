@@ -67,12 +67,12 @@ public class X509CertTest {
             CryptoManager cryptoManager = CryptoManager.getInstance();
             CryptoToken token = cryptoManager.getInternalKeyStorageToken();
             KeyPairGenerator gen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
-            gen.initialize(2048);
+            gen.initialize(4096);
             KeyPair keypairCA = gen.genKeyPair();
             PublicKey pubCA = keypairCA.getPublic();
 
 
-            gen.initialize(2048);
+            gen.initialize(4096);
             KeyPair keypairUser = gen.genKeyPair();
             PublicKey pubUser = keypairUser.getPublic();
 
