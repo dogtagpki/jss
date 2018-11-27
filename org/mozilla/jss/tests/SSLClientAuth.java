@@ -169,7 +169,7 @@ public class SSLClientAuth implements Runnable {
     private void generateCerts(CryptoManager cm, int serialNum) {
         
         // RSA Key with default exponent
-        int keyLength = 1024;
+        int keyLength = 4096;
         try {
             java.security.KeyPairGenerator kpg =
                     java.security.KeyPairGenerator.getInstance("RSA",
