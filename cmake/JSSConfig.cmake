@@ -66,8 +66,10 @@ macro(jss_config_outputs)
     set(LIB_OUTPUT_DIR "${CMAKE_BINARY_DIR}/lib")
     set(INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include")
 
-    # These two are pseudo-locations for CMake targets and the test suite
+    # This folder is for pseudo-locations for CMake targets
     set(TARGETS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/.targets")
+
+    # These folders are for the NSS DBs created during testing
     set(RESULTS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/tests")
     set(RESULTS_FIPS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/fips")
 
@@ -83,8 +85,6 @@ macro(jss_config_outputs)
     file(MAKE_DIRECTORY "${LIB_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${INCLUDE_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${TARGETS_OUTPUT_DIR}")
-    file(MAKE_DIRECTORY "${RESULTS_OUTPUT_DIR}")
-    file(MAKE_DIRECTORY "${RESULTS_FIPS_OUTPUT_DIR}")
 endmacro()
 
 macro(jss_config_cflags)

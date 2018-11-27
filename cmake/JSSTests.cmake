@@ -28,15 +28,38 @@ macro(jss_tests)
             COMMAND "org.mozilla.jss.tests.TestPKCS11Constants"
         )
     endif()
+
+    # Rather than creating our results directories earlier in JSSConfig,
+    # create them here so that the test suite can be rerun multiple times.
+    jss_test_exec(
+        NAME "Clean_Setup_DBs"
+        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_OUTPUT_DIR}"
+    )
+    jss_test_exec(
+        NAME "Create_Setup_DBs"
+        COMMAND "cmake" "-E" "make_directory" "${RESULTS_OUTPUT_DIR}"
+        DEPENDS "Clean_Setup_DBs"
+    )
     jss_test_java(
         NAME "Setup_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "Create_Setup_DBs"
     )
     # Various FIPS related tests depend on FIPS being enabled; since this
     # affects the entire NSS DB, create a separate database for them.
+    jss_test_exec(
+        NAME "Clean_FIPS_Setup_DBs"
+        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_FIPS_OUTPUT_DIR}"
+    )
+    jss_test_exec(
+        NAME "Create_FIPS_Setup_DBs"
+        COMMAND "cmake" "-E" "make_directory" "${RESULTS_FIPS_OUTPUT_DIR}"
+        DEPENDS "Clean_FIPS_Setup_DBs"
+    )
     jss_test_java(
         NAME "Setup_FIPS_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "Clean_FIPS_Setup_DBs"
     )
     jss_test_java(
         NAME "Generate_known_RSA_cert_pair"
