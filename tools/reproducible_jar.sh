@@ -6,6 +6,9 @@
 # insertion order. This will help to ensure that anyone building in the same
 # environment will receive the same jar file assuming the contents of Java
 # haven't changed.
+#
+# Usage:
+#   reproducible_jar.sh /path/to/input.jar /path/to/tmp/dir /path/to/output.jar
 
 set -e
 
