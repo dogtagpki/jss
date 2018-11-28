@@ -15,6 +15,9 @@ This project has the following dependencies:
  - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
  - [SLF4J](https://www.slf4j.org/)
 
+Additionally, a zipping and unzipping program is required to create
+reproducible builds.
+
 To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
@@ -26,7 +29,7 @@ To install these dependencies on Debian, execute the following:
     sudo apt-get install build-essential libcommons-codec-java \
                          libcommons-lang-java libnss3-dev libslf4j-java \
                          openjdk-8-jdk pkg-config zlib1g-dev \
-                         libjaxb-api-java cmake
+                         libjaxb-api-java cmake zip unzip
 
 ## Test Suite Dependencies:
 
