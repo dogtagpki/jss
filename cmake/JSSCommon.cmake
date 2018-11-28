@@ -135,10 +135,21 @@ macro(jss_build_jar)
     # jss_config_version macro. Further, this doesn't yet build a reproducible
     # JAR.
     add_custom_command(
-        OUTPUT "${JSS_JAR_PATH}"
-        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_JAR_PATH} org/*
+        OUTPUT "${JSS_BUILD_JAR_PATH}"
+        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_BUILD_JAR_PATH} org/*
         WORKING_DIRECTORY "${CLASSES_OUTPUT_DIR}"
         DEPENDS generate_java
+    )
+
+    add_custom_target(
+        generate_build_jar
+        DEPENDS "${JSS_BUILD_JAR_PATH}"
+    )
+
+    add_custom_command(
+        OUTPUT "${JSS_JAR_PATH}"
+        COMMAND "${PROJECT_SOURCE_DIR}/tools/reproducible_jar.sh" "${JSS_BUILD_JAR_PATH}" "${REPRODUCIBLE_TEMP_DIR}" "${JSS_JAR_PATH}"
+        DEPENDS generate_build_jar
     )
 
     add_custom_target(

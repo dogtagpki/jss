@@ -73,8 +73,13 @@ macro(jss_config_outputs)
     set(RESULTS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/tests")
     set(RESULTS_FIPS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/fips")
 
+    # This is a temporary location for building the reproducible jar
+    set(REPRODUCIBLE_TEMP_DIR "${CMAKE_BINARY_DIR}/reproducible")
+
+    set(JSS_BUILD_JAR "staging.jar")
     set(JSS_JAR "jss${JSS_VERSION_MAJOR}.jar")
     set(JSS_SO "libjss${JSS_VERSION_MAJOR}.so")
+    set(JSS_BUILD_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_BUILD_JAR}")
     set(JSS_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_JAR}")
     set(JSS_SO_PATH "${CMAKE_BINARY_DIR}/${JSS_SO}")
 
