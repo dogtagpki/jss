@@ -14,6 +14,11 @@ if (DEFINED CHECK_DEPRECATION)
     set(CMAKE_JAVA_COMPILE_FLAGS "-Xlint:deprecation")
 endif()
 
+# Build a debug build by default when no type is specified on the command line
+if(NOT (DEFINED CMAKE_BUILD_TYPE))
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 # Find NSPR and NSS Libraries.
 find_package(NSPR REQUIRED)
 find_package(NSS REQUIRED)

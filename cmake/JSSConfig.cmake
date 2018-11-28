@@ -115,7 +115,13 @@ macro(jss_config_cflags)
 
     # This list of C flags was taken from the original build scripts for
     # debug and release builds.
-    list(APPEND JSS_RAW_C_FLAGS "-g")
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        list(APPEND JSS_RAW_C_FLAGS "-Og")
+        list(APPEND JSS_RAW_C_FLAGS "-ggdb")
+    else()
+        list(APPEND JSS_RAW_C_FLAGS "-O2")
+    endif()
+
     list(APPEND JSS_RAW_C_FLAGS "-Wall")
     list(APPEND JSS_RAW_C_FLAGS "-Werror-implicit-function-declaration")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-switch")
@@ -215,6 +221,16 @@ macro(jss_config_java)
     # Set class paths
     set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${CODEC_JAR}:${LANG_JAR}:${JAXB_JAR}")
     set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}")
+
+    list(APPEND JSS_JAVAC_FLAGS "-classpath")
+    list(APPEND JSS_JAVAC_FLAGS "${JAVAC_CLASSPATH}")
+    list(APPEND JSS_JAVAC_FLAGS "-sourcepath")
+    list(APPEND JSS_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}")
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        list(APPEND JSS_JAVAC_FLAGS "-g")
+    else()
+        list(APPEND JSS_JAVAC_FLAGS "-O")
+    endif()
 
     # Variables for javadoc building. Note that JSS_PACKAGES needs to be
     # updated whenever a new package is created.
