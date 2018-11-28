@@ -60,11 +60,11 @@ endmacro()
 macro(jss_config_outputs)
     # Global variables representing various output files; note that these are
     # created at the end of this macro.
-    set(CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes")
+    set(CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes/jss")
     set(DOCS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/docs")
-    set(JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/jss/_jni")
     set(LIB_OUTPUT_DIR "${CMAKE_BINARY_DIR}/lib")
-    set(INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include")
+    set(INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss")
+    set(JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss/_jni")
 
     # This folder is for pseudo-locations for CMake targets
     set(TARGETS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/.targets")
@@ -83,13 +83,26 @@ macro(jss_config_outputs)
     set(JSS_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_JAR}")
     set(JSS_SO_PATH "${CMAKE_BINARY_DIR}/${JSS_SO}")
 
+    # These options are for the test suite and mirror their non-tests
+    # counterparts
+    set(TESTS_CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes/tests")
+    set(TESTS_INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/tests")
+    set(TESTS_JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss/_jni")
+    set(JSS_TESTS_JAR "tests-jss${JSS_VERSION_MAJOR}.jar")
+    set(JSS_TESTS_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_TESTS_JAR}")
+
     # Create the *_OUTPUT_DIR locations.
-    file(MAKE_DIRECTORY "${JNI_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${CLASSES_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${DOCS_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${LIB_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${INCLUDE_OUTPUT_DIR}")
+    file(MAKE_DIRECTORY "${JNI_OUTPUT_DIR}")
+
     file(MAKE_DIRECTORY "${TARGETS_OUTPUT_DIR}")
+
+    file(MAKE_DIRECTORY "${TESTS_CLASSES_OUTPUT_DIR}")
+    file(MAKE_DIRECTORY "${TESTS_INCLUDE_OUTPUT_DIR}")
+    file(MAKE_DIRECTORY "${TESTS_JNI_OUTPUT_DIR}")
 endmacro()
 
 macro(jss_config_cflags)
@@ -108,7 +121,6 @@ macro(jss_config_cflags)
     foreach(JNI_INCLUDE_DIR ${JNI_INCLUDE_DIRS})
         list(APPEND JSS_RAW_C_FLAGS "-I${JNI_INCLUDE_DIR}")
     endforeach()
-    list(APPEND JSS_RAW_C_FLAGS "-I${CMAKE_BINARY_DIR}/jss")
 
     foreach(JSS_RAW_C_FLAG ${JSS_RAW_C_FLAGS})
         # Validate that each of our desired CFLAGS is supported by the
@@ -197,12 +209,12 @@ macro(jss_config_java)
 
     # Set class paths
     set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${CODEC_JAR}:${LANG_JAR}:${JAXB_JAR}")
-    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}")
+    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}")
 
     # Variables for javadoc building. Note that JSS_PACKAGES needs to be
     # updated whenever a new package is created.
     set(JSS_WINDOW_TITLE "JSS: Java Security Services")
-    set(JSS_PACKAGES "org.mozilla.jss;org.mozilla.jss.asn1;org.mozilla.jss.crypto;org.mozilla.jss.pkcs7;org.mozilla.jss.pkcs10;org.mozilla.jss.pkcs11;org.mozilla.jss.pkcs12;org.mozilla.jss.pkix.primitive;org.mozilla.jss.pkix.cert;org.mozilla.jss.pkix.cmc;org.mozilla.jss.pkix.cmmf;org.mozilla.jss.pkix.cms;org.mozilla.jss.pkix.crmf;org.mozilla.jss.provider.java.security;org.mozilla.jss.provider.javax.crypto;org.mozilla.jss.SecretDecoderRing;org.mozilla.jss.ssl;org.mozilla.jss.tests;org.mozilla.jss.util")
+    set(JSS_PACKAGES "org.mozilla.jss;org.mozilla.jss.asn1;org.mozilla.jss.crypto;org.mozilla.jss.pkcs7;org.mozilla.jss.pkcs10;org.mozilla.jss.pkcs11;org.mozilla.jss.pkcs12;org.mozilla.jss.pkix.primitive;org.mozilla.jss.pkix.cert;org.mozilla.jss.pkix.cmc;org.mozilla.jss.pkix.cmmf;org.mozilla.jss.pkix.cms;org.mozilla.jss.pkix.crmf;org.mozilla.jss.provider.java.security;org.mozilla.jss.provider.javax.crypto;org.mozilla.jss.SecretDecoderRing;org.mozilla.jss.ssl;org.mozilla.jss.util")
 
     set(JSS_BASE_PORT 2876)
     math(EXPR JSS_TEST_PORT_CLIENTAUTH ${JSS_BASE_PORT}+0)
