@@ -76,14 +76,14 @@ macro(jss_build_java)
     #   https://gitlab.kitware.com/cmake/community/wikis/FAQ#how-can-i-add-a-dependency-to-a-source-file-which-is-generated-in-a-subdirectory
     add_custom_command(
         OUTPUT "${JNI_OUTPUTS}"
-        COMMAND ${Java_JAVAC_EXECUTABLE} -classpath "${JAVAC_CLASSPATH}" -g -d ${CLASSES_OUTPUT_DIR} -sourcepath ${PROJECT_SOURCE_DIR} -h ${JNI_OUTPUT_DIR} ${JAVA_SOURCES}
+        COMMAND ${Java_JAVAC_EXECUTABLE} ${JSS_JAVAC_FLAGS} -d ${CLASSES_OUTPUT_DIR} -h ${JNI_OUTPUT_DIR} ${JAVA_SOURCES}
         COMMAND touch "${JNI_OUTPUTS}"
         DEPENDS ${JAVA_SOURCES}
     )
 
     add_custom_command(
         OUTPUT "${TESTS_JNI_OUTPUTS}"
-        COMMAND ${Java_JAVAC_EXECUTABLE} -classpath "${JAVAC_CLASSPATH}" -g -d ${TESTS_CLASSES_OUTPUT_DIR} -sourcepath ${PROJECT_SOURCE_DIR} -h ${TESTS_JNI_OUTPUT_DIR} ${JAVA_TEST_SOURCES}
+        COMMAND ${Java_JAVAC_EXECUTABLE} ${JSS_JAVAC_FLAGS} -d ${TESTS_CLASSES_OUTPUT_DIR} -h ${TESTS_JNI_OUTPUT_DIR} ${JAVA_TEST_SOURCES}
         COMMAND touch "${TESTS_JNI_OUTPUTS}"
         DEPENDS ${JAVA_TEST_SOURCES}
     )
