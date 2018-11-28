@@ -153,16 +153,23 @@ macro(jss_build_c)
         DEPENDS ${C_OUTPUTS}
     )
 
+    # We generate two libraries: build/lib/libjss.so and build/libjss.so:
+    # the former is for testing and is unversioned, so all symbols are public
+    # and can thus be tested; the latter is for releases and is versioned,
+    # limiting which symbols are made public. We only need to make the JNI
+    # symbols public as libjss.so should only be used from Java in conjunction
+    # with jss.jar.
     add_custom_command(
-        OUTPUT "${JSS_SO_PATH}"
-        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_LIBRARY_FLAGS}
+        OUTPUT "${JSS_SO_PATH}" "${JSS_TESTS_SO_PATH}"
+        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_TESTS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_LIBRARY_FLAGS}
+        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_VERSION_SCRIPT} ${JSS_LIBRARY_FLAGS}
         DEPENDS generate_c
     )
 
     # Add a target for anything depending on the library existing.
     add_custom_target(
         generate_so ALL
-        DEPENDS ${JSS_SO_PATH}
+        DEPENDS ${JSS_SO_PATH} ${JSS_TESTS_SO_PATH}
     )
 endmacro()
 

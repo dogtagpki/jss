@@ -241,11 +241,13 @@ function(jss_test_java)
             NAME "${TEST_JAVA_NAME}"
             COMMAND "${EXEC_COMMAND}"
             DEPENDS ${TEST_JAVA_DEPENDS}
+            LIBRARY "java"
         )
     else()
         jss_test_exec(
             NAME "${TEST_JAVA_NAME}"
             COMMAND "${EXEC_COMMAND}"
+            LIBRARY "java"
         )
     endif()
 endfunction()
@@ -262,7 +264,7 @@ macro(jss_test_exec)
     #
     #   jss_test_exec("NAME" "ARG1" "ARG2" "...")
 
-    set(TEST_FLAGS "NAME")
+    set(TEST_FLAGS "NAME" "LIBRARY")
     set(TEST_ARGS  "COMMAND" "DEPENDS")
     cmake_parse_arguments(TEST_EXEC "" "${TEST_FLAGS}" "${TEST_ARGS}" ${ARGN})
 
@@ -270,11 +272,22 @@ macro(jss_test_exec)
         NAME "${TEST_EXEC_NAME}"
         COMMAND ${TEST_EXEC_COMMAND}
     )
-    set_tests_properties(
-        "${TEST_EXEC_NAME}"
-        PROPERTIES ENVIRONMENT
-        "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}"
-    )
+
+    # If we are calling a java program, use the versioned library to ensure
+    # that any new JNI calls are made visible.
+    if(TEST_EXEC_LIBRARY AND (TEST_EXEC_LIBRARY STREQUAL "java"))
+        set_tests_properties(
+            "${TEST_EXEC_NAME}"
+            PROPERTIES ENVIRONMENT
+            "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}"
+        )
+    else()
+        set_tests_properties(
+            "${TEST_EXEC_NAME}"
+            PROPERTIES ENVIRONMENT
+            "LD_LIBRARY_PATH=${LIB_OUTPUT_DIR}"
+        )
+    endif()
     if(TEST_EXEC_DEPENDS)
         set_tests_properties(
             "${TEST_EXEC_NAME}"

@@ -84,12 +84,16 @@ macro(jss_config_outputs)
     set(JSS_SO_PATH "${CMAKE_BINARY_DIR}/${JSS_SO}")
 
     # These options are for the test suite and mirror their non-tests
-    # counterparts
+    # counterparts. Note that JSS_TESTS_SO is the same as JSS_SO, but
+    # JSS_TESTS_SO_PATH differs -- one is "unversioned" and lacks a
+    # version script so we can test internal methods.
     set(TESTS_CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes/tests")
     set(TESTS_INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/tests")
     set(TESTS_JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss/_jni")
     set(JSS_TESTS_JAR "tests-jss${JSS_VERSION_MAJOR}.jar")
+    set(JSS_TESTS_SO "${JSS_SO}")
     set(JSS_TESTS_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_TESTS_JAR}")
+    set(JSS_TESTS_SO_PATH "${LIB_OUTPUT_DIR}/${JSS_TESTS_SO}")
 
     # Create the *_OUTPUT_DIR locations.
     file(MAKE_DIRECTORY "${CLASSES_OUTPUT_DIR}")
@@ -160,7 +164,8 @@ macro(jss_config_ldflags)
     list(APPEND JSS_LIBRARY_FLAGS "-Wl,-z,defs")
     list(APPEND JSS_LIBRARY_FLAGS "-Wl,-soname")
     list(APPEND JSS_LIBRARY_FLAGS "-Wl,${JSS_SO}")
-    list(APPEND JSS_LIBRARY_FLAGS "-Wl,--version-script,${PROJECT_SOURCE_DIR}/lib/jss.map")
+
+    set(JSS_VERSION_SCRIPT "-Wl,--version-script,${PROJECT_SOURCE_DIR}/lib/jss.map")
 endmacro()
 
 macro(jss_config_java)
