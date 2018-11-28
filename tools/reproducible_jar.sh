@@ -21,7 +21,7 @@ function extract() {
     fi
 
     mkdir -p "$path"
-    unzip "$jar" -d "$path"
+    unzip -q "$jar" -d "$path"
 }
 
 function normalize_timestamps() {
@@ -33,21 +33,21 @@ function add_manifest() {
     local path="$1"
     local output="$2"
 
-    pushd "$path"
-        zip -X "$output" "META-INF"
-        zip -X "$output" "META-INF/MANIFEST.MF"
-    popd
+    pushd "$path" >/dev/null
+        zip -X -q "$output" "META-INF"
+        zip -X -q "$output" "META-INF/MANIFEST.MF"
+    popd >/dev/null
 }
 
 function add_classes() {
     local path="$1"
     local output="$2"
 
-    pushd "$path"
+    pushd "$path" >/dev/null
         for file in $(find "org" | sort); do
-            zip -X "$output" "$file"
+            zip -X -q "$output" "$file"
         done
-    popd
+    popd >/dev/null
 }
 
 abs_jar="$(realpath "$1")"
