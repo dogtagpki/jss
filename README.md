@@ -43,7 +43,7 @@ To install these dependencies on Debian, execute the following:
     sudo apt-get install build-essential libcommons-codec-java \
                          libcommons-lang-java libnss3-dev libslf4j-java \
                          openjdk-8-jdk pkg-config zlib1g-dev \
-                         libjaxb-api-java libnss3-tools cmake
+                         libjaxb-api-java libnss3-tools cmake zip unzip
 
 
 Building
