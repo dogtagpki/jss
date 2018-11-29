@@ -142,7 +142,16 @@ public class AlgorithmId implements Serializable, DerEncoder {
          * Figure out what class (if any) knows about this oid's
          * parameters.  Make one, and give it the data to decode.
          */
-        AlgorithmId alg = new AlgorithmId(algid, params);
+        AlgorithmId alg = null;
+        // omit parameter field for ECDSA
+        if (!algid.equals(sha224WithEC_oid) &&
+                !algid.equals(sha256WithEC_oid) &&
+                !algid.equals(sha384WithEC_oid) &&
+                !algid.equals(sha512WithEC_oid)) {
+            alg = new AlgorithmId(algid, params);
+        } else {
+            alg = new AlgorithmId(algid);
+        }
         if (params != null)
             alg.decodeParams();
 
@@ -790,17 +799,17 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * Supported signing algorithms for a RSA key.
      */
     public static final String[] RSA_SIGNING_ALGORITHMS = new String[]
-    { "SHA1withRSA", "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "MD5withRSA", "MD2withRSA" };
+    { "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA" };
 
     public static final String[] EC_SIGNING_ALGORITHMS = new String[]
-    { "SHA1withEC", "SHA256withEC", "SHA384withEC", "SHA512withEC" };
+    { "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC" };
 
     /**
      * All supported signing algorithms.
      */
     public static final String[] ALL_SIGNING_ALGORITHMS = new String[]
     {
-            "SHA1withRSA", "MD5withRSA", "MD2withRSA", "SHA1withDSA", "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withEC",
-            "SHA256withEC", "SHA384withEC", "SHA512withEC" };
-
+        "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA",
+        "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC"
+    };
 }
