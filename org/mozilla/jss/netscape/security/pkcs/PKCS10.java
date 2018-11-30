@@ -26,16 +26,16 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 
-
+import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.util.BigInt;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
+import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.netscape.security.x509.AlgorithmId;
 import org.mozilla.jss.netscape.security.x509.X500Name;
 import org.mozilla.jss.netscape.security.x509.X500Signer;
 import org.mozilla.jss.netscape.security.x509.X509Key;
-import org.mozilla.jss.netscape.security.util.Utils;
 /**
  * PKCS #10 certificate requests are created and sent to Certificate
  * Authorities, which then create X.509 certificates and return them to
@@ -70,6 +70,7 @@ import org.mozilla.jss.netscape.security.util.Utils;
  * @version 1.28
  */
 public class PKCS10 {
+
     /**
      * Constructs an unsigned PKCS #10 certificate request. Before this
      * request may be used, it must be encoded and signed. Then it
@@ -122,12 +123,10 @@ public class PKCS10 {
         byte sigData[];
         Signature sig;
 
-        String method = "PKCS10: PKCS10: ";
         String msg = "";
 
-        System.out.println(method + "begins");
         if (data == null) {
-            throw new IllegalArgumentException(method + "param data cann't be null");
+            throw new IllegalArgumentException("Missing PKCS #10 data");
         }
         certificateRequest = data;
 
@@ -138,11 +137,12 @@ public class PKCS10 {
         in = new DerInputStream(data);
         seq = in.getSequence(3);
         if (seq == null) {
-            throw new IllegalArgumentException(method + "in.getSequence null");
+            throw new IllegalArgumentException("in.getSequence null");
         }
 
-        if (seq.length != 3)
-            throw new IllegalArgumentException(method + "not a PKCS #10 request");
+        if (seq.length != 3) {
+            throw new IllegalArgumentException("Invalid PKCS #10 request");
+        }
 
         data = seq[0].toByteArray(); // reusing this variable
         certRequestInfo = seq[0].toByteArray(); // make a copy
@@ -167,8 +167,7 @@ public class PKCS10 {
         subjectPublicKeyInfo = X509Key.parse(new DerValue(val1));
         PublicKey publicKey = X509Key.parsePublicKey(new DerValue(val1));
         if (publicKey == null) {
-            System.out.println(method + msg + "publicKey null");
-            throw new SignatureException (method + msg + "publicKey null");
+            throw new SignatureException(msg + "publicKey null");
         }
 
         // Cope with a somewhat common illegal PKCS #10 format
@@ -213,15 +212,12 @@ public class PKCS10 {
                 sig.initVerify(publicKey);
                 sig.update(data);
                 if (!sig.verify(sigData)) {
-                    System.out.println(method + msg + "sig.verify() failed");
-                        throw new SignatureException(method + msg + "Invalid PKCS #10 signature");
+                    throw new SignatureException(msg + "Invalid PKCS #10 signature");
                 }
             }
         } catch (InvalidKeyException e) {
-            System.out.println(method + msg + e.toString());
-            throw new SignatureException(method + msg + "invalid key");
+            throw new SignatureException(msg + "invalid key", e);
         }
-        System.out.println(method + "ends");
     }
 
     public PKCS10(byte data[])
@@ -336,9 +332,9 @@ public class PKCS10 {
         if (certificateRequest == null)
             throw new SignatureException("Cert request was not signed");
 
-        out.println("-----BEGIN NEW CERTIFICATE REQUEST-----");
+        out.println(Cert.REQUEST_HEADER);
         out.println(Utils.base64encode(certificateRequest, true));
-        out.println("-----END NEW CERTIFICATE REQUEST-----");
+        out.println(Cert.REQUEST_FOOTER);
     }
 
     /**
