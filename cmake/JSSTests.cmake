@@ -1,6 +1,8 @@
 macro(jss_tests)
     enable_testing()
 
+    jss_tests_compile()
+
     # Common variables used as arguments to several tests
     set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests")
     set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")
@@ -105,6 +107,16 @@ macro(jss_tests)
     jss_test_java(
         NAME "JUnit_UTF8StringTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.UTF8StringTest"
+    )
+    jss_test_exec(
+        NAME "buffer_size_1"
+        COMMAND "${BIN_OUTPUT_DIR}/buffer_size_1"
+        DEPENDS "generate_c_buffer_size_1"
+    )
+    jss_test_exec(
+        NAME "buffer_size_4"
+        COMMAND "${BIN_OUTPUT_DIR}/buffer_size_4"
+        DEPENDS "generate_c_buffer_size_4"
     )
     jss_test_java(
         NAME "JUnit_ChainSortingTest"
@@ -289,6 +301,32 @@ macro(jss_tests)
       check
       DEPENDS test
     )
+endmacro()
+
+macro(jss_tests_compile)
+    jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_1.c" "${BIN_OUTPUT_DIR}/buffer_size_1" "buffer_size_1")
+    jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_4.c" "${BIN_OUTPUT_DIR}/buffer_size_4" "buffer_size_4")
+endmacro()
+
+macro(jss_tests_compile_c C_FILE C_OUTPUT C_TARGET)
+    # Generate the target executable from C_FILE
+
+    add_custom_command(
+        OUTPUT "${C_OUTPUT}"
+        COMMAND ${CMAKE_C_COMPILER} ${JSS_C_FLAGS} -o ${C_OUTPUT} ${C_FILE} -L${LIB_OUTPUT_DIR} -ljss4 ${JSS_LD_FLAGS}
+        WORKING_DIRECTORY ${C_DIR}
+        DEPENDS "${C_FILE}"
+        DEPENDS "${JSS_TESTS_SO_PATH}"
+        DEPENDS generate_java
+        DEPENDS generate_includes
+    )
+
+    add_custom_target(
+        "generate_c_${C_TARGET}"
+        DEPENDS "${C_OUTPUT}"
+    )
+
+    add_dependencies("generate_so" "generate_c_${C_TARGET}")
 endmacro()
 
 function(jss_test_java)
