@@ -18,6 +18,7 @@
 package org.mozilla.jss.netscape.security.x509;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.StringTokenizer;
 
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
@@ -64,8 +65,6 @@ public class IPAddressName implements GeneralNameInterface {
 
     protected static final char IPv4_LEN = 4;
     protected static final char IPv6_LEN = 16;
-    protected static final IPAddr IPv4 = new IPv4Addr();
-    protected static final IPAddr IPv6 = new IPv6Addr();
 
     /**
      * Create the IPAddressName object with a string representing the
@@ -77,25 +76,23 @@ public class IPAddressName implements GeneralNameInterface {
      * @param netmask the netmask address in the format: n.n.n.n or x:x:x:x:x:x:x:x (RFC 1884)
      */
     public IPAddressName(String s, String netmask) {
-        // Based on PKIX RFC2459. IPAddress has
-        // 8 bytes (instead of 4 bytes) in the
-        // context of NameConstraints
-        IPAddr ipAddr = null;
-        if (s.indexOf(':') != -1) {
-            ipAddr = IPv6;
-            address = new byte[IPv6_LEN * 2];
-        } else {
-            ipAddr = IPv4;
-            address = new byte[IPv4_LEN * 2];
-        }
-        StringTokenizer st = new StringTokenizer(s, ",");
-        int numFilled = ipAddr.getIPAddr(st.nextToken(), address, 0);
-        if (st.hasMoreTokens()) {
-            ipAddr.getIPAddr(st.nextToken(), address, numFilled);
-        } else {
-            for (int i = numFilled; i < address.length; i++)
-                address[i] = (byte) 0xff;
-        }
+        address = parseAddress(true, s);
+        if (address.length == IPv4_LEN * 2)
+            fillIPv4Address(netmask, address, address.length / 2);
+        else
+            fillIPv6Address(netmask, address, address.length / 2);
+    }
+
+    /**
+     * IP address with CIDR netmask
+     *
+     * @param s a single IPv4 or IPv6 address
+     * @param mask a CIDR netmask
+     */
+    public IPAddressName(String s, CIDRNetmask mask) {
+        address = parseAddress(true, s);
+        mask.write(ByteBuffer.wrap(
+                    address, address.length / 2, address.length / 2));
     }
 
     /**
@@ -105,15 +102,27 @@ public class IPAddressName implements GeneralNameInterface {
      * @param s the ip address in the format: n.n.n.n or x:x:x:x:x:x:x:x
      */
     public IPAddressName(String s) {
-        IPAddr ipAddr = null;
+        address = parseAddress(false, s);
+    }
+
+    /**
+     * Initialise and return a byte[] and write the IP address into it.
+     * If withNetmask == true, the byte[] will be double the size,
+     * with the latter half uninitialised.
+     *
+     * @return byte[] of length 4 or 16 if withNetmask == false,
+     *         or length 8 or 32 if withNetmask == true.
+     */
+    private static byte[] parseAddress(boolean withNetmask, String s) {
         if (s.indexOf(':') != -1) {
-            ipAddr = IPv6;
-            address = new byte[IPv6_LEN];
+            byte[] address = new byte[IPv6_LEN * (withNetmask ? 2 : 1)];
+            fillIPv6Address(s, address, 0);
+            return address;
         } else {
-            ipAddr = IPv4;
-            address = new byte[IPv4_LEN];
+            byte[] address = new byte[IPv4_LEN * (withNetmask ? 2 : 1)];
+            fillIPv4Address(s, address, 0);
+            return address;
         }
-        ipAddr.getIPAddr(s, address, 0);
     }
 
     /**
@@ -121,6 +130,16 @@ public class IPAddressName implements GeneralNameInterface {
      */
     public int getType() {
         return (GeneralNameInterface.NAME_IP);
+    }
+
+    @Override
+    public boolean validSingle() {
+        return address.length == IPv4_LEN || address.length == IPv6_LEN;
+    }
+
+    @Override
+    public boolean validSubtree() {
+        return address.length == 2*IPv4_LEN || address.length == 2*IPv6_LEN;
     }
 
     /**
@@ -137,46 +156,52 @@ public class IPAddressName implements GeneralNameInterface {
      * Return a printable string of IPaddress
      */
     public String toString() {
-        if (address.length == 4) {
-            return ("IPAddress: " + (address[0] & 0xff) + "."
-                    + (address[1] & 0xff) + "."
-                    + (address[2] & 0xff) + "." + (address[3] & 0xff));
+        StringBuilder r = new StringBuilder("IPAddress: ");
+        ByteBuffer buf = ByteBuffer.wrap(address);
+        if (address.length == IPv4_LEN) {
+            writeIPv4(r, buf);
+        } else if (address.length == IPv4_LEN * 2) {
+            writeIPv4(r, buf);
+            r.append(",");
+            writeIPv4(r, buf);
+        } else if (address.length == IPv6_LEN) {
+            writeIPv6(r, buf);
+        } else if (address.length == IPv6_LEN * 2) {
+            writeIPv6(r, buf);
+            r.append(",");
+            writeIPv6(r, buf);
         } else {
-            StringBuffer r = new StringBuffer("IPAddress: " + Integer.toHexString(address[0] & 0xff));
-            String hexString = Integer.toHexString(address[1] & 0xff);
-            if (hexString.length() == 1) {
-                r.append("0" + hexString);
-            } else {
-                r.append(hexString);
-            }
-            for (int i = 2; i < address.length;) {
-                r.append(":" + Integer.toHexString(address[i] & 0xff));
-                hexString = Integer.toHexString(address[i + 1] & 0xff);
-                if (hexString.length() == 1) {
-                    r.append("0" + hexString);
-                } else {
-                    r.append(hexString);
-                }
-                i += 2;
-            }
-            return r.toString();
+            // shouldn't be possible
+            r.append("0.0.0.0");
+        }
+        return r.toString();
+    }
+
+    private static void writeIPv4(StringBuilder r, ByteBuffer buf) {
+        for (int i = 0; i < 4; i++) {
+            if (i > 0) r.append(".");
+            r.append(buf.get() & 0xff);
         }
     }
-}
 
-interface IPAddr {
-    public int getIPAddr(String s, byte[] address, int start);
+    private static void writeIPv6(StringBuilder r, ByteBuffer buf) {
+        for (int i = 0; i < 8; i++) {
+            if (i > 0) r.append(":");
+            r.append(Integer.toHexString(read16BitInt(buf)));
+        }
+    }
 
-    public int getLength();
-}
-
-class IPv4Addr implements IPAddr {
-    protected static final int IPv4_LEN = 4;
+    /**
+     * Read big-endian 16-bit int from buffer (advancing cursor)
+     */
+    private static int read16BitInt(ByteBuffer buf) {
+        return ((buf.get() & 0xff) << 8) + (buf.get() & 0xff);
+    }
 
     /**
      * Gets an IP v4 address in the form n.n.n.n.
      */
-    public int getIPAddr(String s, byte[] address, int start) {
+    public static int fillIPv4Address(String s, byte[] address, int start) {
         StringTokenizer st = new StringTokenizer(s, ".");
         int nt = st.countTokens();
         if (nt != IPv4_LEN)
@@ -193,12 +218,6 @@ class IPv4Addr implements IPAddr {
         return nt;
     }
 
-    public int getLength() {
-        return IPv4_LEN;
-    }
-}
-
-class IPv6Addr implements IPAddr {
     /**
      * Gets an IP address in the forms as defined in RFC1884:<br>
      * <ul>
@@ -207,7 +226,7 @@ class IPv6Addr implements IPAddr {
      * <li>...:n.n.n.n (with n.n.n.n at the end)
      * </ul>
      */
-    public int getIPAddr(String s, byte[] address, int start) {
+    public static int fillIPv6Address(String s, byte[] address, int start) {
         int lastcolon = -2;
         int end = start + 16;
         int idx = start;
@@ -218,8 +237,7 @@ class IPv6Addr implements IPAddr {
             if (lastcolon == -1)
                 throw new InvalidIPAddressException(s);
             end -= 4;
-            IPAddressName.IPv4.getIPAddr(
-                    s.substring(lastcolon + 1), address, end);
+            fillIPv4Address(s.substring(lastcolon + 1), address, end);
         }
         try {
             String s1 = s;
@@ -268,10 +286,6 @@ class IPv6Addr implements IPAddr {
         } catch (NumberFormatException e) {
             throw new InvalidIPAddressException(s);
         }
-        return 16;
-    }
-
-    public int getLength() {
         return 16;
     }
 }
