@@ -22,6 +22,10 @@ macro(jss_tests)
         NAME "JSS_Test_Empty_DER_Value"
         COMMAND "org.mozilla.jss.tests.EmptyDerValue"
     )
+    jss_test_java(
+        NAME "BigObjectIdentifier"
+        COMMAND "org.mozilla.jss.tests.BigObjectIdentifier"
+    )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
