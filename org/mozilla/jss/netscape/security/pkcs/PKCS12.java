@@ -143,6 +143,7 @@ public class PKCS12 {
     Map<BigInteger, PKCS12KeyInfo> keyInfosByID = new LinkedHashMap<BigInteger, PKCS12KeyInfo>();
 
     Map<BigInteger, PKCS12CertInfo> certInfosByID = new LinkedHashMap<BigInteger, PKCS12CertInfo>();
+    Map<BigInteger, PKCS12CertInfo> certInfosByKeyID = new LinkedHashMap<BigInteger, PKCS12CertInfo>();
 
     public PKCS12() {
     }
@@ -152,15 +153,15 @@ public class PKCS12 {
     }
 
     public void addKeyInfo(PKCS12KeyInfo keyInfo) {
-        keyInfosByID.put(keyInfo.id, keyInfo);
+        keyInfosByID.put(new BigInteger(1, keyInfo.getID()), keyInfo);
     }
 
-    public PKCS12KeyInfo getKeyInfoByID(BigInteger id) {
-        return keyInfosByID.get(id);
+    public PKCS12KeyInfo getKeyInfoByID(byte[] id) {
+        return keyInfosByID.get(new BigInteger(1, id));
     }
 
-    public PKCS12KeyInfo removeKeyInfoByID(BigInteger id) {
-        return keyInfosByID.remove(id);
+    public PKCS12KeyInfo removeKeyInfoByID(byte[] id) {
+        return keyInfosByID.remove(new BigInteger(1, id));
     }
 
     public Collection<PKCS12CertInfo> getCertInfos() {
@@ -168,42 +169,57 @@ public class PKCS12 {
     }
 
     public void addCertInfo(PKCS12CertInfo certInfo, boolean replace) {
-        BigInteger id = certInfo.getID();
+        BigInteger id = new BigInteger(1, certInfo.getID());
 
         if (!replace && certInfosByID.containsKey(id))
             return;
 
         certInfosByID.put(id, certInfo);
+
+        byte[] keyID = certInfo.getKeyID();
+        if (keyID == null) return;
+
+        certInfosByKeyID.put(new BigInteger(1, keyID), certInfo);
     }
 
-    public PKCS12CertInfo getCertInfoByID(BigInteger id) {
-        return certInfosByID.get(id);
+    public PKCS12CertInfo getCertInfoByID(byte[] id) {
+        return certInfosByID.get(new BigInteger(1, id));
     }
 
-    public Collection<PKCS12CertInfo> getCertInfosByNickname(String nickname) {
+    public PKCS12CertInfo getCertInfoByKeyID(byte[] keyID) {
+        return certInfosByKeyID.get(new BigInteger(1, keyID));
+    }
+
+    public Collection<PKCS12CertInfo> getCertInfosByFriendlyName(String friendlyName) {
 
         Collection<PKCS12CertInfo> result = new ArrayList<PKCS12CertInfo>();
 
         for (PKCS12CertInfo certInfo : certInfosByID.values()) {
-            if (!nickname.equals(certInfo.getNickname())) continue;
+            if (!friendlyName.equals(certInfo.getFriendlyName())) continue;
             result.add(certInfo);
         }
 
         return result;
     }
 
-    public void removeCertInfoByNickname(String nickname) throws Exception {
+    public void removeCertInfoByFriendlyName(String friendlyName) throws Exception {
 
-        Collection<PKCS12CertInfo> result = getCertInfosByNickname(nickname);
+        Collection<PKCS12CertInfo> result = getCertInfosByFriendlyName(friendlyName);
 
         if (result.isEmpty()) {
-            throw new Exception("Certificate not found: " + nickname);
+            throw new Exception("Certificate not found: " + friendlyName);
         }
 
         for (PKCS12CertInfo certInfo : result) {
-            // remove cert and key
-            certInfosByID.remove(certInfo.getID());
-            keyInfosByID.remove(certInfo.getID());
+
+            BigInteger id = new BigInteger(1, certInfo.getID());
+            certInfosByID.remove(id);
+
+            byte[] keyID = certInfo.getKeyID();
+            if (keyID == null) continue;
+
+            certInfosByKeyID.remove(new BigInteger(1, keyID));
+            keyInfosByID.remove(new BigInteger(1, keyID));
         }
     }
 }
