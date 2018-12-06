@@ -17,25 +17,24 @@
 // --- END COPYRIGHT BLOCK ---
 package org.mozilla.jss.netscape.security.pkcs;
 
-import java.math.BigInteger;
-
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 
 public class PKCS12CertInfo {
 
-    BigInteger id;
-    X509CertImpl cert;
-    String nickname;
-    String trustFlags;
+    private byte[] id;
+    private X509CertImpl cert;
+    private String friendlyName;
+    private String trustFlags;
+    private byte[] keyID;
 
     public PKCS12CertInfo() {
     }
 
-    public BigInteger getID() {
+    public byte[] getID() {
         return id;
     }
 
-    public void setID(BigInteger id) {
+    public void setID(byte[] id) {
         this.id = id;
     }
 
@@ -47,12 +46,12 @@ public class PKCS12CertInfo {
         this.cert = cert;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getFriendlyName() {
+        return friendlyName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setFriendlyName(String friendlyName) {
+        this.friendlyName = friendlyName;
     }
 
     public String getTrustFlags() {
@@ -61,5 +60,13 @@ public class PKCS12CertInfo {
 
     public void setTrustFlags(String trustFlags) {
         this.trustFlags = trustFlags;
+    }
+
+    public byte[] getKeyID() {
+        return keyID;
+    }
+
+    public void setKeyID(byte[] keyID) {
+        this.keyID = keyID;
     }
 }
