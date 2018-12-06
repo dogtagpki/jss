@@ -17,8 +17,6 @@
 // --- END COPYRIGHT BLOCK ---
 package org.mozilla.jss.netscape.security.pkcs;
 
-import java.math.BigInteger;
-
 import org.mozilla.jss.crypto.PrivateKey;
 
 /**
@@ -36,8 +34,8 @@ public class PKCS12KeyInfo {
 
     private PrivateKey privateKey;
     private byte[] epkiBytes;
-    BigInteger id;
-    String subjectDN;
+    private byte[] id;
+    private String friendlyName;
 
     public PKCS12KeyInfo() {
     }
@@ -66,19 +64,19 @@ public class PKCS12KeyInfo {
         return epkiBytes;
     }
 
-    public BigInteger getID() {
+    public byte[] getID() {
         return id;
     }
 
-    public void setID(BigInteger id) {
+    public void setID(byte[] id) {
         this.id = id;
     }
 
-    public String getSubjectDN() {
-        return subjectDN;
+    public String getFriendlyName() {
+        return friendlyName;
     }
 
-    public void setSubjectDN(String subjectDN) {
-        this.subjectDN = subjectDN;
+    public void setFriendlyName(String friendlyName) {
+        this.friendlyName = friendlyName;
     }
 }
