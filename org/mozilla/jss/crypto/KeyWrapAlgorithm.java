@@ -10,6 +10,8 @@ import java.util.Hashtable;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
 
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+
 /**
  *
  */
@@ -120,4 +122,31 @@ public class KeyWrapAlgorithm extends Algorithm {
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
                 (Class<?>) null, true, 8);
+
+    // Known OIDs; copied from the CertUtil class from the
+    // com.netscape.cmsutil.crypto package of PKI.
+    public static final OBJECT_IDENTIFIER AES_KEY_WRAP_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
+    public static final OBJECT_IDENTIFIER AES_CBC_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.2");
+    public static final OBJECT_IDENTIFIER DES3_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.2.840.113549.3.7");
+
+    // This OID does not come from CertUtil; it was added for completeness.
+    public static final OBJECT_IDENTIFIER DES_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.3.14.3.2.7");
+
+    public static KeyWrapAlgorithm fromOID(String wrapOID) throws NoSuchAlgorithmException {
+        OBJECT_IDENTIFIER oid = new OBJECT_IDENTIFIER(wrapOID);
+
+        if (oid.equals(AES_KEY_WRAP_PAD_OID))
+            return AES_KEY_WRAP_PAD;
+
+        if (oid.equals(AES_CBC_PAD_OID))
+            return AES_CBC_PAD;
+
+        if (oid.equals(DES3_CBC_PAD_OID))
+            return DES3_CBC_PAD;
+
+        if (oid.equals(DES_CBC_PAD_OID))
+            return DES_CBC_PAD;
+
+        throw new NoSuchAlgorithmException();
+    }
 }
