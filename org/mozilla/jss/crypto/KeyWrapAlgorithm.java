@@ -4,16 +4,19 @@
 
 package org.mozilla.jss.crypto;
 
-import java.util.Hashtable;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
+
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
+
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
  *
  */
 public class KeyWrapAlgorithm extends Algorithm {
-    protected KeyWrapAlgorithm(int oidTag, String name, Class paramClass,
+    protected KeyWrapAlgorithm(int oidTag, String name, Class<?> paramClass,
         boolean padded, int blockSize) {
         super(oidTag, name, null, paramClass);
         this.padded = padded;
@@ -23,7 +26,7 @@ public class KeyWrapAlgorithm extends Algorithm {
         }
     }
 
-    protected KeyWrapAlgorithm(int oidTag, String name, Class []paramClasses,
+    protected KeyWrapAlgorithm(int oidTag, String name, Class<?> []paramClasses,
         boolean padded, int blockSize) {
         super(oidTag, name, null, paramClasses);
         this.padded = padded;
@@ -36,7 +39,7 @@ public class KeyWrapAlgorithm extends Algorithm {
     private boolean padded;
     private int blockSize;
 
-    private static Hashtable nameMap = new Hashtable();
+    private static Hashtable<String, KeyWrapAlgorithm> nameMap = new Hashtable<>();
 
     public static KeyWrapAlgorithm fromString(String name)
             throws NoSuchAlgorithmException
@@ -57,7 +60,7 @@ public class KeyWrapAlgorithm extends Algorithm {
         return blockSize;
     }
 
-    private static Class[] IVParameterSpecClasses = null;
+    private static Class<?>[] IVParameterSpecClasses = null;
     static {
         IVParameterSpecClasses = new Class[2];
         IVParameterSpecClasses[0] = IVParameterSpec.class;
@@ -65,7 +68,7 @@ public class KeyWrapAlgorithm extends Algorithm {
     }
 
     public static final KeyWrapAlgorithm
-    DES_ECB = new KeyWrapAlgorithm(SEC_OID_DES_ECB, "DES/ECB", (Class) null,
+    DES_ECB = new KeyWrapAlgorithm(SEC_OID_DES_ECB, "DES/ECB", (Class<?>) null,
         false, 8);
 
     public static final KeyWrapAlgorithm
@@ -77,7 +80,7 @@ public class KeyWrapAlgorithm extends Algorithm {
                         IVParameterSpecClasses, true, 8);
 
     public static final KeyWrapAlgorithm
-    DES3_ECB = new KeyWrapAlgorithm(CKM_DES3_ECB, "DES3/ECB", (Class)null,
+    DES3_ECB = new KeyWrapAlgorithm(CKM_DES3_ECB, "DES3/ECB", (Class<?>)null,
         false, 8);
 
     public static final KeyWrapAlgorithm
@@ -90,15 +93,15 @@ public class KeyWrapAlgorithm extends Algorithm {
 
     public static final KeyWrapAlgorithm
     RSA = new KeyWrapAlgorithm(SEC_OID_PKCS1_RSA_ENCRYPTION, "RSA",
-            (Class) null, false, 0);
+            (Class<?>) null, false, 0);
 
     public static final KeyWrapAlgorithm
-    PLAINTEXT = new KeyWrapAlgorithm(0, "Plaintext", (Class) null,
+    PLAINTEXT = new KeyWrapAlgorithm(0, "Plaintext", (Class<?>) null,
             false, 0);
 
     public static final KeyWrapAlgorithm
     AES_ECB = new KeyWrapAlgorithm(CKM_AES_ECB, "AES/ECB/NoPadding",
-        (Class) null, false, 16);
+        (Class<?>) null, false, 16);
 
     public static final KeyWrapAlgorithm
     AES_CBC = new KeyWrapAlgorithm(CKM_AES_CBC, "AES/CBC/NoPadding",
@@ -111,12 +114,39 @@ public class KeyWrapAlgorithm extends Algorithm {
     public static final KeyWrapAlgorithm
     RC2_CBC_PAD = new KeyWrapAlgorithm(CKM_RC2_CBC_PAD, "RC2/CBC/PKCS5Padding",
                         RC2ParameterSpec.class, true, 8);
-    
+
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP, "AES KeyWrap",
-    		(Class) null, true, 8);
-    
+                (Class<?>) null, true, 8);
+
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
-    		(Class) null, true, 8);
+                (Class<?>) null, true, 8);
+
+    // Known OIDs; copied from the CertUtil class from the
+    // com.netscape.cmsutil.crypto package of PKI.
+    public static final OBJECT_IDENTIFIER AES_KEY_WRAP_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
+    public static final OBJECT_IDENTIFIER AES_CBC_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.2");
+    public static final OBJECT_IDENTIFIER DES3_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.2.840.113549.3.7");
+
+    // This OID does not come from CertUtil; it was added for completeness.
+    public static final OBJECT_IDENTIFIER DES_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.3.14.3.2.7");
+
+    public static KeyWrapAlgorithm fromOID(String wrapOID) throws NoSuchAlgorithmException {
+        OBJECT_IDENTIFIER oid = new OBJECT_IDENTIFIER(wrapOID);
+
+        if (oid.equals(AES_KEY_WRAP_PAD_OID))
+            return AES_KEY_WRAP_PAD;
+
+        if (oid.equals(AES_CBC_PAD_OID))
+            return AES_CBC_PAD;
+
+        if (oid.equals(DES3_CBC_PAD_OID))
+            return DES3_CBC_PAD;
+
+        if (oid.equals(DES_CBC_PAD_OID))
+            return DES_CBC_PAD;
+
+        throw new NoSuchAlgorithmException();
+    }
 }
