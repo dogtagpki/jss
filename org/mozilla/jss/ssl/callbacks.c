@@ -286,6 +286,12 @@ JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *aler
     PR_ASSERT(rc == JNI_OK);
     PR_ASSERT(env != NULL);
 
+    /* Fast return when assumptions are incorrect. */
+    if (socket != NULL || socket->socketObject != NULL ||
+            rc != JNI_OK || env != NULL) {
+        return;
+    }
+
     /* SSLAlertEvent event = new SSLAlertEvent(socket); */
 
     socketClass = (*env)->FindClass(env, SSLSOCKET_CLASS);
@@ -345,6 +351,12 @@ JSSL_AlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *alert)
     rc = (*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL);
     PR_ASSERT(rc == JNI_OK);
     PR_ASSERT(env != NULL);
+
+    /* Fast return when assumptions are incorrect. */
+    if (socket != NULL || socket->socketObject != NULL ||
+            rc != JNI_OK || env != NULL) {
+        return;
+    }
 
     /* SSLAlertEvent event = new SSLAlertEvent(socket); */
 
