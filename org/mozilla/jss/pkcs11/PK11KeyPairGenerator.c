@@ -7,7 +7,7 @@
 #include <pk11func.h>
 #include <pk11pqg.h>
 #include <nspr.h>
-#include <key.h>
+#include <keyhi.h>
 #include <secitem.h>
 
 #include <jssutil.h>

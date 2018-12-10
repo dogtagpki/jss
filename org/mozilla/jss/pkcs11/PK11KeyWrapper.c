@@ -9,7 +9,7 @@
 #include <seccomon.h>
 #include <pk11func.h>
 #include <secitem.h>
-#include <keyt.h>
+#include <keythi.h>
 
 /* JSS includes */
 #include <java_ids.h>

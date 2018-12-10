@@ -7,7 +7,7 @@
 #include <nspr.h>
 #include <plarena.h>
 #include <secmodt.h>
-#include <key.h>
+#include <keyhi.h>
 #include <certt.h>
 #include <secpkcs5.h> /* for hand-generating SHA-1 PBA HMAC key */
 #include <pk11pqg.h>

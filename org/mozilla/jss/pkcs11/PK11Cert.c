@@ -13,7 +13,7 @@
 #include <pk11func.h>
 #include <secerr.h>
 #include <secder.h>
-#include <key.h>
+#include <keyhi.h>
 
 #include <jss_exceptions.h>
 #include <jss_bigint.h>

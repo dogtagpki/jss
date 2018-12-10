@@ -10,7 +10,7 @@
 #include <nspr.h>
 #include <cert.h>
 #include <certdb.h>
-#include <key.h>
+#include <keyhi.h>
 #include <secpkcs7.h>
 
 #include <jssutil.h>

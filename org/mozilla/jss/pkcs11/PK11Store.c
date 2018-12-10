@@ -6,7 +6,7 @@
 
 #include <plarena.h>
 #include <nspr.h>
-#include <key.h>
+#include <keyhi.h>
 #include <secmod.h>
 #include <pk11func.h>
 #include <cert.h>
