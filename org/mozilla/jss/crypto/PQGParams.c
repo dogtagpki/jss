@@ -9,7 +9,7 @@
 #include <plarena.h>
 #include <secitem.h>
 #include <secoidt.h>
-#include <keyt.h>   /* for PQGParams */
+#include <keythi.h>   /* for PQGParams */
 #include <pk11pqg.h>
 
 #include <jss_bigint.h>

@@ -12,7 +12,7 @@
 #include <pk11func.h>
 #include <secerr.h>
 #include <nspr.h>
-#include <key.h>
+#include <keyhi.h>
 #include <secasn1.h>
 #include <certt.h>
 

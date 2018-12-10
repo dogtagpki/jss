@@ -37,7 +37,7 @@
 #include <pk11func.h>
 #include <nspr.h>
 #include <seccomon.h>
-#include <key.h>
+#include <keyhi.h>
 #include <secitem.h>
 
 #include <jssutil.h>

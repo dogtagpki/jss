@@ -10,7 +10,7 @@
 #include <pk11pqg.h>
 #include <secerr.h>
 #include <nspr.h>
-#include <key.h>
+#include <keyhi.h>
 #include <secitem.h>
 
 #include <jss_bigint.h>

@@ -7,7 +7,7 @@
 #include <secmod.h>
 #include <cert.h>
 #include <certt.h>
-#include <key.h>
+#include <keyhi.h>
 #include <ocsp.h>
 #include <pk11func.h>
 #include <nspr.h>
