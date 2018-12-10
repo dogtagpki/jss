@@ -650,6 +650,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo(
     SECItem epkiItem;
     epkiItem.data = NULL;
     epkiItem.len = 0;
+    jbyteArray encodedEpki = NULL;
 
     PR_ASSERT(env != NULL && this != NULL);
 
@@ -709,7 +710,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo(
     }
 
     // convert to Java byte array
-    jbyteArray encodedEpki = JSS_SECItemToByteArray(env, &epkiItem);
+    encodedEpki = JSS_SECItemToByteArray(env, &epkiItem);
 
 finish:
     if (epki != NULL) {
