@@ -147,6 +147,6 @@ public class KeyWrapAlgorithm extends Algorithm {
         if (oid.equals(DES_CBC_PAD_OID))
             return DES_CBC_PAD;
 
-        throw new NoSuchAlgorithmException();
+        throw new NoSuchAlgorithmException("Unknown Algorithm for OID: " + wrapOID);
     }
 }
