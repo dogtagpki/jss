@@ -84,7 +84,9 @@ mv jss %{name}-%{version}
 ################################################################################
 %build
 
+%if 0%{?fedora} >= 27
 %set_build_flags
+%endif
 
 [ -z "$JAVA_HOME" ] && export JAVA_HOME=%{_jvmdir}/java
 [ -z "$USE_INSTALLED_NSPR" ] && export USE_INSTALLED_NSPR=1
