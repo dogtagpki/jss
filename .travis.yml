@@ -3,20 +3,21 @@
 # All rights reserved.
 # END COPYRIGHT BLOCK
 
+language: java
+
 services:
   - docker
 
-install:
-  - docker pull registry.fedoraproject.org/fedora:27
-  - docker run
-      --name=container
-      --detach
-      -i
-      -v $(pwd):/root/jss
-      registry.fedoraproject.org/fedora:27
-  - docker exec container dnf install -y dnf-plugins-core gcc make rpm-build
-  - docker exec container dnf builddep -y --spec /root/jss/jss.spec.in
-  - docker exec container /root/jss/build.sh --with-timestamp --with-commit-id rpm
+stages:
+  - test
+
+env:
+  - BASE_IMAGE="fedora_26"
+  - BASE_IMAGE="fedora_29"
+  - BASE_IMAGE="centos_7"
 
 script:
-  - docker exec container rpm -Uvh /root/build/jss/RPMS/*
+  - bash tools/run_container.sh "$BASE_IMAGE"
+
+matrix:
+  fast_finish: true
