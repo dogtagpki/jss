@@ -52,17 +52,21 @@ generate_rpm_sources() {
             echo "Generating $TARBALL from $SOURCE_TAG tag"
         fi
 
-        git -C "$SRC_DIR" \
+        pushd "$SCR_DIR"
+        git \
             archive \
             --format=tar.gz \
             --prefix $NAME-$VERSION/ \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
             $SOURCE_TAG
+        popd
 
         if [ "$SOURCE_TAG" != "HEAD" ] ; then
 
-            TAG_ID=`git -C "$SRC_DIR" rev-parse $SOURCE_TAG`
-            HEAD_ID=`git -C "$SRC_DIR" rev-parse HEAD`
+            pushd "$SRC_DIR"
+            TAG_ID=`git rev-parse $SOURCE_TAG`
+            HEAD_ID=`git rev-parse HEAD`
+            popd
 
             if [ "$TAG_ID" != "$HEAD_ID" ] ; then
                 generate_patch
@@ -92,11 +96,13 @@ generate_patch() {
         echo "Generating $PATCH for all changes since $SOURCE_TAG tag"
     fi
 
-    git -C "$SRC_DIR" \
+    pushd "$SRC_DIR"
+    git \
         format-patch \
         --stdout \
         $SOURCE_TAG \
         > "$WORK_DIR/SOURCES/$PATCH"
+    popd
 }
 
 generate_rpm_spec() {
@@ -224,7 +230,9 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 if [ "$WITH_COMMIT_ID" = true ]; then
-    COMMIT_ID="`git -C "$SRC_DIR" rev-parse --short=8 HEAD`"
+    pushd "$SRC_DIR"
+    COMMIT_ID="`git rev-parse --short=8 HEAD`"
+    popd
     _COMMIT_ID=".$COMMIT_ID"
 fi
 
