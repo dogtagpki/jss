@@ -976,8 +976,14 @@ JNIEXPORT jboolean JNICALL
 Java_org_mozilla_jss_CryptoManager_FIPSEnabled(JNIEnv *env, jobject this)
 {
     if( PK11_IsFIPS() ) {
+        /* There's a bug in NSS where it won't disable x25519 in FIPS mode.
+         * Since they won't fix the bug, we have to do it ourselves. */
+        NSS_SetAlgorithmPolicy(SEC_OID_CURVE25519, 0, NSS_USE_ALG_IN_SSL_KX);
         return JNI_TRUE;
     } else {
+        /* In case FIPS mode is toggled, re-enable x25519 as it is a good
+         * curve. */
+        NSS_SetAlgorithmPolicy(SEC_OID_CURVE25519, 1, NSS_USE_ALG_IN_SSL_KX);
         return JNI_FALSE;
     }
 }
