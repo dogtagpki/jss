@@ -838,6 +838,8 @@ public final class CryptoManager implements TokenSupplier
         if(instance==null) {
             throw new NotInitializedException();
         }
+        /* throw away call -- disables x25519 if we're in FIPS mode */
+        instance.FIPSEnabled();
         return instance;
     }
 
