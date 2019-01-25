@@ -277,6 +277,15 @@ PR_BEGIN_EXTERN_C
 #define GET_BUF_SIZE_SIG "()I"
 
 /*
+ * CryptoManager
+ *
+*/
+
+#define CRYPTO_MANAGER_NAME "org/mozilla/jss/CryptoManager"
+#define GET_OCSP_POLICY_NAME "getOCSPPolicy"
+#define GET_OCSP_POLICY_SIG "()I"
+
+/*
  * SocketBase
  */
 #define SOCKET_BASE_NAME "org/mozilla/jss/ssl/SocketBase"
