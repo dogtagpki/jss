@@ -1201,6 +1201,44 @@ public final class CryptoManager implements TokenSupplier
     // OCSP management
     ///////////////////////////////////////////////////////////////////////
 
+    /* OCSP Policy related */
+
+    public enum OCSPPolicy {
+        NONE,
+        NORMAL,
+        LEAF_AND_CHAIN;
+    }
+
+    private static OCSPPolicy ocspPolicy  = OCSPPolicy.NONE;
+
+    /**
+     * Gets the current ocsp Policy.
+     * Currently we only support 2 modes  OCSP_LEAF_AND_CHAIN_POLICY.
+     * And OCSP_NORMAL_POLICY, which is current processing , by default.
+     * If we have AIA based OCSP enabled we will check all certs in the chain.
+     * using PKIX cert verfication calls in the various cert auth callbacks we
+     * have.
+     * @return - The current ocsp policy in effect.
+     */
+
+    public static synchronized int getOCSPPolicy() {
+        return ocspPolicy.ordinal();
+    }
+
+    /**
+     * Sets the current ocsp Policy.
+     * Currently we only support one mode OCSP_LEAF_AND_CHAIN_POLICY.
+     * If we have AIA based OCSP enabled we will check all certs in the chain.
+     * using PKIX cert verfication calls in the various cert auth callbacks we
+     * have.
+     * @param policy - Either cert and chain or normal default processing.
+     *
+     */
+ 
+    public static synchronized void setOCSPPolicy(OCSPPolicy policy) {
+        ocspPolicy = policy;
+    }
+
     /**
      * Enables OCSP, note when you Initialize JSS for the first time, for
      * backwards compatibility, the initialize will enable OCSP if you
@@ -1220,6 +1258,16 @@ public final class CryptoManager implements TokenSupplier
         String ocspResponderCertNickname )
     throws GeneralSecurityException
     {
+        /* set the ocsp policy */
+
+        if(ocspCheckingEnabled && 
+            ocspResponderURL == null && 
+            ocspResponderCertNickname == null) {
+            setOCSPPolicy(OCSPPolicy.LEAF_AND_CHAIN);
+        } else {
+            setOCSPPolicy(OCSPPolicy.NORMAL);
+        }
+
         configureOCSPNative(ocspCheckingEnabled,
                                    ocspResponderURL,
                                     ocspResponderCertNickname );

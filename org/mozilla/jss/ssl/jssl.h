@@ -5,7 +5,26 @@
 #ifndef ORG_MOZILLA_JSS_SSL_JSSL_H
 #define ORG_MOZILLA_JSS_SSL_JSSL_H
 
+/* ocsp policy constants */
+
+/* ocsp policy constants */
+static const int OCSP_NO_POLICY = 0;
+static const int OCSP_NORMAL_POLICY = 1;
+static const int OCSP_LEAF_AND_CHAIN_POLICY = 2;
+
 #include <ssl.h>
+
+typedef struct
+{
+    enum
+    {
+        PW_NONE = 0,
+        PW_FROMFILE = 1,
+        PW_PLAINTEXT = 2,
+        PW_EXTERNAL = 3
+    } source;
+    char *data;
+} secuPWData;
 
 struct JSSL_SocketData {
     PRFileDesc *fd;
@@ -119,5 +138,15 @@ JSS_SSL_processExceptions(JNIEnv *env, PRFilePrivate *priv);
 
 
 void JSSL_throwSSLSocketException(JNIEnv *env, char *message);
+
+int
+JSSL_getOCSPPolicy();
+
+
+SECStatus 
+JSSL_verifyCertPKIX(CERTCertificate *cert,
+                    SECCertificateUsage certUsage,
+                    secuPWData *pwdata, int ocspPolicy,
+                    CERTVerifyLog *log,SECCertificateUsage *usage);
 
 #endif

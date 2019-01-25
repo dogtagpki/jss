@@ -14,7 +14,7 @@
 #include <secpkcs7.h>
 
 #include <jssutil.h>
-
+#include <jssl.h>
 #include <jss_exceptions.h>
 #include "pk11util.h"
 #include <java_ids.h>
@@ -1574,6 +1574,9 @@ SECStatus verifyCertificateNow(JNIEnv *env, jobject self, jstring nickString,
          goto finish;
     }
 
+    int ocspPolicy = JSSL_getOCSPPolicy();
+    
+
     certificateUsage = required_certificateUsage;
 
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
@@ -1587,8 +1590,24 @@ SECStatus verifyCertificateNow(JNIEnv *env, jobject self, jstring nickString,
     /* 0 for certificateUsage in call to CERT_VerifyCertificateNow will
      * retrieve the current valid usage into currUsage
      */
-        rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
-            checkSig, certificateUsage, NULL, currUsage );
+        if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+            rv = JSSL_verifyCertPKIX( cert, certificateUsage,
+                     NULL /* pin arg */, ocspPolicy, NULL, currUsage);
+
+            /* we need to do this just to get the cert usages, the pkix version
+               doesn't seem to honor the method to get the usages as of yet.
+               Let the PKIX call only determine the final fate.
+            */
+            if(rv == SECSuccess) {
+                CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+                checkSig, certificateUsage, NULL, currUsage );
+            }
+
+        } else {
+            rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+                checkSig, certificateUsage, NULL, currUsage );
+        }
+
         if ((rv == SECSuccess) && certificateUsage == 0x0000) {
             if (*currUsage == 
                 ( certUsageUserCertImport |
@@ -1639,6 +1658,8 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
          goto finish;
     }
 
+    int ocspPolicy = JSSL_getOCSPPolicy();
+
     certificateUsage = required_certificateUsage;
 
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
@@ -1653,8 +1674,23 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
      * just get the current usage (which we are not passing back for now
      * but will bypass the certificate usage check
      */
-        rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
-            checkSig, certificateUsage, NULL, &currUsage );
+
+        if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+            rv= JSSL_verifyCertPKIX( cert, certificateUsage,
+                     NULL /* pin arg */, ocspPolicy, NULL, &currUsage);
+
+            /* we need to do this just to get the cert usages, the pkix version
+               doesn't seem to honor the method to get the usages as of yet.
+               Let the PKIX call only determine the final fate.
+            */
+            if(rv == SECSuccess) {
+                CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+                checkSig, certificateUsage, NULL, &currUsage );
+            }
+        } else {
+            rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+                checkSig, certificateUsage, NULL, &currUsage );
+        }
     }
 
 finish:
@@ -1720,11 +1756,13 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
     SECStatus                rv = SECFailure;
     CERTCertificate          *cert = NULL;
     char                     *nickname = NULL;
-    
+   
     if (nickString == NULL) {
         JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
         goto finish;
     }
+
+    int ocspPolicy = JSSL_getOCSPPolicy();
 
     nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
     if (nickname == NULL) {
@@ -1747,8 +1785,25 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
     /* 0 for certificateUsage in call to CERT_VerifyCertificateNow will
      * retrieve the current valid usage into currUsage
      */
-    rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
-        checkSig, certificateUsage, NULL, &currUsage);
+
+    if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+        rv = JSSL_verifyCertPKIX( cert, certificateUsage,
+                     NULL /* pin arg */, ocspPolicy, NULL, &currUsage);
+
+        /* we need to do this just to get the cert usages, the pkix version
+           doesn't seem to honor the method to get the usages as of yet.
+           Let the PKIX call only determine the final fate.
+        */
+        if(rv == SECSuccess) {
+            CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+            checkSig, certificateUsage, NULL, &currUsage );
+
+        }
+
+    } else {
+        rv = CERT_VerifyCertificateNow(CERT_GetDefaultCertDB(), cert,
+                     checkSig, certificateUsage, NULL, &currUsage);
+    }
 
     if (rv != SECSuccess) {
         JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Invalid certificate");
@@ -1803,6 +1858,9 @@ Java_org_mozilla_jss_CryptoManager_verifyCertNowNative(JNIEnv *env,
     if( nickname == NULL ) {
          goto finish;
     }
+
+    int ocspPolicy = JSSL_getOCSPPolicy();
+
     certUsage = cUsage;
     cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
 
@@ -1812,8 +1870,13 @@ Java_org_mozilla_jss_CryptoManager_verifyCertNowNative(JNIEnv *env,
         PR_smprintf_free(message);
         goto finish;
     } else {
-        rv = CERT_VerifyCertNow(CERT_GetDefaultCertDB(), cert,
-            checkSig, certUsage, NULL );
+        if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+            rv = JSSL_verifyCertPKIX( cert, certUsage,
+                NULL /* pin arg */, ocspPolicy, NULL, NULL);
+        } else {
+            rv = CERT_VerifyCertNow(CERT_GetDefaultCertDB(), cert,
+                checkSig, certUsage, NULL );
+        }
     }
 
 finish:
@@ -1858,6 +1921,8 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
     derCerts[0] = JSS_ByteArrayToSECItem(env, packageArray);
     derCerts[1] = NULL;
 
+    int ocspPolicy = JSSL_getOCSPPolicy();
+
     rv = CERT_ImportCerts(certdb, cUsage,
                           1, derCerts, &certArray, PR_FALSE /*temp Certs*/,
                           PR_FALSE /*caOnly*/, NULL);
@@ -1869,8 +1934,14 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
     }
 
     certUsage = cUsage;
-    rv = CERT_VerifyCertNow(certdb, certArray[0],
-                            checkSig, certUsage, NULL );
+
+    if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+        rv = JSSL_verifyCertPKIX( certArray[0], certUsage,
+            NULL /* pin arg */, ocspPolicy, NULL, NULL);
+    } else {
+        rv = CERT_VerifyCertNow(certdb, certArray[0],
+            checkSig, certUsage, NULL );
+    }
 
     finish:
     /* this checks for NULL */

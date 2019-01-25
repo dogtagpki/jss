@@ -15,6 +15,7 @@
 #include <pk11util.h>
 #include "_jni/org_mozilla_jss_ssl_SSLSocket.h"
 #include "jssl.h"
+#include "cert.h"
 
 #ifdef WIN32
 #include <winsock.h>
@@ -898,4 +899,201 @@ finish:
         int VARIABLE_MAY_NOT_BE_USED ret = (*env)->Throw(env, currentExcep);
         PR_ASSERT(ret == 0);
     }
+}
+
+/* Get the trusted anchor for pkix */
+
+CERTCertificate * getRoot(CERTCertificate *cert, 
+    SECCertificateUsage certUsage) 
+{
+    CERTCertificate  *root = NULL;
+    CERTCertListNode *node = NULL;
+
+    if( !cert ) {
+        goto finish;
+    }
+
+    CERTCertList *certList =  CERT_GetCertChainFromCert(cert, 
+        PR_Now(), 
+        certUsage);
+
+    if( certList == NULL) {
+        goto finish;
+    }
+
+    for (node = CERT_LIST_HEAD(certList);
+       !CERT_LIST_END(node, certList);
+       node = CERT_LIST_NEXT(node)) {
+       
+        /* try to find the root */
+       if( node->cert && node->cert->isRoot ) {
+          root = CERT_DupCertificate(node->cert) ;
+       } 
+    }
+
+finish:
+  
+    CERT_DestroyCertList (certList); 
+    return root; 
+}
+
+/* Verify a cert using explicit PKIX call.
+ * For now only used in OCSP AIA context.
+ * The result of this call will be a full chain
+ * and leaf network AIA ocsp validation.
+ * The policy param will be used in the future to
+ * handle more scenarios.
+ */
+
+SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
+      SECCertificateUsage certUsage,secuPWData *pwdata, int ocspPolicy,
+      CERTVerifyLog *log, SECCertificateUsage *usage) 
+{
+
+    /* put the first set of possible flags internally here first */
+    /* later there could be a more complete list to choose from */
+    /* support our hard core fetch aia ocsp policy for now */
+
+    static PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
+        /* crl */
+        0,
+        /* ocsp */
+        CERT_REV_M_TEST_USING_THIS_METHOD |
+        CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
+    };
+
+    static PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
+        /* crl */
+        0,
+        /* ocsp */
+        CERT_REV_M_TEST_USING_THIS_METHOD |
+        CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
+    };
+
+    static CERTRevocationMethodIndex
+        ocsp_Enabled_Hard_Policy_Method_Preference = {
+            cert_revocation_method_ocsp
+        };
+
+    static CERTRevocationFlags ocsp_Enabled_Hard_Policy = {
+    { /* leafTests */
+      2,
+      ocsp_Enabled_Hard_Policy_LeafFlags,
+      1,
+      &ocsp_Enabled_Hard_Policy_Method_Preference,
+      0 },
+    { /* chainTests */
+      2,
+      ocsp_Enabled_Hard_Policy_ChainFlags,
+      1,
+      &ocsp_Enabled_Hard_Policy_Method_Preference,
+      0 }
+    };
+
+    /* for future expansion */
+
+    CERTValOutParam cvout[20] = {0};
+    CERTValInParam cvin[20] = {0};
+
+    int inParamIndex = 0;
+    int outParamIndex = 0;
+    CERTRevocationFlags *rev = NULL;
+
+    CERTCertList *trustedCertList = NULL;
+
+    PRBool fetchCerts = PR_FALSE;
+
+    SECStatus res =  SECFailure;
+    if(cert == NULL) {
+        goto finish;
+    }
+
+    if(ocspPolicy != OCSP_LEAF_AND_CHAIN_POLICY) {
+        goto finish;
+    }
+
+    /* Force the strict ocsp network check on chain
+       and leaf.
+    */
+
+    if(ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+        fetchCerts = PR_TRUE;   
+        rev = &ocsp_Enabled_Hard_Policy;
+    }
+
+    /* fetch aia over net */
+ 
+    cvin[inParamIndex].type = cert_pi_useAIACertFetch;
+    cvin[inParamIndex].value.scalar.b = fetchCerts;
+    inParamIndex++; 
+
+    /* time */
+
+    cvin[inParamIndex].type = cert_pi_date;
+    cvin[inParamIndex].value.scalar.time = PR_Now();
+    inParamIndex++;
+
+    /* flags */
+
+    cvin[inParamIndex].type = cert_pi_revocationFlags;
+    cvin[inParamIndex].value.pointer.revocation = rev;
+    inParamIndex++;
+
+
+    /* establish trust anchor */
+
+    CERTCertificate *root = getRoot(cert,certUsage);
+
+    /* Try to add the root as the trust anchor so all the
+       other memebers of the ca chain will get validated.
+    */
+
+    if( root != NULL ) {
+        trustedCertList = CERT_NewCertList();
+        CERT_AddCertToListTail(trustedCertList, root);        
+
+        cvin[inParamIndex].type = cert_pi_trustAnchors;
+        cvin[inParamIndex].value.pointer.chain = trustedCertList;
+
+        inParamIndex++;
+    }
+
+    cvin[inParamIndex].type = cert_pi_end;
+
+    if(log != NULL) {
+        cvout[outParamIndex].type = cert_po_errorLog;
+        cvout[outParamIndex].value.pointer.log = log;
+        outParamIndex ++;
+    }
+
+    int usageIndex = 0;
+    if(usage != NULL) {
+        usageIndex = outParamIndex;
+        cvout[outParamIndex].type = cert_po_usages;
+        cvout[outParamIndex].value.scalar.usages = 0;
+        outParamIndex ++;
+    }
+
+    cvout[outParamIndex].type = cert_po_end;
+
+    res = CERT_PKIXVerifyCert(cert, certUsage, cvin, cvout, &pwdata);
+
+finish:
+    /* clean up any trusted cert list */
+
+    if (trustedCertList) {
+        CERT_DestroyCertList(trustedCertList);
+        trustedCertList = NULL;
+    }
+
+    if(root) {
+       CERT_DestroyCertificate(root);
+       root = NULL;
+    }
+
+    if(res == SECSuccess && usage) {
+        *usage = cvout[usageIndex].value.scalar.usages;
+    }
+
+    return res;
 }
