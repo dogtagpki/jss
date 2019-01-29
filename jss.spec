@@ -38,8 +38,8 @@ BuildRequires:  cmake
 
 BuildRequires:  gcc-c++
 BuildRequires:  nspr-devel >= 4.13.1
-BuildRequires:  nss-devel >= 3.28.4-6
-BuildRequires:  nss-tools >= 3.28.4-6
+BuildRequires:  nss-devel >= 3.30
+BuildRequires:  nss-tools >= 3.30
 BuildRequires:  java-devel
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
@@ -56,7 +56,7 @@ BuildRequires:  apache-commons-codec
 BuildRequires:  perl-interpreter
 %endif
 
-Requires:       nss >= 3.28.4-6
+Requires:       nss >= 3.30
 Requires:       java-headless
 Requires:       jpackage-utils
 Requires:       slf4j
