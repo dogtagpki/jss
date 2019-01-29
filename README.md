@@ -53,7 +53,7 @@ To build JSS and make a best effort to detect environment variables:
 
     git clone https://github.com/dogtagpki/jss
     cd jss/build && cmake ..
-    make all check
+    make all test
 
 Alternatively, to build a RPM distribution of JSS:
 
