@@ -56,6 +56,9 @@ BuildRequires:  apache-commons-codec
 BuildRequires:  perl-interpreter
 %endif
 
+BuildRequires:  junit
+BuildRequires:  hamcrest
+
 Requires:       nss >= 3.30
 Requires:       java-headless
 Requires:       jpackage-utils
