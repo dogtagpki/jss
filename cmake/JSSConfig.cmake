@@ -196,6 +196,14 @@ macro(jss_config_java)
         SLF4J_JDK14_JAR
         NAMES jdk14 slf4j/jdk14 slf4j-jdk14
     )
+    find_jar(
+        JUNIT4_JAR
+        NAMES junit4 junit
+    )
+    find_jar(
+        HAMCREST_JAR
+        NAMES hamcrest/core
+    )
 
     # Validate that we've found the required JARs
     if(SLF4J_API_JAR STREQUAL "SLF4J_API_JAR-NOTFOUND")
@@ -218,10 +226,22 @@ macro(jss_config_java)
         message(WARNING "Test dependency sfl4j-jdk14.jar not found by find_jar! Tests might not run properly.")
     endif()
 
+    if(JUINT4_JAR STREQUAL "JUNIT4_JAR-NOTFOUND")
+        message(FATAL_ERROR "Test dependency junit4.jar not found by find_jar! Tests will not compile.")
+    endif()
+
+    if(HAMCREST_JAR STREQUAL "HAMCREST_JAR-NOTFOUND")
+        message(WARNING "Test dependency hamcrest/core.jar not found by find_jar! Tests might not run properly.")
+    endif()
+
     # Set class paths
     set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${CODEC_JAR}:${LANG_JAR}:${JAXB_JAR}")
-    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}")
+    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${HAMCREST_JAR}")
 
+    message(STATUS "javac classpath: ${JAVAC_CLASSPATH}")
+    message(STATUS "tests classpath: ${TEST_CLASSPATH}")
+
+    # Set compile flags for JSS
     list(APPEND JSS_JAVAC_FLAGS "-classpath")
     list(APPEND JSS_JAVAC_FLAGS "${JAVAC_CLASSPATH}")
     list(APPEND JSS_JAVAC_FLAGS "-sourcepath")
@@ -230,6 +250,17 @@ macro(jss_config_java)
         list(APPEND JSS_JAVAC_FLAGS "-g")
     else()
         list(APPEND JSS_JAVAC_FLAGS "-O")
+    endif()
+
+    # Set compile flags for JSS test suite
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-classpath")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT4_JAR}")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}")
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        list(APPEND JSS_TEST_JAVAC_FLAGS "-g")
+    else()
+        list(APPEND JSS_TEST_JAVAC_FLAGS "-O")
     endif()
 
     # Variables for javadoc building. Note that JSS_PACKAGES needs to be
