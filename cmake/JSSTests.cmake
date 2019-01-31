@@ -32,6 +32,30 @@ macro(jss_tests)
             COMMAND "org.mozilla.jss.tests.TestPKCS11Constants"
         )
     endif()
+    jss_test_java(
+        NAME "JUnit_BMPStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.BMPStringTest"
+    )
+    jss_test_java(
+        NAME "JUnit_IA5StringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.IA5StringTest"
+    )
+    jss_test_java(
+        NAME "JUnit_PrintableStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.PrintableStringTest"
+    )
+    jss_test_java(
+        NAME "JUnit_TeletexStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.TeletexStringTest"
+    )
+    jss_test_java(
+        NAME "JUnit_UniversalStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.UniversalStringTest"
+    )
+    jss_test_java(
+        NAME "JUnit_UTF8StringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.UTF8StringTest"
+    )
 
     # Rather than creating our results directories earlier in JSSConfig,
     # create them here so that the test suite can be rerun multiple times.
@@ -221,6 +245,23 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "disable"
         DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
     )
+
+    jss_test_java(
+        NAME "JUnit_GenericValueConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.x509.GenericValueConverterTest"
+        DEPENDS "Disable_FipsMODE"
+    )
+    jss_test_java(
+        NAME "JUnit_IA5StringConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.x509.IA5StringConverterTest"
+        DEPENDS "Disable_FipsMODE"
+    )
+    jss_test_java(
+        NAME "JUnit_PrintableConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.x509.PrintableConverterTest"
+        DEPENDS "Disable_FipsMODE"
+    )
+
 
     # For compliance with several
     add_custom_target(
