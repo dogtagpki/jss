@@ -145,7 +145,7 @@ JSSL_getOCSPPolicy();
 
 SECStatus 
 JSSL_verifyCertPKIX(CERTCertificate *cert,
-                    SECCertificateUsage certUsage,
+                    SECCertificateUsage certificateUsage,
                     secuPWData *pwdata, int ocspPolicy,
                     CERTVerifyLog *log,SECCertificateUsage *usage);
 
