@@ -891,7 +891,7 @@ finish:
 /* Get the trusted anchor for pkix */
 
 CERTCertificate * getRoot(CERTCertificate *cert, 
-    SECCertificateUsage certUsage) 
+    SECCertUsage certUsage) 
 {
     CERTCertificate  *root = NULL;
     CERTCertListNode *node = NULL;
@@ -933,7 +933,7 @@ finish:
  */
 
 SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
-      SECCertificateUsage certUsage,secuPWData *pwdata, int ocspPolicy,
+      SECCertificateUsage certificateUsage,secuPWData *pwdata, int ocspPolicy,
       CERTVerifyLog *log, SECCertificateUsage *usage) 
 {
 
@@ -990,6 +990,8 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
 
     PRBool fetchCerts = PR_FALSE;
 
+    SECCertUsage certUsage = certUsageSSLClient /* 0 */;
+    
     SECStatus res =  SECFailure;
     if(cert == NULL) {
         goto finish;
@@ -1024,8 +1026,14 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
     cvin[inParamIndex].value.pointer.revocation = rev;
     inParamIndex++;
 
-
     /* establish trust anchor */
+
+    /* We need to convert the SECCertificateUsage to a SECCertUsage to obtain
+     * the root.
+    */
+
+    SECCertificateUsage testUsage = certificateUsage;
+    while (0 != (testUsage = testUsage >> 1)) { certUsage++; }
 
     CERTCertificate *root = getRoot(cert,certUsage);
 
@@ -1061,7 +1069,7 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
 
     cvout[outParamIndex].type = cert_po_end;
 
-    res = CERT_PKIXVerifyCert(cert, certUsage, cvin, cvout, &pwdata);
+    res = CERT_PKIXVerifyCert(cert, certificateUsage, cvin, cvout, &pwdata);
 
 finish:
     /* clean up any trusted cert list */
@@ -1071,8 +1079,9 @@ finish:
         trustedCertList = NULL;
     }
 
+    /* CERT_DestroyCertList destroys interior certs for us. */
+
     if(root) {
-       CERT_DestroyCertificate(root);
        root = NULL;
     }
 
