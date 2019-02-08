@@ -481,6 +481,9 @@ JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
 
     certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
 
+    /* PKIX call needs a SECCertificate usage, convert */
+    SECCertificateUsage certificateUsage =  (SECCertificateUsage)1 << certUsage;
+
     /* SSL_PeerCertificate() returns a shallow copy of the cert, so we
        must destroy it before we exit this function */
 
@@ -488,7 +491,7 @@ JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
 
     if (peerCert) {
         if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
-            rv = JSSL_verifyCertPKIX( peerCert, certUsage,
+            rv = JSSL_verifyCertPKIX( peerCert, certificateUsage,
                      NULL /* pin arg */, ocspPolicy, NULL, NULL);
         } else {
             rv = CERT_VerifyCertNow(CERT_GetDefaultCertDB(), peerCert,
@@ -624,6 +627,9 @@ JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
     if (peerCert == NULL) goto finish;
 
     certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
+    /* PKIX call needs a SECCertificate usage, convert */
+    SECCertificateUsage certificateUsage =  (SECCertificateUsage)1 << certUsage;
+
 
     /* 
      * verify it against current time - (can't use
@@ -632,7 +638,7 @@ JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
      */
 
     if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
-        verificationResult = JSSL_verifyCertPKIX( peerCert, certUsage,
+        verificationResult = JSSL_verifyCertPKIX( peerCert, certificateUsage,
                                  NULL /* pin arg */, ocspPolicy, &log, NULL);
      }  else {
         verificationResult = CERT_VerifyCert(   CERT_GetDefaultCertDB(),
