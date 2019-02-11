@@ -87,7 +87,7 @@ macro(jss_tests)
     jss_test_java(
         NAME "Setup_FIPS_DBs"
         COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Clean_FIPS_Setup_DBs"
+        DEPENDS "Create_FIPS_Setup_DBs"
     )
     jss_test_java(
         NAME "Generate_known_RSA_cert_pair"
