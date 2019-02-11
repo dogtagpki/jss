@@ -694,14 +694,9 @@ Java_org_mozilla_jss_ssl_SocketBase_getPeerAddressByteArrayNative
         address = (jbyte *) &addr.inet.ip;
     }
 
-    byteArray = (*env)->NewByteArray(env,size);
-    if(byteArray == NULL) {
+    byteArray = JSS_ToByteArray(env, address, size);
+    if (byteArray == NULL) {
         ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    (*env)->SetByteArrayRegion(env, byteArray, 0,size ,address);
-    if( (*env)->ExceptionOccurred(env) != NULL) {
-        PR_ASSERT(PR_FALSE);
         goto finish;
     }
 
@@ -729,14 +724,9 @@ Java_org_mozilla_jss_ssl_SocketBase_getLocalAddressByteArrayNative
         address = (jbyte *) &addr.inet.ip;
     }
 
-    byteArray = (*env)->NewByteArray(env,size);
-    if(byteArray == NULL) {
+    byteArray = JSS_ToByteArray(env, address, size);
+    if (byteArray == NULL) {
         ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    (*env)->SetByteArrayRegion(env, byteArray, 0,size,address);
-    if( (*env)->ExceptionOccurred(env) != NULL) {
-        PR_ASSERT(PR_FALSE);
         goto finish;
     }
 

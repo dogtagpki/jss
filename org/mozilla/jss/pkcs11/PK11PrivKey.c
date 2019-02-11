@@ -352,15 +352,9 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getUniqueID
      * Write the key id to a new byte array
      ***************************************************/
     PR_ASSERT(idItem->len > 0);
-    byteArray = (*env)->NewByteArray(env, idItem->len);
-    if(byteArray == NULL) {
+    byteArray = JSS_ToByteArray(env, idItem->data, idItem->len);
+    if (byteArray == NULL) {
         ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    (*env)->SetByteArrayRegion(env, byteArray, 0, idItem->len,
-                (jbyte*)idItem->data);
-    if( (*env)->ExceptionOccurred(env) != NULL) {
-        PR_ASSERT(PR_FALSE);
         goto finish;
     }
 
@@ -709,16 +703,13 @@ Java_org_mozilla_jss_pkcs11_PK11RSAPrivateKey_getModulusByteArray
     length = (jint)publicKey->u.rsa.modulus.len;
 
     // create byte array
-    array = (*env)->NewByteArray(env, length);
+    array = JSS_ToByteArray(env, value, length);
 
     // check byte array creation
     if (array == NULL) {
         JSS_throw(env, OUT_OF_MEMORY_ERROR);
         goto finish;
     }
-
-    // copy modulus into byte array
-    (*env)->SetByteArrayRegion(env, array, 0, length, value);
 
 finish:
     if (publicKey) {

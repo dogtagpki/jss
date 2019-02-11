@@ -34,7 +34,6 @@ JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getEncoded
 	CERTCertificate *cert;
 	SECItem *derCert;
 	jbyteArray derArray=NULL;
-	jbyte *pByte;
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
@@ -60,18 +59,11 @@ JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getEncoded
 	/*
 	 * Copy the DER data to a new Java byte array
 	 */
-	derArray = (*env)->NewByteArray(env, derCert->len);
-	if(derArray==NULL) {
+	derArray = JSS_ToByteArray(env, derCert->data, derCert->len);
+	if (derArray == NULL) {
 		JSS_throw(env, OUT_OF_MEMORY_ERROR);
 		goto finish;
 	}
-	pByte = (*env)->GetByteArrayElements(env, derArray, NULL);
-	if(pByte==NULL) {
-		JSS_throw(env, OUT_OF_MEMORY_ERROR);
-		goto finish;
-	}
-	memcpy(pByte, derCert->data, derCert->len);
-	(*env)->ReleaseByteArrayElements(env, derArray, pByte, 0);
 
 finish:
 	PR_DetachThread();
@@ -544,14 +536,9 @@ Java_org_mozilla_jss_pkcs11_PK11Cert_getUniqueID
     /***************************************************
      * Write the id to a new byte array
      ***************************************************/
-    byteArray = (*env)->NewByteArray(env, id->len);
-    if(byteArray == NULL) {
+    byteArray = JSS_ToByteArray(env, id->data, id->len);
+    if (byteArray == NULL) {
         ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    (*env)->SetByteArrayRegion(env, byteArray, 0, id->len, (jbyte*)id->data);
-    if( (*env)->ExceptionOccurred(env) != NULL) {
-        PR_ASSERT(PR_FALSE);
         goto finish;
     }
 

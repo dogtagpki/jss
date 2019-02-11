@@ -205,7 +205,6 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineSignNative
     SigContextType type;
     SECItem signature;
     jbyteArray sigArray=NULL;
-    jbyte *sigBytes=NULL;
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
@@ -232,22 +231,13 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineSignNative
     /*
      * Convert SECItem signature to Java byte array
      */
-    sigArray = (*env)->NewByteArray(env, signature.len);
-    if(sigArray == NULL) {
+    sigArray = JSS_ToByteArray(env, signature.data, signature.len);
+    if (sigArray == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
-    sigBytes = (*env)->GetByteArrayElements(env, sigArray, NULL);
-    if(sigBytes == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    memcpy(sigBytes, signature.data, signature.len);
     
 finish:
-    if(sigBytes != NULL) {
-        (*env)->ReleaseByteArrayElements(env, sigArray, sigBytes, 0);
-    }
     if( signature.data != NULL ) {
         PR_Free(signature.data);
     }

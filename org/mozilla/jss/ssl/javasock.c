@@ -430,24 +430,10 @@ jsock_send(PRFileDesc *fd, const void *buf, PRInt32 amount,
     /*
      * Turn buf into byte array
      */
-    {
-        jbyte *bytes;
-
-        byteArray = (*env)->NewByteArray(env, amount);
-        if( byteArray == NULL ) {
-            ASSERT_OUTOFMEM(env);
-            goto finish;
-        }
-
-        bytes = (*env)->GetByteArrayElements(env, byteArray, NULL);
-        if( bytes == NULL ) {
-            ASSERT_OUTOFMEM(env);
-            goto finish;
-        }
-
-        memcpy(bytes, buf, amount);
-
-        (*env)->ReleaseByteArrayElements(env, byteArray, bytes, 0);
+    byteArray = JSS_ToByteArray(env, buf, amount);
+    if (byteArray == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
     }
 
     retval = writebuf(env, fd, sockObj, byteArray);
