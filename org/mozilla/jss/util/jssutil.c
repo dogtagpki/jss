@@ -317,20 +317,7 @@ JSS_getPtrFromProxyOwner(JNIEnv *env, jobject proxyOwner, char* proxyFieldName,
 jbyteArray
 JSS_ptrToByteArray(JNIEnv *env, void *ptr)
 {
-    jbyteArray byteArray;
-
-    /* Construct byte array from the pointer */
-    byteArray = (*env)->NewByteArray(env, sizeof(ptr));
-    if(byteArray==NULL) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        return NULL;
-    }
-    (*env)->SetByteArrayRegion(env, byteArray, 0, sizeof(ptr), (jbyte*)&ptr);
-    if((*env)->ExceptionOccurred(env) != NULL) {
-        PR_ASSERT(PR_FALSE);
-        return NULL;
-    }
-    return byteArray;
+    return JSS_ToByteArray(env, (void *)&ptr, sizeof(ptr));
 }
 
 
@@ -593,6 +580,32 @@ finish:
     return item;
 }
 
+/************************************************************************
+** JSS_ToByteArray.
+**
+** Converts the given chararacter array to a Java byte array.
+**
+** Returns
+**  The new jbyteArray object or NULL on failure.
+*/
+jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length)
+{
+    jbyteArray byteArray;
+
+    byteArray = (*env)->NewByteArray(env, length);
+    if (byteArray == NULL) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+        return NULL;
+    }
+
+    (*env)->SetByteArrayRegion(env, byteArray, 0, length, (jbyte *)data);
+    if ((*env)->ExceptionOccurred(env) != NULL) {
+        PR_ASSERT(PR_FALSE);
+        return NULL;
+    }
+
+    return byteArray;
+}
 
 /*
  * External references to the rcs and sccsc ident information in 

@@ -286,6 +286,16 @@ void JSS_initErrcodeTranslationTable();
 */
 int JSS_ConvertNativeErrcodeToJava(int nativeErrcode);
 
+/************************************************************************
+** JSS_ToByteArray.
+**
+** Converts the given chararacter array to a Java byte array.
+**
+** Returns
+**  The new jbyteArray object or NULL on failure.
+*/
+jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length);
+
 PR_END_EXTERN_C
 
 #endif
