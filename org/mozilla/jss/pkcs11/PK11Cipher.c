@@ -163,17 +163,13 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_updateContext
     PR_ASSERT(outlen >= 0);
 
     /* convert output buffer to byte array */
-    outArray = (*env)->NewByteArray(env, outlen);
-    if(outArray == NULL) {
+    outArray = JSS_ToByteArray(env, outbuf, outlen);
+    if (outArray == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
-    (*env)->SetByteArrayRegion(env, outArray, 0, outlen, (jbyte*)outbuf);
 
 finish:
-    if(inbuf) {
-        (*env)->ReleaseByteArrayElements(env, inputBA, inbuf, JNI_ABORT);
-    }
     if(outbuf) {
         PR_Free(outbuf);
     }
@@ -222,12 +218,11 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_finalizeContext
 
     /* convert output buffer to byte array */
     PR_ASSERT(newOutLen >= 0);
-    outBA = (*env)->NewByteArray(env, newOutLen);
+    outBA = JSS_ToByteArray(env, outBuf, newOutLen);
     if(outBA == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
-    (*env)->SetByteArrayRegion(env, outBA, 0, newOutLen, (jbyte*)outBuf);
 
 finish:
     if(outBuf) {
