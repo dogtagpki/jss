@@ -9,7 +9,6 @@ services:
   - docker
 
 stages:
-  - validate
   - test
   - extra
 
@@ -23,8 +22,6 @@ script:
 matrix:
   fast_finish: true
   include:
-    - stage: validate
-      env: BASE_IMAGE="stylecheck"
     - stage: extra
       env: BASE_IMAGE="pkcs11check"
     - stage: extra
