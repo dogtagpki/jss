@@ -29,5 +29,6 @@ CMD true \
         && mkdir build \
         && cd build \
         && cmake .. \
-        && make all test \
+        && make all \
+        && ctest --output-on-failure \
         && true
