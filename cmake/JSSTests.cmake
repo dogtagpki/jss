@@ -6,6 +6,56 @@ macro(jss_tests)
     set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")
     set(DB_PWD "m1oZilla")
 
+
+    # Create directories for test cases:
+    #  - results/data
+    #  - results/nssdb
+    #  - results/fips
+    jss_test_exec(
+        NAME "Clean_Data_Dir"
+        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_DATA_OUTPUT_DIR}"
+    )
+    jss_test_exec(
+        NAME "Create_Data_Dir"
+        COMMAND "cmake" "-E" "make_directory" "${RESULTS_DATA_OUTPUT_DIR}"
+        DEPENDS "Clean_Data_Dir"
+    )
+
+    # Rather than creating our results directories earlier in JSSConfig,
+    # create them here so that the test suite can be rerun multiple times.
+    jss_test_exec(
+        NAME "Clean_Setup_DBs"
+        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_NSSDB_OUTPUT_DIR}"
+    )
+    jss_test_exec(
+        NAME "Create_Setup_DBs"
+        COMMAND "cmake" "-E" "make_directory" "${RESULTS_NSSDB_OUTPUT_DIR}"
+        DEPENDS "Clean_Setup_DBs"
+    )
+    jss_test_java(
+        NAME "Setup_DBs"
+        COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "Create_Setup_DBs"
+    )
+
+    # Various FIPS related tests depend on FIPS being enabled; since this
+    # affects the entire NSS DB, create a separate database for them.
+    jss_test_exec(
+        NAME "Clean_FIPS_Setup_DBs"
+        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}"
+    )
+    jss_test_exec(
+        NAME "Create_FIPS_Setup_DBs"
+        COMMAND "cmake" "-E" "make_directory" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}"
+        DEPENDS "Clean_FIPS_Setup_DBs"
+    )
+    jss_test_java(
+        NAME "Setup_FIPS_DBs"
+        COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "Create_FIPS_Setup_DBs"
+    )
+
+
     jss_test_java(
         NAME "Test_UTF-8_Converter"
         COMMAND "org.mozilla.jss.tests.UTF8ConverterTest"
@@ -56,184 +106,151 @@ macro(jss_tests)
         NAME "JUnit_UTF8StringTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.UTF8StringTest"
     )
-
-    # Rather than creating our results directories earlier in JSSConfig,
-    # create them here so that the test suite can be rerun multiple times.
-    jss_test_exec(
-        NAME "Clean_Setup_DBs"
-        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_OUTPUT_DIR}"
-    )
-    jss_test_exec(
-        NAME "Create_Setup_DBs"
-        COMMAND "cmake" "-E" "make_directory" "${RESULTS_OUTPUT_DIR}"
-        DEPENDS "Clean_Setup_DBs"
-    )
-    jss_test_java(
-        NAME "Setup_DBs"
-        COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Create_Setup_DBs"
-    )
-    # Various FIPS related tests depend on FIPS being enabled; since this
-    # affects the entire NSS DB, create a separate database for them.
-    jss_test_exec(
-        NAME "Clean_FIPS_Setup_DBs"
-        COMMAND "cmake" "-E" "remove_directory" "${RESULTS_FIPS_OUTPUT_DIR}"
-    )
-    jss_test_exec(
-        NAME "Create_FIPS_Setup_DBs"
-        COMMAND "cmake" "-E" "make_directory" "${RESULTS_FIPS_OUTPUT_DIR}"
-        DEPENDS "Clean_FIPS_Setup_DBs"
-    )
-    jss_test_java(
-        NAME "Setup_FIPS_DBs"
-        COMMAND "org.mozilla.jss.tests.SetupDBs" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Create_FIPS_Setup_DBs"
-    )
     jss_test_java(
         NAME "Generate_known_RSA_cert_pair"
-        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}" "20" "localhost" "SHA-256/RSA" "CA_RSA" "Server_RSA" "Client_RSA"
+        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "20" "localhost" "SHA-256/RSA" "CA_RSA" "Server_RSA" "Client_RSA"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Generate_known_ECDSA_cert_pair"
-        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}" "30" "localhost" "SHA-256/EC" "CA_ECDSA" "Server_ECDSA" "Client_ECDSA"
+        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "30" "localhost" "SHA-256/EC" "CA_ECDSA" "Server_ECDSA" "Client_ECDSA"
         DEPENDS "Generate_known_RSA_cert_pair"
     )
     jss_test_java(
         NAME "Generate_known_DSS_cert_pair"
-        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "SHA-1/DSA" "CA_DSS" "Server_DSS" "Client_DSS"
+        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "SHA-1/DSA" "CA_DSS" "Server_DSS" "Client_DSS"
         DEPENDS "Generate_known_ECDSA_cert_pair"
     )
     jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_rsa.pfx"
-        COMMAND "pk12util" "-o" "${RESULTS_OUTPUT_DIR}/rsa.pfx" "-n" "CA_RSA" "-d" "${RESULTS_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
+        COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/rsa.pfx" "-n" "CA_RSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
         DEPENDS "Generate_known_RSA_cert_pair"
     )
     jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_ecdsa.pfx"
-        COMMAND "pk12util" "-o" "${RESULTS_OUTPUT_DIR}/ecdsa.pfx" "-n" "CA_ECDSA" "-d" "${RESULTS_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
+        COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/ecdsa.pfx" "-n" "CA_ECDSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
         DEPENDS "Generate_known_ECDSA_cert_pair"
     )
     jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_dss.pfx"
-        COMMAND "pk12util" "-o" "${RESULTS_OUTPUT_DIR}/dss.pfx" "-n" "CA_DSS" "-d" "${RESULTS_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
+        COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/dss.pfx" "-n" "CA_DSS" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
         DEPENDS "Generate_known_DSS_cert_pair"
     )
     jss_test_java(
         NAME "List_CA_certs"
-        COMMAND "org.mozilla.jss.tests.ListCACerts" "${RESULTS_OUTPUT_DIR}"
+        COMMAND "org.mozilla.jss.tests.ListCACerts" "${RESULTS_NSSDB_OUTPUT_DIR}"
         DEPENDS "Generate_known_DSS_cert_pair"
     )
     jss_test_java(
         NAME "SSLClientAuth"
-        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH}" "50"
+        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH}" "50"
         DEPENDS "List_CA_certs"
     )
     jss_test_java(
         NAME "Key_Generation"
-        COMMAND "org.mozilla.jss.tests.TestKeyGen" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.TestKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Key_Factory"
-        COMMAND "org.mozilla.jss.tests.KeyFactoryTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.KeyFactoryTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Digest"
-        COMMAND "org.mozilla.jss.tests.DigestTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.DigestTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "HMAC"
-        COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "HMAC_Unwrap"
-        COMMAND "org.mozilla.jss.tests.HmacTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.HmacTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "KeyWrapping"
-        COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Mozilla_JSS_JCA_Signature"
-        COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Mozilla_JSS_NSS_Signature"
-        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "JSS_Signature_test"
-        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Secret_Decoder_Ring"
-        COMMAND "org.mozilla.jss.tests.TestSDR" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.TestSDR" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "List_cert_by_certnick"
-        COMMAND "org.mozilla.jss.tests.ListCerts" "${RESULTS_OUTPUT_DIR}" "Server_RSA"
+        COMMAND "org.mozilla.jss.tests.ListCerts" "${RESULTS_NSSDB_OUTPUT_DIR}" "Server_RSA"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Verify_cert_by_certnick"
-        COMMAND "org.mozilla.jss.tests.VerifyCert" "${RESULTS_OUTPUT_DIR}" "${PASSWORD_FILE}" "Server_RSA"
+        COMMAND "org.mozilla.jss.tests.VerifyCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Server_RSA"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Secret_Key_Generation"
-        COMMAND "org.mozilla.jss.tests.SymKeyGen" "${RESULTS_OUTPUT_DIR}"
+        COMMAND "org.mozilla.jss.tests.SymKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
         NAME "Mozilla_JSS_Secret_Key_Generation"
-        COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_OUTPUT_DIR}"
+        COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}"
         DEPENDS "Setup_DBs"
     )
 
     # FIPS-related tests
     jss_test_java(
         NAME "Enable_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "enable"
+        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "enable"
         DEPENDS "Setup_FIPS_DBs"
     )
     jss_test_java(
         NAME "check_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "chkfips"
+        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "chkfips"
         DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "SSLClientAuth_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
+        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
         DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "HMAC_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "KeyWrapping_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Enable_FipsMODE"
     )
     jss_test_java(
         NAME "JSS_Signature_test_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Enable_FipsMODE"
     )
 
@@ -242,7 +259,7 @@ macro(jss_tests)
     # FIPS-related checks.
     jss_test_java(
         NAME "Disable_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_FIPS_OUTPUT_DIR}" "disable"
+        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "disable"
         DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
     )
 

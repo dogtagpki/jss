@@ -70,8 +70,9 @@ macro(jss_config_outputs)
     set(TARGETS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/.targets")
 
     # These folders are for the NSS DBs created during testing
-    set(RESULTS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/tests")
-    set(RESULTS_FIPS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/fips")
+    set(RESULTS_DATA_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/data")
+    set(RESULTS_NSSDB_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/nssdb")
+    set(RESULTS_NSSDB_FIPS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/fips")
 
     # This is a temporary location for building the reproducible jar
     set(REPRODUCIBLE_TEMP_DIR "${CMAKE_BINARY_DIR}/reproducible")
