@@ -124,6 +124,8 @@ macro(jss_config_cflags)
     endif()
 
     list(APPEND JSS_RAW_C_FLAGS "-Wall")
+    list(APPEND JSS_RAW_C_FLAGS "-Wno-cast-function-type")
+    list(APPEND JSS_RAW_C_FLAGS "-Wno-unused-parameter")
     list(APPEND JSS_RAW_C_FLAGS "-Werror-implicit-function-declaration")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-switch")
     list(APPEND JSS_RAW_C_FLAGS "-I${NSPR_INCLUDE_DIR}")
