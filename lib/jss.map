@@ -336,3 +336,18 @@ Java_org_mozilla_jss_CryptoManager_getJSSPatchVersion;
     local:
        *;
 };
+JSS_4.5.3 {
+    global:
+Java_org_mozilla_jss_nss_PR_Open;
+Java_org_mozilla_jss_nss_PR_Close;
+Java_org_mozilla_jss_nss_PR_Write;
+Java_org_mozilla_jss_nss_PR_Read;
+Java_org_mozilla_jss_nss_PR_Send;
+Java_org_mozilla_jss_nss_PR_Recv;
+Java_org_mozilla_jss_nss_PR_NewTCPSocket;
+Java_org_mozilla_jss_nss_PR_Shutdown;
+Java_org_mozilla_jss_nss_PR_GetError;
+Java_org_mozilla_jss_nss_PR_GetErrorText;
+    local:
+        *;
+};
