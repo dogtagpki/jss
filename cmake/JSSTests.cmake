@@ -80,6 +80,11 @@ macro(jss_tests)
         NAME "JSS_Test_PR_FileDesc"
         COMMAND "org.mozilla.jss.tests.TestPRFD"
     )
+    jss_test_java(
+        NAME "JSS_Test_Raw_NSS"
+        COMMAND "org.mozilla.jss.tests.TestRawNSS" "${RESULTS_NSSDB_OUTPUT_DIR}"
+        DEPENDS "Setup_DBs"
+    )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
