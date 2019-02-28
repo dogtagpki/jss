@@ -416,7 +416,7 @@ void
 DumpItem(SECItem *item)
 {
   unsigned char *data = item->data;
-  int i;
+  unsigned int i;
 
   for (i=0; i < item->len; i++) {
     printf(" %02x",data[i]);

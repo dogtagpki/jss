@@ -597,12 +597,12 @@ data_start(unsigned char *buf, int length, unsigned int *data_length,
 
         *data_length = 0;
 
-        while (len_count-- > 0) {
+        while (len_count-- > 0 && used_length < length) {
             *data_length = (*data_length << 8) | buf[used_length++];
         }
     }
 
-    if (*data_length > (length-used_length) ) {
+    if (*data_length > (unsigned)(length-used_length) ) {
         *data_length = length-used_length;
         return NULL;
     }
