@@ -386,6 +386,12 @@ PR_BEGIN_EXTERN_C
 #define PRFD_PROXY_CLASS_NAME "org/mozilla/jss/nss/PRFDProxy"
 #define PRFD_PROXY_CONSTRUCTOR_SIG "([B)V"
 
+/*
+ * SecurityStatusResult
+ */
+#define SECURITY_STATUS_CLASS_NAME "org/mozilla/jss/nss/SecurityStatusResult"
+#define SECURITY_STATUS_CONSTRUCTOR_SIG "(I[BII[B[B)V"
+
 PR_END_EXTERN_C
 
 #endif
