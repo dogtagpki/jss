@@ -1,11 +1,7 @@
-package org.mozilla.jss.netscape.security.x509;
+package org.mozilla.jss.tests;
 
-import org.junit.Test;
 import org.junit.Assert;
-
-import org.mozilla.jss.netscape.security.util.JSSUtil;
-import org.mozilla.jss.netscape.security.util.StringTestUtil;
-
+import org.junit.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.x509.PrintableConverter;
 

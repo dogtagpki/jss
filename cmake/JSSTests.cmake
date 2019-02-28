@@ -84,27 +84,27 @@ macro(jss_tests)
     endif()
     jss_test_java(
         NAME "JUnit_BMPStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.BMPStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.BMPStringTest"
     )
     jss_test_java(
         NAME "JUnit_IA5StringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.IA5StringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.IA5StringTest"
     )
     jss_test_java(
         NAME "JUnit_PrintableStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.PrintableStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.PrintableStringTest"
     )
     jss_test_java(
         NAME "JUnit_TeletexStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.TeletexStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.TeletexStringTest"
     )
     jss_test_java(
         NAME "JUnit_UniversalStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.UniversalStringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.UniversalStringTest"
     )
     jss_test_java(
         NAME "JUnit_UTF8StringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.util.UTF8StringTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.UTF8StringTest"
     )
     jss_test_java(
         NAME "Generate_known_RSA_cert_pair"
@@ -265,17 +265,17 @@ macro(jss_tests)
 
     jss_test_java(
         NAME "JUnit_GenericValueConverterTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.x509.GenericValueConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.GenericValueConverterTest"
         DEPENDS "Disable_FipsMODE"
     )
     jss_test_java(
         NAME "JUnit_IA5StringConverterTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.x509.IA5StringConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.IA5StringConverterTest"
         DEPENDS "Disable_FipsMODE"
     )
     jss_test_java(
         NAME "JUnit_PrintableConverterTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.netscape.security.x509.PrintableConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.PrintableConverterTest"
         DEPENDS "Disable_FipsMODE"
     )
 

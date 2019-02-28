@@ -1,9 +1,8 @@
-package org.mozilla.jss.netscape.security.util;
+package org.mozilla.jss.tests;
 
-import org.mozilla.jss.netscape.security.util.DerValue;
-
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
+import org.mozilla.jss.netscape.security.util.DerValue;
 
 public class BMPStringTest {
 

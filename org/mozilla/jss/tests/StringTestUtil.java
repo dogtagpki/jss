@@ -1,4 +1,4 @@
-package org.mozilla.jss.netscape.security.util;
+package org.mozilla.jss.tests;
 
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;

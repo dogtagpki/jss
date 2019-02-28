@@ -1,4 +1,4 @@
-package org.mozilla.jss.netscape.security.x509;
+package org.mozilla.jss.tests;
 
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;

@@ -1,14 +1,13 @@
-package org.mozilla.jss.netscape.security.extensions;
+package org.mozilla.jss.tests;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 
-import org.mozilla.jss.netscape.security.extensions.GenericASN1Extension;
-import org.mozilla.jss.netscape.security.x509.OIDMap;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.mozilla.jss.netscape.security.extensions.GenericASN1Extension;
+import org.mozilla.jss.netscape.security.x509.OIDMap;
 
 public class GenericASN1ExtensionTest {
 
