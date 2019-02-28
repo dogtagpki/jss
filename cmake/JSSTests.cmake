@@ -76,6 +76,10 @@ macro(jss_tests)
         NAME "BigObjectIdentifier"
         COMMAND "org.mozilla.jss.tests.BigObjectIdentifier"
     )
+    jss_test_java(
+        NAME "JSS_Test_PR_FileDesc"
+        COMMAND "org.mozilla.jss.tests.TestPRFD"
+    )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
@@ -296,6 +300,7 @@ function(jss_test_java)
     list(APPEND EXEC_COMMAND "-classpath")
     list(APPEND EXEC_COMMAND "${TEST_CLASSPATH}")
     list(APPEND EXEC_COMMAND "-ea")
+    list(APPEND EXEC_COMMAND "-Djava.library.path=${CMAKE_BINARY_DIR}")
     set(EXEC_COMMAND "${EXEC_COMMAND};${TEST_JAVA_COMMAND}")
 
     if(TEST_JAVA_DEPENDS)
