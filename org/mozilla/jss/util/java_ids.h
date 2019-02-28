@@ -380,6 +380,12 @@ PR_BEGIN_EXTERN_C
 #define SSL_VERSION_RANGE_CONSTRUCTOR_NAME "<init>"
 #define SSL_VERSION_RANGE_CONSTRUCTOR_SIG "(II)V"
 
+/*
+ * PRFDProxy
+ */
+#define PRFD_PROXY_CLASS_NAME "org/mozilla/jss/nss/PRFDProxy"
+#define PRFD_PROXY_CONSTRUCTOR_SIG "([B)V"
+
 PR_END_EXTERN_C
 
 #endif
