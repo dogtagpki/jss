@@ -166,8 +166,8 @@ finish:
 
 static void FUNCTION_MAY_NOT_BE_USED
 print_secitem(SECItem *item) {
-    int i;
-    int online;
+    unsigned int i;
+    unsigned int online;
 
     if(item==NULL) {
         return;
