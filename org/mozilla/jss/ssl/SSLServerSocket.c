@@ -180,9 +180,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_configServerSessionIDCache(
     const char* dirName = NULL;
     SECStatus status;
 
-    if (nameString != NULL) {
-        dirName = (*env)->GetStringUTFChars(env, nameString, NULL);
-    }
+    dirName = JSS_RefJString(env, nameString);
 
     status = SSL_ConfigServerSessionIDCache(
                 maxEntries, ssl2Timeout, ssl3Timeout, dirName);
@@ -193,9 +191,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_configServerSessionIDCache(
     }
 
 finish:
-    if(dirName != NULL) {
-        (*env)->ReleaseStringUTFChars(env, nameString, dirName);
-    }
+    JSS_DerefJString(env, nameString, dirName);
 }
 
 /*
