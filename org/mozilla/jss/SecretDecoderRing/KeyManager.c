@@ -119,7 +119,7 @@ Java_org_mozilla_jss_SecretDecoderRing_KeyManager_generateUniqueNamedKeyNative
     }
 
     /* convert the Java String into a native "C" string */
-    keyname = (*env)->GetStringUTFChars( env, nickname, 0 );
+    keyname = JSS_RefJString(env, nickname);
 
     /* name the key */
     status = PK11_SetSymKeyNickname( symk, keyname );
@@ -136,10 +136,9 @@ finish:
     if( keyID != NULL ) {
         SECITEM_FreeItem(keyID, PR_TRUE /*freeit*/);
     }
-    if( keyname != NULL ) {
-        /* free the native "C" string */
-        (*env)->ReleaseStringUTFChars(env, nickname, keyname);
-    }
+
+    /* free the native "C" string */
+    JSS_DerefJString(env, nickname, keyname);
     return;
 }
 
@@ -234,7 +233,7 @@ Java_org_mozilla_jss_SecretDecoderRing_KeyManager_lookupUniqueNamedKeyNative
     }
 
     /* convert the Java String into a native "C" string */
-    keyname = (*env)->GetStringUTFChars( env, nickname, 0 );
+    keyname = JSS_RefJString(env, nickname);
 
     /* initialize the symmetric key list. */
     symKey = PK11_ListFixedKeysInSlot(
@@ -313,10 +312,10 @@ finish:
     if( symKey != NULL ) {
         PK11_FreeSymKey(symKey);
     }
-    if( keyname != NULL ) {
-        /* free the native "C" string */
-        (*env)->ReleaseStringUTFChars(env, nickname, keyname);
-    }
+
+    /* free the native "C" string */
+    JSS_DerefJString(env, nickname, keyname);
+
     return symKeyObj;
 }
 
