@@ -421,7 +421,7 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineDeleteEntry
     }
 
     /* get the nickname */
-    cbinfo.targetNickname = (*env)->GetStringUTFChars(env, aliasString, NULL);
+    cbinfo.targetNickname = JSS_RefJString(env, aliasString);
     if( cbinfo.targetNickname == NULL ) {
         goto finish;
     }
@@ -437,9 +437,7 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineDeleteEntry
                             (void*) &cbinfo);
 
 finish:
-    if( cbinfo.targetNickname != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, aliasString, cbinfo.targetNickname);
-    }
+    JSS_DerefJString(env, aliasString, cbinfo.targetNickname);
 }
 
 typedef struct {
@@ -484,7 +482,7 @@ lookupCertByNickname(JNIEnv *env, jobject this, jstring alias)
         goto finish;
     }
 
-    cbinfo.targetNickname = (*env)->GetStringUTFChars(env, alias, NULL);
+    cbinfo.targetNickname = JSS_RefJString(env, alias);
     if(cbinfo.targetNickname == NULL ) goto finish;
 
     status  = traverseTokenObjects( env,
@@ -494,9 +492,8 @@ lookupCertByNickname(JNIEnv *env, jobject this, jstring alias)
                                     (void*) &cbinfo);
 
 finish:
-    if( cbinfo.targetNickname != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, alias, cbinfo.targetNickname);
-    }
+    JSS_DerefJString(env, alias, cbinfo.targetNickname);
+
     if( status != PR_SUCCESS && cbinfo.cert != NULL) {
         CERT_DestroyCertificate(cbinfo.cert);
         cbinfo.cert = NULL;
@@ -712,7 +709,7 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineGetKeyNative
      * first look for a matching key
      */
 
-    keyCbinfo.label = (*env)->GetStringUTFChars(env, alias, NULL);
+    keyCbinfo.label = JSS_RefJString(env, alias);
     if( keyCbinfo.label == NULL ) {
         goto finish;
     }
@@ -740,7 +737,7 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineGetKeyNative
          * If we didn't find a matching key, look for a matching cert
          */
 
-        certCbinfo.targetNickname = (*env)->GetStringUTFChars(env, alias, NULL);
+        certCbinfo.targetNickname = JSS_RefJString(env, alias);
         if(certCbinfo.targetNickname == NULL ) goto finish;
 
         if( traverseTokenObjects(   env,
@@ -760,12 +757,9 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineGetKeyNative
     }
 
 finish:
-    if( keyCbinfo.label != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, alias, keyCbinfo.label);
-    }
-    if( certCbinfo.targetNickname != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, alias, certCbinfo.targetNickname);
-    }
+    JSS_DerefJString(env, alias, keyCbinfo.label);
+    JSS_DerefJString(env, alias, certCbinfo.targetNickname);
+
     PR_ASSERT( keyCbinfo.privk==NULL && keyCbinfo.symk==NULL);
     PR_ASSERT( certCbinfo.privk==NULL );
 
@@ -787,7 +781,7 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineIsCertificateEn
         goto finish;
     }
 
-    cbinfo.targetNickname = (*env)->GetStringUTFChars(env, alias, NULL);
+    cbinfo.targetNickname = JSS_RefJString(env, alias);
     if(cbinfo.targetNickname == NULL ) goto finish;
 
     if( traverseTokenObjects(   env,
@@ -821,9 +815,8 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineIsCertificateEn
     }
 
 finish:
-    if( cbinfo.targetNickname != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, alias, cbinfo.targetNickname);
-    }
+    JSS_DerefJString(env, alias, cbinfo.targetNickname);
+
     if( cbinfo.cert != NULL) {
         CERT_DestroyCertificate(cbinfo.cert);
     }
@@ -845,7 +838,7 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineSetKeyEntryNati
         goto finish;
     }
 
-    nickname = (*env)->GetStringUTFChars(env, alias, NULL);
+    nickname = JSS_RefJString(env, alias);
     if( nickname == NULL ) {
         ASSERT_OUTOFMEM(env);
         goto finish;
@@ -906,9 +899,8 @@ Java_org_mozilla_jss_provider_java_security_JSSKeyStoreSpi_engineSetKeyEntryNati
     }
 
 finish:
-    if( nickname != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, alias, nickname);
-    }
+    JSS_DerefJString(env, alias, nickname);
+
     if( tokenPrivk != NULL ) {
         SECKEY_DestroyPrivateKey(tokenPrivk);
     }
