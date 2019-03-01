@@ -115,8 +115,7 @@ JSSL_CallCertSelectionCallback(    void * arg,
     jmethodID vector_add;
     jstring nickname_string;
     jstring chosen_nickname;
-    char *chosen_nickname_for_c;
-    jboolean chosen_nickname_cleanup;
+    const char *chosen_nickname_for_c;
     jclass clientcertselectionclass;
     jmethodID clientcertselectionclass_select;
     JNIEnv *env;
@@ -224,15 +223,12 @@ JSSL_CallCertSelectionCallback(    void * arg,
     chosen_nickname = (*env)->CallObjectMethod(env,nicknamecallback,
             clientcertselectionclass_select,
             vector
-            );
+    );
 
-    if (chosen_nickname == NULL) {
+    chosen_nickname_for_c = JSS_RefJString(env, chosen_nickname);
+    if (chosen_nickname_for_c == NULL) {
         return SECFailure;
     }
-
-    chosen_nickname_for_c = (char*)(*env)->GetStringUTFChars(env,
-        chosen_nickname,
-        &chosen_nickname_cleanup);
 
     if (debug_cc) { PR_fprintf(PR_STDOUT,"  chosen nickname: %s\n",chosen_nickname_for_c); }
     cert = JSS_PK11_findCertAndSlotFromNickname(chosen_nickname_for_c,
@@ -241,20 +237,16 @@ JSSL_CallCertSelectionCallback(    void * arg,
 
     if (debug_cc) { PR_fprintf(PR_STDOUT,"  found certificate\n"); }
 
-    if (chosen_nickname_cleanup == JNI_TRUE) {
-        (*env)->ReleaseStringUTFChars(env,
-            chosen_nickname,
-            chosen_nickname_for_c);
-    }
-            
+    JSS_DerefJString(env, chosen_nickname, chosen_nickname_for_c);
 
     if (cert == NULL) {
         return SECFailure;
     }
 
-        privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
-        PK11_FreeSlot(slot);
-        if ( privkey == NULL )  {
+    privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
+    PK11_FreeSlot(slot);
+
+    if ( privkey == NULL )  {
         CERT_DestroyCertificate(cert);
         return SECFailure;
     }
