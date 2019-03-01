@@ -658,7 +658,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
      * Tell SSL the URL we think we want to connect to.
      * This prevents man-in-the-middle attacks.
      */
-    hostnameStr = (*env)->GetStringUTFChars(env, hostname, NULL);
+    hostnameStr = JSS_RefJString(env, hostname);
     if( hostnameStr == NULL ) goto finish;
     stat = SSL_SetURL(sock->fd, (char*)hostnameStr);
     if( stat != 0 ) {
@@ -706,9 +706,8 @@ finish:
     /* This method should never be called on a Java socket wrapper. */
     PR_ASSERT( sock==NULL || sock->jsockPriv==NULL);
 
-    if( hostnameStr != NULL ) {
-        (*env)->ReleaseStringUTFChars(env, hostname, hostnameStr);
-    }
+    JSS_DerefJString(env, hostname, hostnameStr);
+
     if( addrBAelems != NULL ) {
         (*env)->ReleaseByteArrayElements(env, addrBA, addrBAelems, JNI_ABORT);
     }
