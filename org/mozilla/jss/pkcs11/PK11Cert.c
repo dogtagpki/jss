@@ -291,7 +291,7 @@ findSlotByTokenNameAndCert(char *name, CERTCertificate *cert)
  * key slot (which contains the permanent database token) is returned.
  */
 CERTCertificate *
-JSS_PK11_findCertAndSlotFromNickname(char *nickname, void *wincx,
+JSS_PK11_findCertAndSlotFromNickname(const char *nickname, void *wincx,
     PK11SlotInfo **ppSlot)
 {
     CERTCertificate *cert;
