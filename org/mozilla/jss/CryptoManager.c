@@ -109,8 +109,8 @@ int ConfigureOCSP(
         jstring ocspResponderURL,
         jstring ocspResponderCertNickname )
 {
-    char *ocspResponderURL_string=NULL;
-    char *ocspResponderCertNickname_string=NULL;
+    const char *ocspResponderURL_string = NULL;
+    const char *ocspResponderCertNickname_string = NULL;
     SECStatus status;
     int result = SECSuccess;
     CERTCertDBHandle *certdb = CERT_GetDefaultCertDB();
@@ -120,27 +120,8 @@ int ConfigureOCSP(
      * strings associated with these args
      */
 
-    if (ocspResponderURL) {
-        ocspResponderURL_string =
-            (char*) (*env)->GetStringUTFChars(env, ocspResponderURL, NULL);
-        if (ocspResponderURL_string == NULL) {
-            JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
-                    "OCSP invalid URL");
-            result = SECFailure;
-            goto finish;
-        }
-    }
-
-    if (ocspResponderCertNickname) {
-        ocspResponderCertNickname_string =
-            (char*) (*env)->GetStringUTFChars(env, ocspResponderCertNickname, NULL);
-        if (ocspResponderCertNickname_string == NULL) {
-            JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
-                    "OCSP invalid nickname");
-            result = SECFailure;
-            goto finish;
-        }
-    }
+    ocspResponderURL_string = JSS_RefJString(env, ocspResponderURL);
+    ocspResponderCertNickname_string = JSS_RefJString(env, ocspResponderCertNickname);
 
     /* first disable OCSP - we'll enable it later */
 
@@ -149,7 +130,7 @@ int ConfigureOCSP(
     /* if they set the default responder, then set it up
      * and enable it
      */
-    if (ocspResponderURL) {
+    if (ocspResponderURL_string) {
         /* if ocspResponderURL is set they must specify the
            ocspResponderCertNickname */
                 if (ocspResponderCertNickname == NULL ) {
@@ -188,8 +169,7 @@ int ConfigureOCSP(
             goto finish;
         }
         CERT_EnableOCSPDefaultResponder(certdb);
-    }
-    else {
+    } else if (ocspResponderURL == NULL) {
         /* if no defaultresponder is set, disable it */
         CERT_DisableOCSPDefaultResponder(certdb);
     }
@@ -202,16 +182,8 @@ int ConfigureOCSP(
     }
     
 finish:
-        
-    if (ocspResponderURL_string)  {
-        (*env)->ReleaseStringUTFChars(env,
-            ocspResponderURL, ocspResponderURL_string);
-    }
-
-    if (ocspResponderCertNickname_string)  {
-        (*env)->ReleaseStringUTFChars(env,
-            ocspResponderCertNickname, ocspResponderCertNickname_string);
-    }
+    JSS_DerefJString(env, ocspResponderURL, ocspResponderURL_string);
+    JSS_DerefJString(env, ocspResponderCertNickname, ocspResponderCertNickname_string);
 
     return result;
 
@@ -326,18 +298,18 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
         jboolean cooperate)
 {
     SECStatus rv = SECFailure;
-    char *szConfigDir = NULL;
-    char *szCertPrefix = NULL;
-    char *szKeyPrefix = NULL;
-    char *szSecmodName = NULL;
-    char *manuChars=NULL;
-    char *libraryChars=NULL;
-    char *tokChars=NULL;
-    char *keyTokChars=NULL;
-    char *slotChars=NULL;
-    char *keySlotChars=NULL;
-    char *fipsChars=NULL;
-    char *fipsKeyChars=NULL;
+    const char *szConfigDir = NULL;
+    const char *szCertPrefix = NULL;
+    const char *szKeyPrefix = NULL;
+    const char *szSecmodName = NULL;
+    const char *manuChars = NULL;
+    const char *libraryChars = NULL;
+    const char *tokChars = NULL;
+    const char *keyTokChars = NULL;
+    const char *slotChars = NULL;
+    const char *keySlotChars = NULL;
+    const char *fipsChars = NULL;
+    const char *fipsKeyChars = NULL;
     PRUint32 initFlags;
 
     /* This is thread-safe because initialize is synchronized */
@@ -392,14 +364,14 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
     /*
      * Set the PKCS #11 strings
      */
-    manuChars = (char*) (*env)->GetStringUTFChars(env, manuString, NULL);
-    libraryChars = (char*) (*env)->GetStringUTFChars(env, libraryString, NULL);
-    tokChars = (char*) (*env)->GetStringUTFChars(env, tokString, NULL);
-    keyTokChars = (char*) (*env)->GetStringUTFChars(env, keyTokString, NULL);
-    slotChars = (char*) (*env)->GetStringUTFChars(env, slotString, NULL);
-    keySlotChars = (char*) (*env)->GetStringUTFChars(env, keySlotString, NULL);
-    fipsChars = (char*) (*env)->GetStringUTFChars(env, fipsString, NULL);
-    fipsKeyChars = (char*) (*env)->GetStringUTFChars(env, fipsKeyString, NULL);
+    manuChars = JSS_RefJString(env, manuString);
+    libraryChars = JSS_RefJString(env, libraryString);
+    tokChars = JSS_RefJString(env, tokString);
+    keyTokChars = JSS_RefJString(env, keyTokString);
+    slotChars = JSS_RefJString(env, slotString);
+    keySlotChars = JSS_RefJString(env, keySlotString);
+    fipsChars = JSS_RefJString(env, fipsString);
+    fipsKeyChars = JSS_RefJString(env, fipsKeyString);
     if( (*env)->ExceptionOccurred(env) ) {
         ASSERT_OUTOFMEM(env);
         goto finish;
@@ -425,7 +397,7 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
                         );
 
 
-    szConfigDir = (char*) (*env)->GetStringUTFChars(env, configDir, NULL);
+    szConfigDir = JSS_RefJString(env, configDir);
     if( certPrefix != NULL || keyPrefix != NULL || secmodName != NULL ||
         noCertDB || noModDB || forceOpen || noRootInit ||
         optimizeSpace || PK11ThreadSafe || PK11Reload || 
@@ -433,18 +405,10 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
         /*
         * Set up arguments to NSS_Initialize
         */
-        if( certPrefix != NULL ) {
-            szCertPrefix = 
-                    (char*) (*env)->GetStringUTFChars(env, certPrefix, NULL);
-        }
-        if ( keyPrefix != NULL ) { 
-            szKeyPrefix = 
-                    (char*) (*env)->GetStringUTFChars(env, keyPrefix, NULL);
-        }
-        if ( secmodName != NULL ) {
-            szSecmodName = 
-                    (char*) (*env)->GetStringUTFChars(env, secmodName, NULL);
-        }
+        szCertPrefix = JSS_RefJString(env, certPrefix);
+        szKeyPrefix = JSS_RefJString(env, keyPrefix);
+        szSecmodName = JSS_RefJString(env, secmodName);
+
         initFlags = 0;
         if( readOnly ) {
             initFlags |= NSS_INIT_READONLY;
@@ -529,31 +493,18 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
     initialized = PR_TRUE;
 
 finish:
-    /* LET'S BE CAREFUL.  Unbraced if statements ahead. */
-    if(szConfigDir)
-        (*env)->ReleaseStringUTFChars(env, configDir, szConfigDir);
-    if(szCertPrefix)
-        (*env)->ReleaseStringUTFChars(env, certPrefix, szCertPrefix);
-    if(szKeyPrefix)
-        (*env)->ReleaseStringUTFChars(env, keyPrefix, szKeyPrefix);
-    if(szSecmodName)
-        (*env)->ReleaseStringUTFChars(env, secmodName, szSecmodName);
-    if(manuChars)
-        (*env)->ReleaseStringUTFChars(env, manuString, manuChars);
-    if(libraryChars)
-        (*env)->ReleaseStringUTFChars(env, libraryString, libraryChars);
-    if(tokChars)
-        (*env)->ReleaseStringUTFChars(env, tokString, tokChars);
-    if(keyTokChars)
-        (*env)->ReleaseStringUTFChars(env, keyTokString, keyTokChars);
-    if(slotChars)
-        (*env)->ReleaseStringUTFChars(env, slotString, slotChars);
-    if(keySlotChars)
-        (*env)->ReleaseStringUTFChars(env, keySlotString, keySlotChars);
-    if(fipsChars)
-        (*env)->ReleaseStringUTFChars(env, fipsString, fipsChars);
-    if(fipsKeyChars)
-        (*env)->ReleaseStringUTFChars(env, fipsKeyString, fipsKeyChars);
+    JSS_DerefJString(env, configDir, szConfigDir);
+    JSS_DerefJString(env, certPrefix, szCertPrefix);
+    JSS_DerefJString(env, keyPrefix, szKeyPrefix);
+    JSS_DerefJString(env, secmodName, szSecmodName);
+    JSS_DerefJString(env, manuString, manuChars);
+    JSS_DerefJString(env, libraryString, libraryChars);
+    JSS_DerefJString(env, tokString, tokChars);
+    JSS_DerefJString(env, keyTokString, keyTokChars);
+    JSS_DerefJString(env, slotString, slotChars);
+    JSS_DerefJString(env, keySlotString, keySlotChars);
+    JSS_DerefJString(env, fipsString, fipsChars);
+    JSS_DerefJString(env, fipsKeyString, fipsKeyChars);
 
     return;
 }
