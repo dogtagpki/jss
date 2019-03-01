@@ -930,19 +930,17 @@ JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_generatePK10
 {
     PK11SlotInfo *slot;
     const char* c_subject=NULL;
-    jboolean isCopy = JNI_FALSE;
     unsigned char *b64request=NULL;
     SECItem p, q, g;
     PQGParams *dsaParams=NULL;
     const char* c_keyType;
-    jboolean k_isCopy = JNI_FALSE;
     SECOidTag signType = SEC_OID_UNKNOWN;
     PK11RSAGenParams rsaParams;
     void *params = NULL;
 
     PR_ASSERT(env!=NULL && this!=NULL);
     /* get keytype */
-    c_keyType = (*env)->GetStringUTFChars(env, keyType, &k_isCopy);
+    c_keyType = JSS_RefJString(env, keyType);
 
     if (0 == PL_strcasecmp(c_keyType, KEYTYPE_RSA_STRING)) {
       signType = SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION;
@@ -999,21 +997,17 @@ JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_generatePK10
     }
 
     /* get subject */
-    c_subject = (*env)->GetStringUTFChars(env, subject, &isCopy);
+    c_subject = JSS_RefJString(env, subject);
 
     /* call GenerateCertRequest() */
     GenerateCertRequest(env, signType, c_subject, slot, &b64request, params);
 
 finish:
-    if (isCopy == JNI_TRUE) {
-      /* release memory */
-      (*env)->ReleaseStringUTFChars(env, subject, c_subject);
-    }
+    /* release memory */
+    JSS_DerefJString(env, subject, c_subject);
 
-    if (k_isCopy == JNI_TRUE) {
-      /* release memory */
-      (*env)->ReleaseStringUTFChars(env, keyType, c_keyType);
-    }
+    /* release memory */
+    JSS_DerefJString(env, keyType, c_keyType);
 
     if (signType == SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST) {
       SECITEM_FreeItem(&p, PR_FALSE);
