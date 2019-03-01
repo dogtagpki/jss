@@ -170,9 +170,11 @@ Java_org_mozilla_jss_ssl_SocketBase_socketCreate(JNIEnv *env, jobject self,
         const char *chars;
         int retval;
         PR_ASSERT( javaSock != NULL );
-        chars = (*env)->GetStringUTFChars(env, host, NULL);
+
+        chars = JSS_RefJString(env, host);
         retval = SSL_SetURL(sockdata->fd, chars);
-        (*env)->ReleaseStringUTFChars(env, host, chars);
+        JSS_DerefJString(env, host, chars);
+
         if( retval ) {
             JSSL_throwSSLSocketException(env,
                 "Failed to set SSL domain name");
