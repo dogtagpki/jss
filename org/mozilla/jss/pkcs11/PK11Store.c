@@ -833,7 +833,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo(
     }
 
     // prepare nickname
-    nicknameChars = (*env)->GetStringUTFChars(env, nickname, NULL);
+    nicknameChars = JSS_RefJString(env, nickname);
     if (nicknameChars == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
@@ -881,9 +881,8 @@ finish:
     if (pubKey != NULL) {
         SECKEY_DestroyPublicKey(pubKey);
     }
-    if (nicknameChars != NULL) {
-        (*env)->ReleaseStringUTFChars(env, nickname, nicknameChars);
-    }
+
+    JSS_DerefJString(env, nickname, nicknameChars);
 }
 
 /* Process the given password through the given PasswordConverter,
