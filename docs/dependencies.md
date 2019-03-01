@@ -39,16 +39,15 @@ additional packages:
  - [SLF4J's JDK14 package](https://www.slf4j.org/api/org/slf4j/impl/JDK14LoggerAdapter.html)
  - [NSS's pk12util](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Reference/NSS_tools_:_pk12util)
  - [JUnit 4](https://junit.org/junit4/)
-    - [Hamcrest](http://hamcrest.org/)
 
 To install these dependencies on Fedora, execute the following:
 
-    sudo dnf install nss nss-tools slf4j-jdk14 hamcrest junit
+    sudo dnf install nss nss-tools slf4j-jdk14 junit
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install libnss3 libnss3-tools libslf4j-java \
-                         libhamcrest-java junit4
+                         junit4
 
 ## Run-time Dependencies
 

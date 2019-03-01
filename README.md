@@ -33,14 +33,13 @@ This project has the following dependencies:
  - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
  - [SLF4J](https://www.slf4j.org/)
  - [JUnit 4](https://junit.org/junit4/)
-    - [Hamcrest](http://hamcrest.org/)
 
 To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-codec apache-commons-lang gcc-c++ \
                      java-devel jpackage-utils slf4j zlib-devel \
                      glassfish-jaxb-api nss-tools nss-devel cmake \
-                     hamcrest junit
+                     junit
 
 To install these dependencies on Debian, execute the following:
 
@@ -48,7 +47,7 @@ To install these dependencies on Debian, execute the following:
                          libcommons-lang-java libnss3-dev libslf4j-java \
                          openjdk-8-jdk pkg-config zlib1g-dev \
                          libjaxb-api-java libnss3-tools cmake zip unzip \
-                         libhamcrest-java junit4
+                         junit4
 
 
 Building

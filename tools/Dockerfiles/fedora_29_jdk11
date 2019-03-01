@@ -8,7 +8,7 @@ RUN true \
                           apache-commons-codec apache-commons-lang gcc-c++ \
                           java-11-openjdk-devel jpackage-utils slf4j nss \
                           zlib-devel nss-devel nspr-devel perl slf4j-jdk14 \
-                          hamcrest junit \
+                          junit \
         && mkdir -p /home/sandbox \
         && dnf clean -y all \
         && rm -rf /usr/share/doc /usr/share/doc-base \
