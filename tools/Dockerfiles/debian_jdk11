@@ -8,7 +8,7 @@ RUN true \
                               openjdk-11-jdk pkg-config quilt g++ mercurial \
                               zlib1g-dev libslf4j-java liblog4j2-java \
                               libcommons-lang-java libjaxb-api-java cmake \
-                              zip unzip libhamcrest-java junit4 \
+                              zip unzip junit4 \
         && mkdir -p /home/sandbox \
         && apt-get autoremove -y \
         && apt-get clean -y \

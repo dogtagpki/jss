@@ -57,7 +57,6 @@ BuildRequires:  perl-interpreter
 %endif
 
 BuildRequires:  junit
-BuildRequires:  hamcrest
 
 Requires:       nss >= 3.30
 Requires:       java-headless
