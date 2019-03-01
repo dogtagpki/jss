@@ -57,7 +57,7 @@ extern JavaVM *JSS_javaVM;
  *      return -1;
  */
 void
-JSS_throwMsg(JNIEnv *env, char *throwableClassName, char *message);
+JSS_throwMsg(JNIEnv *env, const char *throwableClassName, const char *message);
 
 #define JSS_nativeThrowMsg JSS_throwMsg
 
@@ -256,8 +256,8 @@ JSS_strerror(PRErrorCode errNum);
 **      return -1;
 */
 void
-JSS_throwMsgPrErrArg(JNIEnv *env, char *throwableClassName, char *message,
-    PRErrorCode errCode);
+JSS_throwMsgPrErrArg(JNIEnv *env, const char *throwableClassName,
+    const char *message, PRErrorCode errCode);
 
 #define JSS_throwMsgPrErr(e, cn, m) \
     JSS_throwMsgPrErrArg((e), (cn), (m), PR_GetError())
@@ -295,6 +295,25 @@ int JSS_ConvertNativeErrcodeToJava(int nativeErrcode);
 **  The new jbyteArray object or NULL on failure.
 */
 jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length);
+
+/************************************************************************
+** JSS_RefJString
+**
+** Converts the given jstring object to a char *; must be freed with
+** JSS_DerefJString().
+**
+** Returns
+**  A reference to the characters underlying the given string.
+*/
+const char *JSS_RefJString(JNIEnv *env, jstring str);
+
+/************************************************************************
+** JSS_DerefJString
+**
+** Returns the reference given by the JVM to a jstring's contents.
+**
+*/
+void JSS_DerefJString(JNIEnv *env, jstring str, const char *ref);
 
 PR_END_EXTERN_C
 

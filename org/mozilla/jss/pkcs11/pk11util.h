@@ -179,7 +179,7 @@ JSS_PK11_getCertSlotPtr(JNIEnv *env, jobject certObject, PK11SlotInfo **ptr);
  * key slot (which contains the permanent database token) is returned.
  */
 CERTCertificate *
-JSS_PK11_findCertAndSlotFromNickname(char *nickname, void *wincx,
+JSS_PK11_findCertAndSlotFromNickname(const char *nickname, void *wincx,
     PK11SlotInfo **ppSlot);
 
 

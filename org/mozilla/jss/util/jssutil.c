@@ -33,8 +33,8 @@
 **      return -1;
 */
 void
-JSS_throwMsgPrErrArg(JNIEnv *env, char *throwableClassName, char *message,
-    PRErrorCode errCode)
+JSS_throwMsgPrErrArg(JNIEnv *env, const char *throwableClassName,
+    const char *message, PRErrorCode errCode)
 {
     const char *errStr = JSS_strerror(errCode);
     char *msg = NULL;
@@ -79,7 +79,9 @@ finish:
 **      return -1;
 */
 void
-JSS_throwMsg(JNIEnv *env, char *throwableClassName, char *message) {
+JSS_throwMsg(JNIEnv *env, const char *throwableClassName,
+    const char *message)
+{
 
     jclass throwableClass;
     jint VARIABLE_MAY_NOT_BE_USED result;
@@ -605,6 +607,49 @@ jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length)
     }
 
     return byteArray;
+}
+
+/************************************************************************
+** JSS_RefJString
+**
+** Converts the given jstring object to a char *; must be freed with
+** JSS_DerefJString().
+**
+** Returns
+**  A reference to the characters underlying the given string.
+*/
+const char *JSS_RefJString(JNIEnv *env, jstring str) {
+    const char *result = NULL;
+    if (str == NULL) {
+        return result;
+    }
+
+    /* Saving is_copy is useless in most cases: according to the Java
+     * docs, we always have to call ReleaseStringUTFChars:
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/functions.html */
+    result = (*env)->GetStringUTFChars(env, str, NULL);
+
+    /* We've received a NULL result out of a non-NULL input string. This
+     * means that the JNI code had an issue parsing the string as UTF8, so
+     * raise an exception. */
+    if (result == NULL) {
+        JSS_throwMsg(env, GENERAL_SECURITY_EXCEPTION,
+            "Unable to parse Java String as UTF-8.");
+    }
+
+    return result;
+}
+
+/************************************************************************
+** JSS_DerefJString
+**
+** Returns the reference given by the JVM to a jstring's contents.
+**
+*/
+void JSS_DerefJString(JNIEnv *env, jstring str, const char *ref) {
+    if (str != NULL && ref != NULL) {
+        (*env)->ReleaseStringUTFChars(env, str, ref);
+    }
 }
 
 /*
