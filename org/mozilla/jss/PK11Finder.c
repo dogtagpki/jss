@@ -41,14 +41,14 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_CryptoManager_findCertByNicknameNative
   (JNIEnv *env, jobject this, jstring nickname)
 {
-    char *nick=NULL;
+    const char *nick = NULL;
     jobject certObject=NULL;
     CERTCertificate *cert=NULL;
     PK11SlotInfo *slot=NULL;
 
     PR_ASSERT(env!=NULL && this!=NULL && nickname!=NULL);
 
-    nick = (char*) (*env)->GetStringUTFChars(env, nickname, NULL);
+    nick = JSS_RefJString(env, nickname);
     PR_ASSERT(nick!=NULL);
 
     cert = JSS_PK11_findCertAndSlotFromNickname(nick, NULL, &slot);
@@ -63,9 +63,7 @@ Java_org_mozilla_jss_CryptoManager_findCertByNicknameNative
     certObject = JSS_PK11_wrapCertAndSlot(env, &cert, &slot);
 
 finish:
-    if(nick != NULL) {
-        (*env)->ReleaseStringUTFChars(env, nickname, nick);
-    }
+    JSS_DerefJString(env, nickname, nick);
     if(cert != NULL) {
         CERT_DestroyCertificate(cert);
     }
@@ -89,13 +87,12 @@ Java_org_mozilla_jss_CryptoManager_findCertsByNicknameNative
     jobjectArray certArray=NULL;
     CERTCertListNode *node;
     const char *nickChars=NULL;
-    jboolean charsAreCopied;
     jclass certClass;
     int count;
     int i;
 
     /* convert the nickname string */
-    nickChars = (*env)->GetStringUTFChars(env, nickname, &charsAreCopied);
+    nickChars = JSS_RefJString(env, nickname);
     if( nickChars == NULL ) {
         goto finish;
     }
@@ -165,9 +162,7 @@ finish:
     if(slot) {
         PK11_FreeSlot(slot);
     }
-    if( nickChars && charsAreCopied ) {
-        (*env)->ReleaseStringUTFChars(env, nickname, nickChars);
-    }
+    JSS_DerefJString(env, nickname, nickChars);
     return certArray;
 }
 
@@ -550,9 +545,8 @@ Java_org_mozilla_jss_CryptoManager_importCertToPermNative
     }
     PR_ASSERT(oldCert != NULL);
 
-    if (nickString != NULL) {
-        nickname = (char*) (*env)->GetStringUTFChars(env, nickString, NULL);
-    }
+    /* dereference, discarding const qualifier */
+    nickname = (char *)JSS_RefJString(env, nickString);
     /* Then, add to permanent database */
 
     derCertArray[0] = &oldCert->derCert;
@@ -570,9 +564,7 @@ Java_org_mozilla_jss_CryptoManager_importCertToPermNative
 finish:
     /* this checks for NULL */
     CERT_DestroyCertArray(certArray, 1);
-    if (nickname != NULL) {
-        (*env)->ReleaseStringUTFChars(env, nickString, nickname);
-    }
+    JSS_DerefJString(env, nickString, nickname);
     return result;
 }
 
@@ -849,13 +841,9 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
     numCerts = collection.numCerts;
 
     /***************************************************
-     * convert nickname to char*
+     * convert nickname to char*, discarding const
      ***************************************************/
-    if(nickString == NULL) {
-        nickChars = NULL;
-    } else {
-        nickChars = (char*) (*env)->GetStringUTFChars(env, nickString, NULL);
-    }
+    nickChars = (char *)JSS_RefJString(env, nickString);
 
     /***************************************************
      * user cert can be anywhere in the cert chain. loop and find it.
@@ -1043,6 +1031,7 @@ finish:
     if(leafCert != NULL) {
         CERT_DestroyCertificate(leafCert);
     }
+    JSS_DerefJString(env, nickString, nickChars);
 
     return leafObject;
 }
@@ -1468,7 +1457,7 @@ Java_org_mozilla_jss_CryptoManager_importCRLNative
     SECItem *packageItem = NULL;
     int status = SECFailure;
     char *url = NULL;
-    char *errmsg = NULL;
+    const char *errmsg = NULL;
 
     /***************************************************
      * Validate arguments
@@ -1489,14 +1478,10 @@ Java_org_mozilla_jss_CryptoManager_importCRLNative
     if ( packageItem == NULL ) {
         goto finish;
     }
-    /* XXX need to deal with if error */
 
-    if (url_jstr != NULL) {
-        url = (char*) (*env)->GetStringUTFChars(env, url_jstr, NULL);
-        PR_ASSERT(url!=NULL);
-    }
-    else {
-        url = NULL;
+    url = (char *)JSS_RefJString(env, url_jstr);
+    if (url_jstr != NULL && url == NULL) {
+        goto finish;
     }
 
     crl = CERT_ImportCRL( certdb, packageItem, url, rl_type, NULL);
@@ -1546,9 +1531,7 @@ finish:
         SECITEM_FreeItem(packageItem, PR_TRUE /*freeit*/);
     }
 
-    if(url != NULL) {
-        (*env)->ReleaseStringUTFChars(env, url_jstr, url);
-    }
+    JSS_DerefJString(env, url_jstr, url);
 
     if (crl) {
         SEC_DestroyCrl(crl);
@@ -1567,9 +1550,9 @@ SECStatus verifyCertificateNow(JNIEnv *env, jobject self, jstring nickString,
     SECStatus         rv    = SECFailure;
     SECCertificateUsage      certificateUsage;
     CERTCertificate   *cert=NULL;
-    char *nickname=NULL;
+    const char *nickname = NULL;
 
-    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
+    nickname = JSS_RefJString(env, nickString);
     if( nickname == NULL ) {
          goto finish;
     }
@@ -1609,9 +1592,7 @@ SECStatus verifyCertificateNow(JNIEnv *env, jobject self, jstring nickString,
     }
 
 finish:
-    if(nickname != NULL) {
-      (*env)->ReleaseStringUTFChars(env, nickString, nickname);
-    }
+    JSS_DerefJString(env, nickString, nickname);
     if(cert != NULL) {
        CERT_DestroyCertificate(cert);
     }
@@ -1632,9 +1613,9 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
     SECCertificateUsage      certificateUsage;
     SECCertificateUsage      currUsage;  /* unexposed for now */
     CERTCertificate   *cert=NULL;
-    char *nickname=NULL;
+    const char *nickname = NULL;
 
-    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
+    nickname = JSS_RefJString(env, nickString);
     if( nickname == NULL ) {
          goto finish;
     }
@@ -1658,9 +1639,7 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative(JNIEnv *env,
     }
 
 finish:
-    if(nickname != NULL) {
-      (*env)->ReleaseStringUTFChars(env, nickString, nickname);
-    }
+    JSS_DerefJString(env, nickString, nickname);
     if(cert != NULL) {
        CERT_DestroyCertificate(cert);
     }
@@ -1719,14 +1698,14 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
     SECCertificateUsage      currUsage = 0x0000;  /* unexposed for now */
     SECStatus                rv = SECFailure;
     CERTCertificate          *cert = NULL;
-    char                     *nickname = NULL;
+    const char *nickname = NULL;
     
     if (nickString == NULL) {
         JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
         goto finish;
     }
 
-    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
+    nickname = JSS_RefJString(env, nickString);
     if (nickname == NULL) {
         JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
         goto finish;
@@ -1776,9 +1755,7 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
     }
 
 finish:
-    if (nickname != NULL) {
-        (*env)->ReleaseStringUTFChars(env, nickString, nickname);
-    }
+    JSS_DerefJString(env, nickString, nickname);
     if (cert != NULL) {
         CERT_DestroyCertificate(cert);
     }
@@ -1797,9 +1774,9 @@ Java_org_mozilla_jss_CryptoManager_verifyCertNowNative(JNIEnv *env,
     SECStatus         rv    = SECFailure;
     SECCertUsage      certUsage;
     CERTCertificate   *cert=NULL;
-    char *nickname=NULL;
+    const char *nickname = NULL;
 
-    nickname = (char *) (*env)->GetStringUTFChars(env, nickString, NULL);
+    nickname = JSS_RefJString(env, nickString);
     if( nickname == NULL ) {
          goto finish;
     }
@@ -1817,9 +1794,7 @@ Java_org_mozilla_jss_CryptoManager_verifyCertNowNative(JNIEnv *env,
     }
 
 finish:
-    if(nickname != NULL) {
-      (*env)->ReleaseStringUTFChars(env, nickString, nickname);
-    }
+    JSS_DerefJString(env, nickString, nickname);
     if(cert != NULL) {
        CERT_DestroyCertificate(cert);
     }
