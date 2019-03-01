@@ -184,7 +184,7 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_setNickNameNative
     }
 
     /* convert the Java String into a native "C" string */
-    keyname = (*env)->GetStringUTFChars( env, nickname, 0 );
+    keyname = JSS_RefJString(env, nickname);
 
     /* name the key */
     status = PK11_SetSymKeyNickname( key, keyname );
@@ -193,13 +193,8 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_setNickNameNative
             "Failed to name symmetric key");
     }
 finish:
-
-    if( keyname != NULL ) {
-        /* free the native "C" string */
-        (*env)->ReleaseStringUTFChars(env, nickname, keyname);
-    }
-
-    return;
+    /* free the native "C" string */
+    JSS_DerefJString(env, nickname, keyname);
 }
 
 /***********************************************************************
