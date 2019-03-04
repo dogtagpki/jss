@@ -383,6 +383,12 @@ PR_BEGIN_EXTERN_C
 #define CERT_PROXY_CLASS_NAME "org/mozilla/jss/nss/CertProxy"
 #define CERT_PROXY_CONSTRUCTOR_SIG "([B)V"
 
+/*
+ * PrivateKeyProxy
+ */
+#define PRIVATEKEY_PROXY_CLASS_NAME "org/mozilla/jss/nss/PrivateKeyProxy"
+#define PRIVATEKEY_PROXY_CONSTRUCTOR_SIG "([B)V"
+
 PR_END_EXTERN_C
 
 #endif
