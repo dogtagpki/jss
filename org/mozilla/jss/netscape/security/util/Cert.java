@@ -233,6 +233,14 @@ public class Cert {
      */
     public static java.security.cert.X509Certificate[] sortCertificateChain(java.security.cert.X509Certificate[] certs) throws Exception {
 
+        if (certs == null) {
+            return null;
+        }
+
+        if (certs.length == 0) {
+            return certs;
+        }
+
         // lookup map: subject DN -> cert
         Map<String, java.security.cert.X509Certificate> certMap = new LinkedHashMap<>();
 
