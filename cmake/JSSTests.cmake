@@ -107,6 +107,10 @@ macro(jss_tests)
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.UTF8StringTest"
     )
     jss_test_java(
+        NAME "JUnit_ChainSortingTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.ChainSortingTest"
+    )
+    jss_test_java(
         NAME "Generate_known_RSA_cert_pair"
         COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "20" "localhost" "SHA-256/RSA" "CA_RSA" "Server_RSA" "Client_RSA"
         DEPENDS "Setup_DBs"
