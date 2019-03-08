@@ -610,6 +610,69 @@ jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length)
 }
 
 /************************************************************************
+** JSS_RefByteArray.
+**
+** References the contents of a Java ByteArray into *data, and optionally
+** records length information to *lenght. Must be dereferenced via calling
+** JSS_DerefByteArray.
+**
+** Returns
+**  bool - whether or not the operation succeeded. The operation succeeds if
+**  array is NULL, it has zero length, or if *data is successfully referenced.
+*/
+bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
+    jsize *length)
+{
+    bool ret = false;
+    jsize array_length = 0;
+
+    if (env == NULL || data == NULL) {
+        goto done;
+    }
+    *data = NULL;
+    if (array == NULL) {
+        /* When there is no input array, return true: no work to do. */
+        ret = true;
+        goto done;
+    }
+
+    array_length = (*env)->GetArrayLength(env, array);
+    if (array_length < 0) {
+        goto done;
+    } else if (array_length == 0) {
+        /* A zero-length array is perfectly valid. */
+        ret = true;
+        goto done;
+    }
+
+    *data = (*env)->GetByteArrayElements(env, array, NULL);
+    if (*data != NULL) {
+        ret = true;
+    }
+
+done:
+    if (length != NULL) {
+        *length = array_length;
+    }
+    return ret;
+}
+
+/************************************************************************
+** JSS_DerefByteArray.
+**
+** Dereferences the specified ByteArray and passed reference. mode is the
+** same as given to (*env)->ReleaseByteArrayElements: 0 for copy and free,
+** JNI_COMMIT for copy without freeing, and JNI_ABORT for free-only.
+**
+*/
+void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, jbyte *data, jint mode) {
+    if (env == NULL || array == NULL || data == NULL) {
+        return;
+    }
+    (*env)->ReleaseByteArrayElements(env, array, data, mode);
+}
+
+/************************************************************************
 ** JSS_RefJString
 **
 ** Converts the given jstring object to a char *; must be freed with
