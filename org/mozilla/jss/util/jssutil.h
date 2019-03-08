@@ -1,6 +1,8 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+#include <stdbool.h>
+
 #ifndef JSS_NATIVE_UTIL_H
 #define JSS_NATIVE_UTIL_H
 
@@ -318,6 +320,19 @@ bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
 **
 */
 void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, jbyte *data, jint mode);
+
+/************************************************************************
+** JSS_FromByteArray.
+**
+** Converts the given chararacter array from a Java byte array into a array of
+** uint_t. When length is passed and is not NULL, *length is updated with the
+** length of the array.
+**
+** Returns
+**  bool - whether or not the operation succeeded.
+*/
+bool JSS_FromByteArray(JNIEnv *env, jbyteArray array, uint8_t **data,
+    size_t *length);
 
 /************************************************************************
 ** JSS_RefJString
