@@ -297,6 +297,29 @@ int JSS_ConvertNativeErrcodeToJava(int nativeErrcode);
 jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length);
 
 /************************************************************************
+** JSS_RefByteArray.
+**
+** References the contents of a Java ByteArray into *data, and optionally
+** records length information to *lenght. Must be dereferenced via calling
+** JSS_DerefByteArray.
+**
+** Returns
+**  bool - whether or not the operation succeeded.
+*/
+bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
+    jsize *length);
+
+/************************************************************************
+** JSS_DerefByteArray.
+**
+** Dereferences the specified ByteArray and passed reference. mode is the
+** same as given to (*env)->ReleaseByteArrayElements: 0 for copy and free,
+** JNI_COMMIT for copy without freeing, and JNI_ABORT for free-only.
+**
+*/
+void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, jbyte *data, jint mode);
+
+/************************************************************************
 ** JSS_RefJString
 **
 ** Converts the given jstring object to a char *; must be freed with
