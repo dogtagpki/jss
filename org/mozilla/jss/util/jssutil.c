@@ -617,8 +617,8 @@ jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length)
 ** JSS_DerefByteArray.
 **
 ** Returns
-**  bool - whether or not the operation succeeded. The operation succeeds if
-**  array is NULL, it has zero length, or if *data is successfully referenced.
+**  bool - whether or not the operation succeeded. The operation succeeds
+**  if *data is successfully referenced (i.e., is non-null).
 */
 bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
     jsize *length)
@@ -630,18 +630,13 @@ bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
         goto done;
     }
     *data = NULL;
+
     if (array == NULL) {
-        /* When there is no input array, return true: no work to do. */
-        ret = true;
         goto done;
     }
 
     array_length = (*env)->GetArrayLength(env, array);
-    if (array_length < 0) {
-        goto done;
-    } else if (array_length == 0) {
-        /* A zero-length array is perfectly valid. */
-        ret = true;
+    if (array_length <= 0) {
         goto done;
     }
 
@@ -670,6 +665,49 @@ void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, jbyte *data, jint mode) {
         return;
     }
     (*env)->ReleaseByteArrayElements(env, array, data, mode);
+}
+
+/************************************************************************
+** JSS_FromByteArray.
+**
+** Converts the given chararacter array from a Java byte array into a array of
+** uint_t. When length is passed and is not NULL, *length is updated with the
+** length of the byte array. The actual allocated size of *data is one more
+** than *length to NULL terminate it. Note: *data must be freed with
+** free(*data) after use, not with (*env)->ReleaseByteArrayElements.
+**
+** Returns
+**  bool - whether or not the operation succeeded.
+*/
+bool JSS_FromByteArray(JNIEnv *env, jbyteArray array, uint8_t **data,
+    size_t *length)
+{
+    jsize array_length = 0;
+    jbyte *array_data = NULL;
+
+    if (env == NULL || array == NULL || data == NULL) {
+        return false;
+    }
+    *data = NULL;
+
+    if (!JSS_RefByteArray(env, array, &array_data, &array_length)) {
+        return false;
+    }
+
+    /* Defensive coding: Java's byte arrays are not null terminated, allocate
+     * a structure one larger to guarantee C functions work as expected. */
+    *data = calloc(array_length + 1, sizeof(uint8_t));
+    memcpy(*data, array_data, array_length);
+
+    // Copy length, if specified
+    if (length != NULL) {
+        *length = array_length;
+    }
+
+    // Give back our reference to array_data after destroying the contents.
+    JSS_DerefByteArray(env, array, array_data, JNI_ABORT);
+
+    return true;
 }
 
 /************************************************************************
