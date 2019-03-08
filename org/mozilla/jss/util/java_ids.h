@@ -392,6 +392,12 @@ PR_BEGIN_EXTERN_C
 #define SECURITY_STATUS_CLASS_NAME "org/mozilla/jss/nss/SecurityStatusResult"
 #define SECURITY_STATUS_CONSTRUCTOR_SIG "(I[BII[B[B)V"
 
+/*
+ * BufferProxy
+ */
+#define BUFFER_PROXY_CLASS_NAME "org/mozilla/jss/nss/BufferProxy"
+#define BUFFER_PROXY_CONSTRUCTOR_SIG "([B)V"
+
 PR_END_EXTERN_C
 
 #endif
