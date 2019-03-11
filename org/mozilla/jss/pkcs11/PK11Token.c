@@ -529,21 +529,15 @@ finish:
     /*
 	 * Free native objects
 	 */
-    if(szSsopw) {
-		if(ssoIsCopy) {
-			JSS_wipeCharArray(szSsopw);
-		}
-		/* JNI_ABORT means don't copy back changes */
-		(*env)->ReleaseByteArrayElements(env, ssopw, (jbyte*)szSsopw,
-										JNI_ABORT);
+    if (szSsopw && ssoIsCopy) {
+        JSS_wipeCharArray(szSsopw);
     }
-    if(szUserpw) {
-		if(userIsCopy) {
-			JSS_wipeCharArray(szUserpw);
-		}
-		(*env)->ReleaseByteArrayElements(env, userpw, (jbyte*)szUserpw,
-										JNI_ABORT);
+    JSS_DerefByteArray(env, ssopw, szSsopw, JNI_ABORT);
+
+    if (szUserpw && userIsCopy) {
+        JSS_wipeCharArray(szUserpw);
     }
+    JSS_DerefByteArray(env, userpw, szUserpw, JNI_ABORT);
 
     return;
 }
@@ -640,21 +634,15 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_changePassword
 
 finish:
     /* Free native objects */
-    if(szOldPIN) {
-		if(oldIsCopy) {
-			JSS_wipeCharArray(szOldPIN);
-		}
-		/* JNI_ABORT means don't copy back changes */
-        (*env)->ReleaseByteArrayElements(env, oldPIN, (jbyte*)szOldPIN,
-										JNI_ABORT);
+    if(szOldPIN && oldIsCopy) {
+        JSS_wipeCharArray(szOldPIN);
     }
-    if(szNewPIN) {
-		if(newIsCopy) {
-			JSS_wipeCharArray(szNewPIN);
-		}
-        (*env)->ReleaseByteArrayElements(env, newPIN, (jbyte*)szNewPIN,
-										JNI_ABORT);
+    JSS_DerefByteArray(env, oldPIN, szOldPIN, JNI_ABORT);
+
+    if(szNewPIN && newIsCopy) {
+        JSS_wipeCharArray(szNewPIN);
     }
+    JSS_DerefByteArray(env, newPIN, szNewPIN, JNI_ABORT);
 
     return;
 }
@@ -717,14 +705,11 @@ passwordIsCorrect
 
 finish:
 	/* Free native objects */
-	if(pwBytes != NULL) {
-		if(isCopy) {
-			JSS_wipeCharArray(pwBytes);
-		}
-		/* JNI_ABORT means don't copy back changes */
-		(*env)->ReleaseByteArrayElements(env, password, (jbyte*)pwBytes,
-											JNI_ABORT);
+	if (pwBytes && isCopy) {
+		JSS_wipeCharArray(pwBytes);
 	}
+	/* JNI_ABORT means don't copy back changes */
+	JSS_DerefByteArray(env, password, pwBytes, JNI_ABORT);
 
 	return pwIsCorrect;
 }

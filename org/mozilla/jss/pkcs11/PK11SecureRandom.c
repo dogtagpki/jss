@@ -146,9 +146,7 @@ finish:
      * free any resources associated with it
      */
 
-    if(  jIsCopy == JNI_TRUE ) {
-        ( *env )->ReleaseByteArrayElements( env, jseed, jdata, 0 );
-    }
+    JSS_DerefByteArray(env, jseed, jdata, 0);
 
 
     /*
@@ -283,9 +281,7 @@ finish:
      * free any resources associated with it
      */
 
-    if( jIsCopy == JNI_TRUE ) {
-        ( *env )->ReleaseByteArrayElements( env, jbytes, jdata, 0 );
-    }
+    JSS_DerefByteArray(env, jbytes, jdata, 0);
 
 
     /*

@@ -132,9 +132,7 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_update
     }
 
 finish:
-    if(bytes) {
-        (*env)->ReleaseByteArrayElements(env, inbufBA, bytes, JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, inbufBA, bytes, JNI_ABORT);
 }
 
 
@@ -174,8 +172,6 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_digest
     }
 
 finish:
-    if(bytes) {
-        (*env)->ReleaseByteArrayElements(env, outbuf, bytes, 0);
-    }
+    JSS_DerefByteArray(env, outbuf, bytes, 0);
     return outLen;
 }

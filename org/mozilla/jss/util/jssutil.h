@@ -319,7 +319,7 @@ bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
 ** JNI_COMMIT for copy without freeing, and JNI_ABORT for free-only.
 **
 */
-void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, jbyte *data, jint mode);
+void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, void *data, jint mode);
 
 /************************************************************************
 ** JSS_FromByteArray.

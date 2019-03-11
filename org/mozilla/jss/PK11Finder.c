@@ -1024,10 +1024,8 @@ finish:
         }
         PR_Free(derCerts);
     }
-    if(packageBytes != NULL) {
-        (*env)->ReleaseByteArrayElements(env, packageArray, packageBytes,
-                                            JNI_ABORT); /* don't copy back */
-    }
+    /* don't copy back */
+    JSS_DerefByteArray(env, packageArray, packageBytes, JNI_ABORT);
     if(leafCert != NULL) {
         CERT_DestroyCertificate(leafCert);
     }
@@ -1324,10 +1322,7 @@ finish:
     if( cinfo != NULL) {
         SEC_PKCS7DestroyContentInfo(cinfo);
     }
-    if(pkcs7Bytes != NULL) {
-        PR_ASSERT(pkcs7ByteArray != NULL);
-        (*env)->ReleaseByteArrayElements(env, pkcs7ByteArray, pkcs7Bytes, 0);
-    }
+    JSS_DerefByteArray(env, pkcs7ByteArray, pkcs7Bytes, 0);
     if( info != NULL ) {
         destroyEncoderCallbackInfo(info);
     }
