@@ -708,7 +708,7 @@ getPWFromCallback(PK11SlotInfo *slot, PRBool retry, void *arg)
 
         returnchars = PL_strdup(pwchars);
         JSS_wipeCharArray(pwchars);
-        (*env)->ReleaseByteArrayElements(env, pwArray, (jbyte*)pwchars, 0);
+        JSS_DerefByteArray(env, pwArray, pwchars, 0);
     } else {
         returnchars = NULL;
     }

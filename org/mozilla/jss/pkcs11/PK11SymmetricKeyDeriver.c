@@ -312,14 +312,8 @@ finish:
        slotForSecondaryKey = NULL;
     }
 
-    if(paramValue) {
-        (*env)->ReleaseByteArrayElements(env, param, (jbyte*)paramValue,
-                                                              JNI_ABORT);
-    }
-    if(ivValue) {
-        (*env)->ReleaseByteArrayElements(env, iv, (jbyte*)ivValue,
-                                                        JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, param, paramValue, JNI_ABORT);
+    JSS_DerefByteArray(env, iv, ivValue, JNI_ABORT);
 
     if( keyObj == NULL) {
         JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Unable to derive symmetric key! "

@@ -186,9 +186,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
     }
 
 finish:
-    if(bytes!=NULL) {
-        (*env)->ReleaseByteArrayElements(env, bArray, bytes, JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, bArray, bytes, JNI_ABORT);
 }
 
 
@@ -295,12 +293,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineVerifyNative
 	}
 
 finish:
-	if(sigItem.data!=NULL) {
-		(*env)->ReleaseByteArrayElements(	env,
-											sigArray,
-											(jbyte*)sigItem.data,
-											JNI_ABORT);
-	}
+	JSS_DerefByteArray(env, sigArray, sigItem.data, JNI_ABORT);
 	return verified;
 }
 

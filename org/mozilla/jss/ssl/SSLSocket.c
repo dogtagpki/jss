@@ -707,10 +707,7 @@ finish:
     PR_ASSERT( sock==NULL || sock->jsockPriv==NULL);
 
     JSS_DerefJString(env, hostname, hostnameStr);
-
-    if( addrBAelems != NULL ) {
-        (*env)->ReleaseByteArrayElements(env, addrBA, addrBAelems, JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, addrBA, addrBAelems, JNI_ABORT);
 }
 
 JNIEXPORT jobject JNICALL
@@ -1009,7 +1006,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
 
 finish:
     EXCEPTION_CHECK(env, sock)
-    (*env)->ReleaseByteArrayElements(env, bufBA, buf,
+    JSS_DerefByteArray(env, bufBA, buf,
         (nread>0) ? 0 /*copy and free*/ : JNI_ABORT /*free, no copy*/);
     return nread;
 }
@@ -1114,9 +1111,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
     PR_ASSERT(numwrit == len);
 
 finish:
-    if( buf != NULL ) {
-        (*env)->ReleaseByteArrayElements(env, bufBA, buf, JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, bufBA, buf, JNI_ABORT);
     EXCEPTION_CHECK(env, sock)
 }
 

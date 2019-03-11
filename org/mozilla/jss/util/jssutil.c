@@ -365,7 +365,7 @@ JSS_OctetStringToByteArray(JNIEnv *env, SECItem *item)
     /* now insert the rest of the bytes */
     memcpy(bytes+1, item->data, size-1);
 
-    (*env)->ReleaseByteArrayElements(env, array, bytes, 0);
+    JSS_DerefByteArray(env, array, bytes, 0);
 
     return array;
 }
@@ -422,9 +422,7 @@ JSS_ByteArrayToOctetString(JNIEnv *env, jbyteArray byteArray, SECItem *item)
     status = PR_SUCCESS;
 
 finish:
-    if(bytes) {
-        (*env)->ReleaseByteArrayElements(env, byteArray, bytes, JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, byteArray, bytes, JNI_ABORT);
     if(status != PR_SUCCESS) {
         SECITEM_FreeItem(item, PR_FALSE);
     }
@@ -660,11 +658,11 @@ done:
 ** JNI_COMMIT for copy without freeing, and JNI_ABORT for free-only.
 **
 */
-void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, jbyte *data, jint mode) {
+void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, void *data, jint mode) {
     if (env == NULL || array == NULL || data == NULL) {
         return;
     }
-    (*env)->ReleaseByteArrayElements(env, array, data, mode);
+    (*env)->ReleaseByteArrayElements(env, array, (jbyte *) data, mode);
 }
 
 /************************************************************************

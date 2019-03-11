@@ -618,12 +618,8 @@ finish:
     if( (excep=(*env)->ExceptionOccurred(env)) ) {
         (*env)->ExceptionClear(env);
     }
-    if(derPK.data != NULL) {
-        (*env)->ReleaseByteArrayElements(   env,
-                                            keyArray,
-                                            (jbyte*) derPK.data,
-                                            JNI_ABORT           );
-    }
+    JSS_DerefByteArray(env, keyArray, derPK.data, JNI_ABORT);
+
     /* now re-throw the exception */
     if( excep ) {
         (*env)->Throw(env, excep);

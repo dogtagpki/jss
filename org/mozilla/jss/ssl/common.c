@@ -514,9 +514,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
     }       
 
 finish:
-    if( addrBAelems != NULL ) {
-        (*env)->ReleaseByteArrayElements(env, addrBA, addrBAelems, JNI_ABORT);
-    }
+    JSS_DerefByteArray(env, addrBA, addrBAelems, JNI_ABORT);
 }
 
 /*

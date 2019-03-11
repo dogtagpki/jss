@@ -222,7 +222,7 @@ jsock_write(PRFileDesc *fd, const PRIOVec *iov, PRInt32 iov_size,
             outbufLen += iov[iovi].iov_len;
         }
         PR_ASSERT(outbufLen == (*env)->GetArrayLength(env, outbufArray));
-        (*env)->ReleaseByteArrayElements(env, outbufArray, bytes, 0);
+        JSS_DerefByteArray(env, outbufArray, bytes, 0);
     }
 
     /*
@@ -373,8 +373,7 @@ getInetAddress(PRFileDesc *fd, PRNetAddr *addr, LocalOrPeer localOrPeer)
             addr->inet.port = port;
         }
 
-        (*env)->ReleaseByteArrayElements(env, addrByteArray, addrBytes,
-            JNI_ABORT);
+        JSS_DerefByteArray(env, addrByteArray, addrBytes, JNI_ABORT);
     }
 
     status = PR_SUCCESS;
@@ -553,7 +552,7 @@ jsock_recv(PRFileDesc *fd, void *buf, PRInt32 amount,
 
         memcpy(buf, bytes, retval);
 
-        (*env)->ReleaseByteArrayElements(env, byteArray, bytes, JNI_ABORT);
+        JSS_DerefByteArray(env, byteArray, bytes, JNI_ABORT);
     }
 
 finish:
