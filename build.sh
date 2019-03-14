@@ -52,7 +52,7 @@ generate_rpm_sources() {
             echo "Generating $TARBALL from $SOURCE_TAG tag"
         fi
 
-        pushd "$SCR_DIR"
+        pushd "$SRC_DIR"
         git \
             archive \
             --format=tar.gz \

@@ -12,11 +12,10 @@ Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
 # $ cd jss
-# $ git archive \
-#     --format=tar.gz \
-#     --prefix jss-VERSION/ \
-#     -o jss-VERSION.tar.gz \
-#     <version tag>
+# $ git tag v4.4.<z>
+# $ git push origin v4.4.<z>
+# Then go to https://github.com/dogtagpki/jss/releases and download the source
+# tarball.
 Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 
 # To create a patch for all changes since a version tag:
@@ -72,9 +71,11 @@ This package contains the API documentation for JSS.
 
 # Prior to version 4.4.5, the source code were stored under "jss-<version>/jss"
 # path in the source tarball. Starting from version 4.4.5, the files will be
-# stored under "jss-<version>" path. However, since the spec file is still using
-# the old path, the unpacked source code has to be moved to the old path with
-# the following commands.
+# stored under "jss-<version>" path. However, since the build system is still
+# using the old path (introduced via sandboxing), the unpacked source code has
+# to be moved to the old path with the following commands. Otherwise, even
+# though we're linking against system libraries, the build will complain about
+# a missing sandbox.
 
 cd ..
 mv %{name}-%{version} jss
