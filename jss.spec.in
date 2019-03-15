@@ -34,7 +34,7 @@ BuildRequires:  git
 
 BuildRequires:  nss-devel >= 3.28.4-6
 BuildRequires:  nspr-devel >= 4.13.1
-BuildRequires:  java-devel
+BuildRequires:  java-1.8.0-openjdk-devel
 BuildRequires:  jpackage-utils
 %if 0%{?fedora} >= 25 || 0%{?rhel} > 7
 BuildRequires:  perl-interpreter
@@ -43,7 +43,7 @@ BuildRequires:  apache-commons-lang
 BuildRequires:  apache-commons-codec
 
 Requires:       nss >= 3.28.4-6
-Requires:       java-headless
+Requires:       java-1.8.0-openjdk-headless
 Requires:       jpackage-utils
 Requires:       apache-commons-lang
 Requires:       apache-commons-codec
