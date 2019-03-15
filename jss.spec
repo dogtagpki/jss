@@ -13,11 +13,10 @@ Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
 # $ cd jss
-# $ git archive \
-#     --format=tar.gz \
-#     --prefix jss-VERSION/ \
-#     -o jss-VERSION.tar.gz \
-#     <version tag>
+# $ git tag v4.5.<z>
+# $ git push origin v4.5.<z>
+# Then go to https://github.com/dogtagpki/jss/releases and download the source
+# tarball.
 Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phase}/%{name}-%{version}%{?_phase}.tar.gz
 
 # To create a patch for all changes since a version tag:
@@ -51,10 +50,6 @@ BuildRequires:  slf4j-jdk14
 %endif
 BuildRequires:  apache-commons-lang
 BuildRequires:  apache-commons-codec
-
-%if 0%{?fedora} >= 25 || 0%{?rhel} > 7
-BuildRequires:  perl-interpreter
-%endif
 
 BuildRequires:  junit
 
