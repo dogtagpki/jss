@@ -7,6 +7,8 @@
 #include <plstr.h>
 #include <seccomon.h>
 #include <secitem.h>
+#include <string.h>
+
 #include "jssutil.h"
 #include "jss_bigint.h"
 #include "jss_exceptions.h"
@@ -435,19 +437,25 @@ finish:
  *
  * J S S _ w i p e C h a r A r r a y
  *
- * Given a string, set it to all zeroes. Be a chum and don't pass in NULL.
+ * Given a string, set it to all zeroes.
  */
-void
-JSS_wipeCharArray(char* array)
+void JSS_wipeCharArray(char* array)
 {
-	PR_ASSERT(array != NULL);
-	if(array == NULL) {
-		return;
-	}
+    if (array != NULL) {
+        JSS_wipeCharArrayLen(array, strlen(array));
+    }
+}
 
-	for(; *array != '\0'; array++) {
-		*array = '\0';
-	}
+/************************************************************************
+ *
+ * J S S _ w i p e C h a r A r r a y L e n
+ *
+ * Given a string of a specified length, set it to all zeroes.
+ */
+void JSS_wipeCharArrayLen(char *array, size_t length) {
+    if (array != NULL) {
+        memset(array, 0, length);
+    }
 }
 
 #ifdef DEBUG

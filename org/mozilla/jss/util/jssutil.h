@@ -170,10 +170,17 @@ JSS_ptrToByteArray(JNIEnv *env, void *ptr);
  *
  * J S S _ w i p e C h a r A r r a y
  *
- * Given a string, set it to all zeroes. Don't pass in NULL.
+ * Given a string, set it to all zeroes.
  */
-void
-JSS_wipeCharArray(char* array);
+void JSS_wipeCharArray(char *array);
+
+/************************************************************************
+ *
+ * J S S _ w i p e C h a r A r r a y L e n
+ *
+ * Given a string of a specified length, set it to all zeroes.
+ */
+void JSS_wipeCharArrayLen(char *array, size_t length);
 
 /**********************************************************************
  *
