@@ -644,12 +644,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     supportsIPV6 = (*env)->CallStaticBooleanMethod(env, socketBaseClass,
          supportsIPV6ID);
 
-    addrBAelems = (*env)->GetByteArrayElements(env, addrBA, NULL);
-    addrBALen = (*env)->GetArrayLength(env, addrBA);
-
-    PR_ASSERT(addrBALen != 0);
-
-    if( addrBAelems == NULL ) {
+    if (!JSS_RefByteArray(env, addrBA, &addrBAelems, &addrBALen)) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
@@ -934,15 +929,13 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketRead(JNIEnv *env, jobject self,
     PRIntervalTime ivtimeout;
     PRThread *me;
     jint nread = -1;
-    
-    size = (*env)->GetArrayLength(env, bufBA);
-    if( off < 0 || len < 0 || (off+len) > size) {
-        JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
+
+    if (!JSS_RefByteArray(env, bufBA, &buf, &size)) {
         goto finish;
     }
 
-    buf = (*env)->GetByteArrayElements(env, bufBA, NULL);
-    if( buf == NULL ) {
+    if (off < 0 || len < 0 || (off+len) > size) {
+        JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
         goto finish;
     }
 
@@ -1041,19 +1034,12 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketWrite(JNIEnv *env, jobject self,
     PRThread *me;
     PRInt32 numwrit;
 
-    if( bufBA == NULL ) {
-        JSS_throw(env, NULL_POINTER_EXCEPTION);
+    if (!JSS_RefByteArray(env, bufBA, &buf, &size)) {
         goto finish;
     }
 
-    size = (*env)->GetArrayLength(env, bufBA);
-    if( off < 0 || len < 0 || (off+len) > size ) {
+    if (off < 0 || len < 0 || (off+len) > size) {
         JSS_throw(env, INDEX_OUT_OF_BOUNDS_EXCEPTION);
-        goto finish;
-    }
-
-    buf = (*env)->GetByteArrayElements(env, bufBA, NULL);
-    if( buf == NULL ) {
         goto finish;
     }
 

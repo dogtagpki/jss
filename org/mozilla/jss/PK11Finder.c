@@ -816,12 +816,10 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
     /***************************************************
      * Convert package from byte array to jbyte*
      ***************************************************/
-    packageBytes = (*env)->GetByteArrayElements(env, packageArray, NULL);
-    if(packageBytes == NULL) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) );
+    if (!JSS_RefByteArray(env, packageArray, &packageBytes, &packageLen)) {
+        PR_ASSERT((*env)->ExceptionOccurred(env));
         goto finish;
     }
-    packageLen = (*env)->GetArrayLength(env, packageArray);
 
     /***************************************************
      * Decode package with NSS function

@@ -72,7 +72,6 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed
      */
 
     jbyte*    jdata   = NULL;
-    jboolean  jIsCopy = JNI_FALSE;
     jsize     jlen    = 0;
 
 
@@ -113,18 +112,11 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed
 
     /*
      * Convert "JNI jbyteArray" into "JNI jbyte*" so
-     * that it can be cast into a "C unsigned char*"
+     * that it can be cast into a "C unsigned char*";
+     * also get its length.
      */
 
-    jdata = ( *env )->GetByteArrayElements( env, jseed, &jIsCopy );
-
-
-    /*
-     * Retrieve the length of the "JNI jbyteArray"
-     * so that it can be cast into a "C int"
-     */
-
-    jlen = ( *env )->GetArrayLength( env, jseed );
+    JSS_RefByteArray(env, jseed, &jdata, &jlen);
 
 
     /*
@@ -220,7 +212,6 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_nextBytes
      */
 
     jbyte*    jdata   = NULL;
-    jboolean  jIsCopy = JNI_FALSE;
     jsize     jlen    = 0;
 
 
@@ -249,18 +240,10 @@ Java_org_mozilla_jss_pkcs11_PK11SecureRandom_nextBytes
 
     /*
      * Convert "JNI jbyteArray" into "JNI jbyte*" so
-     * that it can be cast into a "C unsigned char*"
+     * that it can be cast into a "C unsigned char*";
+     * also get its length.
      */
-
-    jdata = ( *env )->GetByteArrayElements( env, jbytes, &jIsCopy );
-
-
-    /*
-     * Retrieve the length of the "JNI jbyteArray"
-     * so that it can be cast into a "C int"
-     */
-
-    jlen = ( *env )->GetArrayLength( env, jbytes );
+    JSS_RefByteArray(env, jbytes, &jdata, &jlen);
 
 
     /*
