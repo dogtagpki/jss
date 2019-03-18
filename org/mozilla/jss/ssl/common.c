@@ -460,16 +460,13 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
 
     memset( &addr, 0, sizeof( PRNetAddr ));
 
-    if( addrBA != NULL ) {
-        addrBAelems = (*env)->GetByteArrayElements(env, addrBA, NULL);
-        addrBALen = (*env)->GetArrayLength(env, addrBA);
-
-        if( addrBAelems == NULL ) {
+    if (addrBA != NULL) {
+        if (!JSS_RefByteArray(env, addrBA, &addrBAelems, &addrBALen)) {
             ASSERT_OUTOFMEM(env);
             goto finish;
         }
 
-        if(addrBALen != 4 && addrBALen != 16) {
+        if (addrBALen != 4 && addrBALen != 16) {
             JSS_throwMsgPrErr(env, BIND_EXCEPTION,
             "Invalid address in bind!");
              goto finish;

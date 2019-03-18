@@ -76,13 +76,11 @@ JNIEXPORT jobject JNICALL Java_org_mozilla_jss_pkcs11_PK11SymmetricKeyDeriver_na
     }
 
     if( param != NULL) {
-        paramValue = (*env)->GetByteArrayElements(env,param, NULL);
-        paramLength = (*env)->GetArrayLength(env,param);
+        JSS_RefByteArray(env, param, &paramValue, &paramLength);
     }
 
     if( iv != NULL) {
-        ivValue = (*env)->GetByteArrayElements(env,iv, NULL);
-        ivLength = (*env)->GetArrayLength(env,iv);
+        JSS_RefByteArray(env, iv, &ivValue, &ivLength);
     }
 
     /* Set up the params data for the PK11_Derive family */
