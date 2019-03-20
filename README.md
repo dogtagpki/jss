@@ -77,4 +77,4 @@ started, check out our [documentation](docs/contributing.md), or if you
 want to contact us, check out the following forums:
 
  - The [pki-devel mailing list](https://www.redhat.com/mailman/listinfo/pki-devel).
- - The `#dogtagpki` IRC channel on [Freenode](https://freenode.net/).
+ - The `#dogtag-pki` IRC channel on [Freenode](https://freenode.net/).

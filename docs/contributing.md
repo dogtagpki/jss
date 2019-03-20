@@ -53,6 +53,6 @@ If you wish to discuss contributing to JSS or an issue, there are a few
 forums of discussion:
 
  - The [pki-devel mailing list](https://www.redhat.com/mailman/listinfo/pki-devel).
- - The `#dogtagpki` IRC channel on [Freenode](https://freenode.net/).
+ - The `#dogtag-pki` IRC channel on [Freenode](https://freenode.net/).
 
 Thanks!
