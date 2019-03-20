@@ -87,6 +87,10 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.TestRawSSL" "${RESULTS_NSSDB_OUTPUT_DIR}"
         DEPENDS "Setup_DBs"
     )
+    jss_test_java(
+        NAME "JSS_Test_Buffer"
+        COMMAND "org.mozilla.jss.tests.TestBuffer"
+    )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
