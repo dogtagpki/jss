@@ -345,6 +345,7 @@ Java_org_mozilla_jss_nss_PR_Read;
 Java_org_mozilla_jss_nss_PR_Send;
 Java_org_mozilla_jss_nss_PR_Recv;
 Java_org_mozilla_jss_nss_PR_NewTCPSocket;
+Java_org_mozilla_jss_nss_PR_NewBufferPRFD;
 Java_org_mozilla_jss_nss_PR_Shutdown;
 Java_org_mozilla_jss_nss_PR_GetError;
 Java_org_mozilla_jss_nss_PR_GetErrorText;
