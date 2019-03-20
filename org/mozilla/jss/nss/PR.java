@@ -23,6 +23,15 @@ public class PR {
     public static native PRFDProxy NewTCPSocket();
 
     /**
+     * Create a new j_buffer backed PRFileDesc, mimicing a TCP socket with
+     * the specified peer_info.
+     *
+     * See also: newBufferPRFileDesc in org/mozilla/jss/ssl/javax/BufferPRFD.h
+     */
+    public static native PRFDProxy NewBufferPRFD(BufferProxy read_buf,
+                                                 BufferProxy write_buf,
+                                                 byte[] peer_info);
+    /**
      * Close an existing PRFDProxy.
      *
      * See also: PR_Close in /usr/include/nspr4/prio.h
