@@ -91,6 +91,10 @@ macro(jss_tests)
         NAME "JSS_Test_Buffer"
         COMMAND "org.mozilla.jss.tests.TestBuffer"
     )
+    jss_test_java(
+        NAME "JSS_Test_BufferPRFD"
+        COMMAND "org.mozilla.jss.tests.TestBufferPRFD"
+    )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
