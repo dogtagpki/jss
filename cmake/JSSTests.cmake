@@ -93,7 +93,8 @@ macro(jss_tests)
     )
     jss_test_java(
         NAME "JSS_Test_BufferPRFD"
-        COMMAND "org.mozilla.jss.tests.TestBufferPRFD"
+        COMMAND "org.mozilla.jss.tests.TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}"
+        DEPENDS "List_CA_certs"
     )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
