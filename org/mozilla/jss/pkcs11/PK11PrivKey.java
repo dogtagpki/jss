@@ -111,9 +111,9 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
         byte[][] pqgArray = getDSAParamsNative();
 
         return new DSAParameterSpec(
-            new BigInteger(pqgArray[0]),
-            new BigInteger(pqgArray[1]),
-            new BigInteger(pqgArray[2])
+            new BigInteger(1, pqgArray[0]),
+            new BigInteger(1, pqgArray[1]),
+            new BigInteger(1, pqgArray[2])
         );
     }
 
