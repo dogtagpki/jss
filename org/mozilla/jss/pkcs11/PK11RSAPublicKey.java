@@ -16,7 +16,7 @@ public class PK11RSAPublicKey extends PK11PubKey implements RSAPublicKey {
 
     public BigInteger getModulus() {
       try {
-        return new BigInteger(getModulusByteArray());
+        return new BigInteger(1, getModulusByteArray());
       } catch( NumberFormatException e) {
         return null;
       }
@@ -25,7 +25,7 @@ public class PK11RSAPublicKey extends PK11PubKey implements RSAPublicKey {
 
     public BigInteger getPublicExponent() {
       try {
-        return new BigInteger(getPublicExponentByteArray());
+        return new BigInteger(1, getPublicExponentByteArray());
       } catch( NumberFormatException e) {
         return null;
       }
