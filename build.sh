@@ -243,7 +243,30 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 if [ "$WITH_COMMIT_ID" = true ]; then
-    COMMIT_ID="$(git -C "$SRC_DIR" rev-parse --short=8 HEAD)"
+    GIT_ROOT="$SRC_DIR/.git"
+    GIT_HEAD="$GIT_ROOT/HEAD"
+    if command -v git >/dev/null 2>/dev/null; then
+        COMMIT_ID="$(git -C "$SRC_DIR" rev-parse --short=8 HEAD)"
+    elif [ -e "$GIT_HEAD" ]; then
+        # We're in a git-based build directory, just without git.
+        GIT_REF="$(grep '^ref: ' "$GIT_HEAD" | awk '{print $NF}')"
+        if [ ! -z "$GIT_REF" ]; then
+            # If HEAD is a reference:
+            GIT_COMMIT="$GIT_ROOT/$GIT_REF"
+            if [ -e "$GIT_COMMIT" ]; then
+                COMMIT_ID="$(grep -o '^[a-f0-9]\{8\}' "$GIT_COMMIT")"
+            else
+                # Set to a sentinel value: this should never happen
+                COMMIT_ID="ffffffff"
+            fi
+        else
+            # Otherwise, we're likely checked out at a specific commit
+            COMMIT_ID="$(grep -o '^[a-f0-9]\{8\}' "$GIT_HEAD")"
+        fi
+    else
+        echo "Cannot use --with-commit-id when not in a git tree" 1>&2
+        exit 1
+    fi
     _COMMIT_ID=".$COMMIT_ID"
 fi
 
