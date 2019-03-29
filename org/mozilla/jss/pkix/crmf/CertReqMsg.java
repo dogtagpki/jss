@@ -313,12 +313,12 @@ public class CertReqMsg implements ASN1Value {
             System.out.println("No public key");
         }
         if( temp.hasIssuerUID() ) {
-            System.out.println("Issuer UID: "+new BigInteger(temp.getIssuerUID().getBits() ) );
+            System.out.println("Issuer UID: "+new BigInteger(1, temp.getIssuerUID().getBits() ) );
         }  else {
             System.out.println("no issuer uid");
         }
         if( temp.hasSubjectUID() ) {
-            System.out.println("Subject UID: "+new BigInteger(temp.getIssuerUID().getBits() ) );
+            System.out.println("Subject UID: "+new BigInteger(1, temp.getIssuerUID().getBits() ) );
         }  else {
             System.out.println("no subject uid");
         }
