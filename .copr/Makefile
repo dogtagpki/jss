@@ -1,6 +1,6 @@
 srpm:
 	dnf install -y git
-	./build.sh srpm --with-timestamp --with-commit-id
+	./build.sh --with-timestamp --with-commit-id srpm
 	if [[ "${outdir}" != "" ]]; then \
 	    mv ${HOME}/build/jss/SRPMS/* ${outdir}; \
 	fi
