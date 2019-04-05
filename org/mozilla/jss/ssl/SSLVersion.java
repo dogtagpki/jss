@@ -6,22 +6,39 @@ package org.mozilla.jss.ssl;
 
 public enum SSLVersion {
 
-    SSL_3_0 ("SSL3",   SocketBase.SSL_LIBRARY_VERSION_3_0),
-    TLS_1_0 ("TLS1_0", SocketBase.SSL_LIBRARY_VERSION_TLS_1_0),
-    TLS_1_1 ("TLS1_1", SocketBase.SSL_LIBRARY_VERSION_TLS_1_1),
-    TLS_1_2 ("TLS1_2", SocketBase.SSL_LIBRARY_VERSION_TLS_1_2),
-    TLS_1_3 ("TLS1_3", SocketBase.SSL_LIBRARY_VERSION_TLS_1_3);
+    /** Aliases ordering is as follows:
+     *    [0] - JSS name
+     *    [1] - JDK name
+     */
+    SSL_3_0(new String[] {"SSL3", "SSLv3"},   SocketBase.SSL_LIBRARY_VERSION_3_0),
+    TLS_1_0(new String[] {"TLS1_0", "TLSv1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_0),
+    TLS_1_1(new String[] {"TLS1_1", "TLSv1.1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_1),
+    TLS_1_2(new String[] {"TLS1_2", "TLSv1.2"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_2),
+    TLS_1_3(new String[] {"TLS1_3", "TLSv1.3"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_3);
 
-    private String alias;
+    private String[] aliases;
     private int value;
 
     private SSLVersion(String alias, int value) {
-        this.alias = alias;
+        this.aliases = new String[] {alias};
+        this.value = value;
+    }
+
+    private SSLVersion(String[] aliases, int value) {
+        this.aliases = aliases;
         this.value = value;
     }
 
     public String alias() {
-        return alias;
+        return aliases[0];
+    }
+
+    public String jdkAlias() {
+        return aliases[1];
+    }
+
+    public String[] aliases() {
+        return aliases;
     }
 
     public int value() {
@@ -36,14 +53,24 @@ public enum SSLVersion {
         throw new IllegalArgumentException("Invalid SSLVersion value: " + value);
     }
 
+    public boolean matchesAlias(String value) {
+        for (String alias : aliases) {
+            if (alias != null && alias.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static SSLVersion findByAlias(String alias) {
 
         alias = alias.toUpperCase();
 
         // find by alias
         for (SSLVersion version : SSLVersion.values()) {
-            String a = version.alias.toUpperCase();
-            if (a.equals(alias)) return version;
+            if (version.matchesAlias(alias)) {
+                return version;
+            }
         }
 
         // find by name
