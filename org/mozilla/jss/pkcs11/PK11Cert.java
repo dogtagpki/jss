@@ -4,18 +4,31 @@
 
 package org.mozilla.jss.pkcs11;
 
+import java.util.*;
 import java.math.BigInteger;
-import java.security.Principal;
-import java.security.cert.CertificateEncodingException;
+import java.security.*;
+import java.security.cert.*;
 
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.netscape.security.x509.X509CertImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PK11Cert implements org.mozilla.jss.crypto.X509Certificate {
 
-	public native byte[] getEncoded() throws CertificateEncodingException;
+public class PK11Cert
+       extends java.security.cert.X509Certificate
+       implements org.mozilla.jss.crypto.X509Certificate
+{
+    public static Logger logger = LoggerFactory.getLogger(PK11Cert.class);
+
+    // Internal X509CertImpl to handle java.security.cert.X509Certificate
+    // methods.
+    private X509CertImpl x509 = null;
+
+    @Override
+    public native byte[] getEncoded() throws CertificateEncodingException;
 
     //public native byte[] getUniqueID();
 
@@ -76,6 +89,286 @@ public class PK11Cert implements org.mozilla.jss.crypto.X509Certificate {
 
 	public native int getVersion();
 
+    /* Begin methods necessary for java.security.cert.X509Certificate */
+    public int getBasicConstraints() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getBasicConstraints();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public boolean[] getKeyUsage() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getKeyUsage();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public boolean[] getSubjectUniqueID() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getSubjectUniqueID();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public boolean[] getIssuerUniqueID() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getIssuerUniqueID();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public byte[] getSigAlgParams() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getSigAlgParams();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public String getSigAlgName() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getSigAlgName();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public String getSigAlgOID() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getSigAlgOID();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public byte[] getSignature() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getSignature();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public byte[] getTBSCertificate() throws CertificateEncodingException {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getTBSCertificate();
+        } catch (CertificateEncodingException cee) {
+            throw cee;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Date getNotAfter() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getNotAfter();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Date getNotBefore() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getNotBefore();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public void checkValidity()
+            throws CertificateExpiredException, CertificateNotYetValidException
+    {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            x509.checkValidity();
+        } catch (CertificateExpiredException cee) {
+            throw cee;
+        } catch (CertificateNotYetValidException cnyve) {
+            throw cnyve;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public void checkValidity(Date date)
+            throws CertificateExpiredException, CertificateNotYetValidException
+    {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            x509.checkValidity(date);
+        } catch (CertificateExpiredException cee) {
+            throw cee;
+        } catch (CertificateNotYetValidException cnyve) {
+            throw cnyve;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public String toString() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public void verify(PublicKey key)
+            throws CertificateException, NoSuchAlgorithmException,
+            InvalidKeyException, NoSuchProviderException, SignatureException
+    {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            x509.verify(key);
+        } catch (NoSuchAlgorithmException nsae) {
+            throw nsae;
+        } catch (InvalidKeyException ike) {
+            throw ike;
+        } catch (NoSuchProviderException nspe) {
+            throw nspe;
+        } catch (SignatureException se) {
+            throw se;
+        } catch (CertificateException ce) {
+            throw ce;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public void verify(PublicKey key, String sigProvider)
+            throws CertificateException, NoSuchAlgorithmException,
+            InvalidKeyException, NoSuchProviderException, SignatureException
+    {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            x509.verify(key, sigProvider);
+        } catch (NoSuchAlgorithmException nsae) {
+            throw nsae;
+        } catch (InvalidKeyException ike) {
+            throw ike;
+        } catch (NoSuchProviderException nspe) {
+            throw nspe;
+        } catch (SignatureException se) {
+            throw se;
+        } catch (CertificateException ce) {
+            throw ce;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public byte[] getExtensionValue(String oid) {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getExtensionValue(oid);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Set<String> getCriticalExtensionOIDs() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getCriticalExtensionOIDs();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Set<String> getNonCriticalExtensionOIDs() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.getNonCriticalExtensionOIDs();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public boolean hasUnsupportedCriticalExtension() {
+        try {
+            if (x509 == null) {
+                x509 = new X509CertImpl(getEncoded());
+            }
+
+            return x509.hasUnsupportedCriticalExtension();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////
     // PKCS #11 Cert stuff. Must only be called on certs that have
