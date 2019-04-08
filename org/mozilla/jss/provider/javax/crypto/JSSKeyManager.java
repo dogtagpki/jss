@@ -17,7 +17,7 @@
  * All rights reserved.
  * END COPYRIGHT BLOCK */
 
-package org.dogtagpki.tomcat;
+package org.mozilla.jss.provider.javax.crypto;
 
 import java.net.Socket;
 import java.security.Principal;
@@ -30,10 +30,10 @@ import javax.net.ssl.X509KeyManager;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.pkcs11.PK11Cert;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.security.x509.X509CertImpl;
 
 public class JSSKeyManager implements X509KeyManager {
 
@@ -81,14 +81,17 @@ public class JSSKeyManager implements X509KeyManager {
             org.mozilla.jss.crypto.X509Certificate[] chain = cm.buildCertificateChain(cert);
             logger.debug("JSSKeyManager: cert chain:");
 
-            Collection<X509Certificate> list = new ArrayList<>();
+            Collection<org.mozilla.jss.pkcs11.PK11Cert> list = new ArrayList<>();
             for (org.mozilla.jss.crypto.X509Certificate c : chain) {
+                if (!(c instanceof PK11Cert)) {
+                    logger.error("JSSKeyManager: Can't cast to PK11Cert: " + c);
+                }
+
                 logger.debug("JSSKeyManager: - " + c.getSubjectDN());
-                list.add(new X509CertImpl(c.getEncoded()));
+                list.add((PK11Cert) c);
             }
 
             return list.toArray(new X509Certificate[list.size()]);
-
         } catch (Throwable e) {
             logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
