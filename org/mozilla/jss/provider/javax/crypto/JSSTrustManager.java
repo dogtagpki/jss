@@ -17,7 +17,7 @@
  * All rights reserved.
  * END COPYRIGHT BLOCK */
 
-package org.dogtagpki.tomcat;
+package org.mozilla.jss.provider.javax.crypto;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -30,11 +30,10 @@ import javax.net.ssl.X509TrustManager;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.netscape.security.util.Cert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.security.x509.X509CertImpl;
 
 public class JSSTrustManager implements X509TrustManager {
 
@@ -178,7 +177,7 @@ public class JSSTrustManager implements X509TrustManager {
                 logger.debug("JSSTrustManager:  - " + cert.getSubjectDN());
 
                 try {
-                    X509CertImpl caCert = new X509CertImpl(cert.getEncoded());
+                    PK11Cert caCert = (PK11Cert) cert;
                     caCert.checkValidity();
                     caCerts.add(caCert);
 
