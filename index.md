@@ -15,3 +15,10 @@ Documentation
 -------------
 
 * [javadoc](javadoc/index.html) for the `master` branch.
+
+Contacting Us
+-------------
+
+* Join on freenode in [`#dogtag-pki`](https://webchat.freenode.net/?channels=%23dogtag-pki).
+* Send an email to [`pki-users@redhat.com`](mailto:pki-users@redhat.com) for help using JSS.
+* Send an email to [`pki-devel@redhat.com`](mailto:pki-devel@redhat.com) if you'd like to contribute to JSS.
