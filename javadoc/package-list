@@ -15,5 +15,4 @@ org.mozilla.jss.pkix.primitive
 org.mozilla.jss.provider.java.security
 org.mozilla.jss.provider.javax.crypto
 org.mozilla.jss.ssl
-org.mozilla.jss.tests
 org.mozilla.jss.util
