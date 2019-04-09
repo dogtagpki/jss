@@ -41,6 +41,7 @@ import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.pkcs11.PK11Token;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.TokenProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,12 +54,8 @@ import org.slf4j.LoggerFactory;
  * <li>deleteEntry will delete all entries with that label. If the entry is a
  * cert with a matching private key, it will also delete the private key.
  *
- * <li>getCertificate returns first cert with matching nickname. Converts it
- * into a java.security.cert.X509Certificate (not a JSS cert).
- *
- * <li>getCertificateChain only returns a single certificate. That's because
- * we don't have a way to build a chain from a specific slot--only from
- * the set of all slots.
+ * <li>getCertificate returns first cert with matching nickname. Returns it as
+ * a PK11Cert, when possible.
  *
  * <li>getCreationDate is unsupported because NSS doesn't store that
  * information.
@@ -311,6 +308,10 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
             logger.debug("JSSKeyStoreSpi: cert found: " + alias);
 
+            if (cert instanceof PK11Cert) {
+                return (PK11Cert) cert;
+            }
+
             byte[] bytes = cert.getEncoded();
             InputStream is = new ByteArrayInputStream(bytes);
 
@@ -340,6 +341,11 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         logger.debug("JSSKeyStoreSpi: engineGetCertificateAlias()");
 
       try {
+        if (cert instanceof PK11Cert) {
+            PK11Cert _c = (PK11Cert) cert;
+            return _c.getNickname();
+        }
+
         return getCertNickname( cert.getEncoded() );
       } catch(CertificateEncodingException e) {
         return null;
@@ -368,6 +374,11 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             for (int i = 0; i < certs.length; i++) {
                 X509Certificate cert = certs[i];
                 logger.debug("JSSKeyStoreSpi: - " + cert.getSubjectDN());
+
+                if (cert instanceof PK11Cert) {
+                    chain[i] = (PK11Cert) cert;
+                    continue;
+                }
 
                 byte[] bytes = cert.getEncoded();
                 InputStream is = new ByteArrayInputStream(bytes);
