@@ -255,6 +255,11 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}"
         DEPENDS "Setup_DBs"
     )
+    jss_test_java(
+        NAME "JSSProvider"
+        COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "List_CA_certs"
+    )
 
     # FIPS-related tests
     jss_test_java(
