@@ -249,6 +249,13 @@ macro(jss_config_java)
     list(APPEND JSS_JAVAC_FLAGS "${JAVAC_CLASSPATH}")
     list(APPEND JSS_JAVAC_FLAGS "-sourcepath")
     list(APPEND JSS_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}")
+
+    # Ensure we're compatible with JDK 8
+    list(APPEND JSS_JAVAC_FLAGS "-target")
+    list(APPEND JSS_JAVAC_FLAGS "1.8")
+    list(APPEND JSS_JAVAC_FLAGS "-source")
+    list(APPEND JSS_JAVAC_FLAGS "1.8")
+
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         list(APPEND JSS_JAVAC_FLAGS "-g")
     else()
@@ -260,6 +267,13 @@ macro(jss_config_java)
     list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT4_JAR}")
     list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
     list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}")
+
+    # Ensure we're compatible with JDK 8
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-target")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "1.8")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-source")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "1.8")
+
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         list(APPEND JSS_TEST_JAVAC_FLAGS "-g")
     else()
