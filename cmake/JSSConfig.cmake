@@ -256,6 +256,12 @@ macro(jss_config_java)
     list(APPEND JSS_JAVAC_FLAGS "-source")
     list(APPEND JSS_JAVAC_FLAGS "1.8")
 
+    # Handle passed-in javac flags as well; assume they are valid.
+    separate_arguments(PASSED_JAVAC_FLAGS UNIX_COMMAND "$ENV{JAVACFLAGS}")
+    foreach(PASSED_JAVAC_FLAG ${PASSED_JAVAC_FLAGS})
+        list(APPEND JSS_JAVAC_FLAGS "${PASSED_JAVAC_FLAG}")
+    endforeach()
+
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         list(APPEND JSS_JAVAC_FLAGS "-g")
     else()
@@ -273,6 +279,12 @@ macro(jss_config_java)
     list(APPEND JSS_TEST_JAVAC_FLAGS "1.8")
     list(APPEND JSS_TEST_JAVAC_FLAGS "-source")
     list(APPEND JSS_TEST_JAVAC_FLAGS "1.8")
+
+    # Handle passed-in javac flags as well; assume they are valid.
+    separate_arguments(PASSED_JAVAC_FLAGS UNIX_COMMAND "$ENV{JAVACFLAGS}")
+    foreach(PASSED_JAVAC_FLAG ${PASSED_JAVAC_FLAGS})
+        list(APPEND JSS_TEST_JAVAC_FLAGS "${PASSED_JAVAC_FLAG}")
+    endforeach()
 
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         list(APPEND JSS_TEST_JAVAC_FLAGS "-g")
