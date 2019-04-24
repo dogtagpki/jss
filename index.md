@@ -14,7 +14,22 @@ JSS also provides a pure Java interface for ASN.1 types and BER/DER encoding.
 Documentation
 -------------
 
-* [javadoc](javadoc/index.html) for the `master` branch.
+`master`
+========
+
+* [javadoc](master/javadocs/index.html) for the `master` branch.
+* [docs](master/docs/index.html) for the `master` branch.
+
+`v4.5.x`
+========
+
+* [javadoc](v4.5.x/javadocs/index.html) for the `v4.5.x` branch.
+* [docs](v4.5.x/docs/index.html) for the `v4.5.x` branch.
+
+`v4.4.x`
+========
+
+* [javadoc](v4.4.x/javadocs/index.html) for the `v4.4.x` branch.
 
 Contacting Us
 -------------
