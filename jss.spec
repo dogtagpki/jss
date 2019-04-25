@@ -113,7 +113,8 @@ rm -rf build && mkdir -p build && cd build
     -DJAVA_LIB_INSTALL_DIR=%{_jnidir} \
     ..
 
-%{__make} all javadoc
+%{__make} all
+%{__make} javadoc || true
 ctest --output-on-failure
 
 ################################################################################
