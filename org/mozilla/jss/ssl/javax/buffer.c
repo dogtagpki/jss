@@ -1,11 +1,8 @@
-#include <stdbool.h>
-#include <string.h>
+#include "buffer.h"
 
-#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "buffer.h"
+#include <string.h>
 
 j_buffer *jb_alloc(size_t length) {
     j_buffer *buf = calloc(1, sizeof(j_buffer));

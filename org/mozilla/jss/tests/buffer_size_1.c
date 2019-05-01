@@ -1,6 +1,8 @@
 #include "buffer.h"
 #include "assert.h"
-#include "stdio.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 void test_jb(uint8_t* d) {
     j_buffer* b = jb_alloc(1);
