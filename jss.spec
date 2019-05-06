@@ -52,10 +52,6 @@ BuildRequires:  slf4j-jdk14
 BuildRequires:  apache-commons-lang
 BuildRequires:  apache-commons-codec
 
-%if 0%{?fedora} >= 25 || 0%{?rhel} > 7
-BuildRequires:  perl-interpreter
-%endif
-
 BuildRequires:  junit
 
 Requires:       nss >= 3.30
@@ -86,7 +82,6 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 ################################################################################
 
 Summary:        Java Security Services (JSS) Javadocs
-Group:          Documentation
 Requires:       jss = %{version}-%{release}
 
 %description javadoc
