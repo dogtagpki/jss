@@ -226,12 +226,35 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapPrivWithSym
         goto finish;
     }
 
-    /* get the mechanism */
+    /* Get the wrapping mechanism */
     mech = JSS_getPK11MechFromAlg(env, algObj);
     if(mech == CKM_INVALID_MECHANISM) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unrecognized algorithm");
         goto finish;
     }
+
+    /*
+     * Currently, NSS has different definitions for the AES KeyWrap
+     * mechanisms from the PKCS11 standard.
+     * Below, we first check for support of the PKCS11 standard;
+     * If supported, we go with that, if not, we try the NSS ones
+     */
+    if ( mech == CKM_AES_KEY_WRAP ||
+             mech == CKM_NSS_AES_KEY_WRAP) {
+        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
+            mech = CKM_NSS_AES_KEY_WRAP;
+        } else {
+            mech = CKM_AES_KEY_WRAP;
+        }
+    } else if ( mech == CKM_AES_KEY_WRAP_PAD
+            || mech == CKM_NSS_AES_KEY_WRAP_PAD) {
+        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
+            mech = CKM_NSS_AES_KEY_WRAP_PAD;
+        } else {
+            mech = CKM_AES_KEY_WRAP_PAD;
+        }
+    }
+
 
     /* get the mechanism parameter (IV) */
     if( ivBA ) {
@@ -342,11 +365,32 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
         goto finish;
     }
 
-    /* get the wrapping mechanism */
+    /* Get the wrapping mechanism */
     wrapType = JSS_getPK11MechFromAlg(env, wrapAlgObj);
+
+    /*
+     * Currently, NSS has different definitions for the AES KeyWrap
+     * mechanisms from the PKCS11 standard.
+     * Below, we first check for support of the PKCS11 standard;
+     * If supported, we go with that, if not, we try the NSS ones
+     */
     if(wrapType == CKM_INVALID_MECHANISM) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unknown algorithm");
         goto finish;
+    } else if ( wrapType == CKM_AES_KEY_WRAP ||
+             wrapType == CKM_NSS_AES_KEY_WRAP) {
+        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
+            wrapType = CKM_NSS_AES_KEY_WRAP;
+        } else {
+            wrapType = CKM_AES_KEY_WRAP;
+        }
+    } else if ( wrapType == CKM_AES_KEY_WRAP_PAD
+            || wrapType == CKM_NSS_AES_KEY_WRAP_PAD) {
+        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
+            wrapType = CKM_NSS_AES_KEY_WRAP_PAD;
+        } else {
+            wrapType = CKM_AES_KEY_WRAP_PAD;
+        }
     }
 
     /* get the mechanism parameter (IV) */
@@ -393,6 +437,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unrecognized key type algorithm");
         goto finish;
     }
+
     keyType = PK11_GetKeyType(keyTypeMech, 0);
 
     /* special case nethsm and lunasa*/
