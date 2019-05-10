@@ -902,21 +902,20 @@ finish:
 
 /* Get the trusted anchor for pkix */
 
-CERTCertificate * getRoot(CERTCertificate *cert, 
+CERTCertificate *getRoot(CERTCertificate *cert,
     SECCertUsage certUsage) 
 {
     CERTCertificate  *root = NULL;
     CERTCertListNode *node = NULL;
+    CERTCertList *certList = NULL;
 
-    if( !cert ) {
+    if (!cert) {
         goto finish;
     }
 
-    CERTCertList *certList =  CERT_GetCertChainFromCert(cert, 
-        PR_Now(), 
-        certUsage);
+    certList = CERT_GetCertChainFromCert(cert, PR_Now(), certUsage);
 
-    if( certList == NULL) {
+    if (certList == NULL) {
         goto finish;
     }
 
@@ -932,7 +931,7 @@ CERTCertificate * getRoot(CERTCertificate *cert,
 
 finish:
   
-    CERT_DestroyCertList (certList); 
+    CERT_DestroyCertList(certList);
     return root; 
 }
 
