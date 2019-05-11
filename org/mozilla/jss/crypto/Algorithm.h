@@ -24,7 +24,7 @@ typedef struct JSS_AlgInfoStr {
     JSS_AlgType type;
 } JSS_AlgInfo;
 
-#define NUM_ALGS 65
+#define NUM_ALGS 67
 
 extern JSS_AlgInfo JSS_AlgTable[];
 extern CK_ULONG JSS_symkeyUsage[];
@@ -56,6 +56,17 @@ JSS_getOidTagFromAlg(JNIEnv *env, jobject alg);
  */
 CK_MECHANISM_TYPE
 JSS_getPK11MechFromAlg(JNIEnv *env, jobject alg);
+
+// The following are put here because NSS has not defined these yet
+#ifndef CKM_AES_KEY_WRAP
+#define CKM_AES_KEY_WRAP 0x2109
+#endif
+#ifndef CKM_AES_KEY_WRAP_PAD
+#define CKM_AES_KEY_WRAP_PAD 0x210a
+#endif
+#ifndef CKM_AES_KEY_WRAP_KWP
+#define CKM_AES_KEY_WRAP_KWP 0x210b
+#endif
 
 PR_END_EXTERN_C
 
