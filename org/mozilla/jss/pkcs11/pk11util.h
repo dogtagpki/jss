@@ -510,6 +510,14 @@ JSS_PK11_closeSession(PK11SlotInfo *slot, CK_SESSION_HANDLE session,
 char*
 JSS_PK11_getErrorString(CK_RV crv);
 
+/***********************************************************************
+ *
+ * getSupportedWrappingMechanism
+ *
+ * Returns a 
+ */
+CK_MECHANISM_TYPE getSupportedWrappingMechanism(JNIEnv *env, jobject algObj, PK11SlotInfo *slot);
+
 
 PR_END_EXTERN_C
 

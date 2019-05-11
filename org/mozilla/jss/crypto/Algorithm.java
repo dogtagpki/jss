@@ -214,6 +214,8 @@ public class Algorithm {
     protected static final short SEC_OID_PKCS5_PBES2=54;
     protected static final short SEC_OID_PKCS5_PBMAC1=55;
     protected static final short SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST=56;
+
+    // NSS AES KeyWrap
     protected static final short CKM_NSS_AES_KEY_WRAP=57;
     protected static final short CKM_NSS_AES_KEY_WRAP_PAD=58;
 
@@ -224,4 +226,9 @@ public class Algorithm {
     protected static final short SEC_OID_AES_192_CBC = 62;
     protected static final short SEC_OID_AES_256_ECB = 63;
     protected static final short SEC_OID_AES_256_CBC = 64;
+
+    // PKCS#11 AES KeyWrap
+    // These underlying defs are currently different from the NSS AES KeyWrap
+    protected static final short CKM_AES_KEY_WRAP=65;
+    protected static final short CKM_AES_KEY_WRAP_PAD=66;
 }

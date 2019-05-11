@@ -115,21 +115,25 @@ public class KeyWrapAlgorithm extends Algorithm {
     RC2_CBC_PAD = new KeyWrapAlgorithm(CKM_RC2_CBC_PAD, "RC2/CBC/PKCS5Padding",
                         RC2ParameterSpec.class, true, 8);
 
+    /*
+     * Note: AES_KEY_WRAP is not suitable for wrapping private keys;
+     *       Use AES_KEY_WRAP_PAD instead
+     * Also note that although it is mapped to CKM_NSS_AES_KEY_WRAP_*
+     * here, down in PK11KeyWrapper.c, logic exists to map to
+     * CKM_AES_KEY_WRAP_* if it is determined to recognize the mechanism
+     */
     public static final KeyWrapAlgorithm
-    AES_KEY_WRAP = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP, "AES KeyWrap",
-                (Class<?>) null, true, 8);
+    AES_KEY_WRAP = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP, "AES KeyWrap/NoPadding",
+                        (Class<?>) null, false, 8);
 
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
                 (Class<?>) null, true, 8);
 
-    // Known OIDs; copied from the CertUtil class from the
-    // com.netscape.cmsutil.crypto package of PKI.
     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
+    public static final OBJECT_IDENTIFIER AES_KEY_WRAP_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.5");
     public static final OBJECT_IDENTIFIER AES_CBC_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.2");
     public static final OBJECT_IDENTIFIER DES3_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.2.840.113549.3.7");
-
-    // This OID does not come from CertUtil; it was added for completeness.
     public static final OBJECT_IDENTIFIER DES_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.3.14.3.2.7");
 
     public static KeyWrapAlgorithm fromOID(String wrapOID) throws NoSuchAlgorithmException {
@@ -137,6 +141,9 @@ public class KeyWrapAlgorithm extends Algorithm {
 
         if (oid.equals(AES_KEY_WRAP_PAD_OID))
             return AES_KEY_WRAP_PAD;
+
+        if (oid.equals(AES_KEY_WRAP_OID))
+            return AES_KEY_WRAP;
 
         if (oid.equals(AES_CBC_PAD_OID))
             return AES_CBC_PAD;
