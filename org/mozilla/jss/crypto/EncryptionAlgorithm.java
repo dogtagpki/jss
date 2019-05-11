@@ -246,6 +246,10 @@ public class EncryptionAlgorithm extends Algorithm {
         Alg alg = Alg.fromString(algName);
         Mode mode = Mode.fromString(modeName);
         Padding padding = Padding.fromString(paddingName);
+
+        if (paddingName == null || paddingName.equals(""))
+            padding = Padding.NONE;
+
         int i;
         for(i = 0; i < len; ++i ) {
             EncryptionAlgorithm cur =
