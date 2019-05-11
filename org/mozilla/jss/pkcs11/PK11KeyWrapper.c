@@ -227,34 +227,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapPrivWithSym
     }
 
     /* Get the wrapping mechanism */
-    mech = JSS_getPK11MechFromAlg(env, algObj);
+    mech = getSupportedWrappingMechanism(env, algObj, slot);
     if(mech == CKM_INVALID_MECHANISM) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unrecognized algorithm");
         goto finish;
     }
-
-    /*
-     * Currently, NSS has different definitions for the AES KeyWrap
-     * mechanisms from the PKCS11 standard.
-     * Below, we first check for support of the PKCS11 standard;
-     * If supported, we go with that, if not, we try the NSS ones
-     */
-    if ( mech == CKM_AES_KEY_WRAP ||
-             mech == CKM_NSS_AES_KEY_WRAP) {
-        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
-            mech = CKM_NSS_AES_KEY_WRAP;
-        } else {
-            mech = CKM_AES_KEY_WRAP;
-        }
-    } else if ( mech == CKM_AES_KEY_WRAP_PAD
-            || mech == CKM_NSS_AES_KEY_WRAP_PAD) {
-        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
-            mech = CKM_NSS_AES_KEY_WRAP_PAD;
-        } else {
-            mech = CKM_AES_KEY_WRAP_PAD;
-        }
-    }
-
 
     /* get the mechanism parameter (IV) */
     if( ivBA ) {
@@ -366,31 +343,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     }
 
     /* Get the wrapping mechanism */
-    wrapType = JSS_getPK11MechFromAlg(env, wrapAlgObj);
+    wrapType = getSupportedWrappingMechanism(env, wrapAlgObj, slot);
 
-    /*
-     * Currently, NSS has different definitions for the AES KeyWrap
-     * mechanisms from the PKCS11 standard.
-     * Below, we first check for support of the PKCS11 standard;
-     * If supported, we go with that, if not, we try the NSS ones
-     */
     if(wrapType == CKM_INVALID_MECHANISM) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unknown algorithm");
         goto finish;
-    } else if ( wrapType == CKM_AES_KEY_WRAP ||
-             wrapType == CKM_NSS_AES_KEY_WRAP) {
-        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
-            wrapType = CKM_NSS_AES_KEY_WRAP;
-        } else {
-            wrapType = CKM_AES_KEY_WRAP;
-        }
-    } else if ( wrapType == CKM_AES_KEY_WRAP_PAD
-            || wrapType == CKM_NSS_AES_KEY_WRAP_PAD) {
-        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
-            wrapType = CKM_NSS_AES_KEY_WRAP_PAD;
-        } else {
-            wrapType = CKM_AES_KEY_WRAP_PAD;
-        }
     }
 
     /* get the mechanism parameter (IV) */
@@ -877,4 +834,35 @@ JSS_PK11_getErrorString(CK_RV crv)
       default:
         return "PKCS #11 error";
     }
+}
+
+/*
+ * Get the wrapping mechanism
+ */ 
+CK_MECHANISM_TYPE getSupportedWrappingMechanism(JNIEnv *env, jobject algObj, PK11SlotInfo *slot)
+{
+    CK_MECHANISM_TYPE mech = JSS_getPK11MechFromAlg(env, algObj);
+
+    /*
+     * Currently, NSS has different definitions for the AES KeyWrap
+     * mechanisms from the PKCS11 standard.
+     * Below, we first check for support of the PKCS11 standard;
+     * If supported, we go with that, if not, we try the NSS ones
+     */
+    if ( mech == CKM_AES_KEY_WRAP ||
+             mech == CKM_NSS_AES_KEY_WRAP) {
+        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
+            mech = CKM_NSS_AES_KEY_WRAP;
+        } else {
+            mech = CKM_AES_KEY_WRAP;
+        }
+    } else if ( mech == CKM_AES_KEY_WRAP_PAD
+            || mech == CKM_NSS_AES_KEY_WRAP_PAD) {
+        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
+            mech = CKM_NSS_AES_KEY_WRAP_PAD;
+        } else {
+            mech = CKM_AES_KEY_WRAP_PAD;
+        }
+    }
+    return mech;
 }
