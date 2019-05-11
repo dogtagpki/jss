@@ -72,7 +72,7 @@ public class KeyWrapping {
         // wrap a private with a symmetric
         keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.DES3_CBC_PAD);
         IVParameterSpec iv = new IVParameterSpec(recovered);
-        keyWrap.initWrap(keyWrapper,iv);
+        keyWrap.initWrap(keyWrapper, iv);
         KeyPairGenerator kpg =
             keyToken.getKeyPairGenerator(KeyPairAlgorithm.RSA);
         kpg.initialize(512);
@@ -91,8 +91,33 @@ public class KeyWrapping {
         PrivateKey newPrivk = keyWrap.unwrapTemporaryPrivate(wrappedKey,
             PrivateKey.RSA, pub );
 
+        // wrap a private with a symmetric using AES_KEY_WRAP_PAD
+        keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.AES_KEY_WRAP_PAD);
+        // IVParameterSpec iv = new IVParameterSpec(recovered);
+        keyWrap.initWrap(keyWrapper,null /*iv*/);
+        KeyPairGenerator kpg2 =
+            keyToken.getKeyPairGenerator(KeyPairAlgorithm.RSA);
+        kpg2.initialize(512);
+        kpg2.temporaryPairs(true);
+        KeyPair kp2 = kpg2.genKeyPair();
+        java.security.PublicKey pub2 = kp2.getPublic();
+        PrivateKey privk2 = (org.mozilla.jss.crypto.PrivateKey)kp2.getPrivate();
+
+        wrappedKey = keyWrap.wrap(privk2);
+        System.out.println("Original key:");
+        displayByteArray(privk2.getUniqueID());
+        privk2 = null; kp2 = null;
+        //keyToken.getCryptoStore().deletePrivateKey(privk);
+
+        keyWrap.initUnwrap(keyWrapper,iv);
+        PrivateKey newPrivk2 = keyWrap.unwrapTemporaryPrivate(wrappedKey,
+            PrivateKey.RSA, pub );
+
         System.out.println("New key:");
-        displayByteArray(newPrivk.getUniqueID());
+        displayByteArray(newPrivk2.getUniqueID());
+
+        System.out.println("New key:");
+        displayByteArray(newPrivk2.getUniqueID());
 
         // wrap a symmetric with a private
         keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.RSA);

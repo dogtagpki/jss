@@ -115,8 +115,13 @@ public class KeyWrapAlgorithm extends Algorithm {
     RC2_CBC_PAD = new KeyWrapAlgorithm(CKM_RC2_CBC_PAD, "RC2/CBC/PKCS5Padding",
                         RC2ParameterSpec.class, true, 8);
 
-    // Note: AES_KEY_WRAP is not suitable for wrapping private keys;
-    //       Use AES_KEY_WRAP_PAD instead
+    /*
+     * Note: AES_KEY_WRAP is not suitable for wrapping private keys;
+     *       Use AES_KEY_WRAP_PAD instead
+     * Also note that although it is mapped to CKM_NSS_AES_KEY_WRAP_*
+     * here, down in PK11KeyWrapper.c, logic exists to map to
+     * CKM_AES_KEY_WRAP_* if it is determined to recognize the mechanism
+     */
     public static final KeyWrapAlgorithm
     AES_KEY_WRAP = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP, "AES KeyWrap/NoPadding",
                         (Class<?>) null, false, 8);
