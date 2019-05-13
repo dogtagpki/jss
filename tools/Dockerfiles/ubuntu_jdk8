@@ -27,7 +27,7 @@ CMD true \
         && rm -rf build \
         && mkdir build \
         && cd build \
-        && cmake .. \
+        && CFLAGS="-Wall -Wextra -Werror" cmake .. \
         && make all \
         && ctest --output-on-failure \
         && true
