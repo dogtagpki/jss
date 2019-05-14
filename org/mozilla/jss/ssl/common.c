@@ -978,8 +978,8 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
 
     /* for future expansion */
 
-    CERTValOutParam cvout[20] = {0};
-    CERTValInParam cvin[20] = {0};
+    CERTValOutParam cvout[20] = {{0}};
+    CERTValInParam cvin[20] = {{0}};
 
     int inParamIndex = 0;
     int outParamIndex = 0;
