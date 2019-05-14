@@ -984,9 +984,8 @@ Java_org_mozilla_jss_CryptoManager_OCSPCacheSettingsNative(
         ocsp_max_cache_entry_duration);
 
     if (rv != SECSuccess) {
-        JSS_throwMsgPrErr(env,
-                     GENERAL_SECURITY_EXCEPTION,
-                     "Failed to set OCSP cache: error "+ PORT_GetError());
+        JSS_throwMsgPrErrArg(env, GENERAL_SECURITY_EXCEPTION,
+            "Failed to set OCSP cache: error", PORT_GetError());
     }
 }
 
@@ -1000,9 +999,8 @@ Java_org_mozilla_jss_CryptoManager_setOCSPTimeoutNative(
     rv = CERT_SetOCSPTimeout(ocsp_timeout);
 
     if (rv != SECSuccess) {
-        JSS_throwMsgPrErr(env,
-                     GENERAL_SECURITY_EXCEPTION,
-                     "Failed to set OCSP timeout: error "+ PORT_GetError());
+        JSS_throwMsgPrErrArg(env, GENERAL_SECURITY_EXCEPTION,
+            "Failed to set OCSP timeout: error ", PORT_GetError());
     }
 }
 
