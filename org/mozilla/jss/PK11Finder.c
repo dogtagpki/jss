@@ -866,7 +866,7 @@ Java_org_mozilla_jss_CryptoManager_importCertPackageNative
          Handles the case when the user certificate is not in
          the certificate chain.
         */
-        if ((slot == NULL)) { /* same as "noUser = 1" */
+        if (slot == NULL) { /* same as "noUser = 1" */
             /* #397713 */
             if (!find_leaf_cert(certdb, derCerts,
                     numCerts, &theDerCert))
