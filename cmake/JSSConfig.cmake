@@ -128,6 +128,7 @@ macro(jss_config_cflags)
     endif()
 
     list(APPEND JSS_RAW_C_FLAGS "-Wall")
+    list(APPEND JSS_RAW_C_FLAGS "-std=gnu99")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-cast-function-type")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-unused-parameter")
     list(APPEND JSS_RAW_C_FLAGS "-Werror-implicit-function-declaration")
