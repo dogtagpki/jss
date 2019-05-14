@@ -1004,11 +1004,14 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
     SECCertUsage certUsage = certUsageSSLClient /* 0 */;
     
     SECStatus res =  SECFailure;
+
+    CERTCertificate *root = NULL;
+
     if(cert == NULL) {
         goto finish;
     }
 
-    if(ocspPolicy != OCSP_LEAF_AND_CHAIN_POLICY) {
+    if (ocspPolicy != OCSP_LEAF_AND_CHAIN_POLICY) {
         goto finish;
     }
 
@@ -1046,7 +1049,7 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
     SECCertificateUsage testUsage = certificateUsage;
     while (0 != (testUsage = testUsage >> 1)) { certUsage++; }
 
-    CERTCertificate *root = getRoot(cert,certUsage);
+    root = getRoot(cert,certUsage);
 
     /* Try to add the root as the trust anchor so all the
        other memebers of the ca chain will get validated.
