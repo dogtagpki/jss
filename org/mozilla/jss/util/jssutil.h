@@ -1,9 +1,11 @@
-#include <secitem.h>
-
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include <stdbool.h>
+
+#include <nspr.h>
+#include <jni.h>
+#include <secitem.h>
 
 #ifndef JSS_NATIVE_UTIL_H
 #define JSS_NATIVE_UTIL_H
@@ -20,12 +22,6 @@
 #define FUNCTION_MAY_NOT_BE_USED
 #define VARIABLE_MAY_NOT_BE_USED
 #endif
-
-/* Need to include these first.
- * #include <nspr.h>
- * #include <jni.h>
- * #include <secitem.h>
- */
 
 PR_BEGIN_EXTERN_C
 
