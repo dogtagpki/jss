@@ -6,6 +6,7 @@
 #include <jni.h>
 
 #include "java_ids.h"
+#include "jss_exceptions.h"
 #include "jssutil.h"
 #include "pk11util.h"
 #include "PRFDProxy.h"
@@ -94,6 +95,28 @@ Java_org_mozilla_jss_nss_SSL_OptionSet(JNIEnv *env, jclass clazz, jobject fd,
     }
 
     return SSL_OptionSet(real_fd, option, val);
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_SSL_OptionGet(JNIEnv *env, jclass clazz, jobject fd,
+    jint option)
+{
+    PRFileDesc *real_fd = NULL;
+    int result = -1;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+            "Unable to dereference fd object");
+        return result;
+    }
+
+    if (SSL_OptionGet(real_fd, option, &result) != SECSuccess) {
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION,
+            "Unknown option to get or getting option failed");
+    }
+    return result;
 }
 
 JNIEXPORT int JNICALL
