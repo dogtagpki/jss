@@ -16,18 +16,33 @@ public class TestRawSSL {
         assert(PR.Close(ssl_fd) == 0);
     }
 
-    public static void TestSSLOptionSet() {
+    public static void TestSSLOptions() throws Exception {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
         PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
-        // 7 == SSL_ENABLE_SSL2; disable it
-        assert(SSL.OptionSet(ssl_fd, 7, 0) == 0);
+        // 8 == SSL_ENABLE_SSL3; disable it
+        assert(SSL.OptionSet(ssl_fd, 8, 0) == 0);
+
+        // Validate that the set worked.
+        assert(SSL.OptionGet(ssl_fd, 8) == 0);
+
+        // Renable SSL_ENABLE_SSL3 and validate it worked
+        assert(SSL.OptionSet(ssl_fd, 8, 1) == 0);
+        assert(SSL.OptionGet(ssl_fd, 8) == 1);
 
         // Ensure that setting an invalid option fails
         assert(SSL.OptionSet(ssl_fd, 799999, 0) != 0);
+
+        // Ensure that getting an invalid option fails
+        try {
+            SSL.OptionGet(ssl_fd, 79999999);
+            assert(false);
+        } catch (Exception e) {
+            assert(true);
+        }
 
         assert(PR.Close(ssl_fd) == 0);
     }
@@ -73,7 +88,7 @@ public class TestRawSSL {
         assert(PR.Close(ssl_fd) == 0);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.loadLibrary("jss4");
 
         if (args.length != 1) {
@@ -84,8 +99,8 @@ public class TestRawSSL {
         System.out.println("Calling TestSSLImportFD()...");
         TestSSLImportFD();
 
-        System.out.println("Calling TestSSLOptionSet()...");
-        TestSSLOptionSet();
+        System.out.println("Calling TestSSLOptions()...");
+        TestSSLOptions();
 
         System.out.println("Calling TestSSLSetURL()...");
         TestSSLSetURL();
