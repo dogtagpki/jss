@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -98,7 +98,17 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li>java.security.cert.Certificate</li>
+<li>
+<ul class="inheritance">
+<li>java.security.cert.X509Certificate</li>
+<li>
+<ul class="inheritance">
 <li>org.mozilla.jss.pkcs11.PK11Cert</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -107,7 +117,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></dd>
+<dd>java.io.Serializable, java.security.cert.X509Extension, <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
@@ -116,8 +126,12 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">PK11Cert</span>
-extends java.lang.Object
+extends java.security.cert.X509Certificate
 implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#org.mozilla.jss.pkcs11.PK11Cert">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -143,6 +157,13 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="nested.classes.inherited.from.class.java.security.cert.Certificate">
+<!--   -->
+</a>
+<h3>Nested classes/interfaces inherited from class&nbsp;java.security.cert.Certificate</h3>
+<code>java.security.cert.Certificate.CertificateRep</code></li>
+</ul>
 </li>
 </ul>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -162,10 +183,14 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#certProxy">certProxy</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static org.slf4j.Logger</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#logger">logger</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#nickname">nickname</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../../org/mozilla/jss/pkcs11/TokenProxy.html" title="class in org.mozilla.jss.pkcs11">TokenProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#tokenProxy">tokenProxy</a></span></code>&nbsp;</td>
 </tr>
@@ -185,73 +210,168 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#checkValidity--">checkValidity</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#checkValidity-java.util.Date-">checkValidity</a></span>(java.util.Date&nbsp;date)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getBasicConstraints--">getBasicConstraints</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.util.Set&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getCriticalExtensionOIDs--">getCriticalExtensionOIDs</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getEncoded--">getEncoded</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>byte[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getExtensionValue-java.lang.String-">getExtensionValue</a></span>(java.lang.String&nbsp;oid)</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.security.Principal</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerDN--">getIssuerDN</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerDNString--">getIssuerDNString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>boolean[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerUniqueID--">getIssuerUniqueID</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>boolean[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getKeyUsage--">getKeyUsage</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNickname--">getNickname</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>java.util.Set&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNonCriticalExtensionOIDs--">getNonCriticalExtensionOIDs</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>java.util.Date</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNotAfter--">getNotAfter</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>java.util.Date</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNotBefore--">getNotBefore</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getOwningToken--">getOwningToken</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.security.PublicKey</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getPublicKey--">getPublicKey</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSerialNumber--">getSerialNumber</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>protected byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSerialNumberByteArray--">getSerialNumberByteArray</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSigAlgName--">getSigAlgName</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSigAlgOID--">getSigAlgOID</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code>byte[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSigAlgParams--">getSigAlgParams</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i21" class="rowColor">
+<td class="colFirst"><code>byte[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSignature--">getSignature</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>java.security.Principal</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectDN--">getSubjectDN</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectDNString--">getSubjectDNString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i24" class="altColor">
+<td class="colFirst"><code>boolean[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectUniqueID--">getSubjectUniqueID</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code>byte[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getTBSCertificate--">getTBSCertificate</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>protected int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getTrust-int-">getTrust</a></span>(int&nbsp;type)</code>
 <div class="block">Gets the trust flags for this cert.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>protected byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getUniqueID--">getUniqueID</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getVersion--">getVersion</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i29" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#hasUnsupportedCriticalExtension--">hasUnsupportedCriticalExtension</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#setTrust-int-int-">setTrust</a></span>(int&nbsp;type,
         int&nbsp;trust)</code>
 <div class="block">Sets the trust flags for this cert.</div>
 </td>
 </tr>
+<tr id="i31" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#toString--">toString</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i32" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#verify-java.security.PublicKey-">verify</a></span>(java.security.PublicKey&nbsp;key)</code>&nbsp;</td>
+</tr>
+<tr id="i33" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#verify-java.security.PublicKey-java.lang.String-">verify</a></span>(java.security.PublicKey&nbsp;key,
+      java.lang.String&nbsp;sigProvider)</code>&nbsp;</td>
+</tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.java.security.cert.X509Certificate">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.security.cert.X509Certificate</h3>
+<code>getExtendedKeyUsage, getIssuerAlternativeNames, getIssuerX500Principal, getSubjectAlternativeNames, getSubjectX500Principal, verify</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.java.security.cert.Certificate">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.security.cert.Certificate</h3>
+<code>equals, getType, hashCode, writeReplace</code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, finalize, getClass, notify, notifyAll, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -267,6 +387,15 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a name="logger">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>logger</h4>
+<pre>public static&nbsp;org.slf4j.Logger logger</pre>
+</li>
+</ul>
 <a name="certProxy">
 <!--   -->
 </a>
@@ -313,6 +442,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html#getEncoded--">getEncoded</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getEncoded</code>&nbsp;in class&nbsp;<code>java.security.cert.Certificate</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The DER encoding of this certificate.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -345,6 +476,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html#getSubjectDN--">getSubjectDN</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSubjectDN</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The RFC 1485 ASCII encoding of the Subject Name.</dd>
 </dl>
@@ -360,6 +493,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html#getIssuerDN--">getIssuerDN</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getIssuerDN</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The RFC 1485 ASCII encoding of the issuer's Subject Name.</dd>
 </dl>
@@ -375,6 +510,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html#getSerialNumber--">getSerialNumber</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSerialNumber</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The serial number of this certificate.</dd>
 </dl>
@@ -417,6 +554,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html#getPublicKey--">getPublicKey</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getPublicKey</code>&nbsp;in class&nbsp;<code>java.security.cert.Certificate</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The Public Key from this certificate.</dd>
 </dl>
@@ -432,9 +571,307 @@ implements <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" tit
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html#getVersion--">getVersion</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getVersion</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the version number of this X.509 certificate.
  0 means v1, 1 means v2, 2 means v3.</dd>
+</dl>
+</li>
+</ul>
+<a name="getBasicConstraints--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getBasicConstraints</h4>
+<pre>public&nbsp;int&nbsp;getBasicConstraints()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getBasicConstraints</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getKeyUsage--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKeyUsage</h4>
+<pre>public&nbsp;boolean[]&nbsp;getKeyUsage()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getKeyUsage</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSubjectUniqueID--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSubjectUniqueID</h4>
+<pre>public&nbsp;boolean[]&nbsp;getSubjectUniqueID()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSubjectUniqueID</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getIssuerUniqueID--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getIssuerUniqueID</h4>
+<pre>public&nbsp;boolean[]&nbsp;getIssuerUniqueID()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getIssuerUniqueID</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSigAlgParams--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSigAlgParams</h4>
+<pre>public&nbsp;byte[]&nbsp;getSigAlgParams()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSigAlgParams</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSigAlgName--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSigAlgName</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getSigAlgName()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSigAlgName</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSigAlgOID--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSigAlgOID</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getSigAlgOID()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSigAlgOID</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSignature--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSignature</h4>
+<pre>public&nbsp;byte[]&nbsp;getSignature()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSignature</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getTBSCertificate--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTBSCertificate</h4>
+<pre>public&nbsp;byte[]&nbsp;getTBSCertificate()
+                         throws java.security.cert.CertificateEncodingException</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getTBSCertificate</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.cert.CertificateEncodingException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getNotAfter--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNotAfter</h4>
+<pre>public&nbsp;java.util.Date&nbsp;getNotAfter()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getNotAfter</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getNotBefore--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNotBefore</h4>
+<pre>public&nbsp;java.util.Date&nbsp;getNotBefore()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getNotBefore</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="checkValidity--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>checkValidity</h4>
+<pre>public&nbsp;void&nbsp;checkValidity()
+                   throws java.security.cert.CertificateExpiredException,
+                          java.security.cert.CertificateNotYetValidException</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>checkValidity</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.cert.CertificateExpiredException</code></dd>
+<dd><code>java.security.cert.CertificateNotYetValidException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="checkValidity-java.util.Date-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>checkValidity</h4>
+<pre>public&nbsp;void&nbsp;checkValidity(java.util.Date&nbsp;date)
+                   throws java.security.cert.CertificateExpiredException,
+                          java.security.cert.CertificateNotYetValidException</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>checkValidity</code>&nbsp;in class&nbsp;<code>java.security.cert.X509Certificate</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.cert.CertificateExpiredException</code></dd>
+<dd><code>java.security.cert.CertificateNotYetValidException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="toString--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toString</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>toString</code>&nbsp;in class&nbsp;<code>java.security.cert.Certificate</code></dd>
+</dl>
+</li>
+</ul>
+<a name="verify-java.security.PublicKey-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>verify</h4>
+<pre>public&nbsp;void&nbsp;verify(java.security.PublicKey&nbsp;key)
+            throws java.security.cert.CertificateException,
+                   java.security.NoSuchAlgorithmException,
+                   java.security.InvalidKeyException,
+                   java.security.NoSuchProviderException,
+                   java.security.SignatureException</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>verify</code>&nbsp;in class&nbsp;<code>java.security.cert.Certificate</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.cert.CertificateException</code></dd>
+<dd><code>java.security.NoSuchAlgorithmException</code></dd>
+<dd><code>java.security.InvalidKeyException</code></dd>
+<dd><code>java.security.NoSuchProviderException</code></dd>
+<dd><code>java.security.SignatureException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="verify-java.security.PublicKey-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>verify</h4>
+<pre>public&nbsp;void&nbsp;verify(java.security.PublicKey&nbsp;key,
+                   java.lang.String&nbsp;sigProvider)
+            throws java.security.cert.CertificateException,
+                   java.security.NoSuchAlgorithmException,
+                   java.security.InvalidKeyException,
+                   java.security.NoSuchProviderException,
+                   java.security.SignatureException</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>verify</code>&nbsp;in class&nbsp;<code>java.security.cert.Certificate</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.cert.CertificateException</code></dd>
+<dd><code>java.security.NoSuchAlgorithmException</code></dd>
+<dd><code>java.security.InvalidKeyException</code></dd>
+<dd><code>java.security.NoSuchProviderException</code></dd>
+<dd><code>java.security.SignatureException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getExtensionValue-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getExtensionValue</h4>
+<pre>public&nbsp;byte[]&nbsp;getExtensionValue(java.lang.String&nbsp;oid)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getExtensionValue</code>&nbsp;in interface&nbsp;<code>java.security.cert.X509Extension</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getCriticalExtensionOIDs--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCriticalExtensionOIDs</h4>
+<pre>public&nbsp;java.util.Set&lt;java.lang.String&gt;&nbsp;getCriticalExtensionOIDs()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getCriticalExtensionOIDs</code>&nbsp;in interface&nbsp;<code>java.security.cert.X509Extension</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getNonCriticalExtensionOIDs--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNonCriticalExtensionOIDs</h4>
+<pre>public&nbsp;java.util.Set&lt;java.lang.String&gt;&nbsp;getNonCriticalExtensionOIDs()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getNonCriticalExtensionOIDs</code>&nbsp;in interface&nbsp;<code>java.security.cert.X509Extension</code></dd>
+</dl>
+</li>
+</ul>
+<a name="hasUnsupportedCriticalExtension--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hasUnsupportedCriticalExtension</h4>
+<pre>public&nbsp;boolean&nbsp;hasUnsupportedCriticalExtension()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>hasUnsupportedCriticalExtension</code>&nbsp;in interface&nbsp;<code>java.security.cert.X509Extension</code></dd>
 </dl>
 </li>
 </ul>
