@@ -355,6 +355,7 @@ Java_org_mozilla_jss_nss_PR_getPRShutdownBoth;
 
 Java_org_mozilla_jss_nss_SSL_ImportFD;
 Java_org_mozilla_jss_nss_SSL_OptionSet;
+Java_org_mozilla_jss_nss_SSL_OptionGet;
 Java_org_mozilla_jss_nss_SSL_SetURL;
 Java_org_mozilla_jss_nss_SSL_SecurityStatus;
 Java_org_mozilla_jss_nss_SSL_ResetHandshake;

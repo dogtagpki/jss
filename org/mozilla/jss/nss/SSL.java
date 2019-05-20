@@ -24,6 +24,14 @@ public class SSL {
     public static native int OptionSet(PRFDProxy fd, int option, int val);
 
     /**
+     * Get the value of a SSL option on the specified PRFileDesc. Note that
+     * this raises an exception in the case of an invalid option.
+     *
+     * See also: SSL_OptionGet in /usr/include/nss3/ssl.h
+     */
+    public static native int OptionGet(PRFDProxy fd, int option) throws Exception;
+
+    /**
      * Set the hostname of a handshake on the specified PRFileDesc.
      *
      * See also: SSL_SetURL in /usr/include/nss3/ssl.h
