@@ -6,6 +6,26 @@ package org.mozilla.jss.nss;
  */
 
 public class PR {
+    /**
+     * Shut down the receiving side of the TCP connection.
+     *
+     * See also: Shutdown
+    */
+    public static final int SHUTDOWN_RCV = getPRShutdownRcv();
+
+    /**
+     * Shut down the sending side of the TCP connection.
+     *
+     * See also: Shutdown
+     */
+    public static final int SHUTDOWN_SEND = getPRShutdownSend();
+
+    /**
+     * Shut down both sides of the TCP connection.
+     *
+     * See also: Shutdown
+     */
+    public static final int SHUTDOWN_BOTH = getPRShutdownBoth();
 
     /**
      * Open the file at name (with the specified flags and mode) and create
@@ -96,4 +116,9 @@ public class PR {
      * See also: PR_GetErrorText in /usr/include/nspr4/prio.h
      */
     public static native byte[] GetErrorText();
+
+    /* Internal methods for querying constants. */
+    private static native int getPRShutdownRcv();
+    private static native int getPRShutdownSend();
+    private static native int getPRShutdownBoth();
 }

@@ -291,3 +291,21 @@ Java_org_mozilla_jss_nss_PR_GetErrorText(JNIEnv *env, jclass clazz)
     free(error_text);
     return result;
 }
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_PR_getPRShutdownRcv(JNIEnv *env, jclass clazz)
+{
+    return PR_SHUTDOWN_RCV;
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_PR_getPRShutdownSend(JNIEnv *env, jclass clazz)
+{
+    return PR_SHUTDOWN_SEND;
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_PR_getPRShutdownBoth(JNIEnv *env, jclass clazz)
+{
+    return PR_SHUTDOWN_BOTH;
+}
