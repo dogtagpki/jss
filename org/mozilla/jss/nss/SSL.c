@@ -140,6 +140,45 @@ Java_org_mozilla_jss_nss_SSL_SetURL(JNIEnv *env, jclass clazz, jobject fd,
     return SSL_SetURL(real_fd, real_url);
 }
 
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_SSL_CipherPrefSet(JNIEnv *env, jclass clazz,
+    jobject fd, jint cipher, jboolean enabled)
+{
+    PRFileDesc *real_fd = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_CipherPrefSet(real_fd, cipher, enabled);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_mozilla_jss_nss_SSL_CipherPrefGet(JNIEnv *env, jclass clazz,
+    jobject fd, jint cipher)
+{
+    PRFileDesc *real_fd = NULL;
+    int enabled = false;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+            "Unable to dereference fd object");
+        return enabled;
+    }
+
+    if (SSL_CipherPrefGet(real_fd, cipher, &enabled) != SECSuccess) {
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION,
+            "Unknown cipher suite to get or getting its value failed");
+        return enabled;
+    }
+
+    return enabled;
+}
+
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_nss_SSL_SecurityStatus(JNIEnv *env, jclass clazz,
     jobject fd)
