@@ -5,6 +5,8 @@ import org.mozilla.jss.nss.PRFDProxy;
 import org.mozilla.jss.nss.SSL;
 import org.mozilla.jss.nss.SecurityStatusResult;
 
+import org.mozilla.jss.ssl.SSLCipher;
+
 public class TestRawSSL {
     public static void TestSSLImportFD() {
         PRFDProxy fd = PR.NewTCPSocket();
@@ -39,6 +41,34 @@ public class TestRawSSL {
         // Ensure that getting an invalid option fails
         try {
             SSL.OptionGet(ssl_fd, 79999999);
+            assert(false);
+        } catch (Exception e) {
+            assert(true);
+        }
+
+        assert(PR.Close(ssl_fd) == 0);
+    }
+
+    public static void TestSSLCipherPref() throws Exception {
+        PRFDProxy fd = PR.NewTCPSocket();
+        assert(fd != null);
+
+        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        assert(ssl_fd != null);
+
+        int cipher = SSLCipher.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384.getID();
+
+        // Ensure that setting a ciphersuite works correctly
+        assert(SSL.CipherPrefSet(ssl_fd, cipher, false) == 0);
+        assert(SSL.CipherPrefGet(ssl_fd, cipher) == false);
+
+        assert(SSL.CipherPrefSet(ssl_fd, cipher, true) == 0);
+        assert(SSL.CipherPrefGet(ssl_fd, cipher) == true);
+
+        // Ensure that using an invalid ciphersuite fails.
+        assert(SSL.CipherPrefSet(ssl_fd, 0x999999, false) != 0);
+        try {
+            SSL.CipherPrefGet(ssl_fd, 0x999999);
             assert(false);
         } catch (Exception e) {
             assert(true);
@@ -104,6 +134,9 @@ public class TestRawSSL {
 
         System.out.println("Calling TestSSLSetURL()...");
         TestSSLSetURL();
+
+        System.out.println("Calling TestSSLCipherPref()...");
+        TestSSLCipherPref();
 
         System.out.println("Calling TestSSLSecurityStatus()...");
         TestSSLSecurityStatus();
