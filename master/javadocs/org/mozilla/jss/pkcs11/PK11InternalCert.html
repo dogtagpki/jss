@@ -98,10 +98,20 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li>java.security.cert.Certificate</li>
+<li>
+<ul class="inheritance">
+<li>java.security.cert.X509Certificate</li>
+<li>
+<ul class="inheritance">
 <li><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">org.mozilla.jss.pkcs11.PK11Cert</a></li>
 <li>
 <ul class="inheritance">
 <li>org.mozilla.jss.pkcs11.PK11InternalCert</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -112,7 +122,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../org/mozilla/jss/crypto/InternalCertificate.html" title="interface in org.mozilla.jss.crypto">InternalCertificate</a>, <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></dd>
+<dd>java.io.Serializable, java.security.cert.X509Extension, <a href="../../../../org/mozilla/jss/crypto/InternalCertificate.html" title="interface in org.mozilla.jss.crypto">InternalCertificate</a>, <a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
@@ -124,6 +134,10 @@ var activeTableTab = "activeTableTab";
 extends <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>
 implements <a href="../../../../org/mozilla/jss/crypto/InternalCertificate.html" title="interface in org.mozilla.jss.crypto">InternalCertificate</a></pre>
 <div class="block">A certificate that lives in the internal cert database.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#org.mozilla.jss.pkcs11.PK11InternalCert">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -142,6 +156,13 @@ implements <a href="../../../../org/mozilla/jss/crypto/InternalCertificate.html"
 </a>
 <h3>Nested classes/interfaces inherited from class&nbsp;org.mozilla.jss.pkcs11.<a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></h3>
 <code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.StringPrincipal.html" title="class in org.mozilla.jss.pkcs11">PK11Cert.StringPrincipal</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="nested.classes.inherited.from.class.java.security.cert.Certificate">
+<!--   -->
+</a>
+<h3>Nested classes/interfaces inherited from class&nbsp;java.security.cert.Certificate</h3>
+<code>java.security.cert.Certificate.CertificateRep</code></li>
 </ul>
 </li>
 </ul>
@@ -175,7 +196,7 @@ implements <a href="../../../../org/mozilla/jss/crypto/InternalCertificate.html"
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.mozilla.jss.pkcs11.<a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></h3>
-<code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#certProxy">certProxy</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#nickname">nickname</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#tokenProxy">tokenProxy</a></code></li>
+<code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#certProxy">certProxy</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#logger">logger</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#nickname">nickname</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#tokenProxy">tokenProxy</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="fields.inherited.from.class.org.mozilla.jss.crypto.InternalCertificate">
@@ -240,14 +261,28 @@ implements <a href="../../../../org/mozilla/jss/crypto/InternalCertificate.html"
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.mozilla.jss.pkcs11.<a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></h3>
-<code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getEncoded--">getEncoded</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerDN--">getIssuerDN</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerDNString--">getIssuerDNString</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNickname--">getNickname</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getOwningToken--">getOwningToken</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getPublicKey--">getPublicKey</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSerialNumber--">getSerialNumber</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSerialNumberByteArray--">getSerialNumberByteArray</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectDN--">getSubjectDN</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectDNString--">getSubjectDNString</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getTrust-int-">getTrust</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getUniqueID--">getUniqueID</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getVersion--">getVersion</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#setTrust-int-int-">setTrust</a></code></li>
+<code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#checkValidity--">checkValidity</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#checkValidity-java.util.Date-">checkValidity</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getBasicConstraints--">getBasicConstraints</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getCriticalExtensionOIDs--">getCriticalExtensionOIDs</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getEncoded--">getEncoded</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getExtensionValue-java.lang.String-">getExtensionValue</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerDN--">getIssuerDN</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerDNString--">getIssuerDNString</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getIssuerUniqueID--">getIssuerUniqueID</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getKeyUsage--">getKeyUsage</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNickname--">getNickname</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNonCriticalExtensionOIDs--">getNonCriticalExtensionOIDs</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNotAfter--">getNotAfter</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getNotBefore--">getNotBefore</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getOwningToken--">getOwningToken</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getPublicKey--">getPublicKey</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSerialNumber--">getSerialNumber</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSerialNumberByteArray--">getSerialNumberByteArray</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSigAlgName--">getSigAlgName</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSigAlgOID--">getSigAlgOID</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSigAlgParams--">getSigAlgParams</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSignature--">getSignature</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectDN--">getSubjectDN</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectDNString--">getSubjectDNString</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getSubjectUniqueID--">getSubjectUniqueID</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getTBSCertificate--">getTBSCertificate</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getTrust-int-">getTrust</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getUniqueID--">getUniqueID</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#getVersion--">getVersion</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#hasUnsupportedCriticalExtension--">hasUnsupportedCriticalExtension</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#setTrust-int-int-">setTrust</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#toString--">toString</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#verify-java.security.PublicKey-">verify</a>, <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html#verify-java.security.PublicKey-java.lang.String-">verify</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.java.security.cert.X509Certificate">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.security.cert.X509Certificate</h3>
+<code>getExtendedKeyUsage, getIssuerAlternativeNames, getIssuerX500Principal, getSubjectAlternativeNames, getSubjectX500Principal, verify</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.java.security.cert.Certificate">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.security.cert.Certificate</h3>
+<code>equals, getType, hashCode, writeReplace</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, finalize, getClass, notify, notifyAll, wait, wait, wait</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.mozilla.jss.crypto.X509Certificate">
