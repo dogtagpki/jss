@@ -39,6 +39,23 @@ public class SSL {
     public static native int SetURL(PRFDProxy fd, String url);
 
     /**
+     * Set the preference for a specific cipher suite on the specified
+     * PRFileDesc.
+     *
+     * See also: SSL_CipherPrefSet in /usr/include/nss3/ssl.h
+     */
+    public static native int CipherPrefSet(PRFDProxy fd, int cipher, boolean enabled);
+
+    /**
+     * Get the preference for a specific cipher suite on the specified
+     * PRFileDesc. Note that this can raise an Exception when the cipher
+     * is unknown.
+     *
+     * See also: SSL_CipherPrefGet in /usr/include/nss3/ssl.h
+     */
+    public static native boolean CipherPrefGet(PRFDProxy fd, int cipher) throws Exception;
+
+    /**
      * Check the security status of a SSL handshake.
      *
      * See also: SSL_SecurityStatus in /usr/include/nss3/ssl.h
