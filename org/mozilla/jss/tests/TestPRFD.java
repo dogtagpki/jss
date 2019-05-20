@@ -63,11 +63,18 @@ public class TestPRFD {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        PR.Shutdown(fd, 0);
-        PR.Shutdown(fd, 1);
-        PR.Shutdown(fd, 2);
+        PR.Shutdown(fd, PR.SHUTDOWN_RCV);
+        PR.Shutdown(fd, PR.SHUTDOWN_SEND);
+        PR.Shutdown(fd, PR.SHUTDOWN_BOTH);
 
         assert(PR.Close(fd) == 0);
+    }
+
+    public static void TestConstants() {
+        // Test to ensure constants present
+        System.out.println("PR.SHUTDOWN_RCV: " + PR.SHUTDOWN_RCV);
+        System.out.println("PR.SHUTDOWN_SEND: " + PR.SHUTDOWN_SEND);
+        System.out.println("PR.SHUTDOWN_BOTH: " + PR.SHUTDOWN_BOTH);
     }
 
     public static void main(String[] args) {
@@ -93,5 +100,8 @@ public class TestPRFD {
 
         System.out.println("Calling TestShutdown()...");
         TestShutdown();
+
+        System.out.println("Calling TestConstants()...");
+        TestConstants();
     }
 }

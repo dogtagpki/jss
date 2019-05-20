@@ -188,8 +188,8 @@ public class TestBufferPRFD {
         }
 
         /* Close connections */
-        assert(PR.Shutdown(c_nspr, 2) == 0);
-        assert(PR.Shutdown(s_nspr, 2) == 0);
+        assert(PR.Shutdown(c_nspr, PR.SHUTDOWN_BOTH) == 0);
+        assert(PR.Shutdown(s_nspr, PR.SHUTDOWN_BOTH) == 0);
 
         /* Clean up */
         assert(PR.Close(c_nspr) == 0);
