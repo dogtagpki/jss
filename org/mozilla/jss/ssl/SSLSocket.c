@@ -25,6 +25,8 @@
 #define AF_INET6 23
 #endif
 
+#include "SSLVersionRange.h"
+
 
 /*
  * support TLS v1.1, v1.2, and v1.3
@@ -39,8 +41,6 @@ Java_org_mozilla_jss_ssl_SSLSocket_boundSSLVersionRange(JNIEnv *env,
     SSLVersionRange vrange;
     SSLVersionRange supported_range;
     jobject versionRange = NULL;
-    jclass versionRangeClass;
-    jmethodID versionRangeCons;
 
     if (ssl_variant <0 || ssl_variant >= JSSL_enums_size||
             min <0 || min >= JSSL_enums_size ||
@@ -68,40 +68,9 @@ Java_org_mozilla_jss_ssl_SSLSocket_boundSSLVersionRange(JNIEnv *env,
     supported_range.min = MAX(supported_range.min, vrange.min);
     supported_range.max = MIN(supported_range.max, vrange.max);
 
-    /* convert new min/max values back to the JSSL_enums indexes */
-    for (int i = 0; i < JSSL_enums_size; i++) {
-        if (JSSL_enums[i] == supported_range.min) {
-            supported_range.min = i;
-            break;
-        }
-    }
-    for (int i = 0; i < JSSL_enums_size; i++) {
-        if (JSSL_enums[i] == supported_range.max) {
-            supported_range.max = i;
-            break;
-        }
-    }
+    /* wrap NSS's SSLVersionRange into a org.mozilla.jss.ssl.SSLVersionRange */
+    versionRange = JSS_SSL_wrapVersionRange(env, supported_range);
 
-    /*
-     * package the status into a new SSLVersionRange object
-     */
-    versionRangeClass = (*env)->FindClass(env, SSL_VERSION_RANGE_CLASS_NAME);
-    PR_ASSERT(versionRangeClass != NULL);
-    if( versionRangeClass == NULL ) {
-        /* exception was thrown */
-        goto finish;
-    }
-
-    versionRangeCons = (*env)->GetMethodID(env, versionRangeClass,
-                            SSL_VERSION_RANGE_CONSTRUCTOR_NAME,
-                            SSL_VERSION_RANGE_CONSTRUCTOR_SIG);
-    PR_ASSERT(versionRangeCons != NULL);
-    if(versionRangeCons == NULL ) {
-        /* exception was thrown */
-        goto finish;
-    }
-    versionRange = (*env)->NewObject(env, versionRangeClass, versionRangeCons,
-            supported_range.min, supported_range.max);
 finish:
     return versionRange;
 }
