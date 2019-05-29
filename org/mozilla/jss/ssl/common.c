@@ -416,6 +416,21 @@ PRInt32 JSSL_enums[] = {
     0
 };
 
+/*
+ * Reverses the above table mapping enum value -> NSS constant.
+ */
+int JSSL_enums_reverse(PRInt32 value)
+{
+    int index = 0;
+    for (index = 0; index < JSSL_enums_size; index++) {
+        if (JSSL_enums[index] == value) {
+            return index;
+        }
+    }
+
+    return index;
+}
+
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketBase_socketBind
     (JNIEnv *env, jobject self, jbyteArray addrBA, jint port)
