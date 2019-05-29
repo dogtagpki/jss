@@ -5,11 +5,13 @@
 #include <stdint.h>
 #include <jni.h>
 
+#include "jssl.h"
 #include "java_ids.h"
 #include "jss_exceptions.h"
 #include "jssutil.h"
 #include "pk11util.h"
 #include "PRFDProxy.h"
+#include "SSLVersionRange.h"
 
 #include "_jni/org_mozilla_jss_nss_SSL.h"
 
@@ -177,6 +179,62 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefGet(JNIEnv *env, jclass clazz,
     }
 
     return enabled;
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_SSL_VersionRangeSetNative(JNIEnv *env, jclass clazz,
+    jobject fd, jint min_ssl, jint max_ssl)
+{
+    PRFileDesc *real_fd = NULL;
+    SSLVersionRange vrange;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (min_ssl < 0 || min_ssl >= JSSL_enums_size ||
+            max_ssl < 0 || max_ssl >= JSSL_enums_size)
+    {
+        char buf[128];
+        snprintf(buf, 128,
+                 "SSL.VersionRangeSetNative(): for min=%d max=%d failed - out of range for array JSSL_enums size: %d",
+                 min_ssl, max_ssl, JSSL_enums_size);
+        JSSL_throwSSLSocketException(env, buf);
+        return SECFailure;
+    }
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+            "Unable to dereference fd object");
+        return SECFailure;
+    }
+
+    vrange.min = JSSL_enums[min_ssl];
+    vrange.max = JSSL_enums[max_ssl];
+
+    return SSL_VersionRangeSet(real_fd, &vrange);
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_nss_SSL_VersionRangeGet(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    SSLVersionRange vrange;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+            "Unable to dereference fd object");
+        return NULL;
+    }
+
+    if (SSL_VersionRangeGet(real_fd, &vrange) != SECSuccess) {
+        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+            "Unable to dereference fd object");
+        return NULL;
+    }
+
+    return JSS_SSL_wrapVersionRange(env, vrange);
 }
 
 JNIEXPORT jobject JNICALL
