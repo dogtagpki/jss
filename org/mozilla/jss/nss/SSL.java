@@ -8,6 +8,8 @@ package org.mozilla.jss.nss;
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 
+import org.mozilla.jss.ssl.SSLVersionRange;
+
 public class SSL {
     /**
      * Import a file descriptor to create a new SSL file descriptor out of it.
@@ -54,6 +56,30 @@ public class SSL {
      * See also: SSL_CipherPrefGet in /usr/include/nss3/ssl.h
      */
     public static native boolean CipherPrefGet(PRFDProxy fd, int cipher) throws Exception;
+
+    /**
+     * Set the range of TLS versions enabled by this server by SSLVersionRange.
+     *
+     * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
+     */
+    public static int VersionRangeSet(PRFDProxy fd, SSLVersionRange range) {
+        return VersionRangeSetNative(fd, range.getMinEnum(), range.getMaxEnum());
+    }
+
+    /**
+     * Set the range of TLS versions enabled by this server. The integer
+     * parameters are values of the SSLVersion enum.
+     *
+     * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
+     */
+    private static native int VersionRangeSetNative(PRFDProxy fd, int min_ssl, int max_ssl);
+
+    /**
+     * Get the range of TLS versions enabled by this server.
+     *
+     * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
+     */
+    public static native SSLVersionRange VersionRangeGet(PRFDProxy fd) throws Exception;
 
     /**
      * Check the security status of a SSL handshake.
