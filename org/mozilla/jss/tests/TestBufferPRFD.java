@@ -7,6 +7,7 @@ import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.pkix.*;
 import org.mozilla.jss.nss.*;
+import org.mozilla.jss.ssl.*;
 import org.mozilla.jss.util.*;
 
 public class TestBufferPRFD {
@@ -60,7 +61,7 @@ public class TestBufferPRFD {
     }
 
     public synchronized static PRFDProxy Setup_NSS_Server(PRFDProxy fd, String host,
-        PK11Cert cert, PK11PrivKey key)
+        PK11Cert cert, PK11PrivKey key) throws Exception
     {
         PRFDProxy model = SSL.ImportFD(null, PR.NewTCPSocket());
         assert(model != null);
@@ -74,6 +75,8 @@ public class TestBufferPRFD {
         assert(SSL.ResetHandshake(fd, true) == 0);
         assert(SSL.SetURL(fd, host) == 0);
 
+        TestSSLVersionGetSet(fd);
+
         return fd;
     }
 
@@ -84,6 +87,20 @@ public class TestBufferPRFD {
         assert(c_result != null && s_result != null);
 
         return c_result.on == 1 && s_result.on == 1;
+    }
+
+    public synchronized static void TestSSLVersionGetSet(PRFDProxy s_nspr) throws Exception {
+        SSLVersionRange initial = SSL.VersionRangeGet(s_nspr);
+        System.out.println("Initial: (" + initial.getMinVersion() + ":" + initial.getMinEnum() + ", " + initial.getMaxVersion() + ":" + initial.getMaxEnum() + ")");
+
+        SSLVersionRange vrange = new SSLVersionRange(SSLVersion.TLS_1_1, SSLVersion.TLS_1_3);
+
+        assert(SSL.VersionRangeSet(s_nspr, vrange) == 0);
+
+        SSLVersionRange actual = SSL.VersionRangeGet(s_nspr);
+        System.out.println("Actual: (" + actual.getMinVersion() + ":" + actual.getMinEnum() + ", " + actual.getMaxVersion() + ":" + actual.getMaxEnum() + ")");
+        assert(actual.getMinEnum() <= SSLVersion.TLS_1_2.value());
+        assert(SSLVersion.TLS_1_2.value() <= actual.getMaxEnum());
     }
 
     public synchronized static void TestSSLHandshake(String database, String password) throws Exception {
