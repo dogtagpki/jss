@@ -10,8 +10,8 @@ cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Define optional variables and conditionals.
-if (DEFINED CHECK_DEPRECATION)
-    set(CMAKE_JAVA_COMPILE_FLAGS "-Xlint:deprecation")
+if (DEFINED ENV{CHECK_DEPRECATION})
+    list(APPEND JSS_JAVAC_FLAGS "-Xlint:deprecation")
 endif()
 
 # Build a debug build by default when no type is specified on the command line
