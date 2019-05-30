@@ -1068,6 +1068,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/DerValue.html#buffer">buffer</a></span> - Variable in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/DerValue.html" title="class in org.mozilla.jss.netscape.security.util">DerValue</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Buffer</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Buffer--">Buffer()</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">BufferProxy</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BufferProxy.html#BufferProxy-byte:A-">BufferProxy(byte[])</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/CryptoManager.html#buildCertificateChain-org.mozilla.jss.crypto.X509Certificate-">buildCertificateChain(X509Certificate)</a></span> - Method in class org.mozilla.jss.<a href="org/mozilla/jss/CryptoManager.html" title="class in org.mozilla.jss">CryptoManager</a></dt>
 <dd>
 <div class="block">Given a certificate, constructs its certificate chain.</div>
@@ -1128,6 +1136,18 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/HoldInstructionExtension.html#CALL_ISSUER_HOLD_INSTR_OID_STR">CALL_ISSUER_HOLD_INSTR_OID_STR</a></span> - Static variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/HoldInstructionExtension.html" title="class in org.mozilla.jss.netscape.security.x509">HoldInstructionExtension</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#CanRead-org.mozilla.jss.nss.BufferProxy-">CanRead(BufferProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Check whether or not the buffer can be read from (i.e., is non-empty).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#CanWrite-org.mozilla.jss.nss.BufferProxy-">CanWrite(BufferProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Check whether or not the buffer can be written to (i.e., is not full).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Capacity-org.mozilla.jss.nss.BufferProxy-">Capacity(BufferProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Check the total capacity of a buffer object.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/EncryptionAlgorithm.Mode.html#CBC">CBC</a></span> - Static variable in class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/EncryptionAlgorithm.Mode.html" title="class in org.mozilla.jss.crypto">EncryptionAlgorithm.Mode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/netscape/security/util/Cert.html" title="class in org.mozilla.jss.netscape.security.util"><span class="typeNameLink">Cert</span></a> - Class in <a href="org/mozilla/jss/netscape/security/util/package-summary.html">org.mozilla.jss.netscape.security.util</a></dt>
@@ -1863,8 +1883,20 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/Cipher.html#Cipher--">Cipher()</a></span> - Constructor for class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/Cipher.html" title="class in org.mozilla.jss.crypto">Cipher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#cipher">cipher</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/ssl/CipherPolicy.html" title="class in org.mozilla.jss.ssl"><span class="typeNameLink">CipherPolicy</span></a> - Class in <a href="org/mozilla/jss/ssl/package-summary.html">org.mozilla.jss.ssl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#CipherPrefGet-org.mozilla.jss.nss.PRFDProxy-int-">CipherPrefGet(PRFDProxy, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Get the preference for a specific cipher suite on the specified
+ PRFileDesc.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#CipherPrefSet-org.mozilla.jss.nss.PRFDProxy-int-boolean-">CipherPrefSet(PRFDProxy, int, boolean)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the preference for a specific cipher suite on the specified
+ PRFileDesc.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PKCS11Constants.html#CKA_AC_ISSUER">CKA_AC_ISSUER</a></span> - Static variable in interface org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PKCS11Constants.html" title="interface in org.mozilla.jss.pkcs11">PKCS11Constants</a></dt>
 <dd>
 <div class="block">Content automatically generated; see NSS documentation for more information.</div>
@@ -4802,6 +4834,10 @@
 <dd>
 <div class="block">Allows a SymmetricKey to be cloned on a different token.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Close-org.mozilla.jss.nss.PRFDProxy-">Close(PRFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Close an existing PRFDProxy.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#close--">close()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServerSocket.html" title="class in org.mozilla.jss.ssl">SSLServerSocket</a></dt>
 <dd>
 <div class="block">Closes this socket.</div>
@@ -4934,6 +4970,14 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/InitializationValues.html#configDir">configDir</a></span> - Variable in class org.mozilla.jss.<a href="org/mozilla/jss/InitializationValues.html" title="class in org.mozilla.jss">InitializationValues</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigSecureServer-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-int-">ConfigSecureServer(PRFDProxy, PK11Cert, PK11PrivKey, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Configure the certificate and private key for a server socket.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigServerSessionIDCache-int-long-long-java.lang.String-">ConfigServerSessionIDCache(int, long, long, String)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Configure the server's session cache.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#configServerSessionIDCache-int-int-int-java.lang.String-">configServerSessionIDCache(int, int, int, String)</a></span> - Static method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServerSocket.html" title="class in org.mozilla.jss.ssl">SSLServerSocket</a></dt>
 <dd>
 <div class="block">Configures the session ID cache.</div>
@@ -5116,6 +5160,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/CPSuri.html#CPSuri-org.mozilla.jss.netscape.security.util.DerValue-">CPSuri(DerValue)</a></span> - Constructor for class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/CPSuri.html" title="class in org.mozilla.jss.netscape.security.x509">CPSuri</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Create-long-">Create(long)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Create a new j_buffer object with the specified number of bytes.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#create_EPKI_with_PBE_PKCS5_PBES2-org.mozilla.jss.crypto.CryptoToken-org.mozilla.jss.crypto.PrivateKey-org.mozilla.jss.util.Password-">create_EPKI_with_PBE_PKCS5_PBES2(CryptoToken, PrivateKey, Password)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#create_EPKI_with_PBE_SHA1_DES3_CBC-org.mozilla.jss.crypto.CryptoToken-org.mozilla.jss.crypto.PrivateKey-org.mozilla.jss.util.Password-">create_EPKI_with_PBE_SHA1_DES3_CBC(CryptoToken, PrivateKey, Password)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
@@ -8962,6 +9010,10 @@
 <div class="block"><span class="deprecationComment">finalize() in Object has been deprecated</span></div>
 </div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BufferProxy.html#finalize--">finalize()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PRFDProxy.html#finalize--">finalize()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#finalize--">finalize()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServerSocket.html" title="class in org.mozilla.jss.ssl">SSLServerSocket</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -9052,6 +9104,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/extensions/CertInfo.html#FORCE_VERSION_3">FORCE_VERSION_3</a></span> - Static variable in class org.mozilla.jss.netscape.security.extensions.<a href="org/mozilla/jss/netscape/security/extensions/CertInfo.html" title="class in org.mozilla.jss.netscape.security.extensions">CertInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ForceHandshake-org.mozilla.jss.nss.PRFDProxy-">ForceHandshake(PRFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Force a handshake to occur if not started, else step one.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLSocket.html#forceHandshake--">forceHandshake()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></dt>
 <dd>
 <div class="block">Force an already started SSL handshake to complete.</div>
@@ -9098,6 +9154,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/CipherPolicy.html#FRANCE">FRANCE</a></span> - Static variable in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/CipherPolicy.html" title="class in org.mozilla.jss.ssl">CipherPolicy</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Free-org.mozilla.jss.nss.BufferProxy-">Free(BufferProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Destroy a buffer object, freeing its resources.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/PKIXExtensions.html#FreshestCRL_Id">FreshestCRL_Id</a></span> - Static variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/PKIXExtensions.html" title="class in org.mozilla.jss.netscape.security.x509">PKIXExtensions</a></dt>
 <dd>
 <div class="block">Identifies how delta CRL information is obtained.</div>
@@ -9625,6 +9685,10 @@
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html#get-java.lang.String-">get(String)</a></span> - Method in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertInfo</a></dt>
 <dd>
 <div class="block">Get the certificate attribute.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Get-org.mozilla.jss.nss.BufferProxy-">Get(BufferProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Get a single character from the buffer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/LdapV3DNStrConverter.html#getAcceptUnknownOids--">getAcceptUnknownOids()</a></span> - Method in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/LdapV3DNStrConverter.html" title="class in org.mozilla.jss.netscape.security.x509">LdapV3DNStrConverter</a></dt>
 <dd>
@@ -10847,6 +10911,14 @@
 <dd>
 <div class="block">Returns an error code, as defined in class
  <code>org.mozilla.jss.util.NativeErrcodes</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#GetError--">GetError()</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Get the value of the current PR error.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#GetErrorText--">GetErrorText()</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Get the error text of the current PR error.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmc/OtherInfo.html#getExtendedFailInfo--">getExtendedFailInfo()</a></span> - Method in class org.mozilla.jss.pkix.cmc.<a href="org/mozilla/jss/pkix/cmc/OtherInfo.html" title="class in org.mozilla.jss.pkix.cmc">OtherInfo</a></dt>
 <dd>
@@ -14432,6 +14504,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Store.html#importEncryptedPrivateKeyInfo-org.mozilla.jss.crypto.KeyGenerator.CharToByteConverter-org.mozilla.jss.util.Password-java.lang.String-java.security.PublicKey-byte:A-">importEncryptedPrivateKeyInfo(KeyGenerator.CharToByteConverter, Password, String, PublicKey, byte[])</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Store.html" title="class in org.mozilla.jss.pkcs11">PK11Store</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ImportFD-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.nss.PRFDProxy-">ImportFD(PRFDProxy, PRFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Import a file descriptor to create a new SSL file descriptor out of it.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#importKey-org.mozilla.jss.netscape.security.pkcs.PKCS12-org.mozilla.jss.util.Password-java.lang.String-org.mozilla.jss.netscape.security.pkcs.PKCS12KeyInfo-">importKey(PKCS12, Password, String, PKCS12KeyInfo)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/CryptoStore.html#importPrivateKey-byte:A-org.mozilla.jss.crypto.PrivateKey.Type-">importPrivateKey(byte[], PrivateKey.Type)</a></span> - Method in interface org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/CryptoStore.html" title="interface in org.mozilla.jss.crypto">CryptoStore</a></dt>
@@ -15013,6 +15089,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html#issuer">issuer</a></span> - Variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#issuer">issuer</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cms/SignerIdentifier.html#ISSUER_AND_SERIALNUMBER">ISSUER_AND_SERIALNUMBER</a></span> - Static variable in class org.mozilla.jss.pkix.cms.<a href="org/mozilla/jss/pkix/cms/SignerIdentifier.html" title="class in org.mozilla.jss.pkix.cms">SignerIdentifier</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS9Attribute.html#ISSUER_AND_SERIALNUMBER_OID">ISSUER_AND_SERIALNUMBER_OID</a></span> - Static variable in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS9Attribute.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS9Attribute</a></dt>
@@ -15483,6 +15561,8 @@
  be used to perform.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/InitializationValues.html#keyPrefix">keyPrefix</a></span> - Variable in class org.mozilla.jss.<a href="org/mozilla/jss/InitializationValues.html" title="class in org.mozilla.jss">InitializationValues</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#keySize">keySize</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/pkcs11/KeyType.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">KeyType</span></a> - Class in <a href="org/mozilla/jss/pkcs11/package-summary.html">org.mozilla.jss.pkcs11</a></dt>
 <dd>
@@ -16124,6 +16204,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Token.html#needsLogin--">needsLogin()</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Token.html" title="class in org.mozilla.jss.pkcs11">PK11Token</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#NewBufferPRFD-org.mozilla.jss.nss.BufferProxy-org.mozilla.jss.nss.BufferProxy-byte:A-">NewBufferPRFD(BufferProxy, BufferProxy, byte[])</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Create a new j_buffer backed PRFileDesc, mimicing a TCP socket with
+ the specified peer_info.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/IA5Charset.html#newDecoder--">newDecoder()</a></span> - Method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/IA5Charset.html" title="class in org.mozilla.jss.netscape.security.util">IA5Charset</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/PrintableCharset.html#newDecoder--">newDecoder()</a></span> - Method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/PrintableCharset.html" title="class in org.mozilla.jss.netscape.security.util">PrintableCharset</a></dt>
@@ -16136,6 +16221,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/UniversalCharset.html#newEncoder--">newEncoder()</a></span> - Method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/UniversalCharset.html" title="class in org.mozilla.jss.netscape.security.util">UniversalCharset</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#NewTCPSocket--">NewTCPSocket()</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Open a new TCP Socket and create a new PRFDProxy for that socket.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/JSSSecureRandom.html#nextBytes-byte:A-">nextBytes(byte[])</a></span> - Method in interface org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/JSSSecureRandom.html" title="interface in org.mozilla.jss.crypto">JSSSecureRandom</a></dt>
 <dd>
 <div class="block">Retrieves random bytes and stores them in the given array.</div>
@@ -16601,13 +16690,28 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/OIDName.html#OIDName-java.lang.String-">OIDName(String)</a></span> - Constructor for class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/OIDName.html" title="class in org.mozilla.jss.netscape.security.x509">OIDName</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#on">on</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/CryptoToken.html#ONE_TIME">ONE_TIME</a></span> - Static variable in interface org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a></dt>
 <dd>
 <div class="block">Login once, never need to re-enter the password until you log out.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Open-java.lang.String-int-int-">Open(String, int, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Open the file at name (with the specified flags and mode) and create
+ a new PRFDProxy (to a NSPR PRFileDesc *) for that file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/InitializationValues.html#optimizeSpace">optimizeSpace</a></span> - Variable in class org.mozilla.jss.<a href="org/mozilla/jss/InitializationValues.html" title="class in org.mozilla.jss">InitializationValues</a></dt>
 <dd>
 <div class="block">Use smaller tables and caches.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#OptionGet-org.mozilla.jss.nss.PRFDProxy-int-">OptionGet(PRFDProxy, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Get the value of a SSL option on the specified PRFileDesc.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#OptionSet-org.mozilla.jss.nss.PRFDProxy-int-int-">OptionSet(PRFDProxy, int, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the value of a SSL option on the specified PRFileDesc.</div>
 </dd>
 <dt><a href="org/mozilla/jss/package-summary.html">org.mozilla.jss</a> - package org.mozilla.jss</dt>
 <dd>
@@ -16632,6 +16736,8 @@
 <dt><a href="org/mozilla/jss/netscape/security/util/package-summary.html">org.mozilla.jss.netscape.security.util</a> - package org.mozilla.jss.netscape.security.util</dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/netscape/security/x509/package-summary.html">org.mozilla.jss.netscape.security.x509</a> - package org.mozilla.jss.netscape.security.x509</dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a> - package org.mozilla.jss.nss</dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/pkcs10/package-summary.html">org.mozilla.jss.pkcs10</a> - package org.mozilla.jss.pkcs10</dt>
 <dd>
@@ -17746,6 +17852,13 @@ a symmetric key.</div>
 <div class="block">Creates a PQGParams object from a set of pre-computed DSA
  parameters.</div>
 </dd>
+<dt><a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">PR</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>
+<div class="block">This class provides static access to raw NSPS calls with the PR prefix,
+ and handles the usage of NativeProxy objects.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#PR--">PR()</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeErrcodes.html#PR_ACCESS_FAULT_ERROR">PR_ACCESS_FAULT_ERROR</a></span> - Static variable in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeErrcodes.html" title="class in org.mozilla.jss.util">NativeErrcodes</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeErrcodes.html#PR_ADDRESS_IN_USE_ERROR">PR_ADDRESS_IN_USE_ERROR</a></span> - Static variable in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeErrcodes.html" title="class in org.mozilla.jss.util">NativeErrcodes</a></dt>
@@ -17921,6 +18034,10 @@ a symmetric key.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/PrettyPrintResources.html#PrettyPrintResources--">PrettyPrintResources()</a></span> - Constructor for class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/PrettyPrintResources.html" title="class in org.mozilla.jss.netscape.security.util">PrettyPrintResources</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">PRFDProxy</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PRFDProxy.html#PRFDProxy-byte:A-">PRFDProxy(byte[])</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/asn1/ASN1Header.html#PRIMITIVE">PRIMITIVE</a></span> - Static variable in class org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Header.html" title="class in org.mozilla.jss.asn1">ASN1Header</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/asn1/Form.html#PRIMITIVE">PRIMITIVE</a></span> - Static variable in class org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/Form.html" title="class in org.mozilla.jss.asn1">Form</a></dt>
@@ -18090,6 +18207,10 @@ a symmetric key.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS9Attribute.html#PUBLIC_KEY_STR">PUBLIC_KEY_STR</a></span> - Static variable in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS9Attribute.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS9Attribute</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Put-org.mozilla.jss.nss.BufferProxy-byte-">Put(BufferProxy, byte)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Put a single character into the buffer.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/DerOutputStream.html#putBitString-byte:A-">putBitString(byte[])</a></span> - Method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/DerOutputStream.html" title="class in org.mozilla.jss.netscape.security.util">DerOutputStream</a></dt>
 <dd>
 <div class="block">Marshals a DER bit string on the output stream.</div>
@@ -18320,6 +18441,14 @@ a symmetric key.</div>
 </dd>
 <dt><a href="org/mozilla/jss/pkix/primitive/RDN.Template.html" title="class in org.mozilla.jss.pkix.primitive"><span class="typeNameLink">RDN.Template</span></a> - Class in <a href="org/mozilla/jss/pkix/primitive/package-summary.html">org.mozilla.jss.pkix.primitive</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Read-org.mozilla.jss.nss.BufferProxy-long-">Read(BufferProxy, long)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Read the specified number of bytes from the buffer.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Read-org.mozilla.jss.nss.PRFDProxy-int-">Read(PRFDProxy, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Read up to amount bytes from a PRFDProxy.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/Base64InputStream.html#read--">read()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/Base64InputStream.html" title="class in org.mozilla.jss.util">Base64InputStream</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/Base64InputStream.html#read-byte:A-int-int-">read(byte[], int, int)</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/Base64InputStream.html" title="class in org.mozilla.jss.util">Base64InputStream</a></dt>
@@ -18395,6 +18524,11 @@ a symmetric key.</div>
 <dd>
 <div class="block">A template file for decoding a RecipientInfo blob</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Recv-org.mozilla.jss.nss.PRFDProxy-int-int-long-">Recv(PRFDProxy, int, int, long)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Recv up to amount bytes from a PRFDProxy, given the specified receive
+ flags and timeout value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLSocket.html#redoHandshake--">redoHandshake()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></dt>
 <dd>
 <div class="block">Causes SSL to begin a full, new SSL 3.0 handshake from scratch
@@ -18410,6 +18544,10 @@ a symmetric key.</div>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/HoldInstructionExtension.html#REJECT_HOLD_INSTR_OID_STR">REJECT_HOLD_INSTR_OID_STR</a></span> - Static variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/HoldInstructionExtension.html" title="class in org.mozilla.jss.netscape.security.x509">HoldInstructionExtension</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmmf/PKIStatusInfo.html#rejection">rejection</a></span> - Static variable in class org.mozilla.jss.pkix.cmmf.<a href="org/mozilla/jss/pkix/cmmf/PKIStatusInfo.html" title="class in org.mozilla.jss.pkix.cmmf">PKIStatusInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BufferProxy.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PRFDProxy.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/TokenProxy.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/TokenProxy.html" title="class in org.mozilla.jss.pkcs11">TokenProxy</a></dt>
 <dd>&nbsp;</dd>
@@ -18560,6 +18698,10 @@ a symmetric key.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/Base64InputStream.html#reset--">reset()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/Base64InputStream.html" title="class in org.mozilla.jss.util">Base64InputStream</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ResetHandshake-org.mozilla.jss.nss.PRFDProxy-boolean-">ResetHandshake(PRFDProxy, boolean)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Reset the handshake status, optionally handshaking as a server.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLSocket.html#resetHandshake--">resetHandshake()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></dt>
 <dd>
 <div class="block">Resets the handshake state.</div>
@@ -19193,6 +19335,20 @@ a symmetric key.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/SecretKeyFacade.html#SecretKeyFacade-org.mozilla.jss.crypto.SymmetricKey-">SecretKeyFacade(SymmetricKey)</a></span> - Constructor for class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/SecretKeyFacade.html" title="class in org.mozilla.jss.crypto">SecretKeyFacade</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#secretKeySize">secretKeySize</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#SecurityStatus-org.mozilla.jss.nss.PRFDProxy-">SecurityStatus(PRFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Check the security status of a SSL handshake.</div>
+</dd>
+<dt><a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">SecurityStatusResult</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>
+<div class="block">The fields in a SecurityStatusResult indicate whether a given SSL-enabled
+ PRFileDesc has completed its handshake and the resulting handshake-specific
+ information.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#SecurityStatusResult-int-byte:A-int-int-byte:A-byte:A-">SecurityStatusResult(int, byte[], int, int, byte[], byte[])</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLClientCertificateSelectionCallback.html#select-java.util.Vector-">select(Vector&lt;String&gt;)</a></span> - Method in interface org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLClientCertificateSelectionCallback.html" title="interface in org.mozilla.jss.ssl">SSLClientCertificateSelectionCallback</a></dt>
 <dd>
 <div class="block">This method will be called from the native callback code
@@ -19202,6 +19358,11 @@ a symmetric key.</div>
 <dd>
 <div class="block">this method will be called form the native callback code
   when a certificate is requested.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Send-org.mozilla.jss.nss.PRFDProxy-byte:A-int-long-">Send(PRFDProxy, byte[], int, long)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Send the specified bytes via the PRFDProxy, given the specified
+ send flags and timeout value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12.html#SEND_WARN">SEND_WARN</a></span> - Static variable in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12</a></dt>
 <dd>&nbsp;</dd>
@@ -20003,6 +20164,10 @@ a symmetric key.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#setTrustFlagsEnabled-boolean-">setTrustFlagsEnabled(boolean)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#SetURL-org.mozilla.jss.nss.PRFDProxy-java.lang.String-">SetURL(PRFDProxy, String)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the hostname of a handshake on the specified PRFileDesc.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#setUseClientMode-boolean-">setUseClientMode(boolean)</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServerSocket.html" title="class in org.mozilla.jss.ssl">SSLServerSocket</a></dt>
 <dd>
 <div class="block">Determines whether this end of the socket is the client or the server
@@ -20144,6 +20309,22 @@ a symmetric key.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/ShortBufferException.html#ShortBufferException--">ShortBufferException()</a></span> - Constructor for exception org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/ShortBufferException.html" title="class in org.mozilla.jss.crypto">ShortBufferException</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Shutdown-org.mozilla.jss.nss.PRFDProxy-int-">Shutdown(PRFDProxy, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Shutdown an existing PRFDProxy.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#SHUTDOWN_BOTH">SHUTDOWN_BOTH</a></span> - Static variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Shut down both sides of the TCP connection.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#SHUTDOWN_RCV">SHUTDOWN_RCV</a></span> - Static variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Shut down the receiving side of the TCP connection.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#SHUTDOWN_SEND">SHUTDOWN_SEND</a></span> - Static variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Shut down the sending side of the TCP connection.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLSocket.html#shutdownInput--">shutdownInput()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></dt>
 <dd>
 <div class="block">Shuts down the input side of the socket.</div>
@@ -20373,6 +20554,10 @@ a symmetric key.</div>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/Utils.html#SpecialEncode-byte:A-">SpecialEncode(byte[])</a></span> - Static method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/Utils.html" title="class in org.mozilla.jss.netscape.security.util">Utils</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/Utils.html#SpecialURLDecode-java.lang.String-">SpecialURLDecode(String)</a></span> - Static method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/Utils.html" title="class in org.mozilla.jss.netscape.security.util">Utils</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">SSL</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#SSL--">SSL()</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11InternalCert.html#SSL">SSL</a></span> - Static variable in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11InternalCert.html" title="class in org.mozilla.jss.pkcs11">PK11InternalCert</a></dt>
 <dd>&nbsp;</dd>
@@ -21063,6 +21248,8 @@ a symmetric key.</div>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html#SUBJECT">SUBJECT</a></span> - Static variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html#subject">subject</a></span> - Variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SecurityStatusResult.html#subject">subject</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertImpl.html#SUBJECT_DN">SUBJECT_DN</a></span> - Static variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertImpl.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertImpl</a></dt>
 <dd>
@@ -23907,6 +24094,14 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html#version">version</a></span> - Variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertInfo.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeGet-org.mozilla.jss.nss.PRFDProxy-">VersionRangeGet(PRFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Get the range of TLS versions enabled by this server.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeSet-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSet(PRFDProxy, SSLVersionRange)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the range of TLS versions enabled by this server by SSLVersionRange.</div>
+</dd>
 </dl>
 <a name="I:W">
 <!--   -->
@@ -23970,6 +24165,14 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/CIDRNetmask.html#write-java.nio.ByteBuffer-">write(ByteBuffer)</a></span> - Method in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/CIDRNetmask.html" title="class in org.mozilla.jss.netscape.security.x509">CIDRNetmask</a></dt>
 <dd>
 <div class="block">Write the netmask into a byte buffer.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/Buffer.html#Write-org.mozilla.jss.nss.BufferProxy-byte:A-">Write(BufferProxy, byte[])</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Buffer.html" title="class in org.mozilla.jss.nss">Buffer</a></dt>
+<dd>
+<div class="block">Write the specified bytes to the buffer.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#Write-org.mozilla.jss.nss.PRFDProxy-byte:A-">Write(PRFDProxy, byte[])</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
+<dd>
+<div class="block">Write the specified bytes to the PRFDProxy.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/Base64OutputStream.html#write-int-">write(int)</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/Base64OutputStream.html" title="class in org.mozilla.jss.util">Base64OutputStream</a></dt>
 <dd>&nbsp;</dd>
