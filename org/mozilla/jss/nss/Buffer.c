@@ -50,6 +50,20 @@ Java_org_mozilla_jss_nss_Buffer_CanRead(JNIEnv *env, jclass clazz, jobject buf)
     return jb_can_read(real_buf);
 }
 
+JNIEXPORT jlong JNICALL
+Java_org_mozilla_jss_nss_Buffer_ReadCapacity(JNIEnv *env, jclass clazz, jobject buf)
+{
+    j_buffer *real_buf = NULL;
+
+    PR_ASSERT(env != NULL && buf != NULL);
+
+    if (JSS_PR_unwrapJBuffer(env, buf, &real_buf) != PR_SUCCESS) {
+        return 0;
+    }
+
+    return jb_read_capacity(real_buf);
+}
+
 JNIEXPORT jboolean JNICALL
 Java_org_mozilla_jss_nss_Buffer_CanWrite(JNIEnv *env, jclass clazz, jobject buf)
 {
@@ -62,6 +76,20 @@ Java_org_mozilla_jss_nss_Buffer_CanWrite(JNIEnv *env, jclass clazz, jobject buf)
     }
 
     return jb_can_write(real_buf);
+}
+
+JNIEXPORT jlong JNICALL
+Java_org_mozilla_jss_nss_Buffer_WriteCapacity(JNIEnv *env, jclass clazz, jobject buf)
+{
+    j_buffer *real_buf = NULL;
+
+    PR_ASSERT(env != NULL && buf != NULL);
+
+    if (JSS_PR_unwrapJBuffer(env, buf, &real_buf) != PR_SUCCESS) {
+        return 0;
+    }
+
+    return jb_write_capacity(real_buf);
 }
 
 JNIEXPORT jbyteArray JNICALL

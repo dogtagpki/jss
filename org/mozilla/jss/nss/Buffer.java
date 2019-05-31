@@ -23,11 +23,27 @@ public class Buffer {
     public static native boolean CanRead(BufferProxy buf);
 
     /**
+     * Check the remaining number of bytes that can be read from the
+     * buffer.
+     *
+     * See also: jb_read_capacity in org/mozilla/jss/ssl/javax/buffer.h
+     */
+    public static native long ReadCapacity(BufferProxy buf);
+
+    /**
      * Check whether or not the buffer can be written to (i.e., is not full).
      *
      * See also: jb_can_write in org/mozilla/jss/ssl/javax/buffer.h
      */
     public static native boolean CanWrite(BufferProxy buf);
+
+    /**
+     * Check the remaining number of bytes that can be written to the
+     * buffer.
+     *
+     * See also: jb_write_capacity in org/mozilla/jss/ssl/javax/buffer.h
+     */
+    public static native long WriteCapacity(BufferProxy buf);
 
     /**
      * Read the specified number of bytes from the buffer.
