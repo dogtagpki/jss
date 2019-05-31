@@ -31,9 +31,60 @@ bool jb_can_read(j_buffer *buf) {
     return buf != NULL && buf->read_pos != buf->capacity;
 }
 
+size_t jb_read_capacity(j_buffer *buf) {
+    if (buf == NULL) {
+        return 0;
+    }
+
+    /* Semantics: buf->read_pos == buf->capacity <=> can't read */
+    if (buf->read_pos == buf->capacity) {
+        return 0;
+    }
+
+    /* Semantics: buf->write_pos == buf->capacity <=> buffer empty */
+    if (buf->write_pos == buf->capacity) {
+        return buf->capacity;
+    }
+
+    /* When buf->read_pos < buf->write_pos, delta is what we can read */
+    if (buf->read_pos < buf->write_pos) {
+        return buf->write_pos - buf->read_pos;
+    }
+
+    /* Lastly, we can read to the end of the buffer and back around to
+     * write_pos when buf->read_pos > buf->write_pos. Note that it is
+     * never true that buf->read_pos == buf->write_pos. */
+    return (buf->capacity - buf->read_pos) + buf->write_pos;
+}
+
 bool jb_can_write(j_buffer *buf) {
     /* buf->write_pos == buf->capacity <=> can't write to the buffer */
     return buf != NULL && buf->write_pos != buf->capacity;
+}
+
+size_t jb_write_capacity(j_buffer *buf) {
+    if (buf == NULL) {
+        return 0;
+    }
+
+    /* Semantics: buf->write_pos == buf->capacity <=> can't write */
+    if (buf->write_pos == buf->capacity) {
+        return 0;
+    }
+
+    /* Semantics: buf->read_pos == buf->capacity <=> can't read */
+    if (buf->read_pos == buf->capacity) {
+        return buf->capacity;
+    }
+
+    /* When buf->write_pos < buf->read_pos, delta is what we can write */
+    if (buf->write_pos < buf->read_pos) {
+        return buf->read_pos - buf->write_pos;
+    }
+
+    /* Lastly, we can write to the end of the buffer and back around to
+     * write_pos when buf->write_pos > buf->read_pos */
+    return (buf->capacity - buf->write_pos) + buf->read_pos;
 }
 
 int jb_put(j_buffer *buf, uint8_t byte) {

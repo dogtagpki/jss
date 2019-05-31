@@ -36,8 +36,14 @@ size_t jb_capacity(j_buffer *buf);
 /* Whether or not the buffer can be read from. */
 bool jb_can_read(j_buffer *buf);
 
+/* Number of bytes which can be read. */
+size_t jb_read_capacity(j_buffer *buf);
+
 /* Whether or not the buffer can be written to. */
 bool jb_can_write(j_buffer *buf);
+
+/* Number of bytes which can be written. */
+size_t jb_write_capacity(j_buffer *buf);
 
 /*
  * Store a character into the buffer. Returns the character if stored,
