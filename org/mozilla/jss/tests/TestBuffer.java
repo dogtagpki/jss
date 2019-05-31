@@ -33,16 +33,22 @@ public class TestBuffer {
 
         assert(buf != null);
         assert(Buffer.Capacity(buf) == 6);
+        assert(Buffer.ReadCapacity(buf) == 0);
+        assert(Buffer.WriteCapacity(buf) == 6);
         assert(!Buffer.CanRead(buf));
         assert(Buffer.CanWrite(buf));
 
         assert(Buffer.Write(buf, data) == data.length);
         assert(Buffer.CanRead(buf));
         assert(Buffer.CanWrite(buf));
+        assert(Buffer.ReadCapacity(buf) == 3);
+        assert(Buffer.WriteCapacity(buf) == 3);
 
         assert(Buffer.Write(buf, data) == data.length);
         assert(Buffer.CanRead(buf));
         assert(!Buffer.CanWrite(buf));
+        assert(Buffer.ReadCapacity(buf) == 6);
+        assert(Buffer.WriteCapacity(buf) == 0);
 
         Buffer.Free(buf);
     }
