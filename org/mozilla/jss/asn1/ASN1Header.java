@@ -150,7 +150,7 @@ public class ASN1Header {
                 }
                 encoding.write(inInt);
                 next = (byte) inInt;
-                bV.addElement( new Byte(next) );
+                bV.addElement( Byte.valueOf(next) );
             } while( (next & 0x80) == 0x80 );
             Assert._assert( bV.size() > 0 );
 

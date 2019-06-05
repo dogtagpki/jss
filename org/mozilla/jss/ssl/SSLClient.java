@@ -110,7 +110,7 @@ public class SSLClient
   }
 
   private String cmp(String s1, int s2) {
-    return cmp(s1, new Integer(s2).toString());
+    return cmp(s1, Integer.valueOf(s2).toString());
   }
 
 

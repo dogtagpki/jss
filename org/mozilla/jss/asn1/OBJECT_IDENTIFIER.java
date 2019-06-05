@@ -489,8 +489,8 @@ public static class Template implements ASN1Template {
         byte b = readByte(istream);
         remainingContent--;
         long num = b % 40;
-        numberV.addElement( new Long( b % 40 ) ); // second number
-        numberV.insertElementAt( new Long( b / 40 ), 0); // first number
+        numberV.addElement( Long.valueOf(b % 40) ); // second number
+        numberV.insertElementAt( Long.valueOf(b / 40), 0); // first number
 
         // handle the rest of the numbers
         while( remainingContent > 0 ) {
@@ -510,7 +510,7 @@ public static class Template implements ASN1Template {
                 num |= (b & 0x7f);
             } while( (b & 0x80) != 0 );
 
-            numberV.addElement( new Long( num ) );
+            numberV.addElement( Long.valueOf(num) );
         }
 
         // convert Vector to array

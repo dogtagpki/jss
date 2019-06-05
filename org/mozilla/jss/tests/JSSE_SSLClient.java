@@ -18,6 +18,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.HandshakeCompletedListener;
@@ -274,13 +275,13 @@ public class JSSE_SSLClient {
                 System.setProperty("java.protocol.handler.pkgs",
                         "com.ibm.net.ssl.www.protocol.Handler");
                 java.security.Security.addProvider((java.security.Provider)
-                Class.forName("com.ibm.jsse2.IBMJSSEProvider2").newInstance());
+                Class.forName("com.ibm.jsse2.IBMJSSEProvider2").getConstructor().newInstance());
                 provider = "IBMJCE";
             } else {
                 System.setProperty("java.protocol.handler.pkgs",
                         "com.sun.net.ssl.internal.www.protocol");
                 java.security.Security.addProvider((java.security.Provider)
-                Class.forName("com.sun.crypto.provider.SunJCE").newInstance());
+                Class.forName("com.sun.crypto.provider.SunJCE").getConstructor().newInstance());
             }
 
             // Load the keystore that contains the certificate
@@ -342,6 +343,10 @@ public class JSSE_SSLClient {
         } catch (IllegalAccessException ex) {
             ex.printStackTrace();
         } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
+        } catch (InvocationTargetException ex) {
             ex.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();

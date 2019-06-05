@@ -281,7 +281,7 @@ public class SET implements ASN1Value {
 
         // insert ourself before this item
         encs.insertElementAt(enc, i);
-        tags.insertElementAt(new Integer(i), i );
+        tags.insertElementAt(Integer.valueOf(i), i );
     }
 
 

@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.Vector;
+import java.lang.NumberFormatException;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
@@ -112,14 +113,14 @@ public class JSS_SelfServServer  {
             if (args[3].equalsIgnoreCase("true") == true)
                 TestInetAddress = true;
             if (args.length >= 5)
-                port = new Integer(args[4]).intValue();
+                port = new Integer(Integer.valueOf(args[4]));
             if (args.length >=6 && args[5].equalsIgnoreCase("verbose")) {
                 bVerbose = true;
             }
             if (args.length >=7 && !args[6].equalsIgnoreCase("default")) {
                 fServerCertNick = args[6];
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println("Error parsing command line " + e.getMessage());
             System.out.println(usage);
             System.exit(1);

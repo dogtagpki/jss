@@ -56,6 +56,7 @@ public class SSLVersionRange {
      * @param max_enum
      * @throws IllegalArgumentException
      */
+    @Deprecated
     public SSLVersionRange(int min_enum, int max_enum) throws IllegalArgumentException {
         this(SSLVersion.valueOf(min_enum), SSLVersion.valueOf(max_enum));
     }
