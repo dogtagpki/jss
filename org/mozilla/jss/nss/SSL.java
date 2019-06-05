@@ -12,6 +12,22 @@ import org.mozilla.jss.ssl.SSLVersionRange;
 
 public class SSL {
     /**
+     * Request certificate from the remote peer. Value for use with OptionGet
+     * and OptionSet.
+     *
+     * See also: SSL_REQUEST_CERTIFICATE in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUEST_CERTIFICATE = getSSLRequestCertificate();
+
+    /**
+     * Require certificate from the remote peer. Value for use with OptionGet
+     * and OptionSet.
+     *
+     * See also: SSL_REQUIRE_CERTIFICATE in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUIRE_CERTIFICATE = getSSLRequireCertificate();
+
+    /**
      * Import a file descriptor to create a new SSL file descriptor out of it.
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
@@ -117,4 +133,8 @@ public class SSL {
      */
     public static native int ConfigServerSessionIDCache(int maxCacheEntries,
         long timeout, long ssl3_timeout, String directory);
+
+    /* Internal methods for querying constants. */
+    private static native int getSSLRequestCertificate();
+    private static native int getSSLRequireCertificate();
 }
