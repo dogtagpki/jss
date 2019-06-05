@@ -132,7 +132,7 @@ public abstract class NativeProxy
 
         // Get a unique index
         do {
-            index = new Long(indexGenerator.nextLong());
+            index = Long.valueOf(indexGenerator.nextLong());
         } while( registry.containsKey(index) );
         registry.put(index, index);
 
@@ -146,7 +146,7 @@ public abstract class NativeProxy
      * from the previous call to register().
      */
     private synchronized static void unregister(long index) {
-        Long Lindex = new Long(index);
+        Long Lindex = Long.valueOf(index);
         Long element;
 
         element = registry.remove(Lindex);

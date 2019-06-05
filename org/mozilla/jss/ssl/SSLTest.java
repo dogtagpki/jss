@@ -56,7 +56,7 @@ public class SSLTest {
         dumpParams();
         CryptoManager.initialize(".");
 
-        int port = (new Integer( params.get("port") )).intValue();
+        int port = Integer.valueOf(params.get("port"));
 
         Socket s = new Socket(params.get("host"), port);
 
