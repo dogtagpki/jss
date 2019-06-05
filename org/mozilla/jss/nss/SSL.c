@@ -335,3 +335,15 @@ Java_org_mozilla_jss_nss_SSL_ConfigServerSessionIDCache(JNIEnv *env, jclass claz
     JSS_DerefJString(env, directory, dir_path);
     return ret;
 }
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequestCertificate(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUEST_CERTIFICATE;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequireCertificate(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUIRE_CERTIFICATE;
+}
