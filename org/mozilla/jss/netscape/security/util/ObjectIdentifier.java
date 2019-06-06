@@ -447,10 +447,10 @@ final public class ObjectIdentifier implements Serializable {
             return thisOID;
 
         StringTokenizer token = new StringTokenizer(oid, ".");
-        value = new Integer(token.nextToken()).intValue();
+        value = Integer.valueOf(token.nextToken());
         /* First token should be 0, 1, 2 */
         if (value >= 0 && value <= 2) {
-            value = new Integer(token.nextToken()).intValue();
+            value = Integer.valueOf(token.nextToken());
             /* Second token should be 0 <= && >= 39 */
             if (value >= 0 && value <= 39) {
                 thisOID = new ObjectIdentifier(oid);
