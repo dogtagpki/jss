@@ -180,8 +180,12 @@ public class EncryptedContentInfo implements ASN1Value {
         // generate IV
         EncryptionAlgorithm encAlg = pbeAlg.getEncryptionAlg();
         AlgorithmParameterSpec params=null;
-        if( encAlg.getParameterClass().equals( IVParameterSpec.class ) ) {
-            params = new IVParameterSpec( kg.generatePBE_IV() );
+        Class<?> [] paramClasses = pbeAlg.getParameterClasses();
+        for (int i = 0; i < paramClasses.length; i ++) {
+            if ( paramClasses[i].equals( IVParameterSpec.class ) ) {
+                params = new IVParameterSpec( kg.generatePBE_IV() );
+                break;
+            }
         }
 
         // perform encryption
@@ -269,11 +273,14 @@ public class EncryptedContentInfo implements ASN1Value {
 
         // compute algorithm parameters
         EncryptionAlgorithm encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
-        AlgorithmParameterSpec algParams;
-        if( encAlg.getParameterClass().equals( IVParameterSpec.class ) ) {
-            algParams = new IVParameterSpec( kg.generatePBE_IV() );
-        } else {
-            algParams = null;
+        AlgorithmParameterSpec algParams = null;
+        Class<?> [] paramClasses = encAlg.getParameterClasses();
+        for (int i = 0; i < paramClasses.length; i ++) {
+            if ( paramClasses[i].equals(
+                       javax.crypto.spec.IvParameterSpec.class ) ) {
+                algParams = new IVParameterSpec( kg.generatePBE_IV() );
+                break;
+            }
         }
 
         // perform the decryption
