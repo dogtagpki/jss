@@ -31,6 +31,7 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.lang.reflect.InvocationTargetException;
 
 import org.mozilla.jss.netscape.security.util.BigInt;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
@@ -185,7 +186,7 @@ public class PKCS8Key implements PrivateKey {
             Object inst;
             PKCS8Key result;
 
-            inst = keyClass.newInstance();
+            inst = keyClass.getConstructor().newInstance();
             if (inst instanceof PKCS8Key) {
                 result = (PKCS8Key) inst;
                 result.algid = algid;
@@ -196,8 +197,12 @@ public class PKCS8Key implements PrivateKey {
         } catch (ClassNotFoundException e) {
         } catch (InstantiationException e) {
         } catch (IllegalAccessException e) {
-            // this should not happen.
-            throw new IOException(classname + " [internal error]");
+            throw new IOException("IllegalAccessException : " +
+                      e.getMessage(), e);
+        } catch (NoSuchMethodException e) {
+        } catch (InvocationTargetException e) {
+            throw new IOException("InvocationTargetException : " +
+                      e.getMessage(), e);
         }
 
         PKCS8Key result = new PKCS8Key();

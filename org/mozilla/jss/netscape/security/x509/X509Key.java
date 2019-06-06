@@ -21,6 +21,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -199,7 +201,8 @@ public class X509Key implements PublicKey {
             Object inst;
             X509Key result;
 
-            inst = keyClass.newInstance();
+            inst = keyClass.getConstructor().newInstance(
+                    sunProvider.getProperty("PublicKey.X.509." + algid.getName()));
             if (inst instanceof X509Key) {
                 result = (X509Key) inst;
                 result.algid = algid;
@@ -210,8 +213,12 @@ public class X509Key implements PublicKey {
         } catch (ClassNotFoundException e) {
         } catch (InstantiationException e) {
         } catch (IllegalAccessException e) {
-            // this should not happen.
-            throw new IOException(classname + " [internal error]");
+            throw new IOException("IllegalAccessException : " +
+                      e.getMessage(), e);
+        } catch (NoSuchMethodException e) {
+        } catch (InvocationTargetException e) {
+            throw new IOException("InvocationTargetException : " +
+                      e.getMessage(), e);
         }
 
         X509Key result = new X509Key();
