@@ -14,10 +14,17 @@ import org.mozilla.jss.ssl.*;
  * layer. We also create a default set of SSLParameters which use a null
  * cipher suite list and null protocol version list to fall back on the
  * NSS default. On RHEL-like systems, this will default to CryptoPolicies.
+ *
+ * We also need to store the desired certificate alias; this contrasts to
+ * the SNI functionality provided by SSLParameters in that it ties back
+ * to a certificate in the NSS DB and works with client certificates. When
+ * using the JSSEngine implementation of SSLEngine, only the alias will be
+ * used to find the certificate.
  */
 public class JSSParameters extends SSLParameters {
     private SSLCipher[] suites;
     private SSLVersionRange range;
+    private String alias;
 
     public JSSParameters() {
         // Choose our default set of SSLParameters here; default to null
@@ -160,5 +167,13 @@ public class JSSParameters extends SSLParameters {
 
     public SSLVersionRange getSSLVersionRange() {
         return range;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String cert_alias) {
+        alias = cert_alias;
     }
 }
