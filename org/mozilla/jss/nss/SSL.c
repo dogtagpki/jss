@@ -347,3 +347,21 @@ Java_org_mozilla_jss_nss_SSL_getSSLRequireCertificate(JNIEnv *env, jclass clazz)
 {
     return SSL_REQUIRE_CERTIFICATE;
 }
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLSECSuccess(JNIEnv *env, jclass clazz)
+{
+    return SECSuccess;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLSECFailure(JNIEnv *env, jclass clazz)
+{
+    return SECFailure;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLSECWouldBlock(JNIEnv *env, jclass clazz)
+{
+    return SECWouldBlock;
+}
