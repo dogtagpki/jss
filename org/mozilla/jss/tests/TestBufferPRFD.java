@@ -39,8 +39,8 @@ public class TestBufferPRFD {
             assert(result[i] == info[i % info.length]);
         }
 
-        assert(PR.Close(left) == 0);
-        assert(PR.Close(right) == 0);
+        assert(PR.Close(left) == PR.SUCCESS);
+        assert(PR.Close(right) == PR.SUCCESS);
 
         Buffer.Free(left_read);
         Buffer.Free(right_read);
@@ -197,12 +197,12 @@ public class TestBufferPRFD {
         }
 
         /* Close connections */
-        assert(PR.Shutdown(c_nspr, PR.SHUTDOWN_BOTH) == 0);
-        assert(PR.Shutdown(s_nspr, PR.SHUTDOWN_BOTH) == 0);
+        assert(PR.Shutdown(c_nspr, PR.SHUTDOWN_BOTH) == PR.SUCCESS);
+        assert(PR.Shutdown(s_nspr, PR.SHUTDOWN_BOTH) == PR.SUCCESS);
 
         /* Clean up */
-        assert(PR.Close(c_nspr) == 0);
-        assert(PR.Close(s_nspr) == 0);
+        assert(PR.Close(c_nspr) == PR.SUCCESS);
+        assert(PR.Close(s_nspr) == PR.SUCCESS);
 
         Buffer.Free(read_buf);
         Buffer.Free(write_buf);

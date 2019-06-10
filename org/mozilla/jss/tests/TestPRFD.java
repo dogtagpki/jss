@@ -14,7 +14,7 @@ public class TestPRFD {
         PRFDProxy fd = PR.Open("results/prfd_open_close", 0x04 | 0x08, 00644);
         assert(fd != null);
 
-        assert(PR.Close(fd) == 0);
+        assert(PR.Close(fd) == PR.SUCCESS);
     }
 
     public static void TestPROpenWriteClose() {
@@ -24,7 +24,7 @@ public class TestPRFD {
         byte[] data = {0x2a, 0x20, 0x2a, 0x20};
         assert(PR.Write(fd, data) == 4);
 
-        assert(PR.Close(fd) == 0);
+        assert(PR.Close(fd) == PR.SUCCESS);
     }
 
     public static void TestPRRead() {
@@ -41,7 +41,7 @@ public class TestPRFD {
             assert(read_data[i] == data[i]);
         }
 
-        assert(PR.Close(fd) == 0);
+        assert(PR.Close(fd) == PR.SUCCESS);
     }
 
     public static void TestPREmptyRead() {
@@ -51,7 +51,7 @@ public class TestPRFD {
         byte[] read_data = PR.Read(fd, 10);
         assert(read_data == null || read_data.length == 0);
 
-        assert(PR.Close(fd) == 0);
+        assert(PR.Close(fd) == PR.SUCCESS);
     }
 
     public static void TestNewTCPSocket() {
@@ -67,7 +67,7 @@ public class TestPRFD {
         PR.Shutdown(fd, PR.SHUTDOWN_SEND);
         PR.Shutdown(fd, PR.SHUTDOWN_BOTH);
 
-        assert(PR.Close(fd) == 0);
+        assert(PR.Close(fd) == PR.SUCCESS);
     }
 
     public static void TestConstants() {
