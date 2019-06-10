@@ -15,7 +15,7 @@ public class TestRawSSL {
         PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
-        assert(PR.Close(ssl_fd) == SSL.SECSuccess);
+        assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
     public static void TestSSLOptions() throws Exception {
@@ -46,7 +46,7 @@ public class TestRawSSL {
             assert(true);
         }
 
-        assert(PR.Close(ssl_fd) == 0);
+        assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
     public static void TestSSLCipherPref() throws Exception {
@@ -74,7 +74,7 @@ public class TestRawSSL {
             assert(true);
         }
 
-        assert(PR.Close(ssl_fd) == 0);
+        assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
     public static void TestSSLSetURL() {
@@ -88,7 +88,7 @@ public class TestRawSSL {
 
         assert(SSL.SetURL(ssl_fd, "https://google.com") == SSL.SECSuccess);
 
-        assert(PR.Close(ssl_fd) == 0);
+        assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
     public static void TestSSLSecurityStatus() {
@@ -103,7 +103,7 @@ public class TestRawSSL {
         SecurityStatusResult r = SSL.SecurityStatus(ssl_fd);
         assert(r.on == 0);
 
-        assert(PR.Close(ssl_fd) == 0);
+        assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
     public static void TestSSLResetHandshake() {
@@ -115,7 +115,7 @@ public class TestRawSSL {
         PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(SSL.ResetHandshake(fd, false) == SSL.SECSuccess);
 
-        assert(PR.Close(ssl_fd) == 0);
+        assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
     public static void main(String[] args) throws Exception {
