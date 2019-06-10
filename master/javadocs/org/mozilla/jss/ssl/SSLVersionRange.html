@@ -350,9 +350,10 @@ public static final&nbsp;int tls1_3</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SSLVersionRange</h4>
-<pre>public&nbsp;SSLVersionRange(int&nbsp;min_enum,
-                       int&nbsp;max_enum)
-                throws java.lang.IllegalArgumentException</pre>
+<pre>@Deprecated
+public&nbsp;SSLVersionRange(int&nbsp;min_enum,
+                                   int&nbsp;max_enum)
+                            throws java.lang.IllegalArgumentException</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Replaced with SSLVersionRange(SSLVersion minVersion, SSLVersion maxVersion).</span></div>
 <div class="block">Used by the C code, do not use it directly</div>
 <dl>

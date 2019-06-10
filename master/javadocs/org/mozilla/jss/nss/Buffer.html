@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -196,9 +196,23 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/Buffer.html#ReadCapacity-org.mozilla.jss.nss.BufferProxy-">ReadCapacity</a></span>(<a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;buf)</code>
+<div class="block">Check the remaining number of bytes that can be read from the
+ buffer.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>static long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/Buffer.html#Write-org.mozilla.jss.nss.BufferProxy-byte:A-">Write</a></span>(<a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;buf,
      byte[]&nbsp;input)</code>
 <div class="block">Write the specified bytes to the buffer.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>static long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/Buffer.html#WriteCapacity-org.mozilla.jss.nss.BufferProxy-">WriteCapacity</a></span>(<a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;buf)</code>
+<div class="block">Check the remaining number of bytes that can be written to the
+ buffer.</div>
 </td>
 </tr>
 </table>
@@ -276,6 +290,19 @@ extends java.lang.Object</pre>
  See also: jb_can_read in org/mozilla/jss/ssl/javax/buffer.h</div>
 </li>
 </ul>
+<a name="ReadCapacity-org.mozilla.jss.nss.BufferProxy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ReadCapacity</h4>
+<pre>public static&nbsp;long&nbsp;ReadCapacity(<a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;buf)</pre>
+<div class="block">Check the remaining number of bytes that can be read from the
+ buffer.
+
+ See also: jb_read_capacity in org/mozilla/jss/ssl/javax/buffer.h</div>
+</li>
+</ul>
 <a name="CanWrite-org.mozilla.jss.nss.BufferProxy-">
 <!--   -->
 </a>
@@ -286,6 +313,19 @@ extends java.lang.Object</pre>
 <div class="block">Check whether or not the buffer can be written to (i.e., is not full).
 
  See also: jb_can_write in org/mozilla/jss/ssl/javax/buffer.h</div>
+</li>
+</ul>
+<a name="WriteCapacity-org.mozilla.jss.nss.BufferProxy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>WriteCapacity</h4>
+<pre>public static&nbsp;long&nbsp;WriteCapacity(<a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;buf)</pre>
+<div class="block">Check the remaining number of bytes that can be written to the
+ buffer.
+
+ See also: jb_write_capacity in org/mozilla/jss/ssl/javax/buffer.h</div>
 </li>
 </ul>
 <a name="Read-org.mozilla.jss.nss.BufferProxy-long-">
