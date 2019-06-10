@@ -138,7 +138,7 @@ public class TestBufferPRFD {
 
         /* Try a handshake */
         while(!IsHandshakeFinished(c_nspr, s_nspr)) {
-            if (SSL.ForceHandshake(c_nspr) != 0) {
+            if (SSL.ForceHandshake(c_nspr) != SSL.SECSuccess) {
                 int error = PR.GetError();
 
                 if (error != PR_WOULD_BLOCK_ERROR) {
@@ -146,7 +146,7 @@ public class TestBufferPRFD {
                     System.exit(1);
                 }
             }
-            if (SSL.ForceHandshake(s_nspr) != 0) {
+            if (SSL.ForceHandshake(s_nspr) != SSL.SECSuccess) {
                 int error = PR.GetError();
 
                 if (error != PR_WOULD_BLOCK_ERROR) {
