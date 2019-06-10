@@ -28,6 +28,20 @@ public class PR {
     public static final int SHUTDOWN_BOTH = getPRShutdownBoth();
 
     /**
+     * Return value on success from NSPR functions.
+     *
+     * See also: PR_SUCCESS in /usr/include/nspr4/prtypes.h
+     */
+    public static final int SUCCESS = getPRSuccess();
+
+    /**
+     * Return value on failure from NSPR functions.
+     *
+     * See also: PR_FAILURE in /usr/include/nspr4/prtypes.h
+     */
+    public static final int FAILURE = getPRFailure();
+
+    /**
      * Open the file at name (with the specified flags and mode) and create
      * a new PRFDProxy (to a NSPR PRFileDesc *) for that file.
      *
@@ -121,4 +135,6 @@ public class PR {
     private static native int getPRShutdownRcv();
     private static native int getPRShutdownSend();
     private static native int getPRShutdownBoth();
+    private static native int getPRSuccess();
+    private static native int getPRFailure();
 }

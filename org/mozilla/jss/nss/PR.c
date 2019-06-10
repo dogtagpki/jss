@@ -309,3 +309,15 @@ Java_org_mozilla_jss_nss_PR_getPRShutdownBoth(JNIEnv *env, jclass clazz)
 {
     return PR_SHUTDOWN_BOTH;
 }
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_PR_getPRSuccess(JNIEnv *env, jclass clazz)
+{
+    return PR_SUCCESS;
+}
+
+JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_PR_getPRFailure(JNIEnv *env, jclass clazz)
+{
+    return PR_FAILURE;
+}
