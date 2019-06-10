@@ -47,12 +47,8 @@ public class TestBufferPRFD {
     }
 
     public synchronized static PRFDProxy Setup_NSS_Client(PRFDProxy fd, String host) {
-        PRFDProxy model = SSL.ImportFD(null, PR.NewTCPSocket());
-        assert(model != null);
-
-        fd = SSL.ImportFD(model, fd);
+        fd = SSL.ImportFD(null, fd);
         assert(fd != null);
-        PR.Close(model);
 
         assert(SSL.ResetHandshake(fd, false) == 0);
         assert(SSL.SetURL(fd, host) == 0);
@@ -63,12 +59,8 @@ public class TestBufferPRFD {
     public synchronized static PRFDProxy Setup_NSS_Server(PRFDProxy fd, String host,
         PK11Cert cert, PK11PrivKey key) throws Exception
     {
-        PRFDProxy model = SSL.ImportFD(null, PR.NewTCPSocket());
-        assert(model != null);
-
-        fd = SSL.ImportFD(model, fd);
+        fd = SSL.ImportFD(null, fd);
         assert(fd != null);
-        PR.Close(model);
 
         assert(SSL.ConfigSecureServer(fd, cert, key, 1) == 0);
         assert(SSL.ConfigServerSessionIDCache(1, 100, 100, null) == 0);
