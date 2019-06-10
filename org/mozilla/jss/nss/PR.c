@@ -69,7 +69,7 @@ Java_org_mozilla_jss_nss_PR_NewBufferPRFD(JNIEnv *env, jclass clazz,
         return result;
     }
 
-    if (!JSS_FromByteArray(env, peer_info, &real_peer_info, &peer_info_len)) {
+    if (peer_info != NULL && !JSS_FromByteArray(env, peer_info, &real_peer_info, &peer_info_len)) {
         return result;
     }
 
