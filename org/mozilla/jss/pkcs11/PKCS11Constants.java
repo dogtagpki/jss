@@ -4631,6 +4631,13 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKM_NSS_CHACHA20_CTR = 0xCE534371L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKM_NETSCAPE_PBE_SHA1_DES_CBC = 0x80000002L;
 
     /**
