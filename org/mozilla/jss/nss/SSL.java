@@ -28,6 +28,27 @@ public class SSL {
     public static final int REQUIRE_CERTIFICATE = getSSLRequireCertificate();
 
     /**
+     * Return value on success from NSS functions.
+     *
+     * See also: SECSuccess in /usr/include/nss3/seccomon.h
+     */
+    public static final int SECSuccess = getSSLSECSuccess();
+
+    /**
+     * Return value on failure from NSS functions.
+     *
+     * See also: SECFailure in /usr/include/nss3/seccomon.h
+     */
+    public static final int SECFailure = getSSLSECFailure();
+
+    /**
+     * Return value from NSS functions when the operation would block.
+     *
+     * See also: SECWouldBlock in /usr/include/nss3/seccomon.h
+     */
+    public static final int SECWouldBlock = getSSLSECWouldBlock();
+
+    /**
      * Import a file descriptor to create a new SSL file descriptor out of it.
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
@@ -137,4 +158,7 @@ public class SSL {
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
     private static native int getSSLRequireCertificate();
+    private static native int getSSLSECSuccess();
+    private static native int getSSLSECFailure();
+    private static native int getSSLSECWouldBlock();
 }
