@@ -11,8 +11,6 @@ import org.mozilla.jss.ssl.*;
 import org.mozilla.jss.util.*;
 
 public class TestBufferPRFD {
-    public static int PR_WOULD_BLOCK_ERROR = -5998;
-
     public static void TestCreateClose() {
         byte[] info = {0x01, 0x02, 0x03, 0x04};
         BufferProxy left_read = Buffer.Create(10);
@@ -141,7 +139,7 @@ public class TestBufferPRFD {
             if (SSL.ForceHandshake(c_nspr) != SSL.SECSuccess) {
                 int error = PR.GetError();
 
-                if (error != PR_WOULD_BLOCK_ERROR) {
+                if (error != PRErrors.WOULD_BLOCK_ERROR) {
                     System.out.println("Unexpected error: " + error);
                     System.exit(1);
                 }
@@ -149,7 +147,7 @@ public class TestBufferPRFD {
             if (SSL.ForceHandshake(s_nspr) != SSL.SECSuccess) {
                 int error = PR.GetError();
 
-                if (error != PR_WOULD_BLOCK_ERROR) {
+                if (error != PRErrors.WOULD_BLOCK_ERROR) {
                     System.out.println("Unexpected error: " + error);
                     System.exit(1);
                 }
