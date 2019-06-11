@@ -355,6 +355,8 @@ Java_org_mozilla_jss_nss_PR_getPRShutdownBoth;
 Java_org_mozilla_jss_nss_PR_getPRSuccess;
 Java_org_mozilla_jss_nss_PR_getPRFailure;
 
+Java_org_mozilla_jss_nss_PRErrors_getWouldBlockError;
+
 Java_org_mozilla_jss_nss_SSL_ImportFD;
 Java_org_mozilla_jss_nss_SSL_OptionSet;
 Java_org_mozilla_jss_nss_SSL_OptionGet;
