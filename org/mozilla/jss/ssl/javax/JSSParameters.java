@@ -25,6 +25,7 @@ public class JSSParameters extends SSLParameters {
     private SSLCipher[] suites;
     private SSLVersionRange range;
     private String alias;
+    private String hostname;
 
     public JSSParameters() {
         // Choose our default set of SSLParameters here; default to null
@@ -175,5 +176,13 @@ public class JSSParameters extends SSLParameters {
 
     public void setAlias(String cert_alias) {
         alias = cert_alias;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String server_hostname) {
+        hostname = server_hostname;
     }
 }
