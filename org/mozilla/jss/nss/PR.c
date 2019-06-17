@@ -292,6 +292,25 @@ Java_org_mozilla_jss_nss_PR_GetErrorText(JNIEnv *env, jclass clazz)
     return result;
 }
 
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_nss_PR_ErrorToName(JNIEnv *env, jclass clazz, jint error_code)
+{
+    size_t error_size;
+    const char *error_name = NULL;
+    jbyteArray result = NULL;
+
+    PR_ASSERT(env != NULL);
+
+    error_name = PR_ErrorToName(error_code);
+    if (error_name == NULL) {
+        return NULL;
+    }
+
+    error_size = strlen(error_name);
+    result = JSS_ToByteArray(env, error_name, error_size);
+    return result;
+}
+
 JNIEXPORT int JNICALL
 Java_org_mozilla_jss_nss_PR_getPRShutdownRcv(JNIEnv *env, jclass clazz)
 {
