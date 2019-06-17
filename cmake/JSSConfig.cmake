@@ -174,6 +174,11 @@ macro(jss_config_ldflags)
     list(APPEND JSS_LD_FLAGS "-lpthread")
     list(APPEND JSS_LD_FLAGS "-ldl")
 
+    separate_arguments(PASSED_LD_FLAGS UNIX_COMMAND "${CMAKE_SHARED_LINKER_FLAGS}")
+    foreach(PASSED_LD_FLAG ${PASSED_LD_FLAGS})
+        list(INSERT JSS_LD_FLAGS 0 "${PASSED_LD_FLAG}")
+    endforeach()
+
     # This set of flags is specific to building the libjss library.
     list(APPEND JSS_LIBRARY_FLAGS "-shared")
     list(APPEND JSS_LIBRARY_FLAGS "-Wl,-z,defs")
@@ -181,6 +186,9 @@ macro(jss_config_ldflags)
     list(APPEND JSS_LIBRARY_FLAGS "-Wl,${JSS_SO}")
 
     set(JSS_VERSION_SCRIPT "-Wl,--version-script,${PROJECT_SOURCE_DIR}/lib/jss.map")
+
+    message(STATUS "JSS LD FLAGS: ${JSS_LD_FLAGS}")
+    message(STATUS "JSS LIBRARY FLAGS: ${JSS_LIBRARY_FLAGS}")
 endmacro()
 
 macro(jss_config_java)
