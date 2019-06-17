@@ -131,6 +131,14 @@ public class PR {
      */
     public static native byte[] GetErrorText();
 
+    /**
+     * Get the constant name of the current PR error. This is cleared on each
+     * NSPR call.
+     *
+     * See also: PR_ErrorToName in /usr/include/nspr4/prio.h
+     */
+    public static native byte[] ErrorToName(int code);
+
     /* Internal methods for querying constants. */
     private static native int getPRShutdownRcv();
     private static native int getPRShutdownSend();
