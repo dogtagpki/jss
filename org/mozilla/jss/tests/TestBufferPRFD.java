@@ -44,23 +44,25 @@ public class TestBufferPRFD {
         Buffer.Free(right_read);
     }
 
-    public synchronized static PRFDProxy Setup_NSS_Client(PRFDProxy fd, String host) {
+    public static PRFDProxy Setup_NSS_Client(PRFDProxy fd, String host) throws Exception {
         fd = SSL.ImportFD(null, fd);
         assert(fd != null);
 
         assert(SSL.ResetHandshake(fd, false) == 0);
         assert(SSL.SetURL(fd, host) == 0);
 
+        TestSSLVersionGetSet(fd);
+
         return fd;
     }
 
-    public synchronized static PRFDProxy Setup_NSS_Server(PRFDProxy fd, String host,
+    public static PRFDProxy Setup_NSS_Server(PRFDProxy fd, String host,
         PK11Cert cert, PK11PrivKey key) throws Exception
     {
         fd = SSL.ImportFD(null, fd);
         assert(fd != null);
 
-        assert(SSL.ConfigSecureServer(fd, cert, key, 1) == 0);
+        assert(SSL.ConfigServerCert(fd, cert, key) == 0);
         assert(SSL.ConfigServerSessionIDCache(1, 100, 100, null) == 0);
         assert(SSL.ResetHandshake(fd, true) == 0);
         assert(SSL.SetURL(fd, host) == 0);
@@ -70,7 +72,7 @@ public class TestBufferPRFD {
         return fd;
     }
 
-    public synchronized static boolean IsHandshakeFinished(PRFDProxy c_nspr, PRFDProxy s_nspr) {
+    public static boolean IsHandshakeFinished(PRFDProxy c_nspr, PRFDProxy s_nspr) {
         SecurityStatusResult c_result = SSL.SecurityStatus(c_nspr);
         SecurityStatusResult s_result = SSL.SecurityStatus(s_nspr);
 
@@ -79,7 +81,7 @@ public class TestBufferPRFD {
         return c_result.on == 1 && s_result.on == 1;
     }
 
-    public synchronized static void TestSSLVersionGetSet(PRFDProxy s_nspr) throws Exception {
+    public static void TestSSLVersionGetSet(PRFDProxy s_nspr) throws Exception {
         SSLVersionRange initial = SSL.VersionRangeGet(s_nspr);
         System.out.println("Initial: (" + initial.getMinVersion() + ":" + initial.getMinEnum() + ", " + initial.getMaxVersion() + ":" + initial.getMaxEnum() + ")");
 
@@ -93,19 +95,22 @@ public class TestBufferPRFD {
         assert(SSLVersion.TLS_1_2.value() <= actual.getMaxEnum());
     }
 
-    public synchronized static void TestSSLHandshake(String database, String password) throws Exception {
+    public static void InitializeCM(String database, String password) throws Exception {
+        CryptoManager manager;
+        CryptoManager.initialize(database);
+        manager = CryptoManager.getInstance();
+        manager.setPasswordCallback(new Password(password.toCharArray()));
+    }
+
+    public static void TestSSLHandshake(String nickname) throws Exception
+    {
         /* Constants */
         String host = "localhost";
         byte[] peer_info = host.getBytes();
 
         /* Find SSL Certificate */
-        CryptoManager manager;
-        CryptoManager.initialize(database);
-        manager = CryptoManager.getInstance();
-        manager.setPasswordCallback(new Password(password.toCharArray()));
-        CryptoToken token = manager.getInternalKeyStorageToken();
-
-        PK11Cert server_cert = (PK11Cert) manager.findCertByNickname("Server_RSA");
+        CryptoManager manager = CryptoManager.getInstance();
+        PK11Cert server_cert = (PK11Cert) manager.findCertByNickname(nickname);
         PK11PrivKey server_key = (PK11PrivKey) manager.findPrivKeyByCert(server_cert);
 
         assert(server_cert != null);
@@ -140,7 +145,7 @@ public class TestBufferPRFD {
                 int error = PR.GetError();
 
                 if (error != PRErrors.WOULD_BLOCK_ERROR) {
-                    System.out.println("Unexpected error: " + error);
+                    System.out.println("Unexpected error: " + new String(PR.ErrorToName(error)) + " (" + error + ")");
                     System.exit(1);
                 }
             }
@@ -148,7 +153,7 @@ public class TestBufferPRFD {
                 int error = PR.GetError();
 
                 if (error != PRErrors.WOULD_BLOCK_ERROR) {
-                    System.out.println("Unexpected error: " + error);
+                    System.out.println("Unexpected error: " + new String(PR.ErrorToName(error)) + " (" + error + ")");
                     System.exit(1);
                 }
             }
@@ -212,7 +217,13 @@ public class TestBufferPRFD {
         System.out.println("Calling TestCreateClose()...");
         TestCreateClose();
 
-        System.out.println("Calling TestSSLHandshake()...");
-        TestSSLHandshake(args[0], args[1]);
+        System.out.println("Initializing CryptoManager...");
+        InitializeCM(args[0], args[1]);
+
+        System.out.println("Calling TestSSLHandshake(Server_RSA)...");
+        TestSSLHandshake("Server_RSA");
+
+        System.out.println("Calling TestSSLHandshake(Server_ECDSA)...");
+        TestSSLHandshake("Server_ECDSA");
     }
 }

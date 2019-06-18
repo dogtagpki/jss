@@ -142,10 +142,21 @@ public class SSL {
     /**
      * Configure the certificate and private key for a server socket.
      *
+     * @deprecated replaced with ConfigServerCert
      * See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h
      */
+    @Deprecated
     public static native int ConfigSecureServer(PRFDProxy fd, PK11Cert cert,
         PK11PrivKey key, int kea);
+
+    /**
+     * Configure the certificate and private key for a server socket. This
+     * form assumes no additional data is passed.
+     *
+     * See also: SSL_ConfigServerCert in /usr/include/nss3/ssl.h
+     */
+    public static native int ConfigServerCert(PRFDProxy fd, PK11Cert cert,
+        PK11PrivKey key);
 
     /**
      * Configure the server's session cache.

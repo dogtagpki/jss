@@ -180,11 +180,11 @@ static SECKEYPrivateKey *get_privkey(CERTCertificate *cert, char *password)
     return PK11_FindPrivateKeyFromCert(slot, cert, NULL);
 }
 
-static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *password)
+static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *password, char *nickname)
 {
     /* Set up the server end of the SSL connection and find certificates. */
     /* Adapted from aforementioned Fedora developer guide and mod_nss. */
-    CERTCertificate *cert = get_cert("Server_RSA");
+    CERTCertificate *cert = get_cert(nickname);
     if (cert == NULL) {
         printf("Failed to find certificate for host: %s\n", host);
         exit(1);
@@ -221,9 +221,9 @@ static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *passwo
 
     /* This part differs from the client side: set the certificate and
      * private key we're using. */
-    if (SSL_ConfigSecureServer(s_nspr, cert, priv_key, kt_rsa) != SECSuccess) {
+    if (SSL_ConfigServerCert(s_nspr, cert, priv_key, NULL, 0) != SECSuccess) {
         const PRErrorCode err = PR_GetError();
-        fprintf(stderr, "error: SSL_ResetHandshake error %d: %s\n",
+        fprintf(stderr, "error: SSL_ConfigServerCert error %d: %s\n",
             err, PR_ErrorToName(err));
         exit(1);
     }
@@ -277,8 +277,8 @@ bool is_finished(PRFileDesc *c_nspr, PRFileDesc *s_nspr)
 
 int main(int argc, char** argv)
 {
-    if (argc != 3) {
-        fprintf(stderr, "usage: %s /path/to/nssdb password\n", argv[0]);
+    if (argc != 4) {
+        fprintf(stderr, "usage: %s /path/to/nssdb password cert-nickname\n", argv[0]);
         exit(1);
     }
 
@@ -305,7 +305,7 @@ int main(int argc, char** argv)
     /* Set up client and server sockets with NSSL */
     char *host = "localhost";
     c_nspr = setup_nss_client(c_nspr, host);
-    s_nspr = setup_nss_server(s_nspr, host, argv[2]);
+    s_nspr = setup_nss_server(s_nspr, host, argv[2], argv[3]);
 
     /* In the handshake step, we blindly try to step both the client and
      * server ends of the handshake. As NSS stores the contents of what we're
