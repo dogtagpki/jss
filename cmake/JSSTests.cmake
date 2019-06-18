@@ -181,8 +181,13 @@ macro(jss_tests)
         DEPENDS "List_CA_certs"
     )
     jss_test_exec(
-        NAME "TestBufferPRFD"
-        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}"
+        NAME "TestBufferPRFD_RSA"
+        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_RSA"
+        DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
+    )
+    jss_test_exec(
+        NAME "TestBufferPRFD_ECDSA"
+        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_ECDSA"
         DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
     )
     jss_test_java(
@@ -326,8 +331,8 @@ macro(jss_tests)
 
     # For compliance with several
     add_custom_target(
-      check
-      DEPENDS test
+        check
+        DEPENDS test
     )
 endmacro()
 

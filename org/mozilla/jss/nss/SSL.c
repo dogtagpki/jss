@@ -319,6 +319,31 @@ Java_org_mozilla_jss_nss_SSL_ConfigSecureServer(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_SSL_ConfigServerCert(JNIEnv *env, jclass clazz,
+    jobject fd, jobject cert, jobject key)
+{
+    PRFileDesc *real_fd = NULL;
+    CERTCertificate *real_cert = NULL;
+    SECKEYPrivateKey *real_key = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_PK11_getCertPtr(env, cert, &real_cert) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_PK11_getPrivKeyPtr(env, key, &real_key) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_ConfigServerCert(real_fd, real_cert, real_key, NULL, 0);
+}
+
+JNIEXPORT int JNICALL
 Java_org_mozilla_jss_nss_SSL_ConfigServerSessionIDCache(JNIEnv *env, jclass clazz,
     jint maxCacheEntries, jlong timeout, jlong ssl3_timeout, jstring directory)
 {
