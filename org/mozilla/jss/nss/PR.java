@@ -129,7 +129,15 @@ public class PR {
      *
      * See also: PR_GetErrorText in /usr/include/nspr4/prio.h
      */
-    public static native byte[] GetErrorText();
+    public static String GetErrorText() {
+        byte[] text = GetErrorTextNative();
+        if (text == null) {
+            return "";
+        }
+
+        return new String(text);
+    }
+    private static native byte[] GetErrorTextNative();
 
     /**
      * Get the constant name of the current PR error. This is cleared on each
@@ -137,7 +145,15 @@ public class PR {
      *
      * See also: PR_ErrorToName in /usr/include/nspr4/prio.h
      */
-    public static native byte[] ErrorToName(int code);
+    public static String ErrorToName(int code) {
+        byte[] name = ErrorToNameNative(code);
+        if (name == null) {
+            return "";
+        }
+
+        return new String(name);
+    }
+    private static native byte[] ErrorToNameNative(int code);
 
     /* Internal methods for querying constants. */
     private static native int getPRShutdownRcv();
