@@ -216,7 +216,6 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_setServerCert(
     CERTCertificate* cert=NULL;
     PK11SlotInfo* slot=NULL;
     SECKEYPrivateKey* privKey=NULL;
-    SSLKEAType certKEA;
     SECStatus status;
 
     if( certObj == NULL ) {
@@ -237,8 +236,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_setServerCert(
 
     privKey = PK11_FindPrivateKeyFromCert(slot, cert, NULL);
     if (privKey != NULL) {
-        certKEA = NSS_FindCertKEAType(cert);
-        status = SSL_ConfigSecureServer(sock->fd, cert, privKey, certKEA); 
+        status = SSL_ConfigServerCert(sock->fd, cert, privKey, NULL, 0);
         if( status != SECSuccess) {
             JSSL_throwSSLSocketException(env,
                 "Failed to configure secure server certificate and key");
