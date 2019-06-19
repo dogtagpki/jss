@@ -77,12 +77,7 @@ public class TestPRFD {
         System.out.println("PR.SHUTDOWN_SEND: " + PR.SHUTDOWN_SEND);
         System.out.println("PR.SHUTDOWN_BOTH: " + PR.SHUTDOWN_BOTH);
 
-        byte[] would_block_bytes = PR.ErrorToName(PRErrors.WOULD_BLOCK_ERROR);
-        assert(would_block_bytes != null);
-
-        String would_block = new String(would_block_bytes);
-        assert(would_block != null);
-        assert(would_block.equals("PR_WOULD_BLOCK_ERROR"));
+        assert(PR.ErrorToName(PRErrors.WOULD_BLOCK_ERROR).equals("PR_WOULD_BLOCK_ERROR"));
     }
 
     public static void main(String[] args) {
