@@ -265,6 +265,22 @@ jobject
 JSS_PK11_wrapCert(JNIEnv *env, CERTCertificate **ppCert);
 
 
+/****************************************************************
+ *
+ * J S S _ P K 1 1 _ w r a p C e r t C h a i n
+ *
+ * Builds an array of PK11Cert objects from a CERTCertList.
+ * ppChain: Pointer to pointer to CERTCertList.  The CERTCertList
+ *      will be wrapped in a Java certificate.  If this fails, it
+ *      will be deleted.  In any case, the caller should never worry about,
+ *      or use, this CERTCertList again. To enforce this, *ppChain
+ *      will be set to NULL whether the functions fails or succeeds.
+ * Returns: a new Java PK11Cert[] object, or NULL if an exception was thrown.
+ */
+jobjectArray
+JSS_PK11_wrapCertChain(JNIEnv *env, CERTCertList **ppChain);
+
+
 /*=====================================================================
                             S T O R E S
 =====================================================================*/
