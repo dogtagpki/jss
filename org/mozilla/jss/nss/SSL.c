@@ -1,6 +1,7 @@
 #include <nspr.h>
 #include <nss.h>
 #include <ssl.h>
+#include <sslerr.h>
 #include <limits.h>
 #include <stdint.h>
 #include <jni.h>
@@ -359,6 +360,54 @@ Java_org_mozilla_jss_nss_SSL_ConfigServerSessionIDCache(JNIEnv *env, jclass claz
 
     JSS_DerefJString(env, directory, dir_path);
     return ret;
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_nss_SSL_PeerCertificate(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    CERTCertificate *cert = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return NULL;
+    }
+
+    cert = SSL_PeerCertificate(real_fd);
+    if (cert == NULL) {
+        return NULL;
+    }
+
+    return JSS_PK11_wrapCert(env, &cert);
+}
+
+JNIEXPORT jobjectArray JNICALL
+Java_org_mozilla_jss_nss_SSL_PeerCertificateChain(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    CERTCertList *chain = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return NULL;
+    }
+
+    chain = SSL_PeerCertificateChain(real_fd);
+    int error = PORT_GetError();
+
+    if (chain == NULL && error == SSL_ERROR_NO_CERTIFICATE) {
+        return NULL;
+    } else if (chain == NULL /* && error != SSL_ERROR_NO_CERTIFICATE */) {
+        JSS_throwMsgPrErrArg(env, SECURITY_EXCEPTION,
+            "Unable to construct peer certificate chain.", error);
+        return NULL;
+    }
+
+    return JSS_PK11_wrapCertChain(env, &chain);
 }
 
 JNIEXPORT jint JNICALL

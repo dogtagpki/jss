@@ -161,6 +161,12 @@ public class TestBufferPRFD {
         System.out.println("Handshake completed successfully!\n");
         assert(IsHandshakeFinished(c_nspr, s_nspr));
 
+        /* Test peer data */
+        assert(SSL.PeerCertificate(c_nspr) != null);
+        assert(SSL.PeerCertificateChain(c_nspr) != null);
+        assert(SSL.PeerCertificate(s_nspr) == null);
+        assert(SSL.PeerCertificateChain(s_nspr) == null);
+
         /* Send data from client -> server */
         byte[] client_message = "Cooking MCs".getBytes();
 

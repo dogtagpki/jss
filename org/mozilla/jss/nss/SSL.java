@@ -166,6 +166,20 @@ public class SSL {
     public static native int ConfigServerSessionIDCache(int maxCacheEntries,
         long timeout, long ssl3_timeout, String directory);
 
+    /**
+     * Introspect the peer's certificate.
+     *
+     * See also: SSL_PeerCertificate in /usr/include/nss3/ssl.h
+     */
+    public static native PK11Cert PeerCertificate(PRFDProxy fd);
+
+    /**
+     * Introspect the peer's certificate chain.
+     *
+     * See also: SSL_PeerCertificateChain in /usr/include/nss3/ssl.h
+     */
+    public static native PK11Cert[] PeerCertificateChain(PRFDProxy fd) throws Exception;
+
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
     private static native int getSSLRequireCertificate();
