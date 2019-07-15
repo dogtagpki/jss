@@ -313,6 +313,8 @@ int main(int argc, char** argv)
      * size, we'll be able to step one of the two sides until something useful
      * happens. */
     printf("Trying handshake...\n");
+
+    int count = 0;
     while (!is_finished(c_nspr, s_nspr)) {
         printf("Client Handshake:\n");
         if (SSL_ForceHandshake(c_nspr) != SECSuccess) {
@@ -335,6 +337,10 @@ int main(int argc, char** argv)
         }
 
         printf("\n\n");
+        count += 1;
+        if (count >= 40) {
+            fprintf(stderr, "error: unable to make progress after %d steps!\n", count);
+        }
     }
 
     /* Send a test message from client -> server to ensure that the connection

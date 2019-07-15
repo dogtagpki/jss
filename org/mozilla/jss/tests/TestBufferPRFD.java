@@ -140,6 +140,7 @@ public class TestBufferPRFD {
         assert(!IsHandshakeFinished(c_nspr, s_nspr));
 
         /* Try a handshake */
+        int count = 0;
         while(!IsHandshakeFinished(c_nspr, s_nspr)) {
             if (SSL.ForceHandshake(c_nspr) != SSL.SECSuccess) {
                 int error = PR.GetError();
@@ -156,6 +157,12 @@ public class TestBufferPRFD {
                     System.out.println("Unexpected error: " + new String(PR.ErrorToName(error)) + " (" + error + ")");
                     System.exit(1);
                 }
+            }
+
+            count += 1;
+            if (count >= 40) {
+                System.err.println("Error: unable to make progress after " + count + " steps!");
+                System.exit(1);
             }
         }
         System.out.println("Handshake completed successfully!\n");
