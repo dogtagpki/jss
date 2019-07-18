@@ -6,6 +6,8 @@ package org.mozilla.jss.util;
 
 import java.io.CharConversionException;
 import java.io.Console;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,9 @@ public class Password implements PasswordCallback, Cloneable,
     private static final long serialVersionUID = 1L;
 
     public static Logger logger = LoggerFactory.getLogger(Password.class);
+
+    // store the location where the Password object was created
+    private StackTraceElement[] stackTrace = new Throwable().getStackTrace();
 
     /**
      * Don't use this if you aren't Password.
@@ -172,10 +177,36 @@ public class Password implements PasswordCallback, Cloneable,
      */
     @Deprecated
     protected void finalize() throws Throwable {
-        if(!cleared) {
-            logger.warn("Password was garbage collected before it was cleared.");
-        }
+
+        if (cleared) return;
+
+        // clear the password first
         clear();
+
+        StringWriter sw = new StringWriter();
+        PrintWriter out = new PrintWriter(sw, true);
+        int i = 0;
+
+        // show where the password was created
+        for (; i < stackTrace.length; i++) {
+            StackTraceElement ste = stackTrace[i];
+            String className = ste.getClassName();
+            if (Password.class.getName().equals(className)) continue;
+
+            out.println("Uncleared Password object created at " + ste);
+            i++;
+            break;
+        }
+
+        // show who called the code
+        for (; i < stackTrace.length; i++) {
+            StackTraceElement ste = stackTrace[i];
+            out.println("        called by " + ste);
+        }
+
+        out.println("Please report the above trace to your software vendors.");
+
+        logger.warn(sw.toString());
     }
 
 	/**
