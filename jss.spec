@@ -106,6 +106,9 @@ export BUILD_OPT=1
 CFLAGS="-g $RPM_OPT_FLAGS"
 export CFLAGS
 
+# Check if we're in FIPS mode
+modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
+
 # The Makefile is not thread-safe
 rm -rf build && mkdir -p build && cd build
 %cmake \
