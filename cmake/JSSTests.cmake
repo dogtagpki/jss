@@ -91,11 +91,6 @@ macro(jss_tests)
         NAME "JSS_Test_Buffer"
         COMMAND "org.mozilla.jss.tests.TestBuffer"
     )
-    jss_test_java(
-        NAME "JSS_Test_BufferPRFD"
-        COMMAND "org.mozilla.jss.tests.TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}"
-        DEPENDS "List_CA_certs"
-    )
     if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
@@ -180,24 +175,9 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH}" "50"
         DEPENDS "List_CA_certs"
     )
-    jss_test_exec(
-        NAME "TestBufferPRFD_RSA"
-        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_RSA"
-        DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
-    )
-    jss_test_exec(
-        NAME "TestBufferPRFD_ECDSA"
-        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_ECDSA"
-        DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
-    )
     jss_test_java(
         NAME "Key_Generation"
         COMMAND "org.mozilla.jss.tests.TestKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Setup_DBs"
-    )
-    jss_test_java(
-        NAME "Key_Factory"
-        COMMAND "org.mozilla.jss.tests.KeyFactoryTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
@@ -208,11 +188,6 @@ macro(jss_tests)
     jss_test_java(
         NAME "HMAC"
         COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Setup_DBs"
-    )
-    jss_test_java(
-        NAME "HMAC_Unwrap"
-        COMMAND "org.mozilla.jss.tests.HmacTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
@@ -256,76 +231,103 @@ macro(jss_tests)
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
-        NAME "Mozilla_JSS_Secret_Key_Generation"
-        COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}"
-        DEPENDS "Setup_DBs"
-    )
-    jss_test_java(
         NAME "JSSProvider"
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs"
     )
 
-    # FIPS-related tests
-    jss_test_java(
-        NAME "Enable_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "enable"
-        DEPENDS "Setup_FIPS_DBs"
-    )
-    jss_test_java(
-        NAME "check_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "chkfips"
-        DEPENDS "Enable_FipsMODE"
-    )
-    jss_test_java(
-        NAME "SSLClientAuth_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
-        DEPENDS "Enable_FipsMODE"
-    )
-    jss_test_java(
-        NAME "HMAC_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Enable_FipsMODE"
-    )
-    jss_test_java(
-        NAME "KeyWrapping_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Enable_FipsMODE"
-    )
-    jss_test_java(
-        NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
-        COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Enable_FipsMODE"
-    )
-    jss_test_java(
-        NAME "JSS_Signature_test_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "Enable_FipsMODE"
-    )
+    if(NOT FIPS_ENABLED)
+        jss_test_java(
+            NAME "Key_Factory"
+            COMMAND "org.mozilla.jss.tests.KeyFactoryTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Setup_DBs"
+        )
+        jss_test_java(
+            NAME "HMAC_Unwrap"
+            COMMAND "org.mozilla.jss.tests.HmacTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Setup_DBs"
+        )
+        jss_test_java(
+            NAME "Mozilla_JSS_Secret_Key_Generation"
+            COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}"
+            DEPENDS "Setup_DBs"
+        )
 
-    # Since we need to disable FIPS mode _after_ all FIPS-mode tests have
-    # run, we have to add a strict dependency from Disable_FipsMODE onto all
-    # FIPS-related checks.
-    jss_test_java(
-        NAME "Disable_FipsMODE"
-        COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "disable"
-        DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
-    )
+        # SSL Engine related tests
+        jss_test_exec(
+            NAME "TestBufferPRFD_RSA"
+            COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_RSA"
+            DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
+        )
+        jss_test_exec(
+            NAME "TestBufferPRFD_ECDSA"
+            COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_ECDSA"
+            DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
+        )
+        jss_test_java(
+            NAME "JSS_Test_BufferPRFD"
+            COMMAND "org.mozilla.jss.tests.TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}"
+            DEPENDS "List_CA_certs"
+        )
+
+        # FIPS-related tests
+        jss_test_java(
+            NAME "Enable_FipsMODE"
+            COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "enable"
+            DEPENDS "Setup_FIPS_DBs"
+        )
+        jss_test_java(
+            NAME "check_FipsMODE"
+            COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "chkfips"
+            DEPENDS "Enable_FipsMODE"
+        )
+        jss_test_java(
+            NAME "SSLClientAuth_FIPSMODE"
+            COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
+            DEPENDS "Enable_FipsMODE"
+        )
+        jss_test_java(
+            NAME "HMAC_FIPSMODE"
+            COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Enable_FipsMODE"
+        )
+        jss_test_java(
+            NAME "KeyWrapping_FIPSMODE"
+            COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Enable_FipsMODE"
+        )
+        jss_test_java(
+            NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
+            COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Enable_FipsMODE"
+        )
+        jss_test_java(
+            NAME "JSS_Signature_test_FipsMODE"
+            COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Enable_FipsMODE"
+        )
+
+        # Since we need to disable FIPS mode _after_ all FIPS-mode tests have
+        # run, we have to add a strict dependency from Disable_FipsMODE onto all
+        # FIPS-related checks.
+        jss_test_java(
+            NAME "Disable_FipsMODE"
+            COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "disable"
+            DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
+        )
+    endif()
 
     jss_test_java(
         NAME "JUnit_GenericValueConverterTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.GenericValueConverterTest"
-        DEPENDS "Disable_FipsMODE"
     )
     jss_test_java(
         NAME "JUnit_IA5StringConverterTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.IA5StringConverterTest"
-        DEPENDS "Disable_FipsMODE"
     )
     jss_test_java(
         NAME "JUnit_PrintableConverterTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.PrintableConverterTest"
-        DEPENDS "Disable_FipsMODE"
     )
 
 
