@@ -236,6 +236,10 @@ public final class JSSProvider extends java.security.Provider {
         put("Mac.HmacSHA512",
             "org.mozilla.jss.provider.javax.crypto.JSSMacSpi$HmacSHA512");
         put("Alg.Alias.Mac.Hmac-SHA512", "HmacSHA512");
+        put("Alg.Alias.Mac.SHA-1-HMAC", "HmacSHA1");
+        put("Alg.Alias.Mac.SHA-256-HMAC", "HmacSHA256");
+        put("Alg.Alias.Mac.SHA-384-HMAC", "HmacSHA384");
+        put("Alg.Alias.Mac.SHA-512-HMAC", "HmacSHA512");
 
 
         /////////////////////////////////////////////////////////////
