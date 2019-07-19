@@ -102,21 +102,20 @@ public class MacData implements ASN1Value {
         throws NotInitializedException,
             DigestException, TokenException, CharConversionException
     {
+        CryptoManager cm = CryptoManager.getInstance();
+        CryptoToken token = cm.getInternalCryptoToken();
+
+        if (macSalt == null) {
+            JSSSecureRandom rand = cm.createPseudoRandomNumberGenerator();
+            macSalt = new byte[SALT_LENGTH];
+            rand.nextBytes(macSalt);
+        }
+
+        PBEKeyGenParams params = new PBEKeyGenParams(password, macSalt, iterations);
+
         try {
-
-            CryptoManager cm = CryptoManager.getInstance();
-            CryptoToken token = cm.getInternalCryptoToken();
-
-            if (macSalt == null) {
-                JSSSecureRandom rand = cm.createPseudoRandomNumberGenerator();
-                macSalt = new byte[SALT_LENGTH];
-                rand.nextBytes(macSalt);
-            }
-
             // generate key from password and salt
             KeyGenerator kg = token.getKeyGenerator(KeyGenAlgorithm.PBA_SHA1_HMAC);
-            PBEKeyGenParams params = new PBEKeyGenParams(password, macSalt,
-                    iterations);
             kg.setCharToByteConverter(new PasswordConverter());
             kg.initialize(params);
             SymmetricKey key = kg.generate();
@@ -127,8 +126,7 @@ public class MacData implements ASN1Value {
             byte[] digestBytes = digest.digest(toBeMACed);
 
             // put everything into a DigestInfo
-            AlgorithmIdentifier algID = new AlgorithmIdentifier(
-                    DigestAlgorithm.SHA1.toOID());
+            AlgorithmIdentifier algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
             this.mac = new DigestInfo(algID, new OCTET_STRING(digestBytes));
             this.macSalt = new OCTET_STRING(macSalt);
             this.macIterationCount = new INTEGER(iterations);
@@ -136,12 +134,18 @@ public class MacData implements ASN1Value {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-1 HMAC algorithm not found on internal " +
                     "token: " + e.getMessage(), e);
+
         } catch (InvalidAlgorithmParameterException e) {
             throw new RuntimeException("Invalid PBE algorithm parameters: " + e.getMessage(), e);
+
         } catch (java.lang.IllegalStateException e) {
             throw new RuntimeException("Illegal state: " + e.getMessage(), e);
+
         } catch (InvalidKeyException e) {
             throw new RuntimeException("Invalid key: " + e.getMessage(), e);
+
+        } finally {
+            params.clear();
         }
     }
 
