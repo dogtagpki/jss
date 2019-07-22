@@ -236,4 +236,9 @@ public class Algorithm {
     // These underlying defs are currently different from the NSS AES KeyWrap
     protected static final int CKM_AES_KEY_WRAP=65;
     protected static final int CKM_AES_KEY_WRAP_PAD=66;
+
+    // PKCS#11 SHA2 HMAC
+    protected static final int CKM_SHA256_HMAC=67;
+    protected static final int CKM_SHA384_HMAC=68;
+    protected static final int CKM_SHA512_HMAC=69;
 }

@@ -114,6 +114,24 @@ public class KeyGenAlgorithm extends Algorithm {
             "SHA1/HMAC", new FixedKeyStrengthValidator(160),
             null, null );
 
+    public static final KeyGenAlgorithm
+    SHA256_HMAC = new KeyGenAlgorithm(
+        CKM_SHA256_HMAC,
+            "SHA256/HMAC", new FixedKeyStrengthValidator(256),
+            null, null );
+
+    public static final KeyGenAlgorithm
+    SHA384_HMAC = new KeyGenAlgorithm(
+        CKM_SHA384_HMAC,
+            "SHA384/HMAC", new FixedKeyStrengthValidator(384),
+            null, null );
+
+    public static final KeyGenAlgorithm
+    SHA512_HMAC = new KeyGenAlgorithm(
+        CKM_SHA512_HMAC,
+            "SHA512/HMAC", new FixedKeyStrengthValidator(512),
+            null, null );
+
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
     AES = new KeyGenAlgorithm(CKM_AES_KEY_GEN, "AES",
