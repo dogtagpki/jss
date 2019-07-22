@@ -187,7 +187,7 @@ macro(jss_tests)
     )
     jss_test_java(
         NAME "HMAC"
-        COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        COMMAND "org.mozilla.jss.tests.CrossHMACTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
@@ -288,7 +288,7 @@ macro(jss_tests)
         )
         jss_test_java(
             NAME "HMAC_FIPSMODE"
-            COMMAND "org.mozilla.jss.tests.HMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            COMMAND "org.mozilla.jss.tests.CrossHMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
             DEPENDS "Enable_FipsMODE"
         )
         jss_test_java(

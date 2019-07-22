@@ -15,12 +15,12 @@ import org.mozilla.jss.util.PasswordCallback;
 
 /**
  * HMAC is a hash function based message authentication code.
- * HMACTest compares the HMAC created by Mozilla, IBM and Sun JCE.
+ * CrossHMACTest compares the HMAC created by Mozilla, IBM and Sun JCE.
  *
  * @author  Sandeep.Konchady@Sun.COM
  * @version 1.0
  */
-public class HMACTest {
+public class CrossHMACTest {
 
     private CryptoManager cm;
     /**
@@ -34,10 +34,10 @@ public class HMACTest {
         "HmacSHA384", "HmacSHA512"
     };
 
-    public HMACTest(String[] argv) throws Exception {
+    public CrossHMACTest(String[] argv) throws Exception {
         if (argv.length < 1) {
             System.out.println(
-                    "Usage: java org.mozilla.jss.tests.HMACTest " +
+                    "Usage: java org.mozilla.jss.tests.CrossHMACTest " +
                     "<dbdir> [password file only needed in FIPS mode]");
             System.exit(1);
         }
@@ -127,7 +127,7 @@ public class HMACTest {
     public static void main(String[] argv) {
 
         try {
-            HMACTest hmacTest = new HMACTest(argv);
+            CrossHMACTest hmacTest = new CrossHMACTest(argv);
 
             //The secret key must be a JSS key. That is, it must be an 
             //instanceof org.mozilla.jss.crypto.SecretKeyFacade.
