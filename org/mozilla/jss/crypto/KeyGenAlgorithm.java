@@ -108,6 +108,12 @@ public class KeyGenAlgorithm extends Algorithm {
             "PBA/SHA1/HMAC", new FixedKeyStrengthValidator(160),
             null, PBEKeyGenParams.class );
 
+    public static final KeyGenAlgorithm
+    SHA1_HMAC = new KeyGenAlgorithm(
+        CKM_SHA_1_HMAC,
+            "SHA1/HMAC", new FixedKeyStrengthValidator(160),
+            null, null );
+
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
     AES = new KeyGenAlgorithm(CKM_AES_KEY_GEN, "AES",
