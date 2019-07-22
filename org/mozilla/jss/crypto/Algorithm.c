@@ -94,8 +94,11 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
 /* 64 */    {SEC_OID_AES_256_CBC, SEC_OID_TAG},
 /* the CKM_AES_KEY_WRAP_* have different defs than CKM_NSS_AES_KEY_WRAP_*  */
 /* 65 */    {CKM_AES_KEY_WRAP, PK11_MECH},
-/* 66 */    {CKM_AES_KEY_WRAP_PAD, PK11_MECH}
-/* REMEMBER TO UPDATE NUM_ALGS!!! */
+/* 66 */    {CKM_AES_KEY_WRAP_PAD, PK11_MECH},
+/* 67 */    {CKM_SHA256_HMAC, PK11_MECH},
+/* 68 */    {CKM_SHA384_HMAC, PK11_MECH},
+/* 69 */    {CKM_SHA512_HMAC, PK11_MECH}
+/* REMEMBER TO UPDATE NUM_ALGS!!! (in Algorithm.h) */
 };
 
 /***********************************************************************
