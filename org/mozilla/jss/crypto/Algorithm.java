@@ -127,6 +127,10 @@ public class Algorithm {
         return false;
     }
 
+    public PKCS11Algorithm getEnum() {
+        return PKCS11Algorithm.valueOfIndex(this.oidIndex);
+    }
+
     /**
      * Index into the SECOidTag array in Algorithm.c.
      */
@@ -144,91 +148,92 @@ public class Algorithm {
         new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045 } );
 
     // Algorithm indices.  These must be kept in sync with the
-    // algorithm array in Algorithm.c.
-    protected static final short SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION=0;
-    protected static final short SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION=1;
-    protected static final short SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION=2;
-    protected static final short SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST=3;
-    protected static final short SEC_OID_PKCS1_RSA_ENCRYPTION=4;
-    protected static final short CKM_RSA_PKCS_KEY_PAIR_GEN=5;
-    protected static final short CKM_DSA_KEY_PAIR_GEN=6;
-    protected static final short SEC_OID_ANSIX9_DSA_SIGNATURE=7;
-    protected static final short SEC_OID_RC4=8;
-    protected static final short SEC_OID_DES_ECB=9;
-    protected static final short SEC_OID_DES_CBC=10;
-    protected static final short CKM_DES_CBC_PAD=11;
-    protected static final short CKM_DES3_ECB=12;
-    protected static final short SEC_OID_DES_EDE3_CBC=13;
-    protected static final short CKM_DES3_CBC_PAD=14;
-    protected static final short CKM_DES_KEY_GEN=15;
-    protected static final short CKM_DES3_KEY_GEN=16;
-    protected static final short CKM_RC4_KEY_GEN=17;
+    // algorithm array in Algorithm.c. Any PKCS11 Algorithms must be added
+    // to the org.mozilla.jss.crypto.PKCS11Algorithm enum.
+    protected static final int SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION=0;
+    protected static final int SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION=1;
+    protected static final int SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION=2;
+    protected static final int SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST=3;
+    protected static final int SEC_OID_PKCS1_RSA_ENCRYPTION=4;
+    protected static final int CKM_RSA_PKCS_KEY_PAIR_GEN=5;
+    protected static final int CKM_DSA_KEY_PAIR_GEN=6;
+    protected static final int SEC_OID_ANSIX9_DSA_SIGNATURE=7;
+    protected static final int SEC_OID_RC4=8;
+    protected static final int SEC_OID_DES_ECB=9;
+    protected static final int SEC_OID_DES_CBC=10;
+    protected static final int CKM_DES_CBC_PAD=11;
+    protected static final int CKM_DES3_ECB=12;
+    protected static final int SEC_OID_DES_EDE3_CBC=13;
+    protected static final int CKM_DES3_CBC_PAD=14;
+    protected static final int CKM_DES_KEY_GEN=15;
+    protected static final int CKM_DES3_KEY_GEN=16;
+    protected static final int CKM_RC4_KEY_GEN=17;
 
-    protected static final short SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC=18;
-    protected static final short SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC=19;
-    protected static final short SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC=20;
-    protected static final short
+    protected static final int SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC=18;
+    protected static final int SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC=19;
+    protected static final int SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC=20;
+    protected static final int
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4=21;
-    protected static final short
+    protected static final int
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4=22;
-    protected static final short
+    protected static final int
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC=23;
-    protected static final short SEC_OID_MD2=24;
-    protected static final short SEC_OID_MD5=25;
-    protected static final short SEC_OID_SHA1=26;
-    protected static final short CKM_SHA_1_HMAC=27;
-    protected static final short
+    protected static final int SEC_OID_MD2=24;
+    protected static final int SEC_OID_MD5=25;
+    protected static final int SEC_OID_SHA1=26;
+    protected static final int CKM_SHA_1_HMAC=27;
+    protected static final int
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC=28;
-    protected static final short
+    protected static final int
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC=29;
-    protected static final short SEC_OID_RC2_CBC=30;
-    protected static final short CKM_PBA_SHA1_WITH_SHA1_HMAC=31;
+    protected static final int SEC_OID_RC2_CBC=30;
+    protected static final int CKM_PBA_SHA1_WITH_SHA1_HMAC=31;
 
     // AES
-    protected static final short CKM_AES_KEY_GEN=32;
-    protected static final short CKM_AES_ECB=33;
-    protected static final short CKM_AES_CBC=34;
-    protected static final short CKM_AES_CBC_PAD=35;
-    protected static final short CKM_RC2_CBC_PAD=36;
-    protected static final short CKM_RC2_KEY_GEN=37;
+    protected static final int CKM_AES_KEY_GEN=32;
+    protected static final int CKM_AES_ECB=33;
+    protected static final int CKM_AES_CBC=34;
+    protected static final int CKM_AES_CBC_PAD=35;
+    protected static final int CKM_RC2_CBC_PAD=36;
+    protected static final int CKM_RC2_KEY_GEN=37;
     //FIPS 180-2
-    protected static final short SEC_OID_SHA256=38;
-    protected static final short SEC_OID_SHA384=39;
-    protected static final short SEC_OID_SHA512=40;
-    protected static final short SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION=41;
-    protected static final short SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION=42;
-    protected static final short SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION=43;
-    protected static final short SEC_OID_ANSIX962_EC_PUBLIC_KEY=44;
-    protected static final short SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE=45;
-    protected static final short CKM_EC_KEY_PAIR_GEN=46;
-    protected static final short SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE=47;
-    protected static final short SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE=48;
-    protected static final short SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE=49;
+    protected static final int SEC_OID_SHA256=38;
+    protected static final int SEC_OID_SHA384=39;
+    protected static final int SEC_OID_SHA512=40;
+    protected static final int SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION=41;
+    protected static final int SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION=42;
+    protected static final int SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION=43;
+    protected static final int SEC_OID_ANSIX962_EC_PUBLIC_KEY=44;
+    protected static final int SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE=45;
+    protected static final int CKM_EC_KEY_PAIR_GEN=46;
+    protected static final int SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE=47;
+    protected static final int SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE=48;
+    protected static final int SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE=49;
 
-    protected static final short SEC_OID_HMAC_SHA256=50;
-    protected static final short SEC_OID_HMAC_SHA384=51;
-    protected static final short SEC_OID_HMAC_SHA512=52;
+    protected static final int SEC_OID_HMAC_SHA256=50;
+    protected static final int SEC_OID_HMAC_SHA384=51;
+    protected static final int SEC_OID_HMAC_SHA512=52;
 
     //PKCS5 V2
-    protected static final short SEC_OID_PKCS5_PBKDF2=53;
-    protected static final short SEC_OID_PKCS5_PBES2=54;
-    protected static final short SEC_OID_PKCS5_PBMAC1=55;
-    protected static final short SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST=56;
+    protected static final int SEC_OID_PKCS5_PBKDF2=53;
+    protected static final int SEC_OID_PKCS5_PBES2=54;
+    protected static final int SEC_OID_PKCS5_PBMAC1=55;
+    protected static final int SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST=56;
 
     // NSS AES KeyWrap
-    protected static final short CKM_NSS_AES_KEY_WRAP=57;
-    protected static final short CKM_NSS_AES_KEY_WRAP_PAD=58;
+    protected static final int CKM_NSS_AES_KEY_WRAP=57;
+    protected static final int CKM_NSS_AES_KEY_WRAP_PAD=58;
 
     // AES Encryption Algorithms
-    protected static final short SEC_OID_AES_128_ECB = 59;
-    protected static final short SEC_OID_AES_128_CBC = 60;
-    protected static final short SEC_OID_AES_192_ECB = 61;
-    protected static final short SEC_OID_AES_192_CBC = 62;
-    protected static final short SEC_OID_AES_256_ECB = 63;
-    protected static final short SEC_OID_AES_256_CBC = 64;
+    protected static final int SEC_OID_AES_128_ECB = 59;
+    protected static final int SEC_OID_AES_128_CBC = 60;
+    protected static final int SEC_OID_AES_192_ECB = 61;
+    protected static final int SEC_OID_AES_192_CBC = 62;
+    protected static final int SEC_OID_AES_256_ECB = 63;
+    protected static final int SEC_OID_AES_256_CBC = 64;
 
     // PKCS#11 AES KeyWrap
     // These underlying defs are currently different from the NSS AES KeyWrap
-    protected static final short CKM_AES_KEY_WRAP=65;
-    protected static final short CKM_AES_KEY_WRAP_PAD=66;
+    protected static final int CKM_AES_KEY_WRAP=65;
+    protected static final int CKM_AES_KEY_WRAP_PAD=66;
 }
