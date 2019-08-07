@@ -243,7 +243,7 @@ macro(jss_config_java)
         message(WARNING "Test dependency sfl4j-jdk14.jar not found by find_jar! Tests might not run properly.")
     endif()
 
-    if(JUINT4_JAR STREQUAL "JUNIT4_JAR-NOTFOUND")
+    if(JUNIT4_JAR STREQUAL "JUNIT4_JAR-NOTFOUND")
         message(FATAL_ERROR "Test dependency junit4.jar not found by find_jar! Tests will not compile.")
     endif()
 
