@@ -239,6 +239,11 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs"
     )
+    jss_test_java(
+        NAME "X509CertTest"
+        COMMAND "org.mozilla.jss.tests.X509CertTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "List_CA_certs"
+    )
 
     if(NOT FIPS_ENABLED)
         jss_test_java(
