@@ -126,7 +126,7 @@ public abstract class Cipher {
      */
     public static byte[]
     pad(byte[] toBePadded, int blockSize) {
-        Assert._assert(blockSize > 0);
+        assert(blockSize > 0);
 
         // the padOctet is also the number of pad octets
         byte padOctet = (byte) (blockSize - (toBePadded.length % blockSize));

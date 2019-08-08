@@ -402,13 +402,13 @@ public class PK11Cert
 	// Construction
 	/////////////////////////////////////////////////////////////
 	//PK11Cert(CertProxy proxy) {
-    //    Assert._assert(proxy!=null);
+    //    assert(proxy!=null);
 	//	this.certProxy = proxy;
 	//}
 
 	PK11Cert(byte[] certPtr, byte[] slotPtr, String nickname) {
-        Assert._assert(certPtr!=null);
-        Assert._assert(slotPtr!=null);
+        assert(certPtr!=null);
+        assert(slotPtr!=null);
 		certProxy = new CertProxy(certPtr);
 		tokenProxy = new TokenProxy(slotPtr);
 		this.nickname = nickname;

@@ -135,7 +135,7 @@ public class PKIData implements ASN1Value {
         {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            Assert._assert(seq.size() == 4);
+            assert(seq.size() == 4);
 
             return new PKIData(
                             (SEQUENCE)      seq.elementAt(0),

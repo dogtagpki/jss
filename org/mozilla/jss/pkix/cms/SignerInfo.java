@@ -227,7 +227,7 @@ public class SignerInfo implements ASN1Value {
 
         if( signedAttributes != null ) 
         {
-            Assert._assert( signedAttributes.size() >= 2 );
+            assert( signedAttributes.size() >= 2 );
             this.signedAttributes = signedAttributes;
         }
 
@@ -346,7 +346,7 @@ public class SignerInfo implements ASN1Value {
 				issuerAndSerialNumber.getSerialNumber()  );
 			verify(messageDigest, contentType, cert.getPublicKey());
 		} else {
-            Assert._assert(
+            assert(
 						  signerIdentifier.getType().equals(SignerIdentifier.SUBJECT_KEY_IDENTIFIER) );
 
 			// XXX Do we have method to get key using keyIdentifier
@@ -653,7 +653,7 @@ public class SignerInfo implements ASN1Value {
      */
     private static boolean byteArraysAreSame(byte[] left, byte[] right) {
 
-        Assert._assert(left!=null && right!=null);
+        assert(left!=null && right!=null);
 
         if( left.length != right.length ) {
             return false;
@@ -758,7 +758,7 @@ public class SignerInfo implements ASN1Value {
             throws IOException, InvalidBERException
             {
                 SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
-                Assert._assert(seq.size() == 7);
+                assert(seq.size() == 7);
 
                 return new SignerInfo(
                     (INTEGER)                   seq.elementAt(0),

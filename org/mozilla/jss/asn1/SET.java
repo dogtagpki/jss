@@ -300,11 +300,11 @@ public class SET implements ASN1Value {
 
         // equal up to the minimal endpoint
         if( left.length > min ) {
-            Assert._assert(right.length==min);
+            assert(right.length==min);
             return 1;
         }
         if( right.length > min ) {
-            Assert._assert(left.length==min);
+            assert(left.length==min);
             return -1;
         }
         return 0;
@@ -739,7 +739,7 @@ public static class Template implements ASN1Template {
 
         // We check for this after we read in each item, so this shouldn't
         // happen
-        Assert._assert( remainingContent == 0 || remainingContent == -1);
+        assert( remainingContent == 0 || remainingContent == -1);
 
         // Deal with elements that weren't present.
         int size = elements.size();

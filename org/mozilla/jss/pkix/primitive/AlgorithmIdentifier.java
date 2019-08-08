@@ -100,7 +100,7 @@ public static class Template implements ASN1Template {
         SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
         // the template should have enforced this
-        Assert._assert( seq.size() == 2 );
+        assert( seq.size() == 2 );
 
         OBJECT_IDENTIFIER algOID = (OBJECT_IDENTIFIER)seq.elementAt(0);
 

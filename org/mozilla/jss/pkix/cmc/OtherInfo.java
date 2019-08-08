@@ -107,7 +107,7 @@ public class OtherInfo implements ASN1Value {
                     +" parameter failInfo is null");
             }
         } else {
-            Assert._assert( type == PEND );
+            assert( type == PEND );
             if (pendInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
                     +" parameter pendInfo is null");
@@ -146,7 +146,7 @@ public class OtherInfo implements ASN1Value {
                     +" parameter pendInfo is null");
             }
         } else {
-            Assert._assert( type == EXTENDED );
+            assert( type == EXTENDED );
             if (extendedFailInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
                     +" parameter extendedFailInfo is null");
@@ -208,7 +208,7 @@ public class OtherInfo implements ASN1Value {
         } else if( type == PEND ){
             return PendInfo.TAG;
         } else {
-            Assert._assert( type == EXTENDED );
+            assert( type == EXTENDED );
             return ExtendedFailInfo.TAG;
         }
     }
@@ -220,7 +220,7 @@ public class OtherInfo implements ASN1Value {
         } else if( type == PEND ){
             pendInfo.encode(ostream);
         } else {
-            Assert._assert( type == EXTENDED );
+            assert( type == EXTENDED );
             extendedFailInfo.encode(ostream);
         }
     }
@@ -263,7 +263,7 @@ public class OtherInfo implements ASN1Value {
             } else if( c.getTag().equals(PendInfo.TAG) ) {
                 return new OtherInfo(PEND, null, (PendInfo) c.getValue(), null);
             } else {
-                Assert._assert( c.getTag().equals(ExtendedFailInfo.TAG) );
+                assert( c.getTag().equals(ExtendedFailInfo.TAG) );
                 return new OtherInfo(EXTENDED, null, null, (ExtendedFailInfo) c.getValue());
             }
         }

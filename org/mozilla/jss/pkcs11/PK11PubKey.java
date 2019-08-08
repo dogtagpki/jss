@@ -16,7 +16,7 @@ public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
     private static final long serialVersionUID = 1L;
 
     protected PK11PubKey(byte[] pointer) {
-        Assert._assert(pointer!=null);
+        assert(pointer!=null);
         keyProxy = new PublicKeyProxy(pointer);
     }
 

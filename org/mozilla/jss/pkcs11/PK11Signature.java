@@ -28,7 +28,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 	public PK11Signature(PK11Token token, SignatureAlgorithm algorithm)
 		throws NoSuchAlgorithmException, TokenException
 	{
-        Assert._assert(token!=null && algorithm!=null);
+        assert(token!=null && algorithm!=null);
 
         // Make sure this token supports this algorithm.  It's OK if
         // it only supports the signing part; the hashing can be done
@@ -54,7 +54,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 	{
         PK11PrivKey privKey;
 
-        Assert._assert(privateKey!=null);
+        assert(privateKey!=null);
 
         //
         // Scrutinize the key. Make sure it:
@@ -128,7 +128,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 	{
 		PK11PubKey pubKey;
 
-        Assert._assert(publicKey!=null);
+        assert(publicKey!=null);
 
         //
         // Scrutinize the key. Make sure it:
@@ -181,7 +181,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
     public void engineUpdate(byte[] b, int off, int len)
         throws SignatureException, TokenException
     {
-        Assert._assert(b != null);
+        assert(b != null);
         if( (state==SIGN || state==VERIFY) ) {
             if(!raw && sigContext==null) {
                 throw new SignatureException("Signature has no context");
@@ -189,13 +189,13 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
                 throw new SignatureException("Raw signature has no input stream");
             }
         } else {
-            Assert._assert(state == UNINITIALIZED);
+            assert(state == UNINITIALIZED);
             throw new SignatureException("Signature is not initialized");
         }
-        Assert._assert(token!=null);
-        Assert._assert(tokenProxy!=null);
-        Assert._assert(algorithm!=null);
-        Assert._assert(key!=null);
+        assert(token!=null);
+        assert(tokenProxy!=null);
+        assert(algorithm!=null);
+        assert(key!=null);
 
         if( raw ) {
             rawInput.write(b, off, len);
@@ -219,10 +219,10 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
         } else if(raw && rawInput==null) {
             throw new SignatureException("Signature has no input");
         }
-        Assert._assert(token!=null);
-        Assert._assert(tokenProxy!=null);
-        Assert._assert(algorithm!=null);
-        Assert._assert(key!=null);
+        assert(token!=null);
+        assert(tokenProxy!=null);
+        assert(algorithm!=null);
+        assert(key!=null);
 
         byte[] result;
         if( raw ) {
@@ -241,7 +241,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
     public int engineSign(byte[] outbuf, int offset, int len)
         throws SignatureException, TokenException
     {
-        Assert._assert(outbuf!=null);
+        assert(outbuf!=null);
         byte[] sig;
         if( raw ) {
             sig = engineRawSignNative(token, (PK11PrivKey)key,
@@ -273,7 +273,7 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
     public boolean engineVerify(byte[] sigBytes)
         throws SignatureException, TokenException
     {
-        Assert._assert(sigBytes!=null);
+        assert(sigBytes!=null);
 		if(state != VERIFY) {
 			throw new SignatureException(
 						"Signature is not initialized properly");
@@ -284,10 +284,10 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
         if(raw && rawInput==null) {
             throw new SignatureException("Signature has no input");
         }
-		Assert._assert(token!=null);
-		Assert._assert(tokenProxy!=null);
-		Assert._assert(algorithm!=null);
-		Assert._assert(key!=null);
+		assert(token!=null);
+		assert(tokenProxy!=null);
+		assert(algorithm!=null);
+		assert(key!=null);
 
 		if(sigBytes==null) {
 			return false;

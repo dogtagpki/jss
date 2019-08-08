@@ -141,7 +141,7 @@ public class ExtendedFailInfo implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
             // The template should have enforced this
-            Assert._assert(seq.size() == 2);
+            assert(seq.size() == 2);
 
             return new ExtendedFailInfo( (OBJECT_IDENTIFIER) seq.elementAt(0),
                                             seq.elementAt(1) );

@@ -226,7 +226,7 @@ public class ContentInfo implements ASN1Value {
             throws IOException, InvalidBERException
             {
                 SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
-                Assert._assert(seq.size() == 2);
+                assert(seq.size() == 2);
                 ASN1Value content;
 
                 if( seq.elementAt(1) == null ) {

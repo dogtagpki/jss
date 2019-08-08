@@ -57,7 +57,7 @@ public class PKIArchiveOptions implements ASN1Value {
      * is <code>ENCRYPTED_PRIV_KEY</code>.
      */
     public EncryptedKey getEncryptedKey( ) {
-        Assert._assert(type == ENCRYPTED_PRIV_KEY);
+        assert(type == ENCRYPTED_PRIV_KEY);
         return encryptedPrivKey;
     }
 
@@ -65,7 +65,7 @@ public class PKIArchiveOptions implements ASN1Value {
      * Returns the key gen parameters. Should only be called if the type
      * is <code>KEY_GEN_PARAMETERS</code>.
     public byte[] getKeyGenParameters( ) {
-        Assert._assert(type == KEY_GEN_PARAMETERS);
+        assert(type == KEY_GEN_PARAMETERS);
         return keyGenParameters;
     }
 
@@ -76,7 +76,7 @@ public class PKIArchiveOptions implements ASN1Value {
      * <code>ARCHIVE_REM_GEN_PRIV_KEY</code>.
      */
     public boolean getArchiveRemGenPrivKey( ) {
-        Assert._assert( type == ARCHIVE_REM_GEN_PRIV_KEY );
+        assert( type == ARCHIVE_REM_GEN_PRIV_KEY );
         return archiveRemGenPrivKey;
     }
 
@@ -126,7 +126,7 @@ public class PKIArchiveOptions implements ASN1Value {
         throws IOException
     {
         // no implicit tags on a CHOICE
-        Assert._assert( implicitTag.equals(tag) );
+        assert( implicitTag.equals(tag) );
 
         if( type == ENCRYPTED_PRIV_KEY ) {
             // CHOICEs are always EXPLICITly tagged
@@ -135,7 +135,7 @@ public class PKIArchiveOptions implements ASN1Value {
         } else if( type == KEY_GEN_PARAMETERS ) {
             keyGenParameters.encode(tag, ostream);
         } else {
-            Assert._assert( type == ARCHIVE_REM_GEN_PRIV_KEY );
+            assert( type == ARCHIVE_REM_GEN_PRIV_KEY );
             (new BOOLEAN(archiveRemGenPrivKey)).encode(tag, ostream);
         }
     }

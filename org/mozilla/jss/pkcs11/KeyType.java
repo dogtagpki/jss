@@ -32,13 +32,13 @@ public final class KeyType {
     protected KeyType(Algorithm[] algs, String name) {
         int i;
 
-        Assert._assert(algs!=null);
+        assert(algs!=null);
 
         algorithms = algs.clone();
 
         // Register this key as the key type for each of its algorithms
         for(i=0; i < algorithms.length; i++) {
-            Assert._assert(! algHash.containsKey(algorithms[i]) );
+            assert(! algHash.containsKey(algorithms[i]) );
             algHash.put(algorithms[i], this);
         }
         this.name = name;
@@ -59,14 +59,14 @@ public final class KeyType {
     static public KeyType getKeyTypeFromAlgorithm(Algorithm alg)
         throws NoSuchAlgorithmException
     {
-        Assert._assert(alg!=null);
+        assert(alg!=null);
         Object obj = algHash.get(alg);
 
         if(obj == null) {
             throw new NoSuchAlgorithmException();
         }
 
-        Assert._assert( obj instanceof KeyType );
+        assert( obj instanceof KeyType );
 
         return (KeyType) obj;
     }

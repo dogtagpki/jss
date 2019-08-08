@@ -71,7 +71,7 @@ public class UTF8Converter {
 		int ucs4; // UCS4 encoding of a character
 		boolean failed = true;
 
-		Assert._assert(unicode != null);
+		assert(unicode != null);
 		if(unicode == null) {
 			return null;
 		}
@@ -205,7 +205,7 @@ public class UTF8Converter {
 	public static void wipeBytes(byte[] array) {
 		int i;
 
-		Assert._assert(array != null);
+		assert(array != null);
 		if(array == null) {
 			return;
 		}
@@ -270,7 +270,7 @@ public class UTF8Converter {
 		System.out.println("Maximum buffer size test:");
 		unicode = new char[] {'\uffff', '\uffff', '\uffff', '\uffff'};
 		utf8 = UnicodeToUTF8(unicode);
-		Assert._assert(utf8.length == 12);
+		assert(utf8.length == 12);
 		System.out.println("8 bytes of unicode --> "+utf8.length+
 			" bytes of utf8\n");
 
@@ -280,8 +280,8 @@ public class UTF8Converter {
 		System.out.println("Empty input test:");
 		unicode = new char[0];
 		utf8 = UnicodeToUTF8(unicode);
-		Assert._assert(utf8 != null);
-		Assert._assert(utf8.length == 0);
+		assert(utf8 != null);
+		assert(utf8.length == 0);
 		System.out.println("given 0 bytes Unicode, produces 0 length utf8\n");
 
 		//

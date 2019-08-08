@@ -74,7 +74,7 @@ public final class PK11Token implements CryptoToken {
     getSignatureContext(SignatureAlgorithm algorithm)
             throws NoSuchAlgorithmException, TokenException
     {
-        Assert._assert(algorithm!=null);
+        assert(algorithm!=null);
         return Tunnel.constructSignature( algorithm,
                 new PK11Signature(this, algorithm) );
     }
@@ -161,7 +161,7 @@ public final class PK11Token implements CryptoToken {
     getKeyPairGenerator(KeyPairAlgorithm algorithm)
             throws NoSuchAlgorithmException, TokenException
     {
-        Assert._assert(algorithm!=null);
+        assert(algorithm!=null);
         return new KeyPairGenerator(algorithm,
                 new PK11KeyPairGenerator(this, algorithm));
     }
@@ -540,7 +540,7 @@ public final class PK11Token implements CryptoToken {
      * Default constructor should never be called.
      */
     protected PK11Token() {
-        Assert._assert(false);
+        assert(false);
     }
 
     /**
@@ -549,7 +549,7 @@ public final class PK11Token implements CryptoToken {
      * @param pointer A byte array containing a pointer to a PKCS #11 slot.
      */
     protected PK11Token(byte[] pointer, boolean internal, boolean keyStorage) {
-        Assert._assert(pointer!=null);
+        assert(pointer!=null);
         tokenProxy = new TokenProxy(pointer);
         mIsInternalCryptoToken = internal;
         mIsInternalKeyStorageToken = keyStorage;
@@ -558,7 +558,7 @@ public final class PK11Token implements CryptoToken {
 
 /*
 	protected PK11Token(TokenProxy proxy) {
-        Assert._assert(proxy!=null);
+        assert(proxy!=null);
 		this.tokenProxy = proxy;
 	}
 */

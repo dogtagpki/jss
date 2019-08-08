@@ -174,7 +174,7 @@ public class CMCStatusInfoV2 implements ASN1Value {
      */
     public void addBodyPartID(int id) {
         INTEGER id1 = new INTEGER(id);
-        Assert._assert(id1.compareTo(BODYIDMAX) <= 0);
+        assert(id1.compareTo(BODYIDMAX) <= 0);
         bodyList.addElement( id1 );
     }
 

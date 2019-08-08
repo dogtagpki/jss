@@ -224,7 +224,7 @@ public class Password implements PasswordCallback, Cloneable,
 	public static byte[] charToByte(char[] charArray)
 	{
 		byte[] byteArray;
-		Assert._assert(charArray != null);
+		assert(charArray != null);
 		try {
 			byteArray = UTF8Converter.UnicodeToUTF8NullTerm(charArray);
 		} catch(CharConversionException e) {
@@ -242,7 +242,7 @@ public class Password implements PasswordCallback, Cloneable,
      * <code>null</code> must not be passed in.
 	 */
 	public static void wipeBytes(byte[] byteArray) {
-		Assert._assert(byteArray != null);
+		assert(byteArray != null);
 		UTF8Converter.wipeBytes(byteArray);
 	}
 
@@ -252,7 +252,7 @@ public class Password implements PasswordCallback, Cloneable,
 	 */
 	public static void wipeChars(char[] charArray) {
 		int i;
-		Assert._assert(charArray != null);
+		assert(charArray != null);
 		for(i=0; i < charArray.length; i++) {
 			charArray[i] = 0;
 		}

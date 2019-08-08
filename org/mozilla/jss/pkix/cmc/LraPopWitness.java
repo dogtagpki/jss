@@ -60,7 +60,7 @@ public class LraPopWitness implements ASN1Value {
      */
     public void addBodyPartId(int id) {
         INTEGER id1 = new INTEGER(id);
-        Assert._assert(id1.compareTo(BODYIDMAX) <= 0);
+        assert(id1.compareTo(BODYIDMAX) <= 0);
         bodyIds.addElement( id1 );
     }
 

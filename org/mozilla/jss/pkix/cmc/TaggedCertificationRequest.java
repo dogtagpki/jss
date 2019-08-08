@@ -51,7 +51,7 @@ public class TaggedCertificationRequest implements ASN1Value {
      */
     public TaggedCertificationRequest(INTEGER bodyPartID, CertificationRequest certificationRequest) {
         sequence = new SEQUENCE();
-        Assert._assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
+        assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
         this.bodyPartID = bodyPartID;
         sequence.addElement(bodyPartID);
         this.certificationRequest = certificationRequest;
@@ -120,7 +120,7 @@ public class TaggedCertificationRequest implements ASN1Value {
         {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            Assert._assert(seq.size() == 2);
+            assert(seq.size() == 2);
 
             return new TaggedCertificationRequest(
                             (INTEGER)      seq.elementAt(0),

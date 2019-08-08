@@ -287,16 +287,16 @@ public final class CryptoManager implements TokenSupplier
         while(tokens.hasMoreElements()) {
             PK11Token token = (PK11Token) tokens.nextElement();
             if( token.isInternalCryptoToken() ) {
-                Assert._assert(internalCryptoToken == null);
+                assert(internalCryptoToken == null);
                 internalCryptoToken = token;
             }
             if( token.isInternalKeyStorageToken() ) {
-                Assert._assert(internalKeyStorageToken == null);
+                assert(internalKeyStorageToken == null);
                 internalKeyStorageToken = token;
             }
         }
-        Assert._assert(internalKeyStorageToken != null);
-        Assert._assert(internalCryptoToken != null);
+        assert(internalKeyStorageToken != null);
+        assert(internalCryptoToken != null);
     }
 
     /**
@@ -826,7 +826,7 @@ public final class CryptoManager implements TokenSupplier
     findCertByNickname(String nickname)
         throws ObjectNotFoundException, TokenException
     {
-        Assert._assert(nickname!=null);
+        assert(nickname!=null);
         return findCertByNicknameNative(nickname);
     }
 
@@ -842,7 +842,7 @@ public final class CryptoManager implements TokenSupplier
     findCertsByNickname(String nickname)
         throws TokenException
     {
-        Assert._assert(nickname!=null);
+        assert(nickname!=null);
         return findCertsByNicknameNative(nickname);
     }
 
@@ -934,7 +934,7 @@ public final class CryptoManager implements TokenSupplier
     findPrivKeyByCert(org.mozilla.jss.crypto.X509Certificate cert)
         throws ObjectNotFoundException, TokenException
     {
-        Assert._assert(cert!=null);
+        assert(cert!=null);
         if(! (cert instanceof org.mozilla.jss.pkcs11.PK11Cert)) {
             throw new ObjectNotFoundException("Non-pkcs11 cert passed to PK11Finder");
         }

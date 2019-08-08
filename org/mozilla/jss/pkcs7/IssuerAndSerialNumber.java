@@ -114,7 +114,7 @@ public class IssuerAndSerialNumber implements ASN1Value {
         {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            Assert._assert(seq.size() == 2);
+            assert(seq.size() == 2);
 
             return new IssuerAndSerialNumber(
                             (Name)      seq.elementAt(0),

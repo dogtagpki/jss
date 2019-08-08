@@ -158,7 +158,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                 cipher.initDecrypt(symkey, params);
             }
         } else {
-            Assert._assert(
+            assert(
                 opmode==Cipher.WRAP_MODE || opmode==Cipher.UNWRAP_MODE);
             wrapAlg = KeyWrapAlgorithm.fromString(buf.toString());
             blockSize = wrapAlg.getBlockSize();
@@ -169,7 +169,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                 if( opmode == Cipher.WRAP_MODE ) {
                     params = generateAlgParams(wrapAlg, blockSize);
                 } else {
-                    Assert._assert(opmode == Cipher.UNWRAP_MODE);
+                    assert(opmode == Cipher.UNWRAP_MODE);
                     params = null;
                 }
             }
@@ -193,7 +193,7 @@ class JSSCipherSpi extends javax.crypto.CipherSpi {
                 if( opmode == Cipher.WRAP_MODE ) {
                     wrapper.initWrap( sk.key, params );
                 } else {
-                    Assert._assert(opmode==Cipher.UNWRAP_MODE);
+                    assert(opmode==Cipher.UNWRAP_MODE);
                     wrapper.initUnwrap( sk.key, params );
                 }
             } else {

@@ -80,7 +80,7 @@ public class SubjectKeyIdentifier extends Extension {
             throws IOException, InvalidBERException
         {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
-            Assert._assert( ((OBJECT_IDENTIFIER) seq.elementAt(0)).equals(OID) );
+            assert( ((OBJECT_IDENTIFIER) seq.elementAt(0)).equals(OID) );
 
             return new SubjectKeyIdentifier(
                 ((BOOLEAN) seq.elementAt(1)).toBoolean(),

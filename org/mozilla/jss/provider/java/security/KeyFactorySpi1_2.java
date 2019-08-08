@@ -184,7 +184,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
             // we need to chop off a leading zero byte
             if( y.bitLength() % 8 == 0 ) {
                 byte[] newBA = new byte[yBA.length-1];
-                Assert._assert(newBA.length >= 0);
+                assert(newBA.length >= 0);
                 System.arraycopy(yBA, 1, newBA, 0, newBA.length);
                 yBA = newBA;
             }
