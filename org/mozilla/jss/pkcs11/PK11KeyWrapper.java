@@ -465,7 +465,7 @@ final class PK11KeyWrapper implements KeyWrapper {
                 throw new InvalidKeyException("Type of public key does not "+
                     "match type of private key which is EC");
             }
-            return ((PK11ECPublicKey)publicKey).getW().toByteArray();
+            return ((PK11ECPublicKey)publicKey).getWByteArray();
         } else if(type == PrivateKey.DSA) {
             if( !(publicKey instanceof DSAPublicKey) ) {
                 throw new InvalidKeyException("Type of public key does not "+

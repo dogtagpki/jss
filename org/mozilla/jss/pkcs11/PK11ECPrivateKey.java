@@ -1,10 +1,11 @@
 package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.util.EC;
 
 class PK11ECPrivateKey
-//    extends PK11PrivKey implements ECPrivateKey
-    extends PK11PrivKey 
+    extends PK11PrivKey
+    implements ECPrivateKey
 {
 
     private static final long serialVersionUID = 1L;
