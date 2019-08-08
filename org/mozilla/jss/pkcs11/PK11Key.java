@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 
 
-abstract class PK11Key {
+abstract class PK11Key implements java.security.Key {
 
     //////////////////////////////////////////////////////////
     // Public Interface

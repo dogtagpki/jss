@@ -6,7 +6,7 @@ package org.mozilla.jss.crypto;
 import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
-public interface SymmetricKey {
+public interface SymmetricKey extends javax.crypto.SecretKey {
 
     public static final Type DES = Type.DES;
     public static final Type DES3 = Type.DES3;
