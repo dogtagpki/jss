@@ -15,7 +15,9 @@ public class Assert {
      * throwing an AssertionException.
      *
      * @param cond The condition that is being tested.
+     * @deprecated The assert keyword should be used instead.
      */
+    @Deprecated
     public static void _assert(boolean cond) {
         if(!cond) {
             throw new org.mozilla.jss.util.AssertionException(
@@ -29,7 +31,9 @@ public class Assert {
      *
      * @param cond The condition that is being tested.
      * @param msg A message describing what is wrong if the condition is false.
+     * @deprecated The assert keyword should be used instead.
      */
+    @Deprecated
 	public static void _assert(boolean cond, String msg) {
 		if(!cond) {
 			throw new org.mozilla.jss.util.AssertionException(msg);
