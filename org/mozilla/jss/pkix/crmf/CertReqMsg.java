@@ -63,7 +63,7 @@ public class CertReqMsg implements ASN1Value {
      * field is present.
      */
     public SEQUENCE getRegInfo() {
-        Assert._assert(regInfo != null);
+        assert(regInfo != null);
         return regInfo;
     }
     private SEQUENCE regInfo;
@@ -80,7 +80,7 @@ public class CertReqMsg implements ASN1Value {
      * field is present.
      */
     public ProofOfPossession getPop() {
-        Assert._assert(pop != null);
+        assert(pop != null);
         return pop;
     }
     private ProofOfPossession pop = null;

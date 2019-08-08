@@ -104,7 +104,7 @@ public class BodyPartReference implements ASN1Value {
      */
     public void addBodyPartId(int id) {
         INTEGER id1 = new INTEGER(id);
-        Assert._assert(id1.compareTo(BODYIDMAX) <= 0);
+        assert(id1.compareTo(BODYIDMAX) <= 0);
         bodyPartPath.addElement( id1 );
     }
 
@@ -138,7 +138,7 @@ public class BodyPartReference implements ASN1Value {
         if (type == BodyPartID ) {
             return INTEGER.TAG;
         } else {
-            Assert._assert( type == BodyPartPath);
+            assert( type == BodyPartPath);
             return SEQUENCE.TAG;
         }
     }
@@ -147,7 +147,7 @@ public class BodyPartReference implements ASN1Value {
         if (type == BodyPartID ) {
             bodyPartID.encode(ostream);
         } else {
-            Assert._assert( type == BodyPartPath);
+            assert( type == BodyPartPath);
             bodyPartPath.encode(ostream);
         }
     }
@@ -188,7 +188,7 @@ public class BodyPartReference implements ASN1Value {
             if( c.getTag().equals(INTEGER.TAG) ) {
                 return new BodyPartReference(BodyPartID, (INTEGER) c.getValue() , null);
             } else {
-                Assert._assert( c.getTag().equals(SEQUENCE.TAG) );
+                assert( c.getTag().equals(SEQUENCE.TAG) );
                 return new BodyPartReference(BodyPartPath, null, (SEQUENCE) c.getValue());
             }
         }

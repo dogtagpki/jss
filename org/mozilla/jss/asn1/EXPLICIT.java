@@ -35,7 +35,7 @@ public class EXPLICIT implements ASN1Value {
      * @param content Content.
      */
     public EXPLICIT( Tag tag, ASN1Value content ) {
-        Assert._assert(tag!=null && content!=null);
+        assert(tag!=null && content!=null);
         this.content = content;
         this.tag = tag;
     }

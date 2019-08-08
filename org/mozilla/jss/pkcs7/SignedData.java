@@ -378,7 +378,7 @@ public class SignedData implements ASN1Value {
             throws IOException, InvalidBERException
             {
                 SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
-                Assert._assert(seq.size() == 6);
+                assert(seq.size() == 6);
 
                 return new SignedData(
                     (INTEGER)     seq.elementAt(0),

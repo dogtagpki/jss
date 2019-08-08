@@ -65,7 +65,7 @@ public class BIT_STRING implements ASN1Value {
         // allocate enough bytes to hold all the bits
         bits = new byte[(numBits+7) / 8];
         padCount = (bits.length * 8) - numBits;
-        Assert._assert( padCount >= 0 && padCount <= 7);
+        assert( padCount >= 0 && padCount <= 7);
 
         for(int i=0; i < numBits; i++) {
             if( bs.get(i) ) {
@@ -197,7 +197,7 @@ public class BIT_STRING implements ASN1Value {
                         break;
                     }
                 }
-                Assert._assert(padBits >=0 && padBits <= 7);
+                assert(padBits >=0 && padBits <= 7);
             }
         } else {
             // Don't remove trailing zeroes. Just write the bits out as-is.

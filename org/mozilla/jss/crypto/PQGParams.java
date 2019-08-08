@@ -152,7 +152,7 @@ public class PQGParams extends DSAParameterSpec {
         byte[] ret;
 
         // big must not be negative
-        Assert._assert(big.signum() != -1);
+        assert(big.signum() != -1);
 
         // bitLength is the size of the data without the sign bit.  If
         // it exactly fills an integral number of bytes, that means a whole
@@ -161,7 +161,7 @@ public class PQGParams extends DSAParameterSpec {
         if(big.bitLength() % 8 == 0) {
             byte[] array = big.toByteArray();
             // The first byte should just be sign bits
-            Assert._assert( array[0] == 0 );
+            assert( array[0] == 0 );
             ret = new byte[array.length-1];
             System.arraycopy(array, 1, ret, 0, ret.length);
         } else {

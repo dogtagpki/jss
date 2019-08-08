@@ -323,7 +323,7 @@ public final class PK11KeyPairGenerator
     public PK11KeyPairGenerator(PK11Token token, KeyPairAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
     {
-        Assert._assert(token!=null && algorithm!=null);
+        assert(token!=null && algorithm!=null);
 
         mKeygenOnInternalToken = false;
 
@@ -382,7 +382,7 @@ public final class PK11KeyPairGenerator
                     "be 512, 768, or 1024.");
             }
         } else {
-            Assert._assert( algorithm == KeyPairAlgorithm.EC );
+            assert( algorithm == KeyPairAlgorithm.EC );
             if (strength < 112) {
                 // for EC, "strength" is actually a code for curves defined in
                 //   ECCurve_Code
@@ -429,7 +429,7 @@ public final class PK11KeyPairGenerator
                 throw new InvalidAlgorithmParameterException();
             }
         } else {
-            Assert._assert( algorithm == KeyPairAlgorithm.EC);
+            assert( algorithm == KeyPairAlgorithm.EC);
             // requires JAVA 1.5
             // if(! (params instanceof ECParameterSpec) ) {
             //   throw new InvalidAlgorithmParameterException();
@@ -489,7 +489,7 @@ public final class PK11KeyPairGenerator
                 extractablePairMode,
                 opFlags, opFlagsMask);
         } else {
-            Assert._assert( algorithm == KeyPairAlgorithm.EC );
+            assert( algorithm == KeyPairAlgorithm.EC );
             // requires JAVA 1.5 for ECParameters.
             //
             //AlgorithmParameters ecParams =
@@ -680,9 +680,9 @@ public final class PK11KeyPairGenerator
     private static synchronized void
     testDefaults() {
         if(!defaultsTested) {
-            Assert._assert(PQG1024.paramsAreValid());
-            Assert._assert(PQG768.paramsAreValid());
-            Assert._assert(PQG512.paramsAreValid());
+            assert(PQG1024.paramsAreValid());
+            assert(PQG768.paramsAreValid());
+            assert(PQG512.paramsAreValid());
             defaultsTested = true;
         }
     }

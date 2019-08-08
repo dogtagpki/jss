@@ -50,7 +50,7 @@ public class TaggedAttribute implements ASN1Value {
 
     public TaggedAttribute(INTEGER bodyPartID, OBJECT_IDENTIFIER type, SET values) {
         sequence = new SEQUENCE();
-        Assert._assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
+        assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
         this.bodyPartID = bodyPartID;
         sequence.addElement(bodyPartID);
         this.type = type;
@@ -61,7 +61,7 @@ public class TaggedAttribute implements ASN1Value {
 
     public TaggedAttribute(INTEGER bodyPartID, OBJECT_IDENTIFIER type, ASN1Value value) {
         sequence = new SEQUENCE();
-        Assert._assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
+        assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
         this.bodyPartID = bodyPartID;
         sequence.addElement(bodyPartID);
         this.type = type;
@@ -145,7 +145,7 @@ public class TaggedAttribute implements ASN1Value {
 			SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
 			// The template should have enforced this
-			Assert._assert(seq.size() == 3);
+			assert(seq.size() == 3);
 
 			return new TaggedAttribute(
                             (INTEGER)      seq.elementAt(0),

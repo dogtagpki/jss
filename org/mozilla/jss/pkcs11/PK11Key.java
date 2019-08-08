@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 
+import org.mozilla.jss.util.AssertionException;
+
 
 abstract class PK11Key implements java.security.Key {
 
@@ -42,12 +44,12 @@ abstract class PK11Key implements java.security.Key {
     // Override serialization methods so that we don't get serialized,
     // even though we are supposed to support it as an implementation of Key.
     private void writeObject(ObjectOutputStream out) throws IOException {
-        Assert._assert(false, "PKCS#11 Key is not really serializable");
+        throw new AssertionException("PKCS#11 Key is not really serializable");
     }
 
     private void readObject(ObjectInputStream in)
         throws IOException, ClassNotFoundException {
-        Assert._assert(false, "PKCS#11 Key is not really serializable");
+        throw new AssertionException("PKCS#11 Key is not really serializable");
     }
 
 

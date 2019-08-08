@@ -289,7 +289,7 @@ public class SignerInfo implements ASN1Value {
 
         if( authenticatedAttributes != null )
         {
-            Assert._assert( authenticatedAttributes.size() >= 2 );
+            assert( authenticatedAttributes.size() >= 2 );
             this.authenticatedAttributes = authenticatedAttributes;
         }
 
@@ -699,7 +699,7 @@ public class SignerInfo implements ASN1Value {
      */
     private static boolean byteArraysAreSame(byte[] left, byte[] right) {
 
-        Assert._assert(left!=null && right!=null);
+        assert(left!=null && right!=null);
 
         if( left.length != right.length ) {
             return false;
@@ -804,7 +804,7 @@ public class SignerInfo implements ASN1Value {
             throws IOException, InvalidBERException
             {
                 SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
-                Assert._assert(seq.size() == 7);
+                assert(seq.size() == 7);
 
                 return new SignerInfo(
                     (INTEGER)                   seq.elementAt(0),

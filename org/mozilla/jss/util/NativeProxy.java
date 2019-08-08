@@ -34,7 +34,7 @@ public abstract class NativeProxy
      * NativeProxy instance acts as a proxy for that native data structure.
      */
     public NativeProxy(byte[] pointer) {
-		Assert._assert(pointer!=null);
+		assert(pointer!=null);
         registryIndex = register();
         mPointer = pointer;
     }
@@ -150,7 +150,7 @@ public abstract class NativeProxy
         Long element;
 
         element = registry.remove(Lindex);
-        Assert._assert(element != null);
+        assert(element != null);
     }
 
     /**

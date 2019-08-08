@@ -23,7 +23,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     private PK11PrivKey() { }
 
     protected PK11PrivKey(byte[] pointer) {
-        Assert._assert(pointer!=null);
+        assert(pointer!=null);
         keyProxy = new PrivateKeyProxy(pointer);
     }
 
@@ -52,7 +52,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
         } else if (kt == KeyType.DSA) {
             return PrivateKey.Type.DSA;
         } else {
-            Assert._assert(kt == KeyType.EC);
+            assert(kt == KeyType.EC);
             return PrivateKey.Type.EC;
 	}
     }

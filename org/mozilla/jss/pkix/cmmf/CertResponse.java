@@ -51,7 +51,7 @@ public class CertResponse implements ASN1Value {
      * the certifiedKeyPair field is present.
      */
     public CertifiedKeyPair getCertifiedKeyPair() {
-        Assert._assert(certifiedKeyPair!=null);
+        assert(certifiedKeyPair!=null);
         return certifiedKeyPair;
     }
 

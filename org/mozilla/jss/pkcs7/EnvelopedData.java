@@ -93,7 +93,7 @@ public class EnvelopedData implements ASN1Value {
                 seqt.addElement(new EncryptedContentInfo.Template());
 
                 SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
-                Assert._assert(seq.size() ==3);
+                assert(seq.size() ==3);
 
                 return new EnvelopedData(
                     (INTEGER)               seq.elementAt(0),

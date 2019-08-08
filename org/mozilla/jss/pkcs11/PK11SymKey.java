@@ -13,13 +13,13 @@ import org.mozilla.jss.util.Assert;
 public final class PK11SymKey implements SymmetricKey {
 
     protected PK11SymKey(byte[] pointer) {
-        Assert._assert(pointer!=null);
+        assert(pointer!=null);
         keyProxy  = new SymKeyProxy(pointer);
         nickName = null;
     }
 
     protected PK11SymKey(byte[] pointer,String nickName) {
-        Assert._assert(pointer!=null);
+        assert(pointer!=null);
         keyProxy  = new SymKeyProxy(pointer);
         this.nickName = nickName;
      }

@@ -155,7 +155,7 @@ public class Base64InputStream extends FilterInputStream {
                 return -1;
                 //break;
               default:
-                Assert._assert(false);
+                assert(false);
                 break;
             }
         }
@@ -187,10 +187,10 @@ public class Base64InputStream extends FilterInputStream {
                 }
             }
             if( cur == WOULD_BLOCK ) {
-                Assert._assert(count>0);
+                assert(count>0);
                 return count;
             }
-            Assert._assert( cur >= 0 && cur <= 255);
+            assert( cur >= 0 && cur <= 255);
             b[off+(count++)] = (byte) cur;
         }
         return count;

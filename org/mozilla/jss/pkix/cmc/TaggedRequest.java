@@ -134,7 +134,7 @@ public class TaggedRequest implements ASN1Value {
         } else if( type == CRMF ){
             return Tag.get(1);
         } else {
-            Assert._assert( type == OTHER );
+            assert( type == OTHER );
             return Tag.get(2);
         }
     }
@@ -152,7 +152,7 @@ public class TaggedRequest implements ASN1Value {
             //EXPLICIT e = new EXPLICIT( Tag.get(1), crm );
             //e.encode(ostream);
         } else {
-            Assert._assert( type == OTHER );
+            assert( type == OTHER );
             orm.encode(Tag.get(2), ostream);
             // a CHOICE must be explicitly tagged
             //EXPLICIT e = new EXPLICIT( Tag.get(2), orm );
@@ -217,7 +217,7 @@ public class TaggedRequest implements ASN1Value {
                 //            e.getContent(), null );
                 return new TaggedRequest(CRMF, null, (CertReqMsg) c.getValue() , null);
             } else {
-                Assert._assert( c.getTag().equals(Tag.get(2)) );
+                assert( c.getTag().equals(Tag.get(2)) );
                 //EXPLICIT e = (EXPLICIT) c.getValue();
                 //return new TaggedRequest(OTHER, null,
                 //            (CertReqMsg) e.getContent() );

@@ -78,7 +78,7 @@ public class TestKeyGen {
             try {
                 kpg.initialize(512);
                 keyPair = kpg.genKeyPair();
-                Assert._assert( keyPair.getPublic() instanceof RSAPublicKey);
+                assert( keyPair.getPublic() instanceof RSAPublicKey);
                 rsaPubKey = (RSAPublicKey) keyPair.getPublic();
                 System.out.println("Generated 512-bit RSA KeyPair!");
                 System.out.println("Modulus: "+rsaPubKey.getModulus());
@@ -98,7 +98,7 @@ public class TestKeyGen {
             try {
                 kpg.initialize(1024);
                 keyPair = kpg.genKeyPair();
-                Assert._assert( keyPair.getPublic() instanceof RSAPublicKey);
+                assert( keyPair.getPublic() instanceof RSAPublicKey);
                 rsaPubKey = (RSAPublicKey) keyPair.getPublic();
                 System.out.println("Generated 1024-bit RSA KeyPair!");
                 System.out.println("Modulus: "+rsaPubKey.getModulus());
@@ -119,7 +119,7 @@ public class TestKeyGen {
                 rsaParams = new RSAParameterSpec(512, BigInteger.valueOf(3));
                 kpg.initialize(rsaParams);
                 keyPair = kpg.genKeyPair();
-                Assert._assert( keyPair.getPublic() instanceof RSAPublicKey);
+                assert( keyPair.getPublic() instanceof RSAPublicKey);
                 rsaPubKey = (RSAPublicKey) keyPair.getPublic();
                 System.out.println("Generated 512-bit RSA KeyPair with public exponent=3!");
                 System.out.println("Modulus: "+rsaPubKey.getModulus());
@@ -140,7 +140,7 @@ public class TestKeyGen {
             try {
                 kpg.initialize(512);
                 keyPair = kpg.genKeyPair();
-                Assert._assert( keyPair.getPublic() instanceof DSAPublicKey);
+                assert( keyPair.getPublic() instanceof DSAPublicKey);
                 dsaPubKey = (DSAPublicKey) keyPair.getPublic();
                 System.out.println("Generated 512-bit DSA KeyPair!");
                 dsaParams = dsaPubKey.getParams();
@@ -163,7 +163,7 @@ public class TestKeyGen {
             try {
                 kpg.initialize(PK11KeyPairGenerator.PQG1024);
                 keyPair = kpg.genKeyPair();
-                Assert._assert( keyPair.getPublic() instanceof DSAPublicKey);
+                assert( keyPair.getPublic() instanceof DSAPublicKey);
                 dsaPubKey = (DSAPublicKey) keyPair.getPublic();
                 System.out.println("Generated 1024-bit DSA KeyPair with PQG params!");
                 dsaParams = dsaPubKey.getParams();

@@ -16,7 +16,7 @@ public class PasswordCallbackInfo {
      *      <code>TOKEN</code>) that is being logged into.
      */
 	public PasswordCallbackInfo(String name, int type) {
-		Assert._assert(type==FILE || type==TOKEN);
+		assert(type==FILE || type==TOKEN);
 		this.name = name;
 		this.type = type;
 	}

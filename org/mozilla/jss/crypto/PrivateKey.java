@@ -60,7 +60,7 @@ public interface PrivateKey extends java.security.PrivateKey
             this.name = name;
             Object old = oidMap.put(oid, this);
             this.pkcs11Type = pkcs11Type;
-            Assert._assert( old == null );
+            assert( old == null );
         }
 
         private static Hashtable<OBJECT_IDENTIFIER, Type> oidMap = new Hashtable<>();

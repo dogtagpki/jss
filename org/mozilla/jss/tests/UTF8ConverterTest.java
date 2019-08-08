@@ -50,12 +50,12 @@ public class UTF8ConverterTest {
         }
         System.out.println();
 
-        Assert._assert(utf8 != null);
+        assert(utf8 != null);
 
-        Assert._assert(utf8.length == output.length);
+        assert(utf8.length == output.length);
 
         for(int i=0; i<output.length; i++) {
-            Assert._assert(utf8[i] == output[i]);
+            assert(utf8[i] == output[i]);
         }
     }
 
