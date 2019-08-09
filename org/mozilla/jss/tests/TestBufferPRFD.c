@@ -340,6 +340,7 @@ int main(int argc, char** argv)
         count += 1;
         if (count >= 40) {
             fprintf(stderr, "error: unable to make progress after %d steps!\n", count);
+            exit(1);
         }
     }
 
