@@ -292,8 +292,8 @@ int main(int argc, char** argv)
      * took access (or created access itself), we'd need to get access to
      * them befor giving it to NSS, as NSS wraps our PRFileDesc in one of
      * their PRFileDescs, removing our access to fd->secret. */
-    j_buffer *c_read_buf = jb_alloc(2048);
-    j_buffer *c_write_buf = jb_alloc(2048);
+    j_buffer *c_read_buf = jb_alloc(4096);
+    j_buffer *c_write_buf = jb_alloc(4096);
 
     PRFileDesc *c_nspr = newBufferPRFileDesc(c_read_buf, c_write_buf,
         (uint8_t*) "localhost", 9);
