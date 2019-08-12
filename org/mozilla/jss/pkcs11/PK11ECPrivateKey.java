@@ -1,5 +1,9 @@
 package org.mozilla.jss.pkcs11;
 
+import java.security.interfaces.ECPrivateKey;
+import java.security.spec.ECParameterSpec;
+import java.math.BigInteger;
+
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.util.EC;
 
@@ -20,24 +24,21 @@ class PK11ECPrivateKey
         return PrivateKey.Type.EC;
     }
 
-    /**
-     * If this fails, we just return null, since no exceptions are allowed.
-     */
-// requires JAVA 1.5
-//    public ECParams getParams() {
-//      try {
-//        return getECParams();
-//      } catch(TokenException te) {
-//            return null;
-//      }
-//    }
+    public ECParameterSpec getParams() {
+        PK11PubKey publicKey = getPublicKey();
+        if (!(publicKey instanceof PK11ECPublicKey)) {
+            throw new RuntimeException("Unknown key type: expected the public key of an EC key to be an PK11ECPublicKey; got: " + publicKey);
+        }
+
+        PK11ECPublicKey ecPublicKey = (PK11ECPublicKey)publicKey;
+        return ecPublicKey.getParams();
+    }
 
     /**
      * Not implemented. NSS doesn't support extracting private key material
      * like this.
      */
-// requires JAVA 1.5
-//    public BigInteger getW() {
-//        return null;
-//    }
+    public BigInteger getS() {
+        return null;
+    }
 }
