@@ -904,9 +904,9 @@ Java_org_mozilla_jss_CryptoManager_enableFIPS
     }
 
     if(status != SECSuccess) {
-        JSS_throwMsg(env,
-                     GENERAL_SECURITY_EXCEPTION,
-                     "Failed to toggle FIPS mode");
+        JSS_throwMsgPortErr(env,
+                            GENERAL_SECURITY_EXCEPTION,
+                            "Failed to toggle FIPS mode");
     }
 
     return switched;
