@@ -13,8 +13,22 @@
 #  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
+if (SANDBOX)
+  # Bypass the cache: we want to use files from the directory above.
+  set(NSS_FOUND TRUE)
 
-if (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
+  # Read the internal build directory from the dist directory
+  set(DIST_DIR "${CMAKE_SOURCE_DIR}/../dist")
+  file(READ "${DIST_DIR}/latest" LATEST_BUILD)
+  string(STRIP "${LATEST_BUILD}" LATEST_BUILD)
+
+  message(STATUS "NSS sandbox build directory: ${LATEST_BUILD}")
+
+  # Directly set the NSS include and library directories
+  set(NSS_INCLUDE_DIRS "${DIST_DIR}/public/nss")
+  set(NSS_LIBRARIES "${DIST_DIR}/${LATEST_BUILD}/lib")
+  list(APPEND JSS_LD_FLAGS "-Wl,-rpath,${DIST_DIR}/${LATEST_BUILD}/lib")
+elseif (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
   # in cache already
   set(NSS_FOUND TRUE)
 else (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
@@ -119,4 +133,4 @@ else (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
   # show the NSS_INCLUDE_DIRS and NSS_LIBRARIES variables only in the advanced view
   mark_as_advanced(NSS_INCLUDE_DIRS NSS_LIBRARIES)
 
-endif (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
+endif()

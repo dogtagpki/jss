@@ -23,6 +23,11 @@ if (DEFINED ENV{FIPS_ENABLED})
 endif()
 option(FIPS_ENABLED "When enabled, disable certain tests which don't work in FIPS mode. This should only be specified when the host system is in FIPS mode." ${FIPS_ENABLED_ENV})
 
+if (DEFINED ENV{SANDBOX})
+    set(SANDBOX_ENV TRUE)
+endif()
+option(SANDBOX "When enabled, expect to find nss and nspr from the parent (sandbox) directory instead of using the system-installed versions of the libraries." ${SANDBOX_ENV})
+
 # Build a debug build by default when no type is specified on the command line
 if(NOT (DEFINED CMAKE_BUILD_TYPE))
     set(CMAKE_BUILD_TYPE "Debug")
