@@ -720,3 +720,27 @@ finish:
     }
     return array;
 }
+
+/**********************************************************************
+ * PK11PrivKey.getPublicKey()
+ *
+ * Returns an instance of the public key from the private key.
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11PrivKey_getPublicKey
+    (JNIEnv *env, jobject this)
+{
+    SECKEYPrivateKey *privKey;
+    SECKEYPublicKey *pubKey;
+
+    if (JSS_PK11_getPrivKeyPtr(env, this, &privKey) != PR_SUCCESS) {
+        return NULL;
+    }
+
+    pubKey = SECKEY_ConvertToPublicKey(privKey);
+    if (pubKey == NULL) {
+        return NULL;
+    }
+
+    return JSS_PK11_wrapPubKey(env, &pubKey);
+}

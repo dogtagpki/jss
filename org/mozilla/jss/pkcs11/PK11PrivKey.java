@@ -68,6 +68,11 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     public native int getStrength();
 
     /**
+     * Returns the corresponding public key from a private key instance.
+     */
+    public native PK11PubKey getPublicKey();
+
+    /**
      * Imports a PrivateKeyInfo, storing it as a temporary PrivateKey
      * on the given token.
      * The key will be a temporary (session) key until it is imported
