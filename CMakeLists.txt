@@ -11,6 +11,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Define optional variables and conditionals.
 if (DEFINED ENV{CHECK_DEPRECATION})
+    set(CHECK_DEPRECATION_ENV TRUE)
+endif()
+option(CHECK_DEPRECATION "When enabled, utilize the deprecation checking functionality of the java compiler." ${CHECK_DEPRECATION_ENV})
+if (CHECK_DEPRECATION)
     list(APPEND JSS_JAVAC_FLAGS "-Xlint:deprecation")
 endif()
 
