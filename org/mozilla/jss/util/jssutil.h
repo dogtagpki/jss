@@ -262,6 +262,9 @@ JSS_throwMsgPrErrArg(JNIEnv *env, const char *throwableClassName,
 #define JSS_throwMsgPrErr(e, cn, m) \
     JSS_throwMsgPrErrArg((e), (cn), (m), PR_GetError())
 
+#define JSS_throwMsgPortErr(e, cn, m) \
+    JSS_throwMsgPrErrArg((e), (cn), (m), PORT_GetError())
+
 /************************************************************************
 **
 ** J S S _ i n i t E r r c o d e T r a n s l a t i o n T a b l e.
