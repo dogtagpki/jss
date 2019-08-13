@@ -46,12 +46,40 @@ of our project.
 
 This directory contains two sets of files: dependencies and core modules.
 The non-standard CMake dependencies currently include the `FindNSPR` and
-FindNSS` modules: these allow CMake to find NSPR and NSS system libraries
+`FindNSS` modules: these allow CMake to find NSPR and NSS system libraries
 and were imported from PKI. The core modules include `JSSConfig`, which
 sets useful variables for use within CMake, `JSSCommon`, which controls
 building JSS, and `JSSTests`, which sets up the JSS test suite within
 CTest.
 
+### Available CMake Options
+
+Our CMake generator currently understands the following options when
+configuring the build system. Each option can either be specified on the CMake
+command line with `-D<VAR>=<VALUE>` syntax, or in the environment.
+
+ - `CHECK_DEPRECATION` -- enable `-Xlint:deprecation` when compiling JSS to
+    check for use of deprecated APIs.
+ - `FIPS_ENABLED` -- disable certain test cases which are known to fail in
+    FIPS mode for various reasons. These usually include tests which try to
+    disable FIPS mode, use unsupported ciphers, or too small of key sizes.
+    Note that NSS must still be built with FIPS mode support enabled.
+ - `SANDBOX` -- support building sandboxed builds to test changes to NSPR or
+    NSS alongside changes to JSS. This assumes you have the following
+    directory structure:
+
+    ```
+    sandbox/
+    sandbox/nspr
+    sandbox/nss
+    sandbox/dist
+    sandbox/jss
+    ```
+
+    Note that `sandbox` can be replaced by any directory name. The
+    `sandbox/dist` folder is automatically created by NSS upon build.
+    Please first build NSS (according to current instructions) and then
+    build JSS.
 
 ## `lib/`
 

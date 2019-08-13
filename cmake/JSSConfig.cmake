@@ -58,8 +58,8 @@ macro(jss_config_version MAJOR MINOR PATCH BETA)
 endmacro()
 
 macro(jss_config_outputs)
-    # Global variables representing various output files; note that these are
-    # created at the end of this macro.
+    # Global variables representing various output files; note that these
+    # directories are created at the end of this macro.
     set(CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes/jss")
     set(DOCS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/docs")
     set(LIB_OUTPUT_DIR "${CMAKE_BINARY_DIR}/lib")
@@ -104,9 +104,7 @@ macro(jss_config_outputs)
     file(MAKE_DIRECTORY "${BIN_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${INCLUDE_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${JNI_OUTPUT_DIR}")
-
     file(MAKE_DIRECTORY "${TARGETS_OUTPUT_DIR}")
-
     file(MAKE_DIRECTORY "${TESTS_CLASSES_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${TESTS_INCLUDE_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${TESTS_JNI_OUTPUT_DIR}")
@@ -315,6 +313,9 @@ macro(jss_config_java)
     else()
         list(APPEND JSS_TEST_JAVAC_FLAGS "-O")
     endif()
+
+    message(STATUS "JSS JAVAC FLAGS: ${JSS_JAVAC_FLAGS}")
+    message(STATUS "JSS TEST JAVAC FLAGS: ${JSS_TEST_JAVAC_FLAGS}")
 
     # Variables for javadoc building. Note that JSS_PACKAGES needs to be
     # updated whenever a new package is created.
