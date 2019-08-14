@@ -1,5 +1,5 @@
 #include <jni.h>
-#include "buffer.h"
+#include "j_buffer.h"
 
 #pragma once
 

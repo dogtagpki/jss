@@ -7,7 +7,7 @@
 #include <string.h>
 
 /* Ring buffer implementation to handle read/write calls. */
-#include "buffer.h"
+#include "j_buffer.h"
 #include "BufferPRFD.h"
 
 /* This struct stores all the private data we need access to from inside our
