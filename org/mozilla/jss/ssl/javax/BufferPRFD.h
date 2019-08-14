@@ -7,7 +7,7 @@
 #include <string.h>
 
 /* Ring buffer implementation to handle read/write calls. */
-#include "buffer.h"
+#include "j_buffer.h"
 
 /* Use a modern pragma guard... */
 #pragma once

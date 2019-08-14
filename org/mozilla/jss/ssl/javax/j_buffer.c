@@ -1,4 +1,4 @@
-#include "buffer.h"
+#include "j_buffer.h"
 
 #include <stdlib.h>
 #include <stdio.h>
