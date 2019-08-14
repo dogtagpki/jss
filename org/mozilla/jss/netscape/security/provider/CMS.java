@@ -30,12 +30,10 @@ public final class CMS extends Provider {
      *
      */
     private static final long serialVersionUID = 1065207998900104219L;
-    private static final String INFO = "CMS " +
-            "(DSA key/parameter generation; DSA signing; " +
-            "SHA-1, MD5 digests; SecureRandom; X.509 certificates)";
+    private static final String INFO = "CMS [X.509 certificates]";
 
     public CMS() {
-        /* We are the SUN provider */
+        /* We are the CMS provider */
         super("CMS", 1.0, INFO);
 
         AccessController.doPrivileged(new java.security.PrivilegedAction<Object>() {
