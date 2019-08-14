@@ -68,53 +68,10 @@ public final class Sun extends Provider {
 
             //	    AccessController.beginPrivileged();
 
-            /*
-             * Signature engines
-             */
-            put("Signature.DSA", "org.mozilla.jss.netscape.security.provider.DSA");
-
-            put("Alg.Alias.Signature.SHA/DSA", "DSA");
-            put("Alg.Alias.Signature.SHA1/DSA", "DSA");
-            put("Alg.Alias.Signature.SHA-1/DSA", "DSA");
-            put("Alg.Alias.Signature.DSS", "DSA");
-            put("Alg.Alias.Signature.OID.1.3.14.3.2.13", "DSA");
-            put("Alg.Alias.Signature.OID.1.3.14.3.2.27", "DSA");
-            put("Alg.Alias.Signature.OID.1.2.840.10040.4.3", "DSA");
-            // the following are not according to our formal spec but
-            // are still supported
-            put("Alg.Alias.Signature.1.3.14.3.2.13", "DSA");
-            put("Alg.Alias.Signature.1.3.14.3.2.27", "DSA");
-            put("Alg.Alias.Signature.1.2.840.10040.4.3", "DSA");
-            put("Alg.Alias.Signature.SHAwithDSA", "DSA");
-            put("Alg.Alias.Signature.SHA1withDSA", "DSA");
-
-            /*
-             *  Key Pair Generator engines
-             */
-            put("KeyPairGenerator.DSA",
-                    "org.mozilla.jss.netscape.security.provider.DSAKeyPairGenerator");
-
-            put("Alg.Alias.KeyPairGenerator.OID.1.3.14.3.2.12", "DSA");
-            put("Alg.Alias.KeyPairGenerator.OID.1.2.840.10040.4.1", "DSA");
             // the following are not according to our formal spec but
             // are still supported
             put("Alg.Alias.KeyPairGenerator.1.3.14.3.2.12", "DSA");
             put("Alg.Alias.KeyPairGenerator.1.2.840.10040.4.1", "DSA");
-
-            /*
-             * Digest engines
-             */
-            put("MessageDigest.MD5", "org.mozilla.jss.netscape.security.provider.MD5");
-            put("MessageDigest.SHA-1", "org.mozilla.jss.netscape.security.provider.SHA");
-
-            put("Alg.Alias.MessageDigest.SHA", "SHA-1");
-            put("Alg.Alias.MessageDigest.SHA1", "SHA-1");
-
-            /*
-             * Algorithm Parameter Generator engines
-             */
-            put("AlgorithmParameterGenerator.DSA",
-                    "org.mozilla.jss.netscape.security.provider.DSAParameterGenerator");
 
             /*
              * Algorithm Parameter engines
