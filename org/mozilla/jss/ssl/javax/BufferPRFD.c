@@ -189,34 +189,55 @@ static PRInt32 PRBufferRecv(PRFileDesc *fd, void *buf, PRInt32 amount, PRIntn fl
 // Fake responses to getSocketOption requests
 static PRStatus PRBufferGetSocketOption(PRFileDesc *fd, PRSocketOptionData *data)
 {
-    /* getSocketOption takes a PRFileDesc and modifies the PRSocketOptionData
-     * with the options on this. We set a couple of sane defaults here:
+    /* getSocketOption takes a PRFileDesc and modifies the value field of data
+     * with socket option specified in the option field. We fake responses with
+     * a couple of sane defaults here:
      *
      *   non_blocking = true
      *   reuse_addr = true
      *   keep_alive = false
      *   no_delay = true
      *
-     * However the list above is far fom extensive. Note that responses are
-     * "fake" in that calls to setSocketOption fail to reflect here.
+     * We return valid responses to three other options:
+     *
+     *   max_segment = capacity of read_buffer
+     *   recv_buffer_size = capacity of read buffer
+     *   send_buffer_size = capacity of write buffer
+     *
+     * Note that all responses are "fake" in that calls to SetSocketOption will
+     * not be reflected here.
      */
 
-    if (data) {
-        PRFilePrivate *internal = fd->secret;
-
-        data->value.non_blocking = PR_TRUE;
-        data->value.reuse_addr = PR_TRUE;
-        data->value.keep_alive = PR_FALSE;
-        data->value.mcast_loopback = PR_FALSE;
-        data->value.no_delay = PR_TRUE;
-        data->value.max_segment = jb_capacity(internal->read_buffer);
-        data->value.recv_buffer_size = jb_capacity(internal->read_buffer);
-        data->value.send_buffer_size = jb_capacity(internal->write_buffer);
-
-        return PR_SUCCESS;
+    if (!data || !fd) {
+        return PR_FAILURE;
     }
 
-    return PR_FAILURE;
+    PRFilePrivate *internal = fd->secret;
+    switch (data->option) {
+    case PR_SockOpt_Nonblocking:
+        data->value.non_blocking = PR_TRUE;
+        return PR_SUCCESS;
+    case PR_SockOpt_Reuseaddr:
+        data->value.reuse_addr = PR_TRUE;
+        return PR_SUCCESS;
+    case PR_SockOpt_Keepalive:
+        data->value.keep_alive = PR_FALSE;
+        return PR_SUCCESS;
+    case PR_SockOpt_NoDelay:
+        data->value.no_delay = PR_TRUE;
+        return PR_SUCCESS;
+    case PR_SockOpt_MaxSegment:
+        data->value.max_segment = jb_capacity(internal->read_buffer);
+        return PR_SUCCESS;
+    case PR_SockOpt_RecvBufferSize:
+        data->value.recv_buffer_size = jb_capacity(internal->read_buffer);
+        return PR_SUCCESS;
+    case PR_SockOpt_SendBufferSize:
+        data->value.send_buffer_size = jb_capacity(internal->write_buffer);
+        return PR_SUCCESS;
+    default:
+        return PR_FAILURE;
+    }
 }
 
 // Fake responses to setSocketOption
