@@ -22,6 +22,10 @@ macro(jss_tests)
         COMMAND "cmake" "-E" "make_directory" "${RESULTS_DATA_OUTPUT_DIR}"
         DEPENDS "Clean_Data_Dir"
     )
+    jss_test_exec(
+        NAME "TestBufferPRFD"
+        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD"
+    )
 
     # Rather than creating our results directories earlier in JSSConfig,
     # create them here so that the test suite can be rerun multiple times.
@@ -341,6 +345,7 @@ endmacro()
 macro(jss_tests_compile)
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_1.c" "${BIN_OUTPUT_DIR}/buffer_size_1" "buffer_size_1")
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_4.c" "${BIN_OUTPUT_DIR}/buffer_size_4" "buffer_size_4")
+    jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/TestBufferPRFD.c" "${BIN_OUTPUT_DIR}/TestBufferPRFD" "TestBufferPRFD")
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/TestBufferPRFDSSL.c" "${BIN_OUTPUT_DIR}/TestBufferPRFDSSL" "TestBufferPRFDSSL")
 endmacro()
 
