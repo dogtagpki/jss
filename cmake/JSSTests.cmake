@@ -255,14 +255,14 @@ macro(jss_tests)
 
         # SSL Engine related tests
         jss_test_exec(
-            NAME "TestBufferPRFD_RSA"
-            COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_RSA"
-            DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
+            NAME "TestBufferPRFDSSL_RSA"
+            COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFDSSL" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_RSA"
+            DEPENDS "List_CA_certs" "generate_c_TestBufferPRFDSSL"
         )
         jss_test_exec(
-            NAME "TestBufferPRFD_ECDSA"
-            COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_ECDSA"
-            DEPENDS "List_CA_certs" "generate_c_TestBufferPRFD"
+            NAME "TestBufferPRFDSSL_ECDSA"
+            COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFDSSL" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" "Server_ECDSA"
+            DEPENDS "List_CA_certs" "generate_c_TestBufferPRFDSSL"
         )
         jss_test_java(
             NAME "JSS_Test_BufferPRFD"
@@ -341,7 +341,7 @@ endmacro()
 macro(jss_tests_compile)
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_1.c" "${BIN_OUTPUT_DIR}/buffer_size_1" "buffer_size_1")
     jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/buffer_size_4.c" "${BIN_OUTPUT_DIR}/buffer_size_4" "buffer_size_4")
-    jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/TestBufferPRFD.c" "${BIN_OUTPUT_DIR}/TestBufferPRFD" "TestBufferPRFD")
+    jss_tests_compile_c("${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests/TestBufferPRFDSSL.c" "${BIN_OUTPUT_DIR}/TestBufferPRFDSSL" "TestBufferPRFDSSL")
 endmacro()
 
 macro(jss_tests_compile_c C_FILE C_OUTPUT C_TARGET)
