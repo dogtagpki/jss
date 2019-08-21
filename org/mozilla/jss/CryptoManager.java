@@ -522,8 +522,12 @@ public final class CryptoManager implements TokenSupplier
         logger.debug("Loaded " + kt);
 
         if( values.installJSSProvider ) {
-            int position = java.security.Security.insertProviderAt(
-                            new JSSProvider(), 1);
+            int insert_position = 1;
+            if (!values.installJSSProviderFirst) {
+                insert_position = java.security.Security.getProviders().length + 1;
+            }
+
+            int position = java.security.Security.insertProviderAt(new JSSProvider(), insert_position);
             if (position < 0) {
                 logger.warn("JSS provider is already installed");
             }
