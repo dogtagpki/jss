@@ -17,10 +17,12 @@ import java.security.interfaces.ECPrivateKey;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.mozilla.jss.CertificateUsage;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyPairGenerator;
+import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.netscape.security.util.BigInt;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.x509.AlgorithmId;
@@ -39,6 +41,8 @@ import org.mozilla.jss.netscape.security.x509.X509Key;
 import org.mozilla.jss.pkcs11.PK11ECPublicKey;
 import org.mozilla.jss.util.PasswordCallback;
 
+import org.apache.commons.codec.binary.Base64;
+
 public class X509CertTest {
 
     public static String subjectDN = "CN = 8a99f98342b97d130142ba2cc30f07d3";
@@ -53,7 +57,6 @@ public class X509CertTest {
 
         String dbdir = args[0];
         String passwordfile = args[1];
-
 
         Date notBefore = new Date();
         Calendar cal = Calendar.getInstance();
@@ -71,6 +74,8 @@ public class X509CertTest {
 
         testEC(token, notBefore, notAfter);
         testRSA(token, notBefore, notAfter);
+
+        testImport();
     }
 
     public static void testEC(CryptoToken token, Date notBefore, Date notAfter) throws Exception {
@@ -82,7 +87,6 @@ public class X509CertTest {
         KeyPair keypairCA = gen.genKeyPair();
         testKeys(keypairCA);
         PublicKey pubCA = keypairCA.getPublic();
-
 
         gen.initialize(gen.getCurveCodeByName("secp521r1"));
         KeyPair keypairUser = gen.genKeyPair();
@@ -205,5 +209,32 @@ public class X509CertTest {
             xKey = X509Key.parse(new DerValue(encoded));
         }
         return xKey;
+    }
+
+    public static void testImport() throws Exception {
+        CryptoManager cryptoManager = CryptoManager.getInstance();
+        byte[] cert = Base64.decodeBase64(
+            "MIIDRjCCAi6gAwIBAgIJAMHiDXjnZ1J6MA0GCSqGSIb3DQEBCwUAMDgxEDAOBgNV" +
+            "BAoMB0VYQU1QTEUxJDAiBgNVBAMMG1Jvb3QgQ0EgU2lnbmluZyBDZXJ0aWZpY2F0" +
+            "ZTAeFw0xOTAzMDUxNzQzMjFaFw0yMDAzMDQxNzQzMjFaMDgxEDAOBgNVBAoMB0VY" +
+            "QU1QTEUxJDAiBgNVBAMMG1Jvb3QgQ0EgU2lnbmluZyBDZXJ0aWZpY2F0ZTCCASIw" +
+            "DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMDv7ovkD+JVEdlLncYDnhzbLOz2" +
+            "c3D37fobufnHHNwNOwfLZj8WdBCzwGJv+XGF+D2JIcKyYwYPR+HOg+xClhuuVleE" +
+            "gMVvgxM+HcpM4heyBD2QczNo1dfXQRBy2AXvRn8Byh+Q6zbN7VoNu8ZaMQOxZx9m" +
+            "EAiDZ7WxHVrEp2a4QrI6I9gKY6SyEHRzVT48JElLFokwhkMpF8vhgtj0Xxr5EEIY" +
+            "yCMOzvZLtpeyH8PUri3Cv/hX1RZKjWqKLSJSKirnZLhZoEEzXtsOmoeeZBeRiabi" +
+            "dPLsxqPfWFx4+BC7t5Vw5FaIt2mPh+q6bjZipO4uWz/p4a9wpqakuzgNsYUCAwEA" +
+            "AaNTMFEwHQYDVR0OBBYEFCvlfY9OzAVsYpJEoqr7QfguO9v5MB8GA1UdIwQYMBaA" +
+            "FCvlfY9OzAVsYpJEoqr7QfguO9v5MA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcN" +
+            "AQELBQADggEBAHB1lWjT6bP1jAkk6eTVwBU2pGoGoYMGV3fWQGOmWQP5T7+nHKkU" +
+            "jNMRACoC2hFlypwX8qQ70V5O4U+qrnxDP3EaT1zPsOB0x4DIIrpFgudL9EqnSbJ0" +
+            "kvSz3awwO8x/Nvx7TatCncmTw9c14eqek2puhcQWvxHzWkaDHd9WxPrZJFftbSsn" +
+            "ZGK2A/ybDCnUA5BDeCSDb5gufTd8gbS4wS1NwYcbbrQyHnLJlFcIF4aLkbYuX1bn" +
+            "cYp8pQv3pZ3C/ofA+yBJvPELTaHjDC40MTdjFFfMQTPZswBX2iimoGQ/ProBGg7+" +
+            "rLg2uk5AHff3oo/V1X0SSzo3IpvHh0jhg9I="
+        );
+
+        X509Certificate ret = cryptoManager.importDERCert(cert, CertificateUsage.SSLCA, false, null);
+        assert(ret != null);
     }
 }

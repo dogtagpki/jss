@@ -1924,3 +1924,47 @@ Java_org_mozilla_jss_CryptoManager_verifyCertTempNative(JNIEnv *env,
     }
 }
 
+/***********************************************************************
+ * CryptoManager.importDERCertNative
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_CryptoManager_importDERCertNative(JNIEnv *env,
+     jobject self, jbyteArray cert, int usage, jboolean permanent,
+     jstring nickname)
+{
+    char *nickname_raw = NULL;
+    jsize derCertLen;
+    SECItem *derCert = calloc(1, sizeof(SECItem));
+    CERTCertificate **retCert = NULL;
+
+    PR_ASSERT(env != NULL &&& self != NULL);
+
+    if (cert == NULL) {
+        return NULL;
+    }
+
+    if (nickname != NULL) {
+        nickname_raw = (char *)JSS_RefJString(env, nickname);
+    }
+
+    derCert->type = siDERCertBuffer;
+    if (!JSS_RefByteArray(env, cert, (signed char **)&derCert->data, &derCertLen)) {
+        return NULL;
+    }
+
+    PR_ASSERT(derCertLen > 0);
+    derCert->len = (unsigned int)derCertLen;
+
+    /* At the time of writing, caOnly is an unused parameter. */
+    if (CERT_ImportCerts(CERT_GetDefaultCertDB(), usage, 1, &derCert, &retCert,
+                         permanent, PR_FALSE, nickname_raw) != SECSuccess) {
+        JSS_DerefByteArray(env, cert, derCert->data, JNI_ABORT);
+        JSS_DerefJString(env, nickname, nickname_raw);
+        JSS_throwMsgPortErr(env, INVALID_PARAMETER_EXCEPTION, "Unable to import certificate");
+        return NULL;
+    }
+
+    JSS_DerefByteArray(env, cert, derCert->data, JNI_ABORT);
+    JSS_DerefJString(env, nickname, nickname_raw);
+    return JSS_PK11_wrapCert(env, retCert);
+}
