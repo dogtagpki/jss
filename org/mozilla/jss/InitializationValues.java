@@ -402,6 +402,11 @@ public final class InitializationValues {
     public boolean removeSunProvider = false;
 
     /**
+     * Whether or not to initialize the JSS provider first. Default is true.
+     */
+    public boolean installJSSProviderFirst = true;
+
+    /**
      * If <code>true</code>, none of the underlying NSS components will
      * be initialized. Only the Java portions of JSS will be
      * initialized. This should only be used if NSS has been initialized
