@@ -741,6 +741,17 @@ public final class CryptoManager implements TokenSupplier
         }
     }
 
+    /**
+     * Imports a single DER-encoded certificate into the permanent or temporary
+     * certificate database.
+     */
+    public X509Certificate importDERCert(byte[] cert, CertificateUsage usage,
+                                         boolean permanent, String nickname) {
+        return importDERCertNative(cert, usage.getEnumValue(), permanent, nickname);
+    }
+
+    private native X509Certificate importDERCertNative(byte[] cert, int usage, boolean permanent, String nickname);
+
     private native InternalCertificate
         importCertToPermNative(X509Certificate cert, String nickname)
         throws TokenException;
