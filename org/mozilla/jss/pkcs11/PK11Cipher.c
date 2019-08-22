@@ -137,7 +137,6 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_updateContext
 
     /* extract input from byte array */
     inlen = (*env)->GetArrayLength(env, inputBA);
-    PR_ASSERT(inlen >= 0);
     inbuf = (*env)->GetByteArrayElements(env, inputBA, NULL);
     if(inbuf == NULL) {
         ASSERT_OUTOFMEM(env);
@@ -160,7 +159,6 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_updateContext
             PR_GetError());
         goto finish;
     }
-    PR_ASSERT(outlen >= 0);
 
     /* convert output buffer to byte array */
     outArray = JSS_ToByteArray(env, outbuf, outlen);
@@ -217,7 +215,6 @@ Java_org_mozilla_jss_pkcs11_PK11Cipher_finalizeContext
     }
 
     /* convert output buffer to byte array */
-    PR_ASSERT(newOutLen >= 0);
     outBA = JSS_ToByteArray(env, outBuf, newOutLen);
     if(outBA == NULL) {
         ASSERT_OUTOFMEM(env);
