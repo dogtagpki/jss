@@ -122,7 +122,7 @@ int jb_put(j_buffer *buf, uint8_t byte) {
     return byte;
 }
 
-size_t jb_write(j_buffer *buf, uint8_t *input, size_t input_size) {
+size_t jb_write(j_buffer *buf, const uint8_t *input, size_t input_size) {
     /* ret == 0 <=> can't write to the buffer or input_size == 0 */
     /* ret == amount written <=> can write to the buffer */
     if (!jb_can_write(buf) || input_size == 0) {

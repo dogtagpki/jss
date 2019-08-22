@@ -57,7 +57,7 @@ int jb_put(j_buffer *buf, uint8_t byte);
  * the number of characters written into the buffer; max of input_size. This
  * is zero when the buffer is already full.
  */
-size_t jb_write(j_buffer *buf, uint8_t *input, size_t input_size);
+size_t jb_write(j_buffer *buf, const uint8_t *input, size_t input_size);
 
 /*
  * Get the next character from the buffer or EOF if the buffer is empty. If

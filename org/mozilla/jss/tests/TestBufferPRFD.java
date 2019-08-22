@@ -25,8 +25,7 @@ public class TestBufferPRFD {
         assert(left != null);
         assert(right != null);
 
-        System.err.println(PR.Write(left, info));
-        assert(PR.Send(left, info, 0, 0) == 4);
+        assert(PR.Write(left, info) == 4);
         assert(PR.Send(left, info, 0, 0) == 4);
         assert(PR.Send(left, info, 0, 0) == 2);
 

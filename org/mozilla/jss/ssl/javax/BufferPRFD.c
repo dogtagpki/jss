@@ -153,7 +153,7 @@ static PRInt32 PRBufferSend(PRFileDesc *fd, const void *buf, PRInt32 amount,
 
     if (!jb_can_write(internal->write_buffer)) {
         /* Under correct Unix non-blocking socket semantics, if we lack data
-         * to read, return a negative length and set EWOULDBLOCK. This is
+         * to write, return a negative length and set EWOULDBLOCK. This is
          * documented in `man 2 recv`. */
         PR_SetError(PR_WOULD_BLOCK_ERROR, EWOULDBLOCK);
         return -1;
@@ -162,8 +162,18 @@ static PRInt32 PRBufferSend(PRFileDesc *fd, const void *buf, PRInt32 amount,
     /* By checking if we can write, we ensure we don't return 0 from
      * jb_write(...); otherwise, we'd violate non-blocking socket
      * semantics. */
-    return jb_write(internal->write_buffer, (uint8_t*) buf, amount);
+    return jb_write(internal->write_buffer, (const uint8_t *) buf, amount);
 }
+
+// Respond to write requests
+static PRInt32 PRBufferWrite(PRFileDesc *fd, const void *buf, PRInt32 amount)
+{
+    /* Write is the same as Send except that it doesn't have a timeout or
+     * understand flags. Since our implementation of Send is fake, pass
+     * arbitrary data and use it to implement Write as well. */
+    return PRBufferSend(fd, buf, amount, 0, -1);
+}
+
 
 // Respond to recv requests
 static PRInt32 PRBufferRecv(PRFileDesc *fd, void *buf, PRInt32 amount, PRIntn flags, PRIntervalTime timeout)
@@ -183,7 +193,16 @@ static PRInt32 PRBufferRecv(PRFileDesc *fd, void *buf, PRInt32 amount, PRIntn fl
     /* By checking if we can read, we ensure we don't return 0 from
      * jb_read(...); otherwise, we'd violate non-blocking socket
      * semantics. */
-    return jb_read(internal->read_buffer, (uint8_t*) buf, amount);
+    return jb_read(internal->read_buffer, (uint8_t *) buf, amount);
+}
+
+// Respond to read requests
+static PRInt32 PRBufferRead(PRFileDesc *fd, void *buf, PRInt32 amount)
+{
+    /* Read is the same as Recv except that it doesn't have a timeout or
+     * understand flags. Since our implementation of Recv is fake, pass
+     * arbitrary data and use it to implement Read as well. */
+    return PRBufferRecv(fd, buf, amount, 0, -1);
 }
 
 // Fake responses to getSocketOption requests
@@ -254,8 +273,8 @@ static PRStatus PRBufferSetSocketOption(PRFileDesc *fd, const PRSocketOptionData
 static const PRIOMethods PRIOBufferMethods = {
     PR_DESC_SOCKET_TCP,
     PRBufferClose,
-    (PRReadFN)invalidInternalCall,
-    (PRWriteFN)invalidInternalCall,
+    PRBufferRead,
+    PRBufferWrite,
     (PRAvailableFN)invalidInternalCall,
     (PRAvailable64FN)invalidInternalCall,
     (PRFsyncFN)invalidInternalCall,
