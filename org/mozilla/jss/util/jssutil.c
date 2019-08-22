@@ -526,7 +526,6 @@ JSS_SECItemToByteArray(JNIEnv *env, SECItem *item)
     jbyteArray array=NULL;
 
     PR_ASSERT(env!=NULL && item!=NULL);
-    PR_ASSERT(item->len >= 0);
     PR_ASSERT(item->len == 0 || item->data != NULL);
 
     array = (*env)->NewByteArray(env, item->len);

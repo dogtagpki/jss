@@ -996,6 +996,7 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
     CERTValOutParam cvout[20] = {{0}};
     CERTValInParam cvin[20] = {{0}};
 
+    int usageIndex = -1;
     int inParamIndex = 0;
     int outParamIndex = 0;
     CERTRevocationFlags *rev = NULL;
@@ -1076,7 +1077,6 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
         outParamIndex ++;
     }
 
-    int usageIndex = 0;
     if(usage != NULL) {
         usageIndex = outParamIndex;
         cvout[outParamIndex].type = cert_po_usages;
@@ -1102,7 +1102,7 @@ finish:
        root = NULL;
     }
 
-    if(res == SECSuccess && usage) {
+    if(res == SECSuccess && usage && usageIndex != -1) {
         *usage = cvout[usageIndex].value.scalar.usages;
     }
 
