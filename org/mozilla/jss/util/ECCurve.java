@@ -158,4 +158,16 @@ public enum ECCurve {
 
         return null;
     }
+
+    public static ECCurve fromName(String name) {
+        for (ECCurve curve : ECCurve.values()) {
+            for (String curve_name : curve.names) {
+                if (curve_name.equalsIgnoreCase(name)) {
+                    return curve;
+                }
+            }
+        }
+
+        return null;
+    }
 }
