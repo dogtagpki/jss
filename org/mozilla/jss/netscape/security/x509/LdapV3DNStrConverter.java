@@ -167,7 +167,8 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * Parses a Ldap DN string in a string reader to a X500Name.
      *
      * @param in Pushback string reader for a Ldap DN string.
-     *            The pushback reader must have a pushback buffer size > 2.
+     *            The pushback reader must have a pushback buffer
+     *            {@literal size > 2}.
      *
      * @return a X500Name
      *
@@ -209,7 +210,8 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      *
      * @param in Pushback string reader containing a Ldap DN string with
      *            at least one rdn component.
-     *            The pushback reader must have a pushback buffer size > 2.
+     *            The pushback reader must have a pushback buffer
+     *            {@literal size > 2}.
      *
      * @return RDN object of the first rdn component in the Ldap DN string.
      *
@@ -253,7 +255,8 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      *
      * @param in a Pushback reader containg a Ldap string with
      *            at least one AVA component.
-     *            The Pushback reader must have a pushback buffer size > 2.
+     *            The Pushback reader must have a pushback buffer
+     *            {@literal size > 2}.
      *
      * @return AVA object of the first AVA component in the Ldap DN string.
      */

@@ -55,6 +55,8 @@ import org.mozilla.jss.netscape.security.util.DerValue;
  *
  * <LI>A <em>Serial Number</em> assigned by the CA, for use in certificate revocation and other applications.
  *
+ * </UL>
+ *
  * @author Amit Kapoor
  * @author Hemma Prafullchandra
  * @version 1.16

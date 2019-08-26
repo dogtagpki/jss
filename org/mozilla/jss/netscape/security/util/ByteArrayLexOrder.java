@@ -36,12 +36,10 @@ public class ByteArrayLexOrder implements Comparator<byte[]>, java.io.Serializab
      * is "smaller". If array entries are
      * equal till one array ends, then the longer array is "bigger".
      *
-     * @param obj1 first byte array to compare.
-     * @param obj2 second byte array to compare.
-     * @return negative number if obj1 < obj2, 0 if obj1 == obj2,
-     *         positive number if obj1 > obj2.
-     *
-     * @exception <code>ClassCastException</code> if either argument is not a byte array.
+     * @param bytes1 first byte array to compare.
+     * @param bytes2 second byte array to compare.
+     * @return negative number if {@literal bytes1 < bytes2}, 0 if bytes1 == bytes2,
+     *         positive number if {@literal bytes1 > bytes2}.
      */
     public final int compare(byte[] bytes1, byte[] bytes2) {
 

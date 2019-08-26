@@ -37,11 +37,6 @@ public class CPSuri extends Qualifier {
     private static final long serialVersionUID = -2814961293159006960L;
     private String mURI = null;
 
-    /**
-     * Create a PolicyQualifierInfo
-     *
-     * @param id the ObjectIdentifier for the policy id.
-     */
     public CPSuri(String uri) {
         mURI = uri;
     }

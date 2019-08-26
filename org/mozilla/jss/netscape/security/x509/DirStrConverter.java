@@ -125,7 +125,7 @@ public class DirStrConverter implements AVAValueConverter {
      *
      * NOTE: currently only supports DER encoding for the BER encoded value.
      *
-     * @param berStream Byte array of a BER encoded value.
+     * @param berByteStream Byte array of a BER encoded value.
      *
      * @return DerValue object.
      *

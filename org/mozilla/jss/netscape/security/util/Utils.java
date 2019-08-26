@@ -413,7 +413,7 @@ public class Utils {
      * Normalize B64 input String
      *
      * @param string base-64 string
-     * @param keepspace a boolean variable to control whether to keep spaces or not
+     * @param keepSpace a boolean variable to control whether to keep spaces or not
      * @return normalized string
      */
     public static String normalizeString(String string, Boolean keepSpace) {

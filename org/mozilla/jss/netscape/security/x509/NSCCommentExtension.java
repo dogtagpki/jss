@@ -73,8 +73,6 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
 
     /**
      * Create a NSCCommentExtension with the Vector of CertificatePolicyInfo.
-     *
-     * @param infos the Vector of CertificatePolicyInfo.
      */
     public NSCCommentExtension(boolean critical, String comment) throws IOException {
         this.mComment = comment;

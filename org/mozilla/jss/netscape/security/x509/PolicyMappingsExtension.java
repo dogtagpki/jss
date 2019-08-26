@@ -83,7 +83,7 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Create a PolicyMappings with the Vector of CertificatePolicyMap.
      *
-     * @param maps the Vector of CertificatePolicyMap.
+     * @param map the Vector of CertificatePolicyMap.
      */
     public PolicyMappingsExtension(Vector<CertificatePolicyMap> map) throws IOException {
         init(false, map);
@@ -92,7 +92,8 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Create a PolicyMappings with the Vector of CertificatePolicyMap.
      *
-     * @param maps the Vector of CertificatePolicyMap.
+     * @param critical true if the extension is to be treated as critical.
+     * @param map the Vector of CertificatePolicyMap.
      */
     public PolicyMappingsExtension(boolean critical, Vector<CertificatePolicyMap> map)
             throws IOException {

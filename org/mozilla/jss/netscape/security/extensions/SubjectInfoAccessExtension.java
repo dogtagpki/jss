@@ -66,8 +66,6 @@ public class SubjectInfoAccessExtension extends Extension implements CertAttrSet
      * Create the extension from the passed DER encoded value of the same.
      *
      * @param critical true if the extension is to be treated as critical.
-     * @param value Array of DER encoded bytes of the actual value.
-     * @exception IOException on error.
      */
     public SubjectInfoAccessExtension(boolean critical) {
         this.extensionId = ID;
@@ -75,6 +73,13 @@ public class SubjectInfoAccessExtension extends Extension implements CertAttrSet
         this.extensionValue = null; // build this when encodeThis() is called
     }
 
+    /**
+     * Create the extension from the passed DER encoded value of the same.
+     *
+     * @param critical true if the extension is to be treated as critical.
+     * @param value Array of DER encoded bytes of the actual value.
+     * @exception IOException on error.
+     */
     public SubjectInfoAccessExtension(Boolean critical, Object value)
             throws IOException {
         this.extensionId = ID;

@@ -40,7 +40,6 @@ import org.mozilla.jss.netscape.security.x509.AlgIdDSA;
  *
  * @see DSAPublicKey
  * @see AlgIdDSA
- * @see DSA
  */
 
 public final class DSAPrivateKey extends PKCS8Key

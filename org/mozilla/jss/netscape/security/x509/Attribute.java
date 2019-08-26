@@ -113,7 +113,7 @@ public final class Attribute implements Serializable, DerEncoder {
     /**
      * Construct an attribute from attribute type and attribute values
      *
-     * @param oid attribute type string CN,OU,O,C,L,TITLE,ST,STREET,UID,MAIL,E,DC
+     * @param attr oid attribute type string CN,OU,O,C,L,TITLE,ST,STREET,UID,MAIL,E,DC
      * @param values String value vector
      */
     public Attribute(String attr, Vector<String> values)
@@ -149,7 +149,7 @@ public final class Attribute implements Serializable, DerEncoder {
      * Construct an attribute from a der encoded object. This der
      * der encoded value should represent the attribute object.
      *
-     * @param value the attribute object in der encode form.
+     * @param val the attribute object in der encode form.
      */
     public Attribute(DerValue val)
             throws IOException {

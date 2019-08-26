@@ -57,7 +57,7 @@ public class IPAddressName implements GeneralNameInterface {
     /**
      * Create the IPAddressName object with the specified name.
      *
-     * @param name the IPAddressName.
+     * @param address the IPAddressName.
      */
     public IPAddressName(byte[] address) {
         this.address = address;

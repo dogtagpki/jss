@@ -169,8 +169,8 @@ public class X509CRLImpl extends X509CRL {
      * Initial CRL constructor, no revoked certs, and no extensions.
      *
      * @param issuer the name of the CA issuing this CRL.
-     * @param thisUpdate the Date of this issue.
-     * @param nextUpdate the Date of the next CRL.
+     * @param thisDate the Date of this issue.
+     * @param nextDate the Date of the next CRL.
      */
     public X509CRLImpl(X500Name issuer, Date thisDate, Date nextDate) {
         this.issuer = issuer;
@@ -182,8 +182,8 @@ public class X509CRLImpl extends X509CRL {
      * CRL constructor, revoked certs, no extensions.
      *
      * @param issuer the name of the CA issuing this CRL.
-     * @param thisUpdate the Date of this issue.
-     * @param nextUpdate the Date of the next CRL.
+     * @param thisDate the Date of this issue.
+     * @param nextDate the Date of the next CRL.
      * @param badCerts the array of revoked certificates.
      *
      * @exception CRLException on parsing/construction errors.
@@ -206,8 +206,8 @@ public class X509CRLImpl extends X509CRL {
      * CRL constructor, revoked certs and extensions.
      *
      * @param issuer the name of the CA issuing this CRL.
-     * @param thisUpdate the Date of this issue.
-     * @param nextUpdate the Date of the next CRL.
+     * @param thisDate the Date of this issue.
+     * @param nextDate the Date of the next CRL.
      * @param badCerts the array of revoked certificates.
      * @param crlExts the CRL extensions.
      *
@@ -243,9 +243,9 @@ public class X509CRLImpl extends X509CRL {
      * (other than sign() method)
      *
      * @param issuer the name of the CA issuing this CRL.
-     * @param sigAlg signing algorithm id
-     * @param thisUpdate the Date of this issue.
-     * @param nextUpdate the Date of the next CRL.
+     * @param algId signing algorithm id
+     * @param thisDate the Date of this issue.
+     * @param nextDate the Date of the next CRL.
      * @param badCerts the array of revoked certificates.
      * @param crlExts the CRL extensions.
      */
@@ -260,9 +260,9 @@ public class X509CRLImpl extends X509CRL {
      * CRL constructor, revoked certs and extensions.
      *
      * @param issuer the name of the CA issuing this CRL.
-     * @param sigAlg signing algorithm id
-     * @param thisUpdate the Date of this issue.
-     * @param nextUpdate the Date of the next CRL.
+     * @param algId signing algorithm id
+     * @param thisDate the Date of this issue.
+     * @param nextDate the Date of the next CRL.
      * @param badCerts the hashtable of revoked certificates.
      * @param crlExts the CRL extensions.
      *
@@ -300,7 +300,7 @@ public class X509CRLImpl extends X509CRL {
     /**
      * Returns true if signedCRL was set.
      *
-     * @param byte array of containing signed CRL.
+     * @param crl byte array of containing signed CRL.
      */
     public boolean setSignedCRL(byte[] crl) {
         boolean done = false;
@@ -701,7 +701,6 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the DER encoded CRL information.
      * @exception CRLException on parsing errors.
-     * @exception X509ExtensionException on extension parsing errors.
      */
     public byte[] getTBSCertList()
             throws CRLException {
@@ -728,7 +727,7 @@ public class X509CRLImpl extends X509CRL {
     /**
      * Returns true if signature was set.
      *
-     * @param byte array of containing CRL signature.
+     * @param crlSignature byte array of containing CRL signature.
      */
     public boolean setSignature(byte[] crlSignature) {
         boolean done = false;
@@ -939,8 +938,6 @@ public class X509CRLImpl extends X509CRL {
 
     /**
      * Returns extensions for this impl.
-     *
-     * @param extn CRLExtensions
      */
     public CRLExtensions getExtensions() {
         return extensions;

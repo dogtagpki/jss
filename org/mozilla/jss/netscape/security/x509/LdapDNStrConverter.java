@@ -115,7 +115,7 @@ public abstract class LdapDNStrConverter {
      * Currently it is LdapV3DNStrConverter object using the default
      * X500NameAttrMap and accepts unknown OIDs.
      *
-     * @see netscape.security.x509.LdapV3DNStrConverter
+     * @see LdapV3DNStrConverter
      *
      * @return The global default LdapDNStrConverter instance.
      */

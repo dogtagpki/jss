@@ -217,7 +217,7 @@ public class X509Cert implements Certificate, Serializable {
      * Compares two certificates, returning false if any data
      * differs between the two.
      *
-     * @param other the object being compared with this one
+     * @param src the object being compared with this one
      * @return true iff the certificates are equivalent
      */
     public boolean equals(X509Cert src) {
@@ -263,7 +263,7 @@ public class X509Cert implements Certificate, Serializable {
      * which is used to provide the verification key and to establish trust.
      * Other code must manage and use those cert chains.
      *
-     * <P>For now, you must walk the cert chain being used to verify any
+     * For now, you must walk the cert chain being used to verify any
      * given cert.  Start at the root, which is a self-signed certificate;
      * verify it using the key inside the certificate.  Then use that to
      * verify the next certificate in the chain, issued by that CA.  In
@@ -385,7 +385,7 @@ public class X509Cert implements Certificate, Serializable {
      * without using an X509CertChain API, and there is no current support
      * for other sources of algorithm parameters.</em>
      *
-     * @param algorithm the signature algorithm to be used. Note that a
+     * @param algorithmId the signature algorithm to be used. Note that a
      *            given public/private key pair may support several such algorithms.
      * @param privateKey the private key used to create the signature,
      *            which must correspond to the public key in this certificate

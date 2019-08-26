@@ -41,7 +41,6 @@ import org.mozilla.jss.netscape.security.x509.X509Key;
  *
  * @see DSAPrivateKey
  * @see AlgIdDSA
- * @see DSA
  */
 
 public final class DSAPublicKey extends X509Key

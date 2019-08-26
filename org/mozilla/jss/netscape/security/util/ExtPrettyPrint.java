@@ -117,10 +117,8 @@ public class ExtPrettyPrint {
      * This method return string representation of the certificate
      * in predefined format using specified client local. I18N Support.
      *
-     * @param clientLocale Locale to be used for localization
      * @return string representation of the certificate
      */
-    //    public String toString(int indentSize) {
     public String toString() {
 
         StringBuffer sb = new StringBuffer();

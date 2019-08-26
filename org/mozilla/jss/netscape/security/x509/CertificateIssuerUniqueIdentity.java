@@ -53,7 +53,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Default constructor for the certificate attribute.
      *
-     * @param key the UniqueIdentity
+     * @param id the UniqueIdentity
      */
     public CertificateIssuerUniqueIdentity(UniqueIdentity id) {
         this.id = id;
@@ -85,7 +85,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Create the object, decoding the values from the passed DER value.
      *
-     * @param in the DerValue to read the UniqueIdentity from.
+     * @param val the DerValue to read the UniqueIdentity from.
      * @exception IOException on decoding errors.
      */
     public CertificateIssuerUniqueIdentity(DerValue val)

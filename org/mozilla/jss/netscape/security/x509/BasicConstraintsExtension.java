@@ -122,7 +122,7 @@ public class BasicConstraintsExtension extends Extension
     /**
      * Create the extension from the passed DER encoded value of the same.
      *
-     * @param extension the DER encoded value of the extension.
+     * @param value the DER encoded value of the extension.
      * @exception IOException on error.
      */
     public BasicConstraintsExtension(Boolean critical, Object value)
