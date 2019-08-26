@@ -948,53 +948,68 @@ finish:
 
 SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
       SECCertificateUsage certificateUsage,secuPWData *pwdata, int ocspPolicy,
-      CERTVerifyLog *log, SECCertificateUsage *usage) 
+      CERTVerifyLog *log, SECCertificateUsage *usage)
 {
+    /* Put the first set of possible flags internally here first. Later
+     * there could be a more complete list to choose from; for now we only
+     * support our hard core fetch AIA OCSP policy. Note that we disable
+     * CRL fetching as Dogtag doesn't support it. Additionally, enable OCSP
+     * checking on the chained CA certificates. Since NSS/PKIX's
+     * CERT_GetClassicOCSPEnabledHardFailurePolicy doesn't do what we want,
+     * we construct the policy ourselves. */
 
-    /* put the first set of possible flags internally here first */
-    /* later there could be a more complete list to choose from */
-    /* support our hard core fetch aia ocsp policy for now */
-
-    static PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
+    PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
         /* crl */
-        0,
+        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
-        CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
     };
 
-    static PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
+    PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
         /* crl */
-        0,
+        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
-        CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
     };
 
-    static CERTRevocationMethodIndex
-        ocsp_Enabled_Hard_Policy_Method_Preference = {
-            cert_revocation_method_ocsp
-        };
-
-    static CERTRevocationFlags ocsp_Enabled_Hard_Policy = {
-    { /* leafTests */
-      2,
-      ocsp_Enabled_Hard_Policy_LeafFlags,
-      1,
-      &ocsp_Enabled_Hard_Policy_Method_Preference,
-      0 },
-    { /* chainTests */
-      2,
-      ocsp_Enabled_Hard_Policy_ChainFlags,
-      1,
-      &ocsp_Enabled_Hard_Policy_Method_Preference,
-      0 }
+    CERTRevocationMethodIndex ocsp_Enabled_Hard_Policy_Method_Preference[1] = {
+        cert_revocation_method_ocsp
     };
 
-    /* for future expansion */
+    CERTRevocationFlags ocsp_Enabled_Hard_Policy = {
+        /* CERTRevocationTests - leafTests */
+        {
+            /* number_of_defined_methods */
+            2,
+            /* cert_rev_flags_per_method */
+            ocsp_Enabled_Hard_Policy_LeafFlags,
+            /* number_of_preferred_methods */
+            1,
+            /* preferred_methods */
+            ocsp_Enabled_Hard_Policy_Method_Preference,
+            /* cert_rev_method_independent_flags */
+            0
+        },
+        /* CERTRevocationTests - chainTests */
+        { 
+            /* number_of_defined_methods */
+            2,
+            /* cert_rev_flags_per_method */
+            ocsp_Enabled_Hard_Policy_ChainFlags,
+            /* number_of_preferred_methods */
+            1,
+            /* preferred_methods */
+            ocsp_Enabled_Hard_Policy_Method_Preference,
+            /* cert_rev_method_independent_flags */
+            0
+        }
+    };
 
-    CERTValOutParam cvout[20] = {{0}};
-    CERTValInParam cvin[20] = {{0}};
+    /* for future expansion the size of cvout and cvin have been set to 6 */
+    CERTValOutParam cvout[6] = {{0}};
+    CERTValInParam cvin[6] = {{0}};
 
     int usageIndex = -1;
     int inParamIndex = 0;
@@ -1006,12 +1021,11 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
     PRBool fetchCerts = PR_FALSE;
 
     SECCertUsage certUsage = certUsageSSLClient /* 0 */;
-    
     SECStatus res =  SECFailure;
 
     CERTCertificate *root = NULL;
 
-    if(cert == NULL) {
+    if (cert == NULL) {
         goto finish;
     }
 
@@ -1019,23 +1033,23 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
         goto finish;
     }
 
-    /* Force the strict ocsp network check on chain
-       and leaf.
-    */
+    /* Force the strict ocsp network check on chain and leaf. */
 
-    fetchCerts = PR_TRUE;   
+    fetchCerts = PR_TRUE;
     rev = &ocsp_Enabled_Hard_Policy;
 
     /* fetch aia over net */
- 
+
     cvin[inParamIndex].type = cert_pi_useAIACertFetch;
     cvin[inParamIndex].value.scalar.b = fetchCerts;
-    inParamIndex++; 
+    inParamIndex++;
 
     /* time */
 
+    // Per certt.h, the special value of zero indicates validating it against
+    // the current time.
     cvin[inParamIndex].type = cert_pi_date;
-    cvin[inParamIndex].value.scalar.time = PR_Now();
+    cvin[inParamIndex].value.scalar.time = 0;
     inParamIndex++;
 
     /* flags */
@@ -1047,21 +1061,19 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
     /* establish trust anchor */
 
     /* We need to convert the SECCertificateUsage to a SECCertUsage to obtain
-     * the root.
-    */
+     * the root. */
 
     SECCertificateUsage testUsage = certificateUsage;
     while (0 != (testUsage = testUsage >> 1)) { certUsage++; }
 
     root = getRoot(cert,certUsage);
 
-    /* Try to add the root as the trust anchor so all the
-       other memebers of the ca chain will get validated.
-    */
+    /* Try to add the root as the trust anchor so all the other members of
+     * the ca chain will get validated. */
 
-    if( root != NULL ) {
+    if (root != NULL) {
         trustedCertList = CERT_NewCertList();
-        CERT_AddCertToListTail(trustedCertList, root);        
+        CERT_AddCertToListTail(trustedCertList, root);
 
         cvin[inParamIndex].type = cert_pi_trustAnchors;
         cvin[inParamIndex].value.pointer.chain = trustedCertList;
@@ -1071,13 +1083,13 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
 
     cvin[inParamIndex].type = cert_pi_end;
 
-    if(log != NULL) {
+    if (log != NULL) {
         cvout[outParamIndex].type = cert_po_errorLog;
         cvout[outParamIndex].value.pointer.log = log;
         outParamIndex ++;
     }
 
-    if(usage != NULL) {
+    if (usage != NULL) {
         usageIndex = outParamIndex;
         cvout[outParamIndex].type = cert_po_usages;
         cvout[outParamIndex].value.scalar.usages = 0;
@@ -1090,19 +1102,17 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
 
 finish:
     /* clean up any trusted cert list */
-
     if (trustedCertList) {
         CERT_DestroyCertList(trustedCertList);
         trustedCertList = NULL;
     }
 
     /* CERT_DestroyCertList destroys interior certs for us. */
-
-    if(root) {
+    if (root) {
        root = NULL;
     }
 
-    if(res == SECSuccess && usage && usageIndex != -1) {
+    if (res == SECSuccess && usage && usageIndex != -1) {
         *usage = cvout[usageIndex].value.scalar.usages;
     }
 
