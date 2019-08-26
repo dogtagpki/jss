@@ -31,7 +31,7 @@ import java.util.Arrays;
  * <P>
  * <em><b>NOTE:</b>  This class may eventually disappear, to
  * be supplanted by big-endian byte arrays which hold both signed
- * and unsigned arbitrary-precision integers.
+ * and unsigned arbitrary-precision integers.</em>
  *
  * @version 1.23
  * @author David Brownell

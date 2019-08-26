@@ -121,7 +121,7 @@ public final class AVA implements DerEncoder {
      * of current note are X.400 related ones (PRMD, ADMD, etc).
      *
      * This terminates at unescaped AVA separators ("+") or RDN
-     * separators (",", ";"), or DN terminators (">"), and removes
+     * separators (",", ";"), or DN terminators {@literal (">")}, and removes
      * cosmetic whitespace at the end of values.
      *
      * @see LdapDNStrConverter

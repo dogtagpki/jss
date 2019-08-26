@@ -60,7 +60,7 @@ public class BitArray {
      * specified byte array. The most significant bit of a[0] gets
      * index zero in the BitArray. The array a must be large enough
      * to specify a value for every bit in the BitArray. In other words,
-     * 8*a.length >= length.
+     * {@code 8*a.length >= length}.
      */
     public BitArray(int length, byte[] a) throws IllegalArgumentException {
 

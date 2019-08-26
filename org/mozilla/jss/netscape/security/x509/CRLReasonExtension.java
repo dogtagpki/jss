@@ -105,7 +105,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     /**
      * Create the object from the passed DER encoded value.
      *
-     * @param derVal the DerValue decoded from the stream.
+     * @param value the DerValue decoded from the stream.
      * @exception IOException on decoding errors.
      */
     public CRLReasonExtension(Boolean critical, Object value)

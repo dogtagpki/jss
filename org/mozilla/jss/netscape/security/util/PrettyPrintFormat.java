@@ -76,7 +76,7 @@ public class PrettyPrintFormat {
      * Provide white space indention
      * stevep - speed improvements. Factor of 10 improvement
      *
-     * @param numSpace number of white space to be returned
+     * @param size number of white space to be returned
      * @return white spaces
      */
     public String indent(int size) {
@@ -92,7 +92,7 @@ public class PrettyPrintFormat {
      * Convert Byte Array to Hex String Format
      * stevep - speedup by factor of 8
      *
-     * @param byte array of data to hexify
+     * @param in byte array of data to hexify
      * @param indentSize number of spaces to prepend before each line
      * @param lineLen number of bytes to output on each line (0
      *            means: put everything on one line

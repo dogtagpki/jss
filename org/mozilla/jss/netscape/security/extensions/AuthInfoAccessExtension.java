@@ -85,8 +85,6 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
      * Create the extension from the passed DER encoded value of the same.
      *
      * @param critical true if the extension is to be treated as critical.
-     * @param value Array of DER encoded bytes of the actual value.
-     * @exception IOException on error.
      */
     public AuthInfoAccessExtension(boolean critical) {
         this.extensionId = ID;
@@ -94,6 +92,13 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
         this.extensionValue = null; // build this when encodeThis() is called
     }
 
+    /**
+     * Create the extension from the passed DER encoded value of the same.
+     *
+     * @param critical true if the extension is to be treated as critical.
+     * @param value Array of DER encoded bytes of the actual value.
+     * @exception IOException on error.
+     */
     public AuthInfoAccessExtension(Boolean critical, Object value)
             throws IOException {
         this.extensionId = ID;

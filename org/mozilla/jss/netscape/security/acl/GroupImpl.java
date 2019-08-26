@@ -65,7 +65,7 @@ public class GroupImpl implements Group {
      * removes the specified member from the group.
      *
      * @param user The principal to remove from the group.
-     * @param true if the principal was removed false if
+     * @return true if the principal was removed false if
      *        the principal was not a member
      */
     public boolean removeMember(Principal user) {

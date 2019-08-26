@@ -35,11 +35,8 @@ import java.util.Date;
  *      crlEntryExtensions Extensions OPTIONAL
  *                         -- if present, must be v2
  *  }  OPTIONAL
- * <p>
  *  CertificateSerialNumber  ::=  INTEGER
- * <p>
  *  Extensions  ::=  SEQUENCE SIZE (1..MAX) OF Extension
- * <p>
  *  Extension  ::=  SEQUENCE  {
  *      extnId        OBJECT IDENTIFIER,
  *      critical      BOOLEAN DEFAULT FALSE,

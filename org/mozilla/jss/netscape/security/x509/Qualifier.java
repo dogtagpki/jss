@@ -41,8 +41,6 @@ public class Qualifier implements java.io.Serializable {
 
     /**
      * Create a PolicyQualifierInfo
-     *
-     * @param id the ObjectIdentifier for the policy id.
      */
     public Qualifier() {
     }

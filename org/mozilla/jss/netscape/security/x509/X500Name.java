@@ -63,7 +63,7 @@ public class X500Name implements Principal, GeneralNameInterface {
 
     /**
      * Constructs a name from a Ldap DN string, such
-     * as &lb;CN=Dave, OU=JavaSoft, O=Sun Microsystems, C=US&rb;. The
+     * as "CN=Dave, OU=JavaSoft, O=Sun Microsystems, C=US". The
      * older "/C=US/O=Sun Microsystems, Inc/OU=JavaSoft/CN=Dave" syntax
      * is not currently supported. (The former is RFC 1779 style.)
      *
@@ -277,7 +277,7 @@ public class X500Name implements Principal, GeneralNameInterface {
     /**
      * convenience method.
      *
-     * @param rdns a vector of rdns.
+     * @param rdnVector a vector of rdns.
      */
     public X500Name(Vector<RDN> rdnVector)
             throws IOException {

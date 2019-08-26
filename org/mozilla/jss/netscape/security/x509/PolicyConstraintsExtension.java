@@ -103,7 +103,7 @@ public class PolicyConstraintsExtension extends Extension
      * Create a PolicyConstraintsExtension object with criticality and
      * both require explicit policy and inhibit policy mapping.
      *
-     * @param critical whether this extension should be critical
+     * @param crit whether this extension should be critical
      * @param require require explicit policy (-1 for optional).
      * @param inhibit inhibit policy mapping (-1 for optional).
      */

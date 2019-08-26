@@ -117,7 +117,7 @@ rm -rf build && mkdir -p build && cd build
     ..
 
 %{__make} all
-%{__make} javadoc || true
+%{__make} javadoc
 ctest --output-on-failure
 
 ################################################################################

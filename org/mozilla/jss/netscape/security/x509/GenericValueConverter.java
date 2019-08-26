@@ -102,7 +102,7 @@ public class GenericValueConverter implements AVAValueConverter {
      *
      * NOTE: currently only supports DER encoding (a form of BER) on input .
      *
-     * @param berStream Byte array of a BER encoded value.
+     * @param berByteStream Byte array of a BER encoded value.
      *
      * @return DerValue object.
      *

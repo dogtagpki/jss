@@ -152,8 +152,6 @@ public class SubjectDirAttributesExtension extends Extension
 
     /**
      * Constructor from parsing extension
-     *
-     * @param list Attribute object list
      */
     public SubjectDirAttributesExtension(Boolean crit, Object value)
             throws IOException {

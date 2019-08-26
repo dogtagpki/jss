@@ -285,7 +285,7 @@ public class DerValue {
      *
      * @param buf the buffer
      * @param offset start point of the single DER-encoded dataum
-     * @param length how many bytes are in the encoded datum
+     * @param len how many bytes are in the encoded datum
      */
     public DerValue(byte[] buf, int offset, int len) throws IOException {
         init(true, new ByteArrayInputStream(buf, offset, len));
@@ -732,7 +732,7 @@ public class DerValue {
     /**
      * Create the tag of the attribute.
      *
-     * @param class the tag class type, one of UNIVERSAL, CONTEXT,
+     * @param tagClass the tag class type, one of UNIVERSAL, CONTEXT,
      *        APPLICATION or PRIVATE
      * @param form if true, the value is constructed, otherwise it
      *            is primitive.

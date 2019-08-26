@@ -107,11 +107,6 @@ public class OtherName implements GeneralNameInterface {
         mData = dos.toByteArray();
     }
 
-    /**
-     * Create the IPAddressName object with the specified name.
-     *
-     * @param name the IPAddressName.
-     */
     public OtherName(byte[] data) {
         try {
             decodeThis(new DerValue(data));

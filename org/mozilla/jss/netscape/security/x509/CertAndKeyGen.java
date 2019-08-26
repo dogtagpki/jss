@@ -161,8 +161,7 @@ public final class CertAndKeyGen {
      * be accepted by other parties. However, such certificates are also useful when you are bootstrapping your security
      * infrastructure, or deploying system prototypes.
      *
-     * @deprecated Use the new <a href =
-     *             "#getSelfCertificate(netscape.security.x509.X500Name, long)">
+     * @deprecated Use the new {@link #getSelfCertificate(X500Name, long)}
      *
      * @param myname X.500 name of the subject (who is also the issuer)
      * @param validity how long the certificate should be valid, in seconds

@@ -175,7 +175,6 @@ public class GenericASN1Extension extends Extension
      * Create a GenericASN1Extension with the value and oid.
      * The criticality is set to false.
      *
-     * @param the values to be set for the extension.
      */
     public GenericASN1Extension(String name, String oid, String pattern, boolean critical,
             Hashtable<String, String> config)
@@ -201,7 +200,7 @@ public class GenericASN1Extension extends Extension
      * Create a GenericASN1Extension with the value and oid.
      * The criticality is set to false.
      *
-     * @param the values to be set for the extension.
+     * @param config the values to be set for the extension.
      */
     public GenericASN1Extension(Hashtable<String, String> config)
             throws IOException, ParseException {

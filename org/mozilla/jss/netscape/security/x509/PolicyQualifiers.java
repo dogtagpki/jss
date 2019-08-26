@@ -40,8 +40,6 @@ public class PolicyQualifiers implements java.io.Serializable {
 
     /**
      * Create a PolicyQualifiers with the ObjectIdentifier.
-     *
-     * @param id the ObjectIdentifier for the policy id.
      */
     public PolicyQualifiers() {
     }

@@ -101,7 +101,7 @@ public class DerOutputStream
      *            original tag of the value in the output , such as in
      *
      *            <pre>
-     * 	<em> <field> [N] IMPLICIT <type></em>
+     * 	<em> [N] IMPLICIT </em>
      * </pre>
      *
      *            For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
@@ -312,7 +312,7 @@ public class DerOutputStream
      * Marshals a DER bit string on the output stream.
      * The bit strings need not be byte-aligned.
      *
-     * @param bits the bit string, MSB first
+     * @param ba the bit string, MSB first
      */
     public void putUnalignedBitString(BitArray ba) throws IOException {
         byte[] bits = ba.toByteArray();
@@ -328,7 +328,7 @@ public class DerOutputStream
      * All trailing 0 bits will be stripped off in accordance with DER
      * encoding.
      *
-     * @param bits the bit string, MSB first
+     * @param bitString the bit string, MSB first
      */
     public void putUnalignedBitString(byte[] bitString) throws IOException {
         putUnalignedBitString(toBitArray(bitString));
@@ -339,7 +339,7 @@ public class DerOutputStream
      * All trailing 0 bits will be stripped off in accordance with DER
      * encoding.
      *
-     * @param bits the bit string as an array of booleans.
+     * @param bitString the bit string as an array of booleans.
      */
     public void putUnalignedBitString(boolean[] bitString) throws IOException {
         putUnalignedBitString(toBitArray(bitString));
@@ -704,7 +704,7 @@ public class DerOutputStream
     /**
      * Put the tag of the attribute in the stream.
      *
-     * @param class the tag class type, one of UNIVERSAL, CONTEXT,
+     * @param tagClass the tag class type, one of UNIVERSAL, CONTEXT,
      *        APPLICATION or PRIVATE
      * @param form if true, the value is constructed, otherwise it is
      *            primitive.

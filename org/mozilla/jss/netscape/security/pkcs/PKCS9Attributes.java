@@ -60,7 +60,7 @@ public class PKCS9Attributes {
      *
      * @param permittedAttributes
      *            Array of attribute OIDs that will be accepted.
-     * @param buf
+     * @param in
      *            the contents of the DER encoding of the attribute set.
      *
      * @exception IOException

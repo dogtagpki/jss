@@ -54,7 +54,7 @@ public class OIDName implements GeneralNameInterface {
     /**
      * Create the OIDName object with the specified name.
      *
-     * @param name the OIDName.
+     * @param oid the OIDName.
      */
     public OIDName(ObjectIdentifier oid) {
         this.oid = oid;
