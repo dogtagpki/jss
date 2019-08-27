@@ -100,15 +100,15 @@ public class DerOutputStream
      * @param tag the DER value of the context-specific tag that replaces
      *            original tag of the value in the output , such as in
      *
-     *            <pre>
-     * 	<em> [N] IMPLICIT </em>
+       <pre>
+     *  {@literal <field>} [N] IMPLICIT {@literal <type>}
      * </pre>
      *
-     *            For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
-     *            would be encoded as "81 01 04" whereas in explicit
-     *            tagging it would be encoded as "A1 03 02 01 04".
-     *            Notice that the tag is A1 and not 81, this is because with
-     *            explicit tagging the form is always constructed.
+     * For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
+     * would be encoded as "81 01 04" whereas in explicit
+     * tagging it would be encoded as "A1 03 02 01 04".
+     * Notice that the tag is A1 and not 81, this is because with
+     * explicit tagging the form is always constructed.
      * @param value original value being implicitly tagged
      */
     public void writeImplicit(byte tag, DerOutputStream value)

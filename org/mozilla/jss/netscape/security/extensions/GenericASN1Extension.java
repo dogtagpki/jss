@@ -175,6 +175,11 @@ public class GenericASN1Extension extends Extension
      * Create a GenericASN1Extension with the value and oid.
      * The criticality is set to false.
      *
+     * @param name the name of this extension
+     * @param oid the object identifier of this extension
+     * @param pattern to use for encoding this extension
+     * @param critical true if the extension should be treated as critical
+     * @param config additional configuration for this extension
      */
     public GenericASN1Extension(String name, String oid, String pattern, boolean critical,
             Hashtable<String, String> config)
