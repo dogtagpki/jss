@@ -263,7 +263,7 @@ implements java.security.Principal, <a href="../../../../../../org/mozilla/jss/n
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/X500Name.html#X500Name-java.lang.String-">X500Name</a></span>(java.lang.String&nbsp;ldapDNString)</code>
 <div class="block">Constructs a name from a Ldap DN string, such
- as &lb;CN=Dave, OU=JavaSoft, O=Sun Microsystems, C=US&rb;.</div>
+ as "CN=Dave, OU=JavaSoft, O=Sun Microsystems, C=US".</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -613,7 +613,7 @@ implements java.security.Principal, <a href="../../../../../../org/mozilla/jss/n
 <pre>public&nbsp;X500Name(java.lang.String&nbsp;ldapDNString)
          throws java.io.IOException</pre>
 <div class="block">Constructs a name from a Ldap DN string, such
- as &lb;CN=Dave, OU=JavaSoft, O=Sun Microsystems, C=US&rb;. The
+ as "CN=Dave, OU=JavaSoft, O=Sun Microsystems, C=US". The
  older "/C=US/O=Sun Microsystems, Inc/OU=JavaSoft/CN=Dave" syntax
  is not currently supported. (The former is RFC 1779 style.)</div>
 <dl>
@@ -818,7 +818,7 @@ implements java.security.Principal, <a href="../../../../../../org/mozilla/jss/n
 <div class="block">convenience method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>rdns</code> - a vector of rdns.</dd>
+<dd><code>rdnVector</code> - a vector of rdns.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 </dl>

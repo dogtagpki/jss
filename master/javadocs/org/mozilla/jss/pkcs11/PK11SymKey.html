@@ -107,13 +107,17 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></dd>
+<dd>java.io.Serializable, java.security.Key, javax.crypto.SecretKey, javax.security.auth.Destroyable, <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PK11SymKey</span>
 extends java.lang.Object
 implements <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#org.mozilla.jss.pkcs11.PK11SymKey">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -147,6 +151,13 @@ implements <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title=
 </a>
 <h3>Fields inherited from interface&nbsp;org.mozilla.jss.crypto.<a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></h3>
 <code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#AES">AES</a>, <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#DES">DES</a>, <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#DES3">DES3</a>, <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#RC2">RC2</a>, <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#RC4">RC4</a>, <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#SHA1_HMAC">SHA1_HMAC</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.javax.crypto.SecretKey">
+<!--   -->
+</a>
+<h3>Fields inherited from interface&nbsp;javax.crypto.SecretKey</h3>
+<code>serialVersionUID</code></li>
 </ul>
 </li>
 </ul>
@@ -246,6 +257,13 @@ implements <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title=
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.javax.security.auth.Destroyable">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;javax.security.auth.Destroyable</h3>
+<code>destroy, isDestroyed</code></li>
 </ul>
 </li>
 </ul>
@@ -383,6 +401,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title=
 <pre>public&nbsp;java.lang.String&nbsp;getAlgorithm()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getAlgorithm</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#getAlgorithm--">getAlgorithm</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></code></dd>
 </dl>
 </li>
@@ -396,6 +416,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title=
 <pre>public&nbsp;byte[]&nbsp;getEncoded()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getEncoded</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#getEncoded--">getEncoded</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></code></dd>
 </dl>
 </li>
@@ -408,6 +430,8 @@ implements <a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title=
 <h4>getFormat</h4>
 <pre>public&nbsp;java.lang.String&nbsp;getFormat()</pre>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getFormat</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#getFormat--">getFormat</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a></code></dd>
 </dl>

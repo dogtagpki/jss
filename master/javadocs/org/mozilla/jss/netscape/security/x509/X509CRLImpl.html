@@ -559,8 +559,8 @@ extends java.security.cert.X509CRL</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>issuer</code> - the name of the CA issuing this CRL.</dd>
-<dd><code>thisUpdate</code> - the Date of this issue.</dd>
-<dd><code>nextUpdate</code> - the Date of the next CRL.</dd>
+<dd><code>thisDate</code> - the Date of this issue.</dd>
+<dd><code>nextDate</code> - the Date of the next CRL.</dd>
 </dl>
 </li>
 </ul>
@@ -580,8 +580,8 @@ extends java.security.cert.X509CRL</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>issuer</code> - the name of the CA issuing this CRL.</dd>
-<dd><code>thisUpdate</code> - the Date of this issue.</dd>
-<dd><code>nextUpdate</code> - the Date of the next CRL.</dd>
+<dd><code>thisDate</code> - the Date of this issue.</dd>
+<dd><code>nextDate</code> - the Date of the next CRL.</dd>
 <dd><code>badCerts</code> - the array of revoked certificates.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.security.cert.CRLException</code> - on parsing/construction errors.</dd>
@@ -606,8 +606,8 @@ extends java.security.cert.X509CRL</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>issuer</code> - the name of the CA issuing this CRL.</dd>
-<dd><code>thisUpdate</code> - the Date of this issue.</dd>
-<dd><code>nextUpdate</code> - the Date of the next CRL.</dd>
+<dd><code>thisDate</code> - the Date of this issue.</dd>
+<dd><code>nextDate</code> - the Date of the next CRL.</dd>
 <dd><code>badCerts</code> - the array of revoked certificates.</dd>
 <dd><code>crlExts</code> - the CRL extensions.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -637,9 +637,9 @@ extends java.security.cert.X509CRL</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>issuer</code> - the name of the CA issuing this CRL.</dd>
-<dd><code>sigAlg</code> - signing algorithm id</dd>
-<dd><code>thisUpdate</code> - the Date of this issue.</dd>
-<dd><code>nextUpdate</code> - the Date of the next CRL.</dd>
+<dd><code>algId</code> - signing algorithm id</dd>
+<dd><code>thisDate</code> - the Date of this issue.</dd>
+<dd><code>nextDate</code> - the Date of the next CRL.</dd>
 <dd><code>badCerts</code> - the array of revoked certificates.</dd>
 <dd><code>crlExts</code> - the CRL extensions.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -666,9 +666,9 @@ extends java.security.cert.X509CRL</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>issuer</code> - the name of the CA issuing this CRL.</dd>
-<dd><code>sigAlg</code> - signing algorithm id</dd>
-<dd><code>thisUpdate</code> - the Date of this issue.</dd>
-<dd><code>nextUpdate</code> - the Date of the next CRL.</dd>
+<dd><code>algId</code> - signing algorithm id</dd>
+<dd><code>thisDate</code> - the Date of this issue.</dd>
+<dd><code>nextDate</code> - the Date of the next CRL.</dd>
 <dd><code>badCerts</code> - the hashtable of revoked certificates.</dd>
 <dd><code>crlExts</code> - the CRL extensions.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -712,7 +712,7 @@ extends java.security.cert.X509CRL</pre>
 <div class="block">Returns true if signedCRL was set.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>byte</code> - array of containing signed CRL.</dd>
+<dd><code>crl</code> - byte array of containing signed CRL.</dd>
 </dl>
 </li>
 </ul>
@@ -1090,7 +1090,6 @@ extends java.security.cert.X509CRL</pre>
 <dd>the DER encoded CRL information.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.security.cert.CRLException</code> - on parsing errors.</dd>
-<dd><code><a href="../../../../../../org/mozilla/jss/netscape/security/x509/X509ExtensionException.html" title="class in org.mozilla.jss.netscape.security.x509">X509ExtensionException</a></code> - on extension parsing errors.</dd>
 </dl>
 </li>
 </ul>
@@ -1120,7 +1119,7 @@ extends java.security.cert.X509CRL</pre>
 <div class="block">Returns true if signature was set.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>byte</code> - array of containing CRL signature.</dd>
+<dd><code>crlSignature</code> - byte array of containing CRL signature.</dd>
 </dl>
 </li>
 </ul>
@@ -1280,10 +1279,6 @@ extends java.security.cert.X509CRL</pre>
 <h4>getExtensions</h4>
 <pre>public&nbsp;<a href="../../../../../../org/mozilla/jss/netscape/security/x509/CRLExtensions.html" title="class in org.mozilla.jss.netscape.security.x509">CRLExtensions</a>&nbsp;getExtensions()</pre>
 <div class="block">Returns extensions for this impl.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>extn</code> - CRLExtensions</dd>
-</dl>
 </li>
 </ul>
 <a name="areEntriesIncluded--">

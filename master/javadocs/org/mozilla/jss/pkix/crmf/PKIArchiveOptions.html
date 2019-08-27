@@ -374,7 +374,7 @@ implements <a href="../../../../../org/mozilla/jss/asn1/ASN1Value.html" title="i
 <div class="block">Returns the key gen parameters. Should only be called if the type
  is <code>KEY_GEN_PARAMETERS</code>.
     public byte[] getKeyGenParameters( ) {
-        Assert._assert(type == KEY_GEN_PARAMETERS);
+        assert(type == KEY_GEN_PARAMETERS);
         return keyGenParameters;
     }
 

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -252,24 +252,30 @@ implements <a href="../../../../org/mozilla/jss/crypto/PrivateKey.html" title="i
 </td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/pkcs11/PK11PubKey.html" title="class in org.mozilla.jss.pkcs11">PK11PubKey</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html#getPublicKey--">getPublicKey</a></span>()</code>
+<div class="block">Returns the corresponding public key from a private key instance.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html#getStrength--">getStrength</a></span>()</code>
 <div class="block">Returns the size in bits of the modulus of an RSA Private key.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/crypto/PrivateKey.Type.html" title="class in org.mozilla.jss.crypto">PrivateKey.Type</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html#getType--">getType</a></span>()</code>
 <div class="block">Returns the type (RSA or DSA) of this private key.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html#getUniqueID--">getUniqueID</a></span>()</code>
 <div class="block">Returns the unique ID of this key.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html#verifyKeyIsOnToken-org.mozilla.jss.pkcs11.PK11Token-">verifyKeyIsOnToken</a></span>(<a href="../../../../org/mozilla/jss/pkcs11/PK11Token.html" title="class in org.mozilla.jss.pkcs11">PK11Token</a>&nbsp;token)</code>
 <div class="block">Make sure this key lives on the given token.</div>
@@ -437,6 +443,16 @@ implements <a href="../../../../org/mozilla/jss/crypto/PrivateKey.html" title="i
  Returns -1 for other types of keys.</div>
 </li>
 </ul>
+<a name="getPublicKey--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPublicKey</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/pkcs11/PK11PubKey.html" title="class in org.mozilla.jss.pkcs11">PK11PubKey</a>&nbsp;getPublicKey()</pre>
+<div class="block">Returns the corresponding public key from a private key instance.</div>
+</li>
+</ul>
 <a name="fromPrivateKeyInfo-java.security.spec.PKCS8EncodedKeySpec-org.mozilla.jss.crypto.CryptoToken-">
 <!--   -->
 </a>
@@ -523,6 +539,10 @@ implements <a href="../../../../org/mozilla/jss/crypto/PrivateKey.html" title="i
 <h4>getEncoded</h4>
 <pre>public&nbsp;byte[]&nbsp;getEncoded()</pre>
 <div class="block">Subclasses that support encoding can overload this method.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getEncoded</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+</dl>
 </li>
 </ul>
 <a name="getFormat--">
@@ -533,6 +553,10 @@ implements <a href="../../../../org/mozilla/jss/crypto/PrivateKey.html" title="i
 <h4>getFormat</h4>
 <pre>public&nbsp;java.lang.String&nbsp;getFormat()</pre>
 <div class="block">Subclasses that support encoding can overload this method.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getFormat</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+</dl>
 </li>
 </ul>
 </li>

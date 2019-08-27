@@ -515,15 +515,15 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/util/Der
 <dd><code>tag</code> - the DER value of the context-specific tag that replaces
             original tag of the value in the output , such as in
 
-            <pre>
-        <em> <field> [N] IMPLICIT <type></em>
+       <pre>
+   &lt;field&gt; [N] IMPLICIT  &lt;type&gt;
  </pre>
 
-            For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
-            would be encoded as "81 01 04" whereas in explicit
-            tagging it would be encoded as "A1 03 02 01 04".
-            Notice that the tag is A1 and not 81, this is because with
-            explicit tagging the form is always constructed.</dd>
+ For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
+ would be encoded as "81 01 04" whereas in explicit
+ tagging it would be encoded as "A1 03 02 01 04".
+ Notice that the tag is A1 and not 81, this is because with
+ explicit tagging the form is always constructed.</dd>
 <dd><code>value</code> - original value being implicitly tagged</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
@@ -635,7 +635,7 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/util/Der
  The bit strings need not be byte-aligned.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>bits</code> - the bit string, MSB first</dd>
+<dd><code>ba</code> - the bit string, MSB first</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 </dl>
@@ -654,7 +654,7 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/util/Der
  encoding.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>bits</code> - the bit string, MSB first</dd>
+<dd><code>bitString</code> - the bit string, MSB first</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 </dl>
@@ -673,7 +673,7 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/util/Der
  encoding.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>bits</code> - the bit string as an array of booleans.</dd>
+<dd><code>bitString</code> - the bit string as an array of booleans.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 </dl>
@@ -1008,7 +1008,7 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/util/Der
 <div class="block">Put the tag of the attribute in the stream.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>class</code> - the tag class type, one of UNIVERSAL, CONTEXT,
+<dd><code>tagClass</code> - the tag class type, one of UNIVERSAL, CONTEXT,
         APPLICATION or PRIVATE</dd>
 <dd><code>form</code> - if true, the value is constructed, otherwise it is
             primitive.</dd>

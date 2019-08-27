@@ -221,7 +221,9 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/x509/Cer
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/extensions/AuthInfoAccessExtension.html#AuthInfoAccessExtension-java.lang.Boolean-java.lang.Object-">AuthInfoAccessExtension</a></span>(java.lang.Boolean&nbsp;critical,
-                       java.lang.Object&nbsp;value)</code>&nbsp;</td>
+                       java.lang.Object&nbsp;value)</code>
+<div class="block">Create the extension from the passed DER encoded value of the same.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -437,9 +439,6 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/x509/Cer
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>critical</code> - true if the extension is to be treated as critical.</dd>
-<dd><code>value</code> - Array of DER encoded bytes of the actual value.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code> - on error.</dd>
 </dl>
 </li>
 </ul>
@@ -452,9 +451,13 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/x509/Cer
 <pre>public&nbsp;AuthInfoAccessExtension(java.lang.Boolean&nbsp;critical,
                                java.lang.Object&nbsp;value)
                         throws java.io.IOException</pre>
+<div class="block">Create the extension from the passed DER encoded value of the same.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>critical</code> - true if the extension is to be treated as critical.</dd>
+<dd><code>value</code> - Array of DER encoded bytes of the actual value.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code></dd>
+<dd><code>java.io.IOException</code> - on error.</dd>
 </dl>
 </li>
 </ul>

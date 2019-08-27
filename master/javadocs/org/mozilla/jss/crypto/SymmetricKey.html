@@ -98,12 +98,17 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt>All Superinterfaces:</dt>
+<dd>javax.security.auth.Destroyable, java.security.Key, javax.crypto.SecretKey, java.io.Serializable</dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
 <dd><a href="../../../../org/mozilla/jss/pkcs11/PK11SymKey.html" title="class in org.mozilla.jss.pkcs11">PK11SymKey</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public interface <span class="typeNameLabel">SymmetricKey</span></pre>
+<pre>public interface <span class="typeNameLabel">SymmetricKey</span>
+extends javax.crypto.SecretKey</pre>
 </li>
 </ul>
 </div>
@@ -177,6 +182,13 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#SHA1_HMAC">SHA1_HMAC</a></span></code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.javax.crypto.SecretKey">
+<!--   -->
+</a>
+<h3>Fields inherited from interface&nbsp;javax.crypto.SecretKey</h3>
+<code>serialVersionUID</code></li>
+</ul>
 </li>
 </ul>
 <!-- ========== METHOD SUMMARY =========== -->
@@ -232,6 +244,13 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html#setNickName-java.lang.String-">setNickName</a></span>(java.lang.String&nbsp;nickName)</code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.javax.security.auth.Destroyable">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;javax.security.auth.Destroyable</h3>
+<code>destroy, isDestroyed</code></li>
+</ul>
 </li>
 </ul>
 </li>
@@ -365,6 +384,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getAlgorithm</h4>
 <pre>java.lang.String&nbsp;getAlgorithm()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getAlgorithm</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+</dl>
 </li>
 </ul>
 <a name="getEncoded--">
@@ -374,6 +397,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getEncoded</h4>
 <pre>byte[]&nbsp;getEncoded()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getEncoded</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+</dl>
 </li>
 </ul>
 <a name="getFormat--">
@@ -383,6 +410,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getFormat</h4>
 <pre>java.lang.String&nbsp;getFormat()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getFormat</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+</dl>
 </li>
 </ul>
 <a name="getNickName--">
