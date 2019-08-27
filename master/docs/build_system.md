@@ -46,12 +46,72 @@ of our project.
 
 This directory contains two sets of files: dependencies and core modules.
 The non-standard CMake dependencies currently include the `FindNSPR` and
-FindNSS` modules: these allow CMake to find NSPR and NSS system libraries
+`FindNSS` modules: these allow CMake to find NSPR and NSS system libraries
 and were imported from PKI. The core modules include `JSSConfig`, which
 sets useful variables for use within CMake, `JSSCommon`, which controls
 building JSS, and `JSSTests`, which sets up the JSS test suite within
 CTest.
 
+### Available CMake Options
+
+Our CMake generator currently understands the following options when
+configuring the build system. Each option can either be specified on the CMake
+command line with `-D<VAR>=<VALUE>` syntax, or in the environment.
+
+ - `CHECK_DEPRECATION` -- enable `-Xlint:deprecation` when compiling JSS to
+    check for use of deprecated APIs.
+ - `FIPS_ENABLED` -- disable certain test cases which are known to fail in
+    FIPS mode for various reasons. These usually include tests which try to
+    disable FIPS mode, use unsupported ciphers, or too small of key sizes.
+    Note that NSS must still be built with FIPS mode support enabled.
+ - `SANDBOX` -- support building sandboxed builds to test changes to NSPR or
+    NSS alongside changes to JSS. This assumes you have the following
+    directory structure:
+
+    ```
+    sandbox/
+    sandbox/nspr
+    sandbox/nss
+    sandbox/dist
+    sandbox/jss
+    ```
+
+    Note that `sandbox` can be replaced by any directory name. The
+    `sandbox/dist` folder is automatically created by NSS upon build.
+    Please first build NSS (according to current instructions) and then
+    build JSS.
+
+### Adding a Test Case
+
+To add a new test case, add an entry to `cmake/JSSTests.cmake`. There's two
+useful helpers macros `jss_test_exec` and `jss_test_java`.
+
+`jss_test_exec` takes a `NAME` parameter (to use to identify the test case
+in output and when running particular tests), a `COMMAND` to execute, and an
+optional set of dependencies (`DEPENDS ...`) on other tests. We use this
+because `add_test` doesn't itself handle dependencies or set environment
+variables (we need to inject `LD_LIBRARY_PATH` to handle testing our built
+`libjss4.so`).
+
+`jss_test_java` is a wrapper over `jss_test_exec` which handles setting up
+the JVM and passing required arguments to it (`-classpath`, `-enableasserts`,
+etc.). Pass only the class you wish to execute and any arguments to it as
+the COMMAND field. (e.g., `COMMAND "org.mozilla.jss.tests.TestBuffer"`).
+
+There are a few useful variables defined:
+
+ - `JSS_TEST_DIR` -- directory to the souce code where the tests are
+    contained.
+ - `PASSWORD_FILE` -- password for the NSS DB tokens.
+ - `DB_PWD` -- password for the NSS DB internal (default) token.
+ - `RESULTS_DATA_OUTPUT_DIR` -- directory to write test results to.
+ - `RESULTS_NSSDB_OUTPUT_DIR` -- path of the non-FIPS NSS DB.
+ - `RESULTS_NSSDB_FIPS_OUTPUT_DIR` -- path of the FIPS NSS DB.
+
+Note that, on a FIPS-enabled machine, `RESULTS_NSSDB_FIPS_OUTPUT_DIR` is
+unused and `RESULTS_NSSDB_OUTPUT_DIR` is actually placed in FIPS mode.
+For tests which would fail in FIPS mode, place them in the
+`if(NOT FIPS_ENABLED)` block.
 
 ## `lib/`
 

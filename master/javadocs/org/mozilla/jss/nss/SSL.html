@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":9,"i1":9,"i2":41,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -139,6 +139,24 @@ extends java.lang.Object</pre>
 <div class="block">Require certificate from the remote peer.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SECFailure">SECFailure</a></span></code>
+<div class="block">Return value on failure from NSS functions.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SECSuccess">SECSuccess</a></span></code>
+<div class="block">Return value on success from NSS functions.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SECWouldBlock">SECWouldBlock</a></span></code>
+<div class="block">Return value from NSS functions when the operation would block.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -166,7 +184,7 @@ extends java.lang.Object</pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -194,10 +212,21 @@ extends java.lang.Object</pre>
                   <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
                   <a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key,
                   int&nbsp;kea)</code>
-<div class="block">Configure the certificate and private key for a server socket.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">replaced with ConfigServerCert
+ See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h</span></div>
+</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ConfigServerCert-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">ConfigServerCert</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
+                <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
+                <a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key)</code>
+<div class="block">Configure the certificate and private key for a server socket.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ConfigServerSessionIDCache-int-long-long-java.lang.String-">ConfigServerSessionIDCache</a></span>(int&nbsp;maxCacheEntries,
                           long&nbsp;timeout,
@@ -206,27 +235,27 @@ extends java.lang.Object</pre>
 <div class="block">Configure the server's session cache.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ForceHandshake-org.mozilla.jss.nss.PRFDProxy-">ForceHandshake</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
 <div class="block">Force a handshake to occur if not started, else step one.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ImportFD-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.nss.PRFDProxy-">ImportFD</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;model,
         <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
 <div class="block">Import a file descriptor to create a new SSL file descriptor out of it.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#OptionGet-org.mozilla.jss.nss.PRFDProxy-int-">OptionGet</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
          int&nbsp;option)</code>
 <div class="block">Get the value of a SSL option on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#OptionSet-org.mozilla.jss.nss.PRFDProxy-int-int-">OptionSet</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
          int&nbsp;option,
@@ -234,33 +263,45 @@ extends java.lang.Object</pre>
 <div class="block">Set the value of a SSL option on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#PeerCertificate-org.mozilla.jss.nss.PRFDProxy-">PeerCertificate</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
+<div class="block">Introspect the peer's certificate.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#PeerCertificateChain-org.mozilla.jss.nss.PRFDProxy-">PeerCertificateChain</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
+<div class="block">Introspect the peer's certificate chain.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ResetHandshake-org.mozilla.jss.nss.PRFDProxy-boolean-">ResetHandshake</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
               boolean&nbsp;asServer)</code>
 <div class="block">Reset the handshake status, optionally handshaking as a server.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SecurityStatus-org.mozilla.jss.nss.PRFDProxy-">SecurityStatus</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
 <div class="block">Check the security status of a SSL handshake.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SetURL-org.mozilla.jss.nss.PRFDProxy-java.lang.String-">SetURL</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
       java.lang.String&nbsp;url)</code>
 <div class="block">Set the hostname of a handshake on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeGet-org.mozilla.jss.nss.PRFDProxy-">VersionRangeGet</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
 <div class="block">Get the range of TLS versions enabled by this server.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeSet-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSet</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
                <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;range)</code>
@@ -305,7 +346,7 @@ extends java.lang.Object</pre>
 <a name="REQUIRE_CERTIFICATE">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>REQUIRE_CERTIFICATE</h4>
 <pre>public static final&nbsp;int REQUIRE_CERTIFICATE</pre>
@@ -313,6 +354,42 @@ extends java.lang.Object</pre>
  and OptionSet.
 
  See also: SSL_REQUIRE_CERTIFICATE in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="SECSuccess">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SECSuccess</h4>
+<pre>public static final&nbsp;int SECSuccess</pre>
+<div class="block">Return value on success from NSS functions.
+
+ See also: SECSuccess in /usr/include/nss3/seccomon.h</div>
+</li>
+</ul>
+<a name="SECFailure">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SECFailure</h4>
+<pre>public static final&nbsp;int SECFailure</pre>
+<div class="block">Return value on failure from NSS functions.
+
+ See also: SECFailure in /usr/include/nss3/seccomon.h</div>
+</li>
+</ul>
+<a name="SECWouldBlock">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>SECWouldBlock</h4>
+<pre>public static final&nbsp;int SECWouldBlock</pre>
+<div class="block">Return value from NSS functions when the operation would block.
+
+ See also: SECWouldBlock in /usr/include/nss3/seccomon.h</div>
 </li>
 </ul>
 </li>
@@ -507,19 +584,35 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>ConfigSecureServer</h4>
-<pre>public static&nbsp;int&nbsp;ConfigSecureServer(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
-                                     <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
-                                     <a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key,
-                                     int&nbsp;kea)</pre>
-<div class="block">Configure the certificate and private key for a server socket.
+<pre>@Deprecated
+public static&nbsp;int&nbsp;ConfigSecureServer(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
+                                                 <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
+                                                 <a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key,
+                                                 int&nbsp;kea)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">replaced with ConfigServerCert
+ See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h</span></div>
+<div class="block">Configure the certificate and private key for a server socket.</div>
+</li>
+</ul>
+<a name="ConfigServerCert-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ConfigServerCert</h4>
+<pre>public static&nbsp;int&nbsp;ConfigServerCert(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
+                                   <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
+                                   <a href="../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key)</pre>
+<div class="block">Configure the certificate and private key for a server socket. This
+ form assumes no additional data is passed.
 
- See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h</div>
+ See also: SSL_ConfigServerCert in /usr/include/nss3/ssl.h</div>
 </li>
 </ul>
 <a name="ConfigServerSessionIDCache-int-long-long-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>ConfigServerSessionIDCache</h4>
 <pre>public static&nbsp;int&nbsp;ConfigServerSessionIDCache(int&nbsp;maxCacheEntries,
@@ -529,6 +622,35 @@ extends java.lang.Object</pre>
 <div class="block">Configure the server's session cache.
 
  See also: SSL_ConfigServerSessionIDCache in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="PeerCertificate-org.mozilla.jss.nss.PRFDProxy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>PeerCertificate</h4>
+<pre>public static&nbsp;<a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;PeerCertificate(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</pre>
+<div class="block">Introspect the peer's certificate.
+
+ See also: SSL_PeerCertificate in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="PeerCertificateChain-org.mozilla.jss.nss.PRFDProxy-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>PeerCertificateChain</h4>
+<pre>public static&nbsp;<a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>[]&nbsp;PeerCertificateChain(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)
+                                       throws java.lang.Exception</pre>
+<div class="block">Introspect the peer's certificate chain.
+
+ See also: SSL_PeerCertificateChain in /usr/include/nss3/ssl.h</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
 </li>
 </ul>
 </li>

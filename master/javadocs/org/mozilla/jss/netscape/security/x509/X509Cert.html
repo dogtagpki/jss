@@ -627,7 +627,7 @@ implements java.security.Certificate, java.io.Serializable</pre>
  differs between the two.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>other</code> - the object being compared with this one</dd>
+<dd><code>src</code> - the object being compared with this one</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true iff the certificates are equivalent</dd>
 </dl>
@@ -699,7 +699,7 @@ implements java.security.Certificate, java.io.Serializable</pre>
  which is used to provide the verification key and to establish trust.
  Other code must manage and use those cert chains.
 
- <P>For now, you must walk the cert chain being used to verify any
+ For now, you must walk the cert chain being used to verify any
  given cert.  Start at the root, which is a self-signed certificate;
  verify it using the key inside the certificate.  Then use that to
  verify the next certificate in the chain, issued by that CA.  In
@@ -772,7 +772,7 @@ implements java.security.Certificate, java.io.Serializable</pre>
  for other sources of algorithm parameters.</em></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>algorithm</code> - the signature algorithm to be used. Note that a
+<dd><code>algorithmId</code> - the signature algorithm to be used. Note that a
             given public/private key pair may support several such algorithms.</dd>
 <dd><code>privateKey</code> - the private key used to create the signature,
             which must correspond to the public key in this certificate</dd>

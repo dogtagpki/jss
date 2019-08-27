@@ -529,7 +529,11 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/x509/Cer
  The criticality is set to false.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>the</code> - values to be set for the extension.</dd>
+<dd><code>name</code> - the name of this extension</dd>
+<dd><code>oid</code> - the object identifier of this extension</dd>
+<dd><code>pattern</code> - to use for encoding this extension</dd>
+<dd><code>critical</code> - true if the extension should be treated as critical</dd>
+<dd><code>config</code> - additional configuration for this extension</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 <dd><code>java.text.ParseException</code></dd>
@@ -549,7 +553,7 @@ implements <a href="../../../../../../org/mozilla/jss/netscape/security/x509/Cer
  The criticality is set to false.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>the</code> - values to be set for the extension.</dd>
+<dd><code>config</code> - the values to be set for the extension.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 <dd><code>java.text.ParseException</code></dd>
