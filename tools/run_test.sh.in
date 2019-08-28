@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# This utility gets templated to build/run_test.sh to help with running a
+# single test after building JSS. This gives the caller more flexibility
+# with command line arguments and ensures that the correct build artifacts
+# get used.
+
+export LD_LIBRARY_PATH="${CMAKE_BINARY_DIR}"
+
+if [ "$1" == "--gdb" ]; then
+    shift
+    gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="${CMAKE_BINARY_DIR}" "$@"
+else
+    "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="${CMAKE_BINARY_DIR}" "$@"
+fi

@@ -13,6 +13,9 @@ macro(jss_config)
 
     # Configure java-related flags
     jss_config_java()
+
+    # Template auto-generated files
+    jss_config_template()
 endmacro()
 
 macro(jss_config_version MAJOR MINOR PATCH BETA)
@@ -45,16 +48,6 @@ macro(jss_config_version MAJOR MINOR PATCH BETA)
         set(JSS_VERSION "${JSS_VERSION} beta ${JSS_VERSION_BETA}")
         set(JSS_VERSION_STR "${JSS_VERSION_STR}_b${JSS_VERSION_BETA}")
     endif()
-
-    # Template files
-    configure_file(
-        "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h.in"
-        "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h"
-    )
-    configure_file(
-        "${PROJECT_SOURCE_DIR}/lib/MANIFEST.MF.in"
-        "${CMAKE_BINARY_DIR}/MANIFEST.MF"
-    )
 endmacro()
 
 macro(jss_config_outputs)
@@ -274,4 +267,20 @@ macro(jss_config_java)
     set(JSS_BASE_PORT 2876)
     math(EXPR JSS_TEST_PORT_CLIENTAUTH ${JSS_BASE_PORT}+0)
     math(EXPR JSS_TEST_PORT_CLIENTAUTH_FIPS ${JSS_BASE_PORT}+1)
+endmacro()
+
+macro(jss_config_template)
+    # Template files
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h.in"
+        "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h"
+    )
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/lib/MANIFEST.MF.in"
+        "${CMAKE_BINARY_DIR}/MANIFEST.MF"
+    )
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/run_test.sh.in"
+        "${CMAKE_BINARY_DIR}/run_test.sh"
+    )
 endmacro()
