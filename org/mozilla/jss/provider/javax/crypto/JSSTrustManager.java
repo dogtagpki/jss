@@ -166,6 +166,9 @@ public class JSSTrustManager implements X509TrustManager {
 
     @Override
     public X509Certificate[] getAcceptedIssuers() {
+        /* Note: due to how this is implemented, the list of accepted issuers
+         * is limited only to those in the NSS DB attached to this instance of
+         * CryptoManager. It is unlikely that we'll get access to them. */
 
         logger.debug("JSSTrustManager: getAcceptedIssuers():");
 
