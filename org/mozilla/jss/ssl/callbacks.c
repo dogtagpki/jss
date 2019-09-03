@@ -497,9 +497,11 @@ JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
      */
 
     if ( rv != SECSuccess || isServer )  {
-        if (peerCert) CERT_DestroyCertificate(peerCert);
-            return (int)rv;
+        if (peerCert) {
+            CERT_DestroyCertificate(peerCert);
         }
+        return (int)rv;
+    }
 
     /* cert is OK.  This is the client side of an SSL connection.
      * Now check the name field in the cert against the desired hostname.
