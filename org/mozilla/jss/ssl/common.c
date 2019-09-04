@@ -904,7 +904,6 @@ finish:
 }
 
 /* Get the trusted anchor for pkix */
-
 CERTCertificate *getRoot(CERTCertificate *cert,
     SECCertUsage certUsage) 
 {
@@ -938,80 +937,84 @@ finish:
     return root; 
 }
 
-/* Verify a cert using explicit PKIX call.
- * For now only used in OCSP AIA context.
- * The result of this call will be a full chain
- * and leaf network AIA ocsp validation.
- * The policy param will be used in the future to
- * handle more scenarios.
- */
-
-SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
-      SECCertificateUsage certificateUsage,secuPWData *pwdata, int ocspPolicy,
-      CERTVerifyLog *log, SECCertificateUsage *usage) 
+/* Internal helper for the below call. */
+static SECStatus
+JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
+    SECCertificateUsage certificateUsage, secuPWData *pwdata, int ocspPolicy,
+    CERTVerifyLog *log, SECCertificateUsage *usage,
+    CERTCertList *trustedCertList)
 {
-
-    /* put the first set of possible flags internally here first */
-    /* later there could be a more complete list to choose from */
-    /* support our hard core fetch aia ocsp policy for now */
-
-    static PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
+    /* Put the first set of possible flags internally here first. Later
+     * there could be a more complete list to choose from; for now we only
+     * support our hard core fetch AIA OCSP policy. Note that we disable
+     * CRL fetching as Dogtag doesn't support it. Additionally, enable OCSP
+     * checking on the chained CA certificates. Since NSS/PKIX's
+     * CERT_GetClassicOCSPEnabledHardFailurePolicy doesn't do what we want,
+     * we construct the policy ourselves. */
+    PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
         /* crl */
-        0,
+        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
-        CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
     };
 
-    static PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
+    PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
         /* crl */
-        0,
+        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
-        CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
     };
 
-    static CERTRevocationMethodIndex
-        ocsp_Enabled_Hard_Policy_Method_Preference = {
-            cert_revocation_method_ocsp
-        };
-
-    static CERTRevocationFlags ocsp_Enabled_Hard_Policy = {
-    { /* leafTests */
-      2,
-      ocsp_Enabled_Hard_Policy_LeafFlags,
-      1,
-      &ocsp_Enabled_Hard_Policy_Method_Preference,
-      0 },
-    { /* chainTests */
-      2,
-      ocsp_Enabled_Hard_Policy_ChainFlags,
-      1,
-      &ocsp_Enabled_Hard_Policy_Method_Preference,
-      0 }
+    CERTRevocationMethodIndex ocsp_Enabled_Hard_Policy_Method_Preference[1] = {
+        cert_revocation_method_ocsp
     };
 
-    /* for future expansion */
+    CERTRevocationFlags ocsp_Enabled_Hard_Policy = {
+        /* CERTRevocationTests - leafTests */
+        {
+            /* number_of_defined_methods */
+            2,
+            /* cert_rev_flags_per_method */
+            ocsp_Enabled_Hard_Policy_LeafFlags,
+            /* number_of_preferred_methods */
+            1,
+            /* preferred_methods */
+            ocsp_Enabled_Hard_Policy_Method_Preference,
+            /* cert_rev_method_independent_flags */
+            0
+        },
+        /* CERTRevocationTests - chainTests */
+        {
+            /* number_of_defined_methods */
+            2,
+            /* cert_rev_flags_per_method */
+            ocsp_Enabled_Hard_Policy_ChainFlags,
+            /* number_of_preferred_methods */
+            1,
+            /* preferred_methods */
+            ocsp_Enabled_Hard_Policy_Method_Preference,
+            /* cert_rev_method_independent_flags */
+            0
+        }
+    };
 
-    CERTValOutParam cvout[20] = {{0}};
-    CERTValInParam cvin[20] = {{0}};
+    /* The size of these objects are defined here based upon maximum possible
+     * inputs. A dynamic allocation could reallocate based upon actual usage,
+     * however this would affect the size by at most one or two. Note that,
+     * due to the required usage of cert_pi_end/cert_po_end, these sizes are
+     * inflated by one. */
+    CERTValOutParam cvout[3] = {{0}};
+    CERTValInParam cvin[6] = {{0}};
 
     int usageIndex = -1;
     int inParamIndex = 0;
     int outParamIndex = 0;
-    CERTRevocationFlags *rev = NULL;
 
-    CERTCertList *trustedCertList = NULL;
-
-    PRBool fetchCerts = PR_FALSE;
-
-    SECCertUsage certUsage = certUsageSSLClient /* 0 */;
-    
     SECStatus res =  SECFailure;
 
-    CERTCertificate *root = NULL;
-
-    if(cert == NULL) {
+    if (cert == NULL) {
         goto finish;
     }
 
@@ -1019,92 +1022,122 @@ SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
         goto finish;
     }
 
-    /* Force the strict ocsp network check on chain
-       and leaf.
-    */
-
-    fetchCerts = PR_TRUE;   
-    rev = &ocsp_Enabled_Hard_Policy;
-
-    /* fetch aia over net */
- 
+    /* Enable live AIA fetching over the network. */
     cvin[inParamIndex].type = cert_pi_useAIACertFetch;
-    cvin[inParamIndex].value.scalar.b = fetchCerts;
-    inParamIndex++; 
+    cvin[inParamIndex].value.scalar.b = PR_TRUE;
+    inParamIndex++;
 
-    /* time */
-
+    /* By setting the time to zero, we choose the current time when the
+     * check is performed. */
     cvin[inParamIndex].type = cert_pi_date;
-    cvin[inParamIndex].value.scalar.time = PR_Now();
+    cvin[inParamIndex].value.scalar.time = 0;
     inParamIndex++;
 
-    /* flags */
-
+    /* Force the strict OCSP check on both the leaf and its chain. */
     cvin[inParamIndex].type = cert_pi_revocationFlags;
-    cvin[inParamIndex].value.pointer.revocation = rev;
+    cvin[inParamIndex].value.pointer.revocation = &ocsp_Enabled_Hard_Policy;
     inParamIndex++;
 
-    /* establish trust anchor */
-
-    /* We need to convert the SECCertificateUsage to a SECCertUsage to obtain
-     * the root.
-    */
-
-    SECCertificateUsage testUsage = certificateUsage;
-    while (0 != (testUsage = testUsage >> 1)) { certUsage++; }
-
-    root = getRoot(cert,certUsage);
-
-    /* Try to add the root as the trust anchor so all the
-       other memebers of the ca chain will get validated.
-    */
-
-    if( root != NULL ) {
-        trustedCertList = CERT_NewCertList();
-        CERT_AddCertToListTail(trustedCertList, root);        
-
+    /* Establish a trust anchor if it is passed to us. NOTE: this trust anchor
+     * must previously be validated before it is passed to us here. */
+    if (trustedCertList != NULL) {
         cvin[inParamIndex].type = cert_pi_trustAnchors;
         cvin[inParamIndex].value.pointer.chain = trustedCertList;
-
         inParamIndex++;
     }
 
+    /* Done establishing input parameters. */
     cvin[inParamIndex].type = cert_pi_end;
 
-    if(log != NULL) {
+    /* When we need to log rationale for failure, pass it as an output
+     * parameter. */
+    if (log != NULL) {
         cvout[outParamIndex].type = cert_po_errorLog;
         cvout[outParamIndex].value.pointer.log = log;
         outParamIndex ++;
     }
 
-    if(usage != NULL) {
+    /* When we need to inquire about the resulting certificate usage, pass it
+     * here. */
+    if (usage != NULL) {
         usageIndex = outParamIndex;
         cvout[outParamIndex].type = cert_po_usages;
         cvout[outParamIndex].value.scalar.usages = 0;
         outParamIndex ++;
     }
 
+    /* Done establishing output parameters. */
     cvout[outParamIndex].type = cert_po_end;
 
+    /* Call into NSS's PKIX library to validate our certificate. */
     res = CERT_PKIXVerifyCert(cert, certificateUsage, cvin, cvout, &pwdata);
 
 finish:
-    /* clean up any trusted cert list */
-
+    /* Clean up any certificates in the trusted certificate list. This was
+     * a passed input parameter, but by taking ownership of it and clearing it,
+     * we enable tail calls to this function. */
     if (trustedCertList) {
+        /* CERT_DestroyCertList destroys interior certs for us. */
         CERT_DestroyCertList(trustedCertList);
         trustedCertList = NULL;
     }
 
-    /* CERT_DestroyCertList destroys interior certs for us. */
-
-    if(root) {
-       root = NULL;
-    }
-
-    if(res == SECSuccess && usage && usageIndex != -1) {
+    if (res == SECSuccess && usage && usageIndex != -1) {
         *usage = cvout[usageIndex].value.scalar.usages;
     }
 
     return res;
+}
+
+/* Verify a cert using an explicit PKIX call. For now only perform this call
+ * when the OCSP policy is set to leaf and chain. Performs a blocking, online
+ * OCSP status refresh. The result of this call will be a full-chain OCSP
+ * validation.
+ *
+ * In the future, we'll use ocspPolicy to condition around additional policies
+ * and handle them all with this method (and a call to PKIX).
+ *
+ * Note that this currently requires the certificate to be added directly
+ * to the NSS DB. We can't otherwise validate against root certificates in
+ * the default NSS DB.
+ */
+SECStatus JSSL_verifyCertPKIX(CERTCertificate *cert,
+      SECCertificateUsage certificateUsage, secuPWData *pwdata, int ocspPolicy,
+      CERTVerifyLog *log, SECCertificateUsage *usage)
+{
+    SECCertUsage certUsage = certUsageSSLClient /* 0 */;
+
+    /* We need to convert the SECCertificateUsage to a SECCertUsage to obtain
+     * the root.
+     */
+
+    SECCertificateUsage testUsage = certificateUsage;
+    while (0 != (testUsage = testUsage >> 1)) { certUsage++; }
+
+    CERTCertificate *root = getRoot(cert, certUsage);
+
+    // Two cases: either the root is present, or it isn't.
+    if (root == NULL) {
+        /* In this case, we've had a hard time finding the root. In all
+         * likelihood, the following call will fail to validate the end cert
+         * as well and thus fail to validate. I don't believe there's a risk
+         * in trying it however. */
+        return JSSL_verifyCertPKIXInternal(cert, certificateUsage, pwdata,
+                                           ocspPolicy, log, usage, NULL);
+    } else {
+        /* In this case, we've found the root certificate. Before passing it
+         * to the leaf, explicitly validate it with strict OCSP checking. Then
+         * validate the leaf certificate with a known and trusted root
+         * certificate. */
+        SECStatus ret = JSSL_verifyCertPKIXInternal(root, certificateUsageSSLCA,
+            pwdata, ocspPolicy, log, usage, NULL);
+        if (ret != SECSuccess) {
+            return ret;
+        }
+
+        CERTCertList *rootList = CERT_NewCertList();
+        CERT_AddCertToListTail(rootList, root);
+        return JSSL_verifyCertPKIXInternal(cert, certificateUsage, pwdata,
+                                           ocspPolicy, log, usage, rootList);
+    }
 }
