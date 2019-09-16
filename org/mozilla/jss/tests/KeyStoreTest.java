@@ -40,33 +40,33 @@ public class KeyStoreTest {
             "isTrustedCert <alias>\n");
     }
 
-    public static void main(String argv[]) {
-      try {
-
+    public static void main(String argv[]) throws Throwable {
         if( argv.length < 2 ) {
             printUsage();
             System.exit(1);
         }
 
-        String op = argv[1];
-        String[] args = new String[ argv.length - 2 ];
-        for(int i=2; i < argv.length; ++i) {
-            args[i-2] = argv[i];
+        String nss_db = argv[0];
+        String password_file = argv[1];
+        String op = argv[2];
+
+        int offset = 3;
+        String[] args = new String[argv.length - offset];
+        for(int i = offset; i < argv.length; i++) {
+            args[i - offset] = argv[i];
         }
 
-        CryptoManager.initialize(argv[0]);
+        CryptoManager.initialize(nss_db);
         CryptoManager cm = CryptoManager.getInstance();
 
 
         // login to the token
         CryptoToken token = cm.getInternalKeyStorageToken();
         //CryptoToken token = cm.getTokenByName("Builtin Object Token");
-        try {
-            token.login(new ConsolePasswordCallback());
-        } catch(PK11Token.NotInitializedException ex) { }
+        token.login(new FilePasswordCallback(password_file));
         cm.setThreadToken(token);
 
-        KeyStore ks = KeyStore.getInstance("Mozilla-JSS");
+        KeyStore ks = KeyStore.getInstance("PKCS11", "Mozilla-JSS");
         ks.load(null, null);
 
         if( op.equalsIgnoreCase("getAliases") ) {
@@ -107,11 +107,6 @@ public class KeyStoreTest {
             printUsage();
             System.exit(1);
         }
-
-      } catch(Throwable t) {
-        t.printStackTrace();
-        System.exit(1);
-      }
     }
 
     public static void dumpCert(KeyStore ks, String alias)
