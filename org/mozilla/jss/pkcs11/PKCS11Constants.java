@@ -2797,6 +2797,34 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_AES_CMAC_GENERAL = 0x0000108AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_CMAC = 0x0000108BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_XCBC_MAC = 0x0000108CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_XCBC_MAC_96 = 0x0000108DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_BLOWFISH_KEY_GEN = 0x00001090L;
 
     /**
@@ -4632,6 +4660,41 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKM_NSS_CHACHA20_CTR = 0xCE534371L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_IKE_PRF_PLUS_DERIVE = 0xCE534372L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_IKE_PRF_DERIVE = 0xCE534373L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_IKE1_PRF_DERIVE = 0xCE534374L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_IKE1_APP_B_PRF_DERIVE = 0xCE534375L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_PUB_FROM_PRIV = 0xCE534378L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
