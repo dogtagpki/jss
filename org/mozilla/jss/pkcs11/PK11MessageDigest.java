@@ -36,8 +36,8 @@ public final class PK11MessageDigest extends JSSMessageDigest {
         throws DigestException, InvalidKeyException
     {
 
-        if( ! (alg instanceof HMACAlgorithm) ) {
-            throw new DigestException("Digest is not an HMAC digest");
+        if( ! (alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm) ) {
+            throw new DigestException("Digest is not an HMAC or CMAC digest");
         }
 
         reset();
@@ -90,7 +90,7 @@ public final class PK11MessageDigest extends JSSMessageDigest {
     }
 
     public void reset() throws DigestException {
-        if( ! (alg instanceof HMACAlgorithm) ) {
+        if( ! (alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm) ) {
             // This is a regular digest, so we have enough information
             // to initialize the context
             this.digestProxy = initDigest(alg);
