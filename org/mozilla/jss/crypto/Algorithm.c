@@ -18,6 +18,11 @@
 static PRStatus
 getAlgInfo(JNIEnv *env, jobject alg, JSS_AlgInfo *info);
 
+/* Helpers to handle differences in NSS versions. */
+#ifndef CKM_AES_CMAC
+#define CKM_AES_CMAC CKM_INVALID_MECHANISM
+#endif
+
 /***********************************************************************
 **
 **  Algorithm indices.  This must be kept in sync with the algorithm
@@ -97,7 +102,10 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
 /* 66 */    {CKM_AES_KEY_WRAP_PAD, PK11_MECH},
 /* 67 */    {CKM_SHA256_HMAC, PK11_MECH},
 /* 68 */    {CKM_SHA384_HMAC, PK11_MECH},
-/* 69 */    {CKM_SHA512_HMAC, PK11_MECH}
+/* 69 */    {CKM_SHA512_HMAC, PK11_MECH},
+
+/* CKM_AES_CMAC is new to NSS; some implementations might not yet have it. */
+/* 70 */    {CKM_AES_CMAC, PK11_MECH}
 /* REMEMBER TO UPDATE NUM_ALGS!!! (in Algorithm.h) */
 };
 

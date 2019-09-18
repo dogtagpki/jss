@@ -25,7 +25,8 @@ public enum PKCS11Algorithm {
     CKM_SHA_1_HMAC (Algorithm.CKM_SHA_1_HMAC, PKCS11Constants.CKM_SHA_1_HMAC),
     CKM_SHA_256_HMAC (Algorithm.CKM_SHA256_HMAC, PKCS11Constants.CKM_SHA256_HMAC),
     CKM_SHA_384_HMAC (Algorithm.CKM_SHA384_HMAC, PKCS11Constants.CKM_SHA384_HMAC),
-    CKM_SHA_512_HMAC (Algorithm.CKM_SHA512_HMAC, PKCS11Constants.CKM_SHA512_HMAC);
+    CKM_SHA_512_HMAC (Algorithm.CKM_SHA512_HMAC, PKCS11Constants.CKM_SHA512_HMAC),
+    CKM_AES_CMAC (Algorithm.CKM_AES_CMAC, PKCS11Constants.CKM_AES_CMAC);
 
     // Value from Algorithm's constant -- this is an index into Algorithm's
     // table.

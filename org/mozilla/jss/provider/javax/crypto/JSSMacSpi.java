@@ -11,7 +11,9 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 
+import org.mozilla.jss.crypto.CMACAlgorithm;
 import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.JSSMessageDigest;
 import org.mozilla.jss.crypto.SecretKeyFacade;
@@ -21,9 +23,9 @@ import org.mozilla.jss.crypto.TokenSupplierManager;
 class JSSMacSpi extends javax.crypto.MacSpi {
 
     private JSSMessageDigest digest=null;
-    private HMACAlgorithm alg;
+    private DigestAlgorithm alg;
 
-    protected JSSMacSpi(HMACAlgorithm alg) {
+    protected JSSMacSpi(DigestAlgorithm alg) {
       try {
         this.alg = alg;
         CryptoToken token =
@@ -116,4 +118,9 @@ class JSSMacSpi extends javax.crypto.MacSpi {
         }
     }
 
+    public static class CmacAES extends JSSMacSpi {
+        public CmacAES() {
+            super(CMACAlgorithm.AES);
+        }
+    }
 }

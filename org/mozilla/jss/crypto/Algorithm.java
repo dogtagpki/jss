@@ -241,4 +241,7 @@ public class Algorithm {
     protected static final int CKM_SHA256_HMAC=67;
     protected static final int CKM_SHA384_HMAC=68;
     protected static final int CKM_SHA512_HMAC=69;
+
+    // PKCS#11 AES-CMAC
+    protected static final int CKM_AES_CMAC=70;
 }
