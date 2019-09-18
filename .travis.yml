@@ -33,6 +33,8 @@ matrix:
     - stage: extra
       env: BASE_IMAGE="fedora_rawhide"
     - stage: extra
+      env: BASE_IMAGE="fedora_sandbox"
+    - stage: extra
       env: BASE_IMAGE="fast_finish"
       script:
         - "true"
@@ -47,3 +49,5 @@ matrix:
       env: BASE_IMAGE="fedora_29_jdk11"
     - stage: extra
       env: BASE_IMAGE="fedora_rawhide"
+    - stage: extra
+      env: BASE_IMAGE="fedora_sandbox"
