@@ -398,21 +398,33 @@ class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
-    /**
-     * @deprecated This class name is misleading. This algorithm
-     * is used for generating Password-Based Authentication keys
-     * for use with HmacSHA1. Use PBAHmacSHA1 instead.
-     */
-    @Deprecated
     public static class HmacSHA1 extends JSSSecretKeyFactorySpi {
         public HmacSHA1() {
-            super(KeyGenAlgorithm.PBA_SHA1_HMAC);
+            super(KeyGenAlgorithm.SHA1_HMAC);
         }
     }
 
     public static class PBAHmacSHA1 extends JSSSecretKeyFactorySpi {
         public PBAHmacSHA1() {
             super(KeyGenAlgorithm.PBA_SHA1_HMAC);
+        }
+    }
+
+    public static class HmacSHA256 extends JSSSecretKeyFactorySpi {
+        public HmacSHA256() {
+            super(KeyGenAlgorithm.SHA256_HMAC);
+        }
+    }
+
+    public static class HmacSHA384 extends JSSSecretKeyFactorySpi {
+        public HmacSHA384() {
+            super(KeyGenAlgorithm.SHA384_HMAC);
+        }
+    }
+
+    public static class HmacSHA512 extends JSSSecretKeyFactorySpi {
+        public HmacSHA512() {
+            super(KeyGenAlgorithm.SHA512_HMAC);
         }
     }
 

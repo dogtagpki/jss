@@ -13,6 +13,9 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
     public static final Type RC4 = Type.RC4;
     public static final Type RC2 = Type.RC2;
     public static final Type SHA1_HMAC = Type.SHA1_HMAC;
+    public static final Type SHA256_HMAC = Type.SHA256_HMAC;
+    public static final Type SHA384_HMAC = Type.SHA384_HMAC;
+    public static final Type SHA512_HMAC = Type.SHA512_HMAC;
     public static final Type AES = Type.AES;
 
     public Type getType();

@@ -22,7 +22,10 @@ public enum PKCS11Algorithm {
     CKM_RC2_KEY_GEN (Algorithm.CKM_RC2_KEY_GEN, PKCS11Constants.CKM_RC2_KEY_GEN),
     CKM_RC4_KEY_GEN (Algorithm.CKM_RC4_KEY_GEN, PKCS11Constants.CKM_RC4_KEY_GEN),
     CKM_RSA_PKCS_KEY_PAIR_GEN (Algorithm.CKM_RSA_PKCS_KEY_PAIR_GEN, PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN),
-    CKM_SHA_1_HMAC (Algorithm.CKM_SHA_1_HMAC, PKCS11Constants.CKM_SHA_1_HMAC);
+    CKM_SHA_1_HMAC (Algorithm.CKM_SHA_1_HMAC, PKCS11Constants.CKM_SHA_1_HMAC),
+    CKM_SHA_256_HMAC (Algorithm.CKM_SHA256_HMAC, PKCS11Constants.CKM_SHA256_HMAC),
+    CKM_SHA_384_HMAC (Algorithm.CKM_SHA384_HMAC, PKCS11Constants.CKM_SHA384_HMAC),
+    CKM_SHA_512_HMAC (Algorithm.CKM_SHA512_HMAC, PKCS11Constants.CKM_SHA512_HMAC);
 
     // Value from Algorithm's constant -- this is an index into Algorithm's
     // table.
