@@ -6,6 +6,8 @@ package org.mozilla.jss.crypto;
 import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
+import org.mozilla.jss.pkcs11.PKCS11Constants;
+
 public interface SymmetricKey extends javax.crypto.SecretKey {
 
     public static final Type DES = Type.DES;
@@ -112,18 +114,24 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
      */
     public final static class Usage {
         private Usage() { }
-        private Usage(int val) { this.val = val;}
+        private Usage(int val, long pk11_val) {
+            this.val = val;
+            this.pk11_val = pk11_val;
+        }
+
         private int val;
+        private long pk11_val;
 
         public int getVal() { return val; }
+        public long getPKCS11Constant() { return pk11_val; }
 
         // these enums must match the JSS_symkeyUsage list in Algorithm.c
         // and the opFlagForUsage list in PK11KeyGenerator.java
-        public static final Usage ENCRYPT = new Usage(0);
-        public static final Usage DECRYPT = new Usage(1);
-        public static final Usage WRAP = new Usage(2);
-        public static final Usage UNWRAP = new Usage(3);
-        public static final Usage SIGN = new Usage(4);
-        public static final Usage VERIFY = new Usage(5);
+        public static final Usage ENCRYPT = new Usage(0, PKCS11Constants.CKA_ENCRYPT);
+        public static final Usage DECRYPT = new Usage(1, PKCS11Constants.CKA_DECRYPT);
+        public static final Usage WRAP = new Usage(2, PKCS11Constants.CKA_WRAP);
+        public static final Usage UNWRAP = new Usage(3, PKCS11Constants.CKA_UNWRAP);
+        public static final Usage SIGN = new Usage(4, PKCS11Constants.CKA_SIGN);
+        public static final Usage VERIFY = new Usage(5, PKCS11Constants.CKA_VERIFY);
     }
 }
