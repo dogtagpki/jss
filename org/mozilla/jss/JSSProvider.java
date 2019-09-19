@@ -210,6 +210,12 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$HmacSHA1");
         put("SecretKeyFactory.PBAHmacSHA1",
             "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$PBAHmacSHA1");
+        put("SecretKeyFactory.HmacSHA256",
+            "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$HmacSHA256");
+        put("SecretKeyFactory.HmacSHA384",
+            "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$HmacSHA384");
+        put("SecretKeyFactory.HmacSHA512",
+            "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$HmacSHA512");
         put("SecretKeyFactory.PBEWithMD5AndDES",
             "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$PBE_MD5_DES_CBC");
         put("SecretKeyFactory.PBEWithSHA1AndDES",
