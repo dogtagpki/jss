@@ -53,40 +53,47 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
         // all names converted to lowercase for case insensitivity
         private static Hashtable<String, Type> nameMap = new Hashtable<>();
 
-        private String name;
+        private String[] names;
         private KeyGenAlgorithm keyGenAlg;
         private Type() { }
-        private Type(String name, KeyGenAlgorithm keyGenAlg) {
-            this.name = name;
+        private Type(String[] names, KeyGenAlgorithm keyGenAlg) {
+            this.names = names;
             this.keyGenAlg = keyGenAlg;
-            nameMap.put(name.toLowerCase(), this);
+
+            for (String name : names) {
+                nameMap.put(name.toLowerCase(), this);
+            }
         }
-        public static final Type DES = new Type("DES", KeyGenAlgorithm.DES);
+        public static final Type DES = new Type(new String[]{ "DES" }, KeyGenAlgorithm.DES);
         public static final Type DES3 =
-            new Type("DESede", KeyGenAlgorithm.DES3);
+            new Type(new String[] { "DESede", "TDES", "3DES", "DES3" }, KeyGenAlgorithm.DES3);
         public static final Type DESede = DES3;
-        public static final Type RC4 = new Type("RC4", KeyGenAlgorithm.RC4);
-        public static final Type RC2 = new Type("RC2", KeyGenAlgorithm.RC2);
-        public static final Type SHA1_HMAC = new Type("SHA1_HMAC",
+        public static final Type RC4 = new Type(new String[]{ "RC4" }, KeyGenAlgorithm.RC4);
+        public static final Type RC2 = new Type(new String[]{ "RC2" }, KeyGenAlgorithm.RC2);
+        public static final Type SHA1_HMAC = new Type(new String[]{ "SHA1_HMAC", "SHA1-HMAC", "SHA1HMAC", "HMAC_SHA1", "HMAC-SHA1", "HMACSHA1" },
             KeyGenAlgorithm.SHA1_HMAC);
-        public static final Type SHA256_HMAC = new Type("SHA256_HMAC",
+        public static final Type SHA256_HMAC = new Type(new String[]{ "SHA256_HMAC", "SHA256-HMAC", "SHA256HMAC", "HMAC_SHA256", "HMAC-SHA256", "HMACSHA256" },
             KeyGenAlgorithm.SHA256_HMAC);
-        public static final Type SHA384_HMAC = new Type("SHA384_HMAC",
+        public static final Type SHA384_HMAC = new Type(new String[]{ "SHA384_HMAC", "SHA384-HMAC", "SHA384HMAC", "HMAC_SHA384", "HMAC-SHA384", "HMACSHA384" },
             KeyGenAlgorithm.SHA384_HMAC);
-        public static final Type SHA512_HMAC = new Type("SHA512_HMAC",
+        public static final Type SHA512_HMAC = new Type(new String[]{ "SHA512_HMAC", "SHA512-HMAC", "SHA512HMAC", "HMAC_SHA512", "HMAC-SHA512", "HMACSHA512" },
             KeyGenAlgorithm.SHA512_HMAC);
-        public static final Type PBA_SHA1_HMAC = new Type("PBA_SHA1_HMAC",
+        public static final Type PBA_SHA1_HMAC = new Type(new String[]{ "PBA_SHA1_HMAC" },
             KeyGenAlgorithm.PBA_SHA1_HMAC);
-        public static final Type AES = new Type("AES", KeyGenAlgorithm.AES);
+        public static final Type AES = new Type(new String[]{ "AES" }, KeyGenAlgorithm.AES);
 
 
         public String toString() {
-            return name;
+            return names[0];
+        }
+
+        public String[] getAliases() {
+            return names;
         }
 
         public KeyGenAlgorithm getKeyGenAlg() throws NoSuchAlgorithmException {
             if( keyGenAlg == null ) {
-                throw new NoSuchAlgorithmException(name);
+                throw new NoSuchAlgorithmException(names[0]);
             }
             return keyGenAlg;
         }
