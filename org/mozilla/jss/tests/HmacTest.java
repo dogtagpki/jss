@@ -7,11 +7,15 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.InitializationValues;
+
 import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
 
 
@@ -24,12 +28,10 @@ public class HmacTest {
   private static final String PROVIDER = "Mozilla-JSS";
 
 
-  public static void main(String[] args)
-   {
+  public static void main(String[] args) throws Exception {
 
     String algorithm = "hmac-sha1";
 
-    try {
        configureCrypto(args);
 
        Mac mac = Mac.getInstance(algorithm, PROVIDER);
@@ -42,11 +44,6 @@ public class HmacTest {
        doHMAC(mac,"Dogtag rules!");
 
        System.out.println("Done");
-
-       System.exit(0);
-    } catch (Exception e) {
-        System.exit(1);
-    }
   }
 
   private static void configureCrypto(String[] args)
@@ -67,25 +64,8 @@ public class HmacTest {
 
   private static Key importHmacSha1Key(byte[] key)
     throws Exception {
-
-    final String WRAPPING_ALGORITHM = "AES/CBC/PKCS5Padding";
-
-    Key wrappingKey = getWrappingKey();
-
-    byte[] iv = new byte[16];
-    IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-
-    Cipher wrappingCipher = Cipher.getInstance(WRAPPING_ALGORITHM, PROVIDER);
-    wrappingCipher.init(Cipher.ENCRYPT_MODE, wrappingKey, ivParameterSpec);
-
-    byte[] wrappedKeyData = wrappingCipher.doFinal(key);
-
-    Cipher unwrappingCipher = Cipher.getInstance(WRAPPING_ALGORITHM, PROVIDER);
-    unwrappingCipher.init(Cipher.UNWRAP_MODE, wrappingKey, ivParameterSpec);
-
-    return (SecretKey) unwrappingCipher.unwrap(wrappedKeyData,
-                                               SymmetricKey.SHA1_HMAC.toString(),
-                                               Cipher.SECRET_KEY);
+    SecretKeyFactory factory = SecretKeyFactory.getInstance("HmacSHA1", "Mozilla-JSS");
+    return factory.generateSecret(new SecretKeySpec(key, "HmacSHA1"));
   }
 
   private static synchronized Key getWrappingKey()
