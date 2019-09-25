@@ -16,6 +16,9 @@ macro(jss_config)
 
     # Template auto-generated files
     jss_config_template()
+
+    # Check symbols to see what tests we run
+    jss_config_symbols()
 endmacro()
 
 macro(jss_config_version MAJOR MINOR PATCH BETA)
@@ -334,4 +337,15 @@ macro(jss_config_template)
         "${PROJECT_SOURCE_DIR}/tools/run_test.sh.in"
         "${CMAKE_BINARY_DIR}/run_test.sh"
     )
+endmacro()
+
+macro(jss_config_symbols)
+    list(APPEND CMAKE_REQUIRED_INCLUDES ${NSPR_INCLUDE_DIRS})
+    list(APPEND CMAKE_REQUIRED_INCLUDES ${NSS_INCLUDE_DIRS})
+    list(JOIN JSS_C_FLAGS " " CMAKE_REQUIRED_FLAGS)
+
+    check_symbol_exists("CKM_AES_CMAC" "nspr.h;nss.h;pkcs11t.h" HAVE_NSS_CMAC)
+    if(NOT HAVE_NSS_CMAC)
+        message(WARNING "Your NSS version doesn't support CMAC; some features of JSS won't work.")
+    endif()
 endmacro()
