@@ -53,7 +53,7 @@ public class SSL {
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
      */
-    public static native PRFDProxy ImportFD(PRFDProxy model, PRFDProxy fd);
+    public static native SSLFDProxy ImportFD(PRFDProxy model, PRFDProxy fd);
 
     /**
      * Set the value of a SSL option on the specified PRFileDesc.

@@ -82,7 +82,7 @@ Java_org_mozilla_jss_nss_SSL_ImportFD(JNIEnv *env, jclass clazz, jobject model,
 
     result = SSL_ImportFD(real_model, real_fd);
 
-    return JSS_PR_wrapPRFDProxy(env, &result);
+    return JSS_PR_wrapSSLFDProxy(env, &result);
 }
 
 JNIEXPORT int JNICALL

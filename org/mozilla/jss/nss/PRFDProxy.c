@@ -5,8 +5,8 @@
 #include "jssutil.h"
 #include "PRFDProxy.h"
 
-jobject
-JSS_PR_wrapPRFDProxy(JNIEnv *env, PRFileDesc **fd)
+static jobject
+JSS_PR_wrapFDProxy(JNIEnv *env, PRFileDesc **fd, const char *className, const char *conSig)
 {
     jbyteArray pointer = NULL;
     jclass proxyClass;
@@ -19,14 +19,14 @@ JSS_PR_wrapPRFDProxy(JNIEnv *env, PRFileDesc **fd)
     pointer = JSS_ptrToByteArray(env, *fd);
 
     /* Lookup the class and constructor */
-    proxyClass = (*env)->FindClass(env, PRFD_PROXY_CLASS_NAME);
+    proxyClass = (*env)->FindClass(env, className);
     if(proxyClass == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
     }
     constructor = (*env)->GetMethodID(env, proxyClass,
                             PLAIN_CONSTRUCTOR,
-                            PRFD_PROXY_CONSTRUCTOR_SIG);
+                            conSig);
     if(constructor == NULL) {
         ASSERT_OUTOFMEM(env);
         goto finish;
@@ -45,6 +45,18 @@ finish:
 
     PR_ASSERT(fdObj || (*env)->ExceptionOccurred(env));
     return fdObj;
+}
+
+jobject
+JSS_PR_wrapPRFDProxy(JNIEnv *env, PRFileDesc **fd)
+{
+    return JSS_PR_wrapFDProxy(env, fd, PRFD_PROXY_CLASS_NAME, PRFD_PROXY_CONSTRUCTOR_SIG);
+}
+
+jobject
+JSS_PR_wrapSSLFDProxy(JNIEnv *env, PRFileDesc **fd)
+{
+    return JSS_PR_wrapFDProxy(env, fd, SSLFD_PROXY_CLASS_NAME, SSLFD_PROXY_CONSTRUCTOR_SIG);
 }
 
 PRStatus
