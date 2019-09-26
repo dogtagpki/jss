@@ -46,8 +46,8 @@ public class TestBufferPRFD {
         SSLFDProxy result = SSL.ImportFD(null, fd);
         assert(result != null);
 
-        assert(SSL.ResetHandshake(result, false) == 0);
-        assert(SSL.SetURL(result, host) == 0);
+        assert(SSL.ResetHandshake(result, false) == SSL.SECSuccess);
+        assert(SSL.SetURL(result, host) == SSL.SECSuccess);
 
         TestSSLVersionGetSet(result);
 
@@ -60,10 +60,10 @@ public class TestBufferPRFD {
         SSLFDProxy result = SSL.ImportFD(null, fd);
         assert(result != null);
 
-        assert(SSL.ConfigServerCert(result, cert, key) == 0);
-        assert(SSL.ConfigServerSessionIDCache(1, 100, 100, null) == 0);
-        assert(SSL.ResetHandshake(result, true) == 0);
-        assert(SSL.SetURL(result, host) == 0);
+        assert(SSL.ConfigServerCert(result, cert, key) == SSL.SECSuccess);
+        assert(SSL.ConfigServerSessionIDCache(1, 100, 100, null) == SSL.SECSuccess);
+        assert(SSL.ResetHandshake(result, true) == SSL.SECSuccess);
+        assert(SSL.SetURL(result, host) == SSL.SECSuccess);
 
         TestSSLVersionGetSet(result);
 
@@ -85,7 +85,7 @@ public class TestBufferPRFD {
 
         SSLVersionRange vrange = new SSLVersionRange(SSLVersion.TLS_1_1, SSLVersion.TLS_1_3);
 
-        assert(SSL.VersionRangeSet(s_nspr, vrange) == 0);
+        assert(SSL.VersionRangeSet(s_nspr, vrange) == SSL.SECSuccess);
 
         SSLVersionRange actual = SSL.VersionRangeGet(s_nspr);
         System.out.println("Actual: (" + actual.getMinVersion() + ":" + actual.getMinEnum() + ", " + actual.getMaxVersion() + ":" + actual.getMaxEnum() + ")");
