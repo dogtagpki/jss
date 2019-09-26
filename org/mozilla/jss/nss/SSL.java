@@ -60,7 +60,7 @@ public class SSL {
      *
      * See also: SSL_OptionSet in /usr/include/nss3/ssl.h
      */
-    public static native int OptionSet(PRFDProxy fd, int option, int val);
+    public static native int OptionSet(SSLFDProxy fd, int option, int val);
 
     /**
      * Get the value of a SSL option on the specified PRFileDesc. Note that
@@ -68,14 +68,14 @@ public class SSL {
      *
      * See also: SSL_OptionGet in /usr/include/nss3/ssl.h
      */
-    public static native int OptionGet(PRFDProxy fd, int option) throws Exception;
+    public static native int OptionGet(SSLFDProxy fd, int option) throws Exception;
 
     /**
      * Set the hostname of a handshake on the specified PRFileDesc.
      *
      * See also: SSL_SetURL in /usr/include/nss3/ssl.h
      */
-    public static native int SetURL(PRFDProxy fd, String url);
+    public static native int SetURL(SSLFDProxy fd, String url);
 
     /**
      * Set the preference for a specific cipher suite on the specified
@@ -83,7 +83,7 @@ public class SSL {
      *
      * See also: SSL_CipherPrefSet in /usr/include/nss3/ssl.h
      */
-    public static native int CipherPrefSet(PRFDProxy fd, int cipher, boolean enabled);
+    public static native int CipherPrefSet(SSLFDProxy fd, int cipher, boolean enabled);
 
     /**
      * Get the preference for a specific cipher suite on the specified
@@ -92,14 +92,14 @@ public class SSL {
      *
      * See also: SSL_CipherPrefGet in /usr/include/nss3/ssl.h
      */
-    public static native boolean CipherPrefGet(PRFDProxy fd, int cipher) throws Exception;
+    public static native boolean CipherPrefGet(SSLFDProxy fd, int cipher) throws Exception;
 
     /**
      * Set the range of TLS versions enabled by this server by SSLVersionRange.
      *
      * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
      */
-    public static int VersionRangeSet(PRFDProxy fd, SSLVersionRange range) {
+    public static int VersionRangeSet(SSLFDProxy fd, SSLVersionRange range) {
         return VersionRangeSetNative(fd, range.getMinEnum(), range.getMaxEnum());
     }
 
@@ -109,35 +109,35 @@ public class SSL {
      *
      * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
      */
-    private static native int VersionRangeSetNative(PRFDProxy fd, int min_ssl, int max_ssl);
+    private static native int VersionRangeSetNative(SSLFDProxy fd, int min_ssl, int max_ssl);
 
     /**
      * Get the range of TLS versions enabled by this server.
      *
      * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
      */
-    public static native SSLVersionRange VersionRangeGet(PRFDProxy fd) throws Exception;
+    public static native SSLVersionRange VersionRangeGet(SSLFDProxy fd) throws Exception;
 
     /**
      * Check the security status of a SSL handshake.
      *
      * See also: SSL_SecurityStatus in /usr/include/nss3/ssl.h
      */
-    public static native SecurityStatusResult SecurityStatus(PRFDProxy fd);
+    public static native SecurityStatusResult SecurityStatus(SSLFDProxy fd);
 
     /**
      * Reset the handshake status, optionally handshaking as a server.
      *
      * See also: SSL_ResetHandshake in /usr/include/nss3/ssl.h
      */
-    public static native int ResetHandshake(PRFDProxy fd, boolean asServer);
+    public static native int ResetHandshake(SSLFDProxy fd, boolean asServer);
 
     /**
      * Force a handshake to occur if not started, else step one.
      *
      * See also: SSL_ForceHandshake in /usr/include/nss3/ssl.h
      */
-    public static native int ForceHandshake(PRFDProxy fd);
+    public static native int ForceHandshake(SSLFDProxy fd);
 
     /**
      * Configure the certificate and private key for a server socket.
@@ -146,7 +146,7 @@ public class SSL {
      * See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h
      */
     @Deprecated
-    public static native int ConfigSecureServer(PRFDProxy fd, PK11Cert cert,
+    public static native int ConfigSecureServer(SSLFDProxy fd, PK11Cert cert,
         PK11PrivKey key, int kea);
 
     /**
@@ -155,7 +155,7 @@ public class SSL {
      *
      * See also: SSL_ConfigServerCert in /usr/include/nss3/ssl.h
      */
-    public static native int ConfigServerCert(PRFDProxy fd, PK11Cert cert,
+    public static native int ConfigServerCert(SSLFDProxy fd, PK11Cert cert,
         PK11PrivKey key);
 
     /**
@@ -171,14 +171,14 @@ public class SSL {
      *
      * See also: SSL_PeerCertificate in /usr/include/nss3/ssl.h
      */
-    public static native PK11Cert PeerCertificate(PRFDProxy fd);
+    public static native PK11Cert PeerCertificate(SSLFDProxy fd);
 
     /**
      * Introspect the peer's certificate chain.
      *
      * See also: SSL_PeerCertificateChain in /usr/include/nss3/ssl.h
      */
-    public static native PK11Cert[] PeerCertificateChain(PRFDProxy fd) throws Exception;
+    public static native PK11Cert[] PeerCertificateChain(SSLFDProxy fd) throws Exception;
 
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
