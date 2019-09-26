@@ -11,6 +11,10 @@
 #include "jss_bigint.h"
 #include "jss_exceptions.h"
 #include "java_ids.h"
+#include "nss.h"
+#include "cert.h"
+#include "certt.h"
+#include "pk11util.h"
 
 
 /***********************************************************************
@@ -748,6 +752,24 @@ void JSS_DerefJString(JNIEnv *env, jstring str, const char *ref) {
     if (str != NULL && ref != NULL) {
         (*env)->ReleaseStringUTFChars(env, str, ref);
     }
+}
+
+/************************************************************************
+** JSS_PK11_WrapCertToChain
+**
+** See jssutil.h for more information.
+**
+*/
+jobjectArray JSS_PK11_WrapCertToChain(JNIEnv *env, CERTCertificate *cert, SECCertUsage certUsage) {
+    CERTCertList *chain = CERT_GetCertChainFromCert(cert, PR_Now(), certUsage);
+
+    // The only failure cases here are when we're out of memory; in which
+    // case, there's not much more for us to do but return NULL.
+    if (chain == NULL) {
+        return NULL;
+    }
+
+    return JSS_PK11_wrapCertChain(env, &chain);
 }
 
 /*

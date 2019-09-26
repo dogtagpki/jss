@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include <stdbool.h>
 
+#include <certt.h>
 #include <nspr.h>
 #include <jni.h>
 #include <secitem.h>
@@ -353,6 +354,16 @@ const char *JSS_RefJString(JNIEnv *env, jstring str);
 **
 */
 void JSS_DerefJString(JNIEnv *env, jstring str, const char *ref);
+
+/************************************************************************
+** JSS_PK11_WrapCertToChain
+**
+** Inquires about the certificate chain for cert, and returns the full or
+** partial as a jobjectArray for use in JNI'd code.
+**
+*/
+jobjectArray JSS_PK11_WrapCertToChain(JNIEnv *env, CERTCertificate *cert,
+                                      SECCertUsage certUsage);
 
 PR_END_EXTERN_C
 
