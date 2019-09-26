@@ -2,6 +2,7 @@ package org.mozilla.jss.tests;
 
 import org.mozilla.jss.nss.PR;
 import org.mozilla.jss.nss.PRFDProxy;
+import org.mozilla.jss.nss.SSLFDProxy;
 import org.mozilla.jss.nss.SSL;
 import org.mozilla.jss.nss.SecurityStatusResult;
 
@@ -12,7 +13,7 @@ public class TestRawSSL {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
         assert(PR.Close(ssl_fd) == PR.SUCCESS);
@@ -22,7 +23,7 @@ public class TestRawSSL {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
         // 8 == SSL_ENABLE_SSL3; disable it
@@ -53,7 +54,7 @@ public class TestRawSSL {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
         int cipher = SSLCipher.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384.getID();
@@ -81,9 +82,7 @@ public class TestRawSSL {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        assert(SSL.SetURL(fd, "https://google.com") == SSL.SECFailure);
-
-        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
         assert(SSL.SetURL(ssl_fd, "https://google.com") == SSL.SECSuccess);
@@ -95,9 +94,7 @@ public class TestRawSSL {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        assert(SSL.SecurityStatus(fd) == null);
-
-        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
         SecurityStatusResult r = SSL.SecurityStatus(ssl_fd);
@@ -110,10 +107,8 @@ public class TestRawSSL {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
-        assert(SSL.ResetHandshake(fd, false) == SSL.SECFailure);
-
-        PRFDProxy ssl_fd = SSL.ImportFD(null, fd);
-        assert(SSL.ResetHandshake(fd, false) == SSL.SECSuccess);
+        SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
+        assert(SSL.ResetHandshake(ssl_fd, false) == SSL.SECSuccess);
 
         assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }

@@ -42,35 +42,35 @@ public class TestBufferPRFD {
         Buffer.Free(right_read);
     }
 
-    public static PRFDProxy Setup_NSS_Client(PRFDProxy fd, String host) throws Exception {
-        fd = SSL.ImportFD(null, fd);
-        assert(fd != null);
+    public static SSLFDProxy Setup_NSS_Client(PRFDProxy fd, String host) throws Exception {
+        SSLFDProxy result = SSL.ImportFD(null, fd);
+        assert(result != null);
 
-        assert(SSL.ResetHandshake(fd, false) == 0);
-        assert(SSL.SetURL(fd, host) == 0);
+        assert(SSL.ResetHandshake(result, false) == 0);
+        assert(SSL.SetURL(result, host) == 0);
 
-        TestSSLVersionGetSet(fd);
+        TestSSLVersionGetSet(result);
 
-        return fd;
+        return result;
     }
 
-    public static PRFDProxy Setup_NSS_Server(PRFDProxy fd, String host,
+    public static SSLFDProxy Setup_NSS_Server(PRFDProxy fd, String host,
         PK11Cert cert, PK11PrivKey key) throws Exception
     {
-        fd = SSL.ImportFD(null, fd);
-        assert(fd != null);
+        SSLFDProxy result = SSL.ImportFD(null, fd);
+        assert(result != null);
 
-        assert(SSL.ConfigServerCert(fd, cert, key) == 0);
+        assert(SSL.ConfigServerCert(result, cert, key) == 0);
         assert(SSL.ConfigServerSessionIDCache(1, 100, 100, null) == 0);
-        assert(SSL.ResetHandshake(fd, true) == 0);
-        assert(SSL.SetURL(fd, host) == 0);
+        assert(SSL.ResetHandshake(result, true) == 0);
+        assert(SSL.SetURL(result, host) == 0);
 
-        TestSSLVersionGetSet(fd);
+        TestSSLVersionGetSet(result);
 
-        return fd;
+        return result;
     }
 
-    public static boolean IsHandshakeFinished(PRFDProxy c_nspr, PRFDProxy s_nspr) {
+    public static boolean IsHandshakeFinished(SSLFDProxy c_nspr, SSLFDProxy s_nspr) {
         SecurityStatusResult c_result = SSL.SecurityStatus(c_nspr);
         SecurityStatusResult s_result = SSL.SecurityStatus(s_nspr);
 
@@ -79,7 +79,7 @@ public class TestBufferPRFD {
         return c_result.on == 1 && s_result.on == 1;
     }
 
-    public static void TestSSLVersionGetSet(PRFDProxy s_nspr) throws Exception {
+    public static void TestSSLVersionGetSet(SSLFDProxy s_nspr) throws Exception {
         SSLVersionRange initial = SSL.VersionRangeGet(s_nspr);
         System.out.println("Initial: (" + initial.getMinVersion() + ":" + initial.getMinEnum() + ", " + initial.getMaxVersion() + ":" + initial.getMaxEnum() + ")");
 
@@ -123,14 +123,14 @@ public class TestBufferPRFD {
         assert(read_buf != null);
         assert(write_buf != null);
 
-        PRFDProxy c_nspr = PR.NewBufferPRFD(read_buf, write_buf, peer_info);
-        PRFDProxy s_nspr = PR.NewBufferPRFD(write_buf, read_buf, peer_info);
+        PRFDProxy c_buffer = PR.NewBufferPRFD(read_buf, write_buf, peer_info);
+        PRFDProxy s_buffer = PR.NewBufferPRFD(write_buf, read_buf, peer_info);
 
-        assert(c_nspr != null);
-        assert(s_nspr != null);
+        assert(c_buffer != null);
+        assert(s_buffer != null);
 
-        c_nspr = Setup_NSS_Client(c_nspr, host);
-        s_nspr = Setup_NSS_Server(s_nspr, host, server_cert, server_key);
+        SSLFDProxy c_nspr = Setup_NSS_Client(c_buffer, host);
+        SSLFDProxy s_nspr = Setup_NSS_Server(s_buffer, host, server_cert, server_key);
 
         assert(c_nspr != null);
         assert(s_nspr != null);
