@@ -35,7 +35,7 @@ CMD true \
         && rm -rf build \
         && mkdir build \
         && cd build \
-        && cmake .. \
+        && CFLAGS="-Wall -Wextra -Werror -Og -ggdb" cmake -DCMAKE_BUILD_TYPE=Debug .. \
         && make all \
         && ctest --output-on-failure \
         && true
