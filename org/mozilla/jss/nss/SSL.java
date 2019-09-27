@@ -180,6 +180,14 @@ public class SSL {
      */
     public static native PK11Cert[] PeerCertificateChain(SSLFDProxy fd) throws Exception;
 
+    /**
+     * Use client authentication; set client certificate from SSLFDProxy.
+     *
+     * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
+     *           org.mozilla.jss.nss.SSLFDProxy.SetClientCert(...)
+     */
+    public static native int AttachClientCertCallback(SSLFDProxy fd) throws Exception;
+
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
     private static native int getSSLRequireCertificate();
