@@ -1266,6 +1266,17 @@ public final class CryptoManager implements TokenSupplier
     }
 
     /**
+     * Gets the current OCSP Policy.
+     *
+     * @see getOCSPPolicy()
+     *
+     * @return - The current OCSP policy in effect.
+     */
+    public static synchronized OCSPPolicy getOCSPPolicyEnum() {
+        return ocspPolicy;
+    }
+
+    /**
      * Sets the current ocsp Policy.
      * Currently we only support one mode OCSP_LEAF_AND_CHAIN_POLICY.
      * If we have AIA based OCSP enabled we will check all certs in the chain.
