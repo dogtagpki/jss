@@ -32,6 +32,13 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
         jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage);
 
+/*
+ * This is a private function, used only by JSS in this file.
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative3(JNIEnv *env,
+        jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage);
+
 /*****************************************************************
  *
  * CryptoManager. f i n d C e r t B y N i c k n a m e N a t i v e
@@ -1704,55 +1711,15 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowCUNative(JNIEnv *env,
     return currUsage;
 }
 
-/***********************************************************************
- * CryptoManager.verifyCertificateNowNative2
- *
- * Verify a certificate that exists in the given cert database,
- * check if it's valid and that we trust the issuer. Verify time
- * against now.
- * @param nickname nickname of the certificate to verify.
- * @param checkSig verify the signature of the certificate
- * @param certificateUsage see certificate usage defined to verify certificate
- *
- * @exception InvalidNicknameException If the nickname is null.
- * @exception ObjectNotFoundException If no certificate could be found
- *      with the given nickname.
- * @exception CertificateException If certificate is invalid.
- */
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
-        jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage)
+void JSS_VerifyCertificate(JNIEnv *env, CERTCertificate *cert, jboolean checkSig,
+        jint usage)
 {
     jint certificateUsage;
-    SECCertificateUsage      currUsage = 0x0000;  /* unexposed for now */
-    SECStatus                rv = SECFailure;
-    CERTCertificate          *cert = NULL;
-    const char *nickname = NULL;
-   
-    if (nickString == NULL) {
-        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
-        goto finish;
-    }
-
+    SECCertificateUsage currUsage = 0x0000;  /* unexposed for now */
+    SECStatus rv = SECFailure;
     int ocspPolicy = JSSL_getOCSPPolicy();
-    nickname = JSS_RefJString(env, nickString);
 
-    if (nickname == NULL) {
-        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
-        goto finish;
-    }
-
-    certificateUsage = required_certificateUsage;
-
-    cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
-
-    if (cert == NULL) {
-        char *msgBuf;
-        msgBuf = PR_smprintf("Certificate not found: %s", nickname);
-        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, msgBuf);
-        PR_Free(msgBuf);
-        goto finish;
-    }
+    certificateUsage = usage;
 
     /* 0 for certificateUsage in call to CERT_VerifyCertificateNow will
      * retrieve the current valid usage into currUsage
@@ -1779,7 +1746,7 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
 
     if (rv != SECSuccess) {
         JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Invalid certificate");
-        goto finish;
+        return;
     }
 
     if ((certificateUsage == 0x0000) &&
@@ -1799,14 +1766,73 @@ Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
          */
 
         JSS_throwMsgPrErr(env, CERTIFICATE_EXCEPTION, "Unusable certificate");
+        return;
+    }
+}
+
+/***********************************************************************
+ * CryptoManager.verifyCertificateNowNative2
+ *
+ * Verify a certificate that exists in the given cert database,
+ * check if it's valid and that we trust the issuer. Verify time
+ * against now.
+ * @param nickname nickname of the certificate to verify.
+ * @param checkSig verify the signature of the certificate
+ * @param certificateUsage see certificate usage defined to verify certificate
+ *
+ * @exception InvalidNicknameException If the nickname is null.
+ * @exception ObjectNotFoundException If no certificate could be found
+ *      with the given nickname.
+ * @exception CertificateException If certificate is invalid.
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative2(JNIEnv *env,
+        jobject self, jstring nickString, jboolean checkSig, jint required_certificateUsage)
+{
+    CERTCertificate *cert = NULL;
+    const char *nickname = NULL;
+
+    if (nickString == NULL) {
+        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
         goto finish;
     }
 
+    nickname = JSS_RefJString(env, nickString);
+
+    if (nickname == NULL) {
+        JSS_throwMsg(env, INVALID_NICKNAME_EXCEPTION, "Missing certificate nickname");
+        goto finish;
+    }
+
+    cert = CERT_FindCertByNickname(CERT_GetDefaultCertDB(), nickname);
+
+    if (cert == NULL) {
+        char *msgBuf;
+        msgBuf = PR_smprintf("Certificate not found: %s", nickname);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, msgBuf);
+        PR_Free(msgBuf);
+        goto finish;
+    }
+
+    JSS_VerifyCertificate(env, cert, checkSig, required_certificateUsage);
+
 finish:
     JSS_DerefJString(env, nickString, nickname);
-    if (cert != NULL) {
-        CERT_DestroyCertificate(cert);
+    CERT_DestroyCertificate(cert);
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative3(JNIEnv *env,
+        jobject self, jobject Cert, jboolean checkSig, jint required_certificateUsage)
+{
+    CERTCertificate *cert = NULL;
+
+    if (JSS_PK11_getCertPtr(env, Cert, &cert) != PR_SUCCESS) {
+        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+        return;
     }
+
+    JSS_VerifyCertificate(env, cert, checkSig, required_certificateUsage);
 }
 
 

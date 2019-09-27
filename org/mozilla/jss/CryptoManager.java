@@ -1140,6 +1140,25 @@ public final class CryptoManager implements TokenSupplier
         verifyCertificateNowNative2(nickname, checkSig, usage);
     }
 
+    /**
+     * Verify an X509Certificate by checking if it's valid and that we trust
+     * the issuer. Verify time against now.
+     * @param cert the certificate to verify
+     * @param checkSig verify the signature of the certificate
+     * @param certificateUsage see certificate usage defined to verify certificate
+     *
+     * @exception InvalidNicknameException If the nickname is null.
+     * @exception ObjectNotFoundException If no certificate could be found
+     *      with the given nickname.
+     * @exception CertificateException If certificate is invalid.
+     */
+    public void verifyCertificate(X509Certificate cert, boolean checkSig,
+            CertificateUsage certificateUsage) throws ObjectNotFoundException,
+            InvalidNicknameException, CertificateException {
+        int usage = certificateUsage == null ? 0 : certificateUsage.getUsage();
+        verifyCertificateNowNative3(cert, checkSig, usage);
+    }
+
     private native boolean verifyCertificateNowNative(String nickname,
         boolean checkSig, int certificateUsage) throws ObjectNotFoundException;
 
@@ -1148,6 +1167,12 @@ public final class CryptoManager implements TokenSupplier
             boolean checkSig,
             int certificateUsage)
        throws ObjectNotFoundException, InvalidNicknameException, CertificateException;
+
+    private native void verifyCertificateNowNative3(
+            X509Certificate cert,
+            boolean checkSig,
+            int certificateUsage)
+        throws ObjectNotFoundException, InvalidNicknameException, CertificateException;
 
     /**
      * note: this method calls obsolete function in NSS
