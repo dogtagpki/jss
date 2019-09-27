@@ -16,6 +16,8 @@
 #include "certt.h"
 #include "pk11util.h"
 
+#include "secerr.h"
+
 
 /***********************************************************************
 **
@@ -770,6 +772,113 @@ jobjectArray JSS_PK11_WrapCertToChain(JNIEnv *env, CERTCertificate *cert, SECCer
     }
 
     return JSS_PK11_wrapCertChain(env, &chain);
+}
+
+/************************************************************************
+** JSS_ExceptionToSECStatus
+**
+** When the JNI has thrown a known exception, convert this to a SECStatus
+** code and set the appropriate PRErrorCode.
+**
+** See jssutil.h for a list of supported exceptions.
+**
+*/
+SECStatus JSS_ExceptionToSECStatus(JNIEnv *env) {
+    jclass clazz;
+
+    jthrowable except = (*env)->ExceptionOccurred(env);
+    if (except == NULL) {
+        // No exception occurred; exit with success.
+        PORT_SetError(0);
+        return SECSuccess;
+    }
+
+    // Now we have to handle get the various cases. Each case involves looking
+    // up a class by name and comparing it via IsInstanceOf(...). We ignore
+    // failures which may occur on lookup.
+
+    // CERTIFICATE_ENCODING_EXCEPTION <-> SEC_ERROR_CERT_NOT_VALID
+    clazz = (*env)->FindClass(env, CERTIFICATE_ENCODING_EXCEPTION);
+    if (clazz != NULL && (*env)->IsInstanceOf(env, except, clazz)) {
+        PORT_SetError(SEC_ERROR_CERT_NOT_VALID);
+        return SECFailure;
+    }
+
+    // CERTIFICATE_EXPIRED_EXCEPTION <-> SEC_ERROR_EXPIRED_CERTIFICATE
+    clazz = (*env)->FindClass(env, CERTIFICATE_EXPIRED_EXCEPTION);
+    if (clazz != NULL && (*env)->IsInstanceOf(env, except, clazz)) {
+        PORT_SetError(SEC_ERROR_EXPIRED_CERTIFICATE);
+        return SECFailure;
+    }
+
+    // CERTIFICATE_NOT_YET_VALID_EXCEPTION <-> SEC_ERROR_CERT_NOT_VALID
+    clazz = (*env)->FindClass(env, CERTIFICATE_NOT_YET_VALID_EXCEPTION);
+    if (clazz != NULL && (*env)->IsInstanceOf(env, except, clazz)) {
+        PORT_SetError(SEC_ERROR_CERT_NOT_VALID);
+        return SECFailure;
+    }
+
+    // CERTIFICATE_PARSING_EXCEPTION <-> SEC_ERROR_BAD_DER
+    clazz = (*env)->FindClass(env, CERTIFICATE_PARSING_EXCEPTION);
+    if (clazz != NULL && (*env)->IsInstanceOf(env, except, clazz)) {
+        PORT_SetError(SEC_ERROR_BAD_DER);
+        return SECFailure;
+    }
+
+    // CERTIFICATE_REVOKED_EXCEPTION <-> SEC_ERROR_REVOKED_CERTIFICATE
+    clazz = (*env)->FindClass(env, CERTIFICATE_REVOKED_EXCEPTION);
+    if (clazz != NULL && (*env)->IsInstanceOf(env, except, clazz)) {
+        PORT_SetError(SEC_ERROR_REVOKED_CERTIFICATE);
+        return SECFailure;
+    }
+
+    // Handle the default case. Since these error messages are mostly
+    // user-facing and don't get used internally, setting PR_UNKNOWN_ERROR
+    // here is safe.
+    PORT_SetError(PR_UNKNOWN_ERROR);
+    return SECFailure;
+}
+
+/************************************************************************
+** JSS_SECStatusToException
+**
+** Convert a failing SECStatus and PRErrorCode combination into a raised
+** JNI exception.
+**
+** See jssutil.h for a list of supported exceptions.
+**
+*/
+void JSS_SECStatusToException(JNIEnv *env, SECStatus result, PRErrorCode code) {
+    JSS_SECStatusToExceptionMessage(env, result, code, "");
+}
+
+void JSS_SECStatusToExceptionMessage(JNIEnv *env, SECStatus result, PRErrorCode code, const char *message) {
+    if (result == SECSuccess) {
+        // We ignore PRErrorCode here. However, while we could clear an
+        // exception if it occurred, we don't; that's the caller's choice to
+        // make.
+        return;
+    }
+
+    if (result == SECFailure) {
+        switch (code) {
+            case SEC_ERROR_CERT_NOT_VALID:
+                JSS_throwMsgPrErrArg(env, CERTIFICATE_NOT_YET_VALID_EXCEPTION, message, code);
+                break;
+            case SEC_ERROR_EXPIRED_CERTIFICATE:
+                JSS_throwMsgPrErrArg(env, CERTIFICATE_EXPIRED_EXCEPTION, message, code);
+                break;
+            case SEC_ERROR_BAD_DER:
+                JSS_throwMsgPrErrArg(env, CERTIFICATE_PARSING_EXCEPTION, message, code);
+                break;
+            case SEC_ERROR_REVOKED_CERTIFICATE:
+                JSS_throwMsgPrErrArg(env, CERTIFICATE_REVOKED_EXCEPTION, message, code);
+                break;
+            default:
+                JSS_throwMsgPrErrArg(env, JAVA_LANG_EXCEPTION, message, code);
+                break;
+        }
+    }
 }
 
 /*

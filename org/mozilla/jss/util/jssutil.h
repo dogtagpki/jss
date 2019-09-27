@@ -365,6 +365,43 @@ void JSS_DerefJString(JNIEnv *env, jstring str, const char *ref);
 jobjectArray JSS_PK11_WrapCertToChain(JNIEnv *env, CERTCertificate *cert,
                                       SECCertUsage certUsage);
 
+/************************************************************************
+** JSS_ExceptionToSECStatus
+**
+** When the JNI has thrown a known exception, convert this to a SECStatus
+** code and set the appropriate PRErrorCode.
+**
+** The supported exceptions are:
+**  - CertificateException
+**
+*/
+SECStatus JSS_ExceptionToSECStatus(JNIEnv *env);
+
+/************************************************************************
+** JSS_SECStatusToException
+**
+** Convert a failing SECStatus and PRErrorCode combination into a raised
+** JNI exception.
+**
+** The supported exceptions are:
+**  - CertificateException
+**
+*/
+void JSS_SECStatusToException(JNIEnv *env, SECStatus result, PRErrorCode code);
+
+/************************************************************************
+** JSS_SECStatusToException
+**
+** Convert a failing SECStatus and PRErrorCode combination into a raised
+** JNI exception with the specified message.
+**
+** The supported exceptions are:
+**  - CertificateException
+**
+*/
+void JSS_SECStatusToExceptionMessage(JNIEnv *env, SECStatus result,
+                                     PRErrorCode code, const char *message);
+
 PR_END_EXTERN_C
 
 #endif
