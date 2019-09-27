@@ -313,8 +313,8 @@ JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *aler
     PR_ASSERT(env != NULL);
 
     /* Fast return when assumptions are incorrect. */
-    if (socket != NULL || socket->socketObject != NULL ||
-            rc != JNI_OK || env != NULL) {
+    if (socket == NULL || socket->socketObject == NULL ||
+            rc != JNI_OK || env == NULL) {
         return;
     }
 
@@ -379,8 +379,8 @@ JSSL_AlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *alert)
     PR_ASSERT(env != NULL);
 
     /* Fast return when assumptions are incorrect. */
-    if (socket != NULL || socket->socketObject != NULL ||
-            rc != JNI_OK || env != NULL) {
+    if (socket == NULL || socket->socketObject == NULL ||
+            rc != JNI_OK || env == NULL) {
         return;
     }
 
