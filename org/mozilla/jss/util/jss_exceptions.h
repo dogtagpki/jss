@@ -12,6 +12,7 @@
 
 PR_BEGIN_EXTERN_C
 
+#define JAVA_LANG_EXCEPTION "java/lang/Exception"
 
 #define ALREADY_INITIALIZED_EXCEPTION "org/mozilla/jss/crypto/AlreadyInitializedException"
 
@@ -28,6 +29,14 @@ PR_BEGIN_EXTERN_C
 #define CERTIFICATE_EXCEPTION "java/security/cert/CertificateException"
 
 #define CERTIFICATE_ENCODING_EXCEPTION "java/security/cert/CertificateEncodingException"
+
+#define CERTIFICATE_EXPIRED_EXCEPTION "java/security/cert/CertificateExpiredException"
+
+#define CERTIFICATE_NOT_YET_VALID_EXCEPTION "java/security/cert/CertificateNotYetValidException"
+
+#define CERTIFICATE_PARSING_EXCEPTION "java/security/cert/CertificateParsingException"
+
+#define CERTIFICATE_REVOKED_EXCEPTION "java/security/cert/CertificateRevokedException"
 
 #define CRL_IMPORT_EXCEPTION "org/mozilla/jss/CRLImportException"
 
