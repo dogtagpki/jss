@@ -5,9 +5,12 @@ package org.mozilla.jss.nss;
  * and handles the usage of NativeProxy objects.
  */
 
+import java.util.ArrayList;
+
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 
+import org.mozilla.jss.ssl.SSLAlertEvent;
 import org.mozilla.jss.ssl.SSLVersionRange;
 
 public class SSL {
@@ -187,6 +190,24 @@ public class SSL {
      *           org.mozilla.jss.nss.SSLFDProxy.SetClientCert(...)
      */
     public static native int AttachClientCertCallback(SSLFDProxy fd) throws Exception;
+
+    /**
+     * Enable recording of alerts in the SSLFDProxy object.
+     *
+     * See also: SSL_AlertReceivedCallback in /usr/include/nss3/ssl.h,
+     *           SSL_AlertSentCallback in /usr/include/nss3/ssl.h
+     */
+    public static int EnableAlertLogging(SSLFDProxy fd) {
+        fd.inboundAlerts = new ArrayList<SSLAlertEvent>();
+        fd.inboundOffset = 0;
+        fd.outboundAlerts = new ArrayList<SSLAlertEvent>();
+        fd.outboundOffset = 0;
+
+        return EnableAlertLoggingNative(fd);
+    }
+
+    /* Internal helper for EnableAlertLogging method. */
+    private static native int EnableAlertLoggingNative(SSLFDProxy fd);
 
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
