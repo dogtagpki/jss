@@ -301,7 +301,7 @@ JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *aler
     jint rc;
     JNIEnv *env;
     jclass socketClass, eventClass;
-    jmethodID eventConstructor, eventSetLevel, eventSetDescription;
+    jmethodID eventConstructor;
     jobject event;
     jmethodID fireEvent;
 
@@ -326,25 +326,11 @@ JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *aler
     eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
     PR_ASSERT(eventClass != NULL);
 
-    eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>", "(L" SSLSOCKET_CLASS ";)V");
+    eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>", "(L" SSLSOCKET_CLASS ";II)V");
     PR_ASSERT(eventConstructor != NULL);
 
-    event = (*env)->NewObject(env, eventClass, eventConstructor, socket->socketObject);
+    event = (*env)->NewObject(env, eventClass, eventConstructor, socket->socketObject, (int)alert->level, (int)alert->description);
     PR_ASSERT(event != NULL);
-
-    /* event.setLevel(level); */
-
-    eventSetLevel = (*env)->GetMethodID(env, eventClass, "setLevel", "(I)V");
-    PR_ASSERT(eventSetLevel != NULL);
-
-    (*env)->CallVoidMethod(env, event, eventSetLevel, (int)alert->level);
-
-    /* event.setDescription(description); */
-
-    eventSetDescription = (*env)->GetMethodID(env, eventClass, "setDescription", "(I)V");
-    PR_ASSERT(eventSetDescription != NULL);
-
-    (*env)->CallVoidMethod(env, event, eventSetDescription, alert->description);
 
     /* socket.fireAlertReceivedEvent(event); */
 
