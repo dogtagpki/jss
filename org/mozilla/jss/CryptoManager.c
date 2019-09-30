@@ -1025,3 +1025,13 @@ Java_org_mozilla_jss_CryptoManager_getJSSPatchVersion(
     return JSS_VPATCH;
 }
 
+JNIEXPORT jboolean JNICALL
+Java_org_mozilla_jss_CryptoManager_getJSSDebug(JNIEnv *env, jobject this)
+{
+#ifdef DEBUG
+    return JNI_TRUE;
+#else
+    return JNI_FALSE;
+#endif
+}
+

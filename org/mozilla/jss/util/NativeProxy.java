@@ -4,9 +4,13 @@
 
 package org.mozilla.jss.util;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Random;
+import java.util.HashSet;
+
+import java.lang.AutoCloseable;
+import java.lang.Thread;
+import java.util.Arrays;
+
+import org.mozilla.jss.CryptoManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +24,10 @@ import org.slf4j.LoggerFactory;
  * @author nicolson
  * @version $Revision$ $Date$
  */
-public abstract class NativeProxy
+public abstract class NativeProxy implements AutoCloseable
 {
     public static Logger logger = LoggerFactory.getLogger(NativeProxy.class);
+    private static final boolean saveStacktraces = assertsEnabled() && CryptoManager.JSS_DEBUG;
 
     /**
      * Create a NativeProxy from a byte array representing a C pointer.
@@ -35,8 +40,12 @@ public abstract class NativeProxy
      */
     public NativeProxy(byte[] pointer) {
 		assert(pointer!=null);
-        registryIndex = register();
+        registry.add(this);
         mPointer = pointer;
+
+        if (saveStacktraces) {
+            mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
+        }
     }
 
     /**
@@ -68,8 +77,10 @@ public abstract class NativeProxy
      * Subclasses of NativeProxy must define this method to clean up
      * data structures in C code that are referenced by this proxy.
      * releaseNativeResources() will usually be implemented as a native method.
-     * <p>You don't call this method; NativeProxy.finalize() calls it for you.
-     * <p>You must declare a finalize() method which calls super.finalize().
+     * <p>You don't call this method; NativeProxy.finalize() or close() calls
+     * it for you.</p>
+     *
+     * If you free these resources explicitly, call clear(); instead.
      */
     protected abstract void releaseNativeResources();
 
@@ -88,18 +99,53 @@ public abstract class NativeProxy
      *      }
      * }
      *
-     * @deprecated finalize() in Object has been deprecated
+     * @deprecated finalize() in Object has been deprecated. Use close(...)
+     * from the AutoCloseable interface instead.
      */
     @Deprecated
     protected void finalize() throws Throwable {
-        unregister(registryIndex);
-        releaseNativeResources();
+        close();
+    }
+
+    /**
+     * Close this NativeProxy by releasing its native resources if they
+     * haven't otherwise been freed.
+     *
+     * See comment in finalize.
+     */
+    public final void close() throws Exception {
+        try {
+            if (registry.remove(this)) {
+                releaseNativeResources();
+            }
+        } finally {
+            mPointer = null;
+        }
+    }
+
+    /**
+     * Call clear(...) to clear the value of the pointer, setting it to null.
+     *
+     * This should be used when the pointer has been freed by another means.
+     * Similar to finalize(...) or close(...), except that it doesn't call
+     * releaseNativeResources(...).
+     *
+     * See also: JSS_clearPtrFromProxy(...) in jssutil.h
+     */
+    public final void clear() {
+        this.mPointer = null;
+        registry.remove(this);
     }
 
     /**
      * Byte array containing native pointer bytes.
      */
     private byte mPointer[];
+
+    /**
+     * String containing backtrace of pointer generation.
+     */
+    private String mTrace;
 
     /**
      * <p><b>Native Proxy Registry</b>
@@ -109,64 +155,23 @@ public abstract class NativeProxy
      * the game, we should be able to garbage collect and then assert that
      * the registry is empty. This could be done, for example, in the
      * jssjava JVM after main() completes.
+     *
      * This registration process verifies that people are calling
      * NativeProxy.finalize() from their subclasses of NativeProxy, so that
      * releaseNativeResources() gets called.
      */
-    private long registryIndex;
-    static Hashtable<Long, Long> registry;
-    static Random indexGenerator;
-
-    static {
-        registry = new Hashtable<>();
-        indexGenerator = new Random();
-    }
+    static HashSet<NativeProxy> registry = new HashSet<NativeProxy>();
 
     /**
-     * Register a NativeProxy instance.
+     * Internal helper to check whether or not assertions are enabled in the
+     * JVM.
      *
-     * @return The unique index of this object in the registry.
+     * See: https://docs.oracle.com/javase/8/docs/technotes/guides/language/assert.html
      */
-    private synchronized static long register() {
-        Long index;
-
-        // Get a unique index
-        do {
-            index = Long.valueOf(indexGenerator.nextLong());
-        } while( registry.containsKey(index) );
-        registry.put(index, index);
-
-        return index.longValue();
-    }
-
-    /**
-     * Unregister a NativeProxy instance.
-     *
-     * @param index The index of this object in the registry, as returned
-     * from the previous call to register().
-     */
-    private synchronized static void unregister(long index) {
-        Long Lindex = Long.valueOf(index);
-        Long element;
-
-        element = registry.remove(Lindex);
-        assert(element != null);
-    }
-
-    /**
-     * @return A list of the indices in the registry. Each element is a Long.
-     * @see NativeProxy#getRegistryIndex
-     */
-    public synchronized static Enumeration<Long> getRegistryIndices() {
-        return registry.keys();
-    }
-
-    /**
-     * @return The index of this NativeProxy in the NativeProxy registry.
-     * @see NativeProxy#getRegistryIndices
-     */
-    public long getRegistryIndex() {
-        return registryIndex;
+    private static boolean assertsEnabled() {
+        boolean enabled = false;
+        assert enabled = true;
+        return enabled;
     }
 
     /**
@@ -176,10 +181,16 @@ public abstract class NativeProxy
      * is thrown.
      */
     public synchronized static void assertRegistryEmpty() {
-			if(! registry.isEmpty()) {
-			    logger.warn(registry.size() + " NativeProxys are still registered.");
-			} else {
-			    logger.debug("NativeProxy registry is empty");
-			}
+        if (!registry.isEmpty()) {
+            logger.warn(registry.size() + " NativeProxys are still registered.");
+
+            if (saveStacktraces) {
+                for (NativeProxy proxy : registry) {
+                    logger.warn("\t" + Arrays.toString(proxy.mPointer) + " ::: " + proxy.mTrace);
+                }
+            }
+        } else {
+            logger.debug("NativeProxy registry is empty");
+        }
     }
 }
