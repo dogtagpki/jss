@@ -99,7 +99,12 @@ Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd)
         return PR_FAILURE;
     }
 
-    return PR_Close(real_fd);
+    PRStatus ret = PR_Close(real_fd);
+    if (ret == PR_SUCCESS) {
+        JSS_clearPtrFromProxy(env, fd);
+    }
+
+    return ret;
 }
 
 JNIEXPORT int JNICALL
