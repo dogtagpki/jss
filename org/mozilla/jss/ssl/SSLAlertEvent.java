@@ -6,6 +6,8 @@ package org.mozilla.jss.ssl;
 
 import java.util.EventObject;
 
+import org.mozilla.jss.nss.SSLFDProxy;
+
 public class SSLAlertEvent extends EventObject {
 
     private static final long serialVersionUID = 1L;
@@ -34,8 +36,30 @@ public class SSLAlertEvent extends EventObject {
         setDescription(description);
     }
 
+    public SSLAlertEvent(SSLFDProxy proxy) {
+        super(proxy);
+    }
+
+    public SSLAlertEvent(SSLFDProxy proxy, int level, int description) {
+        super(proxy);
+
+        setLevel(level);
+        setDescription(description);
+    }
+
+    public SSLAlertEvent(SSLFDProxy proxy, SSLAlertLevel level, SSLAlertDescription description) {
+        super(proxy);
+
+        setLevel(level);
+        setDescription(description);
+    }
+
     public SSLSocket getSocket() {
         return (SSLSocket)getSource();
+    }
+
+    public SSLFDProxy getFileDesc() {
+        return (SSLFDProxy)getSource();
     }
 
     public int getLevel() {
@@ -72,5 +96,9 @@ public class SSLAlertEvent extends EventObject {
     public void setDescription(SSLAlertDescription description) {
         this.descriptionEnum = description;
         this.description = description.getID();
+    }
+
+    public String toString() {
+        return this.levelEnum + ": " + this.descriptionEnum;
     }
 }
