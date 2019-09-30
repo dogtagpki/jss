@@ -995,11 +995,14 @@ public final class CryptoManager implements TokenSupplier
     public native static int getJSSMajorVersion();
     public native static int getJSSMinorVersion();
     public native static int getJSSPatchVersion();
+    private native static boolean getJSSDebug();
 
     public static final String
     JAR_JSS_VERSION     = "JSS_VERSION = JSS_" + getJSSMajorVersion() +
                           "_" + getJSSMinorVersion() +
                           "_" + getJSSPatchVersion();
+
+    public static final boolean JSS_DEBUG = getJSSDebug();
 
     // Hashtable is synchronized.
     private Hashtable<Thread, CryptoToken> perThreadTokenTable = new Hashtable<>();

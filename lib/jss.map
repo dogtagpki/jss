@@ -399,6 +399,7 @@ JSS_4.6.2 {
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getPublicKey;
 Java_org_mozilla_jss_CryptoManager_importDERCertNative;
 Java_org_mozilla_jss_nss_SSL_AttachClientCertCallback;
+Java_org_mozilla_jss_CryptoManager_getJSSDebug;
     local:
         *;
 };

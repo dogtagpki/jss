@@ -125,6 +125,18 @@ JSS_getPtrFromProxy(JNIEnv *env, jobject nativeProxy, void **ptr);
 
 /***********************************************************************
 **
+** J S S _ c l e a r P t r F r o m P r o x y
+**
+** Given a NativeProxy, clear the value of the pointer stored in it. This
+** helps to ensure that a double free doesn't occur.
+**
+** Returns: PR_SUCCESS on success, PR_FAILURE if an exception was thrown.
+*/
+PRStatus
+JSS_clearPtrFromProxy(JNIEnv *env, jobject nativeProxy);
+
+/***********************************************************************
+**
 ** J S S _ g e t P t r F r o m P r o x y O w n e r
 **
 ** Given an object which contains a NativeProxy, extract the pointer

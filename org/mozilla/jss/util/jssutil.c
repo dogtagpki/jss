@@ -239,11 +239,14 @@ JSS_getPtrFromProxy(JNIEnv *env, jobject nativeProxy, void **ptr)
 
     byteArray = (jbyteArray) (*env)->GetObjectField(env, nativeProxy,
                         byteArrayField);
-    PR_ASSERT(byteArray != NULL);
+    if (byteArray == NULL) {
+        *ptr = NULL;
+    } else {
+        size = sizeof(*ptr);
+        PR_ASSERT((*env)->GetArrayLength(env, byteArray) == size);
+        (*env)->GetByteArrayRegion(env, byteArray, 0, size, (void*)ptr);
+    }
 
-    size = sizeof(*ptr);
-    PR_ASSERT((*env)->GetArrayLength(env, byteArray) == size);
-    (*env)->GetByteArrayRegion(env, byteArray, 0, size, (void*)ptr);
     if( (*env)->ExceptionOccurred(env) ) {
         PR_ASSERT(PR_FALSE);
         return PR_FAILURE;
@@ -878,6 +881,45 @@ void JSS_SECStatusToExceptionMessage(JNIEnv *env, SECStatus result, PRErrorCode 
                 JSS_throwMsgPrErrArg(env, JAVA_LANG_EXCEPTION, message, code);
                 break;
         }
+    }
+}
+
+/***********************************************************************
+**
+** JSS_clearPtrFromProxy
+**
+** See also: jssutil.h
+*/
+PRStatus
+JSS_clearPtrFromProxy(JNIEnv *env, jobject nativeProxy)
+{
+    jclass proxyClass;
+    jmethodID nativeProxyClear;
+
+    PR_ASSERT(env!=NULL && nativeProxy != NULL);
+    if( nativeProxy == NULL ) {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
+        return PR_FAILURE;
+    }
+
+    proxyClass = (*env)->GetObjectClass(env, nativeProxy);
+    PR_ASSERT(proxyClass != NULL);
+
+    nativeProxyClear = (*env)->GetMethodID(env,
+                                           proxyClass,
+                                           "clear",
+                                           "()V");
+    if (nativeProxyClear == NULL) {
+        ASSERT_OUTOFMEM(env);
+        return PR_FAILURE;
+    }
+
+    (*env)->CallVoidMethod(env, nativeProxy, nativeProxyClear);
+    if ((*env)->ExceptionOccurred(env)) {
+        PR_ASSERT(PR_FALSE);
+        return PR_FAILURE;
+    } else {
+        return PR_SUCCESS;
     }
 }
 
