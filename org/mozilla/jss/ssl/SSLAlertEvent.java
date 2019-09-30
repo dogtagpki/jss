@@ -13,8 +13,25 @@ public class SSLAlertEvent extends EventObject {
     int level;
     int description;
 
+    SSLAlertLevel levelEnum;
+    SSLAlertDescription descriptionEnum;
+
     public SSLAlertEvent(SSLSocket socket) {
         super(socket);
+    }
+
+    public SSLAlertEvent(SSLSocket socket, int level, int description) {
+        super(socket);
+
+        setLevel(level);
+        setDescription(description);
+    }
+
+    public SSLAlertEvent(SSLSocket socket, SSLAlertLevel level, SSLAlertDescription description) {
+        super(socket);
+
+        setLevel(level);
+        setDescription(description);
     }
 
     public SSLSocket getSocket() {
@@ -25,15 +42,35 @@ public class SSLAlertEvent extends EventObject {
         return level;
     }
 
+    public SSLAlertLevel getLevelEnum() {
+        return levelEnum;
+    }
+
     public void setLevel(int level) {
         this.level = level;
+        this.levelEnum = SSLAlertLevel.valueOf(level);
+    }
+
+    public void setLevel(SSLAlertLevel level) {
+        this.levelEnum = level;
+        this.level = level.getID();
     }
 
     public int getDescription() {
         return description;
     }
 
+    public SSLAlertDescription getDescriptionEnum() {
+        return descriptionEnum;
+    }
+
     public void setDescription(int description) {
         this.description = description;
+        this.descriptionEnum = SSLAlertDescription.valueOf(description);
+    }
+
+    public void setDescription(SSLAlertDescription description) {
+        this.descriptionEnum = description;
+        this.description = description.getID();
     }
 }
