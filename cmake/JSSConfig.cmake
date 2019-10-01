@@ -342,7 +342,7 @@ endmacro()
 macro(jss_config_symbols)
     list(APPEND CMAKE_REQUIRED_INCLUDES ${NSPR_INCLUDE_DIRS})
     list(APPEND CMAKE_REQUIRED_INCLUDES ${NSS_INCLUDE_DIRS})
-    list(JOIN JSS_C_FLAGS " " CMAKE_REQUIRED_FLAGS)
+    jss_list_join(JSS_C_FLAGS " " CMAKE_REQUIRED_FLAGS)
 
     check_symbol_exists("CKM_AES_CMAC" "nspr.h;nss.h;pkcs11t.h" HAVE_NSS_CMAC)
     if(NOT HAVE_NSS_CMAC)
