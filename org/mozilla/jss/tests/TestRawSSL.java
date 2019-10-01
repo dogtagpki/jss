@@ -9,7 +9,7 @@ import org.mozilla.jss.nss.SecurityStatusResult;
 import org.mozilla.jss.ssl.SSLCipher;
 
 public class TestRawSSL {
-    public static void TestSSLImportFD() {
+    public static void TestSSLImportFD() throws Exception {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
@@ -78,7 +78,7 @@ public class TestRawSSL {
         assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
-    public static void TestSSLSetURL() {
+    public static void TestSSLSetURL() throws Exception {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
@@ -90,7 +90,7 @@ public class TestRawSSL {
         assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
-    public static void TestSSLSecurityStatus() {
+    public static void TestSSLSecurityStatus() throws Exception {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 
@@ -103,7 +103,7 @@ public class TestRawSSL {
         assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
-    public static void TestSSLResetHandshake() {
+    public static void TestSSLResetHandshake() throws Exception {
         PRFDProxy fd = PR.NewTCPSocket();
         assert(fd != null);
 

@@ -73,6 +73,18 @@ public class PR {
     public static native int Close(PRFDProxy fd);
 
     /**
+     * Close an existing SSLFDProxy.
+     *
+     * See also: org.mozilla.jss.nss.PR.Close
+     *           org.mozilla.jss.nss.SSLFD.releaseNativeResources
+     */
+    public static int Close(SSLFDProxy fd) throws Exception {
+        int ret = PR.Close((PRFDProxy) fd);
+        fd.close();
+        return ret;
+    }
+
+    /**
      * Shutdown an existing PRFDProxy.
      * This is usually used with TCP modes.
      *
