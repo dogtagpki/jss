@@ -7,7 +7,7 @@ RUN true \
                           glassfish-jaxb-api nss-tools apache-commons-codec \
                           apache-commons-lang gcc-c++ jpackage-utils slf4j \
                           zlib-devel perl slf4j-jdk14 junit ninja-build \
-                          gyp gtest mercurial \
+                          gyp gtest mercurial python-unversioned-command \
         && dnf build-dep nss nspr jss -y \
         && mkdir -p /home/sandbox \
         && dnf clean -y all \
