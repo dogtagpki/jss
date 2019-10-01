@@ -42,6 +42,9 @@ find_package(NSS REQUIRED)
 find_package(Java REQUIRED)
 find_package(JNI REQUIRED)
 
+# Shims for older CMake versions without useful features.
+include(Shims)
+
 # Since we found Java, include UseJava to provide the find_jar function.
 include(UseJava)
 
