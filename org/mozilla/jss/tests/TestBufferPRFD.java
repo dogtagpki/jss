@@ -139,6 +139,9 @@ public class TestBufferPRFD {
         SSLFDProxy c_nspr = Setup_NSS_Client(c_buffer, host);
         SSLFDProxy s_nspr = Setup_NSS_Server(s_buffer, host, server_cert, server_key);
 
+        assert(c_nspr != null);
+        assert(s_nspr != null);
+
         /* Apply Client Certificate, if given. When given, request it as the
          * server. */
         if (client_cert != null) {
@@ -148,8 +151,9 @@ public class TestBufferPRFD {
             assert(SSL.OptionSet(s_nspr, SSL.REQUEST_CERTIFICATE, 1) == SSL.SECSuccess);
         }
 
-        assert(c_nspr != null);
-        assert(s_nspr != null);
+        /* Attach alert logging callback handler. */
+        assert(SSL.EnableAlertLogging(c_nspr) == SSL.SECSuccess);
+        assert(SSL.EnableAlertLogging(s_nspr) == SSL.SECSuccess);
 
         assert(!IsHandshakeFinished(c_nspr, s_nspr));
 
@@ -235,6 +239,20 @@ public class TestBufferPRFD {
         /* Close connections */
         assert(PR.Shutdown(c_nspr, PR.SHUTDOWN_BOTH) == PR.SUCCESS);
         assert(PR.Shutdown(s_nspr, PR.SHUTDOWN_BOTH) == PR.SUCCESS);
+
+        /* Print all alerts. */
+        for (SSLAlertEvent alert : c_nspr.inboundAlerts) {
+            System.err.println("client inbound: " + alert);
+        }
+        for (SSLAlertEvent alert : c_nspr.outboundAlerts) {
+            System.err.println("client outbound: " + alert);
+        }
+        for (SSLAlertEvent alert : s_nspr.inboundAlerts) {
+            System.err.println("server inbound: " + alert);
+        }
+        for (SSLAlertEvent alert : s_nspr.outboundAlerts) {
+            System.err.println("server outbound: " + alert);
+        }
 
         /* Clean up */
         assert(PR.Close(c_nspr) == PR.SUCCESS);
