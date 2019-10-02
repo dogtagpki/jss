@@ -120,7 +120,6 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_update
 
     if (!JSS_RefByteArray(env, inbufBA, &bytes, &length) ||
             length < offset+len) {
-        ASSERT_OUTOFMEM(env);
         goto finish;
     }
 
