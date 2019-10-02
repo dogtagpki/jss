@@ -393,6 +393,7 @@ PR_BEGIN_EXTERN_C
 #define SSLFD_PROXY_CONSTRUCTOR_SIG "([B)V"
 #define SSLFD_PROXY_CLIENT_CERT_FIELD "clientCert"
 #define SSLFD_PROXY_CLIENT_CERT_SIG "Lorg/mozilla/jss/pkcs11/PK11Cert;"
+#define SSLFD_PROXY_EVENT_LIST_SIG "Ljava/util/ArrayList;"
 
 /*
  * SecurityStatusResult
@@ -405,6 +406,12 @@ PR_BEGIN_EXTERN_C
  */
 #define BUFFER_PROXY_CLASS_NAME "org/mozilla/jss/nss/BufferProxy"
 #define BUFFER_PROXY_CONSTRUCTOR_SIG "([B)V"
+
+/*
+ * GlobalRefProxy
+ */
+#define GLOBAL_REF_PROXY_CLASS_NAME "org/mozilla/jss/util/GlobalRefProxy"
+#define GLOBAL_REF_CONSTRUCTOR_SIG "([B)V"
 
 PR_END_EXTERN_C
 
