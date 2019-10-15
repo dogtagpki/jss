@@ -6,7 +6,7 @@ Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
-Version:        4.6.1
+Version:        4.6.2
 Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 # global         _phase -a1
 
