@@ -26,7 +26,7 @@ This project has the following dependencies:
     - Minimum version: 3.30
     - A c and c++ compiler such as [gcc](ttps://gcc.gnu.org/)
     - [zlib](https://zlib.net/)
- - [OpenJDK 1.8.0](https://openjdk.java.net/)
+ - [OpenJDK 1.8.0 or newer](https://openjdk.java.net/)
  - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
@@ -45,7 +45,7 @@ To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-codec-java \
                          libcommons-lang-java libnss3-dev libslf4j-java \
-                         openjdk-8-jdk pkg-config zlib1g-dev \
+                         default-jdk pkg-config zlib1g-dev \
                          libjaxb-api-java libnss3-tools cmake zip unzip \
                          junit4
 
