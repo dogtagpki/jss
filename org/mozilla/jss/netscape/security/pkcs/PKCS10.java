@@ -26,11 +26,8 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.util.BigInt;
+import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
@@ -39,6 +36,8 @@ import org.mozilla.jss.netscape.security.x509.AlgorithmId;
 import org.mozilla.jss.netscape.security.x509.X500Name;
 import org.mozilla.jss.netscape.security.x509.X500Signer;
 import org.mozilla.jss.netscape.security.x509.X509Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * PKCS #10 certificate requests are created and sent to Certificate
  * Authorities, which then create X.509 certificates and return them to
@@ -343,7 +342,7 @@ public class PKCS10 {
             throw new SignatureException("Cert request was not signed");
 
         out.println(Cert.REQUEST_HEADER);
-        out.println(Utils.base64encode(certificateRequest, true));
+        out.print(Utils.base64encode(certificateRequest, true));
         out.println(Cert.REQUEST_FOOTER);
     }
 
