@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -155,7 +155,30 @@ extends java.util.EventObject</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#SSLAlertEvent-org.mozilla.jss.nss.SSLFDProxy-">SSLAlertEvent</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;proxy)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#SSLAlertEvent-org.mozilla.jss.nss.SSLFDProxy-int-int-">SSLAlertEvent</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;proxy,
+             int&nbsp;level,
+             int&nbsp;description)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#SSLAlertEvent-org.mozilla.jss.nss.SSLFDProxy-org.mozilla.jss.ssl.SSLAlertLevel-org.mozilla.jss.ssl.SSLAlertDescription-">SSLAlertEvent</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;proxy,
+             <a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;level,
+             <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;description)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#SSLAlertEvent-org.mozilla.jss.ssl.SSLSocket-">SSLAlertEvent</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;socket)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#SSLAlertEvent-org.mozilla.jss.ssl.SSLSocket-int-int-">SSLAlertEvent</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;socket,
+             int&nbsp;level,
+             int&nbsp;description)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#SSLAlertEvent-org.mozilla.jss.ssl.SSLSocket-org.mozilla.jss.ssl.SSLAlertLevel-org.mozilla.jss.ssl.SSLAlertDescription-">SSLAlertEvent</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;socket,
+             <a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;level,
+             <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -177,20 +200,44 @@ extends java.util.EventObject</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#getDescription--">getDescription</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#getDescriptionEnum--">getDescriptionEnum</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#getFileDesc--">getFileDesc</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#getLevel--">getLevel</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#getLevelEnum--">getLevelEnum</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#getSocket--">getSocket</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#setDescription-int-">setDescription</a></span>(int&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#setDescription-org.mozilla.jss.ssl.SSLAlertDescription-">setDescription</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;description)</code>&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#setLevel-int-">setLevel</a></span>(int&nbsp;level)</code>&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#setLevel-org.mozilla.jss.ssl.SSLAlertLevel-">setLevel</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;level)</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -198,7 +245,7 @@ extends java.util.EventObject</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.util.EventObject</h3>
-<code>getSource, toString</code></li>
+<code>getSource</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -224,10 +271,63 @@ extends java.util.EventObject</pre>
 <a name="SSLAlertEvent-org.mozilla.jss.ssl.SSLSocket-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>SSLAlertEvent</h4>
 <pre>public&nbsp;SSLAlertEvent(<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;socket)</pre>
+</li>
+</ul>
+<a name="SSLAlertEvent-org.mozilla.jss.ssl.SSLSocket-int-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SSLAlertEvent</h4>
+<pre>public&nbsp;SSLAlertEvent(<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;socket,
+                     int&nbsp;level,
+                     int&nbsp;description)</pre>
+</li>
+</ul>
+<a name="SSLAlertEvent-org.mozilla.jss.ssl.SSLSocket-org.mozilla.jss.ssl.SSLAlertLevel-org.mozilla.jss.ssl.SSLAlertDescription-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SSLAlertEvent</h4>
+<pre>public&nbsp;SSLAlertEvent(<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;socket,
+                     <a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;level,
+                     <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;description)</pre>
+</li>
+</ul>
+<a name="SSLAlertEvent-org.mozilla.jss.nss.SSLFDProxy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SSLAlertEvent</h4>
+<pre>public&nbsp;SSLAlertEvent(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;proxy)</pre>
+</li>
+</ul>
+<a name="SSLAlertEvent-org.mozilla.jss.nss.SSLFDProxy-int-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SSLAlertEvent</h4>
+<pre>public&nbsp;SSLAlertEvent(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;proxy,
+                     int&nbsp;level,
+                     int&nbsp;description)</pre>
+</li>
+</ul>
+<a name="SSLAlertEvent-org.mozilla.jss.nss.SSLFDProxy-org.mozilla.jss.ssl.SSLAlertLevel-org.mozilla.jss.ssl.SSLAlertDescription-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>SSLAlertEvent</h4>
+<pre>public&nbsp;SSLAlertEvent(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;proxy,
+                     <a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;level,
+                     <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;description)</pre>
 </li>
 </ul>
 </li>
@@ -247,6 +347,15 @@ extends java.util.EventObject</pre>
 <pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a>&nbsp;getSocket()</pre>
 </li>
 </ul>
+<a name="getFileDesc--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFileDesc</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;getFileDesc()</pre>
+</li>
+</ul>
 <a name="getLevel--">
 <!--   -->
 </a>
@@ -254,6 +363,15 @@ extends java.util.EventObject</pre>
 <li class="blockList">
 <h4>getLevel</h4>
 <pre>public&nbsp;int&nbsp;getLevel()</pre>
+</li>
+</ul>
+<a name="getLevelEnum--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLevelEnum</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;getLevelEnum()</pre>
 </li>
 </ul>
 <a name="setLevel-int-">
@@ -265,6 +383,15 @@ extends java.util.EventObject</pre>
 <pre>public&nbsp;void&nbsp;setLevel(int&nbsp;level)</pre>
 </li>
 </ul>
+<a name="setLevel-org.mozilla.jss.ssl.SSLAlertLevel-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setLevel</h4>
+<pre>public&nbsp;void&nbsp;setLevel(<a href="../../../../org/mozilla/jss/ssl/SSLAlertLevel.html" title="enum in org.mozilla.jss.ssl">SSLAlertLevel</a>&nbsp;level)</pre>
+</li>
+</ul>
 <a name="getDescription--">
 <!--   -->
 </a>
@@ -274,13 +401,44 @@ extends java.util.EventObject</pre>
 <pre>public&nbsp;int&nbsp;getDescription()</pre>
 </li>
 </ul>
+<a name="getDescriptionEnum--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDescriptionEnum</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;getDescriptionEnum()</pre>
+</li>
+</ul>
 <a name="setDescription-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setDescription</h4>
+<pre>public&nbsp;void&nbsp;setDescription(int&nbsp;description)</pre>
+</li>
+</ul>
+<a name="setDescription-org.mozilla.jss.ssl.SSLAlertDescription-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setDescription</h4>
+<pre>public&nbsp;void&nbsp;setDescription(<a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>&nbsp;description)</pre>
+</li>
+</ul>
+<a name="toString--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>setDescription</h4>
-<pre>public&nbsp;void&nbsp;setDescription(int&nbsp;description)</pre>
+<h4>toString</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>toString</code>&nbsp;in class&nbsp;<code>java.util.EventObject</code></dd>
+</dl>
 </li>
 </ul>
 </li>

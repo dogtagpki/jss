@@ -191,90 +191,96 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#installJSSProviderFirst">installJSSProviderFirst</a></span></code>
+<div class="block">Whether or not to initialize the JSS provider first.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#keyPrefix">keyPrefix</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#LIBRARY_LENGTH">LIBRARY_LENGTH</a></span></code>
 <div class="block">Library description must be this length exactly.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#MANUFACTURER_LENGTH">MANUFACTURER_LENGTH</a></span></code>
 <div class="block">ManufacturerID must be this length exactly.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#noCertDB">noCertDB</a></span></code>
 <div class="block">Don't open the cert DB and key DB's, just
  initialize the volatile certdb.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#noModDB">noModDB</a></span></code>
 <div class="block">Don't open the security module DB,
  just initialize the PKCS #11 module.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#noPK11Finalize">noPK11Finalize</a></span></code>
 <div class="block">never call C_Finalize on any
  PKCS#11 module.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#noRootInit">noRootInit</a></span></code>
 <div class="block">Don't try to look for the root certs module
  automatically.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#ocspCheckingEnabled">ocspCheckingEnabled</a></span></code>
 <div class="block">To have NSS check the OCSP responder for when verifying
  certificates, set this flags to true.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#ocspResponderCertNickname">ocspResponderCertNickname</a></span></code>
 <div class="block">The nickname of the cert to trust (expected) to
  sign the OCSP responses.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#ocspResponderURL">ocspResponderURL</a></span></code>
 <div class="block">Specify the location and cert of the responder.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#optimizeSpace">optimizeSpace</a></span></code>
 <div class="block">Use smaller tables and caches.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/util/PasswordCallback.html" title="interface in org.mozilla.jss.util">PasswordCallback</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#passwordCallback">passwordCallback</a></span></code>
 <div class="block">The password callback to be used by JSS whenever a password
  is needed.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#PK11Reload">PK11Reload</a></span></code>
 <div class="block">Init PK11Reload to ignore the CKR_CRYPTOKI_ALREADY_INITIALIZED
  error when loading PKCS#11 modules.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#PK11ThreadSafe">PK11ThreadSafe</a></span></code>
 <div class="block">only load PKCS#11 modules that are
@@ -282,37 +288,37 @@ extends java.lang.Object</pre>
  locking or NSS-provided locks .</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#PKIXVerify">PKIXVerify</a></span></code>
 <div class="block">Enable PKIX verify rather than the old cert library,
  to verify certificates.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#readOnly">readOnly</a></span></code>
 <div class="block">To open the databases in read-only mode, set this flag to
  <code>true</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#removeSunProvider">removeSunProvider</a></span></code>
 <div class="block">Remove the Sun crypto provider.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#secmodName">secmodName</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#SLOT_LENGTH">SLOT_LENGTH</a></span></code>
 <div class="block">Slot names must be this length exactly.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#TOKEN_LENGTH">TOKEN_LENGTH</a></span></code>
 <div class="block">Token names must be this length exactly.</div>
@@ -676,6 +682,16 @@ extends java.lang.Object</pre>
 <h4>removeSunProvider</h4>
 <pre>public&nbsp;boolean removeSunProvider</pre>
 <div class="block">Remove the Sun crypto provider. Default is false.</div>
+</li>
+</ul>
+<a name="installJSSProviderFirst">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>installJSSProviderFirst</h4>
+<pre>public&nbsp;boolean installJSSProviderFirst</pre>
+<div class="block">Whether or not to initialize the JSS provider first. Default is true.</div>
 </li>
 </ul>
 <a name="initializeJavaOnly">

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":9,"i16":10,"i17":10,"i18":9,"i19":9,"i20":9,"i21":10,"i22":9,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":9,"i35":9,"i36":10,"i37":10,"i38":42,"i39":10,"i40":10,"i41":9,"i42":10,"i43":10,"i44":10,"i45":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":9,"i16":10,"i17":10,"i18":9,"i19":9,"i20":9,"i21":10,"i22":9,"i23":9,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":9,"i37":9,"i38":10,"i39":10,"i40":42,"i41":10,"i42":10,"i43":9,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -168,6 +168,10 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#JAR_JSS_VERSION">JAR_JSS_VERSION</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#JSS_DEBUG">JSS_DEBUG</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static org.slf4j.Logger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#logger">logger</a></span></code>&nbsp;</td>
 </tr>
@@ -341,55 +345,61 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 </td>
 </tr>
 <tr id="i23" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../org/mozilla/jss/CryptoManager.OCSPPolicy.html" title="enum in org.mozilla.jss">CryptoManager.OCSPPolicy</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getOCSPPolicyEnum--">getOCSPPolicyEnum</a></span>()</code>
+<div class="block">Gets the current OCSP Policy.</div>
+</td>
+</tr>
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/util/PasswordCallback.html" title="interface in org.mozilla.jss.util">PasswordCallback</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getPasswordCallback--">getPasswordCallback</a></span>()</code>
 <div class="block">Returns the currently registered password callback.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getPermCerts--">getPermCerts</a></span>()</code>
 <div class="block">Retrieves all certificates in the trust database.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/JSSSecureRandom.html" title="interface in org.mozilla.jss.crypto">JSSSecureRandom</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getSecureRNG--">getSecureRNG</a></span>()</code>
 <div class="block">Retrieves a FIPS-140-2 validated random number generator.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getThreadToken--">getThreadToken</a></span>()</code>
 <div class="block">Returns the default token for the current thread.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getTokenByName-java.lang.String-">getTokenByName</a></span>(java.lang.String&nbsp;name)</code>
 <div class="block">Looks up the CryptoToken with the given name.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>java.util.Enumeration&lt;<a href="../../../org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#getTokensSupportingAlgorithm-org.mozilla.jss.crypto.Algorithm-">getTokensSupportingAlgorithm</a></span>(<a href="../../../org/mozilla/jss/crypto/Algorithm.html" title="class in org.mozilla.jss.crypto">Algorithm</a>&nbsp;alg)</code>
 <div class="block">Retrieves all tokens that support the given algorithm.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#importCACertPackage-byte:A-">importCACertPackage</a></span>(byte[]&nbsp;certPackage)</code>
 <div class="block">Imports a chain of certificates, none of which is a user certificate.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#importCertPackage-byte:A-java.lang.String-">importCertPackage</a></span>(byte[]&nbsp;certPackage,
                  java.lang.String&nbsp;nickname)</code>
 <div class="block">Imports a chain of certificates.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/InternalCertificate.html" title="interface in org.mozilla.jss.crypto">InternalCertificate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#importCertToPerm-org.mozilla.jss.crypto.X509Certificate-java.lang.String-">importCertToPerm</a></span>(<a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert,
                 java.lang.String&nbsp;nickname)</code>
@@ -397,7 +407,7 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
  database.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#importCRL-byte:A-java.lang.String-">importCRL</a></span>(byte[]&nbsp;crl,
          java.lang.String&nbsp;url)</code>
@@ -405,26 +415,36 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
  Validate CRL then import it to the dbase.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i34" class="altColor">
+<td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#importDERCert-byte:A-org.mozilla.jss.CertificateUsage-boolean-java.lang.String-">importDERCert</a></span>(byte[]&nbsp;cert,
+             <a href="../../../org/mozilla/jss/CertificateUsage.html" title="class in org.mozilla.jss">CertificateUsage</a>&nbsp;usage,
+             boolean&nbsp;permanent,
+             java.lang.String&nbsp;nickname)</code>
+<div class="block">Imports a single DER-encoded certificate into the permanent or temporary
+ certificate database.</div>
+</td>
+</tr>
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#importUserCACertPackage-byte:A-java.lang.String-">importUserCACertPackage</a></span>(byte[]&nbsp;certPackage,
                        java.lang.String&nbsp;nickname)</code>
 <div class="block">Imports a chain of certificates.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#initialize-org.mozilla.jss.InitializationValues-">initialize</a></span>(<a href="../../../org/mozilla/jss/InitializationValues.html" title="class in org.mozilla.jss">InitializationValues</a>&nbsp;values)</code>
 <div class="block">Initialize the security subsystem.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#initialize-java.lang.String-">initialize</a></span>(java.lang.String&nbsp;configDir)</code>
 <div class="block">Initialize the security subsystem.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#isCertValid-byte:A-boolean-org.mozilla.jss.CryptoManager.CertUsage-">isCertValid</a></span>(byte[]&nbsp;certPackage,
            boolean&nbsp;checkSig,
@@ -432,7 +452,7 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 <div class="block">Verify a certificate in memory.</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#isCertValid-java.lang.String-boolean-">isCertValid</a></span>(java.lang.String&nbsp;nickname,
            boolean&nbsp;checkSig)</code>
@@ -440,7 +460,7 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
  check if is valid and that we trust the issuer.</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#isCertValid-java.lang.String-boolean-org.mozilla.jss.CertificateUsage-">isCertValid</a></span>(java.lang.String&nbsp;nickname,
            boolean&nbsp;checkSig,
@@ -450,7 +470,7 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 </div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#isCertValid-java.lang.String-boolean-org.mozilla.jss.CryptoManager.CertUsage-">isCertValid</a></span>(java.lang.String&nbsp;nickname,
            boolean&nbsp;checkSig,
@@ -461,7 +481,7 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
  check if is valid and that we trust the issuer.</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i42" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#OCSPCacheSettings-int-int-int-">OCSPCacheSettings</a></span>(int&nbsp;ocsp_cache_size,
                  int&nbsp;ocsp_min_cache_entry_duration,
@@ -469,37 +489,46 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 <div class="block">change OCSP cache settings</div>
 </td>
 </tr>
-<tr id="i41" class="rowColor">
+<tr id="i43" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#setOCSPPolicy-org.mozilla.jss.CryptoManager.OCSPPolicy-">setOCSPPolicy</a></span>(<a href="../../../org/mozilla/jss/CryptoManager.OCSPPolicy.html" title="enum in org.mozilla.jss">CryptoManager.OCSPPolicy</a>&nbsp;policy)</code>
 <div class="block">Sets the current ocsp Policy.</div>
 </td>
 </tr>
-<tr id="i42" class="altColor">
+<tr id="i44" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#setOCSPTimeout-int-">setOCSPTimeout</a></span>(int&nbsp;ocsp_timeout)</code>
 <div class="block">set OCSP timeout value</div>
 </td>
 </tr>
-<tr id="i43" class="rowColor">
+<tr id="i45" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#setPasswordCallback-org.mozilla.jss.util.PasswordCallback-">setPasswordCallback</a></span>(<a href="../../../org/mozilla/jss/util/PasswordCallback.html" title="interface in org.mozilla.jss.util">PasswordCallback</a>&nbsp;pwcb)</code>
 <div class="block">This function sets the global password callback.</div>
 </td>
 </tr>
-<tr id="i44" class="altColor">
+<tr id="i46" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#setThreadToken-org.mozilla.jss.crypto.CryptoToken-">setThreadToken</a></span>(<a href="../../../org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a>&nbsp;token)</code>
 <div class="block">Sets the default token for the current thread.</div>
 </td>
 </tr>
-<tr id="i45" class="rowColor">
+<tr id="i47" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#verifyCertificate-java.lang.String-boolean-org.mozilla.jss.CertificateUsage-">verifyCertificate</a></span>(java.lang.String&nbsp;nickname,
                  boolean&nbsp;checkSig,
                  <a href="../../../org/mozilla/jss/CertificateUsage.html" title="class in org.mozilla.jss">CertificateUsage</a>&nbsp;certificateUsage)</code>
 <div class="block">Verify a certificate that exists in the given cert database,
  check if it's valid and that we trust the issuer.</div>
+</td>
+</tr>
+<tr id="i48" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#verifyCertificate-org.mozilla.jss.crypto.X509Certificate-boolean-org.mozilla.jss.CertificateUsage-">verifyCertificate</a></span>(<a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert,
+                 boolean&nbsp;checkSig,
+                 <a href="../../../org/mozilla/jss/CertificateUsage.html" title="class in org.mozilla.jss">CertificateUsage</a>&nbsp;certificateUsage)</code>
+<div class="block">Verify an X509Certificate by checking if it's valid and that we trust
+ the issuer.</div>
 </td>
 </tr>
 </table>
@@ -536,10 +565,19 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 <a name="JAR_JSS_VERSION">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>JAR_JSS_VERSION</h4>
 <pre>public static final&nbsp;java.lang.String JAR_JSS_VERSION</pre>
+</li>
+</ul>
+<a name="JSS_DEBUG">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>JSS_DEBUG</h4>
+<pre>public static final&nbsp;boolean JSS_DEBUG</pre>
 </li>
 </ul>
 </li>
@@ -1001,6 +1039,20 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 </dl>
 </li>
 </ul>
+<a name="importDERCert-byte:A-org.mozilla.jss.CertificateUsage-boolean-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>importDERCert</h4>
+<pre>public&nbsp;<a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;importDERCert(byte[]&nbsp;cert,
+                                     <a href="../../../org/mozilla/jss/CertificateUsage.html" title="class in org.mozilla.jss">CertificateUsage</a>&nbsp;usage,
+                                     boolean&nbsp;permanent,
+                                     java.lang.String&nbsp;nickname)</pre>
+<div class="block">Imports a single DER-encoded certificate into the permanent or temporary
+ certificate database.</div>
+</li>
+</ul>
 <a name="importCRL-byte:A-java.lang.String-">
 <!--   -->
 </a>
@@ -1402,6 +1454,33 @@ public&nbsp;boolean&nbsp;isCertValid(java.lang.String&nbsp;nickname,
 </dl>
 </li>
 </ul>
+<a name="verifyCertificate-org.mozilla.jss.crypto.X509Certificate-boolean-org.mozilla.jss.CertificateUsage-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>verifyCertificate</h4>
+<pre>public&nbsp;void&nbsp;verifyCertificate(<a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert,
+                              boolean&nbsp;checkSig,
+                              <a href="../../../org/mozilla/jss/CertificateUsage.html" title="class in org.mozilla.jss">CertificateUsage</a>&nbsp;certificateUsage)
+                       throws <a href="../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a>,
+                              <a href="../../../org/mozilla/jss/util/InvalidNicknameException.html" title="class in org.mozilla.jss.util">InvalidNicknameException</a>,
+                              java.security.cert.CertificateException</pre>
+<div class="block">Verify an X509Certificate by checking if it's valid and that we trust
+ the issuer. Verify time against now.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cert</code> - the certificate to verify</dd>
+<dd><code>checkSig</code> - verify the signature of the certificate</dd>
+<dd><code>certificateUsage</code> - see certificate usage defined to verify certificate</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../org/mozilla/jss/util/InvalidNicknameException.html" title="class in org.mozilla.jss.util">InvalidNicknameException</a></code> - If the nickname is null.</dd>
+<dd><code><a href="../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code> - If no certificate could be found
+      with the given nickname.</dd>
+<dd><code>java.security.cert.CertificateException</code> - If certificate is invalid.</dd>
+</dl>
+</li>
+</ul>
 <a name="isCertValid-java.lang.String-boolean-org.mozilla.jss.CryptoManager.CertUsage-">
 <!--   -->
 </a>
@@ -1477,6 +1556,22 @@ public&nbsp;boolean&nbsp;isCertValid(java.lang.String&nbsp;nickname,
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>- The current ocsp policy in effect.</dd>
+</dl>
+</li>
+</ul>
+<a name="getOCSPPolicyEnum--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOCSPPolicyEnum</h4>
+<pre>public static&nbsp;<a href="../../../org/mozilla/jss/CryptoManager.OCSPPolicy.html" title="enum in org.mozilla.jss">CryptoManager.OCSPPolicy</a>&nbsp;getOCSPPolicyEnum()</pre>
+<div class="block">Gets the current OCSP Policy.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>- The current OCSP policy in effect.</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/mozilla/jss/CryptoManager.html#getOCSPPolicy--"><code>getOCSPPolicy()</code></a></dd>
 </dl>
 </li>
 </ul>
