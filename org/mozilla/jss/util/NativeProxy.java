@@ -40,8 +40,8 @@ public abstract class NativeProxy implements AutoCloseable
      */
     public NativeProxy(byte[] pointer) {
 		assert(pointer!=null);
-        registry.add(this);
         mPointer = pointer;
+        registry.add(this);
 
         if (saveStacktraces) {
             mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
@@ -61,15 +61,12 @@ public abstract class NativeProxy implements AutoCloseable
         if( ! (obj instanceof NativeProxy) ) {
             return false;
         }
-        if( ((NativeProxy)obj).mPointer.length != mPointer.length) {
+        if (((NativeProxy)obj).mPointer == null) {
+            /* If mPointer is null, we have no way to compare the values
+             * of the pointers, so assume they're unequal. */
             return false;
         }
-        for(int i=0; i < mPointer.length; i++) {
-            if(mPointer[i] != ((NativeProxy)obj).mPointer[i]) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(((NativeProxy)obj).mPointer, mPointer);
     }
 
     /**
