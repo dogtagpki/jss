@@ -99,33 +99,39 @@ else (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
     ${NSS_INCLUDE_DIR}
   )
 
-  if (SSL3_LIBRARY)
+  if(SSL3_LIBRARY)
+    get_filename_component(SSL3_LIBRARY "${SSL3_LIBRARY}" DIRECTORY)
     set(NSS_LIBRARIES
         ${NSS_LIBRARIES}
         ${SSL3_LIBRARY}
     )
-  endif (SSL3_LIBRARY)
+  endif()
 
-  if (SMIME3_LIBRARY)
+  if(SMIME3_LIBRARY)
+    get_filename_component(SMIME3_LIBRARY "${SMIME3_LIBRARY}" DIRECTORY)
     set(NSS_LIBRARIES
         ${NSS_LIBRARIES}
         ${SMIME3_LIBRARY}
     )
-  endif (SMIME3_LIBRARY)
+  endif()
 
-  if (NSS3_LIBRARY)
+  if(NSS3_LIBRARY)
+    get_filename_component(NSS3_LIBRARY "${NSS3_LIBRARY}" DIRECTORY)
     set(NSS_LIBRARIES
         ${NSS_LIBRARIES}
         ${NSS3_LIBRARY}
     )
-  endif (NSS3_LIBRARY)
+  endif()
 
-  if (NSSUTIL3_LIBRARY)
+  if(NSSUTIL3_LIBRARY)
+    get_filename_component(NSSUTIL3_LIBRARY "${NSSUTIL3_LIBRARY}" DIRECTORY)
     set(NSS_LIBRARIES
         ${NSS_LIBRARIES}
         ${NSSUTIL3_LIBRARY}
     )
-  endif (NSSUTIL3_LIBRARY)
+  endif()
+
+  list(REMOVE_DUPLICATES NSS_LIBRARIES)
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(NSS DEFAULT_MSG NSS_LIBRARIES NSS_INCLUDE_DIRS)
