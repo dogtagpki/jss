@@ -88,26 +88,31 @@ else (NSPR_LIBRARIES AND NSPR_INCLUDE_DIRS)
     ${NSPR_INCLUDE_DIR}
   )
 
-  if (PLDS4_LIBRARY)
+  if(PLDS4_LIBRARY)
+    get_filename_component(PLDS4_LIBRARY "${PLDS4_LIBRARY}" DIRECTORY)
     set(NSPR_LIBRARIES
         ${NSPR_LIBRARIES}
         ${PLDS4_LIBRARY}
     )
-  endif (PLDS4_LIBRARY)
+  endif()
 
-  if (PLC4_LIBRARY)
+  if(PLC4_LIBRARY)
+    get_filename_component(PLC4_LIBRARY "${PLC4_LIBRARY}" DIRECTORY)
     set(NSPR_LIBRARIES
         ${NSPR_LIBRARIES}
         ${PLC4_LIBRARY}
     )
-  endif (PLC4_LIBRARY)
+  endif()
 
-  if (NSPR4_LIBRARY)
+  if(NSPR4_LIBRARY)
+    get_filename_component(NSPR4_LIBRARY "${NSPR4_LIBRARY}" DIRECTORY)
     set(NSPR_LIBRARIES
         ${NSPR_LIBRARIES}
         ${NSPR4_LIBRARY}
     )
-  endif (NSPR4_LIBRARY)
+  endif()
+
+  list(REMOVE_DUPLICATES NSPR_LIBRARIES)
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(NSPR DEFAULT_MSG NSPR_LIBRARIES NSPR_INCLUDE_DIRS)
