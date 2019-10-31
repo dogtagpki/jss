@@ -436,19 +436,30 @@ macro(jss_test_exec)
         COMMAND ${TEST_EXEC_COMMAND}
     )
 
+    list(APPEND LD_LIBRARY ${NSS_LIBRARIES})
+    list(APPEND LD_LIBRARY ${NSPR_LIBRARIES})
+
     # If we are calling a java program, use the versioned library to ensure
     # that any new JNI calls are made visible.
     if(TEST_EXEC_LIBRARY AND (TEST_EXEC_LIBRARY STREQUAL "java"))
+        list(APPEND LD_LIBRARY "${CMAKE_BINARY_DIR}")
+        list(REMOVE_DUPLICATES LD_LIBRARY)
+        jss_list_join(LD_LIBRARY ":" LD_LIBRARY_PATH)
+
         set_tests_properties(
             "${TEST_EXEC_NAME}"
             PROPERTIES ENVIRONMENT
-            "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}"
+            "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
         )
     else()
+        list(APPEND LD_LIBRARY "${LIB_OUTPUT_DIR}")
+        list(REMOVE_DUPLICATES LD_LIBRARY)
+        jss_list_join(LD_LIBRARY ":" LD_LIBRARY_PATH)
+
         set_tests_properties(
             "${TEST_EXEC_NAME}"
             PROPERTIES ENVIRONMENT
-            "LD_LIBRARY_PATH=${LIB_OUTPUT_DIR}"
+            "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
         )
     endif()
     if(TEST_EXEC_DEPENDS)

@@ -5,11 +5,11 @@
 # with command line arguments and ensures that the correct build artifacts
 # get used.
 
-export LD_LIBRARY_PATH="${CMAKE_BINARY_DIR}"
+export LD_LIBRARY_PATH="${NSS_LIBRARIES}:${CMAKE_BINARY_DIR}:${NSPR_LIBRARIES}"
 
 if [ "$1" == "--gdb" ]; then
     shift
-    gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="${CMAKE_BINARY_DIR}" "$@"
+    gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" "$@"
 else
-    "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="${CMAKE_BINARY_DIR}" "$@"
+    "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" "$@"
 fi
