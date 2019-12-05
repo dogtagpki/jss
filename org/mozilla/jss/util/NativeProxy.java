@@ -39,7 +39,7 @@ public abstract class NativeProxy implements AutoCloseable
      * NativeProxy instance acts as a proxy for that native data structure.
      */
     public NativeProxy(byte[] pointer) {
-		assert(pointer!=null);
+        assert(pointer!=null);
         mPointer = pointer;
         registry.add(this);
 
