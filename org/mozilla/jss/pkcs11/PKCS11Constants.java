@@ -4267,6 +4267,20 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKA_NSS_SERVER_DISTRUST_AFTER = 0xCE534373L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_EMAIL_DISTRUST_AFTER = 0xCE534374L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKA_TRUST = 0xCE536350L;
 
     /**
