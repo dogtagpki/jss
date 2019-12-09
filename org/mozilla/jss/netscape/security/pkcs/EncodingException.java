@@ -27,7 +27,15 @@ public class EncodingException extends Exception {
         super();
     }
 
-    public EncodingException(String s) {
-        super(s);
+    public EncodingException(String mesg) {
+        super(mesg);
+    }
+
+    public EncodingException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public EncodingException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -8,4 +8,9 @@ public class InvalidNicknameException extends Exception {
     private static final long serialVersionUID = 1L;
     public InvalidNicknameException() { super(); }
     public InvalidNicknameException(String mesg) { super(mesg); }
+    public InvalidNicknameException(String mesg, Throwable cause) { super(mesg, cause); }
+
+    public InvalidNicknameException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
 }

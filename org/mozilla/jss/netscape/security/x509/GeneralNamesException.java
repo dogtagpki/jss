@@ -47,4 +47,23 @@ public class GeneralNamesException extends GeneralSecurityException {
     public GeneralNamesException(String message) {
         super(message);
     }
+
+    /**
+     * Constructs the exception with the specified error message and cause.
+     *
+     * @param mesg the requisite error message.
+     * @param cause the requisite cause of this error.
+     */
+    public GeneralNamesException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    /**
+     * Constructs the exception with the specified cause.
+     *
+     * @param cause the requisite cause of this error.
+     */
+    public GeneralNamesException(Throwable cause) {
+        super(cause);
+    }
 }

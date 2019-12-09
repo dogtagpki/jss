@@ -20,8 +20,15 @@ package org.mozilla.jss.netscape.security.x509;
 
 public class InvalidNetmaskException extends RuntimeException {
 
-    public InvalidNetmaskException(String desc) {
-        super("Invalid netmask (" + desc + ")");
+    public InvalidNetmaskException(String netmask) {
+        super("Invalid netmask (" + netmask + ")");
     }
 
+    public InvalidNetmaskException(String netmask, Throwable cause) {
+        super("Invalid netmask (" + netmask + ")", cause);
+    }
+
+    public InvalidNetmaskException(String netmask, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super("Invalid netmask (" + netmask + ")", cause, enableSuppression, writableStackTrace);
+    }
 }

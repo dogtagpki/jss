@@ -17,7 +17,15 @@ public class AssertionException extends RuntimeException {
 
     public AssertionException() {}
 
-    public AssertionException(String msg) {
-        super(msg);
+    public AssertionException(String mesg) {
+        super(mesg);
+    }
+
+    public AssertionException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public AssertionException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

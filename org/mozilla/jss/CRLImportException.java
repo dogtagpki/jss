@@ -9,7 +9,16 @@ package org.mozilla.jss;
 public class CRLImportException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
     public CRLImportException() {}
+
     public CRLImportException(String mesg) {
         super(mesg);
+    }
+
+    public CRLImportException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public CRLImportException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

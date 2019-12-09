@@ -25,4 +25,8 @@ public class PK11Exception extends RuntimeException {
     public PK11Exception(String mesg, Throwable cause) {
         super(mesg, cause);
     }
+
+    public PK11Exception(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
 }

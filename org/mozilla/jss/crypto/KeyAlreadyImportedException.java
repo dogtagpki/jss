@@ -14,4 +14,12 @@ public class KeyAlreadyImportedException extends java.lang.Exception {
     public KeyAlreadyImportedException(String mesg) {
         super(mesg);
     }
+
+    public KeyAlreadyImportedException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public KeyAlreadyImportedException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
 }

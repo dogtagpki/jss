@@ -46,9 +46,31 @@ public class X509ExtensionException extends GeneralSecurityException {
      * message. A detail message is a String that describes this
      * particular exception.
      *
-     * @param message the detail message.
+     * @param mesg the detail message.
      */
-    public X509ExtensionException(String message) {
-        super(message);
+    public X509ExtensionException(String mesg) {
+        super(mesg);
+    }
+
+    /**
+     * Constructs the exception with the specified detail
+     * message and cause of this exception. A detail message is a
+     * String that describes this particular exception.
+     *
+     * @param mesg the detail message.
+     * @param cause the cause of this exception.
+     */
+    public X509ExtensionException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    /**
+     * Constructs the exception with the specified cause of
+     * this exception.
+     *
+     * @param cause the cause of this exception.
+     */
+    public X509ExtensionException(Throwable cause) {
+        super(cause);
     }
 }

@@ -29,7 +29,15 @@ public class ParsingException extends IOException {
         super();
     }
 
-    public ParsingException(String s) {
-        super(s);
+    public ParsingException(String mesg) {
+        super(mesg);
+    }
+
+    public ParsingException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public ParsingException(Throwable cause) {
+        super(cause);
     }
 }

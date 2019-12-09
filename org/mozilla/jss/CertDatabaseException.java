@@ -10,7 +10,16 @@ package org.mozilla.jss;
 public class CertDatabaseException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
     public CertDatabaseException() {}
+
     public CertDatabaseException(String mesg) {
         super(mesg);
+    }
+
+    public CertDatabaseException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public CertDatabaseException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }
