@@ -46,6 +46,48 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CK_TRUE = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_FALSE = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_NULL_PTR = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_INVALID_SESSION = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_EFFECTIVELY_INFINITE = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_INVALID_HANDLE = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKN_SURRENDER = 0x00000000L;
 
     /**
