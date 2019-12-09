@@ -17,4 +17,12 @@ public class TokenException extends Exception {
     public TokenException(String mesg) {
         super(mesg);
     }
+
+    public TokenException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public TokenException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
 }

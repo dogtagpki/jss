@@ -10,7 +10,17 @@ package org.mozilla.jss;
 public class KeyDatabaseException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
     public KeyDatabaseException() {}
+
     public KeyDatabaseException(String mesg) {
         super(mesg);
     }
+
+    public KeyDatabaseException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public KeyDatabaseException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
+
 }

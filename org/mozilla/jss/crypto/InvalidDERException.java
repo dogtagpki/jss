@@ -11,4 +11,9 @@ public class InvalidDERException extends Exception {
     private static final long serialVersionUID = 1L;
     public InvalidDERException() { super(); }
     public InvalidDERException(String mesg) { super(mesg); }
+    public InvalidDERException(String mesg, Throwable cause) { super(mesg, cause); }
+
+    public InvalidDERException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
 }

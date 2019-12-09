@@ -30,4 +30,13 @@ public class InvalidIPAddressException extends RuntimeException {
     public InvalidIPAddressException(String ip) {
         super("Invalid IP Address '" + ip + "'");
     }
+
+    public InvalidIPAddressException(String ip, Throwable cause) {
+        super("Invalid IP Address '" + ip + "'", cause);
+    }
+
+    public InvalidIPAddressException(String ip, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super("Invalid IP Address '" + ip + "'", cause, enableSuppression, writableStackTrace);
+    }
+
 }

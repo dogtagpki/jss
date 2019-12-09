@@ -15,7 +15,16 @@ public class InvalidKeyFormatException
     public InvalidKeyFormatException() {
         super();
     }
+
     public InvalidKeyFormatException(String mesg) {
         super(mesg);
+    }
+
+    public InvalidKeyFormatException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public InvalidKeyFormatException(Throwable cause) {
+        super(cause);
     }
 }

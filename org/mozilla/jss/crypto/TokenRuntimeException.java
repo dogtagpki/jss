@@ -17,4 +17,12 @@ public class TokenRuntimeException extends RuntimeException {
     public TokenRuntimeException(String mesg) {
         super(mesg);
     }
+
+    public TokenRuntimeException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public TokenRuntimeException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(mesg, cause, enableSuppression, writableStackTrace);
+    }
 }
