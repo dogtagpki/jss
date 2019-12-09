@@ -150,9 +150,22 @@ extends java.security.GeneralSecurityException</pre>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/X509ExtensionException.html#X509ExtensionException-java.lang.String-">X509ExtensionException</a></span>(java.lang.String&nbsp;message)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/X509ExtensionException.html#X509ExtensionException-java.lang.String-">X509ExtensionException</a></span>(java.lang.String&nbsp;mesg)</code>
 <div class="block">Constructs the exception with the specified detail
  message.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/X509ExtensionException.html#X509ExtensionException-java.lang.String-java.lang.Throwable-">X509ExtensionException</a></span>(java.lang.String&nbsp;mesg,
+                      java.lang.Throwable&nbsp;cause)</code>
+<div class="block">Constructs the exception with the specified detail
+ message and cause of this exception.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/X509ExtensionException.html#X509ExtensionException-java.lang.Throwable-">X509ExtensionException</a></span>(java.lang.Throwable&nbsp;cause)</code>
+<div class="block">Constructs the exception with the specified cause of
+ this exception.</div>
 </td>
 </tr>
 </table>
@@ -207,16 +220,49 @@ extends java.security.GeneralSecurityException</pre>
 <a name="X509ExtensionException-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>X509ExtensionException</h4>
-<pre>public&nbsp;X509ExtensionException(java.lang.String&nbsp;message)</pre>
+<pre>public&nbsp;X509ExtensionException(java.lang.String&nbsp;mesg)</pre>
 <div class="block">Constructs the exception with the specified detail
  message. A detail message is a String that describes this
  particular exception.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>message</code> - the detail message.</dd>
+<dd><code>mesg</code> - the detail message.</dd>
+</dl>
+</li>
+</ul>
+<a name="X509ExtensionException-java.lang.String-java.lang.Throwable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>X509ExtensionException</h4>
+<pre>public&nbsp;X509ExtensionException(java.lang.String&nbsp;mesg,
+                              java.lang.Throwable&nbsp;cause)</pre>
+<div class="block">Constructs the exception with the specified detail
+ message and cause of this exception. A detail message is a
+ String that describes this particular exception.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mesg</code> - the detail message.</dd>
+<dd><code>cause</code> - the cause of this exception.</dd>
+</dl>
+</li>
+</ul>
+<a name="X509ExtensionException-java.lang.Throwable-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>X509ExtensionException</h4>
+<pre>public&nbsp;X509ExtensionException(java.lang.Throwable&nbsp;cause)</pre>
+<div class="block">Constructs the exception with the specified cause of
+ this exception.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cause</code> - the cause of this exception.</dd>
 </dl>
 </li>
 </ul>
