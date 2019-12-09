@@ -10,13 +10,24 @@ and pkcs11n.h headers. See documentation under docs/pkcs11_constants.md
 for more information.
 """
 
+from __future__ import print_function
+
 import os
 import subprocess
+import sys
 import tempfile
 
 import argparse
 import textwrap
 
+BLACKLIST = [
+    'CK_PTR',
+    'CK_VOID',
+    'CK_CALLBACK_FUNCTION',
+    'CK_DECLARE_FUNCTION',
+    'CK_DECLARE_FUNCTION_POINTER',
+    'CK_UNAVAILABLE_INFORMATION'
+]
 
 def parse_c_value(c_value):
     """
@@ -57,7 +68,7 @@ class ConstantDefinition(object):
 
     PREFIXES = ['CKA_', 'CKC_', 'CKD_', 'CKF_', 'CKG_', 'CKH_', 'CKK_', 'CKM_',
                 'CKN_', 'CKO_', 'CKP_', 'CKR_', 'CKS_', 'CKT_', 'CKU_', 'CKZ_',
-                'NSSCK_', 'SFTK_']
+                'NSSCK_', 'SFTK_', 'CK_']
 
     def __init__(self, header_file="pkcs11t.h", line_number=1, line="",
                  name="DEFAULT", value=1):
@@ -137,7 +148,12 @@ class ConstantDefinition(object):
 
         # Pass the processed numeric expression for value into "parse_c_value"
         # and save it as the resolved value.
-        self.resolved_value = parse_c_value(value)
+        try:
+            self.resolved_value = parse_c_value(value)
+        except Exception as e:
+            print("Failed to parse value for constant: " + self.name, file=sys.stderr)
+            raise e
+
         self.resolved_history = value_history
         self.resolved = True
 
@@ -327,7 +343,7 @@ def read_lines(file_handle):
     return list(map(lambda x: x.rstrip(), file_handle.readlines()))
 
 
-def parse_token(line, offset):
+def parse_token(line, offset, parenthesis=True):
     """
     From a line, parse a single "token" starting at the given character
     offset. The definition of a token is a continguous, non-whitespace
@@ -355,6 +371,8 @@ def parse_token(line, offset):
     while token_end < len(line) and (not line[token_end].isspace() or
                                      paren_count != 0):
         if line[token_end] == '(':
+            if not parenthesis:
+                break
             paren_count += 1
         if line[token_end] == ')':
             paren_count -= 1
@@ -378,8 +396,8 @@ def parse_define(line):
         raise Exception("Cannot parse line: doesn't begin with #define!\n" +
                         line)
 
-    name, name_end = parse_token(line, len('#define'))
-    value, _ = parse_token(line, name_end)
+    name, name_end = parse_token(line, len('#define'), parenthesis=False)
+    value, _ = parse_token(line, name_end, parenthesis=True)
 
     return name, value
 
@@ -443,7 +461,7 @@ def parse_copyright(file_contents):
     return "\n".join(copyright_headers) + "\n\n"
 
 
-def parse_header(header):
+def parse_header(header, verbose):
     """
     Parse the contents of the file path (header) for #define statements and
     the copyright headers. The #define statements are returned as a list of
@@ -459,6 +477,11 @@ def parse_header(header):
         line = file_contents[line_num-1].lstrip()
         if line.startswith('#define'):
             name, value = parse_define(line)
+            if name in BLACKLIST:
+                if verbose:
+                    print("Skipping blacklisted constant: " + name)
+                continue
+
             new_definition = ConstantDefinition(header.name, line_num, line,
                                                 name, value)
             defines.append(new_definition)
@@ -765,10 +788,10 @@ def main():
     #   an error.
     # - If the resulting Java program does not compile, this is an error.
 
-    t_objs, t_copyright = parse_header(args.pkcs11t)
+    t_objs, t_copyright = parse_header(args.pkcs11t, args.verbose)
     t_objs_filtered = filter_objects(t_objs)
 
-    n_objs, n_copyright = parse_header(args.pkcs11n)
+    n_objs, n_copyright = parse_header(args.pkcs11n, args.verbose)
     n_objs_filtered = filter_objects(n_objs)
 
     objs = t_objs_filtered[:]
