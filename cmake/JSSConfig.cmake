@@ -65,6 +65,8 @@ macro(jss_config_outputs)
 
     # This folder is for pseudo-locations for CMake targets
     set(TARGETS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/.targets")
+    set(JAVA_SOURCES_FILE "${TARGETS_OUTPUT_DIR}/java.sources")
+    set(JAVA_TEST_SOURCES_FILE "${TARGETS_OUTPUT_DIR}/java-test.sources")
 
     # These folders are for the NSS DBs created during testing
     set(RESULTS_DATA_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/data")
