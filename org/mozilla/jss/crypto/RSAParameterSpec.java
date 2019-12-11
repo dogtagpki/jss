@@ -4,12 +4,13 @@
 package org.mozilla.jss.crypto;
 
 import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.RSAKeyGenParameterSpec;
 import java.math.BigInteger;
 
 /**
  * This class specifies the parameters used for generating an RSA key pair.
  */
-public class RSAParameterSpec implements AlgorithmParameterSpec {
+public class RSAParameterSpec extends RSAKeyGenParameterSpec {
 
     /**
      * Creates a new RSAParameterSpec with the specified parameter values.
@@ -18,20 +19,11 @@ public class RSAParameterSpec implements AlgorithmParameterSpec {
      *      are 3, 17, and 65537.  65537 is recommended.
      */
     public RSAParameterSpec(int keySize, BigInteger publicExponent) {
-        this.keySize = keySize;
-        this.publicExponent = publicExponent;
+        super(keySize, publicExponent);
     }
 
     /**
      * Returns the size of the modulus in bits.
      */
-    public int getKeySize() { return keySize; }
-
-    /**
-     * Returns the public exponent <i>e</i>.
-     */
-    public BigInteger getPublicExponent() { return publicExponent; }
-
-    private int keySize;
-    private BigInteger publicExponent;
+    public int getKeySize() { return getKeysize(); }
 }
