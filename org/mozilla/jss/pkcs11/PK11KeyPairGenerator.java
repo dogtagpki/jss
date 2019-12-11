@@ -20,6 +20,7 @@ import java.util.Hashtable;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
+import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.crypto.PQGParams;
 import org.mozilla.jss.crypto.RSAParameterSpec;
 import org.mozilla.jss.crypto.TokenException;
@@ -469,6 +470,23 @@ public final class PK11KeyPairGenerator
         if(algorithm == KeyPairAlgorithm.RSA) {
             if(params != null) {
                 RSAKeyGenParameterSpec rsaparams = (RSAKeyGenParameterSpec)params;
+
+                if (rsaparams.getKeysize() < Policy.RSA_MINIMUM_KEY_SIZE) {
+                    String msg = "Disallowing unsafe RSA key size of ";
+                    msg += rsaparams.getKeysize() + ". Policy.RSA_MINIMUM_KEY_SIZE ";
+                    msg += "dictates a minimum of " + Policy.RSA_MINIMUM_KEY_SIZE;
+
+                    throw new TokenException(msg);
+                }
+                if (rsaparams.getPublicExponent().longValue() < Policy.RSA_MINIMUM_PUBLIC_EXPONENT.longValue()) {
+                    String msg = "Disallowing unsafe RSA exponent of ";
+                    msg += rsaparams.getPublicExponent().longValue() + ". ";
+                    msg += "Policy.RSA_MINIMUM_PUBLIC_EXPONENT dictates a minimum of ";
+                    msg += Policy.RSA_MINIMUM_PUBLIC_EXPONENT.longValue();
+
+                    throw new TokenException(msg);
+                }
+
                 return generateRSAKeyPairWithOpFlags(
                                     token,
                                     rsaparams.getKeysize(),
