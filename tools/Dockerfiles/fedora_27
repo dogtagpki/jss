@@ -4,7 +4,7 @@ FROM fedora:27
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build \
-        && dnf copr -y enable ${JSS_4_5_REPO:-@pki/10.6} \
+        && dnf copr -y enable ${JSS_4_6_REPO:-@pki/master} \
         && dnf build-dep -y jss \
         && mkdir -p /home/sandbox \
         && dnf clean -y all \
