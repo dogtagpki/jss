@@ -14,6 +14,7 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.DSAParameterSpec;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Hashtable;
 
 import org.mozilla.jss.asn1.ASN1Util;
@@ -417,13 +418,12 @@ public final class PK11KeyPairGenerator
         }
 
         if(algorithm == KeyPairAlgorithm.RSA) {
-            if(! (params instanceof RSAParameterSpec) ) {
+            if (!(params instanceof RSAKeyGenParameterSpec)) {
                 throw new InvalidAlgorithmParameterException();
             }
 
             // Security library stores public exponent in an unsigned long
-            if( ((RSAParameterSpec)params).getPublicExponent().bitLength()
-                                                                        > 31) {
+            if (((RSAKeyGenParameterSpec)params).getPublicExponent().bitLength() > 31) {
                 throw new InvalidAlgorithmParameterException(
                         "RSA Public Exponent must fit in 31 or fewer bits.");
             }
@@ -468,10 +468,10 @@ public final class PK11KeyPairGenerator
     {
         if(algorithm == KeyPairAlgorithm.RSA) {
             if(params != null) {
-                RSAParameterSpec rsaparams = (RSAParameterSpec)params;
+                RSAKeyGenParameterSpec rsaparams = (RSAKeyGenParameterSpec)params;
                 return generateRSAKeyPairWithOpFlags(
                                     token,
-                                    rsaparams.getKeySize(),
+                                    rsaparams.getKeysize(),
                                     rsaparams.getPublicExponent().longValue(),
                                     temporaryPairMode,
                                     sensitivePairMode,
