@@ -204,10 +204,6 @@ macro(jss_config_java)
         NAMES api slf4j/api slf4j-api
     )
     find_jar(
-        CODEC_JAR
-        NAMES apache-commons-codec commons-codec
-    )
-    find_jar(
         LANG_JAR
         NAMES apache-commons-lang commons-lang
     )
@@ -233,10 +229,6 @@ macro(jss_config_java)
         message(FATAL_ERROR "Required dependency sfl4j-api.jar not found by find_jar!")
     endif()
 
-    if(CODEC_JAR STREQUAL "CODEC_JAR-NOTFOUND")
-        message(FATAL_ERROR "Required dependency apache-commons-codec.jar not found by find_jar!")
-    endif()
-
     if(LANG_JAR STREQUAL "LANG_JAR-NOTFOUND")
         message(FATAL_ERROR "Required dependency apache-commons-lang.jar not found by find_jar!")
     endif()
@@ -258,7 +250,7 @@ macro(jss_config_java)
     endif()
 
     # Set class paths
-    set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${CODEC_JAR}:${LANG_JAR}:${JAXB_JAR}")
+    set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}:${JAXB_JAR}")
     set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${HAMCREST_JAR}")
 
     message(STATUS "javac classpath: ${JAVAC_CLASSPATH}")

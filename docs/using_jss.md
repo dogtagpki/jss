@@ -18,8 +18,6 @@ following dependencies are available in your `CLASSPATH`:
    `/usr/share/java/slf4j/slf4j-api.jar`.
  - `apache-commons-lang.jar` -- provided by the `apache-commons-lang` package
    and installed to `/usr/share/java/apache-commons-lang.jar`.
- - `apache-commons-codec.jar` -- provided by the `apache-commons-codec`
-   package and installed to `/usr/share/java/apache-commons-codec.jar`.
  - `jaxb-api.jar` -- provided by the `glassfish-jaxb-api` package
    and installed to `/usr/share/java/jaxb-api.jar`.
 

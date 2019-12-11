@@ -49,7 +49,6 @@ BuildRequires:  glassfish-jaxb-api
 BuildRequires:  slf4j-jdk14
 %endif
 BuildRequires:  apache-commons-lang
-BuildRequires:  apache-commons-codec
 
 BuildRequires:  junit
 
@@ -64,7 +63,6 @@ Requires:       glassfish-jaxb-api
 Requires:       slf4j-jdk14
 %endif
 Requires:       apache-commons-lang
-Requires:       apache-commons-codec
 
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
