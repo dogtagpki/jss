@@ -14,6 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.ECPrivateKey;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -40,8 +41,6 @@ import org.mozilla.jss.netscape.security.x509.X509CertInfo;
 import org.mozilla.jss.netscape.security.x509.X509Key;
 import org.mozilla.jss.pkcs11.PK11ECPublicKey;
 import org.mozilla.jss.util.PasswordCallback;
-
-import org.apache.commons.codec.binary.Base64;
 
 public class X509CertTest {
 
@@ -213,7 +212,7 @@ public class X509CertTest {
 
     public static void testImport() throws Exception {
         CryptoManager cryptoManager = CryptoManager.getInstance();
-        byte[] cert = Base64.decodeBase64(
+        byte[] cert = Base64.getDecoder().decode(
             "MIIDRjCCAi6gAwIBAgIJAMHiDXjnZ1J6MA0GCSqGSIb3DQEBCwUAMDgxEDAOBgNV" +
             "BAoMB0VYQU1QTEUxJDAiBgNVBAMMG1Jvb3QgQ0EgU2lnbmluZyBDZXJ0aWZpY2F0" +
             "ZTAeFw0xOTAzMDUxNzQzMjFaFw0yMDAzMDQxNzQzMjFaMDgxEDAOBgNVBAoMB0VY" +
