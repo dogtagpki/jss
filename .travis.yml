@@ -13,8 +13,8 @@ stages:
   - extra
 
 env:
-  - BASE_IMAGE="fedora_29"
   - BASE_IMAGE="fedora_30"
+  - BASE_IMAGE="fedora_31"
 
 script:
   - bash tools/run_container.sh "$BASE_IMAGE"
