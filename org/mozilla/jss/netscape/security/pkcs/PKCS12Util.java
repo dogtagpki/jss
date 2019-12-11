@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.asn1.ANY;
@@ -68,6 +67,8 @@ import org.slf4j.LoggerFactory;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.naming.InvalidNameException;
+
+import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 
 public class PKCS12Util {
@@ -214,7 +215,7 @@ public class PKCS12Util {
             SEQUENCE encSafeContents) throws Exception {
 
         byte[] keyID = keyInfo.getID();
-        logger.debug(" - Key ID: " + Hex.encodeHexString(keyID));
+        logger.debug(" - Key ID: " + Utils.HexEncode(keyID));
 
         ASN1Value content;
 
@@ -295,7 +296,7 @@ public class PKCS12Util {
             SEQUENCE safeContents) throws Exception {
 
         byte[] id = certInfo.getID();
-        logger.debug(" - Certificate ID: " + Hex.encodeHexString(id));
+        logger.debug(" - Certificate ID: " + Utils.HexEncode(id));
 
         X509CertImpl cert = certInfo.getCert();
         ASN1Value certAsn1 = new OCTET_STRING(cert.getEncoded());
@@ -380,7 +381,7 @@ public class PKCS12Util {
 
         byte[] keyID = certInfo.getKeyID();
         if (keyID != null) {
-            logger.debug("   Key ID: " + Hex.encodeHexString(keyID));
+            logger.debug("   Key ID: " + Utils.HexEncode(keyID));
 
             SEQUENCE localKeyAttr = new SEQUENCE();
             localKeyAttr.addElement(SafeBag.LOCAL_KEY_ID);
@@ -463,7 +464,7 @@ public class PKCS12Util {
         pkcs12.addCertInfo(certInfo, true);
 
         byte[] id = certInfo.getID();
-        logger.debug(" - Certificate ID: " + Hex.encodeHexString(id));
+        logger.debug(" - Certificate ID: " + Utils.HexEncode(id));
         logger.debug("   Friendly name: " + certInfo.getFriendlyName());
         logger.debug("   Trust flags: " + certInfo.getTrustFlags());
 
@@ -478,7 +479,7 @@ public class PKCS12Util {
 
                 byte[] keyID = keyInfo.getID();
                 certInfo.setKeyID(keyID);
-                logger.debug("   Key ID: " + Hex.encodeHexString(keyID));
+                logger.debug("   Key ID: " + Utils.HexEncode(keyID));
 
             } catch (ObjectNotFoundException e) {
                 logger.debug("Certificate has no private key");
@@ -498,7 +499,7 @@ public class PKCS12Util {
                 pkcs12.addCertInfo(caCertInfo, false);
 
                 byte[] caCertID = caCertInfo.getID();
-                logger.debug("   - Certificate ID: " + Hex.encodeHexString(caCertID));
+                logger.debug("   - Certificate ID: " + Utils.HexEncode(caCertID));
                 logger.debug("     Friendly name: " + caCertInfo.getFriendlyName());
                 logger.debug("     Trust flags: " + caCertInfo.getTrustFlags());
             }
@@ -690,7 +691,7 @@ public class PKCS12Util {
         // generate cert ID from SHA-1 hash of cert data
         byte[] id = SafeBag.getLocalKeyIDFromCert(x509cert);
         certInfo.setID(id);
-        logger.debug("   Certificate ID: " + Hex.encodeHexString(id));
+        logger.debug("   Certificate ID: " + Utils.HexEncode(id));
 
         X509CertImpl cert = new X509CertImpl(x509cert);
         certInfo.setCert(cert);
@@ -726,7 +727,7 @@ public class PKCS12Util {
 
                 byte[] keyID = keyIdAsn1.toByteArray();
                 certInfo.setKeyID(keyID);
-                logger.debug("   Key ID: " + Hex.encodeHexString(keyID));
+                logger.debug("   Key ID: " + Utils.HexEncode(keyID));
 
             } else if (oid.equals(PKCS12.CERT_TRUST_FLAGS_OID) && trustFlagsEnabled) {
 

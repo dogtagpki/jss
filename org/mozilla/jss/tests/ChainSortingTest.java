@@ -1,8 +1,8 @@
 package org.mozilla.jss.tests;
 
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mozilla.jss.netscape.security.util.Cert;
@@ -23,7 +23,7 @@ public class ChainSortingTest {
 
         // Subject DN: CN=Root CA Signing Certificate, O=EXAMPLE
         // Issuer DN: CN=Root CA Signing Certificate, O=EXAMPLE
-        rootCA = new X509CertImpl(Base64.decodeBase64(
+        rootCA = new X509CertImpl(Base64.getDecoder().decode(
             "MIIDRjCCAi6gAwIBAgIJAMHiDXjnZ1J6MA0GCSqGSIb3DQEBCwUAMDgxEDAOBgNV" +
             "BAoMB0VYQU1QTEUxJDAiBgNVBAMMG1Jvb3QgQ0EgU2lnbmluZyBDZXJ0aWZpY2F0" +
             "ZTAeFw0xOTAzMDUxNzQzMjFaFw0yMDAzMDQxNzQzMjFaMDgxEDAOBgNVBAoMB0VY" +
@@ -46,7 +46,7 @@ public class ChainSortingTest {
 
         // Subject DN: CN=Subordinate CA Signing Certificate, O=EXAMPLE
         // Issuer DN: CN=Root CA Signing Certificate, O=EXAMPLE
-        subCA = new X509CertImpl(Base64.decodeBase64(
+        subCA = new X509CertImpl(Base64.getDecoder().decode(
             "MIIC8zCCAdsCCQCPJrl0/W/nMTANBgkqhkiG9w0BAQsFADA4MRAwDgYDVQQKDAdF" +
             "WEFNUExFMSQwIgYDVQQDDBtSb290IENBIFNpZ25pbmcgQ2VydGlmaWNhdGUwHhcN" +
             "MTkwMzA1MTg1MzMzWhcNMjAwMzA0MTg1MzMzWjA/MRAwDgYDVQQKDAdFWEFNUExF" +
@@ -67,7 +67,7 @@ public class ChainSortingTest {
 
         // Subject DN: UID=admin, O=EXAMPLE
         // Issuer DN: CN=Subordinate CA Signing Certificate, O=EXAMPLE
-        admin = new X509CertImpl(Base64.decodeBase64(
+        admin = new X509CertImpl(Base64.getDecoder().decode(
             "MIIC5DCCAcwCCQCh59LykL9CDTANBgkqhkiG9w0BAQsFADA/MRAwDgYDVQQKDAdF" +
             "WEFNUExFMSswKQYDVQQDDCJTdWJvcmRpbmF0ZSBDQSBTaWduaW5nIENlcnRpZmlj" +
             "YXRlMB4XDTE5MDMwNTIwMDQxNloXDTIwMDMwNDIwMDQxNlowKTEQMA4GA1UECgwH" +
@@ -88,7 +88,7 @@ public class ChainSortingTest {
 
         // Subject DN: UID=agent, O=EXAMPLE
         // Issuer DN: CN=Subordinate CA Signing Certificate, O=EXAMPLE
-        agent = new X509CertImpl(Base64.decodeBase64(
+        agent = new X509CertImpl(Base64.getDecoder().decode(
             "MIIC5DCCAcwCCQCh59LykL9CDjANBgkqhkiG9w0BAQsFADA/MRAwDgYDVQQKDAdF" +
             "WEFNUExFMSswKQYDVQQDDCJTdWJvcmRpbmF0ZSBDQSBTaWduaW5nIENlcnRpZmlj" +
             "YXRlMB4XDTE5MDMwNTIwMzU1NVoXDTIwMDMwNDIwMzU1NVowKTEQMA4GA1UECgwH" +

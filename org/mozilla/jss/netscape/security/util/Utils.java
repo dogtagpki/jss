@@ -32,11 +32,10 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import org.apache.commons.codec.binary.Base64;
 
 public class Utils {
     /**
@@ -374,7 +373,7 @@ public class Utils {
      * @return base-64 encoded data
      */
     public static String base64encodeMultiLine(byte[] bytes) {
-        return new Base64(64).encodeToString(bytes);
+        return Base64.getMimeEncoder().encodeToString(bytes);
     }
 
 
@@ -386,7 +385,7 @@ public class Utils {
      * @return base-64 encoded data
      */
     public static String base64encodeSingleLine(byte[] bytes) {
-        return new Base64().encodeToString(bytes);
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
     /**
@@ -396,7 +395,7 @@ public class Utils {
      * @return byte array
      */
     public static byte[] base64decode(String string) {
-        return Base64.decodeBase64(string);
+        return Base64.getDecoder().decode(string);
     }
 
     /**
