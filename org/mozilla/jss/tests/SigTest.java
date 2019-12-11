@@ -20,6 +20,7 @@ import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyPairGenerator;
 import org.mozilla.jss.crypto.KeyPairGeneratorSpi;
+import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.crypto.Signature;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.pkcs11.PK11Token;
@@ -73,7 +74,7 @@ public class SigTest {
             }
             // Generate an RSA keypair
             kpgen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
-            kpgen.initialize(1024);
+            kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
             KeyPairGeneratorSpi.Usage usages[] = {
                 KeyPairGeneratorSpi.Usage.SIGN,
                 KeyPairGeneratorSpi.Usage.VERIFY};

@@ -13,6 +13,8 @@ import java.security.Signature;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.InitializationValues;
 
+import org.mozilla.jss.crypto.Policy;
+
 
 public class JCASigTest {
 
@@ -89,7 +91,7 @@ public class JCASigTest {
 
             // Generate an RSA keypair
             kpgen = KeyPairGenerator.getInstance("RSA");
-            kpgen.initialize(1024);
+            kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
             keyPair = kpgen.generateKeyPair();
             Provider  provider = kpgen.getProvider();
 
