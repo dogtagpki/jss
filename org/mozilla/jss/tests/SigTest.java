@@ -15,10 +15,17 @@ import org.mozilla.jss.crypto.Signature;
 import org.mozilla.jss.crypto.KeyPairGenerator;
 import org.mozilla.jss.crypto.KeyPairGeneratorSpi;
 import java.security.*;
+import java.security.spec.*;
 import java.util.*;
 import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.*;
 import org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage;
+import org.mozilla.jss.netscape.security.util.DerOutputStream;
+import org.mozilla.jss.netscape.security.x509.AlgorithmId;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+
+import org.mozilla.jss.netscape.security.pkcs.PKCS10;
+import org.mozilla.jss.netscape.security.util.Utils;
 
 public class SigTest {
 
@@ -35,6 +42,7 @@ public class SigTest {
             byte[] data = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
             byte[] signature;
             Signature signer;
+            Signature signerPSS;
             PublicKey pubk;
             KeyPairGenerator kpgen;
             KeyPair keyPair;
@@ -51,7 +59,7 @@ public class SigTest {
             CryptoManager.initialize(vals);
             manager = CryptoManager.getInstance();
             manager.setPasswordCallback(new FilePasswordCallback(args[1]));
-            
+
 
             /* Print out list of available tokens */
             Enumeration en = manager.getAllTokens();
@@ -67,6 +75,7 @@ public class SigTest {
                 //get default internal key storage token
                 token = manager.getInternalKeyStorageToken();
             }
+
             // Generate an RSA keypair
             kpgen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
             kpgen.initialize(1024);
@@ -101,6 +110,24 @@ public class SigTest {
                 System.out.println("Signature Verified Successfully!");
             } else {
                 throw new Exception("ERROR: Signature failed to verify.");
+            }
+
+            signerPSS = token.getSignatureContext(
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest);
+            signerPSS.initSign(
+                    (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
+
+            signerPSS.update(data);
+            signature = signerPSS.sign();
+            System.out.println("PSS Successfully signed!");
+
+            signerPSS.initVerify(keyPair.getPublic());
+            signerPSS.update(data);
+            System.out.println("updated verification with data");
+            if (signerPSS.verify(signature)) {
+                System.out.println("PSS Signature Verified Successfully!");
+            } else {
+                throw new Exception("ERROR: PSS Signature failed to verify.");
             }
 
             System.out.println("SigTest passed.");

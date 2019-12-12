@@ -111,6 +111,10 @@ public final class KeyType {
     RSA     = new KeyType (new Algorithm[]
                     {
                     SignatureAlgorithm.RSASignature,
+                    SignatureAlgorithm.RSAPSSSignature,
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest,
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest,
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest,
                     SignatureAlgorithm.RSASignatureWithMD2Digest,
                     SignatureAlgorithm.RSASignatureWithMD5Digest,
                     SignatureAlgorithm.RSASignatureWithSHA1Digest,

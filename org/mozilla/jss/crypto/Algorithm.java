@@ -227,4 +227,7 @@ public class Algorithm {
     // These underlying defs are currently different from the NSS AES KeyWrap
     protected static final short CKM_AES_KEY_WRAP=65;
     protected static final short CKM_AES_KEY_WRAP_PAD=66;
+    // RSA-PSS
+    protected static final short SEC_OID_PKCS1_RSA_PSS_SIGNATURE = 67;
+
 }

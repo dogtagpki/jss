@@ -637,7 +637,7 @@ $testname = "Disable FipsMODE";
 $command = "$java -cp $jss_classpath org.mozilla.jss.tests.FipsTest $testdir disable";
 run_test($testname, $command);
 
-$testname = "Test Big Object Identifiers"
+$testname = "Test Big Object Identifiers";
 $command = "$java -cp $jss_classpath -ea org.mozilla.jss.tests.BigObjectIdentifier";
 run_test($testname, $command);
 

@@ -13,6 +13,7 @@
 #include <secerr.h>
 #include <cryptoht.h>
 #include <cryptohi.h>
+#include <keyhi.h>
 
 #include <jssutil.h>
 #include <java_ids.h>
@@ -31,11 +32,17 @@ getSomeKey(JNIEnv *env, jobject sig, void **key, short type);
 static SECOidTag
 getAlgorithm(JNIEnv *env, jobject sig);
 
+static SECOidTag
+getDigestAlgorithm(JNIEnv *env, jobject sig);
+
+
 static void
 setSigContext(JNIEnv *env, jobject sig, jobject context);
 
 static PRStatus
 getSigContext(JNIEnv *env, jobject sig, void**pContext, SigContextType* pType);
+
+static SECStatus getRSAPSSParamsAndSigningAlg(JNIEnv *env, jobject this, PRArenaPool *arena, SECAlgorithmID **alg, SECKEYPrivateKey *privk); 
 
 /***********************************************************************
  *
@@ -48,19 +55,48 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initSigContext
     SGNContext *ctxt=NULL;
     jobject contextProxy=NULL;
     SECKEYPrivateKey *privk;
+    SECAlgorithmID *signAlg=NULL;
+    SECStatus rv;
 
     /* Extract the private key from the PK11Signature */
     if( getPrivateKey(env, this, &privk) != PR_SUCCESS) {
         PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
         goto finish;
     }
+    
+    PRArenaPool *arena = NULL;
+    SECOidTag signingAlg = SEC_OID_UNKNOWN;
 
-    /* Start the signing operation */
-    ctxt = SGN_NewContext(getAlgorithm(env, this), privk);
-	if(ctxt == NULL) {
-		JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create signing context");
-		goto finish;
-	}
+    signingAlg = getAlgorithm(env,this);
+
+    if(signingAlg == SEC_OID_PKCS1_RSA_PSS_SIGNATURE) {
+        arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
+        if (!arena) {
+           JSS_throw(env, OUT_OF_MEMORY_ERROR);
+           goto finish;
+        }
+
+        rv = getRSAPSSParamsAndSigningAlg(env, this, arena, &signAlg, privk);
+
+        if ( rv == SECFailure) {
+            goto finish;
+        }
+
+        /* Start the signing operation */
+        ctxt = SGN_NewContextWithAlgorithmID(signAlg, privk);
+
+    } else {
+        ctxt = SGN_NewContext(signingAlg, privk);
+    }
+
+    if(ctxt == NULL) {
+        if(arena != NULL) {
+            PORT_FreeArena(arena, PR_FALSE);
+        }
+
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create signing context");
+	goto finish;
+    }
     if( SGN_Begin(ctxt) != SECSuccess ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to begin signing context");
         goto finish;
@@ -68,12 +104,16 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initSigContext
 
     /* Create a contextProxy and stick it in the PK11Signature object */
     contextProxy = JSS_PK11_wrapSigContextProxy(env,
-												(void**)&ctxt,
-												SGN_CONTEXT);
+        (void**)&ctxt,
+        SGN_CONTEXT,arena);
+
     if(contextProxy == NULL) {
         PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
         goto finish;
     }
+
+    // signature alg for RSA PSS allocated in the arena, 
+    // which is destroyed on exit.
     setSigContext(env, this, contextProxy);
 
 finish:
@@ -81,6 +121,9 @@ finish:
         /* we created a context but not the Java wrapper, so we need to
          * delete the context here. */
         SGN_DestroyContext(ctxt, PR_TRUE /*freeit*/);
+        if(arena != NULL) {
+            PORT_FreeArena(arena, PR_FALSE);
+        }
     }
 }
 
@@ -90,20 +133,67 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
 {
 	VFYContext *ctxt=NULL;
 	jobject contextProxy=NULL;
-	SECKEYPublicKey *pubk;
+        SECKEYPublicKey *pubk;
+        SECKEYPrivateKey *privk=NULL;
+        SECKEYPublicKey *tempPubKey=NULL;
+
+        PRArenaPool *arena = NULL;
 
 	if( getPublicKey(env, this, &pubk) != PR_SUCCESS ) {
 		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
-	
-	ctxt = VFY_CreateContext(pubk, NULL /*sig*/, getAlgorithm(env, this),
+
+        SECAlgorithmID *signAlg=NULL;
+        SECStatus rv;
+
+        SECOidTag signingAlg = SEC_OID_UNKNOWN;
+        signingAlg = getAlgorithm(env,this);
+
+        if(signingAlg == SEC_OID_PKCS1_RSA_PSS_SIGNATURE) {
+
+            /* Create place holder private key, just to satisfy the  creating of the PSS Params */
+
+            SECKEYPublicKey *tempPubKey = NULL;
+            privk = SECKEY_CreateRSAPrivateKey(SECKEY_PublicKeyStrengthInBits(pubk), &tempPubKey, NULL);
+            if( privk == NULL) {
+               PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+               goto finish;
+            }
+
+            arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
+            if (!arena) {
+                JSS_throw(env, OUT_OF_MEMORY_ERROR);
+                 goto finish;
+            }
+
+            rv = getRSAPSSParamsAndSigningAlg(env, this, arena , &signAlg ,privk);
+
+            if (rv == SECFailure) {
+                goto finish;
+            }
+       
+            SECOidTag digestAlg = SEC_OID_UNKNOWN; 
+            digestAlg = getDigestAlgorithm(env, this);   
+            ctxt = VFY_CreateContextWithAlgorithmID(pubk,
+                                                   NULL,
+                                                   signAlg,
+                                                   &digestAlg,
+                                                   NULL);
+        } else {
+            ctxt = VFY_CreateContext(pubk, NULL /*sig*/, signingAlg,
                 NULL /*wincx*/);
-	if( ctxt == NULL) {
-		JSS_throwMsg(env, TOKEN_EXCEPTION,
-			"Unable to create verification context");
-		goto finish;
-	}
+        }
+
+        if(ctxt == NULL) {
+            if(arena != NULL) {
+                PORT_FreeArena(arena, PR_FALSE);
+            }
+
+            JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create vfy context");
+            goto finish;
+        }
+
 	if( VFY_Begin(ctxt) != SECSuccess) {
 		JSS_throwMsg(env, TOKEN_EXCEPTION,
 			"Unable to begin verification context");
@@ -112,20 +202,29 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
 
 	/* create a ContextProxy and stick it in the PK11Signature object */
 	contextProxy = JSS_PK11_wrapSigContextProxy(env,
-												(void**)&ctxt,
-												VFY_CONTEXT);
+            (void**)&ctxt,
+	    VFY_CONTEXT,NULL);
 	if(contextProxy == NULL) {
 		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 	setSigContext(env, this, contextProxy);
-
 finish:
 	if(contextProxy==NULL && ctxt!=NULL) {
 		/* we created a context but not the Java wrapper, so we need to
 	 	 * delete the context here */
 		VFY_DestroyContext(ctxt, PR_TRUE /*freeit*/);
 	}
+
+        if(tempPubKey != NULL) {
+            SECKEY_DestroyPublicKey(tempPubKey);
+            tempPubKey = NULL;
+        }
+
+        if(privk != NULL) {
+           SECKEY_DestroyPrivateKey(privk);
+           privk = NULL;
+        }
 }
 
 /**********************************************************************
@@ -355,6 +454,77 @@ finish:
     return retval;
 }
 
+static SECOidTag
+getDigestAlgorithm(JNIEnv *env, jobject sig)
+{
+    jclass sigClass;
+    jfieldID algField;
+    jobject alg;
+    SECOidTag retval=SEC_OID_UNKNOWN;
+
+    PR_ASSERT(env!=NULL && sig!=NULL);
+
+    sigClass = (*env)->GetObjectClass(env, sig);
+    PR_ASSERT(sigClass != NULL);
+
+    algField = (*env)->GetFieldID(  env,
+                                    sigClass,
+                                    SIG_DIGEST_ALGORITHM_FIELD,
+                                    SIG_ALGORITHM_SIG);
+    if(algField == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    alg = (*env)->GetObjectField(env, sig, algField);
+    if(alg == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    retval = JSS_getOidTagFromAlg(env, alg);
+
+finish:
+    return retval;
+}
+
+static
+SECStatus getRSAPSSParamsAndSigningAlg(JNIEnv *env, jobject this, PRArenaPool *arena, SECAlgorithmID **alg, SECKEYPrivateKey *privk)
+{
+    SECItem *sigAlgParams;
+    SECAlgorithmID *signAlg=NULL;
+    SECOidTag digestAlg = SEC_OID_UNKNOWN;
+    SECStatus rv = SECFailure;
+
+    if(alg == NULL) {
+        return rv;  
+    }
+
+    signAlg = (SECAlgorithmID *)PORT_ArenaZAlloc(arena, sizeof(SECAlgorithmID));
+    if (signAlg == NULL) {
+        return rv;    
+    }
+
+    digestAlg = getDigestAlgorithm(env, this);
+
+    sigAlgParams = SEC_CreateSignatureAlgorithmParameters(arena,
+                          NULL,
+                          SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
+                          digestAlg,
+                          NULL,
+                          privk);
+
+    if (!sigAlgParams) {
+        return rv;
+    }
+
+    *alg = signAlg;
+    rv = SECOID_SetAlgorithmID(arena, *alg,
+                       SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
+                       sigAlgParams);
+    return rv;
+}
+
 /*
  * Set the contextProxy member of a PK11Signature.
  *
@@ -506,6 +676,7 @@ getSomeKey(JNIEnv *env, jobject sig, void **key, short type)
 struct SigContextProxyStr {
     void *ctxt;
     SigContextType type;
+    PRArenaPool *arena;
 };
 
 /***********************************************************************
@@ -560,7 +731,7 @@ JSS_PK11_getSigContext(JNIEnv *env, jobject proxy, void**pContext,
  *  NULL if an exception was thrown.
  */
 jobject
-JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type)
+JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type, PRArenaPool *arena)
 {
     jclass proxyClass;
     jmethodID constructor;
@@ -578,6 +749,10 @@ JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type)
     }
     proxy->ctxt = *ctxt;
     proxy->type = type;
+    proxy->arena = NULL;
+    if(arena != NULL) {
+        proxy->arena = arena;
+    }
 
     byteArray = JSS_ptrToByteArray(env, (void*)proxy);
 
@@ -644,11 +819,16 @@ Java_org_mozilla_jss_pkcs11_SigContextProxy_releaseNativeResources
 
     /* Free the context and the proxy */
     if(proxy->type == SGN_CONTEXT) {
-        SGN_DestroyContext( (SGNContext*)proxy->ctxt, PR_TRUE /*freeit*/);
+        SGN_DestroyContext( (SGNContext*)proxy->ctxt, PR_TRUE /*freeit*/); 
     } else {
         PR_ASSERT(proxy->type == VFY_CONTEXT);
         VFY_DestroyContext( (VFYContext*)proxy->ctxt, PR_TRUE /*freeit*/);
     }
+    if(proxy->arena != NULL) {
+        PORT_FreeArena(proxy->arena, PR_FALSE);
+        proxy->arena = NULL;
+    }
+
     PR_Free(proxy);
 
 finish:

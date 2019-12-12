@@ -12,6 +12,7 @@ class JSSSignatureSpi extends java.security.SignatureSpi {
 
     org.mozilla.jss.crypto.Signature sig;
     SignatureAlgorithm alg;
+    AlgorithmParameterSpec paramSpec;
 
     private JSSSignatureSpi() { }
 
@@ -35,12 +36,18 @@ class JSSSignatureSpi extends java.security.SignatureSpi {
     {
         try {
             sig = getSigContext(privateKey);
+            if(paramSpec != null) {
+                sig.setParameter(paramSpec);
+            }
             sig.initSign((PrivateKey)privateKey);
         } catch(java.security.NoSuchAlgorithmException e) {
             throw new InvalidKeyException("Algorithm not supported");
         } catch(TokenException e) {
             throw new InvalidKeyException("Token exception occurred");
+        } catch(InvalidAlgorithmParameterException e) {
+            throw new InvalidKeyException("AlgorithmParameterSpec not supported");
         }
+        
     }
 
     private org.mozilla.jss.crypto.Signature
@@ -145,12 +152,12 @@ class JSSSignatureSpi extends java.security.SignatureSpi {
     public void engineSetParameter(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException
     {
-        try {
-            sig.setParameter(params);
-        } catch( TokenException e ) {
+        if(params == null) {
             throw new InvalidAlgorithmParameterException(
-                "TokenException: "+e.toString());
+                "TokenException: parameterspec is null");
         }
+
+        paramSpec = params;
     }
 
     public Object engineGetParameter(String param)
@@ -212,6 +219,29 @@ class JSSSignatureSpi extends java.security.SignatureSpi {
             super(SignatureAlgorithm.RSASignatureWithSHA256Digest);
         }
     }
+    public static class RSAPSSSignature extends JSSSignatureSpi {
+        public RSAPSSSignature() {
+            super(SignatureAlgorithm.RSAPSSSignature);
+        }
+    }
+    public static class SHA256RSAPSS extends JSSSignatureSpi {
+        public SHA256RSAPSS() {
+            super(SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest);
+        }
+    }
+
+    public static class SHA384RSAPSS extends JSSSignatureSpi {
+        public SHA384RSAPSS() {
+            super(SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest);
+        }
+    }
+
+    public static class SHA512RSAPSS extends JSSSignatureSpi {
+        public SHA512RSAPSS() {
+            super(SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest);
+        }
+    }
+
     public static class SHA384RSA extends JSSSignatureSpi {
         public SHA384RSA() {
             super(SignatureAlgorithm.RSASignatureWithSHA384Digest);
