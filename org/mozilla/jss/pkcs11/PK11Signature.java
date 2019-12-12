@@ -7,6 +7,7 @@ package org.mozilla.jss.pkcs11;
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.util.*;
 import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.PSSParameterSpec;
 import java.security.*;
 import java.security.SecureRandom;
 import java.io.ByteArrayOutputStream;
@@ -31,11 +32,27 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 		this.tokenProxy = token.getProxy();
 		this.token = token;
 		this.algorithm = algorithm;
-        if( algorithm.getRawAlg() == algorithm ) {
+                this.digestAlgorithm = null;
+
+        /*
+         * cfu: RSAPSSSignature would appear like "raw" but it isn't
+         */
+        if( !isRSAPSSAlgorithm(algorithm) &&
+                algorithm.getRawAlg() == algorithm ) {
             raw = true;
             rawInput = new ByteArrayOutputStream();
         }
 		this.state = UNINITIALIZED;
+
+        // If we are PSS, save off the digest alg to be used by native code.
+        if( isRSAPSSAlgorithm(algorithm) ) {
+            try {
+                digestAlgorithm = algorithm.getDigestAlg();
+            } catch (NoSuchAlgorithmException e) {
+                digestAlgorithm = null;
+            }
+        }
+
 	}
 
 	public void engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey)
@@ -317,22 +334,59 @@ final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
     public void engineSetParameter(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException, TokenException
     {
-        Assert.notYetImplemented("PK11Signature.engineSetParameter");
+        //For now we only care about RSAPSS
+        if( isRSAPSSAlgorithm((SignatureAlgorithm) algorithm) ) {
+            digestAlgorithm = getRSAPSSDigestAlgFromSpec((PSSParameterSpec) params);
+        } else {
+            throw new InvalidAlgorithmParameterException("Alg params for this alg not supported: "
+                + params.toString());
+        }
     }
 
-	protected PK11Token token;
-	protected TokenProxy tokenProxy;
-	protected Algorithm algorithm;
-	protected PK11Key key;
-	protected int state;
+    private Algorithm getRSAPSSDigestAlgFromSpec(PSSParameterSpec params)
+        throws InvalidAlgorithmParameterException {
+         String hashAlgName = params.getDigestAlgorithm();
+         Algorithm hashAlg = null;
+        if(hashAlgName.equals("SHA-256")) {
+            hashAlg =  DigestAlgorithm.SHA256;
+        }  else if(hashAlgName.equals("SHA-512")) {
+            hashAlg =  DigestAlgorithm.SHA512;
+        }  else if(hashAlgName.equals("SHA-384")) {
+            hashAlg =  DigestAlgorithm.SHA384;
+        } else {
+          throw new InvalidAlgorithmParameterException("Alg params for this alg not supported");
+        }
+        return hashAlg;
+    }
+
+    private boolean isRSAPSSAlgorithm(SignatureAlgorithm algorithm) {
+        if(algorithm == null) {
+            return false;
+        }
+        if( algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest
+            || algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest 
+            || algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest
+            || algorithm == SignatureAlgorithm.RSAPSSSignature) {
+
+            return true;
+        }
+        return false;
+    }
+
+    protected PK11Token token;
+    protected TokenProxy tokenProxy;
+    protected Algorithm algorithm;
+    protected Algorithm digestAlgorithm;
+    protected PK11Key key;
+    protected int state;
     protected SigContextProxy sigContext;
     protected boolean raw=false; // raw signing only, no hashing
     protected ByteArrayOutputStream rawInput;
 
 	// states
-	static public final int UNINITIALIZED = 0;
-	static public final int SIGN = 1;
-	static public final int VERIFY = 2;
+    static public final int UNINITIALIZED = 0;
+    static public final int SIGN = 1;
+    static public final int VERIFY = 2;
 }
 
 class SigContextProxy extends NativeProxy {

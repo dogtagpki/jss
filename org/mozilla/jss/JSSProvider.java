@@ -59,6 +59,28 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.Signature.SHA256/RSA", "SHA-256/RSA");
         put("Alg.Alias.Signature.SHA256withRSA", "SHA-256/RSA");
 
+        put("Signature.RSASSA-PSS",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$RSAPSSSignature");
+
+        put("Alg.Alias.Signature.1.2.840.113549.1.1.10",     "RSASSA-PSS");
+        put("Alg.Alias.Signature.OID.1.2.840.113549.1.1.10", "RSASSA-PSS");
+
+        put("Signature.SHA-256/RSA/PSS",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA256RSAPSS");
+
+        put("Alg.Alias.Signature.SHA256withRSA/PSS","SHA-256/RSA/PSS");
+
+        put("Signature.SHA-384/RSA/PSS",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA384RSAPSS");
+
+        put("Alg.Alias.Signature.SHA384withRSA/PSS","SHA-384/RSA/PSS");
+
+        put("Signature.SHA-512/RSA/PSS",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA512RSAPSS");
+
+        put("Alg.Alias.Signature.SHA512withRSA/PSS","SHA-512/RSA/PSS");
+
+
         put("Signature.SHA-384/RSA",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA384RSA");
         put("Alg.Alias.Signature.SHA384/RSA", "SHA-384/RSA");
@@ -155,6 +177,9 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.java.security.IvAlgorithmParameters");
         put("AlgorithmParameters.RC2AlgorithmParameters",
             "org.mozilla.jss.provider.java.security.RC2AlgorithmParameters");
+
+        put("AlgorithmParameters.RSAPSSAlgorithmParameters",
+            "org.mozilla.jss.provider.java.security.RSAPSSAlgorithmParameters");
 
         /////////////////////////////////////////////////////////////
         // Cipher

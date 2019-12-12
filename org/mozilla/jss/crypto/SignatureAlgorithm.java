@@ -65,11 +65,44 @@ public class SignatureAlgorithm extends Algorithm {
         }
         return digestAlg;
     }
+
+    public DigestAlgorithm setDigestAlg(DigestAlgorithm alg) throws NoSuchAlgorithmException {
+        if( alg == null ) {
+            throw new NoSuchAlgorithmException();
+        }
+        return digestAlg = alg;
+    }
+
     private DigestAlgorithm digestAlg;
 
     //////////////////////////////////////////////////////////////////////
     // Signature Algorithms
     //////////////////////////////////////////////////////////////////////
+
+    /**********************************************************************
+     * PSS Versions of RSA for different digests.
+     *
+     */
+
+    // PSS Signature with not yet specified Digest
+    //
+
+    //Version with no digest set. Must call setDigestAlg() after initialization
+    //to choose the proper variant
+    public static final SignatureAlgorithm
+    RSAPSSSignature = new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE, "RSAPSSSignature",
+            null, null, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
+    public static final SignatureAlgorithm
+    RSAPSSSignatureWithSHA256Digest = new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE, "RSAPSSSignatureWithSHA256Digest",
+            null, DigestAlgorithm.SHA256, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
+
+    public static final SignatureAlgorithm
+    RSAPSSSignatureWithSHA384Digest = new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE, "RSAPSSSignatureWithSHA384Digest",
+            null, DigestAlgorithm.SHA384, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
+
+    public static final SignatureAlgorithm
+    RSAPSSSignatureWithSHA512Digest = new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE, "RSAPSSSignatureWithSHA512Digest",
+            null, DigestAlgorithm.SHA384, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
 
     /**********************************************************************
      * Raw RSA signing. This algorithm does not do any hashing, it merely
