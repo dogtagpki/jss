@@ -235,6 +235,11 @@ macro(jss_tests)
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
+        NAME "Symmetric_Key_Deriving"
+        COMMAND "org.mozilla.jss.tests.SymKeyDeriving" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "Setup_DBs"
+    )
+    jss_test_java(
         NAME "JSSProvider"
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs"

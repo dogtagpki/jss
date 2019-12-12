@@ -67,16 +67,18 @@ public class SymKeyDeriving {
           0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10 };
 
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
+        if (args.length != 2) {
+            System.err.println("Usage SymKeyDeriving /path/to/nssdb /path/to/password.txt");
+            System.exit(1);
+        }
 
-      SymmetricKey macKeyDev = null;
-      try {
-
-        InitializationValues vals =
-              new InitializationValues("./"
-              );
+        SymmetricKey macKeyDev = null;
+        InitializationValues vals = new InitializationValues(args[0]);
+        vals.removeSunProvider = true;
         CryptoManager.initialize(vals);
         CryptoManager cm = CryptoManager.getInstance();
+        cm.setPasswordCallback(new FilePasswordCallback(args[1]));
         CryptoToken token = cm.getInternalCryptoToken();
         CryptoToken keyToken = cm.getInternalKeyStorageToken();
         System.out.println("interal token name: " + keyToken.getName());
@@ -176,54 +178,6 @@ public class SymKeyDeriving {
 
         /*****************************************************************************************************/
 
-        // Now lets try  more complex derivation
-
-       // tmp2 = PK11_Derive( master , CKM_DES_ECB_ENCRYPT_DATA , &param , CKM_CONCATENATE_BASE_AND_KEY , CKA_DERIVE , 0);
-
-       System.out.println("\n Mechanism CKM_DES_ECB_ENCRYPT_DATA test. \n");
-
-       SymmetricKeyDeriver encrypt = token.getSymmetricKeyDeriver();
-
-       encrypt.initDerive(
-                           baseKeyDes, /* PKCS11Constants.CKM_DES_ECB_ENCRYPT_DATA */ 4352L,derivationData1 ,null,
-                           PKCS11Constants.CKM_DES_ECB, PKCS11Constants.CKA_DERIVE,(long) 8);
-
-       SymmetricKey encrypted8 = encrypt.derive();
-
-       if( encrypted8 == null) {
-            System.out.println("Failed to derive  8 bytes from encrypted derivation data.");
-        }
-
-        byte[] encrypted8Bytes = encrypted8.getEncoded();
-        System.out.println("derived encrypted 8 bytes: " + encrypted8Bytes.length);
-        displayByteArray(encrypted8Bytes,true);
-
-        Cipher cipher = null;
-        cipher =  keyToken.getCipherContext(EncryptionAlgorithm.DES_ECB);
-
-        cipher.initEncrypt(baseKeyDes);
-
-        byte[] ciphertext = cipher.doFinal(derivationData1);
-        displayByteArray(ciphertext,true);
-
-        if ( ciphertext.length != encrypted8Bytes.length ) {
-            System.out.println("FAILED: encrypted data length not equal to derived key length.");
-        } else {
-            for ( int i = 0; i < ciphertext.length ; i ++) {
-                ciphertext[i]&=0xfe;
-                encrypted8Bytes[i]&=0xfe;
-            }
-            if ( Arrays.equals(ciphertext, encrypted8Bytes)) {
-                System.out.println("PASSED: derived key the same as encrypted data.");
-            } else {
-
-                System.out.println("FAILED: derived key not the same as encrypted data.");
-            }
-        }
-
-
-        /*****************************************************************************************************/
-
         // Try ecnrypted des3 derivation
 
        System.out.println("\n Mechanism CKM_DES3_ECB_ENCRYPT_DATA test. \n");
@@ -247,9 +201,9 @@ public class SymKeyDeriving {
        displayByteArray(encrypted16Bytes,true);
 
 
-       cipher =  keyToken.getCipherContext(EncryptionAlgorithm.DES3_ECB);
+       Cipher cipher =  keyToken.getCipherContext(EncryptionAlgorithm.DES3_ECB);
        cipher.initEncrypt(baseKey);
-       ciphertext = cipher.doFinal(derivationData16);
+       byte[] ciphertext = cipher.doFinal(derivationData16);
        displayByteArray(ciphertext,true);
 
        if ( ciphertext.length != encrypted16Bytes.length ) {
@@ -266,49 +220,6 @@ public class SymKeyDeriving {
            }
        }
 
-
-       /*****************************************************************************************************/
-
-       System.out.println("\n Mechanism CKM_DES_CBC_ENCRYPT_DATA test. \n");
-
-       SymmetricKeyDeriver encryptDesCBC = token.getSymmetricKeyDeriver();
-
-       encryptDesCBC.initDerive(
-                           baseKeyDes, /* PKCS11Constants.CKM_DES_CBC_ENCRYPT_DATA */ 4353L  ,derivationData1 ,iv8,
-                           PKCS11Constants.CKM_DES_CBC, PKCS11Constants.CKA_DERIVE,(long) 8);
-
-
-       SymmetricKey encryptedDesCBC = encryptDesCBC.derive();
-
-       if ( encryptedDesCBC == null) {
-           System.out.println("Failed to derive 8 bytes from encrypted derivation data.");
-       }
-
-       byte[] encryptedDesCBCBytes = encryptedDesCBC.getEncoded();
-
-       System.out.println("derived encrypted 8 bytes: " + encryptedDesCBCBytes.length);
-       displayByteArray(encryptedDesCBCBytes,true);
-
-
-       cipher =  keyToken.getCipherContext(EncryptionAlgorithm.DES_CBC);
-       cipher.initEncrypt(baseKeyDes,new IVParameterSpec(iv8));
-       ciphertext = cipher.doFinal(derivationData1);
-       displayByteArray(ciphertext,true);
-
-        if ( ciphertext.length != encryptedDesCBCBytes.length ) {
-            System.out.println("FAILED: encrypted data length not equal to derived key length.");
-        } else {
-            for ( int i = 0; i < ciphertext.length ; i ++) {
-                ciphertext[i]&=0xfe;
-                encryptedDesCBCBytes[i]&=0xfe;
-            }
-            if ( Arrays.equals(ciphertext, encryptedDesCBCBytes)) {
-                System.out.println("PASSED: derived key the same as encrypted data.");
-            } else {
-
-                System.out.println("FAILED: derived key not the same as encrypted data.");
-            }
-        }
 
         /*****************************************************************************************************/
 
@@ -458,10 +369,6 @@ public class SymKeyDeriving {
         SymmetricKey macKey = getSymKeyByName(keys, "defKeySet-macKey");
 
         System.out.println("macKey: " + macKey);
-
-      } catch(Exception e) {
-        e.printStackTrace();
-      }
     }
 
     public static void
