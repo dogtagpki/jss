@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -73,7 +73,7 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#fields.inherited.from.class.java.security.spec.RSAKeyGenParameterSpec">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -98,7 +98,12 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li>java.security.spec.RSAKeyGenParameterSpec</li>
+<li>
+<ul class="inheritance">
 <li>org.mozilla.jss.crypto.RSAParameterSpec</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -112,8 +117,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">RSAParameterSpec</span>
-extends java.lang.Object
-implements java.security.spec.AlgorithmParameterSpec</pre>
+extends java.security.spec.RSAKeyGenParameterSpec</pre>
 <div class="block">This class specifies the parameters used for generating an RSA key pair.</div>
 </li>
 </ul>
@@ -121,6 +125,21 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.java.security.spec.RSAKeyGenParameterSpec">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;java.security.spec.RSAKeyGenParameterSpec</h3>
+<code>F0, F4</code></li>
+</ul>
+</li>
+</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -159,13 +178,14 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <div class="block">Returns the size of the modulus in bits.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.math.BigInteger</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/RSAParameterSpec.html#getPublicExponent--">getPublicExponent</a></span>()</code>
-<div class="block">Returns the public exponent <i>e</i>.</div>
-</td>
-</tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.java.security.spec.RSAKeyGenParameterSpec">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.security.spec.RSAKeyGenParameterSpec</h3>
+<code>getKeysize, getPublicExponent</code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -215,21 +235,11 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <a name="getKeySize--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getKeySize</h4>
 <pre>public&nbsp;int&nbsp;getKeySize()</pre>
 <div class="block">Returns the size of the modulus in bits.</div>
-</li>
-</ul>
-<a name="getPublicExponent--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getPublicExponent</h4>
-<pre>public&nbsp;java.math.BigInteger&nbsp;getPublicExponent()</pre>
-<div class="block">Returns the public exponent <i>e</i>.</div>
 </li>
 </ul>
 </li>
@@ -285,7 +295,7 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#fields.inherited.from.class.java.security.spec.RSAKeyGenParameterSpec">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
