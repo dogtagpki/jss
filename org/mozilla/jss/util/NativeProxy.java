@@ -31,7 +31,7 @@ public abstract class NativeProxy implements AutoCloseable
 
     /**
      * Create a NativeProxy from a byte array representing a C pointer.
-     * This is the only way to create a NativeProxy, it should be called
+     * This is the primary way of creating a NativeProxy; it should be called
      * from the constructor of your subclass.
      *
      * @param pointer A byte array, created with JSS_ptrToByteArray, that
@@ -39,12 +39,27 @@ public abstract class NativeProxy implements AutoCloseable
      * NativeProxy instance acts as a proxy for that native data structure.
      */
     public NativeProxy(byte[] pointer) {
-        assert(pointer!=null);
-        mPointer = pointer;
-        registry.add(this);
+        this(pointer, true);
+    }
 
-        if (saveStacktraces) {
-            mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
+    /**
+     * Create a NativeProxy from a byte array representing a C pointer.
+     * This allows for creating an untracked NativeProxy instance (when
+     * track=false), which allows for creating NativeProxy instances out
+     * of stack-allocated variables and/or creating NativeProxies which
+     * aren't freed.
+     */
+    protected NativeProxy(byte[] pointer, boolean track) {
+        mPointer = pointer;
+
+        if (track) {
+            assert(pointer != null);
+
+            registry.add(this);
+
+            if (saveStacktraces) {
+                mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
+            }
         }
     }
 
