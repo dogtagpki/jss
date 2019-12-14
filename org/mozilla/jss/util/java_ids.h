@@ -413,6 +413,12 @@ PR_BEGIN_EXTERN_C
 #define GLOBAL_REF_PROXY_CLASS_NAME "org/mozilla/jss/util/GlobalRefProxy"
 #define GLOBAL_REF_CONSTRUCTOR_SIG "([B)V"
 
+/*
+ * StaticVoidProxy
+ */
+#define STATIC_VOID_POINTER_CLASS_NAME "org/mozilla/jss/util/StaticVoidPointer"
+#define STATIC_VOID_POINTER_CONSTRUCTOR_SIG "([B)V"
+
 PR_END_EXTERN_C
 
 #endif
