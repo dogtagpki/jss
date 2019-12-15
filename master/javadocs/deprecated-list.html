@@ -410,99 +410,102 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="org/mozilla/jss/util/NativeEnclosure.html#finalize--">org.mozilla.jss.util.NativeEnclosure.finalize()</a></td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/pkcs11/PK11PubKey.html#fromRaw-org.mozilla.jss.crypto.PrivateKey.Type-byte:A-">org.mozilla.jss.pkcs11.PK11PubKey.fromRaw(PrivateKey.Type, byte[])</a>
 <div class="block"><span class="deprecationComment">This method works for RSA keys but not DSA or EC keys. Use
       fromSPKI() instead.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/crypto/EncryptionAlgorithm.html#fromString-java.lang.String-">org.mozilla.jss.crypto.EncryptionAlgorithm.fromString(String)</a>
 <div class="block"><span class="deprecationComment">This method is deprecated because algorithm strings
   don't contain key length, which is necessary to distinguish between
   AES algorithms.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/crypto/Algorithm.html#getParameterClass--">org.mozilla.jss.crypto.Algorithm.getParameterClass()</a>
 <div class="block"><span class="deprecationComment">Call <code>getParameterClasses()</code> instead.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/pkix/cmmf/RevRequest.html#getPassphrase--">org.mozilla.jss.pkix.cmmf.RevRequest.getPassphrase()</a>
 <div class="block"><span class="deprecationComment">The <code>passphrase</code> field has been renamed
   <code>sharedSecret</code>. Call <code>getSharedSecret</code> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/netscape/security/acl/AclImpl.html#getPermissions-java.security.Principal-">org.mozilla.jss.netscape.security.acl.AclImpl.getPermissions(Principal)</a>
 <div class="block"><span class="deprecationComment">Permission in java.security.acl has been deprecated and marked for removal</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/netscape/security/x509/CertAndKeyGen.html#getSelfCert-org.mozilla.jss.netscape.security.x509.X500Name-long-">org.mozilla.jss.netscape.security.x509.CertAndKeyGen.getSelfCert(X500Name, long)</a>
 <div class="block"><span class="deprecationComment">Use the new <a href="org/mozilla/jss/netscape/security/x509/CertAndKeyGen.html#getSelfCertificate-org.mozilla.jss.netscape.security.x509.X500Name-long-"><code>CertAndKeyGen.getSelfCertificate(X500Name, long)</code></a></span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/CryptoManager.html#isCertValid-java.lang.String-boolean-org.mozilla.jss.CertificateUsage-">org.mozilla.jss.CryptoManager.isCertValid(String, boolean, CertificateUsage)</a>
 <div class="block"><span class="deprecationComment">Use verifyCertificate() instead</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/netscape/security/acl/WorldGroupImpl.html#isMember-java.security.Principal-">org.mozilla.jss.netscape.security.acl.WorldGroupImpl.isMember(Principal)</a>
 <div class="block"><span class="deprecationComment">isMember(Principal) in GroupImpl has been deprecated</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/netscape/security/acl/GroupImpl.html#isMember-java.security.Principal-">org.mozilla.jss.netscape.security.acl.GroupImpl.isMember(Principal)</a>
 <div class="block"><span class="deprecationComment">Group in java.security.acl has been deprecated and marked for removal</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLSocket.html#requireClientAuth-boolean-boolean-">org.mozilla.jss.ssl.SSLSocket.requireClientAuth(boolean, boolean)</a>
 <div class="block"><span class="deprecationComment">use requireClientAuth(int)</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#requireClientAuth-boolean-boolean-">org.mozilla.jss.ssl.SSLServerSocket.requireClientAuth(boolean, boolean)</a>
 <div class="block"><span class="deprecationComment">use requireClientAuth(int)</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLSocket.html#requireClientAuthDefault-boolean-boolean-">org.mozilla.jss.ssl.SSLSocket.requireClientAuthDefault(boolean, boolean)</a>
 <div class="block"><span class="deprecationComment">use requireClientAuthDefault(int)</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLSocket.html#setNeedClientAuth-boolean-">org.mozilla.jss.ssl.SSLSocket.setNeedClientAuth(boolean)</a>
 <div class="block"><span class="deprecationComment">As of JSS 3.0. This method is misnamed. Use
   <code>requestClientAuth</code> instead.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#setNeedClientAuth-boolean-">org.mozilla.jss.ssl.SSLServerSocket.setNeedClientAuth(boolean)</a>
 <div class="block"><span class="deprecationComment">As of JSS 3.0. This method is misnamed. Use
   <code>requestClientAuth</code> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLSocket.html#setNeedClientAuthNoExpiryCheck-boolean-">org.mozilla.jss.ssl.SSLSocket.setNeedClientAuthNoExpiryCheck(boolean)</a>
 <div class="block"><span class="deprecationComment">As of JSS 3.0. This method is misnamed. Use
   <code>requestClientAuthNoExpiryCheck</code> instead.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#setNeedClientAuthNoExpiryCheck-boolean-">org.mozilla.jss.ssl.SSLServerSocket.setNeedClientAuthNoExpiryCheck(boolean)</a>
 <div class="block"><span class="deprecationComment">As of JSS 3.0. This method is misnamed. Use
   <code>requestClientAuthNoExpiryCheck</code> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="org/mozilla/jss/netscape/security/x509/CertAndKeyGen.html#setRandom-java.security.SecureRandom-">org.mozilla.jss.netscape.security.x509.CertAndKeyGen.setRandom(SecureRandom)</a>
 <div class="block"><span class="deprecationComment">All random numbers come from PKCS #11 now.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="org/mozilla/jss/netscape/security/acl/AclEntryImpl.html#toString--">org.mozilla.jss.netscape.security.acl.AclEntryImpl.toString()</a>
 <div class="block"><span class="deprecationComment">Group and Permission in java.security.acl have been deprecated and marked for removal</span></div>
 </td>

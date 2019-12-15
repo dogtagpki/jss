@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>, <a href="../../../../org/mozilla/jss/util/GlobalRefProxy.html" title="class in org.mozilla.jss.util">GlobalRefProxy</a>, <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>, <a href="../../../../org/mozilla/jss/pkcs11/TokenProxy.html" title="class in org.mozilla.jss.pkcs11">TokenProxy</a></dd>
+<dd><a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>, <a href="../../../../org/mozilla/jss/util/GlobalRefProxy.html" title="class in org.mozilla.jss.util">GlobalRefProxy</a>, <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>, <a href="../../../../org/mozilla/jss/util/StaticVoidPointer.html" title="class in org.mozilla.jss.util">StaticVoidPointer</a>, <a href="../../../../org/mozilla/jss/pkcs11/TokenProxy.html" title="class in org.mozilla.jss.pkcs11">TokenProxy</a></dd>
 </dl>
 <hr>
 <br>
@@ -156,10 +156,19 @@ implements java.lang.AutoCloseable</pre>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
-<th class="colOne" scope="col">Constructor and Description</th>
+<th class="colFirst" scope="col">Modifier</th>
+<th class="colLast" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#NativeProxy-byte:A-">NativeProxy</a></span>(byte[]&nbsp;pointer)</code>
+<td class="colFirst"><code>&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#NativeProxy-byte:A-">NativeProxy</a></span>(byte[]&nbsp;pointer)</code>
+<div class="block">Create a NativeProxy from a byte array representing a C pointer.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected </code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#NativeProxy-byte:A-boolean-">NativeProxy</a></span>(byte[]&nbsp;pointer,
+           boolean&nbsp;track)</code>
 <div class="block">Create a NativeProxy from a byte array representing a C pointer.</div>
 </td>
 </tr>
@@ -260,12 +269,12 @@ implements java.lang.AutoCloseable</pre>
 <a name="NativeProxy-byte:A-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>NativeProxy</h4>
 <pre>public&nbsp;NativeProxy(byte[]&nbsp;pointer)</pre>
 <div class="block">Create a NativeProxy from a byte array representing a C pointer.
- This is the only way to create a NativeProxy, it should be called
+ This is the primary way of creating a NativeProxy; it should be called
  from the constructor of your subclass.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -273,6 +282,21 @@ implements java.lang.AutoCloseable</pre>
  contains a pointer pointing to a native data structure.  The
  NativeProxy instance acts as a proxy for that native data structure.</dd>
 </dl>
+</li>
+</ul>
+<a name="NativeProxy-byte:A-boolean-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>NativeProxy</h4>
+<pre>protected&nbsp;NativeProxy(byte[]&nbsp;pointer,
+                      boolean&nbsp;track)</pre>
+<div class="block">Create a NativeProxy from a byte array representing a C pointer.
+ This allows for creating an untracked NativeProxy instance (when
+ track=false), which allows for creating NativeProxy instances out
+ of stack-allocated variables and/or creating NativeProxies which
+ aren't freed.</div>
 </li>
 </ul>
 </li>

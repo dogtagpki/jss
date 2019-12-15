@@ -127,6 +127,11 @@
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Constructor for creating an empty ACL.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#acquireNativeResources--">acquireNativeResources()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block">Allocate native resources, setting mPointer and mPointerSize as
+ appropriate.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/PolicyQualifiers.html#add-org.mozilla.jss.netscape.security.x509.PolicyQualifierInfo-">add(PolicyQualifierInfo)</a></span> - Method in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/PolicyQualifiers.html" title="class in org.mozilla.jss.netscape.security.x509">PolicyQualifiers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/primitive/RDN.html#add-org.mozilla.jss.pkix.primitive.AVA-">add(AVA)</a></span> - Method in class org.mozilla.jss.pkix.primitive.<a href="org/mozilla/jss/pkix/primitive/RDN.html" title="class in org.mozilla.jss.pkix.primitive">RDN</a></dt>
@@ -4978,6 +4983,10 @@
 <dd>
 <div class="block">This flushes the stream and closes the next stream downstream.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#close--">close()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block">Deinitialize and free mPointer.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeProxy.html#close--">close()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></dt>
 <dd>
 <div class="block">Close this NativeProxy by releasing its native resources if they
@@ -9184,6 +9193,10 @@
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="block"><span class="deprecationComment">finalize() in Object has been deprecated</span></div>
 </div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#finalize--">finalize()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeProxy.html#finalize--">finalize()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></dt>
 <dd>
@@ -16237,6 +16250,14 @@
 <div class="block">Netscape Enhancement:
  This function implements a object identifier factory.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#mPointer">mPointer</a></span> - Variable in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block">Enclosed NativeProxy reference.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#mPointerSize">mPointerSize</a></span> - Variable in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block">Size of enclosed mPointer.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmc/OtherInfo.html#MUST_ARCHIVE_KEYS">MUST_ARCHIVE_KEYS</a></span> - Static variable in class org.mozilla.jss.pkix.cmc.<a href="org/mozilla/jss/pkix/cmc/OtherInfo.html" title="class in org.mozilla.jss.pkix.cmc">OtherInfo</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -16456,6 +16477,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11SymmetricKeyDeriver.html#nativeDeriveSymKey-org.mozilla.jss.pkcs11.PK11Token-org.mozilla.jss.crypto.SymmetricKey-org.mozilla.jss.crypto.SymmetricKey-long-byte:A-byte:A-long-long-long-">nativeDeriveSymKey(PK11Token, SymmetricKey, SymmetricKey, long, byte[], byte[], long, long, long)</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11SymmetricKeyDeriver.html" title="class in org.mozilla.jss.pkcs11">PK11SymmetricKeyDeriver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">NativeEnclosure</span></a> - Class in <a href="org/mozilla/jss/util/package-summary.html">org.mozilla.jss.util</a></dt>
+<dd>
+<div class="block">Classes extending NativeEnclsoure wrap a single NativeProxy instance,
+ allowing it to be accessed from the JNI layer but be allocated and scoped
+ from the Java layer.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#NativeEnclosure--">NativeEnclosure()</a></span> - Constructor for class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/util/NativeErrcodes.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">NativeErrcodes</span></a> - Class in <a href="org/mozilla/jss/util/package-summary.html">org.mozilla.jss.util</a></dt>
 <dd>
 <div class="block">An enumeration of all error codes from NSS and NSPR.</div>
@@ -16469,6 +16498,10 @@
 <div class="block">NativeProxy, a superclass for Java classes that mirror C data structures.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeProxy.html#NativeProxy-byte:A-">NativeProxy(byte[])</a></span> - Constructor for class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></dt>
+<dd>
+<div class="block">Create a NativeProxy from a byte array representing a C pointer.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeProxy.html#NativeProxy-byte:A-boolean-">NativeProxy(byte[], boolean)</a></span> - Constructor for class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></dt>
 <dd>
 <div class="block">Create a NativeProxy from a byte array representing a C pointer.</div>
 </dd>
@@ -16995,6 +17028,10 @@
 <dd>
 <div class="block">Open the file at name (with the specified flags and mode) and create
  a new PRFDProxy (to a NSPR PRFileDesc *) for that file.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#open--">open()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block">Allocate and initialize mPointer with its enclosed value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/InitializationValues.html#optimizeSpace">optimizeSpace</a></span> - Variable in class org.mozilla.jss.<a href="org/mozilla/jss/InitializationValues.html" title="class in org.mozilla.jss">InitializationValues</a></dt>
 <dd>
@@ -18886,10 +18923,17 @@ a symmetric key.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/GlobalRefProxy.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/GlobalRefProxy.html" title="class in org.mozilla.jss.util">GlobalRefProxy</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeEnclosure.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util">NativeEnclosure</a></dt>
+<dd>
+<div class="block">Called to deallocate native resources; note that mPointer.close()
+ is called afterwards.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeProxy.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></dt>
 <dd>
 <div class="block">Release the native resources used by this proxy.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/StaticVoidPointer.html#releaseNativeResources--">releaseNativeResources()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/StaticVoidPointer.html" title="class in org.mozilla.jss.util">StaticVoidPointer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Module.html#reloadTokens--">reloadTokens()</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Module.html" title="class in org.mozilla.jss.pkcs11">PK11Module</a></dt>
 <dd>
 <div class="block">Re-load the list of this module's tokens.</div>
@@ -21581,6 +21625,13 @@ a symmetric key.</div>
 <dd>
 <div class="block">The OID for the state or province name (S) attribute.</div>
 </dd>
+<dt><a href="org/mozilla/jss/util/StaticVoidPointer.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">StaticVoidPointer</span></a> - Class in <a href="org/mozilla/jss/util/package-summary.html">org.mozilla.jss.util</a></dt>
+<dd>
+<div class="block">StaticVoidPointer is a Java class that mirror a statically allocated
+ `void *` pointer in C.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/util/StaticVoidPointer.html#StaticVoidPointer-byte:A-">StaticVoidPointer(byte[])</a></span> - Constructor for class org.mozilla.jss.util.<a href="org/mozilla/jss/util/StaticVoidPointer.html" title="class in org.mozilla.jss.util">StaticVoidPointer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmc/CMCStatusInfo.html#STATUS">STATUS</a></span> - Static variable in class org.mozilla.jss.pkix.cmc.<a href="org/mozilla/jss/pkix/cmc/CMCStatusInfo.html" title="class in org.mozilla.jss.pkix.cmc">CMCStatusInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmc/CMCStatusInfoV2.html#STATUS">STATUS</a></span> - Static variable in class org.mozilla.jss.pkix.cmc.<a href="org/mozilla/jss/pkix/cmc/CMCStatusInfoV2.html" title="class in org.mozilla.jss.pkix.cmc">CMCStatusInfoV2</a></dt>
