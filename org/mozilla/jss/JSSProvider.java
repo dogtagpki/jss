@@ -201,6 +201,8 @@ public final class JSSProvider extends java.security.Provider {
         /////////////////////////////////////////////////////////////
         // SecretKeyFactory
         /////////////////////////////////////////////////////////////
+        put("SecretKeyFactory.GenericSecret", "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$GenericSecret");
+        put("Alg.Alias.SecretKeyFactory.GENERIC_SECRET", "GenericSecret");
         put("SecretKeyFactory.DES",
             "org.mozilla.jss.provider.javax.crypto.JSSSecretKeyFactorySpi$DES");
         put("SecretKeyFactory.DESede",

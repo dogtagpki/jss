@@ -105,7 +105,11 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
 /* 69 */    {CKM_SHA512_HMAC, PK11_MECH},
 
 /* CKM_AES_CMAC is new to NSS; some implementations might not yet have it. */
-/* 70 */    {CKM_AES_CMAC, PK11_MECH}
+/* 70 */    {CKM_AES_CMAC, PK11_MECH},
+
+/* CKM_GENERIC_SECRET_KEY_GEN stub for additional keys. */
+/* 71 */    {CKM_GENERIC_SECRET_KEY_GEN, PK11_MECH},
+
 /* REMEMBER TO UPDATE NUM_ALGS!!! (in Algorithm.h) */
 };
 

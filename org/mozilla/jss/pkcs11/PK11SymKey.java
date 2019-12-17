@@ -29,22 +29,13 @@ public final class PK11SymKey implements SymmetricKey {
 
     public SymmetricKey.Type getType() {
         KeyType kt = getKeyType();
-        if(kt == KeyType.DES) {
-            return DES;
-        } else if(kt == KeyType.DES3) {
-            return DES3;
-        } else if(kt == KeyType.RC4) {
-            return RC4;
-        } else if(kt == KeyType.RC2) {
-            return RC2;
-        } else if(kt == KeyType.AES) {
-            return AES;
-        } else if(kt == KeyType.SHA1_HMAC) {
-            return SHA1_HMAC;
-        } else {
+
+        SymmetricKey.Type result = SymmetricKey.Type.fromKeyType(kt);
+        if (result == null) {
             throw new RuntimeException("Unrecognized key type: " + kt);
-            // return DES;
         }
+
+        return result;
     }
 
     public native CryptoToken getOwningToken();

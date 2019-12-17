@@ -428,4 +428,9 @@ class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
+    public static class GenericSecret extends JSSSecretKeyFactorySpi {
+        public GenericSecret() {
+            super(KeyGenAlgorithm.GENERIC_SECRET);
+        }
+    }
 }
