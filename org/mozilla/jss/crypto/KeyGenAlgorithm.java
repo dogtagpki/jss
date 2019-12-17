@@ -32,6 +32,14 @@ public class KeyGenAlgorithm extends Algorithm {
         }
     }
 
+    protected static class AnyKeyStrengthValidator
+            implements KeyStrengthValidator
+    {
+        public boolean isValidKeyStrength(int strength) {
+            return true;
+        }
+    }
+
     protected KeyGenAlgorithm(int oidTag, String name,
             KeyStrengthValidator keyStrengthValidator,
             OBJECT_IDENTIFIER oid, Class<?> paramClass)
@@ -78,6 +86,16 @@ public class KeyGenAlgorithm extends Algorithm {
     public boolean isValidStrength(int strength) {
         return keyStrengthValidator.isValidKeyStrength(strength);
     }
+
+    //////////////////////////////////////////////////////////////
+    public static final KeyGenAlgorithm
+    GENERIC_SECRET = new KeyGenAlgorithm(
+        CKM_GENERIC_SECRET_KEY_GEN,
+        "GenericSecret",
+        new AnyKeyStrengthValidator(),
+        null,
+        null
+    );
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm

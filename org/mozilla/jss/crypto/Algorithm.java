@@ -244,4 +244,7 @@ public class Algorithm {
 
     // PKCS#11 AES-CMAC
     protected static final int CKM_AES_CMAC=70;
+
+    // Generic Secret
+    protected static final int CKM_GENERIC_SECRET_KEY_GEN=71;
 }
