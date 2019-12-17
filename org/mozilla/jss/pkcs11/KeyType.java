@@ -9,6 +9,7 @@ import java.util.Hashtable;
 
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.CMACAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
@@ -209,7 +210,8 @@ public final class KeyType {
                             EncryptionAlgorithm.AES_CBC_PAD,
                             EncryptionAlgorithm.AES_128_CBC_PAD,
                             EncryptionAlgorithm.AES_192_CBC_PAD,
-                            EncryptionAlgorithm.AES_256_CBC_PAD
+                            EncryptionAlgorithm.AES_256_CBC_PAD,
+                            CMACAlgorithm.AES
                             },
                             "AES"
                         );
@@ -240,6 +242,29 @@ public final class KeyType {
                             HMACAlgorithm.SHA1
                             },
                             "SHA1_HMAC"
+                        );
+
+    static public final KeyType
+    SHA256_HMAC = new KeyType(new Algorithm[]
+                              {
+                              HMACAlgorithm.SHA256
+                              },
+                              "SHA256_HMAC"
+                        );
+
+    static public final KeyType
+    SHA384_HMAC = new KeyType(new Algorithm[]
+                              {
+                              HMACAlgorithm.SHA384
+                              },
+                              "SHA384_HMAC"
+                        );
+    static public final KeyType
+    SHA512_HMAC = new KeyType(new Algorithm[]
+                              {
+                              HMACAlgorithm.SHA512
+                              },
+                              "SHA512_HMAC"
                         );
 
     static public final KeyType GENERIC_SECRET =
