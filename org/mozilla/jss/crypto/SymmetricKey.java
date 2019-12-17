@@ -84,11 +84,11 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
         public static final Type SHA1_HMAC = new Type(new String[]{ "SHA1_HMAC", "SHA1-HMAC", "SHA1HMAC", "HMAC_SHA1", "HMAC-SHA1", "HMACSHA1" },
             KeyGenAlgorithm.SHA1_HMAC, KeyType.SHA1_HMAC);
         public static final Type SHA256_HMAC = new Type(new String[]{ "SHA256_HMAC", "SHA256-HMAC", "SHA256HMAC", "HMAC_SHA256", "HMAC-SHA256", "HMACSHA256" },
-            KeyGenAlgorithm.SHA256_HMAC, null);
+            KeyGenAlgorithm.SHA256_HMAC, KeyType.SHA256_HMAC);
         public static final Type SHA384_HMAC = new Type(new String[]{ "SHA384_HMAC", "SHA384-HMAC", "SHA384HMAC", "HMAC_SHA384", "HMAC-SHA384", "HMACSHA384" },
-            KeyGenAlgorithm.SHA384_HMAC, null);
+            KeyGenAlgorithm.SHA384_HMAC, KeyType.SHA384_HMAC);
         public static final Type SHA512_HMAC = new Type(new String[]{ "SHA512_HMAC", "SHA512-HMAC", "SHA512HMAC", "HMAC_SHA512", "HMAC-SHA512", "HMACSHA512" },
-            KeyGenAlgorithm.SHA512_HMAC, null);
+            KeyGenAlgorithm.SHA512_HMAC, KeyType.SHA512_HMAC);
         public static final Type PBA_SHA1_HMAC = new Type(new String[]{ "PBA_SHA1_HMAC" },
             KeyGenAlgorithm.PBA_SHA1_HMAC, null);
         public static final Type AES = new Type(new String[]{ "AES" }, KeyGenAlgorithm.AES, KeyType.AES);
