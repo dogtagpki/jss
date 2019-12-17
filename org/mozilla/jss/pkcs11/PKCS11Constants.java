@@ -3070,6 +3070,27 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_SP800_108_COUNTER_KDF = 0x000003ACL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SP800_108_FEEDBACK_KDF = 0x000003ADL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SP800_108_DOUBLE_PIPELINE_KDF = 0x000003AEL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_VENDOR_DEFINED = 0x80000000L;
 
     /**
@@ -3938,6 +3959,55 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CK_SP800_108_ITERATION_VARIABLE = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SP800_108_OPTIONAL_COUNTER = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SP800_108_DKM_LENGTH = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SP800_108_BYTE_ARRAY = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SP800_108_COUNTER = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SP800_108_DKM_LENGTH_SUM_OF_KEYS = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SP800_108_DKM_LENGTH_SUM_OF_SEGMENTS = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKP_PKCS5_PBKD2_HMAC_SHA1 = 0x00000001L;
 
     /**
@@ -4751,6 +4821,27 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKM_NSS_PUB_FROM_PRIV = 0xCE534378L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA = 0xCE53437AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA = 0xCE53437BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA = 0xCE53437CL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
