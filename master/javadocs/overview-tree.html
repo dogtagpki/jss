@@ -83,6 +83,7 @@
 <li><a href="org/mozilla/jss/nss/package-tree.html">org.mozilla.jss.nss</a>, </li>
 <li><a href="org/mozilla/jss/pkcs10/package-tree.html">org.mozilla.jss.pkcs10</a>, </li>
 <li><a href="org/mozilla/jss/pkcs11/package-tree.html">org.mozilla.jss.pkcs11</a>, </li>
+<li><a href="org/mozilla/jss/pkcs11/attrs/package-tree.html">org.mozilla.jss.pkcs11.attrs</a>, </li>
 <li><a href="org/mozilla/jss/pkcs12/package-tree.html">org.mozilla.jss.pkcs12</a>, </li>
 <li><a href="org/mozilla/jss/pkcs7/package-tree.html">org.mozilla.jss.pkcs7</a>, </li>
 <li><a href="org/mozilla/jss/pkix/cert/package-tree.html">org.mozilla.jss.pkix.cert</a>, </li>
@@ -531,6 +532,7 @@
 <li type="circle">org.mozilla.jss.provider.java.security.<a href="org/mozilla/jss/provider/java/security/KeyFactorySpi1_2.html" title="class in org.mozilla.jss.provider.java.security"><span class="typeNameLink">KeyFactorySpi1_2</span></a></li>
 </ul>
 </li>
+<li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenAlgorithm.AnyKeyStrengthValidator.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">KeyGenAlgorithm.AnyKeyStrengthValidator</span></a> (implements org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenAlgorithm.KeyStrengthValidator.html" title="interface in org.mozilla.jss.crypto">KeyGenAlgorithm.KeyStrengthValidator</a>)</li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenAlgorithm.FixedKeyStrengthValidator.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">KeyGenAlgorithm.FixedKeyStrengthValidator</span></a> (implements org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenAlgorithm.KeyStrengthValidator.html" title="interface in org.mozilla.jss.crypto">KeyGenAlgorithm.KeyStrengthValidator</a>)</li>
 <li type="circle">org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/KeyIdentifier.html" title="class in org.mozilla.jss.netscape.security.x509"><span class="typeNameLink">KeyIdentifier</span></a> (implements java.io.Serializable)</li>
 <li type="circle">org.mozilla.jss.SecretDecoderRing.<a href="org/mozilla/jss/SecretDecoderRing/KeyManager.html" title="class in org.mozilla.jss.SecretDecoderRing"><span class="typeNameLink">KeyManager</span></a></li>
@@ -581,7 +583,72 @@
 </li>
 <li type="circle">org.mozilla.jss.pkix.primitive.<a href="org/mozilla/jss/pkix/primitive/Name.html" title="class in org.mozilla.jss.pkix.primitive"><span class="typeNameLink">Name</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Value.html" title="interface in org.mozilla.jss.asn1">ASN1Value</a>)</li>
 <li type="circle">org.mozilla.jss.pkix.primitive.<a href="org/mozilla/jss/pkix/primitive/Name.Template.html" title="class in org.mozilla.jss.pkix.primitive"><span class="typeNameLink">Name.Template</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Template.html" title="interface in org.mozilla.jss.asn1">ASN1Template</a>)</li>
-<li type="circle">org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">NativeEnclosure</span></a> (implements java.lang.AutoCloseable)</li>
+<li type="circle">org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeEnclosure.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">NativeEnclosure</span></a> (implements java.lang.AutoCloseable)
+<ul>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAttribute.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAttribute</span></a>
+<ul>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass</span></a>
+<ul>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.Certificate.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.Certificate</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.Data.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.Data</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.DomainParameters.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.DomainParameters</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.HWFeature.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.HWFeature</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.Mechanism.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.Mechanism</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.PrivateKey.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.PrivateKey</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.PublicKey.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.PublicKey</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAClass.SecretKey.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAClass.SecretKey</span></a></li>
+</ul>
+</li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType</span></a>
+<ul>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.AES.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.AES</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.BATON.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.BATON</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.Blowfish.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.Blowfish</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.Camellia.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.Camellia</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.CAST.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.CAST</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.CAST128.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.CAST128</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.CAST3.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.CAST3</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.CAST5.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.CAST5</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.CDMF.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.CDMF</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.DES.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.DES</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.DES2.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.DES2</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.DES3.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.DES3</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.DH.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.DH</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.DSA.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.DSA</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.EC.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.EC</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.ECDSA.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.ECDSA</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.GenericSecret.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.GenericSecret</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.IDEA.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.IDEA</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.JUNIPER.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.JUNIPER</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.KEA.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.KEA</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.RC2.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.RC2</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.RC4.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.RC4</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.RC5.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.RC5</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.RSA.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.RSA</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.Seed.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.Seed</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.Skipjack.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.Skipjack</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.Twofish.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.Twofish</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAKeyType.X9_42_DH.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAKeyType.X9_42_DH</span></a></li>
+</ul>
+</li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage</span></a>
+<ul>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Decrypt.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Decrypt</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Derive.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Derive</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Encrypt.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Encrypt</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Sign.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Sign</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.SignRecover.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.SignRecover</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Unwrap.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Unwrap</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Verify.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Verify</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.VerifyRecover.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.VerifyRecover</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAUsage.Wrap.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAUsage.Wrap</span></a></li>
+</ul>
+</li>
+<li type="circle">org.mozilla.jss.pkcs11.attrs.<a href="org/mozilla/jss/pkcs11/attrs/CKAValueLen.html" title="class in org.mozilla.jss.pkcs11.attrs"><span class="typeNameLink">CKAValueLen</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li type="circle">org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeErrcodes.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">NativeErrcodes</span></a></li>
 <li type="circle">org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util"><span class="typeNameLink">NativeProxy</span></a> (implements java.lang.AutoCloseable)
 <ul>

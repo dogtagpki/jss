@@ -11,6 +11,7 @@ org.mozilla.jss.netscape.security.x509
 org.mozilla.jss.nss
 org.mozilla.jss.pkcs10
 org.mozilla.jss.pkcs11
+org.mozilla.jss.pkcs11.attrs
 org.mozilla.jss.pkcs12
 org.mozilla.jss.pkcs7
 org.mozilla.jss.pkix.cert
