@@ -404,3 +404,16 @@ Java_org_mozilla_jss_util_GlobalRefProxy_releaseNativeResources;
     local:
         *;
 };
+JSS_4.6.3 {
+    global:
+Java_org_mozilla_jss_pkcs11_attrs_CKAClass_acquireNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAClass_releaseNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAKeyType_acquireNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAKeyType_releaseNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAUsage_acquireNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAUsage_releaseNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAValueLen_acquireNativeResources;
+Java_org_mozilla_jss_pkcs11_attrs_CKAValueLen_releaseNativeResources;
+    local:
+        *;
+};
