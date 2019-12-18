@@ -23,6 +23,16 @@ getAlgInfo(JNIEnv *env, jobject alg, JSS_AlgInfo *info);
 #define CKM_AES_CMAC CKM_INVALID_MECHANISM
 #endif
 
+#ifndef CKM_SP800_108_COUNTER_KDF
+/* All added at the same time. */
+#define CKM_SP800_108_COUNTER_KDF CKM_INVALID_MECHANISM
+#define CKM_SP800_108_FEEDBACK_KDF CKM_INVALID_MECHANISM
+#define CKM_SP800_108_DOUBLE_PIPELINE_KDF CKM_INVALID_MECHANISM
+#define CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA CKM_INVALID_MECHANISM
+#define CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA CKM_INVALID_MECHANISM
+#define CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA CKM_INVALID_MECHANISM
+#endif
+
 /***********************************************************************
 **
 **  Algorithm indices.  This must be kept in sync with the algorithm
@@ -109,6 +119,15 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
 
 /* CKM_GENERIC_SECRET_KEY_GEN stub for additional keys. */
 /* 71 */    {CKM_GENERIC_SECRET_KEY_GEN, PK11_MECH},
+
+/* CKM_SP800_108_* and CKM_NSS_SP800_108_*_DERIVE_DATA are new to NSS; some
+ * implementations might not yet have it. */
+/* 72 */    {CKM_SP800_108_COUNTER_KDF, PK11_MECH},
+/* 73 */    {CKM_SP800_108_FEEDBACK_KDF, PK11_MECH},
+/* 74 */    {CKM_SP800_108_DOUBLE_PIPELINE_KDF, PK11_MECH},
+/* 75 */    {CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA, PK11_MECH},
+/* 76 */    {CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA, PK11_MECH},
+/* 77 */    {CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA, PK11_MECH},
 
 /* REMEMBER TO UPDATE NUM_ALGS!!! (in Algorithm.h) */
 };

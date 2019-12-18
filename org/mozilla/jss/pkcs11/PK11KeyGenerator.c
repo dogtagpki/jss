@@ -14,6 +14,7 @@
 
 #include "jssutil.h"
 #include "pk11util.h"
+#include "StaticVoidPointer.h"
 #include <java_ids.h>
 #include <jss_exceptions.h>
 #include <Algorithm.h>
@@ -476,3 +477,62 @@ finish:
     return cloneObj;
 }
 
+/***********************************************************************
+ *
+ * PK11KeyGenerator.generateKBKDF
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateKBKDF(JNIEnv *env, jclass clazz, jobject tokenObj, jobject baseKeyObj, jlong alg, jobject paramsObj, jlong params_size, jlong derivedKeyAlgorithm, jint strength, jint opFlags, jboolean temporary, jint sensitive)
+{
+    PK11SlotInfo *slot = NULL;
+    PK11SymKey *baseKey = NULL;
+    PK11SymKey *result = NULL;
+    jobject resultObj = NULL;
+
+    SECItem param_item = { 0 };
+    void *param_ptr = NULL;
+
+    PRBool isPerm = PR_FALSE;
+
+    PR_ASSERT(env != NULL && tokenObj != NULL);
+
+    /* get slot */
+    if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    /* get base key */
+    if (JSS_PK11_getSymKeyPtr(env, baseKeyObj, &baseKey) != PR_SUCCESS) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    /* get params */
+    if (JSS_PR_getStaticVoidRef(env, paramsObj, &param_ptr) != PR_SUCCESS) {
+        /* exception was thrown */
+        goto finish;
+    }
+
+    param_item.type = siBuffer;
+    param_item.data = (unsigned char *)(param_ptr);
+    param_item.len = (unsigned int) params_size;
+
+    isPerm = (temporary == JNI_FALSE) ? PR_TRUE : PR_FALSE;
+
+    result = PK11_DeriveWithFlagsPerm(baseKey, alg, &param_item,
+                                      derivedKeyAlgorithm, CKA_ENCRYPT,
+                                      strength, opFlags, isPerm);
+    if (result == NULL) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION,
+                     "Failed to create derived symmetric key object");
+        goto finish;
+    }
+
+    resultObj = JSS_PK11_wrapSymKey(env, &result);
+
+finish:
+    PK11_FreeSymKey(result);
+    return resultObj;
+}

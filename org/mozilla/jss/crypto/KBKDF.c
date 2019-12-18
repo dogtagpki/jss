@@ -5,10 +5,13 @@
 #include <jni.h>
 
 #include "_jni/org_mozilla_jss_crypto_KBKDFByteArrayParam.h"
+#include "_jni/org_mozilla_jss_crypto_KBKDFCounterParams.h"
 #include "_jni/org_mozilla_jss_crypto_KBKDFDerivedKey.h"
 #include "_jni/org_mozilla_jss_crypto_KBKDFDKMLengthParam.h"
+#include "_jni/org_mozilla_jss_crypto_KBKDFFeedbackParams.h"
 #include "_jni/org_mozilla_jss_crypto_KBKDFIterationVariableParam.h"
 #include "_jni/org_mozilla_jss_crypto_KBKDFOptionalCounterParam.h"
+#include "_jni/org_mozilla_jss_crypto_KBKDFPipelineParams.h"
 
 #include "jssutil.h"
 #include "java_ids.h"
@@ -30,14 +33,20 @@ name(JNIEnv *env, jobject this) \
 
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFByteArrayParam_acquireNativeResourcesInternal);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFByteArrayParam_releaseNativeResourcesInternal);
+__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFCounterParams_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFCounterParams_releaseNativeResourcesInternal);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDerivedKey_acquireNativeResourcesInternal);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDerivedKey_releaseNativeResourcesInternal);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDKMLengthParam_acquireNativeResources);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDKMLengthParam_releaseNativeResources);
+__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_releaseNativeResourcesInternal);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFIterationVariableParam_acquireNativeResources);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFIterationVariableParam_releaseNativeResources);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_acquireNativeResources);
 __NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_releaseNativeResources);
+__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFPipelineParams_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFPipelineParams_releaseNativeResourcesInternal);
 
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_crypto_KBKDFDerivedKey_getKeyFromHandle(JNIEnv *env, jobject this, jobject parentKey, jlong mech, jboolean temporary)
@@ -350,7 +359,7 @@ Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_releaseNativeResources(JNI
     }
 
     PR_ASSERT(param_size = sizeof(CK_PRF_DATA_PARAM));
-    PR_ASSERT(param->type == CK_SP800_108_ITERATION_VARIABLE);
+    PR_ASSERT(param->type == CK_SP800_108_OPTIONAL_COUNTER);
     PR_ASSERT(param->ulValueLen == sizeof(CK_SP800_108_COUNTER_FORMAT));
 
     if (param->pValue != NULL) {
@@ -707,7 +716,9 @@ kbkdf_GetAdditionalDerivedKeys(JNIEnv *env, jobject this, jclass this_class, CK_
 
     keys_array = (*env)->GetObjectField(env, this, field_id);
     if (keys_array == NULL) {
-        return PR_FAILURE;
+        *num_additional_keys = 0;
+        *additional_keys = NULL;
+        return PR_SUCCESS;
     }
 
     *num_additional_keys = (*env)->GetArrayLength(env, keys_array);
@@ -738,6 +749,289 @@ kbkdf_GetAdditionalDerivedKeys(JNIEnv *env, jobject this, jclass this_class, CK_
     }
 
     return PR_SUCCESS;
+}
+
+PRStatus
+kbkdf_GetInitialValue(JNIEnv *env, jobject this, jclass this_class, CK_ULONG *initial_value_length, CK_BYTE_PTR *initial_value)
+{
+    jfieldID field_id = NULL;
+    jobjectArray iv_array = NULL;
+
+    field_id = (*env)->GetFieldID(env, this_class, "initial_value", "[B");
+    if (field_id == NULL) {
+        return PR_FAILURE;
+    }
+
+    iv_array = (*env)->GetObjectField(env, this, field_id);
+    if (iv_array == NULL) {
+        *initial_value_length = 0;
+        *initial_value = NULL;
+        return PR_SUCCESS;
+    }
+
+    if (!JSS_FromByteArray(env, iv_array, initial_value, initial_value_length)) {
+        return PR_FAILURE;
+    }
+
+    return PR_SUCCESS;
+}
+
+/* ===== KBKDF Counter Parameters ===== */
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_crypto_KBKDFCounterParams_acquireNativeResourcesInternal(JNIEnv *env, jobject this)
+{
+    jclass this_class = NULL;
+
+    CK_SP800_108_PRF_TYPE prf_type = CKM_INVALID_MECHANISM;
+    CK_ULONG num_data_params = 0;
+    CK_PRF_DATA_PARAM_PTR data_params = NULL;
+    CK_ULONG num_additional_keys = 0;
+    CK_DERIVED_KEY_PTR additional_keys = NULL;
+    CK_SP800_108_KDF_PARAMS_PTR kdf_params = NULL;
+
+    jobject params_obj;
+
+    this_class = (*env)->GetObjectClass(env, this);
+    if (this_class == NULL) {
+        return;
+    }
+
+    /* Handle PRF Type. */
+    if (kbkdf_GetPRFType(env, this, this_class, &prf_type) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Handle Data Parameters. */
+    if (kbkdf_GetDataParameters(env, this, this_class, &num_data_params, &data_params) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Handle Additional Derived Keys. */
+    if (kbkdf_GetAdditionalDerivedKeys(env, this, this_class, &num_additional_keys, &additional_keys) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Place the values in the actual KDF params struct. */
+    kdf_params = calloc(1, sizeof(CK_SP800_108_KDF_PARAMS));
+
+    kdf_params->prfType = prf_type;
+    kdf_params->ulNumberOfDataParams = num_data_params;
+    kdf_params->pDataParams = data_params;
+    kdf_params->ulAdditionalDerivedKeys = num_additional_keys;
+    kdf_params->pAdditionalDerivedKeys = additional_keys;
+
+    /* Place it back into this NativeEnclosure. */
+    params_obj = JSS_PR_wrapStaticVoidPointer(env, (void **)&kdf_params);
+    if (params_obj == NULL) {
+        goto failure;
+    }
+
+    if (JSS_PR_StoreNativeEnclosure(env, this, params_obj, sizeof(CK_SP800_108_KDF_PARAMS)) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    return;
+
+failure:
+    if (data_params != NULL) {
+        memset(data_params, 0, sizeof(CK_PRF_DATA_PARAM) * num_data_params);
+        free(data_params);
+    }
+
+    if (additional_keys != NULL) {
+        memset(additional_keys, 0, sizeof(CK_DERIVED_KEY) * num_additional_keys);
+        free(additional_keys);
+    }
+
+    if (kdf_params != NULL) {
+        memset(kdf_params, 0, sizeof(CK_SP800_108_KDF_PARAMS));
+        free(kdf_params);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_crypto_KBKDFCounterParams_releaseNativeResourcesInternal(JNIEnv *env, jobject this)
+{
+    jobject ptr_object = NULL;
+
+    CK_SP800_108_KDF_PARAMS_PTR kdf_params = NULL;
+    jlong params_length;
+
+    PR_ASSERT(env != NULL && this != NULL);
+
+    if (JSS_PR_LoadNativeEnclosure(env, this, &ptr_object, &params_length) != PR_SUCCESS) {
+        return;
+    }
+
+    if (JSS_PR_getStaticVoidRef(env, ptr_object, (void **)&kdf_params) != PR_SUCCESS || kdf_params == NULL) {
+        return;
+    }
+
+    PR_ASSERT(params_length == sizeof(CK_SP800_108_KDF_PARAMS));
+
+    if (kdf_params->ulNumberOfDataParams != 0 && kdf_params->pDataParams != NULL) {
+        memset(kdf_params->pDataParams, 0, sizeof(CK_PRF_DATA_PARAM) * kdf_params->ulNumberOfDataParams);
+        free(kdf_params->pDataParams);
+    }
+
+    if (kdf_params->ulAdditionalDerivedKeys != 0 && kdf_params->pAdditionalDerivedKeys != NULL) {
+        memset(kdf_params->pAdditionalDerivedKeys, 0, sizeof(CK_DERIVED_KEY) * kdf_params->ulAdditionalDerivedKeys);
+        free(kdf_params->pAdditionalDerivedKeys);
+    }
+
+    memset(kdf_params, 0, params_length);
+    free(kdf_params);
+}
+
+/* ===== KBKDF Feedback Parameters ===== */
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_acquireNativeResourcesInternal(JNIEnv *env, jobject this)
+{
+    jclass this_class = NULL;
+
+    CK_SP800_108_PRF_TYPE prf_type = CKM_INVALID_MECHANISM;
+    CK_ULONG num_data_params = 0;
+    CK_PRF_DATA_PARAM_PTR data_params = NULL;
+    CK_ULONG num_additional_keys = 0;
+    CK_DERIVED_KEY_PTR additional_keys = NULL;
+    CK_ULONG initial_value_length = 0;
+    CK_BYTE_PTR initial_value = NULL;
+    CK_SP800_108_FEEDBACK_KDF_PARAMS_PTR kdf_params = NULL;
+
+    jobject params_obj;
+
+    this_class = (*env)->GetObjectClass(env, this);
+    if (this_class == NULL) {
+        return;
+    }
+
+    /* Handle PRF Type. */
+    if (kbkdf_GetPRFType(env, this, this_class, &prf_type) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Handle Data Parameters. */
+    if (kbkdf_GetDataParameters(env, this, this_class, &num_data_params, &data_params) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Handle Additional Derived Keys. */
+    if (kbkdf_GetAdditionalDerivedKeys(env, this, this_class, &num_additional_keys, &additional_keys) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Handle Initial Value. */
+    if (kbkdf_GetInitialValue(env, this, this_class, &initial_value_length, &initial_value) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    /* Place the values in the actual KDF params struct. */
+    kdf_params = calloc(1, sizeof(CK_SP800_108_FEEDBACK_KDF_PARAMS));
+
+    kdf_params->prfType = prf_type;
+    kdf_params->ulNumberOfDataParams = num_data_params;
+    kdf_params->pDataParams = data_params;
+    kdf_params->ulAdditionalDerivedKeys = num_additional_keys;
+    kdf_params->pAdditionalDerivedKeys = additional_keys;
+    kdf_params->ulIVLen = initial_value_length;
+    kdf_params->pIV = initial_value;
+
+    /* Place it back into this NativeEnclosure. */
+    params_obj = JSS_PR_wrapStaticVoidPointer(env, (void **)&kdf_params);
+    if (params_obj == NULL) {
+        goto failure;
+    }
+
+    if (JSS_PR_StoreNativeEnclosure(env, this, params_obj, sizeof(CK_SP800_108_FEEDBACK_KDF_PARAMS)) != PR_SUCCESS) {
+        goto failure;
+    }
+
+    return;
+
+failure:
+    if (data_params != NULL) {
+        memset(data_params, 0, sizeof(CK_PRF_DATA_PARAM) * num_data_params);
+        free(data_params);
+    }
+
+    if (additional_keys != NULL) {
+        memset(additional_keys, 0, sizeof(CK_DERIVED_KEY) * num_additional_keys);
+        free(additional_keys);
+    }
+
+    if (initial_value != NULL) {
+        memset(initial_value, 0, sizeof(CK_BYTE) * initial_value_length);
+        free(initial_value);
+    }
+
+    if (kdf_params != NULL) {
+        memset(kdf_params, 0, sizeof(CK_SP800_108_FEEDBACK_KDF_PARAMS));
+        free(kdf_params);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_releaseNativeResourcesInternal(JNIEnv *env, jobject this)
+{
+    jobject ptr_object = NULL;
+
+    CK_SP800_108_FEEDBACK_KDF_PARAMS_PTR kdf_params = NULL;
+    jlong params_length;
+
+    PR_ASSERT(env != NULL && this != NULL);
+
+    if (JSS_PR_LoadNativeEnclosure(env, this, &ptr_object, &params_length) != PR_SUCCESS) {
+        return;
+    }
+
+    if (JSS_PR_getStaticVoidRef(env, ptr_object, (void **)&kdf_params) != PR_SUCCESS || kdf_params == NULL) {
+        return;
+    }
+
+    PR_ASSERT(params_length == sizeof(CK_SP800_108_FEEDBACK_KDF_PARAMS));
+
+    if (kdf_params->ulNumberOfDataParams != 0 && kdf_params->pDataParams != NULL) {
+        memset(kdf_params->pDataParams, 0, sizeof(CK_PRF_DATA_PARAM) * kdf_params->ulNumberOfDataParams);
+        free(kdf_params->pDataParams);
+    }
+
+    if (kdf_params->ulIVLen != 0 && kdf_params->pIV != NULL) {
+        memset(kdf_params->pIV, 0, sizeof(CK_BYTE) * kdf_params->ulIVLen);
+        free(kdf_params->pIV);
+    }
+
+    if (kdf_params->ulAdditionalDerivedKeys != 0 && kdf_params->pAdditionalDerivedKeys != NULL) {
+        memset(kdf_params->pAdditionalDerivedKeys, 0, sizeof(CK_DERIVED_KEY) * kdf_params->ulAdditionalDerivedKeys);
+        free(kdf_params->pAdditionalDerivedKeys);
+    }
+
+    memset(kdf_params, 0, params_length);
+    free(kdf_params);
+}
+
+/* ===== KBKDF Double Pipeline Parameters ===== */
+
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_crypto_KBKDFPipelineParams_acquireNativeResourcesInternal(JNIEnv *env, jobject this)
+{
+    /* Counter and Double Pipeline modes have the same parameter struct.
+     * This allows us to implement this call via the corresponding call for
+     * Counter mode. */
+
+    Java_org_mozilla_jss_crypto_KBKDFCounterParams_acquireNativeResourcesInternal(env, this);
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_crypto_KBKDFPipelineParams_releaseNativeResourcesInternal(JNIEnv *env, jobject this)
+{
+    /* Counter and Double Pipeline modes have the same parameter struct.
+     * This allows us to implement this call via the corresponding call for
+     * Counter mode. */
+
+    Java_org_mozilla_jss_crypto_KBKDFCounterParams_releaseNativeResourcesInternal(env, this);
 }
 
 #endif
