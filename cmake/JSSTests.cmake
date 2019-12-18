@@ -273,6 +273,13 @@ macro(jss_tests)
                 DEPENDS "Setup_DBs"
             )
         endif()
+        if(HAVE_NSS_KBKDF)
+            jss_test_java(
+                NAME "KBKDF_Test"
+                COMMAND "org.mozilla.jss.tests.TestKBKDF" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+                DEPENDS "Setup_DBs"
+            )
+        endif()
         jss_test_java(
             NAME "Mozilla_JSS_Secret_Key_Generation"
             COMMAND "org.mozilla.jss.tests.JCASymKeyGen" "${RESULTS_NSSDB_OUTPUT_DIR}"
