@@ -176,27 +176,65 @@ public final class JSSProvider extends java.security.Provider {
         /////////////////////////////////////////////////////////////
         // KeyGenerator
         /////////////////////////////////////////////////////////////
-        put("KeyGenerator.DES",
-            "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$DES");
-        put("KeyGenerator.DESede",
-            "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$DESede");
+        String kg_spi = "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi";
+
+        put("KeyGenerator.DES", kg_spi + "$DES");
+        put("KeyGenerator.DESede", kg_spi + "$DESede");
         put("Alg.Alias.KeyGenerator.DES3", "DESede");
-        put("KeyGenerator.AES",
-            "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$AES");
-        put("KeyGenerator.RC4",
-            "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$RC4");
-        put("KeyGenerator.RC2",
-            "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$RC2");
-        put("KeyGenerator.HmacSHA1",
-           "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$HmacSHA1");
-        put("KeyGenerator.PBAHmacSHA1",
-           "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$PBAHmacSHA1");
-        put("KeyGenerator.HmacSHA256",
-           "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$HmacSHA256");
-        put("KeyGenerator.HmacSHA384",
-           "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$HmacSHA384");
-        put("KeyGenerator.HmacSHA512",
-           "org.mozilla.jss.provider.javax.crypto.JSSKeyGeneratorSpi$HmacSHA512");
+        put("KeyGenerator.AES", kg_spi + "$AES");
+        put("KeyGenerator.RC4", kg_spi + "$RC4");
+        put("KeyGenerator.RC2", kg_spi + "$RC2");
+        put("KeyGenerator.HmacSHA1", kg_spi + "$HmacSHA1");
+        put("KeyGenerator.PBAHmacSHA1", kg_spi + "$PBAHmacSHA1");
+        put("KeyGenerator.HmacSHA256", kg_spi + "$HmacSHA256");
+        put("KeyGenerator.HmacSHA384", kg_spi + "$HmacSHA384");
+        put("KeyGenerator.HmacSHA512", kg_spi + "$HmacSHA512");
+        // KBKDF: Counter
+        put("KeyGenerator.KbkdfCounter", kg_spi + "$KbkdfCounter");
+        put("Alg.Alias.KeyGenerator.KBKDF-Counter", "KbkdfCounter");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-Counter", "KbkdfCounter");
+        put("Alg.Alias.KeyGenerator.SP800-108-Counter", "KbkdfCounter");
+        put("Alg.Alias.KeyGenerator.CounterKbkdf", "KbkdfCounter");
+        // KBKDF: Counter (data)
+        put("KeyGenerator.KbkdfCounterData", kg_spi + "$KbkdfCounterData");
+        put("Alg.Alias.KeyGenerator.KBKDF-Counter-Data", "KbkdfCounterData");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-Counter-Data", "KbkdfCounterData");
+        put("Alg.Alias.KeyGenerator.SP800-108-Counter-Data", "KbkdfCounterData");
+        put("Alg.Alias.KeyGenerator.CounterKbkdf-Data", "KbkdfCounterData");
+        // KBKDF: Feedback
+        put("KeyGenerator.KbkdfFeedback", kg_spi + "$KbkdfFeedback");
+        put("Alg.Alias.KeyGenerator.KBKDF-Feedback", "KbkdfFeedback");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-Feedback", "KbkdfFeedback");
+        put("Alg.Alias.KeyGenerator.SP800-108-Feedback", "KbkdfFeedback");
+        put("Alg.Alias.KeyGenerator.FeedbackKbkdf", "KbkdfFeedback");
+        // KBKDF: Feedback (data)
+        put("KeyGenerator.KbkdfFeedbackData", kg_spi + "$KbkdfFeedbackData");
+        put("Alg.Alias.KeyGenerator.KBKDF-Feedback-Data", "KbkdfFeedbackData");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-Feedback-Data", "KbkdfFeedbackData");
+        put("Alg.Alias.KeyGenerator.SP800-108-Feedback-Data", "KbkdfFeedbackData");
+        put("Alg.Alias.KeyGenerator.FeedbackKbkdf-Data", "KbkdfFeedbackData");
+        // KBKDF: Double Pipeline -- sometimes Pipeline KBKDF
+        put("KeyGenerator.KbkdfDoublePipeline", kg_spi + "$KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.KBKDF-DoublePipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-DoublePipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.SP800-108-DoublePipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.DoublePipelineKbkdf", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.KbkdfPipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.KBKDF-Pipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-Pipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.SP800-108-Pipeline", "KbkdfDoublePipeline");
+        put("Alg.Alias.KeyGenerator.PipelineKbkdf", "KbkdfDoublePipeline");
+        // KBKDF: Double Pipeline (data) -- sometimes Pipeline KBKDF (data)
+        put("KeyGenerator.KbkdfDoublePipelineData", kg_spi + "$KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.KBKDF-DoublePipeline-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-DoublePipeline-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.SP800-108-DoublePipeline-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.DoublePipelineKbkdf-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.KbkdfPipelineData", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.KBKDF-Pipeline-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.SP800-108-KDF-Pipeline-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.SP800-108-Pipeline-Data", "KbkdfDoublePipelineData");
+        put("Alg.Alias.KeyGenerator.PipelineKbkdf-Data", "KbkdfDoublePipelineData");
 
         /////////////////////////////////////////////////////////////
         // SecretKeyFactory

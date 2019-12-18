@@ -12,8 +12,8 @@ import org.mozilla.jss.util.NativeEnclosure;
  * Note that this parameter is illegal in Counter Mode.
  */
 public class KBKDFOptionalCounterParam extends KBKDFDataParameter {
-    private boolean littleEndian = false;
-    private long widthInBits = 0;
+    protected boolean littleEndian = false;
+    protected long widthInBits = 0;
 
     public KBKDFOptionalCounterParam() {
         super(PKCS11Constants.CK_SP800_108_OPTIONAL_COUNTER);

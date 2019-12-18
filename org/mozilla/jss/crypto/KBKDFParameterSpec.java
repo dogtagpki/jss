@@ -9,12 +9,13 @@ import javax.crypto.SecretKeyFactory;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+import org.mozilla.jss.pkcs11.PK11SymKey;
 import org.mozilla.jss.util.NativeEnclosure;
 
 public abstract class KBKDFParameterSpec extends NativeEnclosure implements AlgorithmParameterSpec, KeySpec {
     /* Need access from outside; no real protections in setters outside
      * of additional input types. */
-    public SymmetricKey prfKey;
+    public PK11SymKey prfKey;
     public long derivedKeyAlgorithm;
     public int keySize;
 
@@ -59,24 +60,36 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
      * Must be importable to a JSS SymmetricKey or SecretKeyFacade.
      */
     public void setPRFKey(SecretKey key) throws InvalidKeyException {
+        if (key instanceof PK11SymKey) {
+            prfKey = (PK11SymKey)key;
+            return;
+        }
+
+        if (key instanceof SecretKeyFacade) {
+            setPRFKey(((SecretKeyFacade)key).key);
+            return;
+        }
+
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance(key.getAlgorithm(), "Mozilla-JSS");
             SecretKey translated = skf.translateKey(key);
             if (translated instanceof SymmetricKey) {
-                prfKey = (SymmetricKey)translated;
-            } else if (translated instanceof SecretKeyFacade) {
-                prfKey = ((SecretKeyFacade)translated).key;
-            } else {
-                String msg = "Expected key to become an instance of ";
-                msg += "org.mozilla.jss.crypto.SymmetricKey or ";
-                msg += "org.mozilla.jss.crypto.SecretKeyFacade after ";
-                msg += "translation, but got: ";
-                msg += translated.getClass().getName();
-
-                throw new InvalidKeyException(msg);
+                setPRFKey(translated);
+                return;
             }
 
-            assert(prfKey != null);
+            if (translated instanceof SecretKeyFacade) {
+                setPRFKey(((SecretKeyFacade)translated).key);
+                return;
+            }
+
+            String msg = "Expected key to become an instance of ";
+            msg += "org.mozilla.jss.crypto.SymmetricKey or ";
+            msg += "org.mozilla.jss.crypto.SecretKeyFacade after ";
+            msg += "translation, but got: ";
+            msg += translated.getClass().getName();
+
+            throw new InvalidKeyException(msg);
         } catch (Exception excep) {
             throw new InvalidKeyException("Unable to import key: " + excep.getMessage(), excep);
         }

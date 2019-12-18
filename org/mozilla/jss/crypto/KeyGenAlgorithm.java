@@ -99,72 +99,166 @@ public class KeyGenAlgorithm extends Algorithm {
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    DES = new KeyGenAlgorithm(CKM_DES_KEY_GEN, "DES",
-            new FixedKeyStrengthValidator(56), null, null);
+    DES = new KeyGenAlgorithm(
+        CKM_DES_KEY_GEN,
+        "DES",
+        new FixedKeyStrengthValidator(56),
+        null,
+        null
+    );
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    DES3 = new KeyGenAlgorithm(CKM_DES3_KEY_GEN, "DESede",
-            new FixedKeyStrengthValidator(168), null, null);
+    DES3 = new KeyGenAlgorithm(
+        CKM_DES3_KEY_GEN,
+        "DESede",
+        new FixedKeyStrengthValidator(168),
+        null,
+        null
+    );
 
     public static final KeyGenAlgorithm
     DESede = DES3;
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    RC4 = new KeyGenAlgorithm(CKM_RC4_KEY_GEN, "RC4",
-            new KeyStrengthValidator() {
-                public boolean isValidKeyStrength(int strength) {
-                    return true;
-                }
-            }, null, null);
+    RC4 = new KeyGenAlgorithm(
+        CKM_RC4_KEY_GEN,
+        "RC4",
+        new AnyKeyStrengthValidator(),
+        null,
+        null
+    );
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
     PBA_SHA1_HMAC = new KeyGenAlgorithm(
         CKM_PBA_SHA1_WITH_SHA1_HMAC,
-            "PBA/SHA1/HMAC", new FixedKeyStrengthValidator(160),
-            null, PBEKeyGenParams.class );
+        "PBA/SHA1/HMAC",
+        new FixedKeyStrengthValidator(160),
+        null,
+        PBEKeyGenParams.class
+    );
 
     public static final KeyGenAlgorithm
     SHA1_HMAC = new KeyGenAlgorithm(
         CKM_SHA_1_HMAC,
-            "SHA1/HMAC", new FixedKeyStrengthValidator(160),
-            null, null );
+        "SHA1/HMAC",
+        new FixedKeyStrengthValidator(160),
+        null,
+        null
+    );
 
     public static final KeyGenAlgorithm
     SHA256_HMAC = new KeyGenAlgorithm(
         CKM_SHA256_HMAC,
-            "SHA256/HMAC", new FixedKeyStrengthValidator(256),
-            null, null );
+        "SHA256/HMAC",
+        new FixedKeyStrengthValidator(256),
+        null,
+        null
+    );
 
     public static final KeyGenAlgorithm
     SHA384_HMAC = new KeyGenAlgorithm(
         CKM_SHA384_HMAC,
-            "SHA384/HMAC", new FixedKeyStrengthValidator(384),
-            null, null );
+        "SHA384/HMAC",
+        new FixedKeyStrengthValidator(384),
+        null,
+        null
+    );
 
     public static final KeyGenAlgorithm
     SHA512_HMAC = new KeyGenAlgorithm(
         CKM_SHA512_HMAC,
-            "SHA512/HMAC", new FixedKeyStrengthValidator(512),
-            null, null );
+        "SHA512/HMAC",
+        new FixedKeyStrengthValidator(512),
+        null,
+        null
+    );
 
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    AES = new KeyGenAlgorithm(CKM_AES_KEY_GEN, "AES",
-            new KeyStrengthValidator() {
-                public boolean isValidKeyStrength(int strength) {
-                    return strength==128 || strength==192 || strength==256;
-                }
-            }, null, null);
+    AES = new KeyGenAlgorithm(
+        CKM_AES_KEY_GEN,
+        "AES",
+        new KeyStrengthValidator() {
+            public boolean isValidKeyStrength(int strength) {
+                return strength==128 || strength==192 || strength==256;
+            }
+        },
+        null,
+        null
+    );
     //////////////////////////////////////////////////////////////
     public static final KeyGenAlgorithm
-    RC2 = new KeyGenAlgorithm(CKM_RC2_KEY_GEN, "RC2",
-            new KeyStrengthValidator() {
-                public boolean isValidKeyStrength(int strength) {
-                    // 1 byte - 128 bytes
-                    return strength>=8 && strength <= (128*8);
-                }
-            }, null, null);
+    RC2 = new KeyGenAlgorithm(
+        CKM_RC2_KEY_GEN,
+        "RC2",
+        new KeyStrengthValidator() {
+            public boolean isValidKeyStrength(int strength) {
+                // Allow any key of size between 1 byte and 128 bytes
+                return strength>=8 && strength <= (128*8);
+            }
+        },
+        null,
+        null
+    );
+    //////////////////////////////////////////////////////////////
+    /////////////// GENERIC KBKDFs: NIST SP800-108 ///////////////
+    //////////////////////////////////////////////////////////////
+    public static final KeyGenAlgorithm
+    SP800_108_COUNTER_KDF = new KeyGenAlgorithm(
+        CKM_SP800_108_COUNTER_KDF,
+        "SP800_108_COUNTER_KDF",
+        new AnyKeyStrengthValidator(),
+        null,
+        KBKDFCounterParams.class
+    );
+
+    public static final KeyGenAlgorithm
+    SP800_108_FEEDBACK_KDF = new KeyGenAlgorithm(
+        CKM_SP800_108_FEEDBACK_KDF,
+        "SP800_108_FEEDBACK_KDF",
+        new AnyKeyStrengthValidator(),
+        null,
+        KBKDFFeedbackParams.class
+    );
+
+    public static final KeyGenAlgorithm
+    SP800_108_DOUBLE_PIPELINE_KDF = new KeyGenAlgorithm(
+        CKM_SP800_108_DOUBLE_PIPELINE_KDF,
+        "SP800_108_DOUBLE_PIPELINE_KDF",
+        new AnyKeyStrengthValidator(),
+        null,
+        KBKDFPipelineParams.class
+    );
+    //////////////////////////////////////////////////////////////
+    //////////// Data KBKDFs: NSS-only NIST SP800-108 ////////////
+    //////////////////////////////////////////////////////////////
+    public static final KeyGenAlgorithm
+    NSS_SP800_108_COUNTER_KDF_DERIVE_DATA = new KeyGenAlgorithm(
+        CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA,
+        "NSS_SP800_108_COUNTER_KDF_DERIVE_DATA",
+        new AnyKeyStrengthValidator(),
+        null,
+        KBKDFCounterParams.class
+    );
+
+    public static final KeyGenAlgorithm
+    NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA = new KeyGenAlgorithm(
+        CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA,
+        "NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA",
+        new AnyKeyStrengthValidator(),
+        null,
+        KBKDFFeedbackParams.class
+    );
+
+    public static final KeyGenAlgorithm
+    NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA = new KeyGenAlgorithm(
+        CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA,
+        "NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA",
+        new AnyKeyStrengthValidator(),
+        null,
+        KBKDFPipelineParams.class
+    );
 }

@@ -124,5 +124,34 @@ class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
             super(KeyGenAlgorithm.SHA512_HMAC);
         }
     }
-
+    public static class KbkdfCounter extends JSSKeyGeneratorSpi {
+        public KbkdfCounter() {
+            super(KeyGenAlgorithm.SP800_108_COUNTER_KDF);
+        }
+    }
+    public static class KbkdfFeedback extends JSSKeyGeneratorSpi {
+        public KbkdfFeedback() {
+            super(KeyGenAlgorithm.SP800_108_FEEDBACK_KDF);
+        }
+    }
+    public static class KbkdfDoublePipeline extends JSSKeyGeneratorSpi {
+        public KbkdfDoublePipeline() {
+            super(KeyGenAlgorithm.SP800_108_DOUBLE_PIPELINE_KDF);
+        }
+    }
+    public static class KbkdfCounterData extends JSSKeyGeneratorSpi {
+        public KbkdfCounterData() {
+            super(KeyGenAlgorithm.NSS_SP800_108_COUNTER_KDF_DERIVE_DATA);
+        }
+    }
+    public static class KbkdfFeedbackData extends JSSKeyGeneratorSpi {
+        public KbkdfFeedbackData() {
+            super(KeyGenAlgorithm.NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA);
+        }
+    }
+    public static class KbkdfDoublePipelineData extends JSSKeyGeneratorSpi {
+        public KbkdfDoublePipelineData() {
+            super(KeyGenAlgorithm.NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA);
+        }
+    }
 }

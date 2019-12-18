@@ -10,11 +10,13 @@ import java.security.InvalidKeyException;
 import java.security.spec.AlgorithmParameterSpec;
 
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.KBKDFParameterSpec;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
 import org.mozilla.jss.crypto.KeyGenerator;
 import org.mozilla.jss.crypto.PBEKeyGenParams;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.util.NativeProxy;
 import org.mozilla.jss.util.Password;
 import org.mozilla.jss.util.UTF8Converter;
 
@@ -172,9 +174,10 @@ public final class PK11KeyGenerator implements KeyGenerator {
         throws IllegalStateException, TokenException, CharConversionException
     {
         Class<?>[] paramClasses = algorithm.getParameterClasses();
-        if( paramClasses.length == 1 &&
-            paramClasses[0].equals(PBEKeyGenParams.class) )
-        {
+        boolean is_pbe = paramClasses.length == 1 && paramClasses[0].equals(PBEKeyGenParams.class);
+        boolean is_kbkdf = paramClasses.length == 1 && parameters instanceof KBKDFParameterSpec;
+
+        if (is_pbe) {
             if(parameters==null || !(parameters instanceof PBEKeyGenParams)) {
                 throw new IllegalStateException(
                     "PBE keygen algorithms require PBEKeyGenParams");
@@ -192,6 +195,28 @@ public final class PK11KeyGenerator implements KeyGenerator {
                     Password.wipeBytes(pwbytes);
                 }
             }
+        } else if (is_kbkdf) {
+            KBKDFParameterSpec kps = (KBKDFParameterSpec) parameters;
+            SymmetricKey result = null;
+
+            try {
+                try {
+                    kps.open();
+
+                    long pkcs11_alg = algorithm.getEnum().getValue();
+                    result = generateKBKDF(token, kps.prfKey, pkcs11_alg,
+                                           kps.mPointer, kps.mPointerSize,
+                                           kps.derivedKeyAlgorithm,
+                                           kps.keySize, opFlags,
+                                           temporaryKeyMode, sensitiveKeyMode);
+                } finally {
+                    kps.close();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
+            return result;
         } else {
             return generateNormal(token, algorithm, strength,
                 opFlags, temporaryKeyMode, sensitiveKeyMode);
@@ -211,9 +236,9 @@ public final class PK11KeyGenerator implements KeyGenerator {
         throws TokenException, CharConversionException
     {
         Class<?>[] paramClasses = algorithm.getParameterClasses();
-        if( paramClasses.length == 1 &&
-            paramClasses[0].equals(PBEKeyGenParams.class) )
-        {
+        boolean is_pbe = paramClasses.length == 1 && paramClasses[0].equals(PBEKeyGenParams.class);
+
+        if (is_pbe) {
             if(parameters==null || !(parameters instanceof PBEKeyGenParams)) {
                 throw new IllegalStateException(
                     "PBE keygen algorithms require PBEKeyGenParams");
@@ -306,6 +331,16 @@ public final class PK11KeyGenerator implements KeyGenerator {
     generatePBE(
         PK11Token token, KeyGenAlgorithm algorithm, EncryptionAlgorithm encAlg,
         byte[] pass, byte[] salt, int iterationCount)
+        throws TokenException;
+
+    /**
+     * A native method to generate a key using KBKDF. None of the parameters
+     * should be null.
+     */
+    private static native SymmetricKey
+    generateKBKDF(PK11Token token, PK11SymKey baseKeyObj, long algorithm,
+        NativeProxy pointer, long pointer_size, long derivedKeyAlgorithm,
+        int strength, int opFlags, boolean temporary, int sensitive)
         throws TokenException;
 
 }
