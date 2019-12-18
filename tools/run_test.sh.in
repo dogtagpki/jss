@@ -10,6 +10,9 @@ export LD_LIBRARY_PATH="${NSS_LIBRARIES}:${CMAKE_BINARY_DIR}:${NSPR_LIBRARIES}"
 if [ "$1" == "--gdb" ]; then
     shift
     gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" "$@"
+elif [ "$1" == "--valgrind" ]; then
+    shift
+    valgrind "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" "$@"
 else
     "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" "$@"
 fi
