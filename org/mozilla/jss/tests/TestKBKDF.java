@@ -46,11 +46,12 @@ public class TestKBKDF {
         byte[] byte_array_param = Base64.getDecoder().decode("wW5uAsWj3MjXi5rBMGh3dhMQRVtOQUaZUdnmwiRaBksz/Yw7ASA6eCRIW/CmQGDEZItwfSYHk1aZMW6l");
         kcp.addParameter(new KBKDFByteArrayParam(byte_array_param));
 
-        KBKDFDerivedKey kdk = new KBKDFDerivedKey();
+        // RHEL 8.2 doesn't support additional derived keys.
+        /*KBKDFDerivedKey kdk = new KBKDFDerivedKey();
         kdk.addAttribute(new CKAClass.Data());
         kdk.addAttribute(new CKAUsage.Encrypt());
         kdk.addAttribute(new CKAValueLen(16));
-        kcp.addAdditionalDerivedKey(kdk);
+        kcp.addAdditionalDerivedKey(kdk);*/
 
         kg.init(kcp);
 
@@ -63,11 +64,11 @@ public class TestKBKDF {
 
         assert(Arrays.equals(encoded, expected));
 
-        SecretKey other_key = kdk.getKey(key, PKCS11Constants.CKM_SHA512_HMAC, true);
+        /*SecretKey other_key = kdk.getKey(key, PKCS11Constants.CKM_SHA512_HMAC, true);
         byte[] other_encoded = other_key.getEncoded();
         byte[] other_expected = Base64.getDecoder().decode("DMdy/9fjofZGZMe3xhxlEg==");
 
-        assert(Arrays.equals(encoded, expected));
+        assert(Arrays.equals(encoded, expected));*/
     }
 
     public static void testFeedbackKDFNistCMAC() throws Exception {
