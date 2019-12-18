@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -198,24 +198,30 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Close-org.mozilla.jss.nss.SSLFDProxy-">Close</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
+<div class="block">Close an existing SSLFDProxy.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#ErrorToName-int-">ErrorToName</a></span>(int&nbsp;code)</code>
 <div class="block">Get the constant name of the current PR error.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#GetError--">GetError</a></span>()</code>
 <div class="block">Get the value of the current PR error.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#GetErrorText--">GetErrorText</a></span>()</code>
 <div class="block">Get the error text of the current PR error.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#NewBufferPRFD-org.mozilla.jss.nss.BufferProxy-org.mozilla.jss.nss.BufferProxy-byte:A-">NewBufferPRFD</a></span>(<a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;read_buf,
              <a href="../../../../org/mozilla/jss/nss/BufferProxy.html" title="class in org.mozilla.jss.nss">BufferProxy</a>&nbsp;write_buf,
@@ -224,13 +230,13 @@ extends java.lang.Object</pre>
  the specified peer_info.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#NewTCPSocket--">NewTCPSocket</a></span>()</code>
 <div class="block">Open a new TCP Socket and create a new PRFDProxy for that socket.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Open-java.lang.String-int-int-">Open</a></span>(java.lang.String&nbsp;name,
     int&nbsp;flags,
@@ -239,14 +245,14 @@ extends java.lang.Object</pre>
  a new PRFDProxy (to a NSPR PRFileDesc *) for that file.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Read-org.mozilla.jss.nss.PRFDProxy-int-">Read</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
     int&nbsp;amount)</code>
 <div class="block">Read up to amount bytes from a PRFDProxy.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Recv-org.mozilla.jss.nss.PRFDProxy-int-int-long-">Recv</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
     int&nbsp;amount,
@@ -256,7 +262,7 @@ extends java.lang.Object</pre>
  flags and timeout value.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Send-org.mozilla.jss.nss.PRFDProxy-byte:A-int-long-">Send</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
     byte[]&nbsp;buf,
@@ -266,14 +272,14 @@ extends java.lang.Object</pre>
  send flags and timeout value.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Shutdown-org.mozilla.jss.nss.PRFDProxy-int-">Shutdown</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
         int&nbsp;how)</code>
 <div class="block">Shutdown an existing PRFDProxy.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/PR.html#Write-org.mozilla.jss.nss.PRFDProxy-byte:A-">Write</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd,
      byte[]&nbsp;buf)</code>
@@ -439,6 +445,24 @@ extends java.lang.Object</pre>
 <div class="block">Close an existing PRFDProxy.
 
  See also: PR_Close in /usr/include/nspr4/prio.h</div>
+</li>
+</ul>
+<a name="Close-org.mozilla.jss.nss.SSLFDProxy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>Close</h4>
+<pre>public static&nbsp;int&nbsp;Close(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)
+                 throws java.lang.Exception</pre>
+<div class="block">Close an existing SSLFDProxy.
+
+ See also: org.mozilla.jss.nss.PR.Close
+           org.mozilla.jss.nss.SSLFD.releaseNativeResources</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
 </li>
 </ul>
 <a name="Shutdown-org.mozilla.jss.nss.PRFDProxy-int-">
