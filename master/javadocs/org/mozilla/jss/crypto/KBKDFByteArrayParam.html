@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -204,6 +204,12 @@ extends <a href="../../../../org/mozilla/jss/crypto/KBKDFDataParameter.html" tit
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/KBKDFByteArrayParam.html#setByteArray-byte:A-">setByteArray</a></span>(byte[]&nbsp;data)</code>&nbsp;</td>
 </tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/KBKDFByteArrayParam.html#zeroByteArray--">zeroByteArray</a></span>()</code>
+<div class="block">Zero out the copied contents of the byte array.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.mozilla.jss.util.NativeEnclosure">
@@ -276,6 +282,21 @@ extends <a href="../../../../org/mozilla/jss/crypto/KBKDFDataParameter.html" tit
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code></dd>
 </dl>
+</li>
+</ul>
+<a name="zeroByteArray--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>zeroByteArray</h4>
+<pre>public&nbsp;void&nbsp;zeroByteArray()</pre>
+<div class="block">Zero out the copied contents of the byte array.
+
+ Call this method when the contents of this byte array parameter are
+ sensitive and they're done being used. Note that this isn't called
+ during close() as a given byte array parameter may be used multiple
+ times in different KBKDF calls.</div>
 </li>
 </ul>
 <a name="acquireNativeResources--">
