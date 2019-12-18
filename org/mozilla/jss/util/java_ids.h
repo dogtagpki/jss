@@ -419,6 +419,18 @@ PR_BEGIN_EXTERN_C
 #define STATIC_VOID_POINTER_CLASS_NAME "org/mozilla/jss/util/StaticVoidPointer"
 #define STATIC_VOID_POINTER_CONSTRUCTOR_SIG "([B)V"
 
+
+/*
+ * PKCS#11 CKAttribute
+ */
+#define CK_ATTRIBUTE_CLASS_NAME "org/mozilla/jss/pkcs11/attrs/CKAttribute"
+
+/*
+ * KBKDF classes
+ */
+#define KBKDF_DATA_PARAMETER_CLASS_NAME "org/mozilla/jss/crypto/KBKDFDataParameter"
+#define KBKDF_DERIVED_KEY_CLASS_NAME "org/mozilla/jss/crypto/KBKDFDerivedKey"
+
 PR_END_EXTERN_C
 
 #endif

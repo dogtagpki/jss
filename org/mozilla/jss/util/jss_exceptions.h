@@ -109,6 +109,8 @@ PR_BEGIN_EXTERN_C
 
 #define USER_CERT_CONFLICT_EXCEPTION "org/mozilla/jss/UserCertConflictException"
 
+#define UNSUPPORTED_OPERATION_EXCEPTION "java/lang/UnsupportedOperationException"
+
 PR_END_EXTERN_C
 
 #endif
