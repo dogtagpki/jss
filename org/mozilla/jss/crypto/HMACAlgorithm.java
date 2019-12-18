@@ -58,15 +58,15 @@ public class HMACAlgorithm extends DigestAlgorithm {
              OBJECT_IDENTIFIER.ALGORITHM.subBranch(26), 20);
 
     public static final HMACAlgorithm SHA256 = new HMACAlgorithm
-        (SEC_OID_HMAC_SHA256, "SHA-256-HMAC",
+        (CKM_SHA256_HMAC, "SHA-256-HMAC",
              OBJECT_IDENTIFIER.RSA_DIGEST.subBranch(9), 32);
 
     public static final HMACAlgorithm SHA384 = new HMACAlgorithm
-        (SEC_OID_HMAC_SHA384, "SHA-384-HMAC",
+        (CKM_SHA384_HMAC, "SHA-384-HMAC",
              OBJECT_IDENTIFIER.RSA_DIGEST.subBranch(10), 48);
 
     public static final HMACAlgorithm SHA512 = new HMACAlgorithm
-        (SEC_OID_HMAC_SHA512, "SHA-512-HMAC",
+        (CKM_SHA512_HMAC, "SHA-512-HMAC",
              OBJECT_IDENTIFIER.RSA_DIGEST.subBranch(11), 64);
 
 }
