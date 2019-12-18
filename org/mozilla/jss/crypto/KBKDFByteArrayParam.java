@@ -30,6 +30,24 @@ public class KBKDFByteArrayParam extends KBKDFDataParameter {
         this.data = Arrays.copyOf(data, data.length);
     }
 
+    /**
+     * Zero out the copied contents of the byte array.
+     *
+     * Call this method when the contents of this byte array parameter are
+     * sensitive and they're done being used. Note that this isn't called
+     * during close() as a given byte array parameter may be used multiple
+     * times in different KBKDF calls.
+     */
+    public void zeroByteArray() {
+        if (data == null) {
+            return;
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = 0;
+        }
+    }
+
     protected void acquireNativeResources() throws Exception {
         if (data == null || data.length == 0) {
             String msg = "Expected non-null byte array in ";
@@ -42,11 +60,6 @@ public class KBKDFByteArrayParam extends KBKDFDataParameter {
     }
 
     protected void releaseNativeResources() throws Exception {
-        for (int i = 0; i < data.length; i++) {
-            /* Zero out this byte array after use. */
-            data[i] = 0;
-        }
-
         releaseNativeResourcesInternal();
     }
 
