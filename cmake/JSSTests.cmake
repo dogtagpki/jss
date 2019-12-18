@@ -307,11 +307,17 @@ macro(jss_tests)
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "chkfips"
             DEPENDS "Enable_FipsMODE"
         )
-        jss_test_java(
-            NAME "SSLClientAuth_FIPSMODE"
-            COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
-            DEPENDS "Enable_FipsMODE"
-        )
+
+        # The current version of NSS features partial support for TLS 1.3 in
+        # FIPS mode.
+        if (NOT SANDBOX)
+            jss_test_java(
+                NAME "SSLClientAuth_FIPSMODE"
+                COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
+                DEPENDS "Enable_FipsMODE"
+            )
+        endif()
+
         jss_test_java(
             NAME "HMAC_FIPSMODE"
             COMMAND "org.mozilla.jss.tests.CrossHMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
