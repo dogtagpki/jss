@@ -395,7 +395,7 @@ public class Utils {
      * @return byte array
      */
     public static byte[] base64decode(String string) {
-        return Base64.getDecoder().decode(string);
+        return Base64.getMimeDecoder().decode(string);
     }
 
     /**

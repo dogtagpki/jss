@@ -31,7 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Base64;
 import java.util.Vector;
 
 import org.mozilla.jss.netscape.security.util.Utils;
@@ -166,7 +165,7 @@ public class PKCS7 {
             }
         }
 
-        byte[] bytes = Base64.getDecoder().decode(sb.toString());
+        byte[] bytes = Utils.base64decode(sb.toString());
         parse(new DerInputStream(bytes));
     }
 
