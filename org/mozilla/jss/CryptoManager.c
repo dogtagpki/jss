@@ -455,7 +455,7 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
     }
 
     if( rv != SECSuccess ) {
-        JSS_throwMsg(env, SECURITY_EXCEPTION,
+        JSS_throwMsgPrErr(env, SECURITY_EXCEPTION,
             "Unable to initialize security library");
         goto finish;
     }
