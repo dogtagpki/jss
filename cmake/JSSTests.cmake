@@ -240,11 +240,6 @@ macro(jss_tests)
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
-        NAME "JSSProvider"
-        COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "List_CA_certs"
-    )
-    jss_test_java(
         NAME "X509CertTest"
         COMMAND "org.mozilla.jss.tests.X509CertTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs"
@@ -252,7 +247,12 @@ macro(jss_tests)
     jss_test_java(
         NAME "KeyStoreTest"
         COMMAND "org.mozilla.jss.tests.KeyStoreTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" getAliases
-        DEPENDS "List_CA_certs"
+        DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
+    )
+    jss_test_java(
+        NAME "JSSProvider"
+        COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
     )
 
     if(NOT FIPS_ENABLED)
