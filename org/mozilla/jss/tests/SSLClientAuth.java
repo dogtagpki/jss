@@ -241,6 +241,7 @@ public class SSLClientAuth implements Runnable {
             SSLSocket.enableSSL2Default(false);
             SSLSocket.enableSSL3Default(false);
             /* TLS is enabled by default */
+            SSLSocket.setSSLVersionRangeDefault(SSLProtocolVariant.STREAM, new SSLVersionRange(SSLVersionRange.tls1_2, SSLVersionRange.tls1_2));
 
             /* Enable Session tickets by default */
             SSLSocket.enableSessionTicketsDefault(true);
