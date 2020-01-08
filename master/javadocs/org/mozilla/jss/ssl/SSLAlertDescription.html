@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":9,"i2":9,"i3":9};
+var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -250,20 +250,24 @@ extends java.lang.Enum&lt;<a href="../../../../org/mozilla/jss/ssl/SSLAlertDescr
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>java.lang.Class&lt;? extends javax.net.ssl.SSLException&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html#getExceptionClass--">getExceptionClass</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html#getID--">getID</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html#valueOf-int-">valueOf</a></span>(int&nbsp;id)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html#valueOf-java.lang.String-">valueOf</a></span>(java.lang.String&nbsp;name)</code>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html" title="enum in org.mozilla.jss.ssl">SSLAlertDescription</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLAlertDescription.html#values--">values</a></span>()</code>
 <div class="block">Returns an array containing the constants of this enum type, in
@@ -653,6 +657,15 @@ not permitted.)</div>
 <li class="blockList">
 <h4>getID</h4>
 <pre>public&nbsp;int&nbsp;getID()</pre>
+</li>
+</ul>
+<a name="getExceptionClass--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getExceptionClass</h4>
+<pre>public&nbsp;java.lang.Class&lt;? extends javax.net.ssl.SSLException&gt;&nbsp;getExceptionClass()</pre>
 </li>
 </ul>
 <a name="valueOf-int-">
