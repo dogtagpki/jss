@@ -6,6 +6,8 @@ package org.mozilla.jss.ssl;
 
 import java.util.EventObject;
 
+import javax.net.ssl.SSLException;
+
 import org.mozilla.jss.nss.SSLFDProxy;
 
 public class SSLAlertEvent extends EventObject {
@@ -96,6 +98,31 @@ public class SSLAlertEvent extends EventObject {
     public void setDescription(SSLAlertDescription description) {
         this.descriptionEnum = description;
         this.description = description.getID();
+    }
+
+    public SSLException toException() {
+        if (levelEnum == SSLAlertLevel.FATAL) {
+            Class<? extends SSLException> exception_class = descriptionEnum.getExceptionClass();
+            SSLException exception;
+
+            try {
+                exception = exception_class.getConstructor(String.class).newInstance(this.toString());
+            } catch (Exception e) {
+                // When we fail to construct an exception of type
+                // exception_class, usually that means that we've gotten
+                // a null exception_class. In which case, because this is
+                // a fatal exception, throw it as a generic SSLException.
+                exception = new SSLException(this.toString());
+            }
+
+            return exception;
+        }
+
+        return null;
+    }
+
+    public void throwException() throws SSLException {
+        throw this.toException();
     }
 
     public String toString() {
