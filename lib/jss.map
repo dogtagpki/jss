@@ -401,6 +401,7 @@ Java_org_mozilla_jss_CryptoManager_importDERCertNative;
 Java_org_mozilla_jss_nss_SSL_AttachClientCertCallback;
 Java_org_mozilla_jss_CryptoManager_getJSSDebug;
 Java_org_mozilla_jss_util_GlobalRefProxy_releaseNativeResources;
+Java_org_mozilla_jss_nss_SSL_EnableAlertLoggingNative;
     local:
         *;
 };

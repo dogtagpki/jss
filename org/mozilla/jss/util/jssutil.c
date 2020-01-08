@@ -305,8 +305,11 @@ JSS_getPtrFromProxyOwner(JNIEnv *env, jobject proxyOwner, char* proxyFieldName,
     if(proxyField == NULL) {
         return PR_FAILURE;
     }
+
     proxyObject = (*env)->GetObjectField(env, proxyOwner, proxyField);
-    PR_ASSERT(proxyObject != NULL);
+    if (proxyObject == NULL) {
+        return PR_FAILURE;
+    }
 
     /*
      * Get the pointer from the Native Reference object
