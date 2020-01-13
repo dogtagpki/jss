@@ -467,6 +467,21 @@ Java_org_mozilla_jss_nss_SSL_EnableAlertLoggingNative(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_ConfigJSSDefaultCertAuthCallback(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_AuthCertificateHook(real_fd, JSSL_DefaultCertAuthCallback, NULL);
+}
+
+JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_nss_SSL_getSSLRequestCertificate(JNIEnv *env, jclass clazz)
 {
     return SSL_REQUEST_CERTIFICATE;
