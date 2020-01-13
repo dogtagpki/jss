@@ -209,6 +209,15 @@ public class SSL {
     /* Internal helper for EnableAlertLogging method. */
     private static native int EnableAlertLoggingNative(SSLFDProxy fd);
 
+    /**
+     * Use the default JSS certificate checking handler (which understands CryptoManager
+     * OCSP status).
+     *
+     * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
+     *           JSSL_DefaultCertAuthCallback in jss/ssl/callbacks.c
+     */
+    public static native int ConfigJSSDefaultCertAuthCallback(SSLFDProxy fd);
+
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
     private static native int getSSLRequireCertificate();
