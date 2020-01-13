@@ -44,11 +44,16 @@ public class JSSParameters extends SSLParameters {
         setProtocols(downcast.getProtocols());
         setAlgorithmConstraints(downcast.getAlgorithmConstraints());
         setEndpointIdentificationAlgorithm(downcast.getEndpointIdentificationAlgorithm());
-        setNeedClientAuth(downcast.getNeedClientAuth());
         setServerNames(downcast.getServerNames());
         setSNIMatchers(downcast.getSNIMatchers());
         setUseCipherSuitesOrder(downcast.getUseCipherSuitesOrder());
-        setWantClientAuth(downcast.getWantClientAuth());
+
+        if (downcast.getWantClientAuth()) {
+            setWantClientAuth(downcast.getWantClientAuth());
+        }
+        if (downcast.getNeedClientAuth()) {
+            setNeedClientAuth(downcast.getNeedClientAuth());
+        }
     }
 
     public JSSParameters(String[] cipherSuites) {
