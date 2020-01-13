@@ -42,8 +42,6 @@ finish:
         (*env)->DeleteGlobalRef(env, *ref);
     }
 
-    *ref = NULL;
-
     PR_ASSERT(refObj || (*env)->ExceptionOccurred(env));
     return refObj;
 }
