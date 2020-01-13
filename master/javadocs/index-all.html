@@ -1924,6 +1924,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html#checkCertChain-java.security.cert.X509Certificate:A-java.lang.String-">checkCertChain(X509Certificate[], String)</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSTrustManager</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html#checkClientTrusted-java.security.cert.X509Certificate:A-java.lang.String-">checkClientTrusted(X509Certificate[], String)</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSNativeTrustManager</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html#checkClientTrusted-java.security.cert.X509Certificate:A-java.lang.String-">checkClientTrusted(X509Certificate[], String)</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSTrustManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/Utils.html#checkHost-java.lang.String-">checkHost(String)</a></span> - Static method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/Utils.html" title="class in org.mozilla.jss.netscape.security.util">Utils</a></dt>
@@ -1939,6 +1941,8 @@
 <div class="block">This method checks whether or not the specified principal
  has the required permission.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html#checkServerTrusted-java.security.cert.X509Certificate:A-java.lang.String-">checkServerTrusted(X509Certificate[], String)</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSNativeTrustManager</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html#checkServerTrusted-java.security.cert.X509Certificate:A-java.lang.String-">checkServerTrusted(X509Certificate[], String)</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSTrustManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509CertImpl.html#checkValidity--">checkValidity()</a></span> - Method in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509CertImpl.html" title="class in org.mozilla.jss.netscape.security.x509">X509CertImpl</a></dt>
@@ -5506,6 +5510,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/InitializationValues.html#configDir">configDir</a></span> - Variable in class org.mozilla.jss.<a href="org/mozilla/jss/InitializationValues.html" title="class in org.mozilla.jss">InitializationValues</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigJSSDefaultCertAuthCallback-org.mozilla.jss.nss.SSLFDProxy-">ConfigJSSDefaultCertAuthCallback(SSLFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Use the default JSS certificate checking handler (which understands CryptoManager
+ OCSP status).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigSecureServer-org.mozilla.jss.nss.SSLFDProxy-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-int-">ConfigSecureServer(SSLFDProxy, PK11Cert, PK11PrivKey, int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -10311,6 +10320,8 @@
 <div class="block">Get a single character from the buffer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/ECCurve.html#getA--">getA()</a></span> - Method in enum org.mozilla.jss.util.<a href="org/mozilla/jss/util/ECCurve.html" title="enum in org.mozilla.jss.util">ECCurve</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html#getAcceptedIssuers--">getAcceptedIssuers()</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSNativeTrustManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html#getAcceptedIssuers--">getAcceptedIssuers()</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSTrustManager</a></dt>
 <dd>&nbsp;</dd>
@@ -16123,6 +16134,14 @@
 <dt><a href="org/mozilla/jss/provider/java/security/JSSMessageDigestSpi.SHA384.html" title="class in org.mozilla.jss.provider.java.security"><span class="typeNameLink">JSSMessageDigestSpi.SHA384</span></a> - Class in <a href="org/mozilla/jss/provider/java/security/package-summary.html">org.mozilla.jss.provider.java.security</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/provider/java/security/JSSMessageDigestSpi.SHA512.html" title="class in org.mozilla.jss.provider.java.security"><span class="typeNameLink">JSSMessageDigestSpi.SHA512</span></a> - Class in <a href="org/mozilla/jss/provider/java/security/package-summary.html">org.mozilla.jss.provider.java.security</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSNativeTrustManager</span></a> - Class in <a href="org/mozilla/jss/provider/javax/crypto/package-summary.html">org.mozilla.jss.provider.javax.crypto</a></dt>
+<dd>
+<div class="block">JSSNativeTrustManager is a JSSEngine TrustManager utilizing existing native
+ certificate checking functionality of NSS and JSS, compatible with the old
+ SSLSocket checks.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html#JSSNativeTrustManager--">JSSNativeTrustManager()</a></span> - Constructor for class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSNativeTrustManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/ssl/javax/JSSParameters.html" title="class in org.mozilla.jss.ssl.javax"><span class="typeNameLink">JSSParameters</span></a> - Class in <a href="org/mozilla/jss/ssl/javax/package-summary.html">org.mozilla.jss.ssl.javax</a></dt>
 <dd>
