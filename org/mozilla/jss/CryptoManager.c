@@ -200,7 +200,7 @@ static jobject globalPasswordCallback = NULL;
  * The Java virtual machine can be used to retrieve the JNI environment
  * pointer from callback functions.
  */
-JavaVM * JSS_javaVM;
+JavaVM * JSS_javaVM = NULL;
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_CryptoManager_initializeAllNative

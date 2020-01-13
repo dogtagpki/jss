@@ -94,7 +94,8 @@ JSS_NSS_addGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
 
     if (JSS_getPtrFromProxyOwner(env, sslfd_proxy, "globalRef",
                                  "L" GLOBAL_REF_PROXY_CLASS_NAME ";",
-                                 (void **)global_ref) == PR_FAILURE) {
+                                 (void **)global_ref) == PR_FAILURE ||
+        *global_ref == NULL) {
         /* We assume we failed because we don't yet have a global reference
          * to this SSLFDProxy object. Create one. */
         (*env)->ExceptionClear(env);
@@ -111,8 +112,15 @@ JSS_NSS_addGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
         }
 
         *global_ref = (*env)->NewGlobalRef(env, sslfd_proxy);
+        if (*global_ref == NULL) {
+            return PR_FAILURE;
+        }
 
         globalRefElem = JSS_PR_wrapGlobalRef(env, global_ref);
+        if (globalRefElem == NULL) {
+            (*env)->ExceptionDescribe(env);
+            return PR_FAILURE;
+        }
 
         (*env)->SetObjectField(env, sslfd_proxy, globalRefField, globalRefElem);
     }
@@ -198,7 +206,7 @@ JSS_NSS_addSSLAlert(JNIEnv *env, jobject sslfd_proxy, jobject list,
     }
 
     arrayListAdd = (*env)->GetMethodID(env, eventListClass, "add",
-                                       "(L" SSL_ALERT_EVENT_CLASS ";)B");
+                                       "(Ljava/lang/Object;)Z");
     if (arrayListAdd == NULL) {
         return PR_FAILURE;
     }
@@ -215,11 +223,11 @@ JSSL_SSLFDAlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert 
     jobject sslfd_proxy = (jobject)arg;
     jobject list;
 
-    if (fd == NULL || arg == NULL || alert == NULL) {
+    if (fd == NULL || arg == NULL || alert == NULL || JSS_javaVM == NULL) {
         return;
     }
 
-    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env != NULL) {
+    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env == NULL) {
         return;
     }
 
@@ -239,11 +247,11 @@ JSSL_SSLFDAlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *ale
     jobject sslfd_proxy = (jobject)arg;
     jobject list;
 
-    if (fd == NULL || arg == NULL || alert == NULL) {
+    if (fd == NULL || arg == NULL || alert == NULL || JSS_javaVM == NULL) {
         return;
     }
 
-    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env != NULL) {
+    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env == NULL) {
         return;
     }
 
