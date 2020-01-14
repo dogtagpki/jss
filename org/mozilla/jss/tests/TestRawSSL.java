@@ -100,6 +100,9 @@ public class TestRawSSL {
         SecurityStatusResult r = SSL.SecurityStatus(ssl_fd);
         assert(r.on == 0);
 
+        // Validate toString works
+        System.out.println(r.toString());
+
         assert(PR.Close(ssl_fd) == PR.SUCCESS);
     }
 
