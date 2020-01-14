@@ -69,6 +69,16 @@ public class JSSKeyManager implements X509KeyManager {
         return null;  // not implemented
     }
 
+    public org.mozilla.jss.crypto.X509Certificate getCertificate(String alias) {
+        try {
+            CryptoManager cm = CryptoManager.getInstance();
+            return cm.findCertByNickname(alias);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public X509Certificate[] getCertificateChain(String alias) {
 
