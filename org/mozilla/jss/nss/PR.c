@@ -18,6 +18,7 @@ Java_org_mozilla_jss_nss_PR_Open(JNIEnv *env, jclass clazz, jstring name,
     char *path;
 
     PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
 
     path = (char *)(*env)->GetStringUTFChars(env, name, NULL);
     if (path == NULL) {
@@ -38,6 +39,7 @@ Java_org_mozilla_jss_nss_PR_NewTCPSocket(JNIEnv *env, jclass clazz)
     PRFileDesc *fd;
 
     PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
 
     fd = PR_NewTCPSocket();
     if (fd == NULL) {
@@ -60,6 +62,7 @@ Java_org_mozilla_jss_nss_PR_NewBufferPRFD(JNIEnv *env, jclass clazz,
     jobject result = NULL;
 
     PR_ASSERT(env != NULL && read_buf != NULL && write_buf != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_unwrapJBuffer(env, read_buf, &real_read_buf) != PR_SUCCESS) {
         return result;
@@ -90,6 +93,7 @@ Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd)
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
 
     if (fd == NULL) {
         return PR_SUCCESS;
@@ -114,6 +118,7 @@ Java_org_mozilla_jss_nss_PR_Shutdown(JNIEnv *env, jclass clazz, jobject fd,
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
 
     if (fd == NULL) {
         return PR_SUCCESS;
@@ -136,6 +141,7 @@ Java_org_mozilla_jss_nss_PR_Read(JNIEnv *env, jclass clazz, jobject fd,
     uint8_t *buffer = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL && amount >= 0);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return NULL;
@@ -169,6 +175,7 @@ Java_org_mozilla_jss_nss_PR_Write(JNIEnv *env, jclass clazz, jobject fd,
     int result = 0;
 
     PR_ASSERT(env != NULL && fd != NULL && buf != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return 0;
@@ -206,6 +213,7 @@ Java_org_mozilla_jss_nss_PR_Recv(JNIEnv *env, jclass clazz, jobject fd,
 
     PR_ASSERT(env != NULL && fd != NULL && amount >= 0 && flags >= 0 &&
               timeout >= 0 && timeout <= UINT32_MAX);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return NULL;
@@ -241,6 +249,7 @@ Java_org_mozilla_jss_nss_PR_Send(JNIEnv *env, jclass clazz, jobject fd,
 
     PR_ASSERT(env != NULL && fd != NULL && buf != NULL && flags >= 0 &&
               timeout >= 0 && timeout <= UINT32_MAX);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return 0;
