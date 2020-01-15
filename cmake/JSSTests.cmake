@@ -254,6 +254,16 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
     )
+    jss_test_java(
+        NAME "SSLEngine_RSA"
+        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
+        DEPENDS "List_CA_certs"
+    )
+    jss_test_java(
+        NAME "SSLEngine_ECDSA"
+        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
+        DEPENDS "SSLEngine_RSA"
+    )
 
     if(NOT FIPS_ENABLED)
         jss_test_java(
@@ -363,7 +373,7 @@ macro(jss_tests)
     )
 
 
-    # For compliance with several
+    # For compliance with several existing clients
     add_custom_target(
         check
         DEPENDS test
@@ -408,6 +418,7 @@ function(jss_test_java)
     list(APPEND EXEC_COMMAND "${TEST_CLASSPATH}")
     list(APPEND EXEC_COMMAND "-ea")
     list(APPEND EXEC_COMMAND "-Djava.library.path=${CMAKE_BINARY_DIR}")
+    list(APPEND EXEC_COMMAND "-Djava.util.logging.config.file=${PROJECT_SOURCE_DIR}/tools/logging.properties")
     set(EXEC_COMMAND "${EXEC_COMMAND};${TEST_JAVA_COMMAND}")
 
     if(TEST_JAVA_DEPENDS)
