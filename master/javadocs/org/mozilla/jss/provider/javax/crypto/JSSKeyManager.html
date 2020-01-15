@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -162,19 +162,23 @@ implements javax.net.ssl.X509KeyManager</pre>
                  java.net.Socket&nbsp;socket)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html#getCertificate-java.lang.String-">getCertificate</a></span>(java.lang.String&nbsp;alias)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.security.cert.X509Certificate[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html#getCertificateChain-java.lang.String-">getCertificateChain</a></span>(java.lang.String&nbsp;alias)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html#getClientAliases-java.lang.String-java.security.Principal:A-">getClientAliases</a></span>(java.lang.String&nbsp;keyType,
                 java.security.Principal[]&nbsp;issuers)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.security.PrivateKey</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html#getPrivateKey-java.lang.String-">getPrivateKey</a></span>(java.lang.String&nbsp;alias)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html#getServerAliases-java.lang.String-java.security.Principal:A-">getServerAliases</a></span>(java.lang.String&nbsp;keyType,
                 java.security.Principal[]&nbsp;issuers)</code>&nbsp;</td>
@@ -246,6 +250,15 @@ implements javax.net.ssl.X509KeyManager</pre>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>chooseServerAlias</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.X509KeyManager</code></dd>
 </dl>
+</li>
+</ul>
+<a name="getCertificate-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCertificate</h4>
+<pre>public&nbsp;<a href="../../../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;getCertificate(java.lang.String&nbsp;alias)</pre>
 </li>
 </ul>
 <a name="getCertificateChain-java.lang.String-">
