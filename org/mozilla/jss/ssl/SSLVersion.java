@@ -76,4 +76,19 @@ public enum SSLVersion {
         // find by name
         return SSLVersion.valueOf(alias);
     }
+
+    public static SSLVersion maxSupported() {
+        SSLVersion result = null;
+        for (SSLVersion v : SSLVersion.values()) {
+            if (result == null || v.compareTo(result) > 0) {
+                result = v;
+            }
+        }
+
+        return result;
+    }
+
+    public static SSLVersion minSupported() {
+        return SSLVersion.TLS_1_0;
+    }
 }

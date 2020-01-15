@@ -2,6 +2,11 @@ package org.mozilla.jss.crypto;
 
 import java.math.BigInteger;
 
+import org.mozilla.jss.ssl.SSLProtocolVariant;
+import org.mozilla.jss.ssl.SSLSocket;
+import org.mozilla.jss.ssl.SSLVersion;
+import org.mozilla.jss.ssl.SSLVersionRange;
+
 /**
  * This class helps JSS callers align with local system cryptographic policy.
  *
@@ -28,6 +33,22 @@ public class Policy {
      * Minimum DSA key length in bits permitted by local policy.
      */
     public static int DSA_MINIMUM_KEY_SIZE = getDSAMinimumKeySize();
+
+    public static SSLVersionRange TLS_VERSION_RANGE = getTLSVersionRange();
+
+    public static SSLVersion TLS_MINIMUM_VERSION = TLS_VERSION_RANGE.getMinVersion();
+
+    public static SSLVersion TLS_MAXIMUM_VERSION = TLS_VERSION_RANGE.getMaxVersion();
+
+    private static SSLVersionRange getTLSVersionRange() {
+        SSLVersionRange range = new SSLVersionRange(SSLVersion.minSupported(),
+                                                    SSLVersion.maxSupported());
+        try {
+            return SSLSocket.boundSSLVersionRange(SSLProtocolVariant.STREAM, range);
+        } catch (Exception e) {
+            return range;
+        }
+    }
 
     private static native int getRSAMinimumKeySize();
     private static native int getDHMinimumKeySize();
