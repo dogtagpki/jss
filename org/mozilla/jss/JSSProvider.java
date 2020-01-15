@@ -374,6 +374,16 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.TrustManagerFactory.PKIX", "NssX509");
         put("Alg.Alias.TrustManagerFactory.X509", "NssX509");
         put("Alg.Alias.TrustManagerFactory.X.509", "NssX509");
+
+        /////////////////////////////////////////////////////////////
+        // TLS
+        /////////////////////////////////////////////////////////////
+        put("SSLContext.Default", "org.mozilla.jss.provider.javax.net.JSSContextSpi");
+        put("SSLContext.SSL", "org.mozilla.jss.provider.javax.net.JSSContextSpi");
+        put("SSLContext.TLS", "org.mozilla.jss.provider.javax.net.JSSContextSpi");
+        put("SSLContext.TLSv1.1", "org.mozilla.jss.provider.javax.net.JSSContextSpi$TLSv11");
+        put("SSLContext.TLSv1.2", "org.mozilla.jss.provider.javax.net.JSSContextSpi$TLSv12");
+        put("SSLContext.TLSv1.3", "org.mozilla.jss.provider.javax.net.JSSContextSpi$TLSv13");
     }
 
     public String toString() {
