@@ -4,6 +4,8 @@
 
 package org.mozilla.jss.ssl;
 
+import java.util.ArrayList;
+
 public class SSLVersionRange {
 
     private SSLVersion minVersion;
@@ -78,4 +80,20 @@ public class SSLVersionRange {
      * @return enumeration value
      */
     public int getMaxEnum() { return maxVersion.value(); }
+
+    /**
+     * Gets all of the SSLVersions in this range, including endpoints.
+     *
+     * @return All SSLVersions in this range
+     */
+    public SSLVersion[] getAllInRange() {
+        ArrayList<SSLVersion> result = new ArrayList<SSLVersion>();
+        for (SSLVersion v : SSLVersion.values()) {
+            if (v.compareTo(this.minVersion) >= 0 && v.compareTo(this.maxVersion) <= 0) {
+                result.add(v);
+            }
+        }
+
+        return result.toArray(new SSLVersion[result.size()]);
+    }
 }
