@@ -70,6 +70,7 @@ Java_org_mozilla_jss_nss_SSL_ImportFD(JNIEnv *env, jclass clazz, jobject model,
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
 
     /* Note: NSS calling semantics state that either model or fd can be
      * NULL; so when the Java Object is not-NULL, dereference it. */
@@ -93,6 +94,7 @@ Java_org_mozilla_jss_nss_SSL_OptionSet(JNIEnv *env, jclass clazz, jobject fd,
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -109,6 +111,7 @@ Java_org_mozilla_jss_nss_SSL_OptionGet(JNIEnv *env, jclass clazz, jobject fd,
     int result = -1;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
@@ -131,6 +134,7 @@ Java_org_mozilla_jss_nss_SSL_SetURL(JNIEnv *env, jclass clazz, jobject fd,
     char *real_url = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -151,6 +155,7 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefSet(JNIEnv *env, jclass clazz,
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -167,6 +172,7 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefGet(JNIEnv *env, jclass clazz,
     int enabled = false;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
@@ -191,6 +197,7 @@ Java_org_mozilla_jss_nss_SSL_VersionRangeSetNative(JNIEnv *env, jclass clazz,
     SSLVersionRange vrange;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (min_ssl < 0 || min_ssl >= JSSL_enums_size ||
             max_ssl < 0 || max_ssl >= JSSL_enums_size)
@@ -223,6 +230,7 @@ Java_org_mozilla_jss_nss_SSL_VersionRangeGet(JNIEnv *env, jclass clazz,
     SSLVersionRange vrange;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
@@ -252,6 +260,7 @@ Java_org_mozilla_jss_nss_SSL_SecurityStatus(JNIEnv *env, jclass clazz,
     char *subject;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return NULL;
@@ -272,6 +281,7 @@ Java_org_mozilla_jss_nss_SSL_ResetHandshake(JNIEnv *env, jclass clazz,
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -287,6 +297,7 @@ Java_org_mozilla_jss_nss_SSL_ForceHandshake(JNIEnv *env, jclass clazz,
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -304,6 +315,7 @@ Java_org_mozilla_jss_nss_SSL_ConfigSecureServer(JNIEnv *env, jclass clazz,
     SECKEYPrivateKey *real_key = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -329,6 +341,7 @@ Java_org_mozilla_jss_nss_SSL_ConfigServerCert(JNIEnv *env, jclass clazz,
     SECKEYPrivateKey *real_key = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -353,6 +366,7 @@ Java_org_mozilla_jss_nss_SSL_ConfigServerSessionIDCache(JNIEnv *env, jclass claz
     SECStatus ret = SECFailure;
 
     PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
 
     dir_path = JSS_RefJString(env, directory);
 
@@ -371,6 +385,7 @@ Java_org_mozilla_jss_nss_SSL_PeerCertificate(JNIEnv *env, jclass clazz,
     CERTCertificate *cert = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return NULL;
@@ -392,6 +407,7 @@ Java_org_mozilla_jss_nss_SSL_PeerCertificateChain(JNIEnv *env, jclass clazz,
     CERTCertList *chain = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return NULL;
@@ -419,6 +435,7 @@ Java_org_mozilla_jss_nss_SSL_AttachClientCertCallback(JNIEnv *env, jclass clazz,
     CERTCertificate *real_cert = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
@@ -448,6 +465,7 @@ Java_org_mozilla_jss_nss_SSL_EnableAlertLoggingNative(JNIEnv *env, jclass clazz,
     SECStatus ret = SECFailure;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return ret;
@@ -473,6 +491,7 @@ Java_org_mozilla_jss_nss_SSL_ConfigJSSDefaultCertAuthCallback(JNIEnv *env, jclas
     PRFileDesc *real_fd = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
         return SECFailure;
