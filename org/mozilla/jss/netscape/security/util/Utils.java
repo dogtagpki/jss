@@ -37,7 +37,12 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Utils {
+    public static Logger logger = LoggerFactory.getLogger(Utils.class);
+
     /**
      * Checks if this is NT.
      */
@@ -395,7 +400,12 @@ public class Utils {
      * @return byte array
      */
     public static byte[] base64decode(String string) {
-        return Base64.getMimeDecoder().decode(string);
+        try {
+            return Base64.getMimeDecoder().decode(string);
+        } catch (IllegalArgumentException iae) {
+            logger.warn("Invalid base64: [" + string + "]: " + iae);
+            return new byte[0];
+        }
     }
 
     /**
