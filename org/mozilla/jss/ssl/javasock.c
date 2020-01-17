@@ -548,9 +548,11 @@ jsock_recv(PRFileDesc *fd, void *buf, PRInt32 amount,
 
         bytes = (*env)->GetByteArrayElements(env, byteArray, NULL);
 
-        memcpy(buf, bytes, retval);
+        if (bytes != NULL) {
+            memcpy(buf, bytes, retval);
 
-        JSS_DerefByteArray(env, byteArray, bytes, JNI_ABORT);
+            JSS_DerefByteArray(env, byteArray, bytes, JNI_ABORT);
+        }
     }
 
 finish:

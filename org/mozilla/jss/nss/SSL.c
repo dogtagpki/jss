@@ -131,21 +131,24 @@ Java_org_mozilla_jss_nss_SSL_SetURL(JNIEnv *env, jclass clazz, jobject fd,
     jstring url)
 {
     PRFileDesc *real_fd = NULL;
-    char *real_url = NULL;
+    SECStatus ret = SECFailure;
+    const char *real_url = NULL;
 
     PR_ASSERT(env != NULL && fd != NULL);
     PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
-        return SECFailure;
+        return ret;
     }
 
-    real_url = (char *)(*env)->GetStringUTFChars(env, url, NULL);
+    real_url = JSS_RefJString(env, url);
     if (real_url == NULL) {
-        return SECFailure;
+        return ret;
     }
 
-    return SSL_SetURL(real_fd, real_url);
+    ret = SSL_SetURL(real_fd, real_url);
+    JSS_DerefJString(env, url, real_url);
+    return ret;
 }
 
 JNIEXPORT int JNICALL
