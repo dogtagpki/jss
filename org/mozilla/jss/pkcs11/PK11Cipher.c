@@ -171,6 +171,9 @@ finish:
     if(outbuf) {
         PR_Free(outbuf);
     }
+    if (inbuf) {
+        (*env)->ReleaseByteArrayElements(env, inputBA, inbuf, JNI_ABORT);
+    }
     return outArray;
 }
 

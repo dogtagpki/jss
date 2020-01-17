@@ -15,21 +15,23 @@ Java_org_mozilla_jss_nss_PR_Open(JNIEnv *env, jclass clazz, jstring name,
     jint flags, jint mode)
 {
     PRFileDesc *fd;
-    char *path;
+    const char *path;
 
     PR_ASSERT(env != NULL);
     PR_SetError(0, 0);
 
-    path = (char *)(*env)->GetStringUTFChars(env, name, NULL);
+    path = JSS_RefJString(env, name);
     if (path == NULL) {
          return NULL;
     }
 
     fd = PR_Open(path, flags, mode);
     if (fd == NULL) {
+        JSS_DerefJString(env, name, path);
         return NULL;
     }
 
+    JSS_DerefJString(env, name, path);
     return JSS_PR_wrapPRFDProxy(env, &fd);
 }
 
