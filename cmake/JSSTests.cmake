@@ -445,6 +445,10 @@ macro(jss_test_exec)
     set(TEST_ARGS  "COMMAND" "DEPENDS")
     cmake_parse_arguments(TEST_EXEC "" "${TEST_FLAGS}" "${TEST_ARGS}" ${ARGN})
 
+    if(TEST_VALGRIND)
+        list(INSERT TEST_EXEC_COMMAND 0 "valgrind" "--track-origins=yes" "--leak-check=full")
+    endif()
+
     add_test(
         NAME "${TEST_EXEC_NAME}"
         COMMAND ${TEST_EXEC_COMMAND}
