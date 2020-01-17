@@ -80,6 +80,10 @@ command line with `-D<VAR>=<VALUE>` syntax, or in the environment.
     `sandbox/dist` folder is automatically created by NSS upon build.
     Please first build NSS (according to current instructions) and then
     build JSS.
+ - `TEST_VALGRIND` -- run the entire test suite under Valgrind. This option
+    is quite slow. By default it passes two arguments: `--track-origins=yes`
+    and `--leak-check=full`. Modify `cmake/JSSTests.cmake` (macro:
+    `jss_test_exec`) to change these options.
 
 ### Adding a Test Case
 

@@ -28,6 +28,11 @@ if (DEFINED ENV{SANDBOX})
 endif()
 option(SANDBOX "When enabled, expect to find nss and nspr from the parent (sandbox) directory instead of using the system-installed versions of the libraries." ${SANDBOX_ENV})
 
+if (DEFINED ENV{TEST_VALGRIND})
+    set(TEST_VALGRIND_ENV TRUE)
+endif()
+option(TEST_VALGRIND "When enabled, run the entire test suite under Valgrind. This will be noisy as JSS can't clean up NSS initialization and the JVM itself leaks." ${TEST_VALGRIND_ENV})
+
 # Build a debug build by default when no type is specified on the command line
 if(NOT (DEFINED CMAKE_BUILD_TYPE))
     set(CMAKE_BUILD_TYPE "Debug")
