@@ -15,6 +15,16 @@ import org.mozilla.jss.ssl.SSLVersionRange;
  */
 public class Policy {
     /**
+     * Whether or not this JSS instance is enforcing local crypto-policy,
+     * with respect to key sizes.
+     *
+     * Defaults to false; this lets applications use whatever key sizes are
+     * supported by NSS, at the risk of performing non-compliant operations.
+     * Set to true to enable enforcement, where it exists.
+     */
+    public static boolean ENFORCING_KEY_SIZES = false;
+
+    /**
      * Minimum RSA key length in bits permitted by local policy.
      */
     public static int RSA_MINIMUM_KEY_SIZE = getRSAMinimumKeySize();

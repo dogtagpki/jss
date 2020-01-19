@@ -27,6 +27,9 @@ import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.ECCurve;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A Key Pair Generator implemented using PKCS #11.
  *
@@ -35,6 +38,7 @@ import org.mozilla.jss.util.ECCurve;
 public final class PK11KeyPairGenerator
     extends org.mozilla.jss.crypto.KeyPairGeneratorSpi
 {
+    public static Logger logger = LoggerFactory.getLogger(PK11KeyPairGenerator.class);
 
     // curve code for getting the actual EC curve
     private enum ECCurve_Code {
@@ -472,19 +476,27 @@ public final class PK11KeyPairGenerator
                 RSAKeyGenParameterSpec rsaparams = (RSAKeyGenParameterSpec)params;
 
                 if (rsaparams.getKeysize() < Policy.RSA_MINIMUM_KEY_SIZE) {
-                    String msg = "Disallowing unsafe RSA key size of ";
+                    String msg = "unsafe RSA key size of ";
                     msg += rsaparams.getKeysize() + ". Policy.RSA_MINIMUM_KEY_SIZE ";
                     msg += "dictates a minimum of " + Policy.RSA_MINIMUM_KEY_SIZE;
 
-                    throw new TokenException(msg);
+                    if (Policy.ENFORCING_KEY_SIZES) {
+                        throw new TokenException("Disallowing " + msg);
+                    } else {
+                        logger.warn("Ignored jss.crypto.Policy violation: " + msg);
+                    }
                 }
                 if (rsaparams.getPublicExponent().longValue() < Policy.RSA_MINIMUM_PUBLIC_EXPONENT.longValue()) {
-                    String msg = "Disallowing unsafe RSA exponent of ";
+                    String msg = "unsafe RSA exponent of ";
                     msg += rsaparams.getPublicExponent().longValue() + ". ";
                     msg += "Policy.RSA_MINIMUM_PUBLIC_EXPONENT dictates a minimum of ";
                     msg += Policy.RSA_MINIMUM_PUBLIC_EXPONENT.longValue();
 
-                    throw new TokenException(msg);
+                    if (Policy.ENFORCING_KEY_SIZES) {
+                        throw new TokenException("Disallowing " + msg);
+                    } else {
+                        logger.warn("Ignored jss.crypto.Policy violation: " + msg);
+                    }
                 }
 
                 return generateRSAKeyPairWithOpFlags(
