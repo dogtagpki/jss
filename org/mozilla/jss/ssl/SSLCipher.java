@@ -341,21 +341,35 @@ public enum SSLCipher {
     TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384         (0xD002, true),
 
     /* Special TLS 1.3 cipher suites that really just specify AEAD */
-    TLS_AES_128_GCM_SHA256                        (0x1301),
-    TLS_AES_256_GCM_SHA384                        (0x1302),
-    TLS_CHACHA20_POLY1305_SHA256                  (0x1303);
+    TLS_AES_128_GCM_SHA256                        (0x1301, false, true),
+    TLS_AES_256_GCM_SHA384                        (0x1302, false, true),
+    TLS_CHACHA20_POLY1305_SHA256                  (0x1303, false, true);
 
     private int id;
     private boolean ecc;
+    private boolean tls13;
+    private boolean supported;
 
     private SSLCipher(int id) {
-        this.id = id;
+        this(id, false);
     }
 
     private SSLCipher(int id, boolean ecc) {
+        this(id, ecc, false);
+    }
+
+    private SSLCipher(int id, boolean ecc, boolean tls13) {
+        this(id, ecc, tls13, checkSupportedStatus(id));
+    }
+
+    private SSLCipher(int id, boolean ecc, boolean tls13, boolean supported) {
         this.id = id;
         this.ecc = ecc;
+        this.tls13 = tls13;
+        this.supported = supported;
     }
+
+    private static native boolean checkSupportedStatus(int id);
 
     public int getID() {
         return id;
@@ -363,6 +377,22 @@ public enum SSLCipher {
 
     public boolean isECC() {
         return ecc;
+    }
+
+    public boolean isTLSv13() {
+        return tls13;
+    }
+
+    public boolean isSupported() {
+        return supported;
+    }
+
+    public boolean requiresRSACert() {
+        return this.name().contains("_RSA_");
+    }
+
+    public boolean requiresECDSACert() {
+        return this.name().contains("_ECDSA_");
     }
 
     public static SSLCipher valueOf(int id) {
