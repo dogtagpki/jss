@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -209,18 +209,24 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html#getAllInRange--">getAllInRange</a></span>()</code>
+<div class="block">Gets all of the SSLVersions in this range, including endpoints.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html#getMaxEnum--">getMaxEnum</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html#getMaxVersion--">getMaxVersion</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html#getMinEnum--">getMinEnum</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html#getMinVersion--">getMinVersion</a></span>()</code>&nbsp;</td>
 </tr>
@@ -407,13 +413,27 @@ public&nbsp;SSLVersionRange(int&nbsp;min_enum,
 <a name="getMaxEnum--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getMaxEnum</h4>
 <pre>public&nbsp;int&nbsp;getMaxEnum()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>enumeration value</dd>
+</dl>
+</li>
+</ul>
+<a name="getAllInRange--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getAllInRange</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>[]&nbsp;getAllInRange()</pre>
+<div class="block">Gets all of the SSLVersions in this range, including endpoints.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>All SSLVersions in this range</dd>
 </dl>
 </li>
 </ul>
