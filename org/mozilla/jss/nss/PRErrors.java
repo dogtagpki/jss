@@ -14,5 +14,13 @@ public class PRErrors {
      */
     public static final int WOULD_BLOCK_ERROR = getWouldBlockError();
 
+    /**
+     * The socket is shutdown.
+     *
+     * See also: PR_SOCKET_SHUTDOWN_ERROR in /usr/include/nspr4/prerr.h
+     */
+    public static final int SOCKET_SHUTDOWN_ERROR = getSocketShutdownError();
+
     private static native int getWouldBlockError();
+    private static native int getSocketShutdownError();
 }
