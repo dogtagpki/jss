@@ -138,26 +138,33 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Policy.html#ENFORCING_KEY_SIZES">ENFORCING_KEY_SIZES</a></span></code>
+<div class="block">Whether or not this JSS instance is enforcing local crypto-policy,
+ with respect to key sizes.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Policy.html#RSA_MINIMUM_KEY_SIZE">RSA_MINIMUM_KEY_SIZE</a></span></code>
 <div class="block">Minimum RSA key length in bits permitted by local policy.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Policy.html#RSA_MINIMUM_PUBLIC_EXPONENT">RSA_MINIMUM_PUBLIC_EXPONENT</a></span></code>
 <div class="block">Minimum RSA public exponent allowed by JSS.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Policy.html#TLS_MAXIMUM_VERSION">TLS_MAXIMUM_VERSION</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Policy.html#TLS_MINIMUM_VERSION">TLS_MINIMUM_VERSION</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/Policy.html#TLS_VERSION_RANGE">TLS_VERSION_RANGE</a></span></code>&nbsp;</td>
 </tr>
@@ -208,6 +215,21 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a name="ENFORCING_KEY_SIZES">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ENFORCING_KEY_SIZES</h4>
+<pre>public static&nbsp;boolean ENFORCING_KEY_SIZES</pre>
+<div class="block">Whether or not this JSS instance is enforcing local crypto-policy,
+ with respect to key sizes.
+
+ Defaults to false; this lets applications use whatever key sizes are
+ supported by NSS, at the risk of performing non-compliant operations.
+ Set to true to enable enforcement, where it exists.</div>
+</li>
+</ul>
 <a name="RSA_MINIMUM_KEY_SIZE">
 <!--   -->
 </a>
