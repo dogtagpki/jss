@@ -42,6 +42,12 @@ public class JSSTrustManager implements X509TrustManager {
     final static String SERVER_AUTH_OID = "1.3.6.1.5.5.7.3.1";
     final static String CLIENT_AUTH_OID = "1.3.6.1.5.5.7.3.2";
 
+    public boolean allowMissingExtendedKeyUsage = false;
+
+    public void configureAllowMissingExtendedKeyUsage(boolean allow) {
+        allowMissingExtendedKeyUsage = allow;
+    }
+
     public void checkCertChain(X509Certificate[] certChain, String keyUsage) throws Exception {
 
         logger.debug("JSSTrustManager: checkCertChain(" + keyUsage + ")");
@@ -114,12 +120,18 @@ public class JSSTrustManager implements X509TrustManager {
             List<String> extendedKeyUsages = cert.getExtendedKeyUsage();
             logger.debug("JSSTrustManager: checking extended key usages:");
 
-            for (String extKeyUsage : extendedKeyUsages) {
-                logger.debug("JSSTrustManager:  - " + extKeyUsage);
+            if (extendedKeyUsages != null) {
+                for (String extKeyUsage : extendedKeyUsages) {
+                    logger.debug("JSSTrustManager:  - " + extKeyUsage);
+                }
             }
 
-            if (extendedKeyUsages.contains(keyUsage)) {
+            boolean haveKeyUsage = extendedKeyUsages != null && extendedKeyUsages.contains(keyUsage);
+            boolean allowedToSkip = extendedKeyUsages == null && allowMissingExtendedKeyUsage;
+            if (haveKeyUsage) {
                 logger.debug("JSSTrustManager: extended key usage found: " + keyUsage);
+            } else if (allowedToSkip) {
+                logger.debug("JSSTrustManager: configured to allow null extended key usages field");
             } else {
                 throw new CertificateException("Missing extended key usage: " + keyUsage);
             }
