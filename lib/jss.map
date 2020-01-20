@@ -431,6 +431,7 @@ Java_org_mozilla_jss_crypto_Policy_getDHMinimumKeySize;
 Java_org_mozilla_jss_crypto_Policy_getDSAMinimumKeySize;
 Java_org_mozilla_jss_nss_SSL_ConfigJSSDefaultCertAuthCallback;
 Java_org_mozilla_jss_ssl_SSLCipher_checkSupportedStatus;
+Java_org_mozilla_jss_nss_PRErrors_getSocketShutdownError;
     local:
         *;
 };
