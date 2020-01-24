@@ -10,6 +10,7 @@ public enum SSLVersion {
      *    [0] - JSS name
      *    [1] - JDK name
      */
+    SSL_2_0(new String[] {"SSL2", "SSLv2"},   SocketBase.SSL_LIBRARY_VERSION_2),
     SSL_3_0(new String[] {"SSL3", "SSLv3"},   SocketBase.SSL_LIBRARY_VERSION_3_0),
     TLS_1_0(new String[] {"TLS1_0", "TLSv1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_0),
     TLS_1_1(new String[] {"TLS1_1", "TLSv1.1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_1),
