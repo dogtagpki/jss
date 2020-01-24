@@ -2839,14 +2839,14 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKM_AES_CMAC_GENERAL = 0x0000108AL;
+    public static final long CKM_AES_CMAC = 0x0000108AL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKM_AES_CMAC = 0x0000108BL;
+    public static final long CKM_AES_CMAC_GENERAL = 0x0000108BL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
