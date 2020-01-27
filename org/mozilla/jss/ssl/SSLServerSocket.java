@@ -278,7 +278,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
       try {
         setServerCert( CryptoManager.getInstance().findCertByNickname(nick) );
       } catch(NotInitializedException nie) {
-        throw new SocketException("CryptoManager not initialized");
+        throw new SocketException("CryptoManager not initialized: " + nie);
       } catch(ObjectNotFoundException onfe) {
         throw new SocketException("Object not found: " + onfe);
       } catch(TokenException te) {
