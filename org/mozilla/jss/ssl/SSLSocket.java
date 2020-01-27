@@ -1488,10 +1488,10 @@ public class SSLSocket extends java.net.Socket {
                 iRet = socketRead(b, off, len, base.getTimeout());
             } catch (SocketTimeoutException ste) {
                 throw new SocketTimeoutException(
-                    "SocketTimeoutException cannot read on socket");
+                    "SocketTimeoutException cannot read on socket: " + ste);
             } catch (IOException ioe) {
                 throw new IOException(
-                    "SocketException cannot read on socket");
+                    "SocketException cannot read on socket: " + ioe.getMessage(), ioe);
             } finally {
                 synchronized (this) {
                     inRead = false;
@@ -1515,10 +1515,10 @@ public class SSLSocket extends java.net.Socket {
                 socketWrite(b, off, len, base.getTimeout());
             } catch (SocketTimeoutException ste) {
                 throw new SocketTimeoutException(
-                    "SocketTimeoutException cannot write on socket");
+                    "SocketTimeoutException cannot write on socket: " + ste);
             } catch (IOException ioe) {
                 throw new IOException(
-                    "SocketException cannot write on socket");
+                    "SocketException cannot write on socket: " + ioe.getMessage(), ioe);
             } finally {
                 synchronized (this) {
                     inWrite = false;
