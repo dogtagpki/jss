@@ -30,13 +30,13 @@ jobs:
       uses: actions/checkout@v2
     - name: Build and Run the Docker Image
       run: bash tools/run_container.sh "ubuntu_jdk8" || echo "::warning ::Job exited with status $?"
-  fedora_29_jdk11:
+  fedora_latest_jdk11:
     runs-on: ubuntu-latest
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
     - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_29_jdk11" || echo "::warning ::Job exited with status $?"
+      run: bash tools/run_container.sh "fedora_latest_jdk11" || echo "::warning ::Job exited with status $?"
   fedora_rawhide:
     runs-on: ubuntu-latest
     steps:
