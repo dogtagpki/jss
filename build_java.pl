@@ -72,6 +72,12 @@ org.mozilla.jss.pkix.cmc
 org.mozilla.jss.pkix.cmmf
 org.mozilla.jss.pkix.cms
 org.mozilla.jss.pkix.crmf
+org.mozilla.jss.pkix.legacy.primitive
+org.mozilla.jss.pkix.legacy.cert
+org.mozilla.jss.pkix.legacy.cmc
+org.mozilla.jss.pkix.legacy.cmmf
+org.mozilla.jss.pkix.legacy.cms
+org.mozilla.jss.pkix.legacy.crmf
 org.mozilla.jss.provider.java.security
 org.mozilla.jss.provider.javax.crypto
 org.mozilla.jss.SecretDecoderRing
