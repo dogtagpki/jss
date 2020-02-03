@@ -189,7 +189,7 @@ public class SSL {
      * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
      *           org.mozilla.jss.nss.SSLFDProxy.SetClientCert(...)
      */
-    public static native int AttachClientCertCallback(SSLFDProxy fd) throws Exception;
+    public static native int AttachClientCertCallback(SSLFDProxy fd);
 
     /**
      * Enable recording of alerts in the SSLFDProxy object.
