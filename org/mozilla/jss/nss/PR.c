@@ -140,7 +140,10 @@ Java_org_mozilla_jss_nss_PR_Read(JNIEnv *env, jclass clazz, jobject fd,
     PRFileDesc *real_fd = NULL;
     jobject result = NULL;
     int read_amount = 0;
+    int this_read = 0;
     uint8_t *buffer = NULL;
+    PRSocketOptionData opt = { 0 };
+    PRDescType fd_type;
 
     PR_ASSERT(env != NULL && fd != NULL && amount >= 0);
     PR_SetError(0, 0);
@@ -149,14 +152,48 @@ Java_org_mozilla_jss_nss_PR_Read(JNIEnv *env, jclass clazz, jobject fd,
         return NULL;
     }
 
+    fd_type = PR_GetDescType(real_fd);
+    opt.value.non_blocking = PR_FALSE;
+
+    if (fd_type == PR_DESC_SOCKET_TCP ||
+            fd_type == PR_DESC_SOCKET_UDP ||
+            fd_type == PR_DESC_LAYERED) {
+        opt.option = PR_SockOpt_Nonblocking;
+        if (PR_GetSocketOption(real_fd, &opt) != PR_SUCCESS) {
+            /* Unable to get the value of non_blocking status; so error on
+             * the side of caution. */
+            opt.value.non_blocking = PR_FALSE;
+        }
+    }
+
     PR_ASSERT(real_fd != NULL);
 
     buffer = calloc(amount, sizeof(uint8_t));
 
-    read_amount = PR_Read(real_fd, buffer, amount);
+    /* Work around a bug in NSS/NSPR: sometimes PR_Read returns a much smaller
+     * read than expected, when it could read much more. */
+    while (read_amount < amount) {
+        this_read = PR_Read(real_fd, buffer + read_amount, amount - read_amount);
+        if (this_read <= 0) {
+            if (PR_GetError() == PR_WOULD_BLOCK_ERROR && read_amount > 0) {
+                /* If we've previously gotten data and we would block this
+                 * time, then we're at the end of our data. Reset the error
+                 * status and break, rather than exiting with an error. */
+                PR_SetError(0, 0);
+                break;
+            }
 
-    if (read_amount <= 0) {
-        goto done;
+            goto done;
+        } else {
+            read_amount += this_read;
+
+            if (opt.value.non_blocking != PR_TRUE) {
+                /* When we're not non-blocking, it isn't necessarily safe to
+                 * call PR_Read again -- a call that would've not blocked will
+                 * now block. */
+                break;
+            }
+        }
     }
 
     result = JSS_ToByteArray(env, buffer, read_amount);
