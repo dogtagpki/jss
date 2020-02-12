@@ -183,6 +183,46 @@ public SymmetricKey kbkdfDeriveSCP03Key(SymmetricKey master,
 }
 ```
 
+## Design of KBKDF
+
+Unlike past key generation mechanisms, the `CKM_SP800_108_*` PKCS#11 mechs
+require extensive mechanism parameters. Under Java, these take the form of
+[`java.security.spec.AlgorithmParameterSpec`][alg-param-spec] implementations,
+but this leaves much to be desired when bridging the JNI gap. Our approach
+involved creating new extensions to the [`NativeProxy`][native-proxy] class:
+the [`NativeEnclosure`][native-enclosure].
+
+Unlike a `NativeProxy` -- whose scope is implicit, a `NativeEnclosure`
+formalizes and specifies the exact scope of a C pointer. In particular, a
+`NativeProxy` instance could be created at any time by the JNI code; it is
+then given to Java to handle usage and cleanup. Additionally, a `NativeProxy`
+instance doesn't exist until it is created by C code.
+
+Contrasting with that, we need our parameter specifications to exist prior
+to the creation of the `NativeProxy` instance -- so we can populate them -- but
+we still need to capture the creation, use, and destruction of the underlying
+`NativeProxy`. This leads to two NativeEnclosure methods:
+
+ - `acquireNativeResources(...)` to trigger an allocation of the
+   `NativeProxy`, storing it on the `mPointer` member, and
+ - `releaseNativeResources(...)` to trigger freeing it.
+
+These get wrapped in `open(...)` and `close(...)` respective, allowing us to
+implement the [`java.lang.AutoCloseable`][auto-close] class.
+
+This lets us use the parameters in the `KeyGenerator` as following: prior
+to the call (via JNI) to `PK11_DeriveKey(...)`. We call `open(...)` and
+handle any issues creating the `CK_SP800_108_KDF_PARAMS` or
+`CK_SP800_108_FEEDBACK_KDF_PARAMS` pointer. We pass this pointer directly to
+`PK11_DeriveKey(...)`, and when we're done, call `close(...)` to handle
+freeing it.
+
+Thus, we incur only a single allocation and free when we're ready to use
+the parameter, and the complexities of handling the JNI translation are
+hidden from the programmer wishing to use it.
+
+[alg-param-spec]: https://docs.oracle.com/javase/8/docs/api/java/security/spec/AlgorithmParameterSpec.html "java.security.spec.AlgorithmParameterSpec"
+[auto-close]: https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html "java.lang.AutoCloseable"
 [jca]: https://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html "Java Cryptography Architecture Reference Guide"
 [jss-crypto]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/crypto/package-summary.html "org.mozilla.jss.crypto.*"
 [jss-pkcs11-algorithm]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/crypto/PKCS11Algorithm.html "org.mozilla.jss.crypto.PKCS11Algorithm"
@@ -201,6 +241,8 @@ public SymmetricKey kbkdfDeriveSCP03Key(SymmetricKey master,
 [kbkdf-spec-set-keys]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/crypto/KBKDFParameterSpec.html#setAdditionalDerivedKeys-org.mozilla.jss.crypto.KBKDFDerivedKey:A- "org.mozilla.jss.crypto.KBKDFParameterSpec setAdditionalDerivedKeys(...)"
 [kbkdf-spec-add-key]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/crypto/KBKDFParameterSpec.html#addAdditionalDerivedKey-org.mozilla.jss.crypto.KBKDFDerivedKey- "org.mozilla.jss.crypto.KBKDFParameterSpec addAdditionalDerivedKey(...)"
 [key-generator]: https://docs.oracle.com/javase/8/docs/api/javax/crypto/KeyGenerator.html "javax.crypto.KeyGenerator"
+[native-enclosure]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/util/NativeEnclosure.html "org.mozilla.jss.util.NativeEnclosure"
+[native-proxy]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/util/NativeProxy.html "org.mozilla.jss.util.NativeProxy"
 [pkcs11-kbkdf]: https://docs.oasis-open.org/pkcs11/pkcs11-curr/v3.0/csprd01/pkcs11-curr-v3.0-csprd01.html#_Toc437440585 "PKCS#11 v3.0: SP 800-108 Key Derivation"
 [pkcs11-kbkdf-params]: https://docs.oasis-open.org/pkcs11/pkcs11-curr/v3.0/csprd01/pkcs11-curr-v3.0-csprd01.html#_Toc8118473 "PKCS#11 v3.0: SP 800-108 Key Derivation: 2.42.2 Mechanism Parameters"
 [pkcs11-kbkdf-adk]: https://docs.oasis-open.org/pkcs11/pkcs11-curr/v3.0/csprd01/pkcs11-curr-v3.0-csprd01.html#_Toc8118477 "PKCS#11 v3.0: SP 800-108 Key Derivation: 2.42.6 Deriving Additional Keys"
