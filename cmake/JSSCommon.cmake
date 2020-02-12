@@ -229,7 +229,7 @@ macro(jss_build_javadocs)
 
     add_custom_command(
         OUTPUT ${JAVADOCS_OUTPUTS}
-        COMMAND "${Java_JAVADOC_EXECUTABLE}" -overview "${PROJECT_SOURCE_DIR}/tools/javadoc/overview.html" -windowtitle "${JSS_WINDOW_TITLE}" -notimestamp -breakiterator -classpath ${JAVAC_CLASSPATH} -sourcepath ${PROJECT_SOURCE_DIR} -d ${DOCS_OUTPUT_DIR} ${JSS_PACKAGES}
+        COMMAND "${Java_JAVADOC_EXECUTABLE}" -overview "${PROJECT_SOURCE_DIR}/tools/javadoc/overview.html" -windowtitle "${JSS_WINDOW_TITLE}" -notimestamp -breakiterator -classpath ${JAVAC_CLASSPATH} -sourcepath ${PROJECT_SOURCE_DIR} -d ${DOCS_OUTPUT_DIR} @${JAVA_SOURCES_FILE}
         COMMAND touch "${JAVADOCS_OUTPUTS}"
         DEPENDS ${JAVA_SOURCES}
     )
