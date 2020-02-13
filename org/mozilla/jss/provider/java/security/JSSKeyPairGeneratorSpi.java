@@ -17,7 +17,7 @@ import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 
 
-class JSSKeyPairGeneratorSpi
+public class JSSKeyPairGeneratorSpi
     extends java.security.KeyPairGeneratorSpi
 {
 

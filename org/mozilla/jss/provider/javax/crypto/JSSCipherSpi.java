@@ -41,7 +41,7 @@ import org.mozilla.jss.pkcs11.PK11PubKey;
 import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 import org.mozilla.jss.util.Assert;
 
-class JSSCipherSpi extends javax.crypto.CipherSpi {
+public class JSSCipherSpi extends javax.crypto.CipherSpi {
     private String algFamily=null;
     private String algMode=null;
     private String algPadding=null;
