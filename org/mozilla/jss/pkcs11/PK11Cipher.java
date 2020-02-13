@@ -19,7 +19,7 @@ import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 
-final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
+public final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
 
     // set once in the constructor
     private PK11Token token;

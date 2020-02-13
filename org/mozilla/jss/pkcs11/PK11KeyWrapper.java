@@ -27,7 +27,7 @@ import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.Assert;
 
-final class PK11KeyWrapper implements KeyWrapper {
+public final class PK11KeyWrapper implements KeyWrapper {
 
     private PK11Token token;
     private KeyWrapAlgorithm algorithm;

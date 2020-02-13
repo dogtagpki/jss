@@ -23,7 +23,7 @@ import org.mozilla.jss.util.NativeProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
+public final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
 
 	public PK11Signature(PK11Token token, SignatureAlgorithm algorithm)
 		throws NoSuchAlgorithmException, TokenException
