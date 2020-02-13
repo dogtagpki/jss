@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.util.EC;
 
-class PK11ECPrivateKey
+public class PK11ECPrivateKey
     extends PK11PrivKey
     implements ECPrivateKey
 {

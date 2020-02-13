@@ -21,7 +21,7 @@ import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 
-class JSSMacSpi extends javax.crypto.MacSpi {
+public class JSSMacSpi extends javax.crypto.MacSpi {
 
     private JSSMessageDigest digest=null;
     private DigestAlgorithm alg;

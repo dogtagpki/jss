@@ -21,7 +21,7 @@ import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 
-class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
+public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
     private KeyGenerator keyGenerator= null;
 
     protected JSSKeyGeneratorSpi(KeyGenAlgorithm alg) {

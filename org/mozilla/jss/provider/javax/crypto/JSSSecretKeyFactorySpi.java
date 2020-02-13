@@ -36,7 +36,7 @@ import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.util.Password;
 
-class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
+public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
 
     private KeyGenAlgorithm alg = null;
     private CryptoToken token = null;

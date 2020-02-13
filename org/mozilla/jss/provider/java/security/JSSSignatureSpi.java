@@ -21,7 +21,7 @@ import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 
-class JSSSignatureSpi extends java.security.SignatureSpi {
+public class JSSSignatureSpi extends java.security.SignatureSpi {
 
     org.mozilla.jss.crypto.Signature sig;
     SignatureAlgorithm alg;

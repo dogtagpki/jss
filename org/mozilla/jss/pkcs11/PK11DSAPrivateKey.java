@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPrivateKey;
 
-class PK11DSAPrivateKey
+public class PK11DSAPrivateKey
     extends PK11PrivKey implements DSAPrivateKey
 {
 
