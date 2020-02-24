@@ -13,12 +13,12 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
 
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
-import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapper;
@@ -225,11 +225,9 @@ public final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidAlgorithmParameterException(
                 algorithm + " cannot use a " + name + " parameter");
         }
-        if( params instanceof IVParameterSpec ) {
-            IV = ((IVParameterSpec)params).getIV();
-        } else if( params instanceof javax.crypto.spec.IvParameterSpec ) {
-            IV = ((javax.crypto.spec.IvParameterSpec)params).getIV();
-        } else if( params instanceof RC2ParameterSpec ) {
+        if (params instanceof IvParameterSpec) {
+            IV = ((IvParameterSpec)params).getIV();
+        } else if (params instanceof RC2ParameterSpec) {
             IV = ((RC2ParameterSpec)params).getIV();
         }
     }

@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.BadPaddingException;
+import javax.crypto.spec.IvParameterSpec;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
@@ -28,7 +29,6 @@ import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.crypto.Cipher;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
-import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
 import org.mozilla.jss.crypto.KeyGenerator;
@@ -181,9 +181,9 @@ public class EncryptedContentInfo implements ASN1Value {
         EncryptionAlgorithm encAlg = pbeAlg.getEncryptionAlg();
         AlgorithmParameterSpec params=null;
         Class<?> [] paramClasses = pbeAlg.getParameterClasses();
-        for (int i = 0; i < paramClasses.length; i ++) {
-            if ( paramClasses[i].equals( IVParameterSpec.class ) ) {
-                params = new IVParameterSpec( kg.generatePBE_IV() );
+        for (int i = 0; i < paramClasses.length; i++) {
+            if (paramClasses[i].equals(IvParameterSpec.class)) {
+                params = new IvParameterSpec(kg.generatePBE_IV());
                 break;
             }
         }
@@ -275,10 +275,9 @@ public class EncryptedContentInfo implements ASN1Value {
         EncryptionAlgorithm encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
         AlgorithmParameterSpec algParams = null;
         Class<?> [] paramClasses = encAlg.getParameterClasses();
-        for (int i = 0; i < paramClasses.length; i ++) {
-            if ( paramClasses[i].equals(
-                       javax.crypto.spec.IvParameterSpec.class ) ) {
-                algParams = new IVParameterSpec( kg.generatePBE_IV() );
+        for (int i = 0; i < paramClasses.length; i++) {
+            if (paramClasses[i].equals(IvParameterSpec.class)) {
+                algParams = new IvParameterSpec(kg.generatePBE_IV());
                 break;
             }
         }

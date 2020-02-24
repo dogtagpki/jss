@@ -255,8 +255,8 @@ public class AuthenticatedSafes implements ASN1Value {
         // compute algorithm parameters
         EncryptionAlgorithm encAlg = keyGenAlgToEncryptionAlg(kgAlg);
         AlgorithmParameterSpec algParams;
-        if( encAlg.getParameterClass().equals( IVParameterSpec.class ) ) {
-            algParams = new IVParameterSpec( kg.generatePBE_IV() );
+        if (encAlg instanceof IvParameterSpec) {
+            algParams = new IvParameterSpec( kg.generatePBE_IV() );
         } else {
             algParams = null;
         }
@@ -388,8 +388,8 @@ public class AuthenticatedSafes implements ASN1Value {
         // generate IV
         EncryptionAlgorithm encAlg = keyGenAlgToEncryptionAlg(keyGenAlg);
         AlgorithmParameterSpec params=null;
-        if( encAlg.getParameterClass().equals( IVParameterSpec.class ) ) {
-            params = new IVParameterSpec( kg.generatePBE_IV() );
+        if (encAlg instanceof IvParameterSpec.class) {
+            params = new IvParameterSpec( kg.generatePBE_IV() );
         }
 
         // perform encryption
