@@ -6,21 +6,17 @@ package org.mozilla.jss.crypto;
 
 import java.security.spec.AlgorithmParameterSpec;
 
+import javax.crypto.spec.IvParameterSpec;
+
 /**
  * An algorithm parameter that consists of an initialization vector (IV).
  */
-public class IVParameterSpec implements AlgorithmParameterSpec {
-
-    private byte[] iv;
-
+public class IVParameterSpec extends IvParameterSpec {
     public IVParameterSpec(byte[] iv) {
-        this.iv = iv;
+        super(iv);
     }
 
-    /**
-     * @return Reference to an internal copy of the initialization vector.
-     */
-    public byte[] getIV() {
-        return iv;
+    public IVParameterSpec(byte[] iv, int offset, int len) {
+        super(iv, offset, len);
     }
 }
