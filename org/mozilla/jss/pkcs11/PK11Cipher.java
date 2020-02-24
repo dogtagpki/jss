@@ -14,7 +14,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
 
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
-import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
@@ -70,11 +69,9 @@ public final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
 
     private static byte[] getIVFromParams(AlgorithmParameterSpec params) {
         byte[] IV = null;
-        if( params instanceof IVParameterSpec ) {
-            IV = ((IVParameterSpec)params).getIV();
-        } else if( params instanceof IvParameterSpec ) {
+        if (params instanceof IvParameterSpec) {
             IV = ((IvParameterSpec)params).getIV();
-        } else if( params instanceof RC2ParameterSpec ) {
+        } else if (params instanceof RC2ParameterSpec) {
             IV = ((RC2ParameterSpec)params).getIV();
         }
         return IV;

@@ -112,18 +112,29 @@ public class Algorithm {
      * @return Returns <code>true</code> if the given Object can be used as a parameter.
      */
     public boolean isValidParameterObject(Object o) {
-        if( o == null ) {
+        if (o == null) {
+            // It is only valid to pass a null parameter if the length of the
+            // expected class list is zero. Otherwise, the usage is invalid.
             return (parameterClasses.length == 0);
         }
-        if( parameterClasses.length == 0 ){
-            return false;
-        }
-        Class<?> c = o.getClass();
-        for( int i = 0; i < parameterClasses.length; ++i) {
-            if( c.equals( parameterClasses[i] ) ) {
+
+        // For the remaining instances, if the object's class is a subclass
+        // of the specified parameter class, allow it. This allows the
+        // construct:
+        //
+        //   IVParameterClass -child-of-> IvParameterClass
+        //
+        // by only specifying the parent, IvParameterClass.
+        for (int i = 0; i < parameterClasses.length; i++) {
+            if (parameterClasses[i].isInstance(o)) {
                 return true;
             }
         }
+
+        // If we got an object parameter, but weren't expecting any, it
+        // is invalid. Also, if our class didn't match our expectations,
+        // it is also invalid.
+
         return false;
     }
 
