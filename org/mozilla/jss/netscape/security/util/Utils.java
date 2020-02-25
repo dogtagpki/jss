@@ -378,7 +378,10 @@ public class Utils {
      * @return base-64 encoded data
      */
     public static String base64encodeMultiLine(byte[] bytes) {
-        return Base64.getMimeEncoder().encodeToString(bytes);
+        // When switching from apache-commons-codec to the standard library,
+        // the standard library does not include a final line separator at
+        // the end of the encoded data. This results in malformed CSRs.
+        return Base64.getMimeEncoder().encodeToString(bytes) + "\r\n";
     }
 
 
