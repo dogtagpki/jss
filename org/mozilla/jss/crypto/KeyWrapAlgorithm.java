@@ -62,8 +62,9 @@ public class KeyWrapAlgorithm extends Algorithm {
 
     private static Class<?>[] IVParameterSpecClasses = null;
     static {
-        IVParameterSpecClasses = new Class[1];
-        IVParameterSpecClasses[0] = IvParameterSpec.class;
+        IVParameterSpecClasses = new Class[2];
+        IVParameterSpecClasses[0] = IVParameterSpec.class;
+        IVParameterSpecClasses[1] = IvParameterSpec.class;
     }
 
     public static final KeyWrapAlgorithm

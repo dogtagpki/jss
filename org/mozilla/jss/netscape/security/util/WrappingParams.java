@@ -2,10 +2,9 @@ package org.mozilla.jss.netscape.security.util;
 
 import java.security.NoSuchAlgorithmException;
 
-import javax.crypto.spec.IvParameterSpec;
-
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.SymmetricKey;
@@ -27,14 +26,14 @@ public class WrappingParams {
     KeyWrapAlgorithm payloadWrapAlgorithm;
 
     // payload encryption IV
-    IvParameterSpec payloadEncryptionIV;
+    IVParameterSpec payloadEncryptionIV;
 
     // payload wrapping IV
-    IvParameterSpec payloadWrappingIV;
+    IVParameterSpec payloadWrappingIV;
 
     public WrappingParams(Type skType, KeyGenAlgorithm skKeyGenAlgorithm, int skLength,
             KeyWrapAlgorithm skWrapAlgorithm, EncryptionAlgorithm payloadEncryptionAlgorithm,
-            KeyWrapAlgorithm payloadWrapAlgorithm, IvParameterSpec payloadEncryptIV, IvParameterSpec payloadWrapIV) {
+            KeyWrapAlgorithm payloadWrapAlgorithm, IVParameterSpec payloadEncryptIV, IVParameterSpec payloadWrapIV) {
         super();
         this.skType = skType;
         this.skKeyGenAlgorithm = skKeyGenAlgorithm;
@@ -57,7 +56,7 @@ public class WrappingParams {
 
     public WrappingParams() {}
 
-    public WrappingParams(String encryptOID, String wrapName, String priKeyAlgo, IvParameterSpec encryptIV, IvParameterSpec wrapIV)
+    public WrappingParams(String encryptOID, String wrapName, String priKeyAlgo, IVParameterSpec encryptIV, IVParameterSpec wrapIV)
             throws NumberFormatException, NoSuchAlgorithmException {
         EncryptionAlgorithm encrypt = null;
         OBJECT_IDENTIFIER eccOID = new OBJECT_IDENTIFIER("1.2.840.10045.2.1");
@@ -129,7 +128,7 @@ public class WrappingParams {
         }
     }
 
-    private WrappingParams(String wrapOID, String priKeyAlgo, IvParameterSpec wrapIV)
+    private WrappingParams(String wrapOID, String priKeyAlgo, IVParameterSpec wrapIV)
             throws NumberFormatException, NoSuchAlgorithmException {
         KeyWrapAlgorithm kwAlg = KeyWrapAlgorithm.fromOID(wrapOID);
 
@@ -180,7 +179,7 @@ public class WrappingParams {
         }
     }
 
-    public static WrappingParams getWrappingParamsFromArchiveOptions(String wrapOID, String priKeyAlgo, IvParameterSpec wrapIV)
+    public static WrappingParams getWrappingParamsFromArchiveOptions(String wrapOID, String priKeyAlgo, IVParameterSpec wrapIV)
             throws NumberFormatException, NoSuchAlgorithmException {
         return new WrappingParams(wrapOID, priKeyAlgo, wrapIV);
     }
@@ -273,19 +272,19 @@ public class WrappingParams {
         this.payloadWrapAlgorithm = KeyWrapAlgorithm.fromString(name);
     }
 
-    public IvParameterSpec getPayloadEncryptionIV() {
+    public IVParameterSpec getPayloadEncryptionIV() {
         return payloadEncryptionIV;
     }
 
-    public void setPayloadEncryptionIV(IvParameterSpec payloadEncryptionIV) {
+    public void setPayloadEncryptionIV(IVParameterSpec payloadEncryptionIV) {
         this.payloadEncryptionIV = payloadEncryptionIV;
     }
 
-    public IvParameterSpec getPayloadWrappingIV() {
+    public IVParameterSpec getPayloadWrappingIV() {
         return payloadWrappingIV;
     }
 
-    public void setPayloadWrappingIV(IvParameterSpec payloadWrappingIV) {
+    public void setPayloadWrappingIV(IVParameterSpec payloadWrappingIV) {
         this.payloadWrappingIV = payloadWrappingIV;
     }
 }
