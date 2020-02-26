@@ -17,12 +17,6 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
-var altColor = "altColor";
-var rowColor = "rowColor";
-var tableTab = "tableTab";
-var activeTableTab = "activeTableTab";
 </script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -75,13 +69,13 @@ var activeTableTab = "activeTableTab";
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.summary">Method</a></li>
+<li><a href="#methods.inherited.from.class.javax.crypto.spec.IvParameterSpec">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <a name="skip.navbar.top">
@@ -98,7 +92,12 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li>javax.crypto.spec.IvParameterSpec</li>
+<li>
+<ul class="inheritance">
 <li>org.mozilla.jss.crypto.IVParameterSpec</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -112,8 +111,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">IVParameterSpec</span>
-extends java.lang.Object
-implements java.security.spec.AlgorithmParameterSpec</pre>
+extends javax.crypto.spec.IvParameterSpec</pre>
 <div class="block">An algorithm parameter that consists of an initialization vector (IV).</div>
 </li>
 </ul>
@@ -135,6 +133,11 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/IVParameterSpec.html#IVParameterSpec-byte:A-">IVParameterSpec</a></span>(byte[]&nbsp;iv)</code>&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/IVParameterSpec.html#IVParameterSpec-byte:A-int-int-">IVParameterSpec</a></span>(byte[]&nbsp;iv,
+               int&nbsp;offset,
+               int&nbsp;len)</code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -144,17 +147,13 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tr id="i0" class="altColor">
-<td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/IVParameterSpec.html#getIV--">getIV</a></span>()</code>&nbsp;</td>
-</tr>
-</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.javax.crypto.spec.IvParameterSpec">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;javax.crypto.spec.IvParameterSpec</h3>
+<code>getIV</code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -179,31 +178,21 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <a name="IVParameterSpec-byte:A-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>IVParameterSpec</h4>
 <pre>public&nbsp;IVParameterSpec(byte[]&nbsp;iv)</pre>
 </li>
 </ul>
-</li>
-</ul>
-<!-- ============ METHOD DETAIL ========== -->
-<ul class="blockList">
-<li class="blockList"><a name="method.detail">
-<!--   -->
-</a>
-<h3>Method Detail</h3>
-<a name="getIV--">
+<a name="IVParameterSpec-byte:A-int-int-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getIV</h4>
-<pre>public&nbsp;byte[]&nbsp;getIV()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>Reference to an internal copy of the initialization vector.</dd>
-</dl>
+<h4>IVParameterSpec</h4>
+<pre>public&nbsp;IVParameterSpec(byte[]&nbsp;iv,
+                       int&nbsp;offset,
+                       int&nbsp;len)</pre>
 </li>
 </ul>
 </li>
@@ -261,13 +250,13 @@ implements java.security.spec.AlgorithmParameterSpec</pre>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.summary">Method</a></li>
+<li><a href="#methods.inherited.from.class.javax.crypto.spec.IvParameterSpec">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <a name="skip.navbar.bottom">
