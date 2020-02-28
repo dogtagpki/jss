@@ -180,7 +180,7 @@ public class EncryptedContentInfo implements ASN1Value {
         // generate IV
         EncryptionAlgorithm encAlg = pbeAlg.getEncryptionAlg();
         AlgorithmParameterSpec params=null;
-        Class<?> [] paramClasses = pbeAlg.getParameterClasses();
+        Class<?> [] paramClasses = encAlg.getParameterClasses();
         for (int i = 0; i < paramClasses.length; i ++) {
             if ( paramClasses[i].equals( IVParameterSpec.class ) ) {
                 params = new IVParameterSpec( kg.generatePBE_IV() );
