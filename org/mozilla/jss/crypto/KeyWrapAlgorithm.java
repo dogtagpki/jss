@@ -138,7 +138,10 @@ public class KeyWrapAlgorithm extends Algorithm {
 
     public static KeyWrapAlgorithm fromOID(String wrapOID) throws NoSuchAlgorithmException {
         OBJECT_IDENTIFIER oid = new OBJECT_IDENTIFIER(wrapOID);
+        return fromOID(oid);
+    }
 
+    public static KeyWrapAlgorithm fromOID(OBJECT_IDENTIFIER oid) throws NoSuchAlgorithmException {
         if (oid.equals(AES_KEY_WRAP_PAD_OID))
             return AES_KEY_WRAP_PAD;
 
@@ -154,6 +157,6 @@ public class KeyWrapAlgorithm extends Algorithm {
         if (oid.equals(DES_CBC_PAD_OID))
             return DES_CBC_PAD;
 
-        throw new NoSuchAlgorithmException("Unknown Algorithm for OID: " + wrapOID);
+        throw new NoSuchAlgorithmException("Unknown Algorithm for OID: " + oid);
     }
 }
