@@ -337,8 +337,8 @@ public class EncryptedPrivateKeyInfo implements ASN1Value {
             }
         }
 
-        KeyWrapper wrapper = token.getKeyWrapper(
-                KeyWrapAlgorithm.DES3_CBC_PAD);
+        // wrap the key
+        KeyWrapper wrapper = token.getKeyWrapper(KeyWrapAlgorithm.fromOID(encAlg.toOID()));
         wrapper.initWrap(key, params);
         byte encrypted[] = wrapper.wrap(pri);
 
