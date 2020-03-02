@@ -248,6 +248,16 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
     )
+    jss_test_java(
+        NAME "SSLEngine_RSA"
+        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
+        DEPENDS "List_CA_certs"
+    )
+    jss_test_java(
+        NAME "SSLEngine_ECDSA"
+        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
+        DEPENDS "SSLEngine_RSA"
+    )
 
     if(NOT FIPS_ENABLED)
         jss_test_java(
@@ -299,9 +309,21 @@ macro(jss_tests)
 
         # FIPS-related tests
         jss_test_java(
+            NAME "Generate_FIPS_known_RSA_cert_pair"
+            COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "70" "localhost" "SHA-256/RSA" "CA_RSA" "Server_RSA" "Client_RSA"
+            DEPENDS "Setup_FIPS_DBs"
+            MODE "FIPS"
+        )
+        jss_test_java(
+            NAME "Generate_FIPS_known_ECDSA_cert_pair"
+            COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "80" "localhost" "SHA-256/EC" "CA_ECDSA" "Server_ECDSA" "Client_ECDSA"
+            DEPENDS "Generate_FIPS_known_RSA_cert_pair"
+            MODE "FIPS"
+        )
+        jss_test_java(
             NAME "Enable_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "enable"
-            DEPENDS "Setup_FIPS_DBs"
+            DEPENDS "Generate_FIPS_known_ECDSA_cert_pair"
             MODE "FIPS"
         )
         jss_test_java(
@@ -353,6 +375,18 @@ macro(jss_tests)
             DEPENDS "Enable_FipsMODE"
             MODE "FIPS"
         )
+        jss_test_java(
+            NAME "SSLEngine_RSA_FIPSMODE"
+            COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
+            DEPENDS "Enable_FipsMODE" "SSLEngine_ECDSA"
+            MODE "FIPS"
+        )
+        jss_test_java(
+            NAME "SSLEngine_ECDSA_FIPSMODE"
+            COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
+            DEPENDS "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA"
+            MODE "FIPS"
+        )
 
         # Since we need to disable FIPS mode _after_ all FIPS-mode tests have
         # run, we have to add a strict dependency from Disable_FipsMODE onto all
@@ -360,7 +394,7 @@ macro(jss_tests)
         jss_test_java(
             NAME "Disable_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "disable"
-            DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
+            DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE" "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA_FIPSMODE"
             MODE "FIPS"
         )
     endif()
@@ -379,7 +413,7 @@ macro(jss_tests)
     )
 
 
-    # For compliance with several
+    # For compliance with several existing clients
     add_custom_target(
         check
         DEPENDS test
