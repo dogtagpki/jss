@@ -638,10 +638,11 @@ Java_org_mozilla_jss_crypto_KBKDFDerivedKey_getKeyFromHandle(JNIEnv *env, jobjec
     }
 
     slot = PK11_GetSlotFromKey(parent);
-    PK11_FreeSlot(slot);
 
     key = PK11_SymKeyFromHandle(slot, parent, PK11_OriginDerive, mech,
                                 handle, is_perm, NULL);
+
+    PK11_FreeSlot(slot);
 
     return JSS_PK11_wrapSymKey(env, &key);
 }

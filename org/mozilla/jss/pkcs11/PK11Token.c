@@ -59,14 +59,16 @@ JSS_PK11_wrapPK11Token(JNIEnv *env, PK11SlotInfo **slot)
     jclass tokenClass;
     jmethodID constructor;
     jbyteArray byteArray;
-	jobject Token=NULL;
+    jobject Token=NULL;
     jboolean internal;
     jboolean keyStorage;
+    PK11SlotInfo *internalSlot = NULL;
 
     PR_ASSERT(env!=NULL && slot!=NULL && *slot!=NULL);
 
-    internal = (*slot == PK11_GetInternalSlot());
-    keyStorage = (*slot == PK11_GetInternalKeySlot());
+    internalSlot = PK11_GetInternalSlot();
+    internal = (*slot == internalSlot);
+    keyStorage = PK11_IsInternalKeySlot(*slot);
 
     byteArray = JSS_ptrToByteArray(env, (void*)*slot);
 
@@ -98,10 +100,15 @@ JSS_PK11_wrapPK11Token(JNIEnv *env, PK11SlotInfo **slot)
                               keyStorage);
 
 finish:
-	if(Token==NULL) {
-		PK11_FreeSlot(*slot);
-	}
-	*slot = NULL;
+    if (Token == NULL) {
+        PK11_FreeSlot(*slot);
+    }
+
+    if (internalSlot != NULL) {
+        PK11_FreeSlot(internalSlot);
+    }
+
+    *slot = NULL;
     return Token;
 }
 
@@ -443,7 +450,7 @@ JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_PWInitable
     }
 	PR_ASSERT(slot!=NULL);
 
-	if(slot != PK11_GetInternalKeySlot()) {
+	if (!PK11_IsInternalKeySlot(slot)) {
 		/* We don't know about other tokens */
 		initable = JNI_TRUE;
 	} else {
@@ -492,7 +499,7 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_initPassword
 	 * If we're on the internal module, make sure we can still be 
 	 * initialized.
 	 */
-	if(slot == PK11_GetInternalKeySlot() && !PK11_NeedUserInit(slot)) {
+	if (PK11_IsInternalKeySlot(slot) && !PK11_NeedUserInit(slot)) {
 		JSS_nativeThrowMsg(env, ALREADY_INITIALIZED_EXCEPTION,
 			"Netscape Internal Key Token is already initialized");
 		goto finish;
@@ -565,7 +572,7 @@ Java_org_mozilla_jss_pkcs11_PK11Token_passwordIsInitialized
 	}
 	PR_ASSERT(slot != NULL);
 
-	if(slot == PK11_GetInternalKeySlot()) {
+	if (PK11_IsInternalKeySlot(slot)) {
 		/* special case for our Key slot */
 		isInitialized = ! PK11_NeedPWInit();
 	} else {

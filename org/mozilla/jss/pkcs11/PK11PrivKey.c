@@ -92,7 +92,6 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_verifyKeyIsOnToken
 	SECKEYPrivateKey *key = NULL;
 	PK11SlotInfo *slot = NULL;
 	PK11SlotInfo *keySlot = NULL;
-	PK11SlotInfo *dbSlot = NULL;
 	PK11SlotInfo *cryptoSlot = NULL;
 
 	if( JSS_PK11_getPrivKeyPtr(env, this, &key) != PR_SUCCESS) {
@@ -106,8 +105,7 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_verifyKeyIsOnToken
 	}
 
 	keySlot = PK11_GetSlotFromPrivateKey(key);
-	dbSlot = PK11_GetInternalKeySlot();
-	if(keySlot == dbSlot) {
+	if (PK11_IsInternalKeySlot(keySlot)) {
 		cryptoSlot = PK11_GetInternalSlot();
 		/* hack for internal module */
 		if(slot != keySlot && slot != cryptoSlot) {
@@ -125,10 +123,7 @@ finish:
 	if(keySlot != NULL) {
 		PK11_FreeSlot(keySlot);
 	}
-        if(dbSlot != NULL) {
-		PK11_FreeSlot(dbSlot);
-	}
-        if(cryptoSlot != NULL) {
+	if (cryptoSlot != NULL) {
 		PK11_FreeSlot(cryptoSlot);
 	}
 }
