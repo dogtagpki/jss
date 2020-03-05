@@ -98,6 +98,23 @@ public class SSL {
     public static native boolean CipherPrefGet(SSLFDProxy fd, int cipher) throws Exception;
 
     /**
+     * Set the default preferences for a specific cipher suite across all
+     * future PRFileDesc's.
+     *
+     * See also: SSL_CipherPrefSetDefault in /usr/include/nss3/ssl.h
+     */
+    public static native int CipherPrefSetDefault(int cipher, boolean enabled);
+
+    /**
+     * Get the default preferences for a specific cipher suite across all
+     * future PRFileDesc's. Note that this can raise an Exception when the
+     * cipher is unknown.
+     *
+     * See also: SSL_CipherPrefGetDefault in /usr/include/nss3/ssl.h
+     */
+    public static native boolean CipherPrefGetDefault(int cipher);
+
+    /**
      * Set the range of TLS versions enabled by this server by SSLVersionRange.
      *
      * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h

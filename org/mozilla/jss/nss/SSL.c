@@ -193,6 +193,34 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefGet(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_SSL_CipherPrefSetDefault(JNIEnv *env, jclass clazz,
+    jint cipher, jboolean enabled)
+{
+    PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
+
+    return SSL_CipherPrefSetDefault(cipher, enabled);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_mozilla_jss_nss_SSL_CipherPrefGetDefault(JNIEnv *env, jclass clazz,
+    jint cipher)
+{
+    int enabled = false;
+
+    PR_ASSERT(env != NULL);
+    PR_SetError(0, 0);
+
+    if (SSL_CipherPrefGetDefault(cipher, &enabled) != SECSuccess) {
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION,
+            "Unknown cipher suite to get or getting its value failed");
+        return enabled;
+    }
+
+    return enabled;
+}
+
+JNIEXPORT int JNICALL
 Java_org_mozilla_jss_nss_SSL_VersionRangeSetNative(JNIEnv *env, jclass clazz,
     jobject fd, jint min_ssl, jint max_ssl)
 {
