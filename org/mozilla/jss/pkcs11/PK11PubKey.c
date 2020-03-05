@@ -152,6 +152,7 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken
 	SECKEYPublicKey *key = NULL;
 	PK11SlotInfo *slot = NULL;
 	PK11SlotInfo *keySlot = NULL;
+  PK11SlotInfo *internalSlot = NULL;
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
@@ -166,14 +167,18 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken
 		goto finish;
 	}
 
+  internalSlot = PK11_GetInternalSlot();
+
 #if 0
+  /* There is no way to extract a slot from a SECKEYPublicKey, except by
+   * directly referencing the slot field. */
 	keySlot = PK11_GetSlotFromPublicKey(key);
 #else
     keySlot = PK11_ReferenceSlot(key->pkcs11Slot);
 #endif
-	if(keySlot == PK11_GetInternalKeySlot()) {
+	if (PK11_IsInternalKeySlot(keySlot)) {
 		/* hack for internal module */
-		if(slot != keySlot && slot != PK11_GetInternalSlot()) {
+		if (slot != keySlot && slot != internalSlot) {
 			JSS_throwMsg(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION,
 				"Key is not present on this token");
 			goto finish;
@@ -185,9 +190,12 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken
 	}
 
 finish:
-	if(keySlot != NULL) {
+	if (keySlot != NULL) {
 		PK11_FreeSlot(keySlot);
 	}
+  if (internalSlot != NULL) {
+      PK11_FreeSlot(internalSlot);
+  }
 	PR_DetachThread();
 }
 
