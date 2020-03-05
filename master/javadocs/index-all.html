@@ -2019,10 +2019,20 @@
 <div class="block">Get the preference for a specific cipher suite on the specified
  PRFileDesc.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#CipherPrefGetDefault-int-">CipherPrefGetDefault(int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Get the default preferences for a specific cipher suite across all
+ future PRFileDesc's.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#CipherPrefSet-org.mozilla.jss.nss.SSLFDProxy-int-boolean-">CipherPrefSet(SSLFDProxy, int, boolean)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>
 <div class="block">Set the preference for a specific cipher suite on the specified
  PRFileDesc.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#CipherPrefSetDefault-int-boolean-">CipherPrefSetDefault(int, boolean)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the default preferences for a specific cipher suite across all
+ future PRFileDesc's.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PKCS11Constants.html#CK_EFFECTIVELY_INFINITE">CK_EFFECTIVELY_INFINITE</a></span> - Static variable in interface org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PKCS11Constants.html" title="interface in org.mozilla.jss.pkcs11">PKCS11Constants</a></dt>
 <dd>
@@ -11746,6 +11756,8 @@
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/extensions/CertificateRenewalWindowExtension.html#getEndTime--">getEndTime()</a></span> - Method in class org.mozilla.jss.netscape.security.extensions.<a href="org/mozilla/jss/netscape/security/extensions/CertificateRenewalWindowExtension.html" title="class in org.mozilla.jss.netscape.security.extensions">CertificateRenewalWindowExtension</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/Algorithm.html#getEnum--">getEnum()</a></span> - Method in class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/Algorithm.html" title="class in org.mozilla.jss.crypto">Algorithm</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLProtocolVariant.html#getEnum--">getEnum()</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLProtocolVariant.html" title="class in org.mozilla.jss.ssl">SSLProtocolVariant</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/util/DerValue.html#getEnumerated--">getEnumerated()</a></span> - Method in class org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/DerValue.html" title="class in org.mozilla.jss.netscape.security.util">DerValue</a></dt>
 <dd>
@@ -25924,9 +25936,29 @@ the order they are declared.</div>
 <dd>
 <div class="block">Get the range of TLS versions enabled by this server.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeGetDefault--">VersionRangeGetDefault()</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Get the range of TLS versions enabled in all future PRFileDesc's of the
+ default STREAM protocol variant..</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeGetDefault-org.mozilla.jss.ssl.SSLProtocolVariant-">VersionRangeGetDefault(SSLProtocolVariant)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Get the range of TLS versions enabled in all future PRFileDesc's of the
+ specified protocol variant.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeSet-org.mozilla.jss.nss.SSLFDProxy-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSet(SSLFDProxy, SSLVersionRange)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>
 <div class="block">Set the range of TLS versions enabled by this server by SSLVersionRange.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeSetDefault-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSetDefault(SSLVersionRange)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the range of TLS versions enabled by default, for all future
+ PRFileDesc's of the default protocol variant type, STREAM.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#VersionRangeSetDefault-org.mozilla.jss.ssl.SSLProtocolVariant-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSetDefault(SSLProtocolVariant, SSLVersionRange)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Set the range of TLS versions enabled by default, for all future
+ PRFileDesc's of the specified protocol variant.</div>
 </dd>
 </dl>
 <a name="I:W">
