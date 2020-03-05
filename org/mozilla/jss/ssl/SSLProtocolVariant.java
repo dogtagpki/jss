@@ -16,5 +16,5 @@ public class SSLProtocolVariant {
 
     private SSLProtocolVariant(int val) { _enum = val; }
 
-    int getEnum() { return _enum; }
+    public int getEnum() { return _enum; }
 }

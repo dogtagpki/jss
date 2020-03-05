@@ -11,6 +11,7 @@ import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 
 import org.mozilla.jss.ssl.SSLAlertEvent;
+import org.mozilla.jss.ssl.SSLProtocolVariant;
 import org.mozilla.jss.ssl.SSLVersionRange;
 
 public class SSL {
@@ -137,6 +138,56 @@ public class SSL {
      * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
      */
     public static native SSLVersionRange VersionRangeGet(SSLFDProxy fd) throws Exception;
+
+    /**
+     * Set the range of TLS versions enabled by default, for all future
+     * PRFileDesc's of the default protocol variant type, STREAM.
+     *
+     * See also: SSL_VersionRangeSetDefault in /usr/include/nss3/ssl.h
+     */
+    public static int VersionRangeSetDefault(SSLVersionRange range) {
+        return VersionRangeSetDefault(SSLProtocolVariant.STREAM, range);
+    }
+
+    /**
+     * Set the range of TLS versions enabled by default, for all future
+     * PRFileDesc's of the specified protocol variant.
+     *
+     * See also: SSL_VersionRangeSetDefault in /usr/include/nss3/ssl.h
+     */
+    public static int VersionRangeSetDefault(SSLProtocolVariant variant, SSLVersionRange range) {
+        return VersionRangeSetDefaultNative(variant.getEnum(), range.getMinEnum(), range.getMaxEnum());
+    }
+
+    /**
+     * Set the range of default TLS versions enabled in all future
+     * PRFileDesc's. The integer parameters are values of the SSLVersion enum.
+     *
+     * See also: SSL_VersionRangeSet in /usr/include/nss3/ssl.h
+     */
+    private static native int VersionRangeSetDefaultNative(int variant_ssl, int min_ssl, int max_ssl);
+
+    /**
+     * Get the range of TLS versions enabled in all future PRFileDesc's of the
+     * default STREAM protocol variant..
+     *
+     * See also: SSL_VersionRangeGetDefault in /usr/include/nss3/ssl.h
+     */
+    public static SSLVersionRange VersionRangeGetDefault() {
+        return VersionRangeGetDefault(SSLProtocolVariant.STREAM);
+    }
+
+    /**
+     * Get the range of TLS versions enabled in all future PRFileDesc's of the
+     * specified protocol variant.
+     *
+     * See also: SSL_VersionRangeGetDefault in /usr/include/nss3/ssl.h
+     */
+    public static SSLVersionRange VersionRangeGetDefault(SSLProtocolVariant variant) {
+        return VersionRangeGetDefaultNative(variant.getEnum());
+    }
+
+    private static native SSLVersionRange VersionRangeGetDefaultNative(int variant);
 
     /**
      * Check the security status of a SSL handshake.
