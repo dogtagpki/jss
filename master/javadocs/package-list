@@ -2,7 +2,6 @@ org.mozilla.jss
 org.mozilla.jss.SecretDecoderRing
 org.mozilla.jss.asn1
 org.mozilla.jss.crypto
-org.mozilla.jss.netscape.security.acl
 org.mozilla.jss.netscape.security.extensions
 org.mozilla.jss.netscape.security.pkcs
 org.mozilla.jss.netscape.security.provider
