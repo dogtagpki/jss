@@ -53,21 +53,21 @@ public final class CryptoManager implements TokenSupplier
 
     static {
 
-        logger.info("CryptoManager: loading JSS library");
+        logger.debug("CryptoManager: loading JSS library");
 
         try {
             System.loadLibrary("jss4");
-            logger.info("CryptoManager: loaded JSS library from java.library.path");
+            logger.debug("CryptoManager: loaded JSS library from java.library.path");
 
         } catch (UnsatisfiedLinkError e) {
 
             try {
                 System.load("/usr/lib64/jss/libjss4.so");
-                logger.info("CryptoManager: loaded JSS library from /usr/lib64/jss/libjss4.so");
+                logger.debug("CryptoManager: loaded JSS library from /usr/lib64/jss/libjss4.so");
 
             } catch (UnsatisfiedLinkError e1) {
                 System.load("/usr/lib/jss/libjss4.so");
-                logger.info("CryptoManager: loaded JSS library from /usr/lib/jss/libjss4.so");
+                logger.debug("CryptoManager: loaded JSS library from /usr/lib/jss/libjss4.so");
             }
         }
     }
@@ -468,8 +468,6 @@ public final class CryptoManager implements TokenSupplier
             }
         }
 
-        logger.info("CryptoManager: initializing NSS database at " + values.configDir);
-
         initializeAllNative2(values.configDir,
                             values.certPrefix,
                             values.keyPrefix,
@@ -542,6 +540,8 @@ public final class CryptoManager implements TokenSupplier
         if( values.removeSunProvider ) {
             java.security.Security.removeProvider("SUN");
         }
+
+        logger.info("JSS CryptoManager: successfully initialized from NSS database at " + values.configDir);
     }
 
     private static native void
