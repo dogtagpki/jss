@@ -202,16 +202,11 @@ public class EnumerationZeroTest {
         return (X509CRL) cf.generateCRL(new ByteArrayInputStream(data));
     }
 
-    public static void main(String[] args) {
-        try {
-            X509CRL crl = buildCrl(false);
+    public static void main(String[] args) throws Exception {
+        X509CRL crl = buildCrl(false);
 
-            System.out.println(crl.toString());
+        System.out.println(crl.toString());
 
-            buildCrl(true);  // will throw exception
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        buildCrl(true);  // will throw exception
     }
 }
