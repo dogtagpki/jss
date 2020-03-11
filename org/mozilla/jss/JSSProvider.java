@@ -3,6 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss;
 
+import java.lang.NullPointerException;
+import java.security.Provider;
+
+import java.io.InputStream;
+
 public final class JSSProvider extends java.security.Provider {
 
     private static final long serialVersionUID = 1L;
@@ -18,10 +23,58 @@ public final class JSSProvider extends java.security.Provider {
                                            (JSS_MINOR_VERSION * 100 +
                                             JSS_PATCH_VERSION)/10000.0;
 
+    private static JSSLoader loader = new JSSLoader();
+
     public JSSProvider() {
+        this(loader.loaded());
+    }
+
+    public JSSProvider(boolean initialize) {
         super("Mozilla-JSS", JSS_VERSION,
                 "Provides Signature, Message Digesting, and RNG");
 
+        if (initialize) {
+            initializeProvider();
+        }
+    }
+
+    public JSSProvider(String config_path) throws Exception {
+        this(false);
+
+        configure(config_path);
+    }
+
+    public JSSProvider(InputStream config) throws Exception {
+        this(false);
+
+        loader.init(config);
+        initializeProvider();
+    }
+
+    /**
+     * Configure this instance of JSSProvider with the specified path
+     * to a JSS configuration properties file.
+     *
+     * See JSSLoader's class description for a description of the JSS
+     * configuration properties file and known values.
+     *
+     * If the JSSProvider is already loaded, this is a no-op.
+     */
+    public Provider configure(String arg) {
+        try {
+            loader.init(arg);
+        } catch (NullPointerException npe) {
+            throw npe;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+        initializeProvider();
+
+        return this;
+    }
+
+    protected void initializeProvider() {
         /////////////////////////////////////////////////////////////
         // Signature
         /////////////////////////////////////////////////////////////
@@ -324,7 +377,7 @@ public final class JSSProvider extends java.security.Provider {
     }
 
     public String toString() {
-        String mozillaProviderVersion = JSS_MAJOR_VERSION + "." + 
+        String mozillaProviderVersion = JSS_MAJOR_VERSION + "." +
                                         JSS_MINOR_VERSION;
         if ( JSS_PATCH_VERSION != 0 ) {
             mozillaProviderVersion = mozillaProviderVersion + "." +
