@@ -1,0 +1,3 @@
+nss.config_dir=${NSS_DB_PATH}
+nss.cooperate=true
+jss.password=${DB_PWD}

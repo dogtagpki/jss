@@ -191,15 +191,13 @@ macro(jss_build_jars)
     # JAR.
     add_custom_command(
         OUTPUT "${JSS_BUILD_JAR_PATH}"
-        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_BUILD_JAR_PATH} org/*
-        WORKING_DIRECTORY "${CLASSES_OUTPUT_DIR}"
+        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" "${JSS_BUILD_JAR_PATH}" -C "${CLASSES_OUTPUT_DIR}" org -C "${CLASSES_OUTPUT_DIR}" META-INF
         DEPENDS generate_java
     )
 
     add_custom_command(
         OUTPUT "${JSS_TESTS_JAR_PATH}"
-        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} org/*
-        WORKING_DIRECTORY "${TESTS_CLASSES_OUTPUT_DIR}"
+        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
         DEPENDS generate_java
     )
 

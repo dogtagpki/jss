@@ -1,0 +1,46 @@
+#
+# This is the "master security properties file".
+#
+# An alternate java.security properties file may be specified
+# from the command line via the system property
+#
+#    -Djava.security.properties=<URL>
+#
+# This properties file appends to the master security properties file.
+# If both properties files specify values for the same key, the value
+# from the command-line properties file is selected, as it is the last
+# one loaded.
+#
+# Also, if you specify
+#
+#    -Djava.security.properties==<URL> (2 equals),
+#
+# then that properties file completely overrides the master security
+# properties file.
+#
+# To disable the ability to specify an additional properties file from
+# the command line, set the key security.overridePropertiesFile
+# to false in the master security properties file. It is set to true
+# by default.
+
+#
+# List of providers and their preference orders:
+#
+# This differs from the master file in that we initialize JSS first.
+#
+security.provider.1=org.mozilla.jss.JSSProvider @JSS_CFG_PATH@
+security.provider.2=sun.security.provider.Sun
+security.provider.3=sun.security.rsa.SunRsaSign
+security.provider.4=sun.security.ec.SunEC
+security.provider.5=com.sun.net.ssl.internal.ssl.Provider
+security.provider.6=com.sun.crypto.provider.SunJCE
+security.provider.7=sun.security.jgss.SunProvider
+security.provider.8=com.sun.security.sasl.Provider
+security.provider.9=org.jcp.xml.dsig.internal.dom.XMLDSigRI
+security.provider.10=sun.security.smartcardio.SunPCSC
+
+# Note: JSS and a SunPKCS11-based provider would clash, because it too would
+# initialize NSS. If you see something of the following form in your
+# java.security, it is suggested to remove it:
+#
+# security.provider.11=sun.security.pkcs11.SunPKCS11 ${java.home}/lib/security/nss.cfg

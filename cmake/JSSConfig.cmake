@@ -14,6 +14,9 @@ macro(jss_config)
     # Configure java-related flags
     jss_config_java()
 
+    # Configure test variables
+    jss_config_tests()
+
     # Template auto-generated files
     jss_config_template()
 
@@ -57,6 +60,7 @@ macro(jss_config_outputs)
     # Global variables representing various output files; note that these
     # directories are created at the end of this macro.
     set(CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes/jss")
+    set(CONFIG_OUTPUT_DIR "${CMAKE_BINARY_DIR}/config")
     set(DOCS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/docs")
     set(LIB_OUTPUT_DIR "${CMAKE_BINARY_DIR}/lib")
     set(BIN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/bin")
@@ -97,6 +101,7 @@ macro(jss_config_outputs)
 
     # Create the *_OUTPUT_DIR locations.
     file(MAKE_DIRECTORY "${CLASSES_OUTPUT_DIR}")
+    file(MAKE_DIRECTORY "${CONFIG_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${DOCS_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${LIB_OUTPUT_DIR}")
     file(MAKE_DIRECTORY "${BIN_OUTPUT_DIR}")
@@ -313,6 +318,9 @@ macro(jss_config_java)
     set(JSS_BASE_PORT 2876)
     math(EXPR JSS_TEST_PORT_CLIENTAUTH ${JSS_BASE_PORT}+0)
     math(EXPR JSS_TEST_PORT_CLIENTAUTH_FIPS ${JSS_BASE_PORT}+1)
+
+    # Create META-INF directory for provider
+    file(MAKE_DIRECTORY "${CLASSES_OUTPUT_DIR}/META-INF/services")
 endmacro()
 
 macro(jss_config_template)
@@ -326,9 +334,37 @@ macro(jss_config_template)
         "${CMAKE_BINARY_DIR}/MANIFEST.MF"
     )
     configure_file(
+        "${PROJECT_SOURCE_DIR}/lib/java.security.Provider.in"
+        "${CLASSES_OUTPUT_DIR}/META-INF/services/java.security.Provider"
+    )
+    configure_file(
         "${PROJECT_SOURCE_DIR}/tools/run_test.sh.in"
         "${CMAKE_BINARY_DIR}/run_test.sh"
     )
+    set(JSS_CFG_PATH "${CONFIG_OUTPUT_DIR}/jss.cfg")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/java.security.in"
+        "${CONFIG_OUTPUT_DIR}/java.security"
+        @ONLY
+    )
+    set(NSS_DB_PATH "${RESULTS_NSSDB_OUTPUT_DIR}")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/jss.cfg.in"
+        "${JSS_CFG_PATH}"
+    )
+    set(JSS_CFG_PATH "${CONFIG_OUTPUT_DIR}/jss-fips.cfg")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/java.security.in"
+        "${CONFIG_OUTPUT_DIR}/fips.security"
+        @ONLY
+    )
+    set(NSS_DB_PATH "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/jss.cfg.in"
+        "${JSS_CFG_PATH}"
+    )
+    unset(JSS_CFG_PATH)
+    unset(NSS_DB_PATH)
 endmacro()
 
 macro(jss_config_symbols)
@@ -361,4 +397,11 @@ macro(jss_config_symbols)
         set(HAVE_NSS_KBKDF FALSE)
         message(WARNING "Your NSS version is broken: between NSS v3.47 and v3.50, the values of CKM_AES_CMAC and CKM_AES_CMAC_GENERAL were swapped. Disabling CMAC and KBKDF support.")
     endif()
+endmacro()
+
+macro(jss_config_tests)
+    # Common variables used as arguments to several tests
+    set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests")
+    set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")
+    set(DB_PWD "m1oZilla")
 endmacro()

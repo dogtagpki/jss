@@ -3,12 +3,6 @@ macro(jss_tests)
 
     jss_tests_compile()
 
-    # Common variables used as arguments to several tests
-    set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/org/mozilla/jss/tests")
-    set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")
-    set(DB_PWD "m1oZilla")
-
-
     # Create directories for test cases:
     #  - results/data
     #  - results/nssdb
@@ -21,10 +15,6 @@ macro(jss_tests)
         NAME "Create_Data_Dir"
         COMMAND "cmake" "-E" "make_directory" "${RESULTS_DATA_OUTPUT_DIR}"
         DEPENDS "Clean_Data_Dir"
-    )
-    jss_test_exec(
-        NAME "TestBufferPRFD"
-        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD"
     )
 
     # Rather than creating our results directories earlier in JSSConfig,
@@ -62,6 +52,10 @@ macro(jss_tests)
     )
 
 
+    jss_test_exec(
+        NAME "TestBufferPRFD"
+        COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD"
+    )
     jss_test_java(
         NAME "Test_UTF-8_Converter"
         COMMAND "org.mozilla.jss.tests.UTF8ConverterTest"
@@ -308,11 +302,13 @@ macro(jss_tests)
             NAME "Enable_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "enable"
             DEPENDS "Setup_FIPS_DBs"
+            MODE "FIPS"
         )
         jss_test_java(
             NAME "check_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "chkfips"
             DEPENDS "Enable_FipsMODE"
+            MODE "FIPS"
         )
 
         # The current version of NSS features partial support for TLS 1.3 in
@@ -322,6 +318,14 @@ macro(jss_tests)
                 NAME "SSLClientAuth_FIPSMODE"
                 COMMAND "org.mozilla.jss.tests.SSLClientAuth" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "${JSS_TEST_PORT_CLIENTAUTH_FIPS}" "60"
                 DEPENDS "Enable_FipsMODE"
+                MODE "FIPS"
+            )
+        else()
+            jss_test_java(
+                NAME "SSLClientAuth_FIPSMODE"
+                COMMAND "org.mozilla.jss.tests.JSSProvider"
+                DEPENDS "Enable_FipsMODE"
+                MODE "FIPS"
             )
         endif()
 
@@ -329,21 +333,25 @@ macro(jss_tests)
             NAME "HMAC_FIPSMODE"
             COMMAND "org.mozilla.jss.tests.CrossHMACTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
             DEPENDS "Enable_FipsMODE"
+            MODE "FIPS"
         )
         jss_test_java(
             NAME "KeyWrapping_FIPSMODE"
             COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
             DEPENDS "Enable_FipsMODE"
+            MODE "FIPS"
         )
         jss_test_java(
             NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
             COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
             DEPENDS "Enable_FipsMODE"
+            MODE "FIPS"
         )
         jss_test_java(
             NAME "JSS_Signature_test_FipsMODE"
             COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
             DEPENDS "Enable_FipsMODE"
+            MODE "FIPS"
         )
 
         # Since we need to disable FIPS mode _after_ all FIPS-mode tests have
@@ -353,6 +361,7 @@ macro(jss_tests)
             NAME "Disable_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "disable"
             DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE"
+            MODE "FIPS"
         )
     endif()
 
@@ -407,7 +416,7 @@ endmacro()
 
 function(jss_test_java)
     set(TEST_FLAGS "NAME")
-    set(TEST_ARGS  "COMMAND" "DEPENDS")
+    set(TEST_ARGS  "COMMAND" "DEPENDS" "MODE")
     cmake_parse_arguments(TEST_JAVA "" "${TEST_FLAGS}" "${TEST_ARGS}" ${ARGN})
 
     list(APPEND EXEC_COMMAND "${Java_JAVA_EXECUTABLE}")
@@ -415,6 +424,11 @@ function(jss_test_java)
     list(APPEND EXEC_COMMAND "${TEST_CLASSPATH}")
     list(APPEND EXEC_COMMAND "-ea")
     list(APPEND EXEC_COMMAND "-Djava.library.path=${CMAKE_BINARY_DIR}")
+    if(TEST_JAVA_MODE STREQUAL "FIPS")
+        list(APPEND EXEC_COMMAND "-Djava.security.properties=${CONFIG_OUTPUT_DIR}/fips.security")
+    else()
+        list(APPEND EXEC_COMMAND "-Djava.security.properties=${CONFIG_OUTPUT_DIR}/java.security")
+    endif()
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         list(APPEND EXEC_COMMAND "-Djava.util.logging.config.file=${PROJECT_SOURCE_DIR}/tools/logging.properties")
     endif()
