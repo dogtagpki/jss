@@ -48,7 +48,6 @@ public class JCASymKeyGen {
      */
     public JCASymKeyGen( String certDbLoc, String passwdFile) {
         try {
-            CryptoManager.initialize(certDbLoc);
             CryptoManager cm  = CryptoManager.getInstance();
             CryptoToken token = cm.getInternalCryptoToken();
             if (cm.FIPSEnabled()) {
@@ -68,19 +67,7 @@ public class JCASymKeyGen {
                     System.exit(1);
                 }
             }
-        } catch (AlreadyInitializedException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (CertDatabaseException ex) {
-            ex.printStackTrace();
-            System.exit(1);
         } catch (NotInitializedException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (GeneralSecurityException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (KeyDatabaseException ex) {
             ex.printStackTrace();
             System.exit(1);
         }
@@ -446,6 +433,7 @@ public class JCASymKeyGen {
                 System.exit(1);
             }
         }
+
         JCASymKeyGen skg = new JCASymKeyGen(certDbLoc, passwdFile);
         System.out.println(otherProvider + ": " + p.getInfo());
         p = Security.getProvider(MOZ_PROVIDER_NAME);

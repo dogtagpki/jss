@@ -22,18 +22,21 @@ public class JSSProvider {
         assert(p.get(algo) == null);
     }
 
-    public static void main(String[] args) throws Exception {
-        // Before we initialize the CryptoManager, the JSS Provider shouldn't
-        // exist.
-        assert(Security.getProvider("Mozilla-JSS") == null);
+    public static void listProviders() {
+        System.err.println("Providers:");
+        for (Provider p : Security.getProviders()) {
+            System.err.println(" - " + p);
+        }
+        System.err.println();
+    }
 
-        CryptoManager.initialize(args[0]);
-        CryptoManager cm = CryptoManager.getInstance();
-        cm.setPasswordCallback(new FilePasswordCallback(args[1]));
+    public static void main(String[] args) throws Exception {
+        listProviders();
 
         // Validate that the CryptoManager registers us as the
         // default/first provider.
-        Provider p = Security.getProviders()[0];
+        Provider p = Security.getProvider("Mozilla-JSS");
+        assert(p != null);
         assert(p.getName().equals("Mozilla-JSS"));
         assert(p instanceof org.mozilla.jss.JSSProvider);
 
