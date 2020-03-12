@@ -345,4 +345,20 @@ macro(jss_config_symbols)
     if(NOT HAVE_NSS_KBKDF)
         message(WARNING "Your NSS version doesn't support NIST SP800-108 KBKDF; some features of JSS won't work.")
     endif()
+
+    try_run(CK_HAVE_WORKING_NSS
+            CK_HAVE_COMPILING_NSS
+            ${CMAKE_BINARY_DIR}/results
+            ${CMAKE_SOURCE_DIR}/tools/tests/cmac.c
+            CMAKE_FLAGS
+                "-DINCLUDE_DIRECTORIES=${CMAKE_REQUIRED_INCLUDES}"
+                "-DREQUIRED_FLAGS=${CMAKE_REQUIRED_FLAGS}"
+            COMPILE_OUTPUT_VARIABLE COMP_OUT
+            RUN_OUTPUT_VARIABLE RUN_OUT)
+
+    if (NOT CK_HAVE_WORKING_NSS STREQUAL "0" OR NOT CK_HAVE_COMPILING_NSS)
+        set(HAVE_NSS_CMAC FALSE)
+        set(HAVE_NSS_KBKDF FALSE)
+        message(WARNING "Your NSS version is broken: between NSS v3.47 and v3.50, the values of CKM_AES_CMAC and CKM_AES_CMAC_GENERAL were swapped. Disabling CMAC and KBKDF support.")
+    endif()
 endmacro()
