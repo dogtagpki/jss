@@ -5511,6 +5511,11 @@
 <dd>
 <div class="block">Configures the session ID cache.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSProvider.html#configure-java.lang.String-">configure(String)</a></span> - Method in class org.mozilla.jss.<a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss">JSSProvider</a></dt>
+<dd>
+<div class="block">Configure this instance of JSSProvider with the specified path
+ to a JSS configuration properties file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html#configureAllowMissingExtendedKeyUsage-boolean-">configureAllowMissingExtendedKeyUsage(boolean)</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSTrustManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/CryptoManager.html#configureOCSP-boolean-java.lang.String-java.lang.String-">configureOCSP(boolean, String, String)</a></span> - Method in class org.mozilla.jss.<a href="org/mozilla/jss/CryptoManager.html" title="class in org.mozilla.jss">CryptoManager</a></dt>
@@ -15419,6 +15424,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/extensions/InhibitAnyPolicyExtension.html#InhibitAnyPolicyExtension-java.lang.Boolean-java.lang.Object-">InhibitAnyPolicyExtension(Boolean, Object)</a></span> - Constructor for class org.mozilla.jss.netscape.security.extensions.<a href="org/mozilla/jss/netscape/security/extensions/InhibitAnyPolicyExtension.html" title="class in org.mozilla.jss.netscape.security.extensions">InhibitAnyPolicyExtension</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSLoader.html#init-java.lang.String-">init(String)</a></span> - Static method in class org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss">JSSLoader</a></dt>
+<dd>
+<div class="block">Initialize JSS from the specified path to a configuration file.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSLoader.html#init-java.io.InputStream-">init(InputStream)</a></span> - Static method in class org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss">JSSLoader</a></dt>
+<dd>
+<div class="block">Initialize JSS from an InputStream.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/Cipher.html#initDecrypt-org.mozilla.jss.crypto.SymmetricKey-">initDecrypt(SymmetricKey)</a></span> - Method in class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/Cipher.html" title="class in org.mozilla.jss.crypto">Cipher</a></dt>
 <dd>
 <div class="block">Initializes a decryption context with a symmetric key.</div>
@@ -15535,6 +15548,8 @@
 <div class="block">If <code>true</code>, none of the underlying NSS components will
  be initialized.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSProvider.html#initializeProvider--">initializeProvider()</a></span> - Method in class org.mozilla.jss.<a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss">JSSProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/CryptoToken.html#initPassword-org.mozilla.jss.util.PasswordCallback-org.mozilla.jss.util.PasswordCallback-">initPassword(PasswordCallback, PasswordCallback)</a></span> - Method in interface org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a></dt>
 <dd>
 <div class="block">Initialize the password of this token.</div>
@@ -16304,6 +16319,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/java/security/JSSKeyStoreSpi.html#JSSKeyStoreSpi--">JSSKeyStoreSpi()</a></span> - Constructor for class org.mozilla.jss.provider.java.security.<a href="org/mozilla/jss/provider/java/security/JSSKeyStoreSpi.html" title="class in org.mozilla.jss.provider.java.security">JSSKeyStoreSpi</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss"><span class="typeNameLink">JSSLoader</span></a> - Class in <a href="org/mozilla/jss/package-summary.html">org.mozilla.jss</a></dt>
+<dd>
+<div class="block">The JSS Loader facilitates loading JSS via the Provider interface directly,
+ including from a static java.security configuration file.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSLoader.html#JSSLoader--">JSSLoader()</a></span> - Constructor for class org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss">JSSLoader</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/provider/java/security/JSSLoadStoreParameter.html" title="class in org.mozilla.jss.provider.java.security"><span class="typeNameLink">JSSLoadStoreParameter</span></a> - Class in <a href="org/mozilla/jss/provider/java/security/package-summary.html">org.mozilla.jss.provider.java.security</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/java/security/JSSLoadStoreParameter.html#JSSLoadStoreParameter-org.mozilla.jss.crypto.CryptoToken-">JSSLoadStoreParameter(CryptoToken)</a></span> - Constructor for class org.mozilla.jss.provider.java.security.<a href="org/mozilla/jss/provider/java/security/JSSLoadStoreParameter.html" title="class in org.mozilla.jss.provider.java.security">JSSLoadStoreParameter</a></dt>
@@ -16368,6 +16390,12 @@
 <dt><a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss"><span class="typeNameLink">JSSProvider</span></a> - Class in <a href="org/mozilla/jss/package-summary.html">org.mozilla.jss</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSProvider.html#JSSProvider--">JSSProvider()</a></span> - Constructor for class org.mozilla.jss.<a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss">JSSProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSProvider.html#JSSProvider-boolean-">JSSProvider(boolean)</a></span> - Constructor for class org.mozilla.jss.<a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss">JSSProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSProvider.html#JSSProvider-java.lang.String-">JSSProvider(String)</a></span> - Constructor for class org.mozilla.jss.<a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss">JSSProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSProvider.html#JSSProvider-java.io.InputStream-">JSSProvider(InputStream)</a></span> - Constructor for class org.mozilla.jss.<a href="org/mozilla/jss/JSSProvider.html" title="class in org.mozilla.jss">JSSProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/provider/javax/crypto/JSSSecretKeyFactorySpi.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSSecretKeyFactorySpi</span></a> - Class in <a href="org/mozilla/jss/provider/javax/crypto/package-summary.html">org.mozilla.jss.provider.javax.crypto</a></dt>
 <dd>&nbsp;</dd>
@@ -16833,6 +16861,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#loadCertFromNSS-org.mozilla.jss.netscape.security.pkcs.PKCS12-org.mozilla.jss.crypto.X509Certificate-boolean-boolean-java.lang.String-">loadCertFromNSS(PKCS12, X509Certificate, boolean, boolean, String)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSLoader.html#loaded--">loaded()</a></span> - Static method in class org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss">JSSLoader</a></dt>
+<dd>
+<div class="block">Check if this provider has been configured.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#loadFromByteArray-byte:A-org.mozilla.jss.util.Password-">loadFromByteArray(byte[], Password)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#loadFromFile-java.lang.String-org.mozilla.jss.util.Password-">loadFromFile(String, Password)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
@@ -16860,6 +16892,8 @@
 <div class="block">OID for the "L=" attribute, denoting a locality (such as a city)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/CryptoManager.html#logger">logger</a></span> - Static variable in class org.mozilla.jss.<a href="org/mozilla/jss/CryptoManager.html" title="class in org.mozilla.jss">CryptoManager</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSLoader.html#logger">logger</a></span> - Static variable in class org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss">JSSLoader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS10.html#logger">logger</a></span> - Static variable in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS10.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS10</a></dt>
 <dd>&nbsp;</dd>
