@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../org/mozilla/jss/InvalidLengthException.html" title="class in org.mozilla.jss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../org/mozilla/jss/KeyDatabaseException.html" title="class in org.mozilla.jss"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -187,6 +187,15 @@ extends java.security.Provider</pre>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#JSSProvider--">JSSProvider</a></span>()</code>&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#JSSProvider-boolean-">JSSProvider</a></span>(boolean&nbsp;initialize)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#JSSProvider-java.io.InputStream-">JSSProvider</a></span>(java.io.InputStream&nbsp;config)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#JSSProvider-java.lang.String-">JSSProvider</a></span>(java.lang.String&nbsp;config_path)</code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -203,6 +212,17 @@ extends java.security.Provider</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>java.security.Provider</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#configure-java.lang.String-">configure</a></span>(java.lang.String&nbsp;arg)</code>
+<div class="block">Configure this instance of JSSProvider with the specified path
+ to a JSS configuration properties file.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#initializeProvider--">initializeProvider</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/JSSProvider.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
@@ -252,10 +272,47 @@ extends java.security.Provider</pre>
 <a name="JSSProvider--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>JSSProvider</h4>
 <pre>public&nbsp;JSSProvider()</pre>
+</li>
+</ul>
+<a name="JSSProvider-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>JSSProvider</h4>
+<pre>public&nbsp;JSSProvider(boolean&nbsp;initialize)</pre>
+</li>
+</ul>
+<a name="JSSProvider-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>JSSProvider</h4>
+<pre>public&nbsp;JSSProvider(java.lang.String&nbsp;config_path)
+            throws java.lang.Exception</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
+</li>
+</ul>
+<a name="JSSProvider-java.io.InputStream-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>JSSProvider</h4>
+<pre>public&nbsp;JSSProvider(java.io.InputStream&nbsp;config)
+            throws java.lang.Exception</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -266,6 +323,31 @@ extends java.security.Provider</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="configure-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>configure</h4>
+<pre>public&nbsp;java.security.Provider&nbsp;configure(java.lang.String&nbsp;arg)</pre>
+<div class="block">Configure this instance of JSSProvider with the specified path
+ to a JSS configuration properties file.
+
+ See JSSLoader's class description for a description of the JSS
+ configuration properties file and known values.
+
+ If the JSSProvider is already loaded, this is a no-op.</div>
+</li>
+</ul>
+<a name="initializeProvider--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>initializeProvider</h4>
+<pre>protected&nbsp;void&nbsp;initializeProvider()</pre>
+</li>
+</ul>
 <a name="toString--">
 <!--   -->
 </a>
@@ -306,7 +388,7 @@ extends java.security.Provider</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../org/mozilla/jss/InvalidLengthException.html" title="class in org.mozilla.jss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../org/mozilla/jss/KeyDatabaseException.html" title="class in org.mozilla.jss"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
