@@ -262,10 +262,6 @@ public final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         if( key==null ) {
             throw new InvalidKeyException("Key is null");
         }
-        if( ! key.getOwningToken().equals(token) ) {
-            throw new InvalidKeyException("Key does not reside on the "+
-                "current token");
-        }
         if( ! (key instanceof PK11SymKey) ) {
             throw new InvalidKeyException("Key is not a PKCS #11 key");
         }

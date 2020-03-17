@@ -168,10 +168,6 @@ public final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidKeyException("Key is null");
         }
         try {
-            if( ! key.getOwningToken().equals(token) ) {
-                throw new InvalidKeyException("Key does not reside on the current token: key owning token="+
-                    key.getOwningToken().getName());
-            }
             if( ! (key instanceof PK11SymKey) ) {
                 throw new InvalidKeyException("Key is not a PKCS #11 key");
             }
@@ -195,10 +191,6 @@ public final class PK11KeyWrapper implements KeyWrapper {
     {
         if( key==null ) {
             throw new InvalidKeyException("Key is null");
-        }
-        if( ! key.getOwningToken().equals(token) ) {
-            throw new InvalidKeyException("Key does not reside on the "+
-                "current token");
         }
         if( ! (key instanceof PK11PrivKey) ) {
             throw new InvalidKeyException("Key is not a PKCS #11 key");
@@ -299,13 +291,6 @@ public final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidKeyException("key to be wrapped is not a "+
                 "PKCS #11 key");
         }
-/* NSS is capable of moving keys appropriately,
-   so this call is prematurely bailing
-        if( ! symKey.getOwningToken().equals(token) ) {
-            throw new InvalidKeyException("key to be wrapped does not live"+
-                " on the same token as the wrapping key");
-        }
-*/
     }
 
     /**
@@ -320,13 +305,6 @@ public final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidKeyException("key to be wrapped is not a "+
                 "PKCS #11 key");
         }
-/* NSS is capable of moving keys appropriately,
-   so this call is prematurely bailing
-        if( ! privKey.getOwningToken().equals(token) ) {
-            throw new InvalidKeyException("key to be wrapped does not live"+
-                " on the same token as the wrapping key");
-        }
-*/
     }
 
     /**
