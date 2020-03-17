@@ -4,6 +4,7 @@ FROM fedora:latest
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y nss nss-devel python2 python3 gcc java-devel \
+                          diffutils \
         && mkdir -p /home/sandbox \
         && dnf clean -y all \
         && rm -rf /usr/share/doc /usr/share/doc-base \
