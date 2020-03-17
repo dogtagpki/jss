@@ -47,13 +47,6 @@ public final class PK11MessageDigest extends JSSMessageDigest {
         }
 
         hmacKey = (PK11SymKey) key;
-
-        if( ! key.getOwningToken().equals(token) ) {
-            hmacKey = null;
-            throw new InvalidKeyException(
-                "HMAC key does not live on the same token as this digest");
-        }
-
         this.digestProxy = initHMAC(token, alg, hmacKey);
     }
 
