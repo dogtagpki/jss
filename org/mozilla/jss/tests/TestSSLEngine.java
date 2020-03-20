@@ -265,6 +265,12 @@ public class TestSSLEngine {
         if (counter == max_steps) {
             throw new RuntimeException("Unable to complete a handshake in " + max_steps + " steps; assuming we were stuck in an infinite loop: c2s_buffers.size=" + c2s_buffers.size() + " s2c_buffers.size=" + s2c_buffers.size());
         }
+
+        SSLSession c_session = client_eng.getSession();
+        SSLSession s_session = server_eng.getSession();
+
+        assert(c_session.getCipherSuite() == s_session.getCipherSuite());
+        assert(c_session.getProtocol() == s_session.getProtocol());
     }
 
     public static void sendTestData(SSLEngine send, SSLEngine recv, ByteBuffer mesg, ByteBuffer inter, ByteBuffer dest) throws Exception {
