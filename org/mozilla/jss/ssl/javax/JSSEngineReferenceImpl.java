@@ -46,7 +46,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private boolean closed_fd;
     private BufferProxy read_buf;
     private BufferProxy write_buf;
-    private SSLFDProxy ssl_fd;
 
     private int unknown_state_count;
     private boolean step_handshake;
@@ -207,6 +206,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (ret == SSL.SECFailure) {
             throw new RuntimeException("JSSEngine.init(): Unable to enable SSL Alert Logging on this SSLFDProxy instance.");
         }
+
+        // Pass this ssl_fd to the session object so that we can use
+        // SSL methods to invalidate the session.
     }
 
     private void initClient() {
@@ -540,9 +542,21 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     private void updateSession() {
+        if (ssl_fd == null) {
+            return;
+        }
+
         try {
             PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
             session.setPeerCertificates(peer_chain);
+
+            SSLChannelInfo info = SSL.GetChannelInfo(ssl_fd);
+            if (info == null) {
+                return;
+            }
+
+            session.setId(info.getSessionID());
+            session.refreshData();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -600,6 +614,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             return;
         }
 
+        // Before we step the handshake, check our current security status.
+        // This informs us of our possible return codes. Also, if we're
+        // currently on, update our handshake status. This happens even if
+        // we later exit before calling SSL.ForceHandshake() so that we can
+        // see what the session data contains.
+        SecurityStatusResult preHandshakeStatus = getStatus();
+        if (preHandshakeStatus.on >= 1) {
+            updateSession();
+        }
+
+
         // If we're already done, we should check for SSL ALerts.
         if (!step_handshake && handshake_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
             debug("JSSEngine.updateHandshakeState() - not handshaking");
@@ -622,10 +647,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             seen_exception = (ssl_exception != null);
             return;
         }
-
-        // Before we step the handshake, check our current security status.
-        // This informs us of our possible return codes.
-        SecurityStatusResult preHandshakeStatus = getStatus();
 
         // Since we're not obviously done handshaking, and the last time we
         // were called, we were still handshaking, step the handshake.
@@ -669,7 +690,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // call.
         if (handshakeStatus.on >= 1 && Buffer.ReadCapacity(write_buf) == 0) {
             debug("JSSEngine.updateHandshakeState() - handshakeStatus.on is " + handshakeStatus.on + ", so we've just finished handshaking");
-            updateSession();
             step_handshake = false;
             handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
             unknown_state_count = 0;

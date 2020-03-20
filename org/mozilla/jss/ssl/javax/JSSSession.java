@@ -3,40 +3,82 @@ package org.mozilla.jss.ssl.javax;
 import java.security.cert.Certificate;
 import javax.security.cert.X509Certificate;
 import java.security.Principal;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSessionContext;
-import javax.net.ssl.SSLPeerUnverifiedException;
+import java.util.HashMap;
+
+import javax.net.ssl.*;
+
+import org.mozilla.jss.nss.*;
+import org.mozilla.jss.ssl.*;
 
 public class JSSSession implements SSLSession {
-    private int application_buffer_size;
-    private String cipher_suite;
-    private long creation_time;
-    private byte[] session_id;
-    private long last_access_time;
-    private Certificate[] local_certificates;
-    private Principal local_principal;
-    private int packet_buffer_size;
-    private X509Certificate[] peer_chain;
-    private Certificate[] peer_certificates;
-    private String peer_host;
-    private int peer_port;
-    private Principal peer_principal;
-    private String protocol;
+    private JSSEngine parent;
 
-    JSSSession(int buffer_size) {
-        creation_time = System.currentTimeMillis();
-        application_buffer_size = buffer_size;
-        packet_buffer_size = buffer_size;
-        setLastAccessedTime();
+    private int applicationBufferSize;
+    private int packetBufferSize;
+
+    private SSLCipher cipherSuite;
+    private SSLVersion protocolVersion;
+
+    private long creationTime;
+    private long lastAccessTime;
+    private long expirationTime;
+    private byte[] sessionID;
+
+    private HashMap<String, Object> appDataMap;
+
+    private Certificate[] localCertificates;
+    private Principal localPrincipal;
+
+    private String peerHost;
+    private int peerPort;
+
+    private Principal peerPrincipal;
+    private X509Certificate[] peerChain;
+    private Certificate[] peerCertificates;
+
+    protected JSSSession(JSSEngine engine, int buffer_size) {
+        this.parent = engine;
+
+        applicationBufferSize = buffer_size;
+        packetBufferSize = buffer_size;
+
+        this.appDataMap = new HashMap<String, Object>();
+    }
+
+    public JSSEngine getEngine() {
+        return parent;
+    }
+
+    public SSLChannelInfo getChannelInfo() {
+        if (parent.getSSLFDProxy() != null) {
+            return SSL.GetChannelInfo(parent.getSSLFDProxy());
+        }
+
+        return null;
+    }
+
+    public SSLPreliminaryChannelInfo getPreliminaryChannelInfo() {
+        if (parent.getSSLFDProxy() != null) {
+            return SSL.GetPreliminaryChannelInfo(parent.getSSLFDProxy());
+        }
+
+        return null;
+    }
+
+    public int getApplicationBufferSize() {
+        return applicationBufferSize;
+    }
+
+    public int getPacketBufferSize() {
+        return packetBufferSize;
     }
 
     public byte[] getId() {
-        return session_id;
+        return sessionID;
     }
 
-    protected void setId(byte[] new_id) {
-        session_id = new_id;
-        setLastAccessedTime();
+    protected void setId(byte[] id) {
+        sessionID = id;
     }
 
     public SSLSessionContext getSessionContext() {
@@ -44,115 +86,177 @@ public class JSSSession implements SSLSession {
     }
 
     public long getCreationTime() {
-        return creation_time;
+        refreshData();
+        return creationTime;
+    }
+
+    protected void setCreationTime(long time) {
+        creationTime = time;
     }
 
     public long getLastAccessedTime() {
-        return last_access_time;
+        refreshData();
+        return lastAccessTime;
     }
 
-    protected void setLastAccessedTime() {
-        last_access_time = System.currentTimeMillis();
+    protected void setLastAccessedTime(long when) {
+        lastAccessTime = when;
     }
 
-    public void invalidate() {}
-    public boolean isValid() { return true; }
-    public void putValue(String name, Object value) {}
-    public Object getValue(String name) { return null; }
-    public void removeValue(String name) {}
-    public String[] getValueNames() { return null; }
-
-    public Certificate[] getPeerCertificates() {
-        return peer_certificates;
+    public long getExpirationTime() {
+        refreshData();
+        return expirationTime;
     }
 
-    protected void setPeerCertificates(Certificate[] new_certs) {
-        peer_certificates = new_certs;
-        setLastAccessedTime();
+    protected void refreshData() {
+        SSLChannelInfo info = getChannelInfo();
+        if (info == null) {
+            return;
+        }
+
+        // NSS returns the values as seconds, but we have to report them
+        // in milliseconds to our callers. Multiply by a thousand here.
+        setCreationTime(info.getCreationTime() * 1000);
+        setLastAccessedTime(info.getLastAccessTime() * 1000);
+        setExpirationTime(info.getExpirationTime() * 1000);
+
+        setCipherSuite(info.getCipherSuite());
+        setProtocol(info.getProtocolVersion());
+    }
+
+    protected void setExpirationTime(long when) {
+        expirationTime = when;
+    }
+
+    public boolean isValid() {
+        return System.currentTimeMillis() < getExpirationTime();
+    }
+
+    public void invalidate() {
+        if (parent.getSSLFDProxy() != null) {
+             SSL.InvalidateSession(parent.getSSLFDProxy());
+        }
+    }
+
+    public void putValue(String name, Object value) {
+        if (appDataMap.containsKey(name)) {
+            removeValue(name);
+        }
+
+        appDataMap.put(name, value);
+        if (value instanceof SSLSessionBindingListener) {
+            SSLSessionBindingListener listener = (SSLSessionBindingListener) value;
+            listener.valueBound(new SSLSessionBindingEvent(this, name));
+        }
+    }
+
+    public Object getValue(String name) {
+        return appDataMap.get(name);
+    }
+
+    public void removeValue(String name) {
+        Object value = appDataMap.remove(name);
+
+        if (value instanceof SSLSessionBindingListener) {
+            SSLSessionBindingListener listener = (SSLSessionBindingListener) value;
+            listener.valueUnbound(new SSLSessionBindingEvent(this, name));
+        }
+    }
+
+    public String[] getValueNames() {
+        return appDataMap.keySet().toArray(new String[0]);
     }
 
     public Certificate[] getLocalCertificates() {
-        return local_certificates;
+        return localCertificates;
     }
 
-    protected void setLocalCertificates(Certificate[] new_certs) {
-        local_certificates = new_certs;
-        setLastAccessedTime();
+    protected void setLocalCertificates(Certificate[] certs) {
+        localCertificates = certs;
+    }
+
+    public Certificate[] getPeerCertificates() {
+        return peerCertificates;
+    }
+
+    protected void setPeerCertificates(Certificate[] new_certs) {
+        peerCertificates = new_certs;
     }
 
     public X509Certificate[] getPeerCertificateChain() throws SSLPeerUnverifiedException {
-        if (peer_chain == null) {
+        if (peerChain == null) {
             String msg = "Peer reported no certificate chain or handshake has not yet completed.";
             throw new SSLPeerUnverifiedException(msg);
         }
 
-        return peer_chain;
+        return peerChain;
     }
 
-    protected void setPeerCertificateChain(X509Certificate[] new_chain) {
-        peer_chain = new_chain;
-        setLastAccessedTime();
+    protected void setPeerCertificateChain(X509Certificate[] chain) {
+        peerChain = chain;
     }
 
     public Principal getPeerPrincipal() {
-        return peer_principal;
+        return peerPrincipal;
     }
 
-    protected void setPeerPrincipal(Principal new_principal) {
-        peer_principal = new_principal;
-        setLastAccessedTime();
+    protected void setPeerPrincipal(Principal principal) {
+        peerPrincipal = principal;
     }
 
     public Principal getLocalPrincipal() {
-        return local_principal;
+        return localPrincipal;
     }
 
-    protected void setLocalPrincipal(Principal new_principal) {
-        local_principal = new_principal;
-        setLastAccessedTime();
+    protected void setLocalPrincipal(Principal principal) {
+        localPrincipal = principal;
     }
 
     public String getCipherSuite() {
-        return cipher_suite;
+        refreshData();
+
+        if (cipherSuite == null) {
+            return null;
+        }
+
+        return cipherSuite.name();
     }
 
-    protected void setCipherSuite(String new_suite) {
-        cipher_suite = new_suite;
-        setLastAccessedTime();
+    public SSLCipher getSSLCipher() {
+        return cipherSuite;
+    }
+
+    protected void setCipherSuite(SSLCipher suite) {
+        cipherSuite = suite;
     }
 
     public String getProtocol() {
-        return protocol;
+        refreshData();
+
+        if (protocolVersion == null) {
+            return null;
+        }
+
+        return protocolVersion.jdkAlias();
     }
 
-    protected void setProtocol(String new_protocol) {
-        protocol = new_protocol;
-        setLastAccessedTime();
+    protected void setProtocol(SSLVersion protocol) {
+        protocolVersion = protocol;
     }
 
     public String getPeerHost() {
-        return peer_host;
+        return peerHost;
     }
 
-    public void setPeerHost(String new_host) {
-        peer_host = new_host;
-        setLastAccessedTime();
+    public void setPeerHost(String host) {
+        peerHost = host;
     }
 
     public int getPeerPort() {
-        return peer_port;
+        return peerPort;
     }
 
-    public void setPeerPort(int new_port) {
-        peer_port = new_port;
-        setLastAccessedTime();
-    }
-
-    public int getPacketBufferSize() {
-        return packet_buffer_size;
-    }
-
-    public int getApplicationBufferSize() {
-        return application_buffer_size;
+    public void setPeerPort(int port) {
+        peerPort = port;
     }
 }
