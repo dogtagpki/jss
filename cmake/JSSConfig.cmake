@@ -408,6 +408,27 @@ macro(jss_config_symbols)
         ssl.h
         HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH
     )
+
+    check_struct_has_member(
+        SSLChannelInfo
+        originalKeaGroup
+        ssl.h
+        HAVE_NSS_CHANNEL_INFO_ORIGINAL_KEA_GROUP
+    )
+
+    check_struct_has_member(
+        SSLPreliminaryChannelInfo
+        zeroRttCipherSuite
+        ssl.h
+        HAVE_NSS_PRELIMINARY_CHANNEL_INFO_ZERO_RTT_CIPHER_SUITE
+    )
+
+    check_struct_has_member(
+        SSLPreliminaryChannelInfo
+        peerDelegCred
+        ssl.h
+        HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED
+    )
 endmacro()
 
 macro(jss_config_tests)

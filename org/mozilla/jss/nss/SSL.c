@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <jni.h>
 
+#include "jssconfig.h"
 #include "jssl.h"
 #include "java_ids.h"
 #include "jss_exceptions.h"
@@ -56,6 +57,79 @@ jobject JSS_NewSecurityStatusResult(JNIEnv *env, int on, char *cipher,
 
     result = (*env)->NewObject(env, resultClass, constructor, on, cipher_java,
         keySize, secretKeySize, issuer_java, subject_java);
+
+finish:
+    return result;
+}
+
+jobject JSS_NewSSLChannelInfo(JNIEnv *env, jint protocolVersion,
+    jint cipherSuite, jint authKeyBits, jint keaKeyBits, jlong creationTime,
+    jlong lastAccessTime, jlong expirationTime, jbyteArray sessionID,
+    jint compressionMethod, jboolean extendedMasterSecretUsed,
+    jboolean earlyDataAccepted, jint keaType, jint keaGroup, jint symCipher,
+    jint macAlgorithm, jint authType, jint signatureScheme,
+    jboolean haveNSS334, jint originalKeaGroup, jboolean resumed,
+    jboolean peerDelegCred)
+{
+    jclass resultClass;
+    jmethodID constructor;
+    jobject result = NULL;
+
+    PR_ASSERT(env != NULL);
+
+    resultClass = (*env)->FindClass(env, SSL_CHANNEL_INFO_CLASS_NAME);
+    if (resultClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    constructor = (*env)->GetMethodID(env, resultClass, PLAIN_CONSTRUCTOR,
+        SSL_CHANNEL_INFO_CONSTRUCTOR_SIG);
+    if (constructor == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    result = (*env)->NewObject(env, resultClass, constructor, protocolVersion,
+        cipherSuite, authKeyBits, keaKeyBits, creationTime, lastAccessTime,
+        expirationTime, sessionID, compressionMethod,
+        extendedMasterSecretUsed, earlyDataAccepted, keaType, keaGroup,
+        symCipher, macAlgorithm, authType, signatureScheme, haveNSS334,
+        originalKeaGroup, resumed, peerDelegCred);
+
+finish:
+    return result;
+}
+
+jobject JSS_NewSSLPreliminaryChannelInfo(JNIEnv *env, jlong valuesSet,
+    jint protocolVersion, jint cipherSuite, jboolean canSendEarlyData,
+    jlong maxEarlyDataSize, jboolean haveNSS343, jint zeroRttCipherSuite,
+    jboolean haveNSS348, jboolean peerDelegCred, jint authKeyBits,
+    jint signatureScheme)
+{
+    jclass resultClass;
+    jmethodID constructor;
+    jobject result = NULL;
+
+    PR_ASSERT(env != NULL);
+
+    resultClass = (*env)->FindClass(env, SSL_PRELIMINARY_CHANNEL_INFO_CLASS_NAME);
+    if (resultClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    constructor = (*env)->GetMethodID(env, resultClass, PLAIN_CONSTRUCTOR,
+        SSL_PRELIMINARY_CHANNEL_INFO_CONSTRUCTOR_SIG);
+    if (constructor == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    result = (*env)->NewObject(env, resultClass, constructor, valuesSet,
+        protocolVersion, cipherSuite, canSendEarlyData, maxEarlyDataSize,
+        haveNSS343, zeroRttCipherSuite, haveNSS348, peerDelegCred,
+        authKeyBits, signatureScheme);
 
 finish:
     return result;
@@ -363,6 +437,142 @@ Java_org_mozilla_jss_nss_SSL_SecurityStatus(JNIEnv *env, jclass clazz,
 
     return JSS_NewSecurityStatusResult(env, on, cipher, keySize, secretKeySize,
         issuer, subject);
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_nss_SSL_GetChannelInfo(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    SSLChannelInfo info = { 0 };
+    jint pV = 0;
+    jint cS = 0;
+    jint aKB = 0;
+    jint kKB = 0;
+    jlong cT = 0;
+    jlong lAT = 0;
+    jlong eT = 0;
+    jbyteArray sID = NULL;
+    jint cM = 0;
+    jboolean eMSU = JNI_FALSE;
+    jboolean eDA = JNI_FALSE;
+    jint kT = 0;
+    jint kG = 0;
+    jint sC = 0;
+    jint mA = 0;
+    jint aT = 0;
+    jint sS = 0;
+    jboolean haveNSS334 = JNI_FALSE;
+    jint oKG = 0;
+    jboolean r = JNI_FALSE;
+    jboolean pDC = JNI_FALSE;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return NULL;
+    }
+
+    if (SSL_GetChannelInfo(real_fd, &info, sizeof(info)) != SECSuccess) {
+        return NULL;
+    }
+
+    pV = info.protocolVersion;
+    cS = info.cipherSuite;
+
+    aKB = info.authKeyBits;
+    kKB = info.keaKeyBits;
+
+    cT = info.creationTime;
+    lAT = info.lastAccessTime;
+    eT = info.expirationTime;
+    sID = JSS_ToByteArray(env, info.sessionID, info.sessionIDLength);
+
+    cM = info.compressionMethod;
+
+    eMSU = info.extendedMasterSecretUsed;
+
+    eDA = info.earlyDataAccepted;
+
+    kT = info.keaType;
+    kG = info.keaGroup;
+    sC = info.symCipher;
+    mA = info.macAlgorithm;
+    aT = info.authType;
+    sS = info.signatureScheme;
+
+#ifdef HAVE_NSS_CHANNEL_INFO_ORIGINAL_KEA_GROUP
+    /* The following fields were added in NSS v3.34 and are detected
+     * via feature detection in CMake. */
+    haveNSS334 = JNI_TRUE;
+    oKG = info.originalKeaGroup;
+    r = info.resumed;
+    pDC = info.peerDelegCred;
+#endif
+
+    return JSS_NewSSLChannelInfo(env, pV, cS, aKB, kKB, cT, lAT, eT, sID, cM,
+                                 eMSU, eDA, kT, kG, sC, mA, aT, sS,
+                                 haveNSS334, oKG, r, pDC);
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_nss_SSL_GetPreliminaryChannelInfo(JNIEnv *env,
+    jclass clazz, jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    SSLPreliminaryChannelInfo info = { 0 };
+    jlong vS = 0;
+    jint pV = 0;
+    jint cS = 0;
+    jboolean cSED = JNI_FALSE;
+    jlong mEDS = 0;
+    jboolean haveNSS343 = JNI_FALSE;
+    jint zRCS = 0;
+    jboolean haveNSS348 = JNI_FALSE;
+    jboolean pDC = JNI_FALSE;
+    jint aKB = 0;
+    jint sS = 0;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return NULL;
+    }
+
+    if (SSL_GetPreliminaryChannelInfo(real_fd, &info, sizeof(info)) != SECSuccess) {
+        return NULL;
+    }
+
+    vS = info.valuesSet;
+
+    pV = info.protocolVersion;
+    cS = info.cipherSuite;
+
+    cSED = info.canSendEarlyData;
+
+    mEDS = info.maxEarlyDataSize;
+
+#if HAVE_NSS_PRELIMINARY_CHANNEL_INFO_ZERO_RTT_CIPHER_SUITE
+    /* The following fields were added in NSS v3.43 and are detected
+     * via feature detection in CMake. */
+    haveNSS343 = JNI_TRUE;
+    zRCS = info.zeroRttCipherSuite;
+#endif
+
+#if HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED
+    /* The following fields were added in NSS v3.48 and are detected
+     * via feature detection in CMake. */
+    haveNSS348 = JNI_TRUE;
+    pDC = info.peerDelegCred;
+    aKB = info.authKeyBits;
+    sS = info.signatureScheme;
+#endif
+
+    return JSS_NewSSLPreliminaryChannelInfo(env, vS, pV, cS, cSED, mEDS,
+                                            haveNSS343, zRCS, haveNSS348,
+                                            pDC, aKB, sS);
 }
 
 JNIEXPORT int JNICALL
