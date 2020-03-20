@@ -145,6 +145,12 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected JSSSession session;
 
     /**
+     * Internal SSLFDProxy instance; useful for JSSSession support and any
+     * custom extensions the developer wishes to support.
+     */
+    protected SSLFDProxy ssl_fd;
+
+    /**
      * Whether or not the outbound portion of this connection is closed.
      */
     protected boolean is_outbound_closed;
@@ -164,7 +170,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public JSSEngine() {
         super();
 
-        session = new JSSSession(BUFFER_SIZE);
+        session = new JSSSession(this, BUFFER_SIZE);
     }
 
     /**
@@ -177,7 +183,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public JSSEngine(String peerHost, int peerPort) {
         super(peerHost, peerPort);
 
-        session = new JSSSession(BUFFER_SIZE);
+        session = new JSSSession(this, BUFFER_SIZE);
         session.setPeerHost(peerHost);
         session.setPeerPort(peerPort);
     }
@@ -198,9 +204,22 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         cert = (PK11Cert) localCert;
         key = (PK11PrivKey) localKey;
 
-        session = new JSSSession(BUFFER_SIZE);
+        session = new JSSSession(this, BUFFER_SIZE);
         session.setPeerHost(peerHost);
         session.setPeerPort(peerPort);
+    }
+
+    /**
+     * Get the internal SSLFDProxy object; this should be preferred to
+     * directly accessing ssl_fd.
+     *
+     * Note that ssl_fd can be null at various times during SSLEngine
+     * initialization and destruction. This method should be used with
+     * caution as callers can risk damaging the SSLEngine and making it
+     * unusable or crash.
+     */
+    public SSLFDProxy getSSLFDProxy() {
+        return ssl_fd;
     }
 
     /**
