@@ -431,6 +431,18 @@ PR_BEGIN_EXTERN_C
 #define KBKDF_DATA_PARAMETER_CLASS_NAME "org/mozilla/jss/crypto/KBKDFDataParameter"
 #define KBKDF_DERIVED_KEY_CLASS_NAME "org/mozilla/jss/crypto/KBKDFDerivedKey"
 
+/*
+ * SSLChannelInfo classes
+ */
+#define SSL_CHANNEL_INFO_CLASS_NAME "org/mozilla/jss/nss/SSLChannelInfo"
+#define SSL_CHANNEL_INFO_CONSTRUCTOR_SIG "(IIIIJJJ[BIZZIIIIIIZIZZ)V"
+
+/*
+ * SSLPreliminaryChannelInfo classes
+ */
+#define SSL_PRELIMINARY_CHANNEL_INFO_CLASS_NAME "org/mozilla/jss/nss/SSLPreliminaryChannelInfo"
+#define SSL_PRELIMINARY_CHANNEL_INFO_CONSTRUCTOR_SIG "(JIIZJZIZZII)V"
+
 PR_END_EXTERN_C
 
 #endif
