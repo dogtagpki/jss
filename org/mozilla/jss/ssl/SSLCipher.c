@@ -5,6 +5,7 @@
 #include <pk11pub.h>
 
 #include "_jni/org_mozilla_jss_ssl_SSLCipher.h"
+#include "jssconfig.h"
 
 /* Copied from NSS's ssl3con.c. */
 static const CK_MECHANISM_TYPE auth_alg_defs[] = {
@@ -35,7 +36,7 @@ static const CK_MECHANISM_TYPE kea_alg_defs[] = {
 };
 PR_STATIC_ASSERT(PR_ARRAY_SIZE(kea_alg_defs) == ssl_kea_size);
 
-#if (NSS_VMAJOR >= 3) && (NSS_VMINOR >= 43)
+#ifdef HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH
 /* Not present in ssl3con.c. */
 static const CK_MECHANISM_TYPE hash_alg_defs[] = {
     CKM_INVALID_MECHANISM, /* ssl_hash_none */
@@ -109,10 +110,12 @@ Java_org_mozilla_jss_ssl_SSLCipher_checkSupportedStatus(JNIEnv *env, jclass claz
         return JNI_FALSE;
     }
 
-    /* Only check if NSS >= 3.43. Note that when this condition holds at
-     * compile time, and we're executing under an older NSS version, we'd
-     * have exited due to the check in SSL_GetCipherSuiteInfo(...). */
-#if (NSS_VMAJOR >= 3) && (NSS_VMINOR >= 43)
+    /* Only check if NSS >= 3.43 or if this feature was backported. Note that
+     * when this condition holds at compile time, and we're executing under
+     * an older NSS version, we'd have exited due to the check in
+     * SSL_GetCipherSuiteInfo(...). That means that the value read here is
+     * always correct. */
+#ifdef HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH
     if (info.kdfHash != ssl_hash_none &&
             !PK11_TokenExists(hash_alg_defs[info.kdfHash])) {
         return JNI_FALSE;

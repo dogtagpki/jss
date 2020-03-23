@@ -17,11 +17,11 @@ macro(jss_config)
     # Configure test variables
     jss_config_tests()
 
-    # Template auto-generated files
-    jss_config_template()
-
     # Check symbols to see what tests we run
     jss_config_symbols()
+
+    # Template auto-generated files
+    jss_config_template()
 endmacro()
 
 macro(jss_config_version MAJOR MINOR PATCH BETA)
@@ -326,6 +326,10 @@ endmacro()
 macro(jss_config_template)
     # Template files
     configure_file(
+        "${PROJECT_SOURCE_DIR}/org/mozilla/jss/jssconfig.h.in"
+        "${PROJECT_SOURCE_DIR}/org/mozilla/jss/jssconfig.h"
+    )
+    configure_file(
         "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h.in"
         "${PROJECT_SOURCE_DIR}/org/mozilla/jss/util/jssver.h"
     )
@@ -397,6 +401,13 @@ macro(jss_config_symbols)
         set(HAVE_NSS_KBKDF FALSE)
         message(WARNING "Your NSS version is broken: between NSS v3.47 and v3.50, the values of CKM_AES_CMAC and CKM_AES_CMAC_GENERAL were swapped. Disabling CMAC and KBKDF support.")
     endif()
+
+    check_struct_has_member(
+        SSLCipherSuiteInfo
+        kdfHash
+        ssl.h
+        HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH
+    )
 endmacro()
 
 macro(jss_config_tests)
