@@ -1,0 +1,6 @@
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
+#cmakedefine HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH 1
+
+#endif

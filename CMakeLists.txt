@@ -53,8 +53,10 @@ include(Shims)
 # Since we found Java, include UseJava to provide the find_jar function.
 include(UseJava)
 
-# This include is required for the macro check_symbol_exists in jss_config()
+# These includes are required for the macro check_symbol_exists and
+# check_struct_has_member in jss_config().
 include(CheckSymbolExists)
+include(CheckStructHasMember)
 
 # Load JSSConfig module; this defines the jss_config() macro which defines
 # JSS-specific configuration values.
