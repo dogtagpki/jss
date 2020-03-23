@@ -446,6 +446,7 @@ JSS_4.6.4 {
     global:
 Java_org_mozilla_jss_nss_SSL_GetChannelInfo;
 Java_org_mozilla_jss_nss_SSL_GetPreliminaryChannelInfo;
+Java_org_mozilla_jss_nss_SSL_InvalidateSession;
     local:
         *;
 };

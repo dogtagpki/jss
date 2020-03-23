@@ -252,6 +252,13 @@ public class SSL {
         long timeout, long ssl3_timeout, String directory);
 
     /**
+     * Invalidate the SSL session associated with this socket.
+     *
+     * See also: SSL_InvalidateSession in /usr/include/nss3/ssl.h
+     */
+    public static native int InvalidateSession(SSLFDProxy fd);
+
+    /**
      * Introspect the peer's certificate.
      *
      * See also: SSL_PeerCertificate in /usr/include/nss3/ssl.h
