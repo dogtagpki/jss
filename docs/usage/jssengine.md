@@ -1,0 +1,305 @@
+# `JSSEngine` - Documentation
+
+## About `JSSEngine`
+
+`JSSEngine` is JSS's implementation of the [`SSLEngine`][javax.ssl-engine]
+contract for non-blocking TLS. Unlike the `SunJSSE` provider's `SSLEngine`
+(when using the `SunPKCS11-NSS` provider for primitives), this is built
+directly on NSS's high-level SSL module. This is better for FIPS compliance
+and HSM support (as keys never leave the NSS cryptographic module) and also
+means that we don't need to reimplement the underlying state machine. This
+approach is consistent with our [JSS `SSLSocket`][jss.ssl-socket].
+
+
+## Using `JSSEngine`
+
+There are two ways to use the `JSSEngine`: via the JCA Provider interface,
+or constructing a `JSSEngine` instance directly. The former method is
+preferred out of the two.
+
+
+### Via the JSSProvider
+
+This is the preferred way of using the `JSSEngine`. To construct a new
+[`SSLEngine`][javax.ssl-engine] instance, first get `Mozilla-JSS`'s
+[`SSLContext`][javax.ssl-context]:
+
+```java
+// First get the necessary KeyManagers and TrustManagers. Note that
+// selecting KeyManagers and TrustManagers is discussed more below.
+KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509", "Mozilla-JSS");
+KeyManager[] kms = kmf.getKeyManagers();
+
+TrustManagerFactory tmf = TrustManagerFactory.getInstance("NssX509", "Mozilla-JSS");
+TrustManager[] tms = tmf.getTrustManagers();
+
+// Then, initialize the SSLContext with the above information. Note that
+// we don't utilize the SecureRandom parameter, as NSS internally handles
+// generating random numbers for us.
+SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
+ctx.init(kms, tms, null);
+
+// If we don't have any peer host/port information, use this form:
+SSLEngine engine = ctx.createSSLEngine();
+
+// Otherwise, use this form:
+SSLEngine engine = ctx.createSSLEngine(peerHost, peerPort);
+```
+
+The [`SSLContext`][javax.ssl-context] also provides methods helpful for
+configuring the [`SSLEngine`][javax.ssl-engine]. These are
+`SSLContext.getDefaultSSLParameters()` and
+`SSLContext.getSupportedSSLParameters()`. These provide the default parameters
+used by the SSLEngine and all supported SSLParameters, respectively.
+
+For more information about configuring the `JSSEngine`, see the section below.
+
+
+### Direct Utilization
+
+This is the less preferred way of using the `JSSEngine`. This requires
+understanding the class layout of `JSSEngine`. See the section below for more
+information.
+
+First, get an instance of `JSSEngine`:
+
+```java
+/* If no session resumption hints are provided: */
+// JSSEngine engine = JSSEngine<$Impl>();
+
+/* If we already know the peer's host and port: */
+// String peerHost;
+// int peerPort;
+// JSSEngine engine = JSSEngine<$Impl>(peerHost, peerPort);
+
+/* Or laastly, if we know the peer's host and port, and want to set
+ * a certificate and key to use for our side of the connection: */
+// X509Certificate localCert;
+// PrivateKey localKey;
+JSSEngine engine = JSSEngine<$Impl>(peerHost, peerPort, localCert, localKey);
+```
+
+Replace `JSSEngine<$Impl>` with one of the implementing classes below.
+
+Then, continue with configuring the `JSSEngine` below.
+
+
+### Configuring the `JSSEngine`
+
+Configuring the `JSSEngine` is a multi-step process. Below are common
+configuration options grouped into categories.
+
+#### Choosing Handshake Side
+
+Configuring which side of the handshake this `JSSEngine` will use occurs via
+a call to `setUseClientMode(boolean mode)`. When `mode` is `true`, this engine
+will handshake as if it was the client. Otherwise, this engine will handshake
+as a server. Note that calling `setUseClientMode(...)` after the handshake has
+started (either via calling `beginHandshake(...)`, `wrap(...)`, or
+`unwrap(...)`) isn't supported.
+
+Checking the current mode can be done via `getUseClientMode(...)`.
+
+#### Choosing Key Material
+
+Key material can be chosen in several ways.
+
+#### Choosing TLS protocol version
+
+#### Choosing Cipher Suite
+
+#### Using `JSSParameters`
+
+#### Session Control
+
+
+## Design of the `JSSEngine`
+
+### Class Structuring
+
+The below is a digram showing the structure of `JSSEngine` classes:
+
+                           -----------
+                          | JSSEngine |-------------------------
+                           -----------                          \
+                            /       \                            \
+     ------------------------       ------------------------     ------
+    | JSSEngineReferenceImpl |     | JSSEngineOptimizedImpl |   | .... |
+     ------------------------       ------------------------     ------
+
+`JSSEngine` is an abstract class extending [`SSLEngine`][javax.ssl-engine].
+This class implements some of the boilerplate required for implementing a
+`SSLEngine`, including handling cipher and protocol version configuration.
+Individual implementations implement `wrap`, `unwrap`, and whatever specifics
+are necessary to initialize and release the SSL-backed `PRFileDesc`.
+
+We expect two primary implementations:
+
+ - `JSSEngineReferenceImpl`, a reference implementation with more logging
+   and debugging statements. This also includes port-based debugging, so
+   situations where a `SSLEngine` is without writing to the network can
+   still be tracked and analyzed in Wireshark. Each call to `wrap` or `unwrap`
+   makes several JNI calls, incurring lots of overhead.
+ - `JSSEngineOptimizedImpl`, an optimized, production-ready implementation.
+   This one is harder to debug due to fewer logging statements, but does
+   improve performance significantly with fewer JNI calls.
+
+
+### Non-Blocking IO
+
+NSPR introduces a platform-independent abstraction over C's file descriptors
+(usually an `int`) in the form of the `PRFileDesc` structure. This is
+layer-able, allowing us to write our own and then have it be accepted by
+NSS's SSL `PRFileDesc` implementation as the underlying transport.
+
+Our `PRFileDesc` is called `BufferPRFD` and lives next to the `JSSEngine`
+implementation in `org/mozilla/jss/ssl/javax`. Each `BufferPRFD` is backed
+by two `j_buffer` instances (located adjacent). A `j_buffer` is a circular
+ring buffer optimized to allow efficient access to the underlying data. One
+`j_buffer` is dedicated to the read end of this `BufferPRFD` (the data that
+is returned when `recv(...)` is called); the other is dedicated to the write
+end of this `BufferPRFD` (the data that is waiting to get sent on the wire).
+Note that the `j_buffer` instances exist independently from the `BufferPRFD`:
+the `JSSEngine` itself creates the `j_buffer`s and hands them to the
+`BufferPRFD` to use, because it too needs to be able to read from them.
+
+This forms the following data path once the initial handshake is complete:
+
+     -------------
+    | Application |
+     -------------
+         |  ^
+    app  |  | wire  SSLEngine.wrap(data, result)
+    data |  | data
+         V  |
+      -----------  jb_read(write, result) ----------
+     | JSSEngine | <-------------------- | j_buffer |
+      -----------                         ----------
+          |                                   ^
+          | PR.Write(ssl_fd, data)            | jb_write(write, enc_data)
+          v                                   |
+        -----                            -----------
+       | NSS | -----------------------> | PRFileDesc|
+        -----                            -----------
+             PR.Write(buffer_fd, enc_data)
+
+
+The application creates application data it wants to send to its peer. It
+invokes `SSLEngine.wrap(data, result)`, where `data` is the application data
+and `result` is an empty buffer large enough to store the resulting wire data.
+The `JSSEngine` passes this data (via a call to `PR.Write`) to NSS along the
+SSL `PRFileDesc` (`ssl_fd`) associated with this `JSSEngine`. NSS encrypts
+this data and writes it to the underlying `BufferPRFD`. If the `BufferPRFD`
+has sufficient space in its write `j_buffer`, it can accept all the data.
+This occurs in the `PR.Write` call on the `BufferPRFD`. At this point, the
+call stack returns to `JSSEngine.wrap(...)`. When it sees that there is data
+in the underlying write `j_buffer`, `JSSEngine` reads from the write
+`j_buffer`, thereby freeing space in it for the next PR.Write(...) invocation,
+and adds this to the application's `result` (wire data) buffer.
+
+A similar process (with the bottom loop reversed) occurs for the application
+decrypting data from its peer. In this case, encrypted wire data is written
+to the read `j_buffer`, a call to `jb_read(read)` from `PR.Read(buffer_fd)`
+occurs inside NSS when a call to `PR.Read(ssl_fd)` is made from the SSLEngine.
+The unencrypted result is then passed to the caller of
+`SSLEngine.unwrap(...)`.
+
+
+### Handshaking
+
+The data flow described above in the section on Non-Blocking IO applies to
+the initial TLS Handshake as well, except there's no initial application data
+and the `JSSEngine` doesn't call `PR.Write(...)`. [TLSv1.2][rfc.tls-1.2] and
+[TLSv1.3][rfc.tls-1.3] both have state machines at the core of their handshake
+mechanism. However, NSS doesn't expose the current state of the handshake or
+whether or not we can continue without any additional information from the
+remote peer.
+
+When a `JSSEngine` is initialized, the first thing it expects to do is begin
+a handshake with a peer. The TLS handshake begins with the client sending a
+Client Hello message to the server. When the SSLEngine is initialized as a
+client, it sets the handshake state to `NEED_WRAP` (so we can send the
+outbound Client Hello); when initialized as a server, it gets set to
+`NEED_UNWRAP` so we can receive the inbound Client Hello from the peer.
+
+When `SSL.ForceHandshake` is called, NSS steps the internal state machine.
+This results in a call to `PR.Read(...)` to read any inbound data, and if
+this client needs to write a message, a call to `PR.Write(...)`. In this way,
+all inbound data on the wire is consumed, and if a message needs to be
+transmitted, we can check the amount of data in the write `j_buffer`. This
+gives us the following heuristic for handshaking:
+
+ 1. Get the Security Status prior to handshaking via `SSL.SecurityStatus(...)`
+ 2. Perform `SSL.ForceHandshake(...)`
+ 3. Get the Security Status again
+ 4. Determine our next step:
+    - If we need to send data to the client (and this wasn't a `wrap` call),
+      change status to `NEED_WRAP`
+    - If the handshake status reports security is on (and there is no more
+      data to send in a `wrap` call!), we've just finished handshaking and
+      have sent the last commit message, so change status to `FINISHED`.
+    - If we have no more data to read from the client (and no outbound data
+      either), we assume we need more data from the client so we change the
+      status to `NEED_UNWRAP`.
+    - Otherwise, we keep the status the same. We increment a unknown state
+      counter -- this flips the value from its previous value to the opposite
+      of what it was (e.g., `NEED_WRAP` to `NEED_UNWRAP`). This helps to
+      ensure we don't ever get stuck.
+
+This heuristic is wrapped in `updateHandshakeState`, which is called from
+`wrap`, `unwrap`, and `getHandshakeStatus`; the unknown state counter gets
+incremented in all three places.
+
+
+### SSL Alert Handling
+
+NSS exposes access to protocol-level alerts via the two callback functions,
+`SSL_AlertReceivedCallback` (for when an alert was received from the remote
+peer) and `SSL_AlertSentCallback` (for when NSS sends an alert to the
+remote peer).  When attempting non-blocking IO, there's a weird quirk about
+how these callbacks function: the only execute when a NSPR `PR_Read(...)` or
+`PR_Write(...)` call executes on the SSL `PRFileDesc`. In particular, it
+isn't sufficient to simply call `SSL_ForceHandshake(...)`! The callbacks
+strictly occur when the alerts are on the wire, and don't execute for future
+alerts we're expecting to send. This convolutes our exception handling
+slightly.
+
+JSS takes the following approach to handling SSL Alerts and exposing them to
+callers via exceptions:
+
+ 1. `SSLFDProxy` contains separate queues of inbound and outbound `SSLAlert`s.
+ 2. `checkSSLAlert` verifies whether or not a fatal alert was received and/or
+    sent.
+ 3. The first such fatal alert that was received or sent is converted into an
+    `SSLException` instance; this is saved to the `JSSEngine`'s state and
+    returned.
+ 4. `updateHandshakeState()` checks to see if a SSL alert occurred prior to
+    calling SSL_ForceHandshake(...)` -- if so, it does no work.
+ 5. `wrap` and `unwrap` also check SSL alerts after all work is done. This
+    ensures we always trigger a call into NSPR's `PR_Write(...)` or
+    `PR_Read(...)`.
+ 6. When an alert occurs in `unwrap` (especially during a handshake), we
+    make sure to set the state to `wrap` so our response (either the alert
+    itself or our confirmation of it) is recorded.
+ 7. Lastly, we make sure to throw an exception only once and not multiple
+    times.
+
+### Future Improvements
+
+Currently we've only implemented the `JSSEngineReferenceImpl`; the optimized
+implementation still needs to be written. In particular, the performance of
+multiple JNI calls per step (`wrap` or `unwrap`) needs to be evaluated.
+
+We only have a single `JSSKeyManager` that doesn't understand SNI; we should
+make sure we support SNI from a client and server perspective.
+
+We need to make sure we can interact with external (non-JSS)
+[`X509TrustManager`s](javax.x09trustmanager) and use them to validate the
+peer's certificates.
+
+[javax.ssl-context]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLContext.html "javax.net.ssl.SSLContext"
+[javax.ssl-engine]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLEngine.html "javax.net.ssl.SSLEngine"
+[javax.x509trustmanager]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509TrustManager.html "javax.net.ssl.X509TrustManager"
+[jss.ssl-socket]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/ssl/SSLSocket.html "org.mozilla.jss.ssl.SSLSocket"
+[rfc.tls-1.2]: https://tools.ietf.org/html/rfc5246 "TLSv1.2 RFC 5246"
+[rfc.tls-1.3]: https://tools.ietf.org/html/rfc8446 "TLSv1.3 RFC 8446"
