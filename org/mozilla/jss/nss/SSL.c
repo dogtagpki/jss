@@ -69,7 +69,7 @@ jobject JSS_NewSSLChannelInfo(JNIEnv *env, jint protocolVersion,
     jboolean earlyDataAccepted, jint keaType, jint keaGroup, jint symCipher,
     jint macAlgorithm, jint authType, jint signatureScheme,
     jboolean haveNSS334, jint originalKeaGroup, jboolean resumed,
-    jboolean peerDelegCred)
+    jboolean haveNSS345, jboolean peerDelegCred)
 {
     jclass resultClass;
     jmethodID constructor;
@@ -95,7 +95,7 @@ jobject JSS_NewSSLChannelInfo(JNIEnv *env, jint protocolVersion,
         expirationTime, sessionID, compressionMethod,
         extendedMasterSecretUsed, earlyDataAccepted, keaType, keaGroup,
         symCipher, macAlgorithm, authType, signatureScheme, haveNSS334,
-        originalKeaGroup, resumed, peerDelegCred);
+        originalKeaGroup, resumed, haveNSS345, peerDelegCred);
 
 finish:
     return result;
@@ -465,6 +465,7 @@ Java_org_mozilla_jss_nss_SSL_GetChannelInfo(JNIEnv *env, jclass clazz,
     jboolean haveNSS334 = JNI_FALSE;
     jint oKG = 0;
     jboolean r = JNI_FALSE;
+    jboolean haveNSS345 = JNI_FALSE;
     jboolean pDC = JNI_FALSE;
 
     PR_ASSERT(env != NULL && fd != NULL);
@@ -508,12 +509,18 @@ Java_org_mozilla_jss_nss_SSL_GetChannelInfo(JNIEnv *env, jclass clazz,
     haveNSS334 = JNI_TRUE;
     oKG = info.originalKeaGroup;
     r = info.resumed;
+#endif
+
+#ifdef HAVE_NSS_CHANNEL_INFO_PEER_DELEG_CRED
+    /* The following fields were added in NSS v3.45 and are detected
+     * via feature detection in CMake. */
+    haveNSS345 = JNI_TRUE;
     pDC = info.peerDelegCred;
 #endif
 
     return JSS_NewSSLChannelInfo(env, pV, cS, aKB, kKB, cT, lAT, eT, sID, cM,
                                  eMSU, eDA, kT, kG, sC, mA, aT, sS,
-                                 haveNSS334, oKG, r, pDC);
+                                 haveNSS334, oKG, r, haveNSS345, pDC);
 }
 
 JNIEXPORT jobject JNICALL
