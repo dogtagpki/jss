@@ -368,7 +368,56 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKO_PROFILE = 0x00000009L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKO_VENDOR_DEFINED = 0x80000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKP_INVALID_ID = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKP_BASELINE_PROVIDER = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKP_EXTENDED_PROVIDER = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKP_AUTHENTICATION_TOKEN = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKP_PUBLIC_CERTIFICATES_TOKEN = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKP_VENDOR_DEFINED = 0x80000000L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -1237,6 +1286,13 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKA_ALLOWED_MECHANISMS = 0x40000600L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_PROFILE_ID = 0x00000601L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -4548,6 +4604,13 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKM_INVALID_MECHANISM = 0xFFFFFFFFL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKT_INVALID_TYPE = 0xFFFFFFFFL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
