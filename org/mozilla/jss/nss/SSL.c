@@ -554,14 +554,14 @@ Java_org_mozilla_jss_nss_SSL_GetPreliminaryChannelInfo(JNIEnv *env,
 
     mEDS = info.maxEarlyDataSize;
 
-#if HAVE_NSS_PRELIMINARY_CHANNEL_INFO_ZERO_RTT_CIPHER_SUITE
+#ifdef HAVE_NSS_PRELIMINARY_CHANNEL_INFO_ZERO_RTT_CIPHER_SUITE
     /* The following fields were added in NSS v3.43 and are detected
      * via feature detection in CMake. */
     haveNSS343 = JNI_TRUE;
     zRCS = info.zeroRttCipherSuite;
 #endif
 
-#if HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED
+#ifdef HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED
     /* The following fields were added in NSS v3.48 and are detected
      * via feature detection in CMake. */
     haveNSS348 = JNI_TRUE;
