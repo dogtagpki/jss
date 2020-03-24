@@ -1,0 +1,34 @@
+FROM centos:7
+
+# Install generic dependencies to build jss
+RUN true \
+        && yum update -y \
+        && yum install -y epel-release yum-utils \
+        && yum install -y gcc make cmake3 \
+        && yum-builddep -y jss \
+        && mkdir -p /home/sandbox \
+        && yum clean -y all \
+        && rm -rf /usr/share/doc /usr/share/doc-base \
+                  /usr/share/man /usr/share/locale /usr/share/zoneinfo \
+        && true
+
+# Link in the current version of jss from the git repository
+WORKDIR /home/sandbox
+COPY . /home/sandbox/jss
+
+# Install dependencies from the spec file in case they've changed
+# since the last release on this platform.
+RUN true \
+        && yum-builddep -y /home/sandbox/jss/jss.spec \
+        && true
+
+# Perform the actual build from source, not from RPM
+WORKDIR /home/sandbox/jss
+CMD true \
+        && rm -rf build \
+        && mkdir build \
+        && cd build \
+        && cmake3 .. \
+        && make all \
+        && ctest --output-on-failure \
+        && true
