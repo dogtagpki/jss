@@ -402,6 +402,7 @@ macro(jss_config_symbols)
         message(WARNING "Your NSS version is broken: between NSS v3.47 and v3.50, the values of CKM_AES_CMAC and CKM_AES_CMAC_GENERAL were swapped. Disabling CMAC and KBKDF support.")
     endif()
 
+    # Added in NSS v3.43
     check_struct_has_member(
         SSLCipherSuiteInfo
         kdfHash
@@ -409,6 +410,7 @@ macro(jss_config_symbols)
         HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH
     )
 
+    # Added in NSS v3.34
     check_struct_has_member(
         SSLChannelInfo
         originalKeaGroup
@@ -416,6 +418,15 @@ macro(jss_config_symbols)
         HAVE_NSS_CHANNEL_INFO_ORIGINAL_KEA_GROUP
     )
 
+    # Added in NSS v3.45
+    check_struct_has_member(
+        SSLChannelInfo
+        peerDelegCred
+        ssl.h
+        HAVE_NSS_CHANNEL_INFO_PEER_DELEG_CRED
+    )
+
+    # Added in NSS v3.43
     check_struct_has_member(
         SSLPreliminaryChannelInfo
         zeroRttCipherSuite
@@ -423,6 +434,7 @@ macro(jss_config_symbols)
         HAVE_NSS_PRELIMINARY_CHANNEL_INFO_ZERO_RTT_CIPHER_SUITE
     )
 
+    # Added in NSS v3.48
     check_struct_has_member(
         SSLPreliminaryChannelInfo
         peerDelegCred

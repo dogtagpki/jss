@@ -435,7 +435,7 @@ PR_BEGIN_EXTERN_C
  * SSLChannelInfo classes
  */
 #define SSL_CHANNEL_INFO_CLASS_NAME "org/mozilla/jss/nss/SSLChannelInfo"
-#define SSL_CHANNEL_INFO_CONSTRUCTOR_SIG "(IIIIJJJ[BIZZIIIIIIZIZZ)V"
+#define SSL_CHANNEL_INFO_CONSTRUCTOR_SIG "(IIIIJJJ[BIZZIIIIIIZIZZZ)V"
 
 /*
  * SSLPreliminaryChannelInfo classes

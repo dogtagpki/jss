@@ -174,11 +174,10 @@ public class SSLChannelInfo {
     public SSLSignatureScheme signatureScheme;
 
     /**
-     * This field controls whether or not we have the following three fields:
+     * This field controls whether or not we have the following two fields:
      *
-     *  - originalKeaGroup,
-     *  - resumed, and
-     *  - peerDelegCred.
+     *  - originalKeaGroup, and
+     *  - resumed.
      *
      * When this field is true, the values of these fields can be trusted.
      * Otherwise, their values should be ignored.
@@ -210,9 +209,21 @@ public class SSLChannelInfo {
     public boolean resumed;
 
     /**
+     * This field controls whether or not we have the peerDelegCred field.
+     *
+     * When this field is true, the values of these fields can be trusted.
+     * Otherwise, their values should be ignored.
+     *
+     * The corresponding fields are present when the NSS version used to
+     * compile JSS and the runtime version of NSS match, and both have these
+     * fields.
+     */
+    public boolean haveNSS345;
+
+    /**
      * Whether or not the peer used a delegated credential for authentication.
      *
-     * This field was added in NSS 3.34.
+     * This field was added in NSS 3.45.
      */
     public boolean peerDelegCred;
 
@@ -227,7 +238,8 @@ public class SSLChannelInfo {
         int compressionMethod, boolean extendedMasterSecretUsed,
         boolean earlyDataAccepted, int keaType, int keaGroup, int symCipher,
         int macAlgorithm, int authType, int signatureScheme,
-        boolean haveNSS334, int originalKeaGroup, boolean resumed, boolean peerDelegCred)
+        boolean haveNSS334, int originalKeaGroup, boolean resumed,
+        boolean haveNSS345, boolean peerDelegCred)
     {
         try {
             this.protocolVersion = SSLVersion.valueOf(protocolVersion);
@@ -259,10 +271,16 @@ public class SSLChannelInfo {
 
         this.haveNSS334 = haveNSS334;
 
-        this.originalKeaGroup = SSLNamedGroup.valueOf(originalKeaGroup);
-        this.resumed = resumed;
+        if (haveNSS334) {
+            this.originalKeaGroup = SSLNamedGroup.valueOf(originalKeaGroup);
+            this.resumed = resumed;
+        }
 
-        this.peerDelegCred = peerDelegCred;
+        this.haveNSS345 = haveNSS345;
+
+        if (haveNSS345) {
+            this.peerDelegCred = peerDelegCred;
+        }
     }
 
     /**
