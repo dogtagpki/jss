@@ -3,6 +3,7 @@ package org.mozilla.jss.nss;
 import java.lang.StringBuilder;
 
 import org.mozilla.jss.ssl.*;
+import org.mozilla.jss.util.VersionedFeature;
 
 /**
  * Class representing the SSLPreliminaryChannelInfo struct from NSS's sslt.h.
@@ -65,21 +66,6 @@ public class SSLPreliminaryChannelInfo {
     public long maxEarlyDataSize;
 
     /**
-     * This field controls whether or not we have the zeroRttCipherSuite
-     * field.
-     *
-     * When this field is true, zeroRttCipherSuite could be set with a value.
-     * Otherwise, its value should be ignored. Check the corresponding field
-     * function, have0RTTCipherSuite(), to see whether the handshake has
-     * progressed far enough for this field to have a value.
-     *
-     * Note that the corresponding field is present when the version NSS used
-     * to compile JSS and the runtime version of NSS match, and both have this
-     * field.
-     */
-    public boolean haveNSS343;
-
-    /**
      * Which cipher suite is in use for 0RTT TLS 1.3 connections.
      *
      * This field was added in NSS 3.43.
@@ -91,25 +77,7 @@ public class SSLPreliminaryChannelInfo {
      * value if 0-RTT is accepted by the server.  The server only sets this
      * after accepting 0-RTT, so this will contain the same value.
      */
-    public SSLCipher zeroRttCipherSuite;
-
-    /**
-     * This field controls whether or not we have the following three fields:
-     *
-     *  - peerDelegCred,
-     *  - authKeyBits, and
-     *  - signatureScheme.
-     *
-     * When this field is true, these fields could be set with a value.
-     * Otherwise, their values should be ignored. Check the corresponding
-     * field function, havePeerAuth(), to see whether the handshake has
-     * progressed far enough for this field to have a value.
-     *
-     * Note that the corresponding fields are present when the version NSS used
-     * to compile JSS and the runtime version of NSS match, and both have these
-     * fields.
-     */
-    public boolean haveNSS348;
+    public VersionedFeature<SSLCipher> zeroRttCipherSuite;
 
     /**
      * Whether or not the peer has offered a delegated field.
@@ -124,7 +92,7 @@ public class SSLPreliminaryChannelInfo {
      * valid only after the Certificate message is handled. This can be determined
      * by checking the valuesSet field against |ssl_preinfo_peer_auth|.
      */
-    public boolean peerDelegCred;
+    public VersionedFeature<Boolean> peerDelegCred;
 
     /**
      * How many bits are in the authentication key.
@@ -133,7 +101,7 @@ public class SSLPreliminaryChannelInfo {
      *
      * See also: peerDelegCred and SSLChannelInfo's authKeyBits field.
      */
-    public int authKeyBits;
+    public VersionedFeature<Integer> authKeyBits;
 
     /**
      * Signature scheme used.
@@ -142,7 +110,7 @@ public class SSLPreliminaryChannelInfo {
      *
      * See also: peerDelegCred and SSLChannelInfo's signatureScheme field.
      */
-    public SSLSignatureScheme signatureScheme;
+    public VersionedFeature<SSLSignatureScheme> signatureScheme;
 
     /**
      * Constructor used by SSL.GetPreliminaryChannelInfo(...).
@@ -171,18 +139,18 @@ public class SSLPreliminaryChannelInfo {
         this.canSendEarlyData = canSendEarlyData;
         this.maxEarlyDataSize = maxEarlyDataSize;
 
-        this.haveNSS343 = haveNSS343;
-
-        if (have0RTTCipherSuite()) {
-            this.zeroRttCipherSuite = SSLCipher.valueOf(zeroRttCipherSuite);
+        this.zeroRttCipherSuite = new VersionedFeature<SSLCipher>("3.43");
+        if (haveNSS343) {
+            this.zeroRttCipherSuite.setValue(SSLCipher.valueOf(zeroRttCipherSuite));
         }
 
-        this.haveNSS348 = haveNSS348;
-
-        if (havePeerAuth()) {
-            this.peerDelegCred = peerDelegCred;
-            this.authKeyBits = authKeyBits;
-            this.signatureScheme = SSLSignatureScheme.valueOf(signatureScheme);
+        this.peerDelegCred = new VersionedFeature<Boolean>("3.48");
+        this.authKeyBits = new VersionedFeature<Integer>("3.48");
+        this.signatureScheme = new VersionedFeature<SSLSignatureScheme>("3.48");
+        if (haveNSS348) {
+            this.peerDelegCred.setValue(peerDelegCred);
+            this.authKeyBits.setValue(authKeyBits);
+            this.signatureScheme.setValue(SSLSignatureScheme.valueOf(signatureScheme));
         }
     }
 
@@ -224,7 +192,7 @@ public class SSLPreliminaryChannelInfo {
      */
     public boolean have0RTTCipherSuite() {
         long ssl_preinfo_0rtt_cipher_suite = 1 << 2;
-        return haveField(ssl_preinfo_0rtt_cipher_suite) && haveNSS343;
+        return haveField(ssl_preinfo_0rtt_cipher_suite) && zeroRttCipherSuite.haveFeature();
     }
 
     /**
@@ -236,7 +204,7 @@ public class SSLPreliminaryChannelInfo {
      */
     public boolean havePeerAuth() {
         long ssl_preinfo_peer_auth = 1 << 3;
-        return haveField(ssl_preinfo_peer_auth) && haveNSS348;
+        return haveField(ssl_preinfo_peer_auth) && peerDelegCred.haveFeature();
     }
 
     /**

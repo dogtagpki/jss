@@ -2,8 +2,9 @@ package org.mozilla.jss.nss;
 
 import java.lang.StringBuilder;
 
-import org.mozilla.jss.ssl.*;
 import org.mozilla.jss.netscape.security.util.Utils;
+import org.mozilla.jss.ssl.*;
+import org.mozilla.jss.util.VersionedFeature;
 
 /**
  * Class representing the SSLChannelInfo struct from NSS's sslt.h.
@@ -174,22 +175,6 @@ public class SSLChannelInfo {
     public SSLSignatureScheme signatureScheme;
 
     /**
-     * This field controls whether or not we have the following three fields:
-     *
-     *  - originalKeaGroup,
-     *  - resumed, and
-     *  - peerDelegCred.
-     *
-     * When this field is true, the values of these fields can be trusted.
-     * Otherwise, their values should be ignored.
-     *
-     * The corresponding fields are present when the NSS version used to
-     * compile JSS and the runtime version of NSS match, and both have these
-     * fields.
-     */
-    public boolean haveNSS334;
-
-    /**
      * This field holds the key exchange algorithm group during the initial
      * handshake.
      *
@@ -200,21 +185,21 @@ public class SSLChannelInfo {
      * When the session was resumed this holds the key exchange group of the
      * original handshake.
      */
-    public SSLNamedGroup originalKeaGroup;
+    public VersionedFeature<SSLNamedGroup> originalKeaGroup;
 
     /**
      * Whether or not this session was resumed.
      *
      * This field was added in NSS 3.34.
      */
-    public boolean resumed;
+    public VersionedFeature<Boolean> resumed;
 
     /**
      * Whether or not the peer used a delegated credential for authentication.
      *
      * This field was added in NSS 3.34.
      */
-    public boolean peerDelegCred;
+    public VersionedFeature<Boolean> peerDelegCred;
 
     /**
      * Constructor used by SSL.GetChannelInfo(...).
@@ -257,12 +242,15 @@ public class SSLChannelInfo {
         this.authType = SSLAuthType.valueOf(authType);
         this.signatureScheme = SSLSignatureScheme.valueOf(signatureScheme);
 
-        this.haveNSS334 = haveNSS334;
+        this.originalKeaGroup = new VersionedFeature<SSLNamedGroup>("3.34");
+        this.resumed = new VersionedFeature<Boolean>("3.34");
+        this.peerDelegCred = new VersionedFeature<Boolean>("3.34");
 
-        this.originalKeaGroup = SSLNamedGroup.valueOf(originalKeaGroup);
-        this.resumed = resumed;
-
-        this.peerDelegCred = peerDelegCred;
+        if (haveNSS334) {
+            this.originalKeaGroup.setValue(SSLNamedGroup.valueOf(originalKeaGroup));
+            this.resumed.setValue(resumed);
+            this.peerDelegCred.setValue(peerDelegCred);
+        }
     }
 
     /**
@@ -287,9 +275,13 @@ public class SSLChannelInfo {
         result.append("\n- macAlgorithm: " + macAlgorithm);
         result.append("\n- authType: " + authType);
         result.append("\n- signatureScheme: " + signatureScheme);
-        if (haveNSS334) {
+        if (originalKeaGroup.haveFeature()) {
             result.append("\n- originalKeaGroup: " + originalKeaGroup);
+        }
+        if (resumed.haveFeature()) {
             result.append("\n- resumed: " + resumed);
+        }
+        if (peerDelegCred.haveFeature()) {
             result.append("\n- peerDelegCred: " + peerDelegCred);
         }
 
