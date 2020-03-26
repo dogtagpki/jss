@@ -2,14 +2,15 @@ package org.mozilla.jss.nss;
 
 import java.lang.StringBuilder;
 
+import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.ssl.*;
 import org.mozilla.jss.netscape.security.util.Utils;
 
 /**
  * Class representing the SSLChannelInfo struct from NSS's sslt.h.
  *
- * This class is a data class; it contains public fields rather than
- * getters/setters. It usually should be constructed via a call to
+ * This class is a data class; it contains public getters and no
+ * setters. It usually should be constructed via a call to
  * org.mozilla.jss.nss.SSL.GetChannelInfo(SSLFDProxy inst) rather than
  * directly constructing an instance.
  *
@@ -18,20 +19,20 @@ import org.mozilla.jss.netscape.security.util.Utils;
  * results. Use SSL.GetPreliminaryChannelInfo instead and see the
  * corresponding class, SSLPreliminaryChannelInfo.
  *
- * Field names match that in the NSS equivalent struct. The only omitted field
- * is sessionIDLength, since sessionID.length suffices and Java byte arrays
- * are of fixed, known length.
+ * Field and getter names match that in the NSS equivalent struct. The only
+ * omitted field is sessionIDLength, since sessionID.length suffices and Java
+ * byte arrays are of fixed, known length.
  */
 public class SSLChannelInfo {
     /**
      * Which protocol version is used by this SSL socket.
      */
-    public SSLVersion protocolVersion;
+    private SSLVersion protocolVersion;
 
     /**
      * Which cipher suite is used by this SSL socket.
      */
-    public SSLCipher cipherSuite;
+    private SSLCipher cipherSuite;
 
     /**
      * How many bits are in the authentication key.
@@ -46,7 +47,7 @@ public class SSLChannelInfo {
      * certificate.  If delegated credentials are used (i.e., peerDelegCred is
      * PR_TRUE), then this is the strength of the delegated credential key.
      */
-    public int authKeyBits;
+    private int authKeyBits;
 
     /**
      * How many bits are in the key exchange key.
@@ -55,36 +56,36 @@ public class SSLChannelInfo {
      *
      * key exchange algorithm info
      */
-    public int keaKeyBits;
+    private int keaKeyBits;
 
     /**
      * When the session was created, in seconds since Jan 1, 1970.
      */
-    public long creationTime;
+    private long creationTime;
 
     /**
      * When the session was last accessed, in seconds since Jan 1, 1970.
      */
-    public long lastAccessTime;
+    private long lastAccessTime;
 
     /**
      * When the session expires, in seconds since Jan 1, 1970.
      */
-    public long expirationTime;
+    private long expirationTime;
 
     /**
      * Identifier for this session.
      *
      * Up to 32 bytes.
      */
-    public byte[] sessionID;
+    private byte[] sessionID;
 
     /**
      * Compression method used in this session.
      *
      * This field was added in NSS 3.12.5.
      */
-    public SSLCompressionMethod compressionMethod;
+    private SSLCompressionMethod compressionMethod;
 
     /**
      * Whether or not an extended master secret was used for TLS versions less
@@ -92,7 +93,7 @@ public class SSLChannelInfo {
      *
      * This field was added in NSS 3.21.
      */
-    public boolean extendedMasterSecretUsed;
+    private boolean extendedMasterSecretUsed;
 
     /**
      * Whether or not early data was accepted.
@@ -105,7 +106,7 @@ public class SSLChannelInfo {
      * 1.3, and indicates on the client side that the server accepted early
      * (0-RTT) data.
      */
-    public boolean earlyDataAccepted;
+    private boolean earlyDataAccepted;
 
     /**
      * Key exchange algorithm info.
@@ -114,7 +115,7 @@ public class SSLChannelInfo {
      *
      * This field was added in NSS 3.28.
      */
-    public SSLKEAType keaType;
+    private SSLKEAType keaType;
 
     /**
      * When keaType is an EC-based cipher, name of the group used in this
@@ -124,7 +125,7 @@ public class SSLChannelInfo {
      *
      * This field was added in NSS 3.28.
      */
-    public SSLNamedGroup keaGroup;
+    private SSLNamedGroup keaGroup;
 
     /**
      * Symmetric cipher algorithm info.
@@ -133,7 +134,7 @@ public class SSLChannelInfo {
      *
      * This field was added in NSS 3.28.
      */
-    public SSLCipherAlgorithm symCipher;
+    private SSLCipherAlgorithm symCipher;
 
     /**
      * MAC algorithm info.
@@ -149,7 +150,7 @@ public class SSLChannelInfo {
      * is "AEAD", macAlgorithm is ssl_mac_aead, and macBits is the length in
      * bits of the authentication tag.
      */
-    public SSLMACAlgorithm macAlgorithm;
+    private SSLMACAlgorithm macAlgorithm;
 
     /**
      * Authentication type for the cipher suite.
@@ -164,14 +165,14 @@ public class SSLChannelInfo {
      * This reports the correct authentication type for the cipher suite, use
      * this instead of |authAlgorithm|.
      */
-    public SSLAuthType authType;
+    private SSLAuthType authType;
 
     /**
      * Signature scheme used.
      *
      * This field was added in NSS 3.28.
      */
-    public SSLSignatureScheme signatureScheme;
+    private SSLSignatureScheme signatureScheme;
 
     /**
      * This field controls whether or not we have the following two fields:
@@ -186,7 +187,7 @@ public class SSLChannelInfo {
      * compile JSS and the runtime version of NSS match, and both have these
      * fields.
      */
-    public boolean haveNSS334;
+    private boolean haveNSS334;
 
     /**
      * This field holds the key exchange algorithm group during the initial
@@ -199,14 +200,14 @@ public class SSLChannelInfo {
      * When the session was resumed this holds the key exchange group of the
      * original handshake.
      */
-    public SSLNamedGroup originalKeaGroup;
+    private SSLNamedGroup originalKeaGroup;
 
     /**
      * Whether or not this session was resumed.
      *
      * This field was added in NSS 3.34.
      */
-    public boolean resumed;
+    private boolean resumed;
 
     /**
      * This field controls whether or not we have the peerDelegCred field.
@@ -218,14 +219,14 @@ public class SSLChannelInfo {
      * compile JSS and the runtime version of NSS match, and both have these
      * fields.
      */
-    public boolean haveNSS345;
+    private boolean haveNSS345;
 
     /**
      * Whether or not the peer used a delegated credential for authentication.
      *
      * This field was added in NSS 3.45.
      */
-    public boolean peerDelegCred;
+    private boolean peerDelegCred;
 
     /**
      * Constructor used by SSL.GetChannelInfo(...).
@@ -281,6 +282,182 @@ public class SSLChannelInfo {
         if (haveNSS345) {
             this.peerDelegCred = peerDelegCred;
         }
+    }
+
+    /**
+     * Gets the value of protocolVersion.
+     *
+     * See also: protocolVersion
+     */
+    public SSLVersion getProtocolVersion() { return protocolVersion; }
+
+    /**
+     * Gets the value of cipherSuite.
+     *
+     * See also: cipherSuite.
+     */
+    public SSLCipher getCipherSuite() { return cipherSuite; }
+
+    /**
+     * Gets the value of authKeyBits.
+     *
+     * See also: authKeyBits.
+     */
+    public int getAuthKeyBits() { return authKeyBits; }
+
+    /**
+     * Gets the value of keaKeyBits.
+     *
+     * See also: keaKeyBits.
+     */
+    public int getKeaKeyBits() { return keaKeyBits; }
+
+    /**
+     * Gets the value of creationTime.
+     *
+     * See also: creationTime.
+     */
+    public long getCreationTime() { return creationTime; }
+
+    /**
+     * Gets the value of lastAccessTime.
+     *
+     * See also: lastAccessTime.
+     */
+    public long getLastAccessTime() { return lastAccessTime; }
+
+    /**
+     * Gets the value of expirationTime.
+     *
+     * See also: expirationTime.
+     */
+    public long getExpirationTime() { return expirationTime; }
+
+    /**
+     * Gets the value of sessionID.
+     *
+     * See also: sessionID.
+     */
+    public byte[] getSessionID() { return sessionID; }
+
+    /**
+     * Gets the value of compressionMethod.
+     *
+     * See also: compressionMethod.
+     */
+    public SSLCompressionMethod getCompressionMethod() { return compressionMethod; }
+
+    /**
+     * Gets the value of extendedMasterSecretUsed.
+     *
+     * See also: extendedMasterSecretUsed.
+     */
+    public boolean getExtendedMasterSecretUsed() { return extendedMasterSecretUsed; }
+
+    /**
+     * Gets the value of earlyDataAccepted.
+     *
+     * See also: earlyDataAccepted.
+     */
+    public boolean getEarlyDataAccepted() { return earlyDataAccepted; }
+
+    /**
+     * Gets the value of keaType.
+     *
+     * See also: keaType.
+     */
+    public SSLKEAType getKeaType() { return keaType; }
+
+    /**
+     * Gets the value of keaGroup.
+     *
+     * See also: keaGroup.
+     */
+    public SSLNamedGroup getKeaGroup() { return keaGroup; }
+
+    /**
+     * Gets the value of symCipher.
+     *
+     * See also: symCipher.
+     */
+    public SSLCipherAlgorithm getSymCipher() { return symCipher; }
+
+    /**
+     * Gets the value of macAlgorithm.
+     *
+     * See also: macAlgorithm.
+     */
+    public SSLMACAlgorithm getMacAlgorithm() { return macAlgorithm; }
+
+    /**
+     * Gets the value of authType.
+     *
+     * See also: authType.
+     */
+    public SSLAuthType getAuthType() { return authType; }
+
+    /**
+     * Gets the value of signatureScheme.
+     *
+     * See also: signatureScheme.
+     */
+    public SSLSignatureScheme getSignatureScheme() { return signatureScheme; }
+
+    /**
+     * Gets the value of originalKeaGroup; throws an exception when the
+     * field isn't available from NSS.
+     *
+     * See also: originalKeaGroup.
+     */
+    public SSLNamedGroup getOriginalKeaGroup() throws ObjectNotFoundException {
+        if (!haveNSS334) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLChannelInfo. Either backport ";
+            msg += "this feature or upgrade to at least NSS v3.34. Check ";
+            msg += "the value of HAVE_NSS_CHANNEL_INFO_ORIGINAL_KEA_GROUP ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return originalKeaGroup;
+    }
+
+    /**
+     * Gets the value of resumed; throws an exception when the field isn't
+     * available from NSS.
+     *
+     * See also: resumed.
+     */
+    public boolean getResumed() throws ObjectNotFoundException {
+        if (!haveNSS334) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLChannelInfo. Either backport ";
+            msg += "this feature or upgrade to at least NSS v3.34. Check ";
+            msg += "the value of HAVE_NSS_CHANNEL_INFO_ORIGINAL_KEA_GROUP ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return resumed;
+    }
+
+    /**
+     * Gets the value of peerDelegCred; throws an exception when the field
+     * isn't available from NSS.
+     *
+     * See also: peerDelegCred.
+     */
+    public boolean getPeerDelegCred() throws ObjectNotFoundException {
+        if (!haveNSS345) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLChannelInfo. Either backport ";
+            msg += "this feature or upgrade to at least NSS v3.45. Check ";
+            msg += "the value of HAVE_NSS_CHANNEL_INFO_PEER_DELEG_CRED ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return peerDelegCred;
     }
 
     /**
