@@ -34,6 +34,8 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 BuildRequires:  git
 BuildRequires:  make
 BuildRequires:  cmake
+BuildRequires:  zip
+BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
 BuildRequires:  nspr-devel >= 4.13.1
