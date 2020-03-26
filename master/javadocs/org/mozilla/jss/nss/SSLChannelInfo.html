@@ -194,82 +194,87 @@ extends java.lang.Object</pre>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#haveNSS334">haveNSS334</a></span></code>
-<div class="block">This field controls whether or not we have the following three fields:
+<div class="block">This field controls whether or not we have the following two fields:
 
-  - originalKeaGroup,
-  - resumed, and
-  - peerDelegCred.</div>
+  - originalKeaGroup, and
+  - resumed.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#haveNSS345">haveNSS345</a></span></code>
+<div class="block">This field controls whether or not we have the peerDelegCred field.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#keaGroup">keaGroup</a></span></code>
 <div class="block">When keaType is an EC-based cipher, name of the group used in this
  cipher.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#keaKeyBits">keaKeyBits</a></span></code>
 <div class="block">How many bits are in the key exchange key.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLKEAType.html" title="enum in org.mozilla.jss.ssl">SSLKEAType</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#keaType">keaType</a></span></code>
 <div class="block">Key exchange algorithm info.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#lastAccessTime">lastAccessTime</a></span></code>
 <div class="block">When the session was last accessed, in seconds since Jan 1, 1970.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLMACAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLMACAlgorithm</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#macAlgorithm">macAlgorithm</a></span></code>
 <div class="block">MAC algorithm info.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#originalKeaGroup">originalKeaGroup</a></span></code>
 <div class="block">This field holds the key exchange algorithm group during the initial
  handshake.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#peerDelegCred">peerDelegCred</a></span></code>
 <div class="block">Whether or not the peer used a delegated credential for authentication.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#protocolVersion">protocolVersion</a></span></code>
 <div class="block">Which protocol version is used by this SSL socket.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#resumed">resumed</a></span></code>
 <div class="block">Whether or not this session was resumed.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#sessionID">sessionID</a></span></code>
 <div class="block">Identifier for this session.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#signatureScheme">signatureScheme</a></span></code>
 <div class="block">Signature scheme used.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipherAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLCipherAlgorithm</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#symCipher">symCipher</a></span></code>
 <div class="block">Symmetric cipher algorithm info.</div>
@@ -290,7 +295,7 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#SSLChannelInfo-int-int-int-int-long-long-long-byte:A-int-boolean-boolean-int-int-int-int-int-int-boolean-int-boolean-boolean-">SSLChannelInfo</a></span>(int&nbsp;protocolVersion,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#SSLChannelInfo-int-int-int-int-long-long-long-byte:A-int-boolean-boolean-int-int-int-int-int-int-boolean-int-boolean-boolean-boolean-">SSLChannelInfo</a></span>(int&nbsp;protocolVersion,
               int&nbsp;cipherSuite,
               int&nbsp;authKeyBits,
               int&nbsp;keaKeyBits,
@@ -310,6 +315,7 @@ extends java.lang.Object</pre>
               boolean&nbsp;haveNSS334,
               int&nbsp;originalKeaGroup,
               boolean&nbsp;resumed,
+              boolean&nbsp;haveNSS345,
               boolean&nbsp;peerDelegCred)</code>
 <div class="block">Constructor used by SSL.GetChannelInfo(...).</div>
 </td>
@@ -599,11 +605,10 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>haveNSS334</h4>
 <pre>public&nbsp;boolean haveNSS334</pre>
-<div class="block">This field controls whether or not we have the following three fields:
+<div class="block">This field controls whether or not we have the following two fields:
 
-  - originalKeaGroup,
-  - resumed, and
-  - peerDelegCred.
+  - originalKeaGroup, and
+  - resumed.
 
  When this field is true, the values of these fields can be trusted.
  Otherwise, their values should be ignored.
@@ -643,6 +648,23 @@ extends java.lang.Object</pre>
  This field was added in NSS 3.34.</div>
 </li>
 </ul>
+<a name="haveNSS345">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>haveNSS345</h4>
+<pre>public&nbsp;boolean haveNSS345</pre>
+<div class="block">This field controls whether or not we have the peerDelegCred field.
+
+ When this field is true, the values of these fields can be trusted.
+ Otherwise, their values should be ignored.
+
+ The corresponding fields are present when the NSS version used to
+ compile JSS and the runtime version of NSS match, and both have these
+ fields.</div>
+</li>
+</ul>
 <a name="peerDelegCred">
 <!--   -->
 </a>
@@ -652,7 +674,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;boolean peerDelegCred</pre>
 <div class="block">Whether or not the peer used a delegated credential for authentication.
 
- This field was added in NSS 3.34.</div>
+ This field was added in NSS 3.45.</div>
 </li>
 </ul>
 </li>
@@ -663,7 +685,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SSLChannelInfo-int-int-int-int-long-long-long-byte:A-int-boolean-boolean-int-int-int-int-int-int-boolean-int-boolean-boolean-">
+<a name="SSLChannelInfo-int-int-int-int-long-long-long-byte:A-int-boolean-boolean-int-int-int-int-int-int-boolean-int-boolean-boolean-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -689,6 +711,7 @@ extends java.lang.Object</pre>
                       boolean&nbsp;haveNSS334,
                       int&nbsp;originalKeaGroup,
                       boolean&nbsp;resumed,
+                      boolean&nbsp;haveNSS345,
                       boolean&nbsp;peerDelegCred)</pre>
 <div class="block">Constructor used by SSL.GetChannelInfo(...).
 
