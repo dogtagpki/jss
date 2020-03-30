@@ -2,13 +2,14 @@ package org.mozilla.jss.nss;
 
 import java.lang.StringBuilder;
 
+import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.ssl.*;
 
 /**
  * Class representing the SSLPreliminaryChannelInfo struct from NSS's sslt.h.
  *
- * This class is a data class; it contains public fields rather than
- * getters/setters. It usually should be constructed via a call to
+ * This class is a data class; it contains getters and no setters. It usually
+ * should be constructed via a call to
  * org.mozilla.jss.nss.SSL.GetPreliminaryChannelInfo(SSLFDProxy inst) rather
  * than directly constructing an instance.
  *
@@ -17,8 +18,8 @@ import org.mozilla.jss.ssl.*;
  * known, support will be indicated via the haveFIELD functions. If the value
  * of this field isn't yet known, the function will return false.
  *
- * Field names match that in the NSS equivalent struct. No fields have been
- * omitted.
+ * Field and getter names match that in the NSS equivalent struct. No fields
+ * have been omitted.
  */
 public class SSLPreliminaryChannelInfo {
     /**
@@ -29,12 +30,12 @@ public class SSLPreliminaryChannelInfo {
     /**
      * Which protocol version is used by this SSL socket.
      */
-    public SSLVersion protocolVersion;
+    private SSLVersion protocolVersion;
 
     /**
      * Which cipher suite is used by this SSL socket.
      */
-    public SSLCipher cipherSuite;
+    private SSLCipher cipherSuite;
 
     /**
      * Whether or not early data can be sent.
@@ -46,7 +47,7 @@ public class SSLPreliminaryChannelInfo {
      * |canSendEarlyData| is true when a 0-RTT is enabled. This can only be
      * true after sending the ClientHello and before the handshake completes.
      */
-    public boolean canSendEarlyData;
+    private boolean canSendEarlyData;
 
     /**
      * The maximum amount of early data that can be sent.
@@ -62,7 +63,7 @@ public class SSLPreliminaryChannelInfo {
      * the value that was advertised in the session ticket that was used to
      * resume this session.
      */
-    public long maxEarlyDataSize;
+     private long maxEarlyDataSize;
 
     /**
      * This field controls whether or not we have the zeroRttCipherSuite
@@ -70,14 +71,14 @@ public class SSLPreliminaryChannelInfo {
      *
      * When this field is true, zeroRttCipherSuite could be set with a value.
      * Otherwise, its value should be ignored. Check the corresponding field
-     * function, have0RTTCipherSuite(), to see whether the handshake has
+     * function, haveZeroRttCipherSuite(), to see whether the handshake has
      * progressed far enough for this field to have a value.
      *
      * Note that the corresponding field is present when the version NSS used
      * to compile JSS and the runtime version of NSS match, and both have this
      * field.
      */
-    public boolean haveNSS343;
+    private boolean haveNSS343;
 
     /**
      * Which cipher suite is in use for 0RTT TLS 1.3 connections.
@@ -91,7 +92,7 @@ public class SSLPreliminaryChannelInfo {
      * value if 0-RTT is accepted by the server.  The server only sets this
      * after accepting 0-RTT, so this will contain the same value.
      */
-    public SSLCipher zeroRttCipherSuite;
+    private SSLCipher zeroRttCipherSuite;
 
     /**
      * This field controls whether or not we have the following three fields:
@@ -109,7 +110,7 @@ public class SSLPreliminaryChannelInfo {
      * to compile JSS and the runtime version of NSS match, and both have these
      * fields.
      */
-    public boolean haveNSS348;
+    private boolean haveNSS348;
 
     /**
      * Whether or not the peer has offered a delegated field.
@@ -124,7 +125,7 @@ public class SSLPreliminaryChannelInfo {
      * valid only after the Certificate message is handled. This can be determined
      * by checking the valuesSet field against |ssl_preinfo_peer_auth|.
      */
-    public boolean peerDelegCred;
+    private boolean peerDelegCred;
 
     /**
      * How many bits are in the authentication key.
@@ -133,7 +134,7 @@ public class SSLPreliminaryChannelInfo {
      *
      * See also: peerDelegCred and SSLChannelInfo's authKeyBits field.
      */
-    public int authKeyBits;
+    private int authKeyBits;
 
     /**
      * Signature scheme used.
@@ -142,7 +143,7 @@ public class SSLPreliminaryChannelInfo {
      *
      * See also: peerDelegCred and SSLChannelInfo's signatureScheme field.
      */
-    public SSLSignatureScheme signatureScheme;
+    private SSLSignatureScheme signatureScheme;
 
     /**
      * Constructor used by SSL.GetPreliminaryChannelInfo(...).
@@ -173,7 +174,7 @@ public class SSLPreliminaryChannelInfo {
 
         this.haveNSS343 = haveNSS343;
 
-        if (have0RTTCipherSuite()) {
+        if (haveZeroRttCipherSuite()) {
             this.zeroRttCipherSuite = SSLCipher.valueOf(zeroRttCipherSuite);
         }
 
@@ -222,7 +223,7 @@ public class SSLPreliminaryChannelInfo {
      * Returns true if the handshake has progressed far enough for the value
      * of the field to be determined.
      */
-    public boolean have0RTTCipherSuite() {
+    public boolean haveZeroRttCipherSuite() {
         long ssl_preinfo_0rtt_cipher_suite = 1 << 2;
         return haveField(ssl_preinfo_0rtt_cipher_suite) && haveNSS343;
     }
@@ -237,6 +238,149 @@ public class SSLPreliminaryChannelInfo {
     public boolean havePeerAuth() {
         long ssl_preinfo_peer_auth = 1 << 3;
         return haveField(ssl_preinfo_peer_auth) && haveNSS348;
+    }
+
+    /**
+     * Gets the value of protocolVersion; throws an exception when the value
+     * isn't yet available.
+     *
+     * See also: protocolVersion.
+     */
+    public SSLVersion getProtocolVersion() throws ObjectNotFoundException {
+        if (!haveProtocolVersion()) {
+            String msg = "The protocolVersion field isn't yet available at ";
+            msg += "this point in the TLS handshake; wait for ";
+            msg += "haveProtocolVersion(...) to return true before calling.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return protocolVersion;
+    }
+
+    /**
+     * Gets the value of cipherSuite; throws an exception when the value
+     * isn't yet available.
+     *
+     * See also: cipherSuite.
+     */
+    public SSLCipher getCipherSuite() throws ObjectNotFoundException {
+        if (!haveCipherSuite()) {
+            String msg = "The cipherSuite field isn't yet available at this ";
+            msg += "point in the TLS handshake; wait for ";
+            msg += "haveCipherSuite(...) to return true before calling.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return cipherSuite;
+    }
+
+    /**
+     * Gets the value of zeroRttCipherSuite; throws an exception when the
+     * value isn't yet available.
+     *
+     * See also: zeroRttCipherSuite.
+     */
+    public SSLCipher getZeroRttCipherSuite() throws ObjectNotFoundException {
+        if (!haveNSS343) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLPreliminaryChannelInfo. Either ";
+            msg += "backport this feature or upgrade to at least NSS v3.43. ";
+            msg += "Check the value of ";
+            msg += "HAVE_NSS_PRELIMINARY_CHANNEL_INFO_ZERO_RTT_CIPHER_SUITE ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        if (!haveZeroRttCipherSuite()) {
+            String msg = "The zeroRttCipherSuite field isn't yet available ";
+            msg += "at this point in the TLS handshake; wait for ";
+            msg += "haveZeroRttCipherSuite(...) to return true before ";
+            msg += "calling.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return zeroRttCipherSuite;
+    }
+
+    /**
+     * Gets the value of peerDelegCred; throws an exception when the value
+     * isn't yet available.
+     *
+     * See also: peerDelegCred.
+     */
+    public boolean getPeerDelegCred() throws ObjectNotFoundException {
+        if (!haveNSS348) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLPreliminaryChannelInfo. Either ";
+            msg += "backport this feature or upgrade to at least NSS v3.48. ";
+            msg += "Check the value of ";
+            msg += "HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        if (!havePeerAuth()) {
+            String msg = "The peerDelegCred field isn't yet available at ";
+            msg += "this point in the TLS handshake; wait for ";
+            msg += "havePeerAuth(...) to return true before calling.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return peerDelegCred;
+    }
+
+    /**
+     * Gets the value of authKeyBits; throws an exception when the value isn't
+     * yet available.
+     *
+     * See also: authKeyBits.
+     */
+    public int getAuthKeyBits() throws ObjectNotFoundException {
+        if (!haveNSS348) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLPreliminaryChannelInfo. Either ";
+            msg += "backport this feature or upgrade to at least NSS v3.48. ";
+            msg += "Check the value of ";
+            msg += "HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        if (!havePeerAuth()) {
+            String msg = "The authKeyBits field isn't yet available at ";
+            msg += "this point in the TLS handshake; wait for ";
+            msg += "havePeerAuth(...) to return true before calling.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return authKeyBits;
+    }
+
+    /**
+     * Gets the value of signatureScheme; throws an exception when the value
+     * isn't yet available.
+     *
+     * See also: signatureScheme.
+     */
+    public SSLSignatureScheme getSignatureScheme() throws ObjectNotFoundException {
+        if (!haveNSS348) {
+            String msg = "The version of NSS used to compile JSS doesn't ";
+            msg += "support this field in SSLPreliminaryChannelInfo. Either ";
+            msg += "backport this feature or upgrade to at least NSS v3.48. ";
+            msg += "Check the value of ";
+            msg += "HAVE_NSS_PRELIMINARY_CHANNEL_INFO_PEER_DELEG_CRED ";
+            msg += "when building JSS.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        if (!havePeerAuth()) {
+            String msg = "The signatureScheme field isn't yet available at ";
+            msg += "this point in the TLS handshake; wait for ";
+            msg += "havePeerAuth(...) to return true before calling.";
+            throw new ObjectNotFoundException(msg);
+        }
+
+        return signatureScheme;
     }
 
     /**
@@ -256,7 +400,7 @@ public class SSLPreliminaryChannelInfo {
         result.append("\n- canSendEarlyData: " + canSendEarlyData);
         result.append("\n- maxEarlyDataSize: " + maxEarlyDataSize);
 
-        if (have0RTTCipherSuite()) {
+        if (haveZeroRttCipherSuite()) {
             result.append("\n- zeroRttCipherSuite: " + zeroRttCipherSuite);
         }
 
