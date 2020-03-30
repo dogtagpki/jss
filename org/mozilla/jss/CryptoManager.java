@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss;
 
+import java.security.Security;
 import java.security.GeneralSecurityException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -341,7 +342,25 @@ public final class CryptoManager implements TokenSupplier
     public synchronized static CryptoManager getInstance()
         throws NotInitializedException
     {
-        if(instance==null) {
+        if (instance == null) {
+            /* Java has lazy-loading Security providers; until a provider
+             * is requested, it won't be loaded. This means we could've
+             * initialized the CryptoManager via the JSSLoader but we won't
+             * know about it until it is explicitly requested.
+             *
+             * This breaks tests looking to configure a file-based password
+             * handler: if the very first call is to getInstance(...) instead
+             * of a Provider call, we'd fail.
+             *
+             * Try to get the Mozilla-JSS provider by name before reporting
+             * that we're not initialized.
+             */
+            if (Security.getProvider("Mozilla-JSS") != null) {
+                if (instance != null) {
+                    return instance;
+                }
+            }
+
             throw new NotInitializedException();
         }
         return instance;
@@ -525,7 +544,7 @@ public final class CryptoManager implements TokenSupplier
                 insert_position = java.security.Security.getProviders().length + 1;
             }
 
-            int position = java.security.Security.insertProviderAt(new JSSProvider(), insert_position);
+            int position = java.security.Security.insertProviderAt(new JSSProvider(true), insert_position);
             if (position < 0) {
                 logger.warn("JSS provider is already installed");
             }
