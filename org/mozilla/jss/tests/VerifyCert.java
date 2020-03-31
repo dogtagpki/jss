@@ -95,7 +95,6 @@ public class VerifyCert {
                 vals.ocspResponderCertNickname = ResponderNickname;
                 vals.ocspResponderURL = ResponderURL;
             }
-            CryptoManager.initialize(vals);
             CryptoManager cm = CryptoManager.getInstance();
             PasswordCallback pwd = new Password(password.toCharArray());
             cm.setPasswordCallback(pwd);

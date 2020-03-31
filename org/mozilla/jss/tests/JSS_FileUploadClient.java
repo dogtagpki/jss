@@ -211,7 +211,6 @@ public class JSS_FileUploadClient {
     public void doIt() throws Exception {
 
         try {
-            CryptoManager.initialize(fCertDbPath);
             cm  = CryptoManager.getInstance();
             tok = cm.getInternalKeyStorageToken();
             cb  = new FilePasswordCallback(fPasswordFile);

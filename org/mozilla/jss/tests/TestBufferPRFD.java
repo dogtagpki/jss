@@ -95,7 +95,6 @@ public class TestBufferPRFD {
 
     public static void InitializeCM(String database, String password) throws Exception {
         CryptoManager manager;
-        CryptoManager.initialize(database);
         manager = CryptoManager.getInstance();
         manager.setPasswordCallback(new Password(password.toCharArray()));
     }

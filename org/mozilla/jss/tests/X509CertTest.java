@@ -65,7 +65,6 @@ public class X509CertTest {
         Date notAfter = cal.getTime();
 
         //Generate ca keyPair
-        CryptoManager.initialize(dbdir);
         CryptoManager cryptoManager = CryptoManager.getInstance();
         CryptoToken token = cryptoManager.getInternalKeyStorageToken();
         PasswordCallback cb = new FilePasswordCallback(passwordfile);

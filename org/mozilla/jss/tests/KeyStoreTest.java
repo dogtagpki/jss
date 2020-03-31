@@ -46,7 +46,6 @@ public class KeyStoreTest {
             System.exit(1);
         }
 
-        String nss_db = argv[0];
         String password_file = argv[1];
         String op = argv[2];
 
@@ -56,7 +55,6 @@ public class KeyStoreTest {
             args[i - offset] = argv[i];
         }
 
-        CryptoManager.initialize(nss_db);
         CryptoManager cm = CryptoManager.getInstance();
 
 

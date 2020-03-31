@@ -48,12 +48,7 @@ public class SigTest {
                 usage();
                 System.exit(1);
             }
-            String dbdir = args[0];
 
-
-            InitializationValues vals =
-                    new InitializationValues(args[0]);
-            CryptoManager.initialize(vals);
             manager = CryptoManager.getInstance();
             manager.setPasswordCallback(new FilePasswordCallback(args[1]));
 

@@ -34,9 +34,6 @@ public class SelfTest {
             return;
         }
 
-        InitializationValues vals = new
-            InitializationValues( args[0] );
-        CryptoManager.initialize(vals);
         try {
             manager = CryptoManager.getInstance();
         } catch( NotInitializedException e ) {

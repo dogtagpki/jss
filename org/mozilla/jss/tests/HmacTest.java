@@ -49,11 +49,6 @@ public class HmacTest {
   private static void configureCrypto(String[] args)
     throws Exception {
 
-    InitializationValues initializationValues =
-      new InitializationValues(args[0]);
-
-    CryptoManager.initialize(initializationValues);
-
     CryptoManager cryptoManager = CryptoManager.getInstance();
 
     CryptoToken cryptoToken =

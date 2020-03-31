@@ -100,7 +100,6 @@ public class DigestTest {
                         "<dbdir> <File>");
                 System.exit(1);
             }
-            String dbdir = argv[0];
             byte[] toBeDigested;
             int read;
 
@@ -110,8 +109,6 @@ public class DigestTest {
             }
 
             System.out.println(read + " bytes to be digested");
-
-            CryptoManager.initialize(dbdir);
 
             /////////////////////////////////////////////////////////////
             // Test all available algorithms

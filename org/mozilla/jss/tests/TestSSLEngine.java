@@ -15,8 +15,6 @@ import org.mozilla.jss.provider.javax.crypto.*;
 
 public class TestSSLEngine {
     public static void initialize(String[] args) throws Exception {
-        InitializationValues ivs = new InitializationValues(args[0]);
-        CryptoManager.initialize(ivs);
         CryptoManager cm = CryptoManager.getInstance();
         cm.setPasswordCallback(new FilePasswordCallback(args[1]));
     }

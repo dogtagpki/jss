@@ -108,7 +108,6 @@ public class SSLClientAuth implements Runnable {
             System.exit(1);
         }
         
-        CryptoManager.initialize(args[0]);
         cm = CryptoManager.getInstance();
         CryptoToken tok = cm.getInternalKeyStorageToken();
         

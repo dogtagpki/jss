@@ -15,7 +15,6 @@ import org.mozilla.jss.util.*;
 
 public class TestKBKDF {
     public static void main(String[] args) throws Exception {
-        CryptoManager.initialize(args[0]);
         CryptoManager cm = CryptoManager.getInstance();
         TokenSupplier ts = TokenSupplierManager.getTokenSupplier();
         ts.setThreadToken(cm.getInternalCryptoToken());

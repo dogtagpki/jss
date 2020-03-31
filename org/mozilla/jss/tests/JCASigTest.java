@@ -77,10 +77,6 @@ public class JCASigTest {
         String dbdir = args[0];
         String file = args[1];
         try {
-            InitializationValues vals = new
-                                InitializationValues (dbdir );
-            vals.removeSunProvider = true;
-            CryptoManager.initialize(vals);
             manager = CryptoManager.getInstance();
             manager.setPasswordCallback( new FilePasswordCallback(file) );
 
