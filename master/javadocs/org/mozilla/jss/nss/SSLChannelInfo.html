@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -73,13 +73,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -111,8 +111,8 @@ var activeTableTab = "activeTableTab";
 extends java.lang.Object</pre>
 <div class="block">Class representing the SSLChannelInfo struct from NSS's sslt.h.
 
- This class is a data class; it contains public fields rather than
- getters/setters. It usually should be constructed via a call to
+ This class is a data class; it contains public getters and no
+ setters. It usually should be constructed via a call to
  org.mozilla.jss.nss.SSL.GetChannelInfo(SSLFDProxy inst) rather than
  directly constructing an instance.
 
@@ -121,168 +121,15 @@ extends java.lang.Object</pre>
  results. Use SSL.GetPreliminaryChannelInfo instead and see the
  corresponding class, SSLPreliminaryChannelInfo.
 
- Field names match that in the NSS equivalent struct. The only omitted field
- is sessionIDLength, since sessionID.length suffices and Java byte arrays
- are of fixed, known length.</div>
+ Field and getter names match that in the NSS equivalent struct. The only
+ omitted field is sessionIDLength, since sessionID.length suffices and Java
+ byte arrays are of fixed, known length.</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#authKeyBits">authKeyBits</a></span></code>
-<div class="block">How many bits are in the authentication key.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLAuthType.html" title="enum in org.mozilla.jss.ssl">SSLAuthType</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#authType">authType</a></span></code>
-<div class="block">Authentication type for the cipher suite.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#cipherSuite">cipherSuite</a></span></code>
-<div class="block">Which cipher suite is used by this SSL socket.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCompressionMethod.html" title="enum in org.mozilla.jss.ssl">SSLCompressionMethod</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#compressionMethod">compressionMethod</a></span></code>
-<div class="block">Compression method used in this session.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#creationTime">creationTime</a></span></code>
-<div class="block">When the session was created, in seconds since Jan 1, 1970.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#earlyDataAccepted">earlyDataAccepted</a></span></code>
-<div class="block">Whether or not early data was accepted.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#expirationTime">expirationTime</a></span></code>
-<div class="block">When the session expires, in seconds since Jan 1, 1970.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#extendedMasterSecretUsed">extendedMasterSecretUsed</a></span></code>
-<div class="block">Whether or not an extended master secret was used for TLS versions less
- than 1.3.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#haveNSS334">haveNSS334</a></span></code>
-<div class="block">This field controls whether or not we have the following two fields:
-
-  - originalKeaGroup, and
-  - resumed.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#haveNSS345">haveNSS345</a></span></code>
-<div class="block">This field controls whether or not we have the peerDelegCred field.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#keaGroup">keaGroup</a></span></code>
-<div class="block">When keaType is an EC-based cipher, name of the group used in this
- cipher.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#keaKeyBits">keaKeyBits</a></span></code>
-<div class="block">How many bits are in the key exchange key.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLKEAType.html" title="enum in org.mozilla.jss.ssl">SSLKEAType</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#keaType">keaType</a></span></code>
-<div class="block">Key exchange algorithm info.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#lastAccessTime">lastAccessTime</a></span></code>
-<div class="block">When the session was last accessed, in seconds since Jan 1, 1970.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLMACAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLMACAlgorithm</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#macAlgorithm">macAlgorithm</a></span></code>
-<div class="block">MAC algorithm info.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#originalKeaGroup">originalKeaGroup</a></span></code>
-<div class="block">This field holds the key exchange algorithm group during the initial
- handshake.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#peerDelegCred">peerDelegCred</a></span></code>
-<div class="block">Whether or not the peer used a delegated credential for authentication.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#protocolVersion">protocolVersion</a></span></code>
-<div class="block">Which protocol version is used by this SSL socket.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#resumed">resumed</a></span></code>
-<div class="block">Whether or not this session was resumed.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#sessionID">sessionID</a></span></code>
-<div class="block">Identifier for this session.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#signatureScheme">signatureScheme</a></span></code>
-<div class="block">Signature scheme used.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipherAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLCipherAlgorithm</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#symCipher">symCipher</a></span></code>
-<div class="block">Symmetric cipher algorithm info.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -336,6 +183,129 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getAuthKeyBits--">getAuthKeyBits</a></span>()</code>
+<div class="block">Gets the value of authKeyBits.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLAuthType.html" title="enum in org.mozilla.jss.ssl">SSLAuthType</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getAuthType--">getAuthType</a></span>()</code>
+<div class="block">Gets the value of authType.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getCipherSuite--">getCipherSuite</a></span>()</code>
+<div class="block">Gets the value of cipherSuite.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCompressionMethod.html" title="enum in org.mozilla.jss.ssl">SSLCompressionMethod</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getCompressionMethod--">getCompressionMethod</a></span>()</code>
+<div class="block">Gets the value of compressionMethod.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getCreationTime--">getCreationTime</a></span>()</code>
+<div class="block">Gets the value of creationTime.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getEarlyDataAccepted--">getEarlyDataAccepted</a></span>()</code>
+<div class="block">Gets the value of earlyDataAccepted.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getExpirationTime--">getExpirationTime</a></span>()</code>
+<div class="block">Gets the value of expirationTime.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getExtendedMasterSecretUsed--">getExtendedMasterSecretUsed</a></span>()</code>
+<div class="block">Gets the value of extendedMasterSecretUsed.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getKeaGroup--">getKeaGroup</a></span>()</code>
+<div class="block">Gets the value of keaGroup.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getKeaKeyBits--">getKeaKeyBits</a></span>()</code>
+<div class="block">Gets the value of keaKeyBits.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLKEAType.html" title="enum in org.mozilla.jss.ssl">SSLKEAType</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getKeaType--">getKeaType</a></span>()</code>
+<div class="block">Gets the value of keaType.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getLastAccessTime--">getLastAccessTime</a></span>()</code>
+<div class="block">Gets the value of lastAccessTime.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLMACAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLMACAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getMacAlgorithm--">getMacAlgorithm</a></span>()</code>
+<div class="block">Gets the value of macAlgorithm.</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getOriginalKeaGroup--">getOriginalKeaGroup</a></span>()</code>
+<div class="block">Gets the value of originalKeaGroup; throws an exception when the
+ field isn't available from NSS.</div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getPeerDelegCred--">getPeerDelegCred</a></span>()</code>
+<div class="block">Gets the value of peerDelegCred; throws an exception when the field
+ isn't available from NSS.</div>
+</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getProtocolVersion--">getProtocolVersion</a></span>()</code>
+<div class="block">Gets the value of protocolVersion.</div>
+</td>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getResumed--">getResumed</a></span>()</code>
+<div class="block">Gets the value of resumed; throws an exception when the field isn't
+ available from NSS.</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code>byte[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getSessionID--">getSessionID</a></span>()</code>
+<div class="block">Gets the value of sessionID.</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getSignatureScheme--">getSignatureScheme</a></span>()</code>
+<div class="block">Gets the value of signatureScheme.</div>
+</td>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipherAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLCipherAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#getSymCipher--">getSymCipher</a></span>()</code>
+<div class="block">Gets the value of symCipher.</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html#toString--">toString</a></span>()</code>
 <div class="block">Returns a string representation of the data in this data structure.</div>
@@ -357,328 +327,6 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a name="protocolVersion">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>protocolVersion</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a> protocolVersion</pre>
-<div class="block">Which protocol version is used by this SSL socket.</div>
-</li>
-</ul>
-<a name="cipherSuite">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>cipherSuite</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a> cipherSuite</pre>
-<div class="block">Which cipher suite is used by this SSL socket.</div>
-</li>
-</ul>
-<a name="authKeyBits">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>authKeyBits</h4>
-<pre>public&nbsp;int authKeyBits</pre>
-<div class="block">How many bits are in the authentication key.
-
- NSS describes this as follows:
-
- The strength of the key used to authenticate the peer.  Before
- interpreting this value, check authType, signatureScheme, and
- peerDelegCred, to determine the type of the key and how it was used.
-
- Typically, this is the length of the key from the peer's end-entity
- certificate.  If delegated credentials are used (i.e., peerDelegCred is
- PR_TRUE), then this is the strength of the delegated credential key.</div>
-</li>
-</ul>
-<a name="keaKeyBits">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>keaKeyBits</h4>
-<pre>public&nbsp;int keaKeyBits</pre>
-<div class="block">How many bits are in the key exchange key.
-
- NSS describes this as follows:
-
- key exchange algorithm info</div>
-</li>
-</ul>
-<a name="creationTime">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>creationTime</h4>
-<pre>public&nbsp;long creationTime</pre>
-<div class="block">When the session was created, in seconds since Jan 1, 1970.</div>
-</li>
-</ul>
-<a name="lastAccessTime">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>lastAccessTime</h4>
-<pre>public&nbsp;long lastAccessTime</pre>
-<div class="block">When the session was last accessed, in seconds since Jan 1, 1970.</div>
-</li>
-</ul>
-<a name="expirationTime">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>expirationTime</h4>
-<pre>public&nbsp;long expirationTime</pre>
-<div class="block">When the session expires, in seconds since Jan 1, 1970.</div>
-</li>
-</ul>
-<a name="sessionID">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>sessionID</h4>
-<pre>public&nbsp;byte[] sessionID</pre>
-<div class="block">Identifier for this session.
-
- Up to 32 bytes.</div>
-</li>
-</ul>
-<a name="compressionMethod">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>compressionMethod</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCompressionMethod.html" title="enum in org.mozilla.jss.ssl">SSLCompressionMethod</a> compressionMethod</pre>
-<div class="block">Compression method used in this session.
-
- This field was added in NSS 3.12.5.</div>
-</li>
-</ul>
-<a name="extendedMasterSecretUsed">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>extendedMasterSecretUsed</h4>
-<pre>public&nbsp;boolean extendedMasterSecretUsed</pre>
-<div class="block">Whether or not an extended master secret was used for TLS versions less
- than 1.3.
-
- This field was added in NSS 3.21.</div>
-</li>
-</ul>
-<a name="earlyDataAccepted">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>earlyDataAccepted</h4>
-<pre>public&nbsp;boolean earlyDataAccepted</pre>
-<div class="block">Whether or not early data was accepted.
-
- This field was added in NSS 3.25.
-
- NSS has this to say:
-
- This field only has meaning in TLS versions greater than or equal to
- 1.3, and indicates on the client side that the server accepted early
- (0-RTT) data.</div>
-</li>
-</ul>
-<a name="keaType">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>keaType</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLKEAType.html" title="enum in org.mozilla.jss.ssl">SSLKEAType</a> keaType</pre>
-<div class="block">Key exchange algorithm info.
-
- This field has the same meaning as in SSLCipherSuiteInfo.
-
- This field was added in NSS 3.28.</div>
-</li>
-</ul>
-<a name="keaGroup">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>keaGroup</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a> keaGroup</pre>
-<div class="block">When keaType is an EC-based cipher, name of the group used in this
- cipher.
-
- This field has the same meaning as in SSLCipherSuiteInfo.
-
- This field was added in NSS 3.28.</div>
-</li>
-</ul>
-<a name="symCipher">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>symCipher</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipherAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLCipherAlgorithm</a> symCipher</pre>
-<div class="block">Symmetric cipher algorithm info.
-
- This field has the same meaning as in SSLCipherSuiteInfo.
-
- This field was added in NSS 3.28.</div>
-</li>
-</ul>
-<a name="macAlgorithm">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>macAlgorithm</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLMACAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLMACAlgorithm</a> macAlgorithm</pre>
-<div class="block">MAC algorithm info.
-
- This field has the same meaning as in SSLCipherSuiteInfo.
-
- This field was added in NSS 3.28.
-
- NSS gives the following description of this field in
- SSLCipherSuiteInfo:
-
- AEAD ciphers don't have a MAC. For an AEAD cipher, macAlgorithmName
- is "AEAD", macAlgorithm is ssl_mac_aead, and macBits is the length in
- bits of the authentication tag.</div>
-</li>
-</ul>
-<a name="authType">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>authType</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLAuthType.html" title="enum in org.mozilla.jss.ssl">SSLAuthType</a> authType</pre>
-<div class="block">Authentication type for the cipher suite.
-
- This field has the same meaning as in SSLCipherSuiteInfo.
-
- This field was added in NSS 3.28.
-
- NSS gives the following description of this field in
- SSLCipherSuiteInfo:
-
- This reports the correct authentication type for the cipher suite, use
- this instead of |authAlgorithm|.</div>
-</li>
-</ul>
-<a name="signatureScheme">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>signatureScheme</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a> signatureScheme</pre>
-<div class="block">Signature scheme used.
-
- This field was added in NSS 3.28.</div>
-</li>
-</ul>
-<a name="haveNSS334">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>haveNSS334</h4>
-<pre>public&nbsp;boolean haveNSS334</pre>
-<div class="block">This field controls whether or not we have the following two fields:
-
-  - originalKeaGroup, and
-  - resumed.
-
- When this field is true, the values of these fields can be trusted.
- Otherwise, their values should be ignored.
-
- The corresponding fields are present when the NSS version used to
- compile JSS and the runtime version of NSS match, and both have these
- fields.</div>
-</li>
-</ul>
-<a name="originalKeaGroup">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>originalKeaGroup</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a> originalKeaGroup</pre>
-<div class="block">This field holds the key exchange algorithm group during the initial
- handshake.
-
- This field was added in NSS 3.34.
-
- NSS has the following description of this field:
-
- When the session was resumed this holds the key exchange group of the
- original handshake.</div>
-</li>
-</ul>
-<a name="resumed">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>resumed</h4>
-<pre>public&nbsp;boolean resumed</pre>
-<div class="block">Whether or not this session was resumed.
-
- This field was added in NSS 3.34.</div>
-</li>
-</ul>
-<a name="haveNSS345">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>haveNSS345</h4>
-<pre>public&nbsp;boolean haveNSS345</pre>
-<div class="block">This field controls whether or not we have the peerDelegCred field.
-
- When this field is true, the values of these fields can be trusted.
- Otherwise, their values should be ignored.
-
- The corresponding fields are present when the NSS version used to
- compile JSS and the runtime version of NSS match, and both have these
- fields.</div>
-</li>
-</ul>
-<a name="peerDelegCred">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>peerDelegCred</h4>
-<pre>public&nbsp;boolean peerDelegCred</pre>
-<div class="block">Whether or not the peer used a delegated credential for authentication.
-
- This field was added in NSS 3.45.</div>
-</li>
-</ul>
-</li>
-</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
@@ -726,6 +374,264 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getProtocolVersion--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProtocolVersion</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>&nbsp;getProtocolVersion()</pre>
+<div class="block">Gets the value of protocolVersion.
+
+ See also: protocolVersion</div>
+</li>
+</ul>
+<a name="getCipherSuite--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCipherSuite</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>&nbsp;getCipherSuite()</pre>
+<div class="block">Gets the value of cipherSuite.
+
+ See also: cipherSuite.</div>
+</li>
+</ul>
+<a name="getAuthKeyBits--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAuthKeyBits</h4>
+<pre>public&nbsp;int&nbsp;getAuthKeyBits()</pre>
+<div class="block">Gets the value of authKeyBits.
+
+ See also: authKeyBits.</div>
+</li>
+</ul>
+<a name="getKeaKeyBits--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKeaKeyBits</h4>
+<pre>public&nbsp;int&nbsp;getKeaKeyBits()</pre>
+<div class="block">Gets the value of keaKeyBits.
+
+ See also: keaKeyBits.</div>
+</li>
+</ul>
+<a name="getCreationTime--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCreationTime</h4>
+<pre>public&nbsp;long&nbsp;getCreationTime()</pre>
+<div class="block">Gets the value of creationTime.
+
+ See also: creationTime.</div>
+</li>
+</ul>
+<a name="getLastAccessTime--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLastAccessTime</h4>
+<pre>public&nbsp;long&nbsp;getLastAccessTime()</pre>
+<div class="block">Gets the value of lastAccessTime.
+
+ See also: lastAccessTime.</div>
+</li>
+</ul>
+<a name="getExpirationTime--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getExpirationTime</h4>
+<pre>public&nbsp;long&nbsp;getExpirationTime()</pre>
+<div class="block">Gets the value of expirationTime.
+
+ See also: expirationTime.</div>
+</li>
+</ul>
+<a name="getSessionID--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSessionID</h4>
+<pre>public&nbsp;byte[]&nbsp;getSessionID()</pre>
+<div class="block">Gets the value of sessionID.
+
+ See also: sessionID.</div>
+</li>
+</ul>
+<a name="getCompressionMethod--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCompressionMethod</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCompressionMethod.html" title="enum in org.mozilla.jss.ssl">SSLCompressionMethod</a>&nbsp;getCompressionMethod()</pre>
+<div class="block">Gets the value of compressionMethod.
+
+ See also: compressionMethod.</div>
+</li>
+</ul>
+<a name="getExtendedMasterSecretUsed--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getExtendedMasterSecretUsed</h4>
+<pre>public&nbsp;boolean&nbsp;getExtendedMasterSecretUsed()</pre>
+<div class="block">Gets the value of extendedMasterSecretUsed.
+
+ See also: extendedMasterSecretUsed.</div>
+</li>
+</ul>
+<a name="getEarlyDataAccepted--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getEarlyDataAccepted</h4>
+<pre>public&nbsp;boolean&nbsp;getEarlyDataAccepted()</pre>
+<div class="block">Gets the value of earlyDataAccepted.
+
+ See also: earlyDataAccepted.</div>
+</li>
+</ul>
+<a name="getKeaType--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKeaType</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLKEAType.html" title="enum in org.mozilla.jss.ssl">SSLKEAType</a>&nbsp;getKeaType()</pre>
+<div class="block">Gets the value of keaType.
+
+ See also: keaType.</div>
+</li>
+</ul>
+<a name="getKeaGroup--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKeaGroup</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a>&nbsp;getKeaGroup()</pre>
+<div class="block">Gets the value of keaGroup.
+
+ See also: keaGroup.</div>
+</li>
+</ul>
+<a name="getSymCipher--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSymCipher</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipherAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLCipherAlgorithm</a>&nbsp;getSymCipher()</pre>
+<div class="block">Gets the value of symCipher.
+
+ See also: symCipher.</div>
+</li>
+</ul>
+<a name="getMacAlgorithm--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMacAlgorithm</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLMACAlgorithm.html" title="enum in org.mozilla.jss.ssl">SSLMACAlgorithm</a>&nbsp;getMacAlgorithm()</pre>
+<div class="block">Gets the value of macAlgorithm.
+
+ See also: macAlgorithm.</div>
+</li>
+</ul>
+<a name="getAuthType--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAuthType</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLAuthType.html" title="enum in org.mozilla.jss.ssl">SSLAuthType</a>&nbsp;getAuthType()</pre>
+<div class="block">Gets the value of authType.
+
+ See also: authType.</div>
+</li>
+</ul>
+<a name="getSignatureScheme--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSignatureScheme</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a>&nbsp;getSignatureScheme()</pre>
+<div class="block">Gets the value of signatureScheme.
+
+ See also: signatureScheme.</div>
+</li>
+</ul>
+<a name="getOriginalKeaGroup--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOriginalKeaGroup</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLNamedGroup.html" title="enum in org.mozilla.jss.ssl">SSLNamedGroup</a>&nbsp;getOriginalKeaGroup()
+                                  throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of originalKeaGroup; throws an exception when the
+ field isn't available from NSS.
+
+ See also: originalKeaGroup.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getResumed--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getResumed</h4>
+<pre>public&nbsp;boolean&nbsp;getResumed()
+                   throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of resumed; throws an exception when the field isn't
+ available from NSS.
+
+ See also: resumed.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getPeerDelegCred--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPeerDelegCred</h4>
+<pre>public&nbsp;boolean&nbsp;getPeerDelegCred()
+                         throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of peerDelegCred; throws an exception when the field
+ isn't available from NSS.
+
+ See also: peerDelegCred.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
 <a name="toString--">
 <!--   -->
 </a>
@@ -793,13 +699,13 @@ extends java.lang.Object</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

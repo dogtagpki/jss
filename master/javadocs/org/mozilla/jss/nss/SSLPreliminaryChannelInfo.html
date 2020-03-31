@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -73,13 +73,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -111,8 +111,8 @@ var activeTableTab = "activeTableTab";
 extends java.lang.Object</pre>
 <div class="block">Class representing the SSLPreliminaryChannelInfo struct from NSS's sslt.h.
 
- This class is a data class; it contains public fields rather than
- getters/setters. It usually should be constructed via a call to
+ This class is a data class; it contains getters and no setters. It usually
+ should be constructed via a call to
  org.mozilla.jss.nss.SSL.GetPreliminaryChannelInfo(SSLFDProxy inst) rather
  than directly constructing an instance.
 
@@ -121,94 +121,14 @@ extends java.lang.Object</pre>
  known, support will be indicated via the haveFIELD functions. If the value
  of this field isn't yet known, the function will return false.
 
- Field names match that in the NSS equivalent struct. No fields have been
- omitted.</div>
+ Field and getter names match that in the NSS equivalent struct. No fields
+ have been omitted.</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#authKeyBits">authKeyBits</a></span></code>
-<div class="block">How many bits are in the authentication key.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#canSendEarlyData">canSendEarlyData</a></span></code>
-<div class="block">Whether or not early data can be sent.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#cipherSuite">cipherSuite</a></span></code>
-<div class="block">Which cipher suite is used by this SSL socket.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#haveNSS343">haveNSS343</a></span></code>
-<div class="block">This field controls whether or not we have the zeroRttCipherSuite
- field.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#haveNSS348">haveNSS348</a></span></code>
-<div class="block">This field controls whether or not we have the following three fields:
-
-  - peerDelegCred,
-  - authKeyBits, and
-  - signatureScheme.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#maxEarlyDataSize">maxEarlyDataSize</a></span></code>
-<div class="block">The maximum amount of early data that can be sent.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#peerDelegCred">peerDelegCred</a></span></code>
-<div class="block">Whether or not the peer has offered a delegated field.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#protocolVersion">protocolVersion</a></span></code>
-<div class="block">Which protocol version is used by this SSL socket.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#signatureScheme">signatureScheme</a></span></code>
-<div class="block">Signature scheme used.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#zeroRttCipherSuite">zeroRttCipherSuite</a></span></code>
-<div class="block">Which cipher suite is in use for 0RTT TLS 1.3 connections.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -251,31 +171,73 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#have0RTTCipherSuite--">have0RTTCipherSuite</a></span>()</code>
-<div class="block">Check this to see whether the value of zeroRttCipherSuite can be used.</div>
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#getAuthKeyBits--">getAuthKeyBits</a></span>()</code>
+<div class="block">Gets the value of authKeyBits; throws an exception when the value isn't
+ yet available.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#getCipherSuite--">getCipherSuite</a></span>()</code>
+<div class="block">Gets the value of cipherSuite; throws an exception when the value
+ isn't yet available.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#getPeerDelegCred--">getPeerDelegCred</a></span>()</code>
+<div class="block">Gets the value of peerDelegCred; throws an exception when the value
+ isn't yet available.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#getProtocolVersion--">getProtocolVersion</a></span>()</code>
+<div class="block">Gets the value of protocolVersion; throws an exception when the value
+ isn't yet available.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#getSignatureScheme--">getSignatureScheme</a></span>()</code>
+<div class="block">Gets the value of signatureScheme; throws an exception when the value
+ isn't yet available.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#getZeroRttCipherSuite--">getZeroRttCipherSuite</a></span>()</code>
+<div class="block">Gets the value of zeroRttCipherSuite; throws an exception when the
+ value isn't yet available.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#haveCipherSuite--">haveCipherSuite</a></span>()</code>
 <div class="block">Check this to see whether the value of cipherSuite can be used.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#havePeerAuth--">havePeerAuth</a></span>()</code>
 <div class="block">Check this to see whether the value of the peerDelegCred, authKeyBits,
  and signatureScheme fields can be used.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#haveProtocolVersion--">haveProtocolVersion</a></span>()</code>
 <div class="block">Check this to see whether the value of protocolVersion can be used.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#haveZeroRttCipherSuite--">haveZeroRttCipherSuite</a></span>()</code>
+<div class="block">Check this to see whether the value of zeroRttCipherSuite can be used.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html#toString--">toString</a></span>()</code>
 <div class="block">Returns a string representation of the data in this data structure.</div>
@@ -297,182 +259,6 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a name="protocolVersion">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>protocolVersion</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a> protocolVersion</pre>
-<div class="block">Which protocol version is used by this SSL socket.</div>
-</li>
-</ul>
-<a name="cipherSuite">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>cipherSuite</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a> cipherSuite</pre>
-<div class="block">Which cipher suite is used by this SSL socket.</div>
-</li>
-</ul>
-<a name="canSendEarlyData">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>canSendEarlyData</h4>
-<pre>public&nbsp;boolean canSendEarlyData</pre>
-<div class="block">Whether or not early data can be sent.
-
- This field was added in NSS 3.29.
-
- NSS gives the following description about this field:
-
- |canSendEarlyData| is true when a 0-RTT is enabled. This can only be
- true after sending the ClientHello and before the handshake completes.</div>
-</li>
-</ul>
-<a name="maxEarlyDataSize">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>maxEarlyDataSize</h4>
-<pre>public&nbsp;long maxEarlyDataSize</pre>
-<div class="block">The maximum amount of early data that can be sent.
-
- This field was added in NSS 3.31.
-
- NSS gives the following description of this field:
-
- The number of early data octets that a client is permitted to send on
- this connection.  The value will be zero if the connection was not
- resumed or early data is not permitted.  For a client, this value only
- has meaning if |canSendEarlyData| is true.  For a server, this indicates
- the value that was advertised in the session ticket that was used to
- resume this session.</div>
-</li>
-</ul>
-<a name="haveNSS343">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>haveNSS343</h4>
-<pre>public&nbsp;boolean haveNSS343</pre>
-<div class="block">This field controls whether or not we have the zeroRttCipherSuite
- field.
-
- When this field is true, zeroRttCipherSuite could be set with a value.
- Otherwise, its value should be ignored. Check the corresponding field
- function, have0RTTCipherSuite(), to see whether the handshake has
- progressed far enough for this field to have a value.
-
- Note that the corresponding field is present when the version NSS used
- to compile JSS and the runtime version of NSS match, and both have this
- field.</div>
-</li>
-</ul>
-<a name="zeroRttCipherSuite">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>zeroRttCipherSuite</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a> zeroRttCipherSuite</pre>
-<div class="block">Which cipher suite is in use for 0RTT TLS 1.3 connections.
-
- This field was added in NSS 3.43.
-
- NSS gives the following description of this field:
-
- This reports the cipher suite used for 0-RTT if it sent or accepted.  For
- a client, this is set earlier than |cipherSuite|, and will match that
- value if 0-RTT is accepted by the server.  The server only sets this
- after accepting 0-RTT, so this will contain the same value.</div>
-</li>
-</ul>
-<a name="haveNSS348">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>haveNSS348</h4>
-<pre>public&nbsp;boolean haveNSS348</pre>
-<div class="block">This field controls whether or not we have the following three fields:
-
-  - peerDelegCred,
-  - authKeyBits, and
-  - signatureScheme.
-
- When this field is true, these fields could be set with a value.
- Otherwise, their values should be ignored. Check the corresponding
- field function, havePeerAuth(), to see whether the handshake has
- progressed far enough for this field to have a value.
-
- Note that the corresponding fields are present when the version NSS used
- to compile JSS and the runtime version of NSS match, and both have these
- fields.</div>
-</li>
-</ul>
-<a name="peerDelegCred">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>peerDelegCred</h4>
-<pre>public&nbsp;boolean peerDelegCred</pre>
-<div class="block">Whether or not the peer has offered a delegated field.
-
- This field was added in NSS 3.48.
-
- NSS gives the following description of these three fields:
-
- These fields contain information about the key that will be used in
- the CertificateVerify message. If Delegated Credentials are being used,
- this is the DC-contained SPKI, else the EE-cert SPKI. These fields are
- valid only after the Certificate message is handled. This can be determined
- by checking the valuesSet field against |ssl_preinfo_peer_auth|.</div>
-</li>
-</ul>
-<a name="authKeyBits">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>authKeyBits</h4>
-<pre>public&nbsp;int authKeyBits</pre>
-<div class="block">How many bits are in the authentication key.
-
- This field was added in NSS 3.48.
-
- See also: peerDelegCred and SSLChannelInfo's authKeyBits field.</div>
-</li>
-</ul>
-<a name="signatureScheme">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>signatureScheme</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a> signatureScheme</pre>
-<div class="block">Signature scheme used.
-
- This field was added in NSS 3.48.
-
- See also: peerDelegCred and SSLChannelInfo's signatureScheme field.</div>
-</li>
-</ul>
-</li>
-</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
@@ -535,13 +321,13 @@ extends java.lang.Object</pre>
  of the field to be determined.</div>
 </li>
 </ul>
-<a name="have0RTTCipherSuite--">
+<a name="haveZeroRttCipherSuite--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>have0RTTCipherSuite</h4>
-<pre>public&nbsp;boolean&nbsp;have0RTTCipherSuite()</pre>
+<h4>haveZeroRttCipherSuite</h4>
+<pre>public&nbsp;boolean&nbsp;haveZeroRttCipherSuite()</pre>
 <div class="block">Check this to see whether the value of zeroRttCipherSuite can be used.
 
  Returns true if the handshake has progressed far enough for the value
@@ -560,6 +346,114 @@ extends java.lang.Object</pre>
 
  Returns true if the handshake has progressed far enough for the value
  of the fields to be determined.</div>
+</li>
+</ul>
+<a name="getProtocolVersion--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProtocolVersion</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>&nbsp;getProtocolVersion()
+                              throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of protocolVersion; throws an exception when the value
+ isn't yet available.
+
+ See also: protocolVersion.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getCipherSuite--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCipherSuite</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>&nbsp;getCipherSuite()
+                         throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of cipherSuite; throws an exception when the value
+ isn't yet available.
+
+ See also: cipherSuite.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getZeroRttCipherSuite--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getZeroRttCipherSuite</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>&nbsp;getZeroRttCipherSuite()
+                                throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of zeroRttCipherSuite; throws an exception when the
+ value isn't yet available.
+
+ See also: zeroRttCipherSuite.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getPeerDelegCred--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPeerDelegCred</h4>
+<pre>public&nbsp;boolean&nbsp;getPeerDelegCred()
+                         throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of peerDelegCred; throws an exception when the value
+ isn't yet available.
+
+ See also: peerDelegCred.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getAuthKeyBits--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAuthKeyBits</h4>
+<pre>public&nbsp;int&nbsp;getAuthKeyBits()
+                   throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of authKeyBits; throws an exception when the value isn't
+ yet available.
+
+ See also: authKeyBits.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSignatureScheme--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSignatureScheme</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/ssl/SSLSignatureScheme.html" title="enum in org.mozilla.jss.ssl">SSLSignatureScheme</a>&nbsp;getSignatureScheme()
+                                      throws <a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></pre>
+<div class="block">Gets the value of signatureScheme; throws an exception when the value
+ isn't yet available.
+
+ See also: signatureScheme.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/mozilla/jss/crypto/ObjectNotFoundException.html" title="class in org.mozilla.jss.crypto">ObjectNotFoundException</a></code></dd>
+</dl>
 </li>
 </ul>
 <a name="toString--">
@@ -629,13 +523,13 @@ extends java.lang.Object</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
