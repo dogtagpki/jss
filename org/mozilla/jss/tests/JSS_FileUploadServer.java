@@ -76,7 +76,6 @@ public class JSS_FileUploadServer  {
                 fServerCertNick = args[3];
         } catch (Exception e) {}
 
-        CryptoManager.initialize(fCertDbPath);
         CryptoManager    cm = CryptoManager.getInstance();
         CryptoToken     tok = cm.getInternalKeyStorageToken();
         PasswordCallback cb = new FilePasswordCallback(fPasswordFile);

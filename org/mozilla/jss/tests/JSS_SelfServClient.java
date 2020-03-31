@@ -532,9 +532,6 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             return; /* JSS already initialized */
         }
         try {
-            InitializationValues vals = new
-                    InitializationValues(fCertDbPath);
-            CryptoManager.initialize(vals);
             cm  = CryptoManager.getInstance();
 
             if (cm.FIPSEnabled()) {
@@ -546,22 +543,10 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             tok.login(cb);
             bJSS = true;
 
-        }catch (KeyDatabaseException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (CertDatabaseException ex) {
-            ex.printStackTrace();
-            System.exit(1);
         } catch (NotInitializedException ex) {
             ex.printStackTrace();
             System.exit(1);
         } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (AlreadyInitializedException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (GeneralSecurityException ex) {
             ex.printStackTrace();
             System.exit(1);
         } catch (TokenException ex) {

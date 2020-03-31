@@ -127,7 +127,6 @@ public class GenerateTestCert {
         }
         
         try {
-            CryptoManager.initialize(args[0]);
             CryptoManager cm = CryptoManager.getInstance();
             
             CryptoToken tok = cm.getInternalKeyStorageToken();

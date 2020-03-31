@@ -74,9 +74,6 @@ public class SymKeyDeriving {
         }
 
         SymmetricKey macKeyDev = null;
-        InitializationValues vals = new InitializationValues(args[0]);
-        vals.removeSunProvider = true;
-        CryptoManager.initialize(vals);
         CryptoManager cm = CryptoManager.getInstance();
         cm.setPasswordCallback(new FilePasswordCallback(args[1]));
         CryptoToken token = cm.getInternalCryptoToken();

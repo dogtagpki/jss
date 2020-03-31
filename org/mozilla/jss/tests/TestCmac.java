@@ -17,7 +17,6 @@ public class TestCmac {
     private static final byte[] NIST_256 = Base64.getDecoder().decode("YD3rEBXKcb4rc67whX13gR81LAc7YQjXLZgQowkU3/Q=");
 
     public static void main(String[] args) throws Exception {
-        CryptoManager.initialize(args[0]);
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken tok = cm.getInternalKeyStorageToken();
         PasswordCallback cb = new FilePasswordCallback(args[1]);

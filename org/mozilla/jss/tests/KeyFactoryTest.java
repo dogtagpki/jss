@@ -78,7 +78,6 @@ public class KeyFactoryTest {
 		 "<dbdir> <passwordFile>");
             System.exit(1);
         }
-        CryptoManager.initialize(argv[0]);
         CryptoToken tok = CryptoManager.getInstance().getInternalKeyStorageToken();
 	PasswordCallback cb = new FilePasswordCallback(argv[1]);
         tok.login(cb);

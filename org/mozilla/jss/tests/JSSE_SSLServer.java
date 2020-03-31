@@ -149,10 +149,7 @@ public class JSSE_SSLServer {
                 }
 
                 System.out.println("Initializing " + args[5]);
-                InitializationValues vals = new
-                    InitializationValues(configDir);
-                vals.removeSunProvider = false;
-                CryptoManager.initialize(vals);
+
                 manager = CryptoManager.getInstance();
                 manager.setPasswordCallback(
                     new FilePasswordCallback(pwFile) );

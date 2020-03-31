@@ -15,11 +15,7 @@ import java.security.KeyPair;
 
 public class KeyWrapping {
 
-    public static void main(String args[]) {
-
-      try {
-
-        CryptoManager.initialize(".");
+    public static void main(String args[]) throws Exception {
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken token = cm.getInternalCryptoToken();
         CryptoToken keyToken = cm.getInternalKeyStorageToken();
@@ -132,11 +128,6 @@ public class KeyWrapping {
         recovered = decryptor.doFinal(ciphertext);
         System.out.println("Recovered again:");
         displayByteArray(Cipher.unPad(recovered, 8));
-        
-
-      } catch(Exception e) {
-        e.printStackTrace();
-      }
     }
 
     public static void

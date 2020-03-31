@@ -29,7 +29,6 @@ public class BadSSL {
             ocsp = true;
         }
 
-        CryptoManager.initialize(args[0]);
         CryptoManager cm = CryptoManager.getInstance();
 
         if (ocsp) {

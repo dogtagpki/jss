@@ -207,18 +207,9 @@ public class SymKeyGen {
 
     private SymKeyGen( String certDbLoc) {
         try {
-            CryptoManager.initialize(certDbLoc);
             CryptoManager cm  = CryptoManager.getInstance();
             token = cm.getInternalCryptoToken();
-        } catch (AlreadyInitializedException ex) {
-            ex.printStackTrace();
-        } catch (CertDatabaseException ex) {
-            ex.printStackTrace();
         } catch (NotInitializedException ex) {
-            ex.printStackTrace();
-        } catch (GeneralSecurityException ex) {
-            ex.printStackTrace();
-        } catch (KeyDatabaseException ex) {
             ex.printStackTrace();
         }
     }

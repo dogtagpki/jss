@@ -23,7 +23,7 @@ public class TestSDR {
         if( args.length != 2 ) {
             throw new Exception("Usage: java TestSDR <dbdir> <pwfile>");
         }
-        CryptoManager.initialize(args[0]);
+
         CryptoManager cm = CryptoManager.getInstance();
         cm.setPasswordCallback( new FilePasswordCallback(args[1]) );
 

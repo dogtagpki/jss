@@ -175,7 +175,6 @@ public class JCAKeyWrap {
      */
     public JCAKeyWrap(String certDbLoc, String passwdFile) {
         try {
-            CryptoManager.initialize(certDbLoc);
             CryptoManager cm = CryptoManager.getInstance();
             CryptoToken token = cm.getInternalKeyStorageToken();
             PasswordCallback cb = new FilePasswordCallback(passwdFile);
@@ -185,18 +184,6 @@ public class JCAKeyWrap {
                 System.out.println("in Fipsmode.");
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (KeyDatabaseException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (CertDatabaseException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (AlreadyInitializedException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        } catch (GeneralSecurityException ex) {
             ex.printStackTrace();
             System.exit(1);
         } catch (IncorrectPasswordException ex) {

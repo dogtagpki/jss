@@ -167,7 +167,7 @@ macro(jss_tests)
     )
     jss_test_java(
         NAME "List_CA_certs"
-        COMMAND "org.mozilla.jss.tests.ListCACerts" "${RESULTS_NSSDB_OUTPUT_DIR}"
+        COMMAND "org.mozilla.jss.tests.ListCACerts" "${RESULTS_NSSDB_OUTPUT_DIR}" "Verbose"
         DEPENDS "Generate_known_DSS_cert_pair"
     )
     jss_test_java(

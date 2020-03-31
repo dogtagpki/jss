@@ -46,7 +46,6 @@ public class TestKeyGen {
             System.exit(1);
         }
 
-        CryptoManager.initialize(args[0]);
         manager = CryptoManager.getInstance();
         manager.setPasswordCallback( new FilePasswordCallback(args[1]) );
 

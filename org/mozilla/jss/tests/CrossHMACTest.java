@@ -41,7 +41,6 @@ public class CrossHMACTest {
                     "<dbdir> [password file only needed in FIPS mode]");
             System.exit(1);
         }
-        CryptoManager.initialize(argv[0]);
         cm = CryptoManager.getInstance();
 
         if (cm.FIPSEnabled() == true) {

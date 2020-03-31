@@ -26,8 +26,6 @@ public final class CloseDBs extends org.mozilla.jss.DatabaseCloser {
             System.exit(0);
         }
 
-        CryptoManager.initialize( args[0] );
-
         CryptoManager manager = CryptoManager.getInstance();
 
         Enumeration<CryptoToken> tokens = manager.getAllTokens();

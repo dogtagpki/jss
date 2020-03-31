@@ -127,7 +127,6 @@ public class JSS_SelfServServer  {
         }
 
         if (bVerbose) System.out.println("initializing JSS");
-        CryptoManager.initialize(fCertDbPath);
         CryptoManager    cm = CryptoManager.getInstance();
         CryptoToken     tok = cm.getInternalKeyStorageToken();
         PasswordCallback cb = new FilePasswordCallback(fPasswordFile);

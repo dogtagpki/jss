@@ -28,10 +28,7 @@ public class ListCerts {
                 System.out.println("Usage: ListCerts <dbdir> <nickname>");
                 return;
             }
-            String dbdir = args[0];
             String nickname = args[1];
-
-            CryptoManager.initialize(dbdir);
 
             CryptoManager cm = CryptoManager.getInstance();
 
