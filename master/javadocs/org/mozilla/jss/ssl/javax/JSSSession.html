@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -74,13 +74,13 @@ var activeTableTab = "activeTableTab";
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -120,6 +120,26 @@ implements javax.net.ssl.SSLSession</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier</th>
+<th class="colLast" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected </code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#JSSSession-org.mozilla.jss.ssl.javax.JSSEngine-int-">JSSSession</a></span>(<a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a>&nbsp;engine,
+          int&nbsp;buffer_size)</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -137,129 +157,161 @@ implements javax.net.ssl.SSLSession</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getApplicationBufferSize--">getApplicationBufferSize</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../org/mozilla/jss/nss/SSLChannelInfo.html" title="class in org.mozilla.jss.nss">SSLChannelInfo</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getChannelInfo--">getChannelInfo</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getCipherSuite--">getCipherSuite</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getCreationTime--">getCreationTime</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getEngine--">getEngine</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getExpirationTime--">getExpirationTime</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getId--">getId</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getLastAccessedTime--">getLastAccessedTime</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.security.cert.Certificate[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getLocalCertificates--">getLocalCertificates</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>java.security.Principal</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getLocalPrincipal--">getLocalPrincipal</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPacketBufferSize--">getPacketBufferSize</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>javax.security.cert.X509Certificate[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPeerCertificateChain--">getPeerCertificateChain</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>java.security.cert.Certificate[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPeerCertificates--">getPeerCertificates</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPeerHost--">getPeerHost</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPeerPort--">getPeerPort</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.security.Principal</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPeerPrincipal--">getPeerPrincipal</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i16" class="altColor">
+<td class="colFirst"><code><a href="../../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html" title="class in org.mozilla.jss.nss">SSLPreliminaryChannelInfo</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getPreliminaryChannelInfo--">getPreliminaryChannelInfo</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getProtocol--">getProtocol</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>javax.net.ssl.SSLSessionContext</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getSessionContext--">getSessionContext</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getSSLCipher--">getSSLCipher</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getValue-java.lang.String-">getValue</a></span>(java.lang.String&nbsp;name)</code>&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#getValueNames--">getValueNames</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#invalidate--">invalidate</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#isValid--">isValid</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#putValue-java.lang.String-java.lang.Object-">putValue</a></span>(java.lang.String&nbsp;name,
         java.lang.Object&nbsp;value)</code>&nbsp;</td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#refreshData--">refreshData</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#removeValue-java.lang.String-">removeValue</a></span>(java.lang.String&nbsp;name)</code>&nbsp;</td>
 </tr>
-<tr id="i21" class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setCipherSuite-java.lang.String-">setCipherSuite</a></span>(java.lang.String&nbsp;new_suite)</code>&nbsp;</td>
-</tr>
-<tr id="i22" class="altColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setId-byte:A-">setId</a></span>(byte[]&nbsp;new_id)</code>&nbsp;</td>
-</tr>
-<tr id="i23" class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setLastAccessedTime--">setLastAccessedTime</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i24" class="altColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setLocalCertificates-java.security.cert.Certificate:A-">setLocalCertificates</a></span>(java.security.cert.Certificate[]&nbsp;new_certs)</code>&nbsp;</td>
-</tr>
-<tr id="i25" class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setLocalPrincipal-java.security.Principal-">setLocalPrincipal</a></span>(java.security.Principal&nbsp;new_principal)</code>&nbsp;</td>
-</tr>
-<tr id="i26" class="altColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerCertificateChain-javax.security.cert.X509Certificate:A-">setPeerCertificateChain</a></span>(javax.security.cert.X509Certificate[]&nbsp;new_chain)</code>&nbsp;</td>
-</tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerCertificates-java.security.cert.Certificate:A-">setPeerCertificates</a></span>(java.security.cert.Certificate[]&nbsp;new_certs)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setCipherSuite-org.mozilla.jss.ssl.SSLCipher-">setCipherSuite</a></span>(<a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>&nbsp;suite)</code>&nbsp;</td>
 </tr>
 <tr id="i28" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerHost-java.lang.String-">setPeerHost</a></span>(java.lang.String&nbsp;new_host)</code>&nbsp;</td>
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setCreationTime-long-">setCreationTime</a></span>(long&nbsp;time)</code>&nbsp;</td>
 </tr>
 <tr id="i29" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerPort-int-">setPeerPort</a></span>(int&nbsp;new_port)</code>&nbsp;</td>
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setExpirationTime-long-">setExpirationTime</a></span>(long&nbsp;when)</code>&nbsp;</td>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerPrincipal-java.security.Principal-">setPeerPrincipal</a></span>(java.security.Principal&nbsp;new_principal)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setId-byte:A-">setId</a></span>(byte[]&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setProtocol-java.lang.String-">setProtocol</a></span>(java.lang.String&nbsp;new_protocol)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setLastAccessedTime-long-">setLastAccessedTime</a></span>(long&nbsp;when)</code>&nbsp;</td>
+</tr>
+<tr id="i32" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setLocalCertificates-java.security.cert.Certificate:A-">setLocalCertificates</a></span>(java.security.cert.Certificate[]&nbsp;certs)</code>&nbsp;</td>
+</tr>
+<tr id="i33" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setLocalPrincipal-java.security.Principal-">setLocalPrincipal</a></span>(java.security.Principal&nbsp;principal)</code>&nbsp;</td>
+</tr>
+<tr id="i34" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerCertificateChain-javax.security.cert.X509Certificate:A-">setPeerCertificateChain</a></span>(javax.security.cert.X509Certificate[]&nbsp;chain)</code>&nbsp;</td>
+</tr>
+<tr id="i35" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerCertificates-java.security.cert.Certificate:A-">setPeerCertificates</a></span>(java.security.cert.Certificate[]&nbsp;new_certs)</code>&nbsp;</td>
+</tr>
+<tr id="i36" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerHost-java.lang.String-">setPeerHost</a></span>(java.lang.String&nbsp;host)</code>&nbsp;</td>
+</tr>
+<tr id="i37" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerPort-int-">setPeerPort</a></span>(int&nbsp;port)</code>&nbsp;</td>
+</tr>
+<tr id="i38" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setPeerPrincipal-java.security.Principal-">setPeerPrincipal</a></span>(java.security.Principal&nbsp;principal)</code>&nbsp;</td>
+</tr>
+<tr id="i39" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html#setProtocol-org.mozilla.jss.ssl.SSLVersion-">setProtocol</a></span>(<a href="../../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>&nbsp;protocol)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -277,12 +329,83 @@ implements javax.net.ssl.SSLSession</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="JSSSession-org.mozilla.jss.ssl.javax.JSSEngine-int-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>JSSSession</h4>
+<pre>protected&nbsp;JSSSession(<a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a>&nbsp;engine,
+                     int&nbsp;buffer_size)</pre>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ============ METHOD DETAIL ========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.detail">
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getEngine--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getEngine</h4>
+<pre>public&nbsp;<a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a>&nbsp;getEngine()</pre>
+</li>
+</ul>
+<a name="getChannelInfo--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getChannelInfo</h4>
+<pre>public&nbsp;<a href="../../../../../org/mozilla/jss/nss/SSLChannelInfo.html" title="class in org.mozilla.jss.nss">SSLChannelInfo</a>&nbsp;getChannelInfo()</pre>
+</li>
+</ul>
+<a name="getPreliminaryChannelInfo--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPreliminaryChannelInfo</h4>
+<pre>public&nbsp;<a href="../../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html" title="class in org.mozilla.jss.nss">SSLPreliminaryChannelInfo</a>&nbsp;getPreliminaryChannelInfo()</pre>
+</li>
+</ul>
+<a name="getApplicationBufferSize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getApplicationBufferSize</h4>
+<pre>public&nbsp;int&nbsp;getApplicationBufferSize()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getApplicationBufferSize</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getPacketBufferSize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPacketBufferSize</h4>
+<pre>public&nbsp;int&nbsp;getPacketBufferSize()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getPacketBufferSize</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
+</dl>
+</li>
+</ul>
 <a name="getId--">
 <!--   -->
 </a>
@@ -302,7 +425,7 @@ implements javax.net.ssl.SSLSession</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setId</h4>
-<pre>protected&nbsp;void&nbsp;setId(byte[]&nbsp;new_id)</pre>
+<pre>protected&nbsp;void&nbsp;setId(byte[]&nbsp;id)</pre>
 </li>
 </ul>
 <a name="getSessionContext--">
@@ -331,6 +454,15 @@ implements javax.net.ssl.SSLSession</pre>
 </dl>
 </li>
 </ul>
+<a name="setCreationTime-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setCreationTime</h4>
+<pre>protected&nbsp;void&nbsp;setCreationTime(long&nbsp;time)</pre>
+</li>
+</ul>
 <a name="getLastAccessedTime--">
 <!--   -->
 </a>
@@ -344,26 +476,40 @@ implements javax.net.ssl.SSLSession</pre>
 </dl>
 </li>
 </ul>
-<a name="setLastAccessedTime--">
+<a name="setLastAccessedTime-long-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setLastAccessedTime</h4>
-<pre>protected&nbsp;void&nbsp;setLastAccessedTime()</pre>
+<pre>protected&nbsp;void&nbsp;setLastAccessedTime(long&nbsp;when)</pre>
 </li>
 </ul>
-<a name="invalidate--">
+<a name="getExpirationTime--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>invalidate</h4>
-<pre>public&nbsp;void&nbsp;invalidate()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>invalidate</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
-</dl>
+<h4>getExpirationTime</h4>
+<pre>public&nbsp;long&nbsp;getExpirationTime()</pre>
+</li>
+</ul>
+<a name="refreshData--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>refreshData</h4>
+<pre>protected&nbsp;void&nbsp;refreshData()</pre>
+</li>
+</ul>
+<a name="setExpirationTime-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setExpirationTime</h4>
+<pre>protected&nbsp;void&nbsp;setExpirationTime(long&nbsp;when)</pre>
 </li>
 </ul>
 <a name="isValid--">
@@ -376,6 +522,19 @@ implements javax.net.ssl.SSLSession</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>isValid</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
+</dl>
+</li>
+</ul>
+<a name="invalidate--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invalidate</h4>
+<pre>public&nbsp;void&nbsp;invalidate()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>invalidate</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
 </dl>
 </li>
 </ul>
@@ -432,6 +591,28 @@ implements javax.net.ssl.SSLSession</pre>
 </dl>
 </li>
 </ul>
+<a name="getLocalCertificates--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocalCertificates</h4>
+<pre>public&nbsp;java.security.cert.Certificate[]&nbsp;getLocalCertificates()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getLocalCertificates</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setLocalCertificates-java.security.cert.Certificate:A-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setLocalCertificates</h4>
+<pre>protected&nbsp;void&nbsp;setLocalCertificates(java.security.cert.Certificate[]&nbsp;certs)</pre>
+</li>
+</ul>
 <a name="getPeerCertificates--">
 <!--   -->
 </a>
@@ -452,28 +633,6 @@ implements javax.net.ssl.SSLSession</pre>
 <li class="blockList">
 <h4>setPeerCertificates</h4>
 <pre>protected&nbsp;void&nbsp;setPeerCertificates(java.security.cert.Certificate[]&nbsp;new_certs)</pre>
-</li>
-</ul>
-<a name="getLocalCertificates--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLocalCertificates</h4>
-<pre>public&nbsp;java.security.cert.Certificate[]&nbsp;getLocalCertificates()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getLocalCertificates</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
-</dl>
-</li>
-</ul>
-<a name="setLocalCertificates-java.security.cert.Certificate:A-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setLocalCertificates</h4>
-<pre>protected&nbsp;void&nbsp;setLocalCertificates(java.security.cert.Certificate[]&nbsp;new_certs)</pre>
 </li>
 </ul>
 <a name="getPeerCertificateChain--">
@@ -498,7 +657,7 @@ implements javax.net.ssl.SSLSession</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeerCertificateChain</h4>
-<pre>protected&nbsp;void&nbsp;setPeerCertificateChain(javax.security.cert.X509Certificate[]&nbsp;new_chain)</pre>
+<pre>protected&nbsp;void&nbsp;setPeerCertificateChain(javax.security.cert.X509Certificate[]&nbsp;chain)</pre>
 </li>
 </ul>
 <a name="getPeerPrincipal--">
@@ -520,7 +679,7 @@ implements javax.net.ssl.SSLSession</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeerPrincipal</h4>
-<pre>protected&nbsp;void&nbsp;setPeerPrincipal(java.security.Principal&nbsp;new_principal)</pre>
+<pre>protected&nbsp;void&nbsp;setPeerPrincipal(java.security.Principal&nbsp;principal)</pre>
 </li>
 </ul>
 <a name="getLocalPrincipal--">
@@ -542,7 +701,7 @@ implements javax.net.ssl.SSLSession</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setLocalPrincipal</h4>
-<pre>protected&nbsp;void&nbsp;setLocalPrincipal(java.security.Principal&nbsp;new_principal)</pre>
+<pre>protected&nbsp;void&nbsp;setLocalPrincipal(java.security.Principal&nbsp;principal)</pre>
 </li>
 </ul>
 <a name="getCipherSuite--">
@@ -558,13 +717,22 @@ implements javax.net.ssl.SSLSession</pre>
 </dl>
 </li>
 </ul>
-<a name="setCipherSuite-java.lang.String-">
+<a name="getSSLCipher--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSSLCipher</h4>
+<pre>public&nbsp;<a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>&nbsp;getSSLCipher()</pre>
+</li>
+</ul>
+<a name="setCipherSuite-org.mozilla.jss.ssl.SSLCipher-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setCipherSuite</h4>
-<pre>protected&nbsp;void&nbsp;setCipherSuite(java.lang.String&nbsp;new_suite)</pre>
+<pre>protected&nbsp;void&nbsp;setCipherSuite(<a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>&nbsp;suite)</pre>
 </li>
 </ul>
 <a name="getProtocol--">
@@ -580,13 +748,13 @@ implements javax.net.ssl.SSLSession</pre>
 </dl>
 </li>
 </ul>
-<a name="setProtocol-java.lang.String-">
+<a name="setProtocol-org.mozilla.jss.ssl.SSLVersion-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setProtocol</h4>
-<pre>protected&nbsp;void&nbsp;setProtocol(java.lang.String&nbsp;new_protocol)</pre>
+<pre>protected&nbsp;void&nbsp;setProtocol(<a href="../../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>&nbsp;protocol)</pre>
 </li>
 </ul>
 <a name="getPeerHost--">
@@ -608,7 +776,7 @@ implements javax.net.ssl.SSLSession</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeerHost</h4>
-<pre>public&nbsp;void&nbsp;setPeerHost(java.lang.String&nbsp;new_host)</pre>
+<pre>public&nbsp;void&nbsp;setPeerHost(java.lang.String&nbsp;host)</pre>
 </li>
 </ul>
 <a name="getPeerPort--">
@@ -627,36 +795,10 @@ implements javax.net.ssl.SSLSession</pre>
 <a name="setPeerPort-int-">
 <!--   -->
 </a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setPeerPort</h4>
-<pre>public&nbsp;void&nbsp;setPeerPort(int&nbsp;new_port)</pre>
-</li>
-</ul>
-<a name="getPacketBufferSize--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPacketBufferSize</h4>
-<pre>public&nbsp;int&nbsp;getPacketBufferSize()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getPacketBufferSize</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
-</dl>
-</li>
-</ul>
-<a name="getApplicationBufferSize--">
-<!--   -->
-</a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getApplicationBufferSize</h4>
-<pre>public&nbsp;int&nbsp;getApplicationBufferSize()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getApplicationBufferSize</code>&nbsp;in interface&nbsp;<code>javax.net.ssl.SSLSession</code></dd>
-</dl>
+<h4>setPeerPort</h4>
+<pre>public&nbsp;void&nbsp;setPeerPort(int&nbsp;port)</pre>
 </li>
 </ul>
 </li>
@@ -713,13 +855,13 @@ implements javax.net.ssl.SSLSession</pre>
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
