@@ -402,6 +402,8 @@ Java_org_mozilla_jss_nss_SSL_AttachClientCertCallback;
 Java_org_mozilla_jss_CryptoManager_getJSSDebug;
 Java_org_mozilla_jss_util_GlobalRefProxy_releaseNativeResources;
 Java_org_mozilla_jss_nss_SSL_EnableAlertLoggingNative;
+Java_org_mozilla_jss_CryptoManager_verifyCertificateNowNative3;
+Java_org_mozilla_jss_nss_SSLFDProxy_releaseNativeResources;
     local:
         *;
 };
@@ -447,6 +449,10 @@ JSS_4.6.4 {
 Java_org_mozilla_jss_nss_SSL_GetChannelInfo;
 Java_org_mozilla_jss_nss_SSL_GetPreliminaryChannelInfo;
 Java_org_mozilla_jss_nss_SSL_InvalidateSession;
+Java_org_mozilla_jss_nss_SSL_CipherPrefGetDefault;
+Java_org_mozilla_jss_nss_SSL_CipherPrefSetDefault;
+Java_org_mozilla_jss_nss_SSL_VersionRangeGetDefaultNative;
+Java_org_mozilla_jss_nss_SSL_VersionRangeSetDefaultNative;
     local:
         *;
 };
