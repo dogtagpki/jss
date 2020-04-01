@@ -61,3 +61,7 @@ At run time, the following JARs are required to be specified on the
 Note that these should already be installed when building JSS. For more
 information, please refer to our documentation on using JSS:
 [`docs/using_jss.md`](using_jss.md).
+
+## Incompatibilities
+
+Known NSS incompatibilities are documented in [`docs/nss.md`](nss.md).
