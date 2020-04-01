@@ -1,0 +1,27 @@
+FROM fedora:latest
+
+# Install generic dependencies to check symbols
+RUN true \
+        && dnf update -y --refresh \
+        && dnf install -y diffutils grep coreutils \
+        && mkdir -p /home/sandbox \
+        && dnf clean -y all \
+        && rm -rf /usr/share/doc /usr/share/doc-base \
+                  /usr/share/man /usr/share/locale /usr/share/zoneinfo \
+        && true
+
+# Link in the current version of jss from the git repository
+WORKDIR /home/sandbox
+COPY . /home/sandbox/jss
+
+# List all JNI symbols in the code and in the version script, comparing them,
+# and if the difference is non-empty (test ! -s /tmp/diff.txt), exit with
+# an error.
+WORKDIR /home/sandbox/jss
+CMD true \
+        && grep -iroh '^Java_org_mozilla[^(;]*' org/ | sort -u > /tmp/functions.txt \
+        && grep -iroh '^Java_org_mozilla[^(;]*' lib/ | sort -u > /tmp/version.txt \
+        && comm -23 --check-order /tmp/functions.txt /tmp/version.txt > /tmp/diff.txt \
+        && ( diff /tmp/functions.txt /tmp/version.txt || true ) \
+        && test ! -s /tmp/diff.txt \
+        && true
