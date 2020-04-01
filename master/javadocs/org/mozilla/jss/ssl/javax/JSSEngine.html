@@ -961,9 +961,14 @@ extends javax.net.ssl.SSLEngine</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setEnabledCipherSuites</h4>
-<pre>public&nbsp;void&nbsp;setEnabledCipherSuites(<a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>[]&nbsp;suites)</pre>
+<pre>public&nbsp;void&nbsp;setEnabledCipherSuites(<a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>[]&nbsp;suites)
+                            throws java.lang.IllegalArgumentException</pre>
 <div class="block">Sets the list of enabled cipher suites from a a list of SSLCipher enum
  instances.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code></dd>
+</dl>
 </li>
 </ul>
 <a name="getEnabledCipherSuites--">
