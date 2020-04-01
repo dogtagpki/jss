@@ -15,6 +15,7 @@ import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.ssl.javax.JSSEngine;
 import org.mozilla.jss.ssl.javax.JSSEngineReferenceImpl;
+import org.mozilla.jss.ssl.javax.JSSParameters;
 import org.mozilla.jss.ssl.SSLVersion;
 
 public class JSSContextSpi extends SSLContextSpi {
@@ -94,6 +95,13 @@ public class JSSContextSpi extends SSLContextSpi {
     public SSLSocketFactory engineGetSocketFactory() {
         logger.debug("JSSContextSpi.engineGetSocketFactory() - not implemented");
         return null;
+    }
+
+    public SSLParameters engineGetSupportedSSLParameters() {
+        JSSParameters params = new JSSParameters();
+        params.setCipherSuites(JSSEngine.queryEnabledCipherSuites());
+        params.setProtocols(JSSEngine.queryEnabledProtocols());
+        return params;
     }
 
     public class TLSv11 extends JSSContextSpi {
