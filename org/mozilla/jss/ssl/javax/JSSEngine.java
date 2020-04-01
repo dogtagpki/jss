@@ -417,7 +417,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Queries the list of cipher suites enabled by default, if a
      * corresponding setEnabledCIpherSuites call hasn't yet been made.
      */
-    private SSLCipher[] queryEnabledCipherSuites() {
+    public static SSLCipher[] queryEnabledCipherSuites() {
         logger.debug("JSSEngine: queryEnabledCipherSuites()");
         ArrayList<SSLCipher> enabledCiphers = new ArrayList<SSLCipher>();
 
@@ -545,7 +545,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      *
      * Only used when setEnabledProtocols(...) hasn't yet been called.
      */
-    private SSLVersionRange queryEnabledProtocols() {
+    public static SSLVersionRange queryEnabledProtocols() {
         logger.debug("JSSEngine: queryEnabledProtocols()");
 
         SSLVersionRange vrange;
