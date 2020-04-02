@@ -195,6 +195,7 @@ PR_BEGIN_EXTERN_C
 #define SIG_CONTEXT_PROXY_FIELD "sigContext"
 #define SIG_CONTEXT_PROXY_SIG "Lorg/mozilla/jss/pkcs11/SigContextProxy;"
 #define SIG_ALGORITHM_FIELD "algorithm"
+#define SIG_DIGEST_ALGORITHM_FIELD "digestAlgorithm"
 #define SIG_ALGORITHM_SIG "Lorg/mozilla/jss/crypto/Algorithm;"
 #define SIG_PW_FIELD "pwExtractor"
 #define SIG_PW_SIG "Lorg/mozilla/jss/crypto/PasswordExtractor;"

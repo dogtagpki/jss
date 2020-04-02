@@ -60,13 +60,23 @@ public class SignatureAlgorithm extends Algorithm {
     /**
      * The digest portion of the signature algorithm.
      */
+    private DigestAlgorithm digestAlg;
+
     public DigestAlgorithm getDigestAlg() throws NoSuchAlgorithmException {
-        if( digestAlg == null ) {
+        if (digestAlg == null) {
             throw new NoSuchAlgorithmException();
         }
+
         return digestAlg;
     }
-    private DigestAlgorithm digestAlg;
+
+    public DigestAlgorithm setDigestAlg(DigestAlgorithm alg) throws NoSuchAlgorithmException {
+        if (alg == null) {
+            throw new NoSuchAlgorithmException();
+        }
+
+        return digestAlg = alg;
+    }
 
     //////////////////////////////////////////////////////////////////////
     // Signature Algorithms
@@ -174,4 +184,32 @@ public class SignatureAlgorithm extends Algorithm {
             "RSASignatureWithSHA512Digest", RSASignature, DigestAlgorithm.SHA512,
             OBJECT_IDENTIFIER.PKCS1.subBranch(13));
 
+    //////////////////////////////////////////////////////////////////////
+
+    /**
+     * Version with no digest set: must call setDigestAlg() after initialization
+     * to choose the proper variant.
+     */
+    public static final SignatureAlgorithm
+    RSAPSSSignature =
+        new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
+            "RSAPSSSignature", null, null,
+            OBJECT_IDENTIFIER.PKCS1.subBranch(10));
+    public static final SignatureAlgorithm
+    RSAPSSSignatureWithSHA256Digest =
+        new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
+            "RSAPSSSignatureWithSHA256Digest", null, DigestAlgorithm.SHA256,
+            OBJECT_IDENTIFIER.PKCS1.subBranch(10));
+
+    public static final SignatureAlgorithm
+    RSAPSSSignatureWithSHA384Digest =
+        new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
+            "RSAPSSSignatureWithSHA384Digest", null, DigestAlgorithm.SHA384,
+            OBJECT_IDENTIFIER.PKCS1.subBranch(10));
+
+    public static final SignatureAlgorithm
+    RSAPSSSignatureWithSHA512Digest =
+        new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
+            "RSAPSSSignatureWithSHA512Digest", null, DigestAlgorithm.SHA384,
+            OBJECT_IDENTIFIER.PKCS1.subBranch(10));
 }
