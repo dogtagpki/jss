@@ -57,15 +57,14 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initSigContext
     SECKEYPrivateKey *privk;
     SECAlgorithmID *signAlg=NULL;
     SECStatus rv;
+    PRArenaPool *arena = NULL;
+    SECOidTag signingAlg = SEC_OID_UNKNOWN;
 
     /* Extract the private key from the PK11Signature */
     if( getPrivateKey(env, this, &privk) != PR_SUCCESS) {
         PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
         goto finish;
     }
-    
-    PRArenaPool *arena = NULL;
-    SECOidTag signingAlg = SEC_OID_UNKNOWN;
 
     signingAlg = getAlgorithm(env,this);
 
@@ -139,13 +138,13 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
 
         PRArenaPool *arena = NULL;
 
+        SECAlgorithmID *signAlg=NULL;
+        SECStatus rv;
+
 	if( getPublicKey(env, this, &pubk) != PR_SUCCESS ) {
 		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
-
-        SECAlgorithmID *signAlg=NULL;
-        SECStatus rv;
 
         SECOidTag signingAlg = SEC_OID_UNKNOWN;
         signingAlg = getAlgorithm(env,this);
