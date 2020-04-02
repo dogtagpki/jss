@@ -119,6 +119,10 @@ public final class KeyType {
                     SignatureAlgorithm.RSASignatureWithSHA256Digest,
                     SignatureAlgorithm.RSASignatureWithSHA384Digest,
                     SignatureAlgorithm.RSASignatureWithSHA512Digest,
+                    SignatureAlgorithm.RSAPSSSignature,
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest,
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest,
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest,
                     KeyWrapAlgorithm.RSA
                     },
                     "RSA"

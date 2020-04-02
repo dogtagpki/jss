@@ -431,7 +431,8 @@ JSS_PK11_getSigContext(JNIEnv *env, jobject proxy, void**pContext,
  *  or NULL if an exception was thrown.
  */
 jobject
-JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type);
+JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type,
+        PRArenaPool **arena);
 
 /***********************************************************************
  *

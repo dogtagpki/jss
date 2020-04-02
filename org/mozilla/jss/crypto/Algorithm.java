@@ -255,4 +255,7 @@ public class Algorithm {
     protected static final int CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA=75;
     protected static final int CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA=76;
     protected static final int CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA=77;
+
+    // RSA-PSS
+    protected static final short SEC_OID_PKCS1_RSA_PSS_SIGNATURE = 78;
 }
