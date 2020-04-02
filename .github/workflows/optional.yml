@@ -65,3 +65,10 @@ jobs:
       uses: actions/checkout@v2
     - name: Build and Run the Docker Image
       run: bash tools/run_container.sh "centos_8" || echo "::warning ::Job exited with status $?"
+  buildpki:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone the repository
+      uses: actions/checkout@v2
+    - name: Build and Run the Docker Image
+      run: bash tools/run_container.sh "pki_build" || echo "::warning ::Job exited with status $?"
