@@ -19,7 +19,7 @@ public final class JSSProvider extends java.security.Provider {
     /* QUESTION: When do we change MINOR and PATCH to 4 and 0? */
     private static int JSS_MAJOR_VERSION  = 4;
     private static int JSS_MINOR_VERSION  = 4;
-    private static int JSS_PATCH_VERSION  = 8;
+    private static int JSS_PATCH_VERSION  = 9;
     private static double JSS_VERSION     = JSS_MAJOR_VERSION +
                                            (JSS_MINOR_VERSION * 100 +
                                             JSS_PATCH_VERSION)/10000.0;
