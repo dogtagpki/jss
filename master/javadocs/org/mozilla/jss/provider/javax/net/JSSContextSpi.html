@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -225,6 +225,10 @@ extends javax.net.ssl.SSLContextSpi</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/net/JSSContextSpi.html#engineGetSocketFactory--">engineGetSocketFactory</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
+<td class="colFirst"><code>javax.net.ssl.SSLParameters</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/net/JSSContextSpi.html#engineGetSupportedSSLParameters--">engineGetSupportedSSLParameters</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/provider/javax/net/JSSContextSpi.html#engineInit-javax.net.ssl.KeyManager:A-javax.net.ssl.TrustManager:A-java.security.SecureRandom-">engineInit</a></span>(javax.net.ssl.KeyManager[]&nbsp;kms,
           javax.net.ssl.TrustManager[]&nbsp;tms,
@@ -236,7 +240,7 @@ extends javax.net.ssl.SSLContextSpi</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;javax.net.ssl.SSLContextSpi</h3>
-<code>engineGetDefaultSSLParameters, engineGetSupportedSSLParameters</code></li>
+<code>engineGetDefaultSSLParameters</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -380,13 +384,26 @@ extends javax.net.ssl.SSLContextSpi</pre>
 <a name="engineGetSocketFactory--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>engineGetSocketFactory</h4>
 <pre>public&nbsp;javax.net.ssl.SSLSocketFactory&nbsp;engineGetSocketFactory()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>engineGetSocketFactory</code>&nbsp;in class&nbsp;<code>javax.net.ssl.SSLContextSpi</code></dd>
+</dl>
+</li>
+</ul>
+<a name="engineGetSupportedSSLParameters--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>engineGetSupportedSSLParameters</h4>
+<pre>public&nbsp;javax.net.ssl.SSLParameters&nbsp;engineGetSupportedSSLParameters()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>engineGetSupportedSSLParameters</code>&nbsp;in class&nbsp;<code>javax.net.ssl.SSLContextSpi</code></dd>
 </dl>
 </li>
 </ul>
