@@ -57,7 +57,7 @@ public enum SSLAlertDescription {
         this.id = id;
     }
 
-    private SSLAlertDescription(int id, Class exception) {
+    private SSLAlertDescription(int id, Class<? extends SSLException> exception) {
         this(id);
         this.exception = exception;
     }

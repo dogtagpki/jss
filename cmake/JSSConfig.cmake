@@ -281,6 +281,7 @@ macro(jss_config_java)
 
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         list(APPEND JSS_JAVAC_FLAGS "-g")
+        list(APPEND JSS_JAVAC_FLAGS "-Xlint:unchecked")
     else()
         list(APPEND JSS_JAVAC_FLAGS "-O")
     endif()

@@ -7,7 +7,7 @@ RUN true \
                           glassfish-jaxb-api java-11-openjdk nss-tools \
                           apache-commons-lang gcc-c++ java-11-openjdk-devel \
                           jpackage-utils slf4j nss zlib-devel nss-devel \
-                          nspr-devel perl slf4j-jdk14 junit \
+                          nspr-devel slf4j-jdk14 junit \
         && mkdir -p /home/sandbox \
         && dnf clean -y all \
         && rm -rf /usr/share/doc /usr/share/doc-base \
