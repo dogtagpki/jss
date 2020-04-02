@@ -33,101 +33,95 @@ public class SigTest {
                 " [tokenname]");
     }
 
-    public static void main(String args[]) {
-        try {
-            CryptoToken token;
-            CryptoManager manager;
-            byte[] data = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
-            byte[] signature;
-            Signature signer;
-            Signature signerPSS;
-            PublicKey pubk;
-            KeyPairGenerator kpgen;
-            KeyPair keyPair;
+    public static void main(String args[]) throws Exception {
+        CryptoToken token;
+        CryptoManager manager;
+        byte[] data = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        byte[] signature;
+        Signature signer;
+        Signature signerPSS;
+        PublicKey pubk;
+        KeyPairGenerator kpgen;
+        KeyPair keyPair;
 
-            if (args.length < 2 || args.length > 3) {
-                usage();
-                System.exit(1);
-            }
-
-            manager = CryptoManager.getInstance();
-            manager.setPasswordCallback(new FilePasswordCallback(args[1]));
-
-
-            /* Print out list of available tokens */
-            Enumeration<CryptoToken> en = manager.getAllTokens();
-            System.out.println("Available tokens:");
-            while (en.hasMoreElements()) {
-                PK11Token p = (PK11Token) en.nextElement();
-                System.out.println(" token : " + p.getName());
-            }
-
-            if (args.length >= 3) {
-                token = manager.getTokenByName(args[2]);
-            } else {
-                //get default internal key storage token
-                token = manager.getInternalKeyStorageToken();
-            }
-
-            // Generate an RSA keypair
-            kpgen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
-            kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
-            KeyPairGeneratorSpi.Usage usages[] = {
-                KeyPairGeneratorSpi.Usage.SIGN,
-                KeyPairGeneratorSpi.Usage.VERIFY};
-            KeyPairGeneratorSpi.Usage usages_mask[] = {
-                KeyPairGeneratorSpi.Usage.SIGN,
-                KeyPairGeneratorSpi.Usage.VERIFY};
-
-            kpgen.setKeyPairUsages(usages, usages_mask);
-            keyPair = kpgen.genKeyPair();
-
-            // RSA MD5
-            signer = token.getSignatureContext(
-                    SignatureAlgorithm.RSASignatureWithMD5Digest);
-            System.out.println("Created a signing context");
-            signer.initSign(
-                    (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
-            System.out.println("initialized the signing operation");
-
-            signer.update(data);
-            System.out.println("updated signature with data");
-            signature = signer.sign();
-            System.out.println("Successfully signed!");
-
-            signer.initVerify(keyPair.getPublic());
-            System.out.println("initialized verification");
-            signer.update(data);
-            System.out.println("updated verification with data");
-            if (signer.verify(signature)) {
-                System.out.println("Signature Verified Successfully!");
-            } else {
-                throw new Exception("ERROR: Signature failed to verify.");
-            }
-
-            signerPSS = token.getSignatureContext(
-                    SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest);
-            signerPSS.initSign(
-                    (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
-
-            signerPSS.update(data);
-            signature = signerPSS.sign();
-            System.out.println("PSS Successfully signed!");
-
-            signerPSS.initVerify(keyPair.getPublic());
-            signerPSS.update(data);
-            System.out.println("updated verification with data");
-            if (signerPSS.verify(signature)) {
-                System.out.println("PSS Signature Verified Successfully!");
-            } else {
-                throw new Exception("ERROR: PSS Signature failed to verify.");
-            }
-
-            System.out.println("SigTest passed.");
-            System.exit(0);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (args.length < 2 || args.length > 3) {
+            usage();
             System.exit(1);
         }
+
+        manager = CryptoManager.getInstance();
+        manager.setPasswordCallback(new FilePasswordCallback(args[1]));
+
+
+        /* Print out list of available tokens */
+        Enumeration<CryptoToken> en = manager.getAllTokens();
+        System.out.println("Available tokens:");
+        while (en.hasMoreElements()) {
+            PK11Token p = (PK11Token) en.nextElement();
+            System.out.println(" token : " + p.getName());
+        }
+
+        if (args.length >= 3) {
+            token = manager.getTokenByName(args[2]);
+        } else {
+            //get default internal key storage token
+            token = manager.getInternalKeyStorageToken();
+        }
+
+        // Generate an RSA keypair
+        kpgen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
+        kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
+        KeyPairGeneratorSpi.Usage usages[] = {
+            KeyPairGeneratorSpi.Usage.SIGN,
+            KeyPairGeneratorSpi.Usage.VERIFY};
+        KeyPairGeneratorSpi.Usage usages_mask[] = {
+            KeyPairGeneratorSpi.Usage.SIGN,
+            KeyPairGeneratorSpi.Usage.VERIFY};
+
+        kpgen.setKeyPairUsages(usages, usages_mask);
+        keyPair = kpgen.genKeyPair();
+
+        // RSA MD5
+        signer = token.getSignatureContext(
+                SignatureAlgorithm.RSASignatureWithMD5Digest);
+        System.out.println("Created a signing context");
+        signer.initSign(
+                (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
+        System.out.println("initialized the signing operation");
+
+        signer.update(data);
+        System.out.println("updated signature with data");
+        signature = signer.sign();
+        System.out.println("Successfully signed!");
+
+        signer.initVerify(keyPair.getPublic());
+        System.out.println("initialized verification");
+        signer.update(data);
+        System.out.println("updated verification with data");
+        if (signer.verify(signature)) {
+            System.out.println("Signature Verified Successfully!");
+        } else {
+            throw new Exception("ERROR: Signature failed to verify.");
+        }
+
+        signerPSS = token.getSignatureContext(
+                SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest);
+        signerPSS.initSign(
+                (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
+
+        signerPSS.update(data);
+        signature = signerPSS.sign();
+        System.out.println("PSS Successfully signed!");
+
+        signerPSS.initVerify(keyPair.getPublic());
+        signerPSS.update(data);
+        System.out.println("updated verification with data");
+        if (signerPSS.verify(signature)) {
+            System.out.println("PSS Signature Verified Successfully!");
+        } else {
+            throw new Exception("ERROR: PSS Signature failed to verify.");
+        }
+
+        System.out.println("SigTest passed.");
     }
 }
