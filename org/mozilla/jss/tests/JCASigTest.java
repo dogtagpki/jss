@@ -9,6 +9,8 @@ import java.security.KeyPairGenerator;
 import java.security.Provider;
 import java.security.Security;
 import java.security.Signature;
+import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.PSSParameterSpec;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.InitializationValues;
@@ -31,6 +33,11 @@ public class JCASigTest {
         try {
             signer = Signature.getInstance(alg);
 
+            if(alg.equals("RSASSA-PSS")) { //Set some params, go for SHA256 version.
+                signer.setParameter(new PSSParameterSpec("SHA-256", "MGF1",
+                    new MGF1ParameterSpec("SHA-256"), 32, 1));
+            }
+
             System.out.println("Created a signing context");
             Provider provider = signer.getProvider();
             System.out.println("The provider used for the signer "
@@ -44,7 +51,6 @@ public class JCASigTest {
             signer.initSign(
                    keyPair.getPrivate());
             System.out.println("initialized the signing operation");
-
             signer.update(data);
             System.out.println("updated signature with data");
             signature = signer.sign();
@@ -107,6 +113,10 @@ public class JCASigTest {
             sigTest("SHA-256/RSA", keyPair);
             sigTest("SHA-384/RSA", keyPair);
             sigTest("SHA-512/RSA", keyPair);
+            sigTest("SHA256withRSA/PSS", keyPair);
+            sigTest("SHA384withRSA/PSS", keyPair);
+            sigTest("SHA512withRSA/PSS", keyPair);
+            sigTest("RSASSA-PSS",keyPair);
 
             // Generate an DSA keypair
             kpgen = KeyPairGenerator.getInstance("DSA");

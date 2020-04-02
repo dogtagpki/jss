@@ -40,6 +40,7 @@ public class SigTest {
             byte[] data = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
             byte[] signature;
             Signature signer;
+            Signature signerPSS;
             PublicKey pubk;
             KeyPairGenerator kpgen;
             KeyPair keyPair;
@@ -67,6 +68,7 @@ public class SigTest {
                 //get default internal key storage token
                 token = manager.getInternalKeyStorageToken();
             }
+
             // Generate an RSA keypair
             kpgen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
             kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
@@ -101,6 +103,24 @@ public class SigTest {
                 System.out.println("Signature Verified Successfully!");
             } else {
                 throw new Exception("ERROR: Signature failed to verify.");
+            }
+
+            signerPSS = token.getSignatureContext(
+                    SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest);
+            signerPSS.initSign(
+                    (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
+
+            signerPSS.update(data);
+            signature = signerPSS.sign();
+            System.out.println("PSS Successfully signed!");
+
+            signerPSS.initVerify(keyPair.getPublic());
+            signerPSS.update(data);
+            System.out.println("updated verification with data");
+            if (signerPSS.verify(signature)) {
+                System.out.println("PSS Signature Verified Successfully!");
+            } else {
+                throw new Exception("ERROR: PSS Signature failed to verify.");
             }
 
             System.out.println("SigTest passed.");
