@@ -89,10 +89,6 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initSigContext
     }
 
     if(ctxt == NULL) {
-        if(arena != NULL) {
-            PORT_FreeArena(arena, PR_FALSE);
-        }
-
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create signing context");
 	goto finish;
     }
@@ -104,7 +100,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initSigContext
     /* Create a contextProxy and stick it in the PK11Signature object */
     contextProxy = JSS_PK11_wrapSigContextProxy(env,
         (void**)&ctxt,
-        SGN_CONTEXT,arena);
+        SGN_CONTEXT, &arena);
 
     if(contextProxy == NULL) {
         PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
@@ -120,10 +116,12 @@ finish:
         /* we created a context but not the Java wrapper, so we need to
          * delete the context here. */
         SGN_DestroyContext(ctxt, PR_TRUE /*freeit*/);
-        if(arena != NULL) {
-            PORT_FreeArena(arena, PR_FALSE);
-        }
     }
+
+    /* When contentProxy is created successfully, arena will be NULLed
+     * and contentProxy takes ownership of it. Otherwise, when arena
+     * still exists, we must free it now. */
+    PORT_FreeArena(arena, PR_TRUE /* zero */);
 }
 
 JNIEXPORT void JNICALL
@@ -140,20 +138,18 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
 
         SECAlgorithmID *signAlg=NULL;
         SECStatus rv;
+        SECOidTag signingAlg = SEC_OID_UNKNOWN;
 
 	if( getPublicKey(env, this, &pubk) != PR_SUCCESS ) {
 		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 
-        SECOidTag signingAlg = SEC_OID_UNKNOWN;
         signingAlg = getAlgorithm(env,this);
-
         if(signingAlg == SEC_OID_PKCS1_RSA_PSS_SIGNATURE) {
 
             /* Create place holder private key, just to satisfy the  creating of the PSS Params */
 
-            SECKEYPublicKey *tempPubKey = NULL;
             privk = SECKEY_CreateRSAPrivateKey(SECKEY_PublicKeyStrengthInBits(pubk), &tempPubKey, NULL);
             if( privk == NULL) {
                PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
@@ -185,10 +181,6 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
         }
 
         if(ctxt == NULL) {
-            if(arena != NULL) {
-                PORT_FreeArena(arena, PR_FALSE);
-            }
-
             JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create vfy context");
             goto finish;
         }
@@ -202,7 +194,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
 	/* create a ContextProxy and stick it in the PK11Signature object */
 	contextProxy = JSS_PK11_wrapSigContextProxy(env,
             (void**)&ctxt,
-	    VFY_CONTEXT,NULL);
+	    VFY_CONTEXT, &arena);
 	if(contextProxy == NULL) {
 		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
@@ -215,15 +207,13 @@ finish:
 		VFY_DestroyContext(ctxt, PR_TRUE /*freeit*/);
 	}
 
-        if(tempPubKey != NULL) {
-            SECKEY_DestroyPublicKey(tempPubKey);
-            tempPubKey = NULL;
-        }
+    SECKEY_DestroyPublicKey(tempPubKey);
+    SECKEY_DestroyPrivateKey(privk);
 
-        if(privk != NULL) {
-           SECKEY_DestroyPrivateKey(privk);
-           privk = NULL;
-        }
+    /* When contentProxy is created successfully, arena will be NULLed
+     * and contentProxy takes ownership of it. Otherwise, when arena
+     * still exists, we must free it now. */
+    PORT_FreeArena(arena, PR_TRUE /* zero */);
 }
 
 /**********************************************************************
@@ -477,7 +467,6 @@ getDigestAlgorithm(JNIEnv *env, jobject sig)
 
     alg = (*env)->GetObjectField(env, sig, algField);
     if(alg == NULL) {
-        ASSERT_OUTOFMEM(env);
         goto finish;
     }
 
@@ -730,7 +719,7 @@ JSS_PK11_getSigContext(JNIEnv *env, jobject proxy, void**pContext,
  *  NULL if an exception was thrown.
  */
 jobject
-JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type, PRArenaPool *arena)
+JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type, PRArenaPool **arena)
 {
     jclass proxyClass;
     jmethodID constructor;
@@ -750,7 +739,7 @@ JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type, PRAr
     proxy->type = type;
     proxy->arena = NULL;
     if(arena != NULL) {
-        proxy->arena = arena;
+        proxy->arena = *arena;
     }
 
     byteArray = JSS_ptrToByteArray(env, (void*)proxy);
@@ -788,8 +777,14 @@ finish:
         	PR_ASSERT(type == VFY_CONTEXT);
         	VFY_DestroyContext( (VFYContext*)*ctxt, PR_TRUE /*freeit*/);
 		}
+    if (*arena != NULL) {
+        PORT_FreeArena(*arena, PR_TRUE /* zero */);
+    }
 	}
 	*ctxt = NULL;
+	if (*arena) {
+	    *arena = NULL;
+	}
     return Context;
 }
 
@@ -824,7 +819,7 @@ Java_org_mozilla_jss_pkcs11_SigContextProxy_releaseNativeResources
         VFY_DestroyContext( (VFYContext*)proxy->ctxt, PR_TRUE /*freeit*/);
     }
     if(proxy->arena != NULL) {
-        PORT_FreeArena(proxy->arena, PR_FALSE);
+        PORT_FreeArena(proxy->arena, PR_TRUE);
         proxy->arena = NULL;
     }
 
