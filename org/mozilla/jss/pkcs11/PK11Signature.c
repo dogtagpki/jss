@@ -777,12 +777,12 @@ finish:
         	PR_ASSERT(type == VFY_CONTEXT);
         	VFY_DestroyContext( (VFYContext*)*ctxt, PR_TRUE /*freeit*/);
 		}
-    if (*arena != NULL) {
+    if (arena != NULL) {
         PORT_FreeArena(*arena, PR_TRUE /* zero */);
     }
 	}
 	*ctxt = NULL;
-	if (*arena) {
+	if (arena != NULL) {
 	    *arena = NULL;
 	}
     return Context;
