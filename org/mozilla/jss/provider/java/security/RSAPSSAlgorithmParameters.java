@@ -124,7 +124,7 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
         // Sequence has 3 members, trailer field ignored
         DerValue seq[] = in.getSequence(3);
 
-        if(seq.length != 3) {
+        if(seq.length < 3 || seq.length > 4) {
             throw new IOException("Invalid data!");
         }
 
