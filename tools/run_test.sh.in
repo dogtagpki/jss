@@ -12,7 +12,7 @@ if [ "$1" == "--gdb" ]; then
     gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" "$@"
 elif [ "$1" == "--valgrind" ]; then
     shift
-    valgrind "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" "$@"
+    valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" "$@"
 else
     "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" "$@"
 fi
