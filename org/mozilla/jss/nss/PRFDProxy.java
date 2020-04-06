@@ -5,7 +5,7 @@ public class PRFDProxy extends org.mozilla.jss.util.NativeProxy {
         super(pointer);
     }
 
-    protected native void releaseNativeResources();
+    protected native void releaseNativeResources() throws Exception;
 
     protected void finalize() throws Throwable {
         super.finalize();

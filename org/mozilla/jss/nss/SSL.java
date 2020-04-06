@@ -218,6 +218,11 @@ public class SSL {
      */
     public static native int ConfigJSSDefaultCertAuthCallback(SSLFDProxy fd);
 
+    /**
+     * Removes all enabled callbacks.
+     */
+    public static native void RemoveCallbacks(SSLFDProxy fd);
+
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
     private static native int getSSLRequireCertificate();

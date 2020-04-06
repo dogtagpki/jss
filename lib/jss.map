@@ -442,3 +442,10 @@ Java_org_mozilla_jss_nss_PRErrors_getSocketShutdownError;
     local:
         *;
 };
+JSS_4.6.4 {
+    global:
+Java_org_mozilla_jss_nss_SSL_RemoveCallbacks;
+Java_org_mozilla_jss_util_GlobalRefProxy_refOf;
+    local:
+        *;
+};
