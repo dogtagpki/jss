@@ -90,7 +90,7 @@ Java_org_mozilla_jss_nss_PR_NewBufferPRFD(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT int JNICALL
-Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd)
+Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd, jboolean clear)
 {
     PRFileDesc *real_fd = NULL;
 
@@ -106,7 +106,7 @@ Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd)
     }
 
     PRStatus ret = PR_Close(real_fd);
-    if (ret == PR_SUCCESS) {
+    if (ret == PR_SUCCESS && clear == JNI_TRUE) {
         JSS_clearPtrFromProxy(env, fd);
     }
 
