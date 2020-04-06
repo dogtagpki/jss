@@ -40,5 +40,7 @@ public class SetupDBs {
         PasswordCallback securityOfficerPassword = new NullPasswordCallback();
         PasswordCallback userPassword = new FilePasswordCallback(args[1]);
         tok.initPassword(securityOfficerPassword, userPassword);
+
+        cm.shutdown();
     }
 }
