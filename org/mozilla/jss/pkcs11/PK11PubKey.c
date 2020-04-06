@@ -42,9 +42,10 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PublicKeyProxy_releaseNativeR
         PR_ASSERT( PR_FALSE );
         goto finish;
     }
-    PR_ASSERT(pubk != NULL);
 
-    SECKEY_DestroyPublicKey(pubk);
+    if (pubk != NULL) {
+        SECKEY_DestroyPublicKey(pubk);
+    }
 
 finish:
     PR_DetachThread();

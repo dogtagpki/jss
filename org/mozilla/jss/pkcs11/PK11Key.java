@@ -12,7 +12,10 @@ import java.io.IOException;
 import org.mozilla.jss.util.AssertionException;
 
 
-abstract class PK11Key implements java.security.Key {
+abstract class PK11Key
+    implements java.security.Key,
+               java.lang.AutoCloseable
+{
 
     //////////////////////////////////////////////////////////
     // Public Interface
@@ -58,4 +61,19 @@ abstract class PK11Key implements java.security.Key {
     /////////////////////////////////////////////////////////////
     protected KeyProxy keyProxy;
 
+    @Override
+    public void finalize() throws Throwable {
+        close();
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (keyProxy != null) {
+            try {
+                keyProxy.close();
+            } finally {
+                keyProxy = null;
+            }
+        }
+    }
 }
