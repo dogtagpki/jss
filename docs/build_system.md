@@ -84,6 +84,10 @@ command line with `-D<VAR>=<VALUE>` syntax, or in the environment.
     is quite slow. By default it passes two arguments: `--track-origins=yes`
     and `--leak-check=full`. Modify `cmake/JSSTests.cmake` (macro:
     `jss_test_exec`) to change these options.
+ - `WITH_INTERNET` -- run tests which require an internet connection. This
+    exposes your system to other hosts on the internet, including badssl.com
+    and www.mozilla.org. Correct execution requires a working `common_roots.sh`
+    script under `tools/`; update for your system as necessary.
 
 ### Adding a Test Case
 
