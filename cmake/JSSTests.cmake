@@ -53,6 +53,18 @@ macro(jss_tests)
         MODE "NONE"
     )
 
+    # NSS DB for internet connected tests; imports global root CA certs.
+    if(TEST_WITH_INTERNET)
+        jss_test_exec(
+            NAME "Clean_Internet_Setup_DBs"
+            COMMAND "cmake" "-E" "remove_directory" "${RESULTS_NSSDB_INTERNET_OUTPUT_DIR}"
+        )
+        jss_test_exec(
+            NAME "Import_Internet_Certs"
+            COMMAND "${CMAKE_SOURCE_DIR}/tools/common_roots.sh" "${RESULTS_NSSDB_INTERNET_OUTPUT_DIR}"
+            DEPENDS "Clean_Internet_Setup_DBs"
+        )
+    endif()
 
     jss_test_exec(
         NAME "TestBufferPRFD"
@@ -419,6 +431,20 @@ macro(jss_tests)
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.PrintableConverterTest"
     )
 
+    if(TEST_WITH_INTERNET)
+        jss_test_java(
+            NAME "BadSSL"
+            COMMAND "org.mozilla.jss.tests.BadSSL" "${RESULTS_NSSDB_INTERNET_OUTPUT_DIR}"
+            DEPENDS "Import_Internet_Certs"
+            MODE "INTERNET"
+        )
+        jss_test_java(
+            NAME "BadSSL_Leaf_And_Chain"
+            COMMAND "org.mozilla.jss.tests.BadSSL" "${RESULTS_NSSDB_INTERNET_OUTPUT_DIR}" "LEAF_AND_CHAIN"
+            DEPENDS "Import_Internet_Certs"
+            MODE "INTERNET"
+        )
+    endif()
 
     # For compliance with several existing clients
     add_custom_target(
@@ -467,6 +493,8 @@ function(jss_test_java)
     list(APPEND EXEC_COMMAND "-Djava.library.path=${CMAKE_BINARY_DIR}")
     if(TEST_JAVA_MODE STREQUAL "FIPS")
         list(APPEND EXEC_COMMAND "-Djava.security.properties=${CONFIG_OUTPUT_DIR}/fips.security")
+    elseif(TEST_JAVA_MODE STREQUAL "INTERNET")
+        list(APPEND EXEC_COMMAND "-Djava.security.properties=${CONFIG_OUTPUT_DIR}/internet.security")
     elseif(NOT TEST_JAVA_MODE STREQUAL "NONE")
         list(APPEND EXEC_COMMAND "-Djava.security.properties=${CONFIG_OUTPUT_DIR}/java.security")
     endif()

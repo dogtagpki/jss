@@ -76,6 +76,7 @@ macro(jss_config_outputs)
     set(RESULTS_DATA_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/data")
     set(RESULTS_NSSDB_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/nssdb")
     set(RESULTS_NSSDB_FIPS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/fips")
+    set(RESULTS_NSSDB_INTERNET_OUTPUT_DIR "${CMAKE_BINARY_DIR}/results/internet")
 
     # This is a temporary location for building the reproducible jar
     set(REPRODUCIBLE_TEMP_DIR "${CMAKE_BINARY_DIR}/reproducible")
@@ -364,6 +365,17 @@ macro(jss_config_template)
         @ONLY
     )
     set(NSS_DB_PATH "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/jss.cfg.in"
+        "${JSS_CFG_PATH}"
+    )
+    set(JSS_CFG_PATH "${CONFIG_OUTPUT_DIR}/jss-internet.cfg")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/java.security.in"
+        "${CONFIG_OUTPUT_DIR}/internet.security"
+        @ONLY
+    )
+    set(NSS_DB_PATH "${RESULTS_NSSDB_INTERNET_OUTPUT_DIR}")
     configure_file(
         "${PROJECT_SOURCE_DIR}/tools/jss.cfg.in"
         "${JSS_CFG_PATH}"

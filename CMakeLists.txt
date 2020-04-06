@@ -38,6 +38,11 @@ if(NOT (DEFINED CMAKE_BUILD_TYPE))
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+if (DEFINED ENV{WITH_INTERNET})
+    set(TEST_WITH_INTERNET_ENV TRUE)
+endif()
+option(TEST_WITH_INTERNET "When enabled, runs various tests which require an internet connection. " ${TEST_WITH_INTERNET_ENV})
+
 # Find NSPR and NSS Libraries.
 find_package(NSPR REQUIRED)
 find_package(NSS REQUIRED)
