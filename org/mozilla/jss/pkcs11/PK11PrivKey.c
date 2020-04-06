@@ -734,11 +734,15 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getPublicKey
     SECKEYPublicKey *pubKey;
 
     if (JSS_PK11_getPrivKeyPtr(env, this, &privKey) != PR_SUCCESS) {
+        JSS_throwMsg(env, NULL_POINTER_EXCEPTION, "Unable to get private "
+                     "key pointer from local instance");
         return NULL;
     }
 
     pubKey = SECKEY_ConvertToPublicKey(privKey);
     if (pubKey == NULL) {
+        JSS_throwMsgPrErr(env, NULL_POINTER_EXCEPTION, "Expected non-NULL "
+                          "private key to convert to non-NULL public key");
         return NULL;
     }
 
