@@ -66,3 +66,22 @@ Java_org_mozilla_jss_util_GlobalRefProxy_releaseNativeResources
 
     (*env)->DeleteGlobalRef(env, ref);
 }
+
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_util_GlobalRefProxy_refOf
+    (JNIEnv *env, jobject clazz, jobject obj)
+{
+    jobject globalRef;
+
+    PR_ASSERT(env != NULL && clazz != NULL && obj != NULL);
+    if (obj == NULL) {
+        return NULL;
+    }
+
+    globalRef = (*env)->NewGlobalRef(env, obj);
+    if (globalRef == NULL) {
+        return NULL;
+    }
+
+    return JSS_ptrToByteArray(env, globalRef);
+}

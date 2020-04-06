@@ -5,5 +5,11 @@ public class GlobalRefProxy extends NativeProxy {
         super(pointer);
     }
 
+    public GlobalRefProxy(Object target) {
+        super(GlobalRefProxy.refOf(target));
+    }
+
+    private static native byte[] refOf(Object target);
+
     protected native void releaseNativeResources();
 }
