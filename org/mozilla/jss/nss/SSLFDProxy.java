@@ -20,6 +20,8 @@ public class SSLFDProxy extends PRFDProxy {
 
     public SSLFDProxy(byte[] pointer) {
         super(pointer);
+
+        globalRef = new GlobalRefProxy(this);
     }
 
     public void SetClientCert(X509Certificate cert) throws IllegalArgumentException {
@@ -30,9 +32,16 @@ public class SSLFDProxy extends PRFDProxy {
         clientCert = (PK11Cert)cert;
     }
 
-    protected native void releaseNativeResources();
-
-    protected void finalize() throws Throwable {
-        super.finalize();
+    @Override
+    protected synchronized void releaseNativeResources() throws Exception {
+        synchronized (globalRef) {
+            if (globalRef != null) {
+                try {
+                    globalRef.close();
+                } finally {
+                    globalRef = null;
+                }
+            }
+        }
     }
 }

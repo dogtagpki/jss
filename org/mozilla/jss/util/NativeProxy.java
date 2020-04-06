@@ -113,7 +113,7 @@ public abstract class NativeProxy implements AutoCloseable
      *
      * If you free these resources explicitly, call clear(); instead.
      */
-    protected abstract void releaseNativeResources();
+    protected abstract void releaseNativeResources() throws Exception;
 
     /**
      * Finalize this NativeProxy by releasing its native resources.
@@ -166,6 +166,13 @@ public abstract class NativeProxy implements AutoCloseable
     public final void clear() {
         this.mPointer = null;
         registry.remove(this);
+    }
+
+    /**
+     * Whether or not this is a null pointer.
+     */
+    public boolean isNull() {
+        return this.mPointer == null;
     }
 
     /**

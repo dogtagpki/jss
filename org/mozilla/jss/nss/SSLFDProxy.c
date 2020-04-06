@@ -7,6 +7,7 @@
 #include "java_ids.h"
 #include "jssutil.h"
 #include "pk11util.h"
+#include "jss_exceptions.h"
 #include "SSLFDProxy.h"
 #include "GlobalRefProxy.h"
 
@@ -86,85 +87,20 @@ JSS_NSS_getSSLAlertSentList(JNIEnv *env, jobject sslfd_proxy, jobject *list)
 }
 
 PRStatus
-JSS_NSS_addGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
+JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
 {
-    jclass sslfdProxyClass;
-    jfieldID globalRefField;
-    jobject globalRefElem;
+    PR_ASSERT(env != NULL && sslfd_proxy != NULL && global_ref != NULL);
 
     if (JSS_getPtrFromProxyOwner(env, sslfd_proxy, "globalRef",
                                  "L" GLOBAL_REF_PROXY_CLASS_NAME ";",
                                  (void **)global_ref) == PR_FAILURE ||
-        *global_ref == NULL) {
-        /* We assume we failed because we don't yet have a global reference
-         * to this SSLFDProxy object. Create one. */
-        (*env)->ExceptionClear(env);
-
-        sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
-        if (sslfdProxyClass == NULL) {
-            return PR_FAILURE;
-        }
-
-        globalRefField = (*env)->GetFieldID(env, sslfdProxyClass, "globalRef",
-                                            "L" GLOBAL_REF_PROXY_CLASS_NAME ";");
-        if (globalRefField == NULL) {
-            return PR_FAILURE;
-        }
-
-        *global_ref = (*env)->NewGlobalRef(env, sslfd_proxy);
-        if (*global_ref == NULL) {
-            return PR_FAILURE;
-        }
-
-        globalRefElem = JSS_PR_wrapGlobalRef(env, global_ref);
-        if (globalRefElem == NULL) {
-            (*env)->ExceptionDescribe(env);
-            return PR_FAILURE;
-        }
-
-        (*env)->SetObjectField(env, sslfd_proxy, globalRefField, globalRefElem);
+        *global_ref == NULL)
+    {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
+        return PR_FAILURE;
     }
 
     return PR_SUCCESS;
-}
-
-void
-JSS_NSS_removeGlobalRef(JNIEnv *env, jobject sslfd_proxy)
-{
-    jclass sslfdProxyClass;
-    jfieldID globalRefField;
-
-    jobject globalRefElem;
-    jclass globalRefClass;
-    jmethodID globalRefClose;
-
-    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
-    if (sslfdProxyClass == NULL) {
-        return;
-    }
-
-    globalRefField = (*env)->GetFieldID(env, sslfdProxyClass, "globalRef",
-                                        NATIVE_PROXY_CLASS_NAME);
-    if (globalRefField == NULL) {
-        return;
-    }
-
-    globalRefElem = (*env)->GetObjectField(env, sslfd_proxy, globalRefField);
-    if (globalRefElem == NULL) {
-        return;
-    }
-
-    globalRefClass = (*env)->GetObjectClass(env, globalRefElem);
-    if (globalRefClass == NULL) {
-        return;
-    }
-
-    globalRefClose = (*env)->GetMethodID(env, globalRefClass, "close", "()V");
-    if (globalRefClose == NULL) {
-        return;
-    }
-
-    (*env)->CallVoidMethod(env, globalRefElem, globalRefClose);
 }
 
 PRStatus
@@ -303,11 +239,4 @@ JSSL_SSLFDCertSelectionCallback(void *arg,
     *pRetCert = cert;
     *pRetKey = privkey;
     return SECSuccess;
-}
-
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_nss_SSLFDProxy_releaseNativeResources
-    (JNIEnv *env, jobject this)
-{
-    JSS_NSS_removeGlobalRef(env, this);
 }

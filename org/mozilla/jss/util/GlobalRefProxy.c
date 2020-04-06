@@ -40,6 +40,7 @@ finish:
     if (refObj == NULL && *ref != NULL) {
         /* Something didn't work, so free resources. */
         (*env)->DeleteGlobalRef(env, *ref);
+        *ref = NULL;
     }
 
     PR_ASSERT(refObj || (*env)->ExceptionOccurred(env));
@@ -56,7 +57,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_util_GlobalRefProxy_releaseNativeResources
     (JNIEnv *env, jobject this)
 {
-    jobject ref;
+    jobject ref = NULL;
 
     PR_ASSERT(env != NULL && this != NULL);
 
@@ -64,7 +65,9 @@ Java_org_mozilla_jss_util_GlobalRefProxy_releaseNativeResources
         return;
     }
 
-    (*env)->DeleteGlobalRef(env, ref);
+    if (ref != NULL) {
+        (*env)->DeleteGlobalRef(env, ref);
+    }
 }
 
 JNIEXPORT jbyteArray JNICALL
