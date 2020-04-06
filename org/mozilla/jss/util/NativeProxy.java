@@ -9,8 +9,11 @@ import java.util.HashSet;
 import java.lang.AutoCloseable;
 import java.lang.Thread;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.netscape.security.util.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +54,13 @@ public abstract class NativeProxy implements AutoCloseable
      */
     protected NativeProxy(byte[] pointer, boolean track) {
         mPointer = pointer;
+        mHashCode = registryIndex.getAndIncrement();
+        if (mPointer != null) {
+            mHashCode += Arrays.hashCode(mPointer);
+        }
 
         if (track) {
             assert(pointer != null);
-
             registry.add(this);
 
             if (saveStacktraces) {
@@ -70,18 +76,31 @@ public abstract class NativeProxy implements AutoCloseable
      *      a different underlying native pointer.
      */
     public boolean equals(Object obj) {
-        if(obj==null) {
+        if (obj == null) {
             return false;
         }
-        if( ! (obj instanceof NativeProxy) ) {
+        if (!(obj instanceof NativeProxy)) {
             return false;
         }
-        if (((NativeProxy)obj).mPointer == null) {
-            /* If mPointer is null, we have no way to compare the values
-             * of the pointers, so assume they're unequal. */
+        NativeProxy nObj = (NativeProxy) obj;
+        if (this.mPointer == null || nObj.mPointer == null) {
             return false;
         }
-        return Arrays.equals(((NativeProxy)obj).mPointer, mPointer);
+
+        return Arrays.equals(this.mPointer, nObj.mPointer);
+    }
+
+    /**
+     * Hash code based around mPointer value.
+     *
+     * Note that Object.hashCode() isn't sufficient as it tries to determine
+     * the Object's value based on all internal variables. Because we want a
+     * single static hashCode that is unique to each instance of nativeProxy,
+     * we construct it up front based on an incrementing counter and cache it
+     * throughout the lifetime of this object.
+     */
+    public int hashCode() {
+        return mHashCode;
     }
 
     /**
@@ -127,11 +146,11 @@ public abstract class NativeProxy implements AutoCloseable
      */
     public final void close() throws Exception {
         try {
-            if (registry.remove(this)) {
+            if (mPointer != null) {
                 releaseNativeResources();
             }
         } finally {
-            mPointer = null;
+            clear();
         }
     }
 
@@ -153,6 +172,7 @@ public abstract class NativeProxy implements AutoCloseable
      * Byte array containing native pointer bytes.
      */
     private byte mPointer[];
+    private int mHashCode;
 
     /**
      * String containing backtrace of pointer generation.
@@ -173,6 +193,15 @@ public abstract class NativeProxy implements AutoCloseable
      * releaseNativeResources() gets called.
      */
     static HashSet<NativeProxy> registry = new HashSet<NativeProxy>();
+    static AtomicInteger registryIndex = new AtomicInteger();
+
+    public String toString() {
+        if (mPointer == null) {
+            return this.getClass().getName() + "[" + mHashCode + "@null]";
+        }
+
+        return this.getClass().getName() + "[" + mHashCode + "@" + Utils.HexEncode(mPointer) + "]";
+    }
 
     /**
      * Internal helper to check whether or not assertions are enabled in the
