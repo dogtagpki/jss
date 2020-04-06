@@ -474,7 +474,7 @@ Java_org_mozilla_jss_nss_SSL_EnableAlertLoggingNative(JNIEnv *env, jclass clazz,
         return ret;
     }
 
-    if (JSS_NSS_addGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
+    if (JSS_NSS_getGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
         return ret;
     }
 
@@ -501,6 +501,24 @@ Java_org_mozilla_jss_nss_SSL_ConfigJSSDefaultCertAuthCallback(JNIEnv *env, jclas
     }
 
     return SSL_AuthCertificateHook(real_fd, JSSL_DefaultCertAuthCallback, NULL);
+}
+
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_nss_SSL_RemoveCallbacks(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return;
+    }
+
+    SSL_AlertReceivedCallback(real_fd, NULL, NULL);
+    SSL_AlertSentCallback(real_fd, NULL, NULL);
+    SSL_AuthCertificateHook(real_fd, NULL, NULL);
 }
 
 JNIEXPORT jint JNICALL

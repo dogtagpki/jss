@@ -12,9 +12,7 @@ PRStatus JSS_NSS_getSSLAlertReceivedList(JNIEnv *env, jobject sslfd_proxy, jobje
 
 PRStatus JSS_NSS_addSSLAlert(JNIEnv *env, jobject sslfd_proxy, jobject list, const SSLAlert *alert);
 
-PRStatus JSS_NSS_addGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref);
-
-void JSS_NSS_removeGlobalRef(JNIEnv *env, jobject sslfd_proxy);
+PRStatus JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref);
 
 void
 JSSL_SSLFDAlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *alert);
