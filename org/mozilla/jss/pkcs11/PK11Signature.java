@@ -20,7 +20,10 @@ import org.mozilla.jss.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
+public final class PK11Signature
+    extends org.mozilla.jss.crypto.SignatureSpi
+    implements java.lang.AutoCloseable
+{
 
     public PK11Signature(PK11Token token, SignatureAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
@@ -392,6 +395,22 @@ public final class PK11Signature extends org.mozilla.jss.crypto.SignatureSpi {
         }
 
         return false;
+    }
+
+    @Override
+    public void finalize() throws Throwable {
+        close();
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (sigContext != null) {
+            try {
+                sigContext.close();
+            } finally {
+                sigContext = null;
+            }
+        }
     }
 
     protected PK11Token token;
