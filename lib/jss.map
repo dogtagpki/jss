@@ -454,6 +454,7 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefSetDefault;
 Java_org_mozilla_jss_nss_SSL_VersionRangeGetDefaultNative;
 Java_org_mozilla_jss_nss_SSL_VersionRangeSetDefaultNative;
 Java_org_mozilla_jss_util_GlobalRefProxy_refOf;
+Java_org_mozilla_jss_CryptoManager_shutdownNative;
     local:
         *;
 };

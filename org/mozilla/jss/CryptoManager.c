@@ -1035,3 +1035,10 @@ Java_org_mozilla_jss_CryptoManager_getJSSDebug(JNIEnv *env, jobject this)
 #endif
 }
 
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_CryptoManager_shutdownNative(JNIEnv *env, jobject this)
+{
+    if (NSS_IsInitialized()) {
+        NSS_Shutdown();
+    }
+}
