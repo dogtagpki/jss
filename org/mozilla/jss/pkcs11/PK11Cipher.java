@@ -19,7 +19,10 @@ import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 
-public final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
+public final class PK11Cipher
+    extends org.mozilla.jss.crypto.Cipher
+    implements java.lang.AutoCloseable
+{
 
     // set once in the constructor
     private PK11Token token;
@@ -280,4 +283,19 @@ public final class PK11Cipher extends org.mozilla.jss.crypto.Cipher {
         }
     }
 
+    @Override
+    public void finalize() throws Throwable {
+        close();
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (contextProxy != null) {
+            try {
+                contextProxy.close();
+            } finally {
+                contextProxy = null;
+            }
+        }
+    }
 }
