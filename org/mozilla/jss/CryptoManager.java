@@ -36,6 +36,7 @@ import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.provider.java.security.JSSMessageDigestSpi;
 import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.InvalidNicknameException;
+import org.mozilla.jss.util.NativeProxy;
 import org.mozilla.jss.util.PasswordCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1390,4 +1391,19 @@ public final class CryptoManager implements TokenSupplier
     private native void setOCSPTimeoutNative(
         int ocsp_timeout )
                     throws GeneralSecurityException;
+
+    /**
+     * Shutdowns this CryptoManager instance and the associated NSS
+     * initialization.
+     */
+    public synchronized void shutdown() throws Exception {
+        try {
+            NativeProxy.purgeAllInRegistry();
+        } finally {
+            shutdownNative();
+            CryptoManager.instance = null;
+        }
+    }
+
+    public native void shutdownNative();
 }

@@ -127,7 +127,7 @@ public abstract class NativeProxy implements AutoCloseable
      */
     public final void close() throws Exception {
         try {
-            if (registry.remove(this)) {
+            if (registry.remove(this) && mPointer != null) {
                 releaseNativeResources();
             }
         } finally {
@@ -203,6 +203,34 @@ public abstract class NativeProxy implements AutoCloseable
             }
         } else {
             logger.debug("NativeProxy registry is empty");
+        }
+    }
+
+    /**
+     * Unsafe: Purges all NativeProxies from memory.
+     *
+     * In the rare instances where we wish to shutdown an existing
+     * CryptoManager, all native proxies need to be cleared and freed.
+     * This will result in any lingering references to stop working, but
+     * should ensure that an application can recover from this scenario.
+     */
+    public synchronized static void purgeAllInRegistry() throws Exception {
+        Exception first = null;
+        HashSet<NativeProxy> registryClone = new HashSet<NativeProxy>(registry.size());
+        registryClone.addAll(registry);
+
+        for (NativeProxy proxy : registryClone) {
+            try {
+                proxy.close();
+            } catch (Exception e) {
+                if (first == null) {
+                    first = e;
+                }
+            }
+        }
+
+        if (first != null) {
+            throw first;
         }
     }
 }
