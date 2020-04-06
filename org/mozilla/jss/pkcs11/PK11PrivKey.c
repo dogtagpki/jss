@@ -239,9 +239,10 @@ Java_org_mozilla_jss_pkcs11_PrivateKeyProxy_releaseNativeResources
         PR_ASSERT( PR_FALSE );
         goto finish;
     }
-    PR_ASSERT(privk != NULL);
 
-    SECKEY_DestroyPrivateKey(privk);
+    if (privk != NULL) {
+        SECKEY_DestroyPrivateKey(privk);
+    }
 
 finish:
     PR_DetachThread();
