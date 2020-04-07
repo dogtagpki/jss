@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":9,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":9,"i14":10,"i15":10,"i16":9,"i17":9,"i18":10,"i19":10};
+var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":9,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":9,"i17":10,"i18":10,"i19":9,"i20":9,"i21":10,"i22":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -233,33 +233,41 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#MGF1_oid">MGF1_oid</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../org/mozilla/jss/netscape/security/util/DerValue.html" title="class in org.mozilla.jss.netscape.security.util">DerValue</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#params">params</a></span></code>
 <div class="block">Parameters for this algorithm.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#paramsString">paramsString</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#RSA_oid">RSA_oid</a></span></code>
 <div class="block">Algorithm ID for RSA keys used for any purpose, as defined in X.509.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#RSA_SIGNING_ALGORITHMS">RSA_SIGNING_ALGORITHMS</a></span></code>
 <div class="block">Supported signing algorithms for a RSA key.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#RSAEncryption_oid">RSAEncryption_oid</a></span></code>
 <div class="block">Algorithm ID for RSA keys used with RSA encryption, as defined
  in PKCS #1.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#rsaPSS_oid">rsaPSS_oid</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a></code></td>
@@ -374,7 +382,19 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#AlgorithmId-org.mozilla.jss.netscape.security.util.ObjectIdentifier-">AlgorithmId</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;oid)</code>
-<div class="block">Constructs a parameterless algorithm ID.</div>
+<div class="block">Constructs an  algorithm ID with possible RSAPSS params.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#AlgorithmId-org.mozilla.jss.netscape.security.util.ObjectIdentifier-java.security.AlgorithmParameters-">AlgorithmId</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;oid,
+           java.security.AlgorithmParameters&nbsp;params)</code>
+<div class="block">Constructs an algorithm ID with a fully encoded params object</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#AlgorithmId-org.mozilla.jss.netscape.security.util.ObjectIdentifier-java.lang.String-">AlgorithmId</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;oid,
+           java.lang.String&nbsp;algName)</code>
+<div class="block">Constructor that takes the oid and name, so the name can be cachedf or laster use.</div>
 </td>
 </tr>
 </table>
@@ -393,61 +413,78 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static java.security.AlgorithmParameters</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#createPSSAlgorithmParameters-java.lang.String-">createPSSAlgorithmParameters</a></span>(java.lang.String&nbsp;algName)</code>
+<div class="block">Used to create the PSS algorithm params needed for RSA PSS signatures.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static java.security.AlgorithmParameters</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#createPSSAlgorithmParametersFromData-byte:A-">createPSSAlgorithmParametersFromData</a></span>(byte[]&nbsp;der)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#decodeParams--">decodeParams</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#derEncode-java.io.OutputStream-">derEncode</a></span>(java.io.OutputStream&nbsp;out)</code>
 <div class="block">DER encode this object onto an output stream.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#derEncodeWithContext-java.io.OutputStream-int-">derEncodeWithContext</a></span>(java.io.OutputStream&nbsp;out,
+                    int&nbsp;contextVal)</code>
+<div class="block">DER encode this object onto an output stream.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#encode--">encode</a></span>()</code>
 <div class="block">Returns the DER-encoded X.509 AlgorithmId as a byte array.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#encode-org.mozilla.jss.netscape.security.util.DerOutputStream-">encode</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/util/DerOutputStream.html" title="class in org.mozilla.jss.netscape.security.util">DerOutputStream</a>&nbsp;out)</code>
 <div class="block">Marshal a DER-encoded "AlgorithmID" sequence on the DER stream.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#equals-org.mozilla.jss.netscape.security.x509.AlgorithmId-">equals</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html" title="class in org.mozilla.jss.netscape.security.x509">AlgorithmId</a>&nbsp;other)</code>
 <div class="block">Returns true iff the argument indicates the same algorithm
  with the same parameters.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#equals-java.lang.Object-">equals</a></span>(java.lang.Object&nbsp;other)</code>
 <div class="block">Compares this AlgorithmID to another.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#equals-org.mozilla.jss.netscape.security.util.ObjectIdentifier-">equals</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;id)</code>
 <div class="block">Compares two algorithm IDs for equality.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html" title="class in org.mozilla.jss.netscape.security.x509">AlgorithmId</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#get-java.lang.String-">get</a></span>(java.lang.String&nbsp;algname)</code>
 <div class="block">Returns one of the algorithm IDs most commonly associated
  with this algorithm name.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#getEncodedParams--">getEncodedParams</a></span>()</code>
 <div class="block">Returns the DER encoded parameter, which can then be
  used to initialize java.security.AlgorithmParamters.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#getName--">getName</a></span>()</code>
 <div class="block">Returns a name for the algorithm which may be more intelligible
@@ -455,52 +492,52 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
  be comprehensible on other systems.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#getOID--">getOID</a></span>()</code>
 <div class="block">Returns the ISO OID for this algorithm.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>java.security.AlgorithmParameters</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#getParameters--">getParameters</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#getParametersString--">getParametersString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#getSigningAlgorithms-org.mozilla.jss.netscape.security.x509.AlgorithmId-">getSigningAlgorithms</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html" title="class in org.mozilla.jss.netscape.security.x509">AlgorithmId</a>&nbsp;alg)</code>
 <div class="block">Returns list of signing algorithms for a key algorithm such as
  RSA or DSA.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#hashCode--">hashCode</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#paramsToString--">paramsToString</a></span>()</code>
 <div class="block">Provides a human-readable description of the algorithm parameters.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html" title="class in org.mozilla.jss.netscape.security.x509">AlgorithmId</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#parse-byte:A-">parse</a></span>(byte[]&nbsp;val)</code>&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html" title="class in org.mozilla.jss.netscape.security.x509">AlgorithmId</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#parse-org.mozilla.jss.netscape.security.util.DerValue-">parse</a></span>(<a href="../../../../../../org/mozilla/jss/netscape/security/util/DerValue.html" title="class in org.mozilla.jss.netscape.security.util">DerValue</a>&nbsp;val)</code>
 <div class="block">Parse (unmarshal) an ID from a DER sequence input value.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#setParametersString-java.lang.String-">setParametersString</a></span>(java.lang.String&nbsp;paramStr)</code>&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#toString--">toString</a></span>()</code>
 <div class="block">Returns a string describing the algorithm and its parameters.</div>
@@ -609,6 +646,15 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 <li class="blockList">
 <h4>SHA512_oid</h4>
 <pre>public static final&nbsp;<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a> SHA512_oid</pre>
+</li>
+</ul>
+<a name="MGF1_oid">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>MGF1_oid</h4>
+<pre>public static final&nbsp;<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a> MGF1_oid</pre>
 </li>
 </ul>
 <a name="ANSIX962_EC_Public_Key_oid">
@@ -755,6 +801,15 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 <li class="blockList">
 <h4>sha512WithEC_oid</h4>
 <pre>public static final&nbsp;<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a> sha512WithEC_oid</pre>
+</li>
+</ul>
+<a name="rsaPSS_oid">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>rsaPSS_oid</h4>
+<pre>public static final&nbsp;<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a> rsaPSS_oid</pre>
 </li>
 </ul>
 <a name="md2WithRSAEncryption_oid">
@@ -918,6 +973,45 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
+<a name="AlgorithmId-org.mozilla.jss.netscape.security.util.ObjectIdentifier-java.security.AlgorithmParameters-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>AlgorithmId</h4>
+<pre>public&nbsp;AlgorithmId(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;oid,
+                   java.security.AlgorithmParameters&nbsp;params)
+            throws java.io.IOException,
+                   java.security.NoSuchAlgorithmException</pre>
+<div class="block">Constructs an algorithm ID with a fully encoded params object</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>oid</code> - the identifier for the algorithm</dd>
+<dd><code>params</code> - the fully encoded AlgorithmIdentifier Object</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.NoSuchAlgorithmException</code></dd>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="AlgorithmId-org.mozilla.jss.netscape.security.util.ObjectIdentifier-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>AlgorithmId</h4>
+<pre>public&nbsp;AlgorithmId(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;oid,
+                   java.lang.String&nbsp;algName)
+            throws java.io.IOException,
+                   java.security.NoSuchAlgorithmException</pre>
+<div class="block">Constructor that takes the oid and name, so the name can be cachedf or laster use.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.NoSuchAlgorithmException</code></dd>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
 <a name="AlgorithmId-org.mozilla.jss.netscape.security.util.ObjectIdentifier-">
 <!--   -->
 </a>
@@ -925,7 +1019,7 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 <li class="blockList">
 <h4>AlgorithmId</h4>
 <pre>public&nbsp;AlgorithmId(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;oid)</pre>
-<div class="block">Constructs a parameterless algorithm ID.</div>
+<div class="block">Constructs an  algorithm ID with possible RSAPSS params.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>oid</code> - the identifier for the algorithm</dd>
@@ -1086,6 +1180,26 @@ public&nbsp;AlgorithmId()</pre>
 </dl>
 </li>
 </ul>
+<a name="derEncodeWithContext-java.io.OutputStream-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>derEncodeWithContext</h4>
+<pre>public&nbsp;void&nbsp;derEncodeWithContext(java.io.OutputStream&nbsp;out,
+                                 int&nbsp;contextVal)
+                          throws java.io.IOException</pre>
+<div class="block">DER encode this object onto an output stream.
+ Implements the <code>DerEncoder</code> interface.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>out</code> - the output stream on which to write the DER encoding params,
+            using context value.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code> - on encoding error.</dd>
+</dl>
+</li>
+</ul>
 <a name="encode--">
 <!--   -->
 </a>
@@ -1229,12 +1343,47 @@ public&nbsp;AlgorithmId()</pre>
 <a name="equals-org.mozilla.jss.netscape.security.util.ObjectIdentifier-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>equals</h4>
 <pre>public final&nbsp;boolean&nbsp;equals(<a href="../../../../../../org/mozilla/jss/netscape/security/util/ObjectIdentifier.html" title="class in org.mozilla.jss.netscape.security.util">ObjectIdentifier</a>&nbsp;id)</pre>
 <div class="block">Compares two algorithm IDs for equality. Returns true iff
  they are the same algorithm, ignoring algorithm parameters.</div>
+</li>
+</ul>
+<a name="createPSSAlgorithmParametersFromData-byte:A-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createPSSAlgorithmParametersFromData</h4>
+<pre>public static&nbsp;java.security.AlgorithmParameters&nbsp;createPSSAlgorithmParametersFromData(byte[]&nbsp;der)
+                                                                              throws java.lang.Exception</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
+</li>
+</ul>
+<a name="createPSSAlgorithmParameters-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>createPSSAlgorithmParameters</h4>
+<pre>public static&nbsp;java.security.AlgorithmParameters&nbsp;createPSSAlgorithmParameters(java.lang.String&nbsp;algName)
+                                                                      throws java.lang.IllegalArgumentException,
+                                                                             java.security.NoSuchProviderException,
+                                                                             java.security.spec.InvalidParameterSpecException,
+                                                                             java.security.NoSuchAlgorithmException</pre>
+<div class="block">Used to create the PSS algorithm params needed for RSA PSS signatures.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code></dd>
+<dd><code>java.security.NoSuchProviderException</code></dd>
+<dd><code>java.security.spec.InvalidParameterSpecException</code></dd>
+<dd><code>java.security.NoSuchAlgorithmException</code></dd>
+</dl>
 </li>
 </ul>
 </li>
