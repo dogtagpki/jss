@@ -14,6 +14,11 @@
 #include <jssutil.h>
 #include "pk11util.h"
 
+/* For PKCS#11 v3.0 compatibility */
+#ifndef CKM_NSS_PBE_SHA1_DES_CBC
+#define CKM_NSS_PBE_SHA1_DES_CBC (CKM_NETSCAPE_PBE_SHA1_DES_CBC)
+#endif
+
 /***********************************************************************
  *
  * J S S _ P K 1 1 _ w r a p S y m K e y
@@ -262,7 +267,7 @@ Java_org_mozilla_jss_pkcs11_PK11SymKey_getKeyType
       /* PBE mechanisms have to be handled by hand */
       case CKM_PBE_MD2_DES_CBC:
       case CKM_PBE_MD5_DES_CBC:
-      case CKM_NETSCAPE_PBE_SHA1_DES_CBC:
+      case CKM_NSS_PBE_SHA1_DES_CBC:
         typeFieldName = DES_KEYTYPE_FIELD;
         break;
       case CKM_PBE_SHA1_RC4_128:
