@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":42,"i5":6};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":42,"i5":9,"i6":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -222,6 +222,12 @@ implements java.lang.AutoCloseable</pre>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#purgeAllInRegistry--">purgeAllInRegistry</a></span>()</code>
+<div class="block">Unsafe: Purges all NativeProxies from memory.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#releaseNativeResources--">releaseNativeResources</a></span>()</code>
 <div class="block">Release the native resources used by this proxy.</div>
@@ -413,7 +419,7 @@ protected&nbsp;void&nbsp;finalize()
 <a name="assertRegistryEmpty--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>assertRegistryEmpty</h4>
 <pre>public static&nbsp;void&nbsp;assertRegistryEmpty()</pre>
@@ -421,6 +427,26 @@ protected&nbsp;void&nbsp;finalize()
  ship mode, it is a no-op.  If the Registry is not empty when this
  is called, an assertion (org.mozilla.jss.util.AssertionException)
  is thrown.</div>
+</li>
+</ul>
+<a name="purgeAllInRegistry--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>purgeAllInRegistry</h4>
+<pre>public static&nbsp;void&nbsp;purgeAllInRegistry()
+                               throws java.lang.Exception</pre>
+<div class="block">Unsafe: Purges all NativeProxies from memory.
+
+ In the rare instances where we wish to shutdown an existing
+ CryptoManager, all native proxies need to be cleared and freed.
+ This will result in any lingering references to stop working, but
+ should ensure that an application can recover from this scenario.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
 </li>
 </ul>
 </li>

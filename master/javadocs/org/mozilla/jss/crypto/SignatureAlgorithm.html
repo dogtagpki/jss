@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -167,6 +167,25 @@ extends <a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#RSAPSSSignature">RSAPSSSignature</a></span></code>
+<div class="block">Version with no digest set: must call setDigestAlg() after initialization
+ to choose the proper variant.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#RSAPSSSignatureWithSHA256Digest">RSAPSSSignatureWithSHA256Digest</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#RSAPSSSignatureWithSHA384Digest">RSAPSSSignatureWithSHA384Digest</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#RSAPSSSignatureWithSHA512Digest">RSAPSSSignatureWithSHA512Digest</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#RSASignature">RSASignature</a></span></code>
 <div class="block">Raw RSA signing.</div>
 </td>
@@ -201,7 +220,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.mozilla.jss.crypto.<a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class in org.mozilla.jss.crypto">Algorithm</a></h3>
-<code><a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_CBC">CKM_AES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_CBC_PAD">CKM_AES_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_CMAC">CKM_AES_CMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_ECB">CKM_AES_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_KEY_GEN">CKM_AES_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_KEY_WRAP">CKM_AES_KEY_WRAP</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_KEY_WRAP_PAD">CKM_AES_KEY_WRAP_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES_CBC_PAD">CKM_DES_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES_KEY_GEN">CKM_DES_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES3_CBC_PAD">CKM_DES3_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES3_ECB">CKM_DES3_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES3_KEY_GEN">CKM_DES3_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DSA_KEY_PAIR_GEN">CKM_DSA_KEY_PAIR_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_EC_KEY_PAIR_GEN">CKM_EC_KEY_PAIR_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_GENERIC_SECRET_KEY_GEN">CKM_GENERIC_SECRET_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_AES_KEY_WRAP">CKM_NSS_AES_KEY_WRAP</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_AES_KEY_WRAP_PAD">CKM_NSS_AES_KEY_WRAP_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA">CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA">CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA">CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_PBA_SHA1_WITH_SHA1_HMAC">CKM_PBA_SHA1_WITH_SHA1_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RC2_CBC_PAD">CKM_RC2_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RC2_KEY_GEN">CKM_RC2_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RC4_KEY_GEN">CKM_RC4_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RSA_PKCS_KEY_PAIR_GEN">CKM_RSA_PKCS_KEY_PAIR_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA_1_HMAC">CKM_SHA_1_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA256_HMAC">CKM_SHA256_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA384_HMAC">CKM_SHA384_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA512_HMAC">CKM_SHA512_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SP800_108_COUNTER_KDF">CKM_SP800_108_COUNTER_KDF</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SP800_108_DOUBLE_PIPELINE_KDF">CKM_SP800_108_DOUBLE_PIPELINE_KDF</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SP800_108_FEEDBACK_KDF">CKM_SP800_108_FEEDBACK_KDF</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#oid">oid</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#oidIndex">oidIndex</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_128_CBC">SEC_OID_AES_128_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_128_ECB">SEC_OID_AES_128_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_192_CBC">SEC_OID_AES_192_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_192_ECB">SEC_OID_AES_192_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_256_CBC">SEC_OID_AES_256_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_256_ECB">SEC_OID_AES_256_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX9_DSA_SIGNATURE">SEC_OID_ANSIX9_DSA_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST">SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_EC_PUBLIC_KEY">SEC_OID_ANSIX962_EC_PUBLIC_KEY</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST">SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_DES_CBC">SEC_OID_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_DES_ECB">SEC_OID_DES_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_DES_EDE3_CBC">SEC_OID_DES_EDE3_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_HMAC_SHA256">SEC_OID_HMAC_SHA256</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_HMAC_SHA384">SEC_OID_HMAC_SHA384</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_HMAC_SHA512">SEC_OID_HMAC_SHA512</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_MD2">SEC_OID_MD2</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_MD5">SEC_OID_MD5</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_RSA_ENCRYPTION">SEC_OID_PKCS1_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC">SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC">SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC">SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBES2">SEC_OID_PKCS5_PBES2</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBKDF2">SEC_OID_PKCS5_PBKDF2</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBMAC1">SEC_OID_PKCS5_PBMAC1</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_RC2_CBC">SEC_OID_RC2_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_RC4">SEC_OID_RC4</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA1">SEC_OID_SHA1</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA256">SEC_OID_SHA256</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA384">SEC_OID_SHA384</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA512">SEC_OID_SHA512</a></code></li>
+<code><a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_CBC">CKM_AES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_CBC_PAD">CKM_AES_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_CMAC">CKM_AES_CMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_ECB">CKM_AES_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_KEY_GEN">CKM_AES_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_KEY_WRAP">CKM_AES_KEY_WRAP</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_AES_KEY_WRAP_PAD">CKM_AES_KEY_WRAP_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES_CBC_PAD">CKM_DES_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES_KEY_GEN">CKM_DES_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES3_CBC_PAD">CKM_DES3_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES3_ECB">CKM_DES3_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DES3_KEY_GEN">CKM_DES3_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_DSA_KEY_PAIR_GEN">CKM_DSA_KEY_PAIR_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_EC_KEY_PAIR_GEN">CKM_EC_KEY_PAIR_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_GENERIC_SECRET_KEY_GEN">CKM_GENERIC_SECRET_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_AES_KEY_WRAP">CKM_NSS_AES_KEY_WRAP</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_AES_KEY_WRAP_PAD">CKM_NSS_AES_KEY_WRAP_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA">CKM_NSS_SP800_108_COUNTER_KDF_DERIVE_DATA</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA">CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA">CKM_NSS_SP800_108_FEEDBACK_KDF_DERIVE_DATA</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_PBA_SHA1_WITH_SHA1_HMAC">CKM_PBA_SHA1_WITH_SHA1_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RC2_CBC_PAD">CKM_RC2_CBC_PAD</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RC2_KEY_GEN">CKM_RC2_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RC4_KEY_GEN">CKM_RC4_KEY_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_RSA_PKCS_KEY_PAIR_GEN">CKM_RSA_PKCS_KEY_PAIR_GEN</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA_1_HMAC">CKM_SHA_1_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA256_HMAC">CKM_SHA256_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA384_HMAC">CKM_SHA384_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SHA512_HMAC">CKM_SHA512_HMAC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SP800_108_COUNTER_KDF">CKM_SP800_108_COUNTER_KDF</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SP800_108_DOUBLE_PIPELINE_KDF">CKM_SP800_108_DOUBLE_PIPELINE_KDF</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#CKM_SP800_108_FEEDBACK_KDF">CKM_SP800_108_FEEDBACK_KDF</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#oid">oid</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#oidIndex">oidIndex</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_128_CBC">SEC_OID_AES_128_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_128_ECB">SEC_OID_AES_128_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_192_CBC">SEC_OID_AES_192_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_192_ECB">SEC_OID_AES_192_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_256_CBC">SEC_OID_AES_256_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_AES_256_ECB">SEC_OID_AES_256_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX9_DSA_SIGNATURE">SEC_OID_ANSIX9_DSA_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST">SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_EC_PUBLIC_KEY">SEC_OID_ANSIX962_EC_PUBLIC_KEY</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE">SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST">SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_DES_CBC">SEC_OID_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_DES_ECB">SEC_OID_DES_ECB</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_DES_EDE3_CBC">SEC_OID_DES_EDE3_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_HMAC_SHA256">SEC_OID_HMAC_SHA256</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_HMAC_SHA384">SEC_OID_HMAC_SHA384</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_HMAC_SHA512">SEC_OID_HMAC_SHA512</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_MD2">SEC_OID_MD2</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_MD5">SEC_OID_MD5</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_RSA_ENCRYPTION">SEC_OID_PKCS1_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_RSA_PSS_SIGNATURE">SEC_OID_PKCS1_RSA_PSS_SIGNATURE</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA256_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION">SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4">SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC">SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC">SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC">SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBES2">SEC_OID_PKCS5_PBES2</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBKDF2">SEC_OID_PKCS5_PBKDF2</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_PKCS5_PBMAC1">SEC_OID_PKCS5_PBMAC1</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_RC2_CBC">SEC_OID_RC2_CBC</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_RC4">SEC_OID_RC4</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA1">SEC_OID_SHA1</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA256">SEC_OID_SHA256</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA384">SEC_OID_SHA384</a>, <a href="../../../../org/mozilla/jss/crypto/Algorithm.html#SEC_OID_SHA512">SEC_OID_SHA512</a></code></li>
 </ul>
 </li>
 </ul>
@@ -248,9 +267,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#getDigestAlg--">getDigestAlg</a></span>()</code>
-<div class="block">The digest portion of the signature algorithm.</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#getDigestAlg--">getDigestAlg</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></code></td>
@@ -261,6 +278,10 @@ extends <a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#getSigningAlg--">getSigningAlg</a></span>()</code>
 <div class="block">The raw encryption portion of the signature algorithm.</div>
 </td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html#setDigestAlg-org.mozilla.jss.crypto.DigestAlgorithm-">setDigestAlg</a></span>(<a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a>&nbsp;alg)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -417,10 +438,48 @@ extends <a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class
 <a name="RSASignatureWithSHA512Digest">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>RSASignatureWithSHA512Digest</h4>
 <pre>public static final&nbsp;<a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a> RSASignatureWithSHA512Digest</pre>
+</li>
+</ul>
+<a name="RSAPSSSignature">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RSAPSSSignature</h4>
+<pre>public static final&nbsp;<a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a> RSAPSSSignature</pre>
+<div class="block">Version with no digest set: must call setDigestAlg() after initialization
+ to choose the proper variant.</div>
+</li>
+</ul>
+<a name="RSAPSSSignatureWithSHA256Digest">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RSAPSSSignatureWithSHA256Digest</h4>
+<pre>public static final&nbsp;<a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a> RSAPSSSignatureWithSHA256Digest</pre>
+</li>
+</ul>
+<a name="RSAPSSSignatureWithSHA384Digest">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RSAPSSSignatureWithSHA384Digest</h4>
+<pre>public static final&nbsp;<a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a> RSAPSSSignatureWithSHA384Digest</pre>
+</li>
+</ul>
+<a name="RSAPSSSignatureWithSHA512Digest">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>RSAPSSSignatureWithSHA512Digest</h4>
+<pre>public static final&nbsp;<a href="../../../../org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a> RSAPSSSignatureWithSHA512Digest</pre>
 </li>
 </ul>
 </li>
@@ -492,12 +551,25 @@ extends <a href="../../../../org/mozilla/jss/crypto/Algorithm.html" title="class
 <a name="getDigestAlg--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getDigestAlg</h4>
 <pre>public&nbsp;<a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a>&nbsp;getDigestAlg()
                              throws java.security.NoSuchAlgorithmException</pre>
-<div class="block">The digest portion of the signature algorithm.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.security.NoSuchAlgorithmException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setDigestAlg-org.mozilla.jss.crypto.DigestAlgorithm-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setDigestAlg</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a>&nbsp;setDigestAlg(<a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a>&nbsp;alg)
+                             throws java.security.NoSuchAlgorithmException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.security.NoSuchAlgorithmException</code></dd>

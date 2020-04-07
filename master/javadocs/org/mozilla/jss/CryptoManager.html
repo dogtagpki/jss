@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":9,"i16":10,"i17":10,"i18":9,"i19":9,"i20":9,"i21":10,"i22":9,"i23":9,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":9,"i37":9,"i38":10,"i39":10,"i40":42,"i41":10,"i42":10,"i43":9,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":9,"i16":10,"i17":10,"i18":9,"i19":9,"i20":9,"i21":10,"i22":9,"i23":9,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":9,"i37":9,"i38":10,"i39":10,"i40":42,"i41":10,"i42":10,"i43":9,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -515,6 +515,17 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#shutdown--">shutdown</a></span>()</code>
+<div class="block">Shutdowns this CryptoManager instance and the associated NSS
+ initialization.</div>
+</td>
+</tr>
+<tr id="i48" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#shutdownNative--">shutdownNative</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i49" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#verifyCertificate-java.lang.String-boolean-org.mozilla.jss.CertificateUsage-">verifyCertificate</a></span>(java.lang.String&nbsp;nickname,
                  boolean&nbsp;checkSig,
                  <a href="../../../org/mozilla/jss/CertificateUsage.html" title="class in org.mozilla.jss">CertificateUsage</a>&nbsp;certificateUsage)</code>
@@ -522,7 +533,7 @@ implements <a href="../../../org/mozilla/jss/crypto/TokenSupplier.html" title="i
  check if it's valid and that we trust the issuer.</div>
 </td>
 </tr>
-<tr id="i48" class="altColor">
+<tr id="i50" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/CryptoManager.html#verifyCertificate-org.mozilla.jss.crypto.X509Certificate-boolean-org.mozilla.jss.CertificateUsage-">verifyCertificate</a></span>(<a href="../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert,
                  boolean&nbsp;checkSig,
@@ -1643,7 +1654,7 @@ public&nbsp;boolean&nbsp;isCertValid(java.lang.String&nbsp;nickname,
 <a name="setOCSPTimeout-int-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setOCSPTimeout</h4>
 <pre>public&nbsp;void&nbsp;setOCSPTimeout(int&nbsp;ocsp_timeout)
@@ -1655,6 +1666,31 @@ public&nbsp;boolean&nbsp;isCertValid(java.lang.String&nbsp;nickname,
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.security.GeneralSecurityException</code> - If a security error has occurred.</dd>
 </dl>
+</li>
+</ul>
+<a name="shutdown--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>shutdown</h4>
+<pre>public&nbsp;void&nbsp;shutdown()
+              throws java.lang.Exception</pre>
+<div class="block">Shutdowns this CryptoManager instance and the associated NSS
+ initialization.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
+</li>
+</ul>
+<a name="shutdownNative--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>shutdownNative</h4>
+<pre>public&nbsp;void&nbsp;shutdownNative()</pre>
 </li>
 </ul>
 </li>
