@@ -406,7 +406,7 @@ public class Utils {
         try {
             return Base64.getMimeDecoder().decode(string);
         } catch (IllegalArgumentException iae) {
-            logger.warn("Invalid base64: [" + string + "]: " + iae);
+            logger.warn("Invalid base64: [" + string + "]: " + iae, iae);
             return new byte[0];
         }
     }
