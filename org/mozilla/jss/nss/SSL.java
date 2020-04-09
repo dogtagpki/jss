@@ -53,6 +53,14 @@ public class SSL {
     public static final int SECWouldBlock = getSSLSECWouldBlock();
 
     /**
+     * Enable post-handshake authentication extension. Value for use with
+     * OptionGet.
+     *
+     * See also: SSL_ENABLE_POST_HANDSHAKE_AUTH in /usr/include/nss3/ssl.h
+     */
+    public static final int ENABLE_POST_HANDSHAKE_AUTH = getSSLEnablePostHandshakeAuth();
+
+    /**
      * Import a file descriptor to create a new SSL file descriptor out of it.
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
@@ -318,4 +326,5 @@ public class SSL {
     private static native int getSSLSECSuccess();
     private static native int getSSLSECFailure();
     private static native int getSSLSECWouldBlock();
+    private static native int getSSLEnablePostHandshakeAuth();
 }

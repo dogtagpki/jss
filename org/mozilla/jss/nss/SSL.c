@@ -871,3 +871,9 @@ Java_org_mozilla_jss_nss_SSL_getSSLSECWouldBlock(JNIEnv *env, jclass clazz)
 {
     return SECWouldBlock;
 }
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLEnablePostHandshakeAuth(JNIEnv *env, jclass clazz)
+{
+    return SSL_ENABLE_POST_HANDSHAKE_AUTH;
+}
