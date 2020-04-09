@@ -520,7 +520,7 @@ finish:
 void
 JSS_setPasswordCallback(JNIEnv *env, jobject callback)
 {
-    PR_ASSERT(env!=NULL && callback!=NULL);
+    PR_ASSERT(env != NULL);
 
     /* Free the previously-registered password callback */
     if( globalPasswordCallback != NULL ) {
@@ -528,10 +528,12 @@ JSS_setPasswordCallback(JNIEnv *env, jobject callback)
         globalPasswordCallback = NULL;
     }
 
-    /* Store the new password callback */
-    globalPasswordCallback = (*env)->NewGlobalRef(env, callback);
-    if(globalPasswordCallback == NULL) {
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
+    if (callback != NULL) {
+        /* Store the new password callback */
+        globalPasswordCallback = (*env)->NewGlobalRef(env, callback);
+        if (globalPasswordCallback == NULL) {
+            JSS_throw(env, OUT_OF_MEMORY_ERROR);
+        }
     }
 }
 
