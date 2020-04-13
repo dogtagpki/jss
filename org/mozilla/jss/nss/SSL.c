@@ -877,3 +877,45 @@ Java_org_mozilla_jss_nss_SSL_getSSLEnablePostHandshakeAuth(JNIEnv *env, jclass c
 {
     return SSL_ENABLE_POST_HANDSHAKE_AUTH;
 }
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLEnableRenegotiation(JNIEnv *env, jclass clazz)
+{
+    return SSL_ENABLE_RENEGOTIATION;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequireSafeNegotiation(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUIRE_SAFE_NEGOTIATION;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateNever(JNIEnv *env, jclass clazz)
+{
+    return SSL_RENEGOTIATE_NEVER;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateUnrestricted(JNIEnv *env, jclass clazz)
+{
+    return SSL_RENEGOTIATE_UNRESTRICTED;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateRequiresXtn(JNIEnv *env, jclass clazz)
+{
+    return SSL_RENEGOTIATE_REQUIRES_XTN;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateTransitional(JNIEnv *env, jclass clazz)
+{
+    return SSL_RENEGOTIATE_TRANSITIONAL;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLEnableFallbackSCSV(JNIEnv *env, jclass clazz)
+{
+    return SSL_ENABLE_FALLBACK_SCSV;
+}

@@ -457,6 +457,13 @@ Java_org_mozilla_jss_util_GlobalRefProxy_refOf;
 Java_org_mozilla_jss_CryptoManager_shutdownNative;
 Java_org_mozilla_jss_nss_SSL_RemoveCallbacks;
 Java_org_mozilla_jss_nss_SSL_getSSLEnablePostHandshakeAuth;
+Java_org_mozilla_jss_nss_SSL_getSSLEnableRenegotiation;
+Java_org_mozilla_jss_nss_SSL_getSSLRequireSafeNegotiation;
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateNever;
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateUnrestricted;
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateRequiresXtn;
+Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateTransitional;
+Java_org_mozilla_jss_nss_SSL_getSSLEnableFallbackSCSV;
     local:
         *;
 };
