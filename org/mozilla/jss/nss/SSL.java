@@ -387,6 +387,13 @@ public class SSL {
      */
     public static native void RemoveCallbacks(SSLFDProxy fd);
 
+    /*
+     * Enable handshake completion status checking.
+     *
+     * See also: SSL_HandshakeCallback in /usr/include/nss3/ssl.h
+     */
+    public static native int EnableHandshakeCallback(SSLFDProxy fd);
+
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
     private static native int getSSLRequireCertificate();

@@ -240,3 +240,33 @@ JSSL_SSLFDCertSelectionCallback(void *arg,
     *pRetKey = privkey;
     return SECSuccess;
 }
+
+void
+JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data)
+{
+    JNIEnv *env = NULL;
+    jobject sslfd_proxy = (jobject)client_data;
+    jclass sslfdProxyClass;
+    jfieldID handshakeCompleteField;
+
+    if (fd == NULL || client_data == NULL || JSS_javaVM == NULL) {
+        return;
+    }
+
+    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env == NULL) {
+        return;
+    }
+
+    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+    if (sslfdProxyClass == NULL) {
+        return;
+    }
+
+    handshakeCompleteField = (*env)->GetFieldID(env, sslfdProxyClass,
+                                                "handshakeComplete", "Z");
+    if (handshakeCompleteField == NULL) {
+        return;
+    }
+
+    (*env)->SetBooleanField(env, sslfd_proxy, handshakeCompleteField, JNI_TRUE);
+}
