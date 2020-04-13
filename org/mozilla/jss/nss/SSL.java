@@ -61,6 +61,66 @@ public class SSL {
     public static final int ENABLE_POST_HANDSHAKE_AUTH = getSSLEnablePostHandshakeAuth();
 
     /**
+     * Option for configuring renegotiation after initial handshake. Value for
+     * use with OptionGet and OptionSet.
+     *
+     * See also: SSL_ENABLE_RENEGOTIATION in /usr/include/nss3/ssl.h
+     */
+    public static final int ENABLE_RENEGOTIATION = getSSLEnableRenegotiation();
+
+    /**
+     * Option for requiring safe negotiation. Value for use with OptionGet and
+     * OptionSet.
+     *
+     * See also: SSL_REQUIRE_SAFE_NEGOTIATION in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUIRE_SAFE_NEGOTIATION = getSSLRequireSafeNegotiation();
+
+    /**
+     * Value for never allowing renegotiation after initial handshake. Value
+     * for use with ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+     *
+     * See also: SSL_RENEGOTIATE_NEVER in /usr/include/nss3/ssl.h
+     */
+    public static final int RENEGOTIATE_NEVER = getSSLRenegotiateNever();
+
+    /**
+     * Value for always allowing renegotiation after initial handshake,
+     * regardless of whether or not the peer's client hellow bears the
+     * renegotiation info extension; unsafe. Value for use with
+     * ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+     *
+     * See also: SSL_RENEGOTIATE_UNRESTRICTED in /usr/include/nss3/ssl.h
+     */
+    public static final int RENEGOTIATE_UNRESTRICTED = getSSLRenegotiateUnrestricted();
+
+    /**
+     * Value for allowing renegotiation after initial handshake with the TLS
+     * renegotiation_info extension; safe. Value for use with
+     * ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+     *
+     * See also: SSL_RENEGOTIATE_REQUIRES_XTN in /usr/include/nss3/ssl.h
+     */
+    public static final int RENEGOTIATE_REQUIRES_XTN = getSSLRenegotiateRequiresXtn();
+
+    /**
+     * Value for disallowing unsafe renegotiation in server sockets only, but
+     * allows clients to continue to renegotiate with vulnerable servers.
+     * Value for use with ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+     *
+     * See also: SSL_RENEGOTIATE_TRANSITIONAL in /usr/include/nss3/ssl.h
+     */
+    public static final int RENEGOTIATE_TRANSITIONAL = getSSLRenegotiateTransitional();
+
+    /**
+     * Option for sending SCSV in handshakes. Value for use with OptionGet and
+     * OptionSet.
+     *
+     * See also: SSL_ENABLE_FALLBACK_SCSV in /usr/include/nss3/ssl.h
+     */
+    public static final int ENABLE_FALLBACK_SCSV = getSSLEnableFallbackSCSV();
+
+    /**
      * Import a file descriptor to create a new SSL file descriptor out of it.
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
@@ -327,4 +387,11 @@ public class SSL {
     private static native int getSSLSECFailure();
     private static native int getSSLSECWouldBlock();
     private static native int getSSLEnablePostHandshakeAuth();
+    private static native int getSSLEnableRenegotiation();
+    private static native int getSSLRequireSafeNegotiation();
+    private static native int getSSLRenegotiateNever();
+    private static native int getSSLRenegotiateUnrestricted();
+    private static native int getSSLRenegotiateRequiresXtn();
+    private static native int getSSLRenegotiateTransitional();
+    private static native int getSSLEnableFallbackSCSV();
 }
