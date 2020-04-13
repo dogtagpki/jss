@@ -286,6 +286,13 @@ public class SSL {
     public static native int ResetHandshake(SSLFDProxy fd, boolean asServer);
 
     /**
+     * Rehandshake an existing socket, optionally flushing the cache line.
+     *
+     * See also: SSL_ReHandshake in /usr/include/nss3/ssl.h
+     */
+    public static native int ReHandshake(SSLFDProxy fd, boolean flushCache);
+
+    /**
      * Force a handshake to occur if not started, else step one.
      *
      * See also: SSL_ForceHandshake in /usr/include/nss3/ssl.h
