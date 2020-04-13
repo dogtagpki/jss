@@ -464,6 +464,7 @@ Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateUnrestricted;
 Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateRequiresXtn;
 Java_org_mozilla_jss_nss_SSL_getSSLRenegotiateTransitional;
 Java_org_mozilla_jss_nss_SSL_getSSLEnableFallbackSCSV;
+Java_org_mozilla_jss_nss_SSL_ReHandshake;
     local:
         *;
 };

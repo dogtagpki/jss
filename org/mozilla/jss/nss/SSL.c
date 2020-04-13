@@ -599,6 +599,22 @@ Java_org_mozilla_jss_nss_SSL_ResetHandshake(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT int JNICALL
+Java_org_mozilla_jss_nss_SSL_ReHandshake(JNIEnv *env, jclass clazz,
+    jobject fd, jboolean flushCache)
+{
+    PRFileDesc *real_fd = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_ReHandshake(real_fd, flushCache);
+}
+
+JNIEXPORT int JNICALL
 Java_org_mozilla_jss_nss_SSL_ForceHandshake(JNIEnv *env, jclass clazz,
     jobject fd)
 {
