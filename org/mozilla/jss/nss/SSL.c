@@ -859,6 +859,27 @@ Java_org_mozilla_jss_nss_SSL_RemoveCallbacks(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_EnableHandshakeCallback(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    jobject fd_ref = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_NSS_getGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_HandshakeCallback(real_fd, JSSL_SSLFDHandshakeComplete, fd_ref);
+}
+
+JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_nss_SSL_getSSLRequestCertificate(JNIEnv *env, jclass clazz)
 {
     return SSL_REQUEST_CERTIFICATE;

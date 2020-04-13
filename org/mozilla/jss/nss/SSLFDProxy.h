@@ -26,3 +26,6 @@ JSSL_SSLFDCertSelectionCallback(void *arg,
                                 CERTDistNames *caNames,
                                 CERTCertificate **pRetCert,
                                 SECKEYPrivateKey **pRetKey);
+
+void
+JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data);
