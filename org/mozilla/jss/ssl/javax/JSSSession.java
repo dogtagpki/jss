@@ -8,6 +8,7 @@ import java.util.HashMap;
 import javax.net.ssl.*;
 
 import org.mozilla.jss.nss.*;
+import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.ssl.*;
 
 public class JSSSession implements SSLSession {
@@ -50,8 +51,9 @@ public class JSSSession implements SSLSession {
     }
 
     public SSLChannelInfo getChannelInfo() {
-        if (parent.getSSLFDProxy() != null) {
-            return SSL.GetChannelInfo(parent.getSSLFDProxy());
+        SSLFDProxy ssl_fd = parent.getSSLFDProxy();
+        if (ssl_fd != null && ssl_fd.handshakeComplete) {
+            return SSL.GetChannelInfo(ssl_fd);
         }
 
         return null;
@@ -110,18 +112,24 @@ public class JSSSession implements SSLSession {
 
     protected void refreshData() {
         SSLChannelInfo info = getChannelInfo();
-        if (info == null) {
-            return;
+        if (info != null) {
+            // NSS returns the values as seconds, but we have to report them
+            // in milliseconds to our callers. Multiply by a thousand here.
+            setCreationTime(info.getCreationTime() * 1000);
+            setLastAccessedTime(info.getLastAccessTime() * 1000);
+            setExpirationTime(info.getExpirationTime() * 1000);
+
+            setCipherSuite(info.getCipherSuite());
+            setProtocol(info.getProtocolVersion());
         }
 
-        // NSS returns the values as seconds, but we have to report them
-        // in milliseconds to our callers. Multiply by a thousand here.
-        setCreationTime(info.getCreationTime() * 1000);
-        setLastAccessedTime(info.getLastAccessTime() * 1000);
-        setExpirationTime(info.getExpirationTime() * 1000);
-
-        setCipherSuite(info.getCipherSuite());
-        setProtocol(info.getProtocolVersion());
+        SSLFDProxy ssl_fd = parent.getSSLFDProxy();
+        if (ssl_fd != null) {
+            try {
+                PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
+                setPeerCertificates(peer_chain);
+            } catch (Exception e) {}
+        }
     }
 
     protected void setExpirationTime(long when) {
@@ -176,6 +184,7 @@ public class JSSSession implements SSLSession {
     }
 
     public Certificate[] getPeerCertificates() {
+        refreshData();
         return peerCertificates;
     }
 
@@ -238,6 +247,10 @@ public class JSSSession implements SSLSession {
         }
 
         return protocolVersion.jdkAlias();
+    }
+
+    public SSLVersion getSSLVersion() {
+        return protocolVersion;
     }
 
     protected void setProtocol(SSLVersion protocol) {

@@ -161,6 +161,11 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected boolean is_inbound_closed;
 
     /**
+     * Set of configuration options to enable via SSL_OptionSet(...).
+     */
+    protected HashMap<Integer, Integer> config;
+
+    /**
      * Constructor for a JSSEngine, providing no hints for an internal
      * session reuse strategy and no key.
      *
@@ -171,6 +176,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         super();
 
         session = new JSSSession(this, BUFFER_SIZE);
+        config = getDefaultConfiguration();
     }
 
     /**
@@ -186,6 +192,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         session = new JSSSession(this, BUFFER_SIZE);
         session.setPeerHost(peerHost);
         session.setPeerPort(peerPort);
+        config = getDefaultConfiguration();
     }
 
     /**
@@ -207,6 +214,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         session = new JSSSession(this, BUFFER_SIZE);
         session.setPeerHost(peerHost);
         session.setPeerPort(peerPort);
+        config = getDefaultConfiguration();
     }
 
     /**
@@ -748,6 +756,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public void setNeedClientAuth(boolean need) {
         logger.debug("JSSEngine.setNeedClientAuth(" + need + ")");
         need_client_auth = need;
+
+        reconfigureClientAuth();
     }
 
     /**
@@ -756,7 +766,18 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public void setWantClientAuth(boolean want) {
         logger.debug("JSSEngine.setWantClientAuth(" + want + ")");
         want_client_auth = want;
+
+        reconfigureClientAuth();
     }
+
+    /**
+     * Implementation-specific handler to handle reconfiguration of client
+     * authentication after the handshake has completed.
+     *
+     * Note that this always gets called, regardless of if the handshake has
+     * started; it is up to the implementation to handle this appropriately.
+     */
+    protected abstract void reconfigureClientAuth();
 
     /**
      * Query whether this JSSEngine is a client (true) or a server (false).
@@ -803,6 +824,47 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * their handshake mechanism) as they wish.
      */
     public abstract SecurityStatusResult getStatus();
+
+    /**
+     * Gets the default configuration.
+     */
+    public HashMap<Integer, Integer> getDefaultConfiguration() {
+        HashMap<Integer, Integer> result = new HashMap<Integer, Integer>();
+
+        // JSS (and NSS) generally supports post-handshake authentication, but
+        // we might not always have key material up front. Set the extension
+        // anyways, to give the JSSEngine the chance to negotiate it in the
+        // future.
+        result.put(SSL.ENABLE_POST_HANDSHAKE_AUTH, 1);
+
+        // Allow (and enable) only secure renegotiation. Only relevant for
+        // TLS < 1.3.
+        result.put(SSL.ENABLE_RENEGOTIATION, SSL.RENEGOTIATE_REQUIRES_XTN);
+        result.put(SSL.REQUIRE_SAFE_NEGOTIATION, 1);
+        result.put(SSL.ENABLE_FALLBACK_SCSV, 1);
+        return result;
+    }
+
+    /**
+     * Updates the configuration with the given value.
+     */
+    public void addConfiguration(int key, int value) {
+        config.put(key, value);
+    }
+
+    /**
+     * Removes the given key from the configuration.
+     */
+    public void removeConfiguration(int key) {
+        config.remove(key);
+    }
+
+    /**
+     * Sets the configuration, replacing all current values.
+     */
+    public void setConfiguration(HashMap<Integer, Integer> config) {
+        this.config = config;
+    }
 
     /**
      * Calls cleanup only if both inbound and outbound data streams are
