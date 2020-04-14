@@ -2,6 +2,7 @@
 #include <nss.h>
 #include <ssl.h>
 #include <sslerr.h>
+#include <sslexp.h>
 #include <limits.h>
 #include <stdint.h>
 #include <jni.h>
@@ -765,6 +766,22 @@ Java_org_mozilla_jss_nss_SSL_PeerCertificateChain(JNIEnv *env, jclass clazz,
     }
 
     return JSS_PK11_wrapCertChain(env, &chain);
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_SendCertificateRequest(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_SendCertificateRequest(real_fd);
 }
 
 JNIEXPORT jint JNICALL

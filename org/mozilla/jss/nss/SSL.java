@@ -348,6 +348,13 @@ public class SSL {
     public static native PK11Cert[] PeerCertificateChain(SSLFDProxy fd) throws Exception;
 
     /**
+     * Send the TLS 1.3 Certificate Request as a server; experimental.
+     *
+     * See also: SSL_SendCertificateRequest in /usr/include/nss3/sslexp.h
+     */
+    public static native int SendCertificateRequest(SSLFDProxy fd);
+
+    /**
      * Use client authentication; set client certificate from SSLFDProxy.
      *
      * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
