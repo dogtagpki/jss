@@ -121,6 +121,39 @@ public class SSL {
     public static final int ENABLE_FALLBACK_SCSV = getSSLEnableFallbackSCSV();
 
     /**
+     * Value for never requiring a certificate. Value for use with
+     * SSL_REQUIRE_CERTIFICATE with OptionGet and OptionSet.
+     *
+     * See also: SSL_REQUIRE_NEVER in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUIRE_NEVER = getSSLRequireNever();
+
+    /**
+     * Value for always requiring a certificate. Value for use with
+     * SSL_REQUIRE_CERTIFICATE with OptionGet and OptionSet.
+     *
+     * See also: SSL_REQUIRE_ALWAYS in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUIRE_ALWAYS = getSSLRequireAlways();
+
+    /**
+     * Value for requiring a certificate only on the first handshake. Value
+     * for use with SSL_REQUIRE_CERTIFICATE with OptionGet and OptionSet.
+     *
+     * See also: SSL_REQUIRE_FIRST_HANDSHAKE in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUIRE_FIRST_HANDSHAKE = getSSLRequireFirstHandshake();
+
+    /**
+     * Value for requiring a certificate but not erring if the peer doesn't
+     * provide one. Value for use with SSL_REQUIRE_CERTIFICATE with OptionGet
+     * and OptionSet.
+     *
+     * See also: SSL_REQUIRE_NO_ERROR in /usr/include/nss3/ssl.h
+     */
+    public static final int REQUIRE_NO_ERROR = getSSLRequireNoError();
+
+    /**
      * Import a file descriptor to create a new SSL file descriptor out of it.
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
@@ -415,4 +448,8 @@ public class SSL {
     private static native int getSSLRenegotiateRequiresXtn();
     private static native int getSSLRenegotiateTransitional();
     private static native int getSSLEnableFallbackSCSV();
+    private static native int getSSLRequireNever();
+    private static native int getSSLRequireAlways();
+    private static native int getSSLRequireFirstHandshake();
+    private static native int getSSLRequireNoError();
 }

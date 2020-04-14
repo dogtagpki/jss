@@ -467,6 +467,10 @@ Java_org_mozilla_jss_nss_SSL_getSSLEnableFallbackSCSV;
 Java_org_mozilla_jss_nss_SSL_ReHandshake;
 Java_org_mozilla_jss_nss_SSL_EnableHandshakeCallback;
 Java_org_mozilla_jss_nss_SSL_SendCertificateRequest;
+Java_org_mozilla_jss_nss_SSL_getSSLRequireNever;
+Java_org_mozilla_jss_nss_SSL_getSSLRequireAlways;
+Java_org_mozilla_jss_nss_SSL_getSSLRequireFirstHandshake;
+Java_org_mozilla_jss_nss_SSL_getSSLRequireNoError;
     local:
         *;
 };

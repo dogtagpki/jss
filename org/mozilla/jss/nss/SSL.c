@@ -973,3 +973,27 @@ Java_org_mozilla_jss_nss_SSL_getSSLEnableFallbackSCSV(JNIEnv *env, jclass clazz)
 {
     return SSL_ENABLE_FALLBACK_SCSV;
 }
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequireNever(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUIRE_NEVER;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequireAlways(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUIRE_ALWAYS;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequireFirstHandshake(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUIRE_FIRST_HANDSHAKE;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_getSSLRequireNoError(JNIEnv *env, jclass clazz)
+{
+    return SSL_REQUIRE_NO_ERROR;
+}
