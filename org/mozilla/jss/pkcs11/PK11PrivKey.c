@@ -351,15 +351,12 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getUniqueID
     /***************************************************
      * Write the key id to a new byte array
      ***************************************************/
-    PR_ASSERT(idItem->len > 0);
-    byteArray = JSS_ToByteArray(env, idItem->data, idItem->len);
-    if (byteArray == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
+    if (idItem->len > 0) {
+        byteArray = JSS_ToByteArray(env, idItem->data, idItem->len);
     }
 
 finish:
-    if(idItem != NULL) {
+    if (idItem != NULL) {
         SECITEM_FreeItem(idItem, PR_TRUE /*freeit*/);
     }
     
