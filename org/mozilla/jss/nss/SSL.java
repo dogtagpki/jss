@@ -388,6 +388,13 @@ public class SSL {
     public static native int SendCertificateRequest(SSLFDProxy fd);
 
     /**
+     * Send the TLS 1.3 KeyUpdate Request; experimental.
+     *
+     * See also: SSL_KeyUpdate in /usr/include/nss3/sslexp.h
+     */
+    public static native int KeyUpdate(SSLFDProxy fd, boolean requestUpdate);
+
+    /**
      * Use client authentication; set client certificate from SSLFDProxy.
      *
      * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
