@@ -471,6 +471,7 @@ Java_org_mozilla_jss_nss_SSL_getSSLRequireNever;
 Java_org_mozilla_jss_nss_SSL_getSSLRequireAlways;
 Java_org_mozilla_jss_nss_SSL_getSSLRequireFirstHandshake;
 Java_org_mozilla_jss_nss_SSL_getSSLRequireNoError;
+Java_org_mozilla_jss_nss_SSL_KeyUpdate;
     local:
         *;
 };
