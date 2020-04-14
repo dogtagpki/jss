@@ -158,6 +158,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // Apply the requested cipher suites and protocols.
         applyProtocols();
         applyCiphers();
+        applyConfig();
 
         // Apply hostname information (via setURL).
         applyHosts();
@@ -210,16 +211,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new RuntimeException("JSSEngine.init(): Unable to enable SSL Alert Logging on this SSLFDProxy instance.");
         }
 
+        ret = SSL.EnableHandshakeCallback(ssl_fd);
+        if (ret == SSL.SECFailure) {
+            throw new RuntimeException("JSSEngine.init(): Unable to enable SSL Handshake Callback on this SSLFDProxy instance.");
+        }
+
         // Pass this ssl_fd to the session object so that we can use
         // SSL methods to invalidate the session.
     }
 
     private void initClient() {
         debug("JSSEngine: initClient()");
-
-        // Update handshake status; client initiates connection, so we
-        // need to wrap first.
-        handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
 
         if (cert != null && key != null) {
             debug("JSSEngine.initClient(): Enabling client auth: " + cert);
@@ -228,8 +230,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 throw new RuntimeException("JSSEngine.init(): Unable to attach client certificate auth callback.");
             }
         }
-
-        step_handshake = true;
     }
 
     private void initServer() {
@@ -258,9 +258,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new RuntimeException("Unable to configure server session cache: " + errorText(PR.GetError()));
         }
 
-        // Update handshake status; client initiates connection, so wait
-        // for unwrap on the server end.
-        handshake_state = SSLEngineResult.HandshakeStatus.NEED_UNWRAP;
+        configureClientAuth();
+    }
+
+    private void configureClientAuth() {
+        debug("SSLFileDesc: " + ssl_fd);
 
         // Only specify these on the server side as they affect what we
         // want from the remote peer in NSS. In the server case, this is
@@ -270,11 +272,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new RuntimeException("Unable to configure SSL_REQUEST_CERTIFICATE option: " + errorText(PR.GetError()));
         }
 
-        if (SSL.OptionSet(ssl_fd, SSL.REQUIRE_CERTIFICATE, need_client_auth ? 1 : 0) == SSL.SECFailure) {
+        if (SSL.OptionSet(ssl_fd, SSL.REQUIRE_CERTIFICATE, need_client_auth ? SSL.REQUIRE_ALWAYS : 0) == SSL.SECFailure) {
             throw new RuntimeException("Unable to configure SSL_REQUIRE_CERTIFICATE option: " + errorText(PR.GetError()));
         }
+    }
 
-        step_handshake = true;
+    protected void reconfigureClientAuth() {
+        if (ssl_fd == null || !as_server) {
+            return;
+        }
+
+        configureClientAuth();
     }
 
     private void applyCiphers() {
@@ -325,6 +333,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         SSLVersionRange vrange = new SSLVersionRange(min_protocol, max_protocol);
         if (SSL.VersionRangeSet(ssl_fd, vrange) == SSL.SECFailure) {
             throw new RuntimeException("Unable to set version range: " + errorText(PR.GetError()));
+        }
+    }
+
+    private void applyConfig() {
+        debug("JSSEngine: applyConfig()");
+        for (Integer key : config.keySet()) {
+            Integer value = config.get(key);
+
+            debug("Setting configuration option: " + key + "=" + value);
+            if (SSL.OptionSet(ssl_fd, key, value) != SSL.SECSuccess) {
+                throw new RuntimeException("Unable to set configuration value: " + key + "=" + value);
+            }
         }
     }
 
@@ -414,15 +434,88 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // beginHandshake(...) if ssl_fd == null.
 
         // ssl_fd == null <-> we've not initialized anything yet.
+
+        // TLS begins with the client sending a CLIENT_HELLO to the server;
+        // this means that the server needs to unwrap first and the client
+        // needs to wrap first; hence unwrap = as_server. However, if we're
+        // trying to renegotiate this changes. See when ssl_fd != null below.
+        boolean unwrap = as_server;
+
         if (ssl_fd == null) {
+            // Initialize and create ssl_fd. Throws various RuntimeExceptions
+            // when creation and configuration fails.
             init();
+            assert(ssl_fd != null);
+
+            // Reset the handshake status, using the new socket and
+            // configuration which was just created. This ensures that
+            // we'll attempt to handshake when ForceHandshake is called.
+            if (SSL.ResetHandshake(ssl_fd, as_server) == SSL.SECFailure) {
+                throw new RuntimeException("Unable to begin handshake: " + errorText(PR.GetError()));
+            }
+        } else {
+            // When ssl_fd exists, we need to re-handshake. Usually, the
+            // server initiates the conversation (especially when we want
+            // to upgrade to requiring client auth from not requiring it).
+            //
+            // This means that when we're a (as_server == true), we should
+            // now wrap, rather than unwrap. So, negate unwrap.
+            unwrap = !as_server;
+
+            // TLS v1.3 differs from all previous versions in that it removed
+            // the ability to completely rehandshake. This makes the first
+            // portion more complicated than the latter.
+            if (session.getSSLVersion() == SSLVersion.TLS_1_3) {
+                // We only send the certificate request as a server when we
+                // need client auth. Otherwise, we'll have to issue a rekey
+                // request.
+                boolean send_certificate_request = as_server && need_client_auth;
+                if (send_certificate_request) {
+                    if (SSL.SendCertificateRequest(ssl_fd) == SSL.SECFailure) {
+                        throw new RuntimeException("Unable to issue certificate request on TLSv1.3: " + errorText(PR.GetError()));
+                    }
+                } else {
+                    // Our best guess at what the user wants is to update
+                    // their keys. They don't need client authentication but
+                    // they explicitly called beginHandshake() again.
+                    if (SSL.KeyUpdate(ssl_fd, false) == SSL.SECFailure) {
+                        throw new RuntimeException("Unable to request a new key on TLSv1.3: " + errorText(PR.GetError()));
+                    }
+                }
+            } else {
+                // On older protocol versions, this is easier: just issue a
+                // new handshake request. This is different from
+                // ResetHandshake as for security reasons, the semantics have
+                // to differ.
+                if (SSL.ReHandshake(ssl_fd, true) == SSL.SECFailure) {
+                    throw new RuntimeException("Unable to rehandshake: " + errorText(PR.GetError()));
+                }
+            }
+
+            // Lastly, force a step of the handshake. Ignore all errors; we'll
+            // come back to this later in updateHandshake. We just need this
+            // to kick the process off.
+            try {
+                SSL.ForceHandshake(ssl_fd);
+            } catch (Exception e) {}
         }
 
-        // Always, reset the handshake status, using the existing
-        // socket and configuration (which might've been just created).
-        if (SSL.ResetHandshake(ssl_fd, as_server) == SSL.SECFailure) {
-            throw new RuntimeException("Unable to begin handshake: " + errorText(PR.GetError()));
+        // Make sure we reset the handshake completion status in order for the
+        // callback to work correctly.
+        ssl_fd.handshakeComplete = false;
+
+        // This leaves setting internal variables for HandshakeStatus and
+        // the reporting up from SSLEngine.
+        if (unwrap) {
+            handshake_state = SSLEngineResult.HandshakeStatus.NEED_UNWRAP;
+        } else {
+            handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
         }
+
+        // We've begun a new handshake; make sure we step it and reset
+        // our unknown state count to zero.
+        step_handshake = true;
+        unknown_state_count = 0;
     }
 
     public void closeInbound() {
@@ -638,8 +731,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // currently on, update our handshake status. This happens even if
         // we later exit before calling SSL.ForceHandshake() so that we can
         // see what the session data contains.
-        SecurityStatusResult preHandshakeStatus = getStatus();
-        if (preHandshakeStatus.on >= 1) {
+        if (ssl_fd.handshakeComplete) {
             updateSession();
         }
 
@@ -685,9 +777,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         // Check if we've just finished handshaking.
-        SecurityStatusResult handshakeStatus = getStatus();
-        debug("JSSSEngine.updateHandshakeState() - pre: " + preHandshakeStatus);
-        debug("JSSSEngine.updateHandshakeState() - post: " + handshakeStatus);
         debug("JSSEngine.updateHandshakeState() - read_buf.read=" + Buffer.ReadCapacity(read_buf) + " read_buf.write=" + Buffer.WriteCapacity(read_buf) + " write_buf.read=" + Buffer.ReadCapacity(write_buf) + " write_buf.write=" + Buffer.WriteCapacity(write_buf));
 
         // Set NEED_WRAP when we have data to send to the client.
@@ -707,8 +796,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // (according to SecurityStatusResult since it has sent the massage)
         // but we haven't yet gotten around to doing so if we're in a WRAP()
         // call.
-        if (handshakeStatus.on >= 1 && Buffer.ReadCapacity(write_buf) == 0) {
-            debug("JSSEngine.updateHandshakeState() - handshakeStatus.on is " + handshakeStatus.on + ", so we've just finished handshaking");
+        if (ssl_fd.handshakeComplete && Buffer.ReadCapacity(write_buf) == 0) {
+            debug("JSSEngine.updateHandshakeState() - handshakeComplete is " + ssl_fd.handshakeComplete + ", so we've just finished handshaking");
             step_handshake = false;
             handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
             unknown_state_count = 0;
