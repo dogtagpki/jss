@@ -220,16 +220,14 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_pkcs11_ModuleProxy_releaseNativeResources
     (JNIEnv *env, jobject this)
 {
-    SECMODModule *module;
+    SECMODModule *module = NULL;
 
     if (JSS_getPtrFromProxy(env, this, (void **)&module) != PR_SUCCESS) {
         ASSERT_OUTOFMEM(env);
-        goto finish;
+        return;
     }
-    PR_ASSERT(module != NULL);
 
-    SECMOD_DestroyModule(module);
-
-finish:
-    return;
+    if (module != NULL) {
+        SECMOD_DestroyModule(module);
+    }
 }

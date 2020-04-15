@@ -226,7 +226,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_pkcs11_PrivateKeyProxy_releaseNativeResources
   (JNIEnv *env, jobject this)
 {
-    SECKEYPrivateKey *privk;
+    SECKEYPrivateKey *privk = NULL;
     PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
 
     PR_ASSERT(env!=NULL && this!=NULL);
