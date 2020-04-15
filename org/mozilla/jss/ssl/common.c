@@ -333,21 +333,28 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SocketProxy_releaseNativeResources
     (JNIEnv *env, jobject this)
 {
-    /* SSLSocket.close and SSLServerSocket.close call	  */
-    /* SocketBase.close to destroy all native Resources */
-    /* attached to the socket. There is no native resource */
-    /* to release after close has been called. This method  */
-    /* remains because SocketProxy extends org.mozilla.jss.util.NativeProxy*/
-    /* which defines releaseNativeResources as abstract and */
-    /* therefore must be implemented by SocketProxy */
+    JSSL_SocketData *sockdata;
+
+    PR_ASSERT(env != NULL && this != NULL);
+
+    if (JSS_getPtrFromProxy(env, this, (void**)&sockdata) != PR_SUCCESS) {
+        return;
+    }
+
+    JSSL_DestroySocketData(env, sockdata);
 }
 
 void
 JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
 {
-    PR_ASSERT(sd != NULL);
+    if (sd == NULL) {
+        return;
+    }
 
-    PR_Close(sd->fd);
+    if (sd->fd != NULL) {
+        PR_Close(sd->fd);
+        sd->fd = NULL;
+    }
 
     if( sd->socketObject != NULL ) {
         DELETE_WEAK_GLOBAL_REF(env, sd->socketObject );
@@ -367,6 +374,8 @@ JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd)
     if( sd->lock != NULL ) {
         PR_DestroyLock(sd->lock);
     }
+
+    memset(sd, 0, sizeof(JSSL_SocketData));
     PR_Free(sd);
 }
 
@@ -528,24 +537,6 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
 
 finish:
     JSS_DerefByteArray(env, addrBA, addrBAelems, JNI_ABORT);
-}
-
-/*
- * SSLServerSocket and SSLSocket have their own synchronization 
- * that protects SocketBase.socketClose.
- */
-JNIEXPORT void JNICALL
-Java_org_mozilla_jss_ssl_SocketBase_socketClose(JNIEnv *env, jobject self)
-{
-    JSSL_SocketData *sock = NULL;
-
-    /* get the FD */
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
-        /* exception was thrown */
-        return;
-    }
-
-    JSSL_DestroySocketData(env, sock);
 }
 
 JNIEXPORT void JNICALL
