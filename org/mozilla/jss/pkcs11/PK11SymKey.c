@@ -369,10 +369,8 @@ Java_org_mozilla_jss_pkcs11_SymKeyProxy_releaseNativeResources
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
-    if( JSS_getPtrFromProxy(env, this, (void**)&key) == PR_SUCCESS) {
+    if (JSS_getPtrFromProxy(env, this, (void**)&key) == PR_SUCCESS &&
+        key != NULL) {
         PK11_FreeSymKey(key);
-    } else {
-        /* can't really throw an exception from a destructor */
-        PR_ASSERT(PR_FALSE);
     }
 }

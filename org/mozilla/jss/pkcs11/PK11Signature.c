@@ -776,18 +776,16 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_pkcs11_SigContextProxy_releaseNativeResources
   (JNIEnv *env, jobject this)
 {
-    SigContextProxy *proxy;
+    SigContextProxy *proxy = NULL;
 
     /* Retrieve the proxy pointer */
-    if( JSS_getPtrFromProxy(env, this, (void**)&proxy) != PR_SUCCESS) {
-#ifdef DEBUG
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        PR_fprintf(PR_STDERR,
-                    "ERROR: native signature context was not released\n");
-#endif
-        goto finish;
+    if (JSS_getPtrFromProxy(env, this, (void**)&proxy) != PR_SUCCESS) {
+        return;
     }
-    PR_ASSERT(proxy!=NULL);
+
+    if (proxy == NULL) {
+        return;
+    }
 
     /* Free the context and the proxy */
     if(proxy->type == SGN_CONTEXT) {
@@ -800,9 +798,6 @@ Java_org_mozilla_jss_pkcs11_SigContextProxy_releaseNativeResources
     proxy->arena = NULL;
 
     PR_Free(proxy);
-
-finish:
-    ;
 }
 
 /***********************************************************************
