@@ -55,12 +55,20 @@ public final class InitializationValues {
          * be altering FIPS mode.
          */
         public static final InitializationValues.FIPSMode UNCHANGED = new FIPSMode();
-            }
+    }
 
+    /**
+     * Default constructor taking only the path to the NSS DB directory.
+     */
     public InitializationValues(String configDir) {
         this.configDir = configDir;
     }
 
+    /**
+     * Optional constructor taking the path to the NSS DB directory,
+     * the prefix of the cert database, the prefix of the key database,
+     * and the name of the secmod/pkcs11 database.
+     */
     public InitializationValues(String configDir, String certPrefix,
         String keyPrefix, String secmodName)
     {
@@ -123,7 +131,10 @@ public final class InitializationValues {
      *      exactly <code>MANUFACTURER_LENGTH</code>.
      */
     public void setManufacturerID(String s) throws InvalidLengthException {
-        if( s.length() != MANUFACTURER_LENGTH ) {
+        if (s.length() != MANUFACTURER_LENGTH) {
+            String msg = "Expected internal manufacturer ID description ";
+            msg += "of length " + MANUFACTURER_LENGTH + " but was ";
+            msg += s.length();
             throw new InvalidLengthException();
         }
         manufacturerID = s;
@@ -154,8 +165,10 @@ public final class InitializationValues {
     public void setLibraryDescription(String s)
         throws InvalidLengthException
     {
-        if( s.length() != LIBRARY_LENGTH ) {
-            throw new InvalidLengthException();
+        if (s.length() != LIBRARY_LENGTH) {
+            String msg = "Expected internal library description of length ";
+            msg += LIBRARY_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         libraryDescription = s;
     }
@@ -186,8 +199,10 @@ public final class InitializationValues {
     public void setInternalTokenDescription(String s)
         throws InvalidLengthException
     {
-        if(s.length() != TOKEN_LENGTH) {
-            throw new InvalidLengthException();
+        if (s.length() != TOKEN_LENGTH) {
+            String msg = "Expected internal token description of length ";
+            msg += TOKEN_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         internalTokenDescription = s;
     }
@@ -218,8 +233,10 @@ public final class InitializationValues {
     public void setInternalKeyStorageTokenDescription(String s)
         throws InvalidLengthException
     {
-        if(s.length() != TOKEN_LENGTH) {
-            throw new InvalidLengthException();
+        if (s.length() != TOKEN_LENGTH) {
+            String msg = "Expected internal key storage token description ";
+            msg += "of length " + TOKEN_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         internalKeyStorageTokenDescription = s;
     }
@@ -251,8 +268,10 @@ public final class InitializationValues {
     public void setInternalSlotDescription(String s)
         throws InvalidLengthException
     {
-        if(s.length() != SLOT_LENGTH)  {
-            throw new InvalidLengthException();
+        if (s.length() != SLOT_LENGTH) {
+            String msg = "Expected internal slot description of length ";
+            msg += SLOT_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         internalSlotDescription = s;
     }
@@ -284,8 +303,10 @@ public final class InitializationValues {
     public void setInternalKeyStorageSlotDescription(String s)
         throws InvalidLengthException
     {
-        if(s.length() != SLOT_LENGTH) {
-            throw new InvalidLengthException();
+        if (s.length() != SLOT_LENGTH) {
+            String msg = "Expected internal key storage slot description of ";
+            msg += "length " + SLOT_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         internalKeyStorageSlotDescription = s;
     }
@@ -318,8 +339,10 @@ public final class InitializationValues {
     public void setFIPSSlotDescription(String s)
         throws InvalidLengthException
     {
-        if(s.length() != SLOT_LENGTH) {
-            throw new InvalidLengthException();
+        if (s.length() != SLOT_LENGTH) {
+            String msg = "Expected FIPS slot description of length ";
+            msg += SLOT_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         FIPSSlotDescription = s;
     }
@@ -353,8 +376,10 @@ public final class InitializationValues {
     public void setFIPSKeyStorageSlotDescription(String s)
         throws InvalidLengthException
     {
-        if(s.length() != SLOT_LENGTH) {
-            throw new InvalidLengthException();
+        if (s.length() != SLOT_LENGTH) {
+            String msg = "Expected FIPS key storage slot description of ";
+            msg += "length " + SLOT_LENGTH + " but was " + s.length();
+            throw new InvalidLengthException(msg);
         }
         FIPSKeyStorageSlotDescription = s;
     }
@@ -488,7 +513,7 @@ public final class InitializationValues {
      * if another piece of code is using the same PKCS#11
      * modules that NSS is accessing without going through
      * NSS, for example Java SunPKCS11 provider.
-     * default is false.
+     * Default is false.
      */
     public boolean PK11Reload = false;
 
