@@ -795,7 +795,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_pkcs11_TokenProxy_releaseNativeResources
   (JNIEnv *env, jobject this)
 {
-    PK11SlotInfo *slot;
+    PK11SlotInfo *slot = NULL;
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
