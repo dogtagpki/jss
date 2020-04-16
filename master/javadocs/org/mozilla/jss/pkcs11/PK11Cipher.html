@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":42,"i1":42,"i2":10,"i3":10,"i4":42,"i5":10,"i6":42,"i7":10,"i8":10};
+var methods = {"i0":10,"i1":42,"i2":42,"i3":10,"i4":10,"i5":10,"i6":42,"i7":10,"i8":42,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -110,10 +110,15 @@ var activeTableTab = "activeTableTab";
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.lang.AutoCloseable</dd>
+</dl>
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PK11Cipher</span>
-extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in org.mozilla.jss.crypto">Cipher</a></pre>
+extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in org.mozilla.jss.crypto">Cipher</a>
+implements java.lang.AutoCloseable</pre>
 </li>
 </ul>
 </div>
@@ -133,6 +138,10 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#close--">close</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#doFinal--">doFinal</a></span>()</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
@@ -140,7 +149,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 </div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#doFinal-byte:A-">doFinal</a></span>(byte[]&nbsp;bytes)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
@@ -148,7 +157,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 </div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#doFinal-byte:A-int-int-">doFinal</a></span>(byte[]&nbsp;bytes,
        int&nbsp;offset,
@@ -156,13 +165,17 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 <div class="block">Completes an cipher operation.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#finalize--">finalize</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#initDecrypt-org.mozilla.jss.crypto.SymmetricKey-">initDecrypt</a></span>(<a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a>&nbsp;key)</code>
 <div class="block">Initializes a decryption context with a symmetric key.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#initDecrypt-org.mozilla.jss.crypto.SymmetricKey-java.security.spec.AlgorithmParameterSpec-">initDecrypt</a></span>(<a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a>&nbsp;key,
            java.security.spec.AlgorithmParameterSpec&nbsp;parameters)</code>
@@ -171,13 +184,13 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 </div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#initEncrypt-org.mozilla.jss.crypto.SymmetricKey-">initEncrypt</a></span>(<a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a>&nbsp;key)</code>
 <div class="block">Initializes a encryption context with a symmetric key.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#initEncrypt-org.mozilla.jss.crypto.SymmetricKey-java.security.spec.AlgorithmParameterSpec-">initEncrypt</a></span>(<a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a>&nbsp;key,
            java.security.spec.AlgorithmParameterSpec&nbsp;parameters)</code>
@@ -186,13 +199,13 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 </div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#update-byte:A-">update</a></span>(byte[]&nbsp;bytes)</code>
 <div class="block">Updates the encryption context with additional input.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11Cipher.html#update-byte:A-int-int-">update</a></span>(byte[]&nbsp;bytes,
       int&nbsp;offset,
@@ -213,7 +226,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/Cipher.html" title="class in
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -448,7 +461,7 @@ public&nbsp;byte[]&nbsp;doFinal(byte[]&nbsp;bytes)
 <a name="doFinal--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>doFinal</h4>
 <pre>@Deprecated
@@ -470,6 +483,38 @@ public&nbsp;byte[]&nbsp;doFinal()
 <dd><code><a href="../../../../org/mozilla/jss/crypto/IllegalBlockSizeException.html" title="class in org.mozilla.jss.crypto">IllegalBlockSizeException</a></code></dd>
 <dd><code>javax.crypto.BadPaddingException</code></dd>
 <dd><code><a href="../../../../org/mozilla/jss/crypto/TokenException.html" title="class in org.mozilla.jss.crypto">TokenException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="finalize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>finalize</h4>
+<pre>public&nbsp;void&nbsp;finalize()
+              throws java.lang.Throwable</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>finalize</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Throwable</code></dd>
+</dl>
+</li>
+</ul>
+<a name="close--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>close</h4>
+<pre>public&nbsp;void&nbsp;close()
+           throws java.lang.Exception</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>close</code>&nbsp;in interface&nbsp;<code>java.lang.AutoCloseable</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
 </dl>
 </li>
 </ul>

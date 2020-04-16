@@ -204,7 +204,7 @@
 <ul>
 <li type="circle">java.security.cert.X509Certificate (implements java.security.cert.X509Extension)
 <ul>
-<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11Cert</span></a> (implements org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>)
+<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11Cert</span></a> (implements java.lang.AutoCloseable, org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>)
 <ul>
 <li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11InternalCert.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11InternalCert</span></a> (implements org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/InternalCertificate.html" title="interface in org.mozilla.jss.crypto">InternalCertificate</a>)
 <ul>
@@ -311,7 +311,7 @@
 <li type="circle">org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/CIDRNetmask.html" title="class in org.mozilla.jss.netscape.security.x509"><span class="typeNameLink">CIDRNetmask</span></a></li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/Cipher.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">Cipher</span></a>
 <ul>
-<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cipher.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11Cipher</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cipher.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11Cipher</span></a> (implements java.lang.AutoCloseable)</li>
 </ul>
 </li>
 <li type="circle">org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/CipherPolicy.html" title="class in org.mozilla.jss.ssl"><span class="typeNameLink">CipherPolicy</span></a></li>
@@ -539,7 +539,7 @@
 <li type="circle">org.mozilla.jss.provider.java.security.<a href="org/mozilla/jss/provider/java/security/JSSLoadStoreParameter.html" title="class in org.mozilla.jss.provider.java.security"><span class="typeNameLink">JSSLoadStoreParameter</span></a> (implements java.security.KeyStore.LoadStoreParameter)</li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/JSSMessageDigest.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">JSSMessageDigest</span></a>
 <ul>
-<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11MessageDigest.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11MessageDigest</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11MessageDigest.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11MessageDigest</span></a> (implements java.lang.AutoCloseable)</li>
 </ul>
 </li>
 <li type="circle">org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSNativeTrustManager</span></a> (implements javax.net.ssl.X509TrustManager)</li>
@@ -969,7 +969,7 @@
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/Signature.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">Signature</span></a></li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/SignatureSpi.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">SignatureSpi</span></a>
 <ul>
-<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Signature.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11Signature</span></a></li>
+<li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Signature.html" title="class in org.mozilla.jss.pkcs11"><span class="typeNameLink">PK11Signature</span></a> (implements java.lang.AutoCloseable)</li>
 </ul>
 </li>
 <li type="circle">java.security.SignatureSpi
