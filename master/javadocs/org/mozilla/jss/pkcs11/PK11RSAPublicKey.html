@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,7 +112,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>java.io.Serializable, java.security.interfaces.RSAKey, java.security.interfaces.RSAPublicKey, java.security.Key, java.security.PublicKey</dd>
+<dd>java.io.Serializable, java.lang.AutoCloseable, java.security.interfaces.RSAKey, java.security.interfaces.RSAPublicKey, java.security.Key, java.security.PublicKey</dd>
 </dl>
 <hr>
 <br>
@@ -178,10 +178,18 @@ implements java.security.interfaces.RSAPublicKey</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPublicKey.html#close--">close</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPublicKey.html#finalize--">finalize</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPublicKey.html#getModulus--">getModulus</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPublicKey.html#getPublicExponent--">getPublicExponent</a></span>()</code>&nbsp;</td>
 </tr>
@@ -198,7 +206,7 @@ implements java.security.interfaces.RSAPublicKey</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.security.Key">
@@ -271,13 +279,45 @@ implements java.security.interfaces.RSAPublicKey</pre>
 <a name="getPublicExponent--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getPublicExponent</h4>
 <pre>public&nbsp;java.math.BigInteger&nbsp;getPublicExponent()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getPublicExponent</code>&nbsp;in interface&nbsp;<code>java.security.interfaces.RSAPublicKey</code></dd>
+</dl>
+</li>
+</ul>
+<a name="finalize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>finalize</h4>
+<pre>public&nbsp;void&nbsp;finalize()
+              throws java.lang.Throwable</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>finalize</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Throwable</code></dd>
+</dl>
+</li>
+</ul>
+<a name="close--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>close</h4>
+<pre>public&nbsp;void&nbsp;close()
+           throws java.lang.Exception</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>close</code>&nbsp;in interface&nbsp;<code>java.lang.AutoCloseable</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
 </dl>
 </li>
 </ul>

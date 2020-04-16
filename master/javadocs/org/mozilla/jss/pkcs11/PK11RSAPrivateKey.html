@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,7 +112,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>java.io.Serializable, java.security.interfaces.RSAKey, java.security.interfaces.RSAPrivateKey, java.security.Key, java.security.PrivateKey, javax.security.auth.Destroyable</dd>
+<dd>java.io.Serializable, java.lang.AutoCloseable, java.security.interfaces.RSAKey, java.security.interfaces.RSAPrivateKey, java.security.Key, java.security.PrivateKey, javax.security.auth.Destroyable</dd>
 </dl>
 <hr>
 <br>
@@ -206,26 +206,34 @@ implements java.security.interfaces.RSAPrivateKey</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#close--">close</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#finalize--">finalize</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#getEncoded--">getEncoded</a></span>()</code>
 <div class="block">Subclasses that support encoding can overload this method.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#getFormat--">getFormat</a></span>()</code>
 <div class="block">Subclasses that support encoding can overload this method.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#getModulus--">getModulus</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.math.BigInteger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#getPrivateExponent--">getPrivateExponent</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/crypto/PrivateKey.Type.html" title="class in org.mozilla.jss.crypto">PrivateKey.Type</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11RSAPrivateKey.html#getType--">getType</a></span>()</code>
 <div class="block">Returns the type (RSA or DSA) of this private key.</div>
@@ -244,7 +252,7 @@ implements java.security.interfaces.RSAPrivateKey</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.security.Key">
@@ -375,7 +383,7 @@ implements java.security.interfaces.RSAPrivateKey</pre>
 <a name="getFormat--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getFormat</h4>
 <pre>public&nbsp;java.lang.String&nbsp;getFormat()</pre>
@@ -383,6 +391,38 @@ implements java.security.interfaces.RSAPrivateKey</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getFormat</code>&nbsp;in interface&nbsp;<code>java.security.Key</code></dd>
+</dl>
+</li>
+</ul>
+<a name="finalize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>finalize</h4>
+<pre>public&nbsp;void&nbsp;finalize()
+              throws java.lang.Throwable</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>finalize</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Throwable</code></dd>
+</dl>
+</li>
+</ul>
+<a name="close--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>close</h4>
+<pre>public&nbsp;void&nbsp;close()
+           throws java.lang.Exception</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>close</code>&nbsp;in interface&nbsp;<code>java.lang.AutoCloseable</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
 </dl>
 </li>
 </ul>

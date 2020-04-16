@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -110,10 +110,15 @@ var activeTableTab = "activeTableTab";
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.lang.AutoCloseable</dd>
+</dl>
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PK11MessageDigest</span>
-extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title="class in org.mozilla.jss.crypto">JSSMessageDigest</a></pre>
+extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title="class in org.mozilla.jss.crypto">JSSMessageDigest</a>
+implements java.lang.AutoCloseable</pre>
 <div class="block">Message Digesting with PKCS #11.</div>
 </li>
 </ul>
@@ -134,6 +139,10 @@ extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#close--">close</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#digest-byte:A-int-int-">digest</a></span>(byte[]&nbsp;outbuf,
       int&nbsp;offset,
@@ -141,23 +150,27 @@ extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title
 <div class="block">Completes digesting, storing the result into the provided array.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#finalize--">finalize</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#getAlgorithm--">getAlgorithm</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#initHMAC-org.mozilla.jss.crypto.SymmetricKey-">initHMAC</a></span>(<a href="../../../../org/mozilla/jss/crypto/SymmetricKey.html" title="interface in org.mozilla.jss.crypto">SymmetricKey</a>&nbsp;key)</code>
 <div class="block">Initializes an HMAC digest with the given symmetric key.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#reset--">reset</a></span>()</code>
 <div class="block">Resets this digest for further use.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/pkcs11/PK11MessageDigest.html#update-byte:A-int-int-">update</a></span>(byte[]&nbsp;input,
       int&nbsp;offset,
@@ -178,7 +191,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -292,7 +305,7 @@ extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title
 <a name="getAlgorithm--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getAlgorithm</h4>
 <pre>public&nbsp;<a href="../../../../org/mozilla/jss/crypto/DigestAlgorithm.html" title="class in org.mozilla.jss.crypto">DigestAlgorithm</a>&nbsp;getAlgorithm()</pre>
@@ -301,6 +314,38 @@ extends <a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title
 <dd><code><a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html#getAlgorithm--">getAlgorithm</a></code>&nbsp;in class&nbsp;<code><a href="../../../../org/mozilla/jss/crypto/JSSMessageDigest.html" title="class in org.mozilla.jss.crypto">JSSMessageDigest</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The algorithm that this digest uses.</dd>
+</dl>
+</li>
+</ul>
+<a name="finalize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>finalize</h4>
+<pre>public&nbsp;void&nbsp;finalize()
+              throws java.lang.Throwable</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>finalize</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Throwable</code></dd>
+</dl>
+</li>
+</ul>
+<a name="close--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>close</h4>
+<pre>public&nbsp;void&nbsp;close()
+           throws java.lang.Exception</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>close</code>&nbsp;in interface&nbsp;<code>java.lang.AutoCloseable</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
 </dl>
 </li>
 </ul>
