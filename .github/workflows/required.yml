@@ -3,10 +3,10 @@ name: Required Tests
 on:
   push:
     branches:
-    - master
+    - v4.6.x
   pull_request:
     branches:
-    - master
+    - v4.6.x
 
 jobs:
   fedora30:
