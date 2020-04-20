@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":42,"i5":6};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":42,"i5":10,"i6":10,"i7":6,"i8":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -222,10 +222,26 @@ implements java.lang.AutoCloseable</pre>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#hashCode--">hashCode</a></span>()</code>
+<div class="block">Hash code based around mPointer value.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#isNull--">isNull</a></span>()</code>
+<div class="block">Whether or not this is a null pointer.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#releaseNativeResources--">releaseNativeResources</a></span>()</code>
 <div class="block">Release the native resources used by this proxy.</div>
 </td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/util/NativeProxy.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -233,7 +249,7 @@ implements java.lang.AutoCloseable</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, getClass, notify, notifyAll, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -325,13 +341,34 @@ implements java.lang.AutoCloseable</pre>
 </dl>
 </li>
 </ul>
+<a name="hashCode--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hashCode</h4>
+<pre>public&nbsp;int&nbsp;hashCode()</pre>
+<div class="block">Hash code based around mPointer value.
+
+ Note that Object.hashCode() isn't sufficient as it tries to determine
+ the Object's value based on all internal variables. Because we want a
+ single static hashCode that is unique to each instance of nativeProxy,
+ we construct it up front based on an incrementing counter and cache it
+ throughout the lifetime of this object.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>hashCode</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
+</li>
+</ul>
 <a name="releaseNativeResources--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>releaseNativeResources</h4>
-<pre>protected abstract&nbsp;void&nbsp;releaseNativeResources()</pre>
+<pre>protected abstract&nbsp;void&nbsp;releaseNativeResources()
+                                        throws java.lang.Exception</pre>
 <div class="block">Release the native resources used by this proxy.
  Subclasses of NativeProxy must define this method to clean up
  data structures in C code that are referenced by this proxy.
@@ -340,6 +377,10 @@ implements java.lang.AutoCloseable</pre>
  it for you.</p>
 
  If you free these resources explicitly, call clear(); instead.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.Exception</code></dd>
+</dl>
 </li>
 </ul>
 <a name="finalize--">
@@ -408,6 +449,29 @@ protected&nbsp;void&nbsp;finalize()
  releaseNativeResources(...).
 
  See also: JSS_clearPtrFromProxy(...) in jssutil.h</div>
+</li>
+</ul>
+<a name="isNull--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isNull</h4>
+<pre>public&nbsp;boolean&nbsp;isNull()</pre>
+<div class="block">Whether or not this is a null pointer.</div>
+</li>
+</ul>
+<a name="toString--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toString</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
 </li>
 </ul>
 <a name="assertRegistryEmpty--">

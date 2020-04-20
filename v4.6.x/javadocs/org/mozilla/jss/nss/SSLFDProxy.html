@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -206,34 +206,35 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#finalize--">finalize</a></span>()</code>
-<div class="block">Finalize this NativeProxy by releasing its native resources.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#releaseNativeResources--">releaseNativeResources</a></span>()</code>
 <div class="block">Release the native resources used by this proxy.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#SetClientCert-org.mozilla.jss.crypto.X509Certificate-">SetClientCert</a></span>(<a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.mozilla.jss.nss.PRFDProxy">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.mozilla.jss.nss.<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></h3>
+<code><a href="../../../../org/mozilla/jss/nss/PRFDProxy.html#finalize--">finalize</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.mozilla.jss.util.NativeProxy">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.mozilla.jss.util.<a href="../../../../org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></h3>
-<code><a href="../../../../org/mozilla/jss/util/NativeProxy.html#assertRegistryEmpty--">assertRegistryEmpty</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#clear--">clear</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#close--">close</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#equals-java.lang.Object-">equals</a></code></li>
+<code><a href="../../../../org/mozilla/jss/util/NativeProxy.html#assertRegistryEmpty--">assertRegistryEmpty</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#clear--">clear</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#close--">close</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#equals-java.lang.Object-">equals</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#hashCode--">hashCode</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#isNull--">isNull</a>, <a href="../../../../org/mozilla/jss/util/NativeProxy.html#toString--">toString</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, getClass, notify, notifyAll, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -345,10 +346,11 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <a name="releaseNativeResources--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>releaseNativeResources</h4>
-<pre>protected&nbsp;void&nbsp;releaseNativeResources()</pre>
+<pre>protected&nbsp;void&nbsp;releaseNativeResources()
+                               throws java.lang.Exception</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../org/mozilla/jss/util/NativeProxy.html#releaseNativeResources--">NativeProxy</a></code></span></div>
 <div class="block">Release the native resources used by this proxy.
  Subclasses of NativeProxy must define this method to clean up
@@ -361,36 +363,8 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../org/mozilla/jss/nss/PRFDProxy.html#releaseNativeResources--">releaseNativeResources</a></code>&nbsp;in class&nbsp;<code><a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="finalize--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>finalize</h4>
-<pre>protected&nbsp;void&nbsp;finalize()
-                 throws java.lang.Throwable</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../org/mozilla/jss/util/NativeProxy.html#finalize--">NativeProxy</a></code></span></div>
-<div class="block">Finalize this NativeProxy by releasing its native resources.
- The finalizer calls releaseNativeResources() so you don't have to.
- This finalizer should be called from the finalize() method of all
- subclasses:
- class MyProxy extends NativeProxy {
-      [...]
-      protected void finalize() throws Throwable {
-          // do any object-specific finalization other than
-          // releasing native resources
-          [...]
-          super.finalize();
-      }
- }</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../../../../org/mozilla/jss/nss/PRFDProxy.html#finalize--">finalize</a></code>&nbsp;in class&nbsp;<code><a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a></code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.Throwable</code></dd>
+<dd><code>java.lang.Exception</code></dd>
 </dl>
 </li>
 </ul>
