@@ -345,14 +345,20 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#InitializationValues-java.lang.String-">InitializationValues</a></span>(java.lang.String&nbsp;configDir)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#InitializationValues-java.lang.String-">InitializationValues</a></span>(java.lang.String&nbsp;configDir)</code>
+<div class="block">Default constructor taking only the path to the NSS DB directory.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/mozilla/jss/InitializationValues.html#InitializationValues-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">InitializationValues</a></span>(java.lang.String&nbsp;configDir,
                     java.lang.String&nbsp;certPrefix,
                     java.lang.String&nbsp;keyPrefix,
-                    java.lang.String&nbsp;secmodName)</code>&nbsp;</td>
+                    java.lang.String&nbsp;secmodName)</code>
+<div class="block">Optional constructor taking the path to the NSS DB directory,
+ the prefix of the cert database, the prefix of the key database,
+ and the name of the secmod/pkcs11 database.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -822,7 +828,7 @@ extends java.lang.Object</pre>
  if another piece of code is using the same PKCS#11
  modules that NSS is accessing without going through
  NSS, for example Java SunPKCS11 provider.
- default is false.</div>
+ Default is false.</div>
 </li>
 </ul>
 <a name="noPK11Finalize">
@@ -881,6 +887,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>InitializationValues</h4>
 <pre>public&nbsp;InitializationValues(java.lang.String&nbsp;configDir)</pre>
+<div class="block">Default constructor taking only the path to the NSS DB directory.</div>
 </li>
 </ul>
 <a name="InitializationValues-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">
@@ -893,6 +900,9 @@ extends java.lang.Object</pre>
                             java.lang.String&nbsp;certPrefix,
                             java.lang.String&nbsp;keyPrefix,
                             java.lang.String&nbsp;secmodName)</pre>
+<div class="block">Optional constructor taking the path to the NSS DB directory,
+ the prefix of the cert database, the prefix of the key database,
+ and the name of the secmod/pkcs11 database.</div>
 </li>
 </ul>
 </li>

@@ -31,3 +31,8 @@ We recommend referring to the javadoc distribution generated when JSS was
 installed. On Fedora-like systems, this is provided by the `jss-javadoc`
 package; for an online version tracking master, please refer to our
 [live instance](https://dogtagpki.github.io/jss/javadoc/index.html).
+
+## More Information
+
+For more information about using JSS, please see our documentation on loading
+the [`JSSProvider`](usage/jssprovider.md).
