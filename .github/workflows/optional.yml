@@ -3,10 +3,10 @@ name: Optional Tests
 on:
   push:
     branches:
-    - master
+    - v4.6.x
   pull_request:
     branches:
-    - master
+    - v4.6.x
 
 jobs:
   pkcs11check:
