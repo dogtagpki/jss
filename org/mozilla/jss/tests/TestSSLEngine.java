@@ -366,6 +366,22 @@ public class TestSSLEngine {
         ByteBuffer client_unwrap = ByteBuffer.allocate(max_data);
         sendTestData(server_eng, client_eng, server_msg, s2c_buffer, client_unwrap);
 
+        String clientMessage = "Cooking MCs";
+        for (int i = 1; i < 10; i++) { clientMessage += clientMessage; }
+
+        client_msg = ByteBuffer.wrap(clientMessage.getBytes());
+        c2s_buffer = ByteBuffer.allocate(2*clientMessage.length());
+        server_unwrap = ByteBuffer.allocate(2*clientMessage.length());
+        sendTestData(client_eng, server_eng, client_msg, c2s_buffer, server_unwrap);
+
+        String serverMessage = "like a pound of bacon.";
+        for (int i = 1; i < 10; i++) { serverMessage += serverMessage; }
+
+        server_msg = ByteBuffer.wrap(serverMessage.getBytes());
+        s2c_buffer = ByteBuffer.allocate(2*serverMessage.length());
+        client_unwrap = ByteBuffer.allocate(2*serverMessage.length());
+        sendTestData(server_eng, client_eng, server_msg, s2c_buffer, client_unwrap);
+
         System.err.println("Done testing post-handshake transfer! Success!");
     }
 
