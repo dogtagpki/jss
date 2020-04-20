@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":41,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":41,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -295,32 +295,38 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i14" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#RemoveCallbacks-org.mozilla.jss.nss.SSLFDProxy-">RemoveCallbacks</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
+<div class="block">Removes all enabled callbacks.</div>
+</td>
+</tr>
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ResetHandshake-org.mozilla.jss.nss.SSLFDProxy-boolean-">ResetHandshake</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
               boolean&nbsp;asServer)</code>
 <div class="block">Reset the handshake status, optionally handshaking as a server.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SecurityStatus-org.mozilla.jss.nss.SSLFDProxy-">SecurityStatus</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Check the security status of a SSL handshake.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SetURL-org.mozilla.jss.nss.SSLFDProxy-java.lang.String-">SetURL</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
       java.lang.String&nbsp;url)</code>
 <div class="block">Set the hostname of a handshake on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeGet-org.mozilla.jss.nss.SSLFDProxy-">VersionRangeGet</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Get the range of TLS versions enabled by this server.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeSet-org.mozilla.jss.nss.SSLFDProxy-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSet</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
                <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;range)</code>
@@ -701,7 +707,7 @@ public static&nbsp;int&nbsp;ConfigSecureServer(<a href="../../../../org/mozilla/
 <a name="ConfigJSSDefaultCertAuthCallback-org.mozilla.jss.nss.SSLFDProxy-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>ConfigJSSDefaultCertAuthCallback</h4>
 <pre>public static&nbsp;int&nbsp;ConfigJSSDefaultCertAuthCallback(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</pre>
@@ -710,6 +716,16 @@ public static&nbsp;int&nbsp;ConfigSecureServer(<a href="../../../../org/mozilla/
 
  See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
            JSSL_DefaultCertAuthCallback in jss/ssl/callbacks.c</div>
+</li>
+</ul>
+<a name="RemoveCallbacks-org.mozilla.jss.nss.SSLFDProxy-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>RemoveCallbacks</h4>
+<pre>public static&nbsp;void&nbsp;RemoveCallbacks(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</pre>
+<div class="block">Removes all enabled callbacks.</div>
 </li>
 </ul>
 </li>
