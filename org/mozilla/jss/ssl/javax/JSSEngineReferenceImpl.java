@@ -1174,7 +1174,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private void cleanupSSLFD() {
         if (!closed_fd) {
             try {
+                SSL.RemoveCallbacks(ssl_fd);
                 PR.Close(ssl_fd);
+                ssl_fd.close();
             } catch (Exception e) {
             } finally {
                 closed_fd = true;

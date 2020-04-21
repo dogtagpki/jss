@@ -71,6 +71,10 @@ public class PR {
      * See also: PR_Close in /usr/include/nspr4/prio.h
      */
     public static int Close(PRFDProxy fd) {
+        if (fd == null || fd.isNull()) {
+            return SUCCESS;
+        }
+
         return Close(fd, true);
     }
 
@@ -88,18 +92,14 @@ public class PR {
      *           org.mozilla.jss.nss.SSLFDProxy.releaseNativeResources
      */
     public synchronized static int Close(SSLFDProxy fd) throws Exception {
-        if (fd.isNull()) {
+        if (fd == null || fd.isNull()) {
             return SUCCESS;
         }
-
-        SSL.RemoveCallbacks(fd);
 
         // Because a SSLFDProxy instance needs to free other native resources,
         // we can't release the pointer here. Instead, let NativeProxy.close()
         // handle clearing the PRFileDesc pointer.
-        int ret = PR.Close((PRFDProxy) fd, false);
-        fd.close();
-        return ret;
+        return Close((PRFDProxy) fd, false);
     }
 
     /**
