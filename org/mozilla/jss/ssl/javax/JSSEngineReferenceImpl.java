@@ -875,19 +875,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         logUnwrap(src);
 
-        // wire_data is the number of bytes from src we've written into
-        // read_buf. This is bounded above by src.capcity but also the
-        // free space left in read_buf to write to. Allows us to size the
-        // temporary byte array appropriately.
-        int wire_data = (int) Buffer.WriteCapacity(read_buf);
-        if (src == null) {
-            wire_data = 0;
-        } else {
-            // We need to know how many bytes have been written into src: this
-            // is via src.remaining().
-            wire_data = Math.min(wire_data, src.remaining());
-        }
-
         // Order of operations:
         //  1. Read data from srcs
         //  2. Update handshake status
@@ -900,58 +887,68 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // case no data would be written to dsts. Lastly, even if no new data
         // from srcs, could still have residual data in read_buf, so we should
         // attempt to read from the ssl_fd.
+        //
+        // In order to handle large buffer sizes, wrap everything in a
+        // do-while loop.
 
-        // When we have data from src, write it to read_buf.
-        if (wire_data > 0) {
-            byte[] wire_buffer = new byte[wire_data];
-            src.get(wire_buffer);
-            int written = (int) Buffer.Write(read_buf, wire_buffer);
-
-            // For safety: ensure everything we thought we could write was
-            // actually written. Otherwise, we've done something wrong.
-            wire_data = Math.min(wire_data, written);
-
-            // TODO: Determine if we should write the trail of wire_buffer
-            // back to the front of src... Seems like unnecessary work.
-            debug("JSSEngine.unwrap(): Wrote " + wire_data + " bytes to read_buf.");
-        }
-
-        // In the above, we should always try to read and write data. Check to
-        // see if we need to step our handshake process or not.
-        updateHandshakeState();
+        // wire_data is the number of bytes from src we've written into
+        // read_buf.
+        int wire_data = 0;
 
         // Actual amount of data written to the buffer.
         int app_data = 0;
 
-        // Maximum theoretical amount of data we could've written to the
-        // destination. This is bounded by the lower of both the size of
-        // our dsts and the maximum BUFFER_SIZE. Worst case, we'll be forced
-        // to call unwrap(...) multiple times.
-        int max_app_data = Math.min(computeSize(dsts, offset, length), BUFFER_SIZE);
+        int this_src_write;
+        int this_dst_write;
 
-        // When we have app data to write over the network, go ahead and do
-        // so. This involves reading from ssl_fd and writing to dsts. We don't
-        // currently have a good proxy metric for "can read from a ssl_fd",
-        // so always attempt it. In particular, even if the handshake isn't
-        // finished, we still need to call PR.Read(...) or PR.Write(...) in
-        // order to tell if an inbound alert was received.
-        if (max_app_data > 0) {
-            byte[] app_buffer = PR.Read(ssl_fd, max_app_data);
-            debug("JSSEngine.unwrap() - " + app_buffer + " error=" + errorText(PR.GetError()));
+        do {
+            this_src_write = 0;
+            this_dst_write = 0;
+
+            if (src != null) {
+                this_src_write = Math.min((int) Buffer.WriteCapacity(read_buf), src.remaining());
+
+                // When we have data from src, write it to read_buf.
+                if (this_src_write > 0) {
+                    byte[] wire_buffer = new byte[this_src_write];
+                    src.get(wire_buffer);
+
+                    this_src_write = (int) Buffer.Write(read_buf, wire_buffer);
+
+                    wire_data += this_src_write;
+                    debug("JSSEngine.unwrap(): Wrote " + this_src_write + " bytes to read_buf.");
+                }
+            }
+
+            // In the above, we should always try to read and write data. Check to
+            // see if we need to step our handshake process or not.
+            updateHandshakeState();
+
+            int max_dst_size = computeSize(dsts, offset, length);
+            byte[] app_buffer = PR.Read(ssl_fd, max_dst_size);
+            int error = PR.GetError();
+            debug("JSSEngine.unwrap() - " + app_buffer + " error=" + errorText(error));
             if (app_buffer != null) {
-                app_data = putData(app_buffer, dsts, offset, length);
-            } else {
-                int error = PR.GetError();
-                if (error != 0 && error != PRErrors.WOULD_BLOCK_ERROR) {
+                this_dst_write = putData(app_buffer, dsts, offset, length);
+                app_data += this_dst_write;
+            } else if (max_dst_size > 0) {
+                // There are two scenarios we need to ignore here:
+                //  1. WOULD_BLOCK_ERRORs are safe, because we're expecting
+                //     not to block. Usually this means we don't have space
+                //     to write any more data.
+                //  2. SOCKET_SHUTDOWN_ERRORs are safe, because if the
+                //     underling cause was fatal, we'd catch it after exiting
+                //     the do-while loop, in checkSSLAlerts().
+                if (error != 0 && error != PRErrors.WOULD_BLOCK_ERROR && error != PRErrors.SOCKET_SHUTDOWN_ERROR) {
                     ssl_exception = new SSLException("Unexpected return from PR.Read(): " + errorText(error));
                     seen_exception = true;
                 }
             }
+        } while (this_src_write != 0 || this_dst_write != 0);
 
-            if (seen_exception == false && ssl_exception == null) {
-                ssl_exception = checkSSLAlerts();
-                seen_exception = (ssl_exception != null);
-            }
+        if (seen_exception == false && ssl_exception == null) {
+            ssl_exception = checkSSLAlerts();
+            seen_exception = (ssl_exception != null);
         }
 
         // Before we return, check if an exception occurred and throw it if
@@ -1003,10 +1000,15 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // However, we do use Buffer.WriteCapacity(write_buf) as a proxy
         // metric for how much we can write without having to place data back
         // in a src buffer.
+        //
+        // When we don't perform an actual NSPR write call, make a dummy
+        // invocation to ensure we always attempt to flush these buffers.
         int data_length = 0;
 
         int index = offset;
         int max_index = offset + length;
+
+        boolean attempted_write = false;
 
         while (index < max_index) {
             // If we don't have any remaining bytes in this buffer, skip it.
@@ -1027,8 +1029,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             byte[] app_data = new byte[expected_write];
             srcs[index].get(app_data);
 
-            // Actual amount written.
+            // Actual amount written. Since this is a PR.Write call, mark
+            // attempted_write.
             int this_write = PR.Write(ssl_fd, app_data);
+            attempted_write = true;
+
             debug("JSSEngine.writeData(): this_write=" + this_write);
             if (this_write < 0) {
                 int error = PR.GetError();
@@ -1054,6 +1059,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 // Also check for SSLExceptions while we're here.
                 break;
             }
+        }
+
+        // When we didn't call PR.Write, invoke a dummy call to PR.Write to
+        // ensure we always attempt to write to push data from NSS's internal
+        // buffers into our network buffers.
+        if (!attempted_write) {
+            PR.Write(ssl_fd, null);
         }
 
         debug("JSSEngine.writeData(): data_length=" + data_length);
@@ -1118,76 +1130,90 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // Both steps 1 and 2 could write data to dsts. At best 2 will fail if
         // write_buf is full, however, we'd again end up calling wrap() again
         // anyways.
-
-        // In the above order of operations, we should always try to read and
-        // write data. Check to see if we need to step our handshake process
-        // or not.
-        updateHandshakeState();
-
-        if (ssl_exception == null && seen_exception) {
-            if (handshake_state != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
-                // In the event that:
-                //
-                //      1. We saw an exception in the past
-                //          --> (seen_exception is true),
-                //      2. We've already thrown it from wrap or unwrap,
-                //          --> (ssl_exception is null),
-                //      3. We were previously handshaking
-                //          --> (handshake_state is a handshaking state),
-                //
-                // we need to make sure wrap is called again to ensure the
-                // alert is actually written to the wire. So here we are,
-                // in wrap and the above hold true; we can mark the handshake
-                // status as "FINISHED" (because well, it is over due to the
-                // alert). That leaves the return state to be anything other
-                // than OK to indicate the error.
-                handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
-            }
-        }
+        //
+        // Note that allowances are given for underflow but not overflow: a
+        // single call to PR.Write() might not suffice for step 2; we might
+        // need to execute step 3 and come back and re-execute steps 2 and 3
+        // multiple times in order to send all data. However, since this could
+        // technically also be true of the handshake itself, wrap everything
+        // in the do-while loop.
 
         // Actual amount of data read from srcs (and written to ssl_fd). This
         // is determined by the PR.Write(...) call on ssl_fd.
         int app_data = 0;
 
-        // Maximum theoretical amount of data we could've read from srcs.
-        // While this isn't strictly bounded above by BUFFER_SIZE (as it is
-        // being written to ssl_fd instead of to read_buf or write_buf), we're
-        // better off limiting ourselves to a reasonable limit.
-        int max_app_data = Math.min(computeSize(srcs, offset, length), BUFFER_SIZE);
-
-        // Try writing data from srcs to the other end of the connection. Note
-        // that we always attempt this, even if the handshake isn't yet marked
-        // as finished. This is because we need the call to PR.Write(...) to
-        // tell if an alert is getting sent.
-        if (max_app_data > 0) {
-            debug("JSSEngine.wrap(): writing from srcs to buffer...");
-            app_data = writeData(srcs, offset, length);
-
-            if (seen_exception == false && ssl_exception == null) {
-                ssl_exception = checkSSLAlerts();
-                seen_exception = (ssl_exception != null);
-            }
-        } else {
-            debug("JSSEngine.wrap(): not writing from srcs to buffer: max_app_data=" + max_app_data + " handshake_finished=" + isHandshakeFinished());
-        }
-
         // wire_data is the number of bytes written to dst. This is bounded
         // above by two fields: the number of bytes we can read from
         // write_buf, and the size of dst, if present.
-        int wire_data = (int) Buffer.ReadCapacity(write_buf);
-        if (dst == null) {
-            wire_data = 0;
-        } else {
-            // We want to know how much free space there is in dst for us to
-            // write to. This is given by dst.remaining().
-            wire_data = Math.min(wire_data, dst.remaining());
-        }
+        int wire_data = 0;
 
-        // Try reading data from write_buf to dst
-        if (wire_data > 0) {
-            byte[] wire_buffer = Buffer.Read(write_buf, wire_data);
-            dst.put(wire_buffer);
-            debug("JSSEngine.wrap() - Wrote " + wire_buffer.length + " bytes to dst.");
+        int this_src_write;
+        int this_dst_write;
+        do {
+            this_src_write = 0;
+            this_dst_write = 0;
+
+            // First we try updating the handshake state.
+            updateHandshakeState();
+            if (ssl_exception == null && seen_exception) {
+                if (handshake_state != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
+                    // In the event that:
+                    //
+                    //      1. We saw an exception in the past
+                    //          --> (seen_exception is true),
+                    //      2. We've already thrown it from wrap or unwrap,
+                    //          --> (ssl_exception is null),
+                    //      3. We were previously handshaking
+                    //          --> (handshake_state is a handshaking state),
+                    //
+                    // we need to make sure wrap is called again to ensure the
+                    // alert is actually written to the wire. So here we are,
+                    // in wrap and the above hold true; we can mark the handshake
+                    // status as "FINISHED" (because well, it is over due to the
+                    // alert). That leaves the return state to be anything other
+                    // than OK to indicate the error.
+                    handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
+                }
+            }
+
+            // Try writing data from srcs to the other end of the connection. Note
+            // that we always attempt this, even if the handshake isn't yet marked
+            // as finished. This is because we need the call to PR.Write(...) to
+            // tell if an alert is getting sent.
+            this_src_write = writeData(srcs, offset, length);
+            if (this_src_write > 0) {
+                app_data += this_src_write;
+                debug("JSSEngine.wrap(): wrote " + this_src_write + " from srcs to buffer.");
+            } else {
+                debug("JSSEngine.wrap(): not writing from srcs to buffer: this_src_write=" + this_src_write + " handshake_finished=" + isHandshakeFinished());
+            }
+
+            if (dst != null) {
+                // Get an estimate for the expected write to dst; this is
+                // the minimum of write_buf read capacity and dst.remaining
+                // capacity.
+                this_dst_write = Math.min((int) Buffer.ReadCapacity(write_buf), dst.remaining());
+
+                // Try reading data from write_buf to dst; always do this, even
+                // if we didn't write.
+                if (this_dst_write > 0) {
+                    byte[] wire_buffer = Buffer.Read(write_buf, this_dst_write);
+                    dst.put(wire_buffer);
+                    this_dst_write = wire_buffer.length;
+                    wire_data += this_dst_write;
+
+                    debug("JSSEngine.wrap() - Wrote " + wire_buffer.length + " bytes to dst.");
+                } else {
+                    debug("JSSEngine.wrap(): not writing from write_buf into dst: this_dst_write=0 write_buf.read_capacity=" + Buffer.ReadCapacity(write_buf) + " dst.remaining=" + dst.remaining());
+                }
+            } else {
+                debug("JSSEngine.wrap(): not writing from write_buf into NULL dst");
+            }
+        } while (this_src_write != 0 || this_dst_write != 0);
+
+        if (seen_exception == false && ssl_exception == null) {
+            ssl_exception = checkSSLAlerts();
+            seen_exception = (ssl_exception != null);
         }
 
         logWrap(dst);
