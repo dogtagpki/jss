@@ -4,6 +4,7 @@
 #include <jni.h>
 
 #include "jssutil.h"
+#include "jss_exceptions.h"
 #include "PRFDProxy.h"
 #include "BufferProxy.h"
 #include "BufferPRFD.h"
@@ -208,12 +209,12 @@ Java_org_mozilla_jss_nss_PR_Write(JNIEnv *env, jclass clazz, jobject fd,
     jbyteArray buf)
 {
     PRFileDesc *real_fd = NULL;
-    unsigned int real_length = 0;
     int max_length = 0;
+    uint8_t dummy_buffer = 0;
     uint8_t *buffer = NULL;
     int result = 0;
 
-    PR_ASSERT(env != NULL && fd != NULL && buf != NULL);
+    PR_ASSERT(env != NULL && fd != NULL);
     PR_SetError(0, 0);
 
     if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
@@ -222,20 +223,24 @@ Java_org_mozilla_jss_nss_PR_Write(JNIEnv *env, jclass clazz, jobject fd,
 
     PR_ASSERT(real_fd != NULL);
 
-    real_length = (*env)->GetArrayLength(env, buf);
-    if (real_length > INT_MAX) {
-        max_length = INT_MAX;
-    } else {
-        max_length = (int)(real_length % INT_MAX);
-    }
+    if (buf != NULL) {
+        max_length = (*env)->GetArrayLength(env, buf);
 
-    buffer = (uint8_t*)((*env)->GetByteArrayElements(env, buf, NULL));
-    if (buffer == NULL) {
-        return 0;
+        buffer = (uint8_t*)((*env)->GetByteArrayElements(env, buf, NULL));
+        if (buffer == NULL) {
+            ASSERT_OUTOFMEM(env);
+            return 0;
+        }
+    } else {
+        buffer = &dummy_buffer;
+        max_length = 0;
     }
 
     result = PR_Write(real_fd, buffer, max_length);
-    (*env)->ReleaseByteArrayElements(env, buf, (jbyte *)buffer, JNI_ABORT);
+
+    if (buf != NULL && buffer != &dummy_buffer) {
+        (*env)->ReleaseByteArrayElements(env, buf, (jbyte *)buffer, JNI_ABORT);
+    }
 
     return result;
 }
@@ -280,7 +285,6 @@ Java_org_mozilla_jss_nss_PR_Send(JNIEnv *env, jclass clazz, jobject fd,
     jbyteArray buf, jint flags, jlong timeout)
 {
     PRFileDesc *real_fd = NULL;
-    unsigned int real_length = 0;
     int max_length = 0;
     uint8_t *buffer = NULL;
     PRIntervalTime timeout_interval = (PRIntervalTime)(timeout % UINT32_MAX);
@@ -296,12 +300,7 @@ Java_org_mozilla_jss_nss_PR_Send(JNIEnv *env, jclass clazz, jobject fd,
 
     PR_ASSERT(real_fd != NULL);
 
-    real_length = (*env)->GetArrayLength(env, buf);
-    if (real_length > INT_MAX) {
-        max_length = INT_MAX;
-    } else {
-        max_length = (int)(real_length % INT_MAX);
-    }
+    max_length = (*env)->GetArrayLength(env, buf);
 
     buffer = (uint8_t*)((*env)->GetByteArrayElements(env, buf, NULL));
     if (buffer == NULL) {
