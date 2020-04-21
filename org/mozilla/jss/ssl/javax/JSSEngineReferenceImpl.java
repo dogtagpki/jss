@@ -646,8 +646,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 break;
             }
 
-            // TODO: use bulk copy
-            buffers[buffer_index].put(data[data_index]);
+            // Compute the size of the put: it is the minimum of the space
+            // remaining in this buffer and the bytes remaining in the data
+            // array.
+            int put_size = buffers[buffer_index].remaining();
+            if (put_size > (data.length - data_index)) {
+                put_size = data.length - data_index;
+            }
+
+            buffers[buffer_index].put(data, data_index, put_size);
+            data_index += put_size;
         }
 
         return data_index;
