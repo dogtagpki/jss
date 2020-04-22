@@ -9,66 +9,24 @@ on:
     - master
 
 jobs:
-  pkcs11check:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: 
+          - 'pkcs11check'
+          - 'debian_jdk11'
+          - 'ubuntu_jdk8'
+          - 'fedora_latest_jdk11'
+          - 'fedora_rawhide'
+          - 'fedora_sandbox'
+          - 'centos_7'
+          - 'centos_8'
+          - 'pki_build'
+
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
+  
     - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "pkcs11check" || echo "::warning ::Job exited with status $?"
-  debian_jdk11:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "debian_jdk11" || echo "::warning ::Job exited with status $?"
-  ubuntu_jdk8:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "ubuntu_jdk8" || echo "::warning ::Job exited with status $?"
-  fedora_latest_jdk11:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_latest_jdk11" || echo "::warning ::Job exited with status $?"
-  fedora_rawhide:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_rawhide" || echo "::warning ::Job exited with status $?"
-  fedora_sandbox:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_sandbox" || echo "::warning ::Job exited with status $?"
-  centos7:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "centos_7" || echo "::warning ::Job exited with status $?"
-  centos8:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "centos_8" || echo "::warning ::Job exited with status $?"
-  buildpki:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "pki_build" || echo "::warning ::Job exited with status $?"
+      run: bash tools/run_container.sh "${{ matrix.image }}" || echo "::warning ::Job exited with status $?"

@@ -9,24 +9,13 @@ on:
     - master
 
 jobs:
-  fedora30:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ['fedora_30', 'fedora_31', 'symbolcheck']
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
     - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_30"
-  fedora31:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_31"
-  symbolcheck:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "symbolcheck"
+      run: bash tools/run_container.sh "${{ matrix.image }}"
