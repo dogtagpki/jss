@@ -3,6 +3,7 @@ package org.mozilla.jss.ssl.javax;
 import java.lang.*;
 import java.util.*;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -57,7 +58,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private ServerSocket ss_socket;
     private Socket s_socket;
     private Socket c_socket;
+    private InputStream s_istream;
     private OutputStream s_ostream;
+    private InputStream c_istream;
     private OutputStream c_ostream;
 
     private String name;
@@ -379,12 +382,28 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             s_socket.setReceiveBufferSize(BUFFER_SIZE);
             s_socket.setSendBufferSize(BUFFER_SIZE);
 
+            s_istream = s_socket.getInputStream();
             s_ostream = s_socket.getOutputStream();
 
+            c_istream = c_socket.getInputStream();
             c_ostream = c_socket.getOutputStream();
         } catch (Exception e) {
             throw new RuntimeException("Unable to enable debug socket logging! " + e.getMessage(), e);
         }
+    }
+
+    private void loggingSocketConsumeAllBytes() {
+        try {
+            int available = s_istream.available();
+            byte[] data = new byte[available];
+            s_istream.read(data);
+        } catch (Exception e) {}
+
+        try {
+            int available = c_istream.available();
+            byte[] data = new byte[available];
+            c_istream.read(data);
+        } catch (Exception e) {}
     }
 
     public void beginHandshake() {
@@ -726,6 +745,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             return;
         }
 
+        loggingSocketConsumeAllBytes();
+
         OutputStream stream = c_ostream;
 
         if (!as_server) {
@@ -955,6 +976,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (debug_port <= 0 || dst == null || dst.remaining() == 0) {
             return;
         }
+
+        loggingSocketConsumeAllBytes();
 
         OutputStream stream = s_ostream;
 
