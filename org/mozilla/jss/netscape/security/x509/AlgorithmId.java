@@ -624,9 +624,19 @@ public class AlgorithmId implements Serializable, DerEncoder {
     }
 
     /**
-     * Returns a string describing the algorithm and its parameters.
+     * Returns a string describing only the algorithm without parameters.
+     *
+     * Use toStringWithParams() for algorithm name and paramaters, or
+     * paramsToString() for just parameters.
      */
     public String toString() {
+        return algName();
+    }
+
+    /**
+     * Returns a string describing the algorithm and its parameters.
+     */
+    public String toStringWithParams() {
         if (params == null) {
             return algName();
         }
