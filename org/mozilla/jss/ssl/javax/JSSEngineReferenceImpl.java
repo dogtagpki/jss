@@ -1029,8 +1029,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // We expect (i.e., need to construct a buffer) to write up to
             // this much. Note that this is non-zero since we're taking the
             // max here and we guarantee with the previous statement that
-            // srcs[index].remaining() > 0.
-            int expected_write = srcs[index].remaining();
+            // srcs[index].remaining() > 0. There's no point in getting more
+            // than BUFFER_SIZE bytes either; so cap at the minimum of the
+            // two sizes.
+            int expected_write = Math.min(srcs[index].remaining(), BUFFER_SIZE);
             debug("JSSEngine.writeData(): expected_write=" + expected_write + " write_cap=" + Buffer.WriteCapacity(write_buf) + " read_cap=" + Buffer.ReadCapacity(read_buf));
 
             // Get data from our current srcs[index] buffer.
@@ -1041,6 +1043,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // attempted_write.
             int this_write = PR.Write(ssl_fd, app_data);
             attempted_write = true;
+
+            // Reset our buffer's position in event of sub-optimal write.
+            if (this_write < expected_write) {
+                int pos = srcs[index].position();
+
+                // When this_write < 0, we want to reset to the beginning
+                // because we assume we haven't written any data due to an
+                // error before writing.
+                int delta = expected_write - Math.max(0, this_write);
+
+                srcs[index].position(pos - delta);
+            }
 
             debug("JSSEngine.writeData(): this_write=" + this_write);
             if (this_write < 0) {
@@ -1057,14 +1071,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             data_length += this_write;
 
-            if (this_write == 0) {
-                // Revert our position to the previous position and break: we
-                // are out of space to write into our SSL FD.
-                int pos = srcs[index].position();
-                int delta = expected_write - this_write;
-                srcs[index].position(pos - delta);
-
-                // Also check for SSLExceptions while we're here.
+            if (this_write < expected_write) {
+                // If we didn't get an error but we got less than our expected
+                // write, it is best to exit to give us time to drain the
+                // buffers before attempting another write. We're guaranteed
+                // to be called again because we wrote a non-zero amount here.
                 break;
             }
         }
