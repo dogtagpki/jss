@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":9,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":9,"i17":10,"i18":10,"i19":9,"i20":9,"i21":10,"i22":10};
+var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":9,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":9,"i17":10,"i18":10,"i19":9,"i20":9,"i21":10,"i22":10,"i23":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -540,6 +540,12 @@ implements java.io.Serializable, <a href="../../../../../../org/mozilla/jss/nets
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#toString--">toString</a></span>()</code>
+<div class="block">Returns a string describing only the algorithm without parameters.</div>
+</td>
+</tr>
+<tr id="i23" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html#toStringWithParams--">toStringWithParams</a></span>()</code>
 <div class="block">Returns a string describing the algorithm and its parameters.</div>
 </td>
 </tr>
@@ -1262,11 +1268,24 @@ public&nbsp;AlgorithmId()</pre>
 <li class="blockList">
 <h4>toString</h4>
 <pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
-<div class="block">Returns a string describing the algorithm and its parameters.</div>
+<div class="block">Returns a string describing only the algorithm without parameters.
+
+ Use toStringWithParams() for algorithm name and paramaters, or
+ paramsToString() for just parameters.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
 </dl>
+</li>
+</ul>
+<a name="toStringWithParams--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toStringWithParams</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toStringWithParams()</pre>
+<div class="block">Returns a string describing the algorithm and its parameters.</div>
 </li>
 </ul>
 <a name="getEncodedParams--">
