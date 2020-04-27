@@ -22,12 +22,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.mozilla.jss.netscape.security.pkcs.ContentInfo;
 import org.mozilla.jss.netscape.security.pkcs.PKCS7;
 import org.mozilla.jss.netscape.security.pkcs.SignerInfo;
 
 public class CertificateChain implements Serializable {
+
+    private List<X509Certificate> certs = new ArrayList<>();
+
+    /**
+     * Constructs an empty certificate chain.
+     */
     public CertificateChain() {
     }
 
@@ -37,17 +46,31 @@ public class CertificateChain implements Serializable {
      * @param cert a certificate
      */
     public CertificateChain(X509Certificate cert) {
-        mChain = new X509Certificate[1];
-        mChain[0] = cert;
+        if (cert == null) {
+            throw new IllegalArgumentException("Missing input certificate");
+        }
+        certs.add(cert);
     }
 
     /**
      * constructs a certificate chain from a X509 certificate array.
      *
-     * @param chain a certificate array.
+     * @param certs a certificate array.
      */
-    public CertificateChain(X509Certificate[] chain) {
-        mChain = chain.clone();
+    public CertificateChain(X509Certificate[] certs) {
+        if (certs == null) {
+            throw new IllegalArgumentException("Missing input certificates");
+        }
+        this.certs.addAll(Arrays.asList(certs));
+    }
+
+    /**
+     * Returns the certificate list.
+     *
+     * @return The certificate list.
+     */
+    public List<X509Certificate> getCertificates() {
+        return certs;
     }
 
     /**
@@ -57,7 +80,7 @@ public class CertificateChain implements Serializable {
      * @return the X509 certificate at the given index.
      */
     public X509Certificate getCertificate(int index) {
-        return mChain[index];
+        return certs.get(index);
     }
 
     /**
@@ -66,7 +89,7 @@ public class CertificateChain implements Serializable {
      * @return the X509 certificate at the given index.
      */
     public X509Certificate getFirstCertificate() {
-        return mChain[0];
+        return certs.get(0);
     }
 
     /**
@@ -75,7 +98,7 @@ public class CertificateChain implements Serializable {
      * @return an array of X509 Certificates.
      */
     public X509Certificate[] getChain() {
-        return mChain.clone();
+        return certs.toArray(new X509Certificate[certs.size()]);
     }
 
     public void encode(OutputStream out)
@@ -86,11 +109,13 @@ public class CertificateChain implements Serializable {
     /**
      * encode in PKCS7 blob.
      */
-    public void encode(OutputStream out, boolean sort)
-            throws IOException {
-        PKCS7 p7 = new PKCS7(new AlgorithmId[0],
-                             new ContentInfo(new byte[0]), mChain,
-                             new SignerInfo[0]);
+    public void encode(OutputStream out, boolean sort) throws IOException {
+        X509Certificate[] certs = getChain();
+        PKCS7 p7 = new PKCS7(
+                new AlgorithmId[0],
+                new ContentInfo(new byte[0]),
+                certs,
+                new SignerInfo[0]);
         p7.encodeSignedData(out, sort);
     }
 
@@ -100,7 +125,8 @@ public class CertificateChain implements Serializable {
     public void decode(InputStream in)
             throws IOException {
         PKCS7 p7 = new PKCS7(in);
-        mChain = p7.getCertificates();
+        certs.clear();
+        certs.addAll(Arrays.asList(p7.getCertificates()));
     }
 
     /**
@@ -124,16 +150,17 @@ public class CertificateChain implements Serializable {
      */
     public String toString() {
 
-        String s = "[\n";
-        if (mChain == null)
-            return "[empty]";
-        StringBuffer tempBuffer = new StringBuffer();
-        for (int i = 0; i < mChain.length; i++) {
-            tempBuffer.append(mChain[i].toString());
+        if (certs.isEmpty()) {
+            return "[]";
         }
-        s += tempBuffer.toString() + "]\n";
-        return s;
-    }
 
-    private X509Certificate[] mChain = null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (X509Certificate cert : certs) {
+            sb.append(cert);
+        }
+        sb.append("]");
+
+        return sb.toString();
+    }
 }
