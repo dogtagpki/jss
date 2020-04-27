@@ -386,11 +386,6 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         JSSParameters parser = new JSSParameters();
         parser.setCipherSuites(suites);
 
-        if (parser.getSSLCiphers() == null) {
-            enabled_ciphers = null;
-            return;
-        }
-
         setEnabledCipherSuites(parser.getSSLCiphers());
     }
 
@@ -406,11 +401,25 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         }
 
         if (suites == null || suites.length == 0) {
+            enabled_ciphers = null;
             logger.warn("JSSEngine.setEnabledCipherSuites(...) given a null list of cipher suites.");
             return;
         }
 
-        enabled_ciphers = suites.clone();
+        ArrayList<SSLCipher> supportedCiphers = new ArrayList<SSLCipher>();
+        for (SSLCipher suite : suites) {
+            if (suite.isSupported()) {
+                supportedCiphers.add(suite);
+            }
+        }
+
+        if (supportedCiphers.size() == 0) {
+            enabled_ciphers = null;
+            logger.warn("JSSEngine.setEnabledCipherSuites(...) given a list of cipher suites where none were supported or approved.");
+            return;
+        }
+
+        enabled_ciphers = supportedCiphers.toArray(new SSLCipher[supportedCiphers.size()]);
     }
 
     /**
@@ -423,7 +432,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         for (SSLCipher cipher : SSLCipher.values()) {
             try {
-                if (SSL.CipherPrefGetDefault(cipher.getID())) {
+                if (SSL.CipherPrefGetDefault(cipher.getID()) && cipher.isSupported()) {
                     logger.debug("Enabled: " + cipher.name() + " (" + cipher.getID() + ")");
                     enabledCiphers.add(cipher);
                 }
@@ -515,14 +524,13 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             throw new IllegalArgumentException("Expected min and max to either both be null or both be not-null; not mixed: (" + min + ", " + max + ")");
         }
 
-        if (ssl_fd != null) {
-            String msg = "Unable to process setEnabledProtocols(...) after ";
-            msg += "handshake has started!";
-            throw new IllegalArgumentException(msg);
+        if (max == null && min == null) {
+            min_protocol = null;
+            max_protocol = null;
+            return;
         }
 
-        min_protocol = min;
-        max_protocol = max;
+        setEnabledProtocols(new SSLVersionRange(min, max));
     }
 
     /**
@@ -536,8 +544,15 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             return;
         }
 
-        min_protocol = vrange.getMinVersion();
-        max_protocol = vrange.getMaxVersion();
+        if (ssl_fd != null) {
+            String msg = "Unable to process setEnabledProtocols(...) after ";
+            msg += "handshake has started!";
+            throw new IllegalArgumentException(msg);
+        }
+
+        SSLVersionRange bounded = vrange.boundBy(Policy.TLS_VERSION_RANGE);
+        min_protocol = bounded.getMinVersion();
+        max_protocol = bounded.getMaxVersion();
     }
 
     /**
@@ -562,7 +577,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             throw new RuntimeException("JSSEngine.queryEnabledProtocols() - null protocol range");
         }
 
-        return vrange;
+        return vrange.boundBy(Policy.TLS_VERSION_RANGE);
     }
 
     /**

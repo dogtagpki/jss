@@ -96,4 +96,26 @@ public class SSLVersionRange {
 
         return result.toArray(new SSLVersion[result.size()]);
     }
+
+    /**
+     * Bounds this SSLVersionRange by the given range.
+     *
+     * The resulting SSLVersionRange does not has a minimum less than
+     * that of its bound and does not have a maximum greater than that
+     * of its bound.
+     */
+    public SSLVersionRange boundBy(SSLVersionRange bound) {
+        SSLVersion minimum = minVersion;
+        SSLVersion maximum = maxVersion;
+
+        if (minimum.compareTo(bound.getMinVersion()) < 0) {
+            minimum = bound.getMinVersion();
+        }
+
+        if (maximum.compareTo(bound.getMaxVersion()) > 0) {
+            maximum = bound.getMaxVersion();
+        }
+
+        return new SSLVersionRange(minimum, maximum);
+    }
 }
