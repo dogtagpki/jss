@@ -251,6 +251,86 @@ This heuristic is wrapped in `updateHandshakeState`, which is called from
 incremented in all three places.
 
 
+### Post-Handshake Auth (PHA) and Re-Handshaking
+
+Prior to TLS 1.3, clients and servers could initiate another handshake,
+allowing clients the chance to specify authentication that wasn't provided at
+the initial handshake. This also allowed the client and server to negotiate a
+new key. Because this poses a [security risk][rfc.tls-renegotiation], a TLS
+extension modifies the behavior to improve security. However, this behavior
+was removed in TLS 1.3 and replaced with two separate steps: one mechanism
+to provide authentication post-handshake and another to rekey the handshake.
+
+By default, renegotiation and PHA support are both enabled for a `JSSEngine`.
+In order to issue such a renegotiation, change the status of client
+authentication after the initial handshake:
+
+```java
+// SSLEngine inst;
+inst.setNeedClientAuth(true);
+```
+
+Then call `beginHandshake()` in order to re-handshake:
+
+```java
+inst.beginHandshake();
+```
+
+Complete a handshake as usual. Note that this will detect if TLS 1.3 or a
+previous version was negotiated and choose between a rehandshaking and
+PHA as appropriate for the selected TLS version.
+
+
+#### Disabling Post-Handshake Auth (PHA)
+
+In order to disable PHA support, cast `SSLEngine` to a `JSSEngine` instance
+prior to the initial handshake and remove the PHA configuration option,
+`SSL.ENABLE_POST_HANDSHAKE_AUTH` or set it to `0` to disable it:
+
+```java
+import org.mozilla.jss.ssl.javax.JSSEngine;
+import org.mozilla.jss.nss.SSL;
+
+// JSSEngine inst;
+inst.addConfiguration(SSL.ENABLE_POST_HANDSHAKE_AUTH, 0);
+```
+
+Note that this must be done before `beginHandshake()`, `wrap()`, or `unwrap()`
+is called.
+
+
+#### Disabling Re-Handshaking
+
+In order to disable or configure secure renegotiation, the following
+configuration options can be modified:
+
+ - `SSL.ENABLE_RENEGOTATION` - set to `SSL.RENEGOTIATE_NEVER` to disable all
+   attempts at renegotation; set to `SSL.RENEGOTIATE_UNRESTRICTED` to always
+   renegotiation even in unsafe scenarios; set to
+   `SSL.RENEGOTIATE_REQUIRES_XTN` to only allow secure renegotiation; set to
+   `SSL.RENEGOTIATE_TRANSITIONAL` to require the renegotiation extension
+   when this is a server connection, but allowing clients to handshake with
+   vulnerable servers.
+ - `SSL.REQUIRE_SAFE_NEGOTIATION` - set to `1` by default, can be set to `0`
+   to enable unsafe renegotiation.
+ - `SSL.ENABLE_FALLBACK_SCSV` - set to `1` by default to send the fallback
+   `SCSV` pseudo-ciphersuite; can be set to `0` to disable sending the
+   option.
+
+For example, to disable renegotiation completely:
+
+```java
+import org.mozilla.jss.ssl.javax.JSSEngine;
+import org.mozilla.jss.nss.SSL;
+
+// JSSEngine inst;
+inst.addConfiguration(SSL.ENABLE_RENEGOTATION, SSL.RENEGOTIATE_NEVER);
+```
+
+Note that this must be done before `beginHandshake()`, `wrap()`, or `unwrap()`
+or called.
+
+
 ### SSL Alert Handling
 
 NSS exposes access to protocol-level alerts via the two callback functions,
@@ -302,4 +382,5 @@ peer's certificates.
 [javax.x509trustmanager]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509TrustManager.html "javax.net.ssl.X509TrustManager"
 [jss.ssl-socket]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/ssl/SSLSocket.html "org.mozilla.jss.ssl.SSLSocket"
 [rfc.tls-1.2]: https://tools.ietf.org/html/rfc5246 "TLSv1.2 RFC 5246"
+[rfc.tls-renegotiation]: https://tools.ietf.org/html/rfc5746#section-5
 [rfc.tls-1.3]: https://tools.ietf.org/html/rfc8446 "TLSv1.3 RFC 8446"
