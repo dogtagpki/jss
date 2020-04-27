@@ -149,6 +149,10 @@ macro(jss_tests)
         DEPENDS "generate_c_buffer_size_4"
     )
     jss_test_java(
+        NAME "JUnit_CertificateChainTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.CertificateChainTest"
+    )
+    jss_test_java(
         NAME "JUnit_ChainSortingTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.ChainSortingTest"
     )
