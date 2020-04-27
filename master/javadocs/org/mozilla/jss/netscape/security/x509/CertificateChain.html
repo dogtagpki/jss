@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -136,7 +136,9 @@ implements java.io.Serializable</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#CertificateChain--">CertificateChain</a></span>()</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#CertificateChain--">CertificateChain</a></span>()</code>
+<div class="block">Constructs an empty certificate chain.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#CertificateChain-java.security.cert.X509Certificate-">CertificateChain</a></span>(java.security.cert.X509Certificate&nbsp;cert)</code>
@@ -144,7 +146,7 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#CertificateChain-java.security.cert.X509Certificate:A-">CertificateChain</a></span>(java.security.cert.X509Certificate[]&nbsp;chain)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#CertificateChain-java.security.cert.X509Certificate:A-">CertificateChain</a></span>(java.security.cert.X509Certificate[]&nbsp;certs)</code>
 <div class="block">constructs a certificate chain from a X509 certificate array.</div>
 </td>
 </tr>
@@ -187,18 +189,24 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>java.util.List&lt;java.security.cert.X509Certificate&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#getCertificates--">getCertificates</a></span>()</code>
+<div class="block">Returns the certificate list.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.security.cert.X509Certificate[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#getChain--">getChain</a></span>()</code>
 <div class="block">returns the certificate chain as an array of X509 certificates.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.security.cert.X509Certificate</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#getFirstCertificate--">getFirstCertificate</a></span>()</code>
 <div class="block">returns the first certificate in chain.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/x509/CertificateChain.html#toString--">toString</a></span>()</code>
 <div class="block">Converts the certificate chain to a readable string.</div>
@@ -233,6 +241,7 @@ implements java.io.Serializable</pre>
 <li class="blockList">
 <h4>CertificateChain</h4>
 <pre>public&nbsp;CertificateChain()</pre>
+<div class="block">Constructs an empty certificate chain.</div>
 </li>
 </ul>
 <a name="CertificateChain-java.security.cert.X509Certificate-">
@@ -255,11 +264,11 @@ implements java.io.Serializable</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>CertificateChain</h4>
-<pre>public&nbsp;CertificateChain(java.security.cert.X509Certificate[]&nbsp;chain)</pre>
+<pre>public&nbsp;CertificateChain(java.security.cert.X509Certificate[]&nbsp;certs)</pre>
 <div class="block">constructs a certificate chain from a X509 certificate array.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>chain</code> - a certificate array.</dd>
+<dd><code>certs</code> - a certificate array.</dd>
 </dl>
 </li>
 </ul>
@@ -271,6 +280,20 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getCertificates--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCertificates</h4>
+<pre>public&nbsp;java.util.List&lt;java.security.cert.X509Certificate&gt;&nbsp;getCertificates()</pre>
+<div class="block">Returns the certificate list.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The certificate list.</dd>
+</dl>
+</li>
+</ul>
 <a name="getCertificate-int-">
 <!--   -->
 </a>
