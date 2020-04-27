@@ -12,6 +12,9 @@ import org.mozilla.jss.ssl.SSLVersionRange;
  *
  * In the event of a policy violation, applications can override policy by
  * writing to the desired variable.
+ *
+ * Refer to SSLCipher.isSupported() for whether or not a given TLS cipher
+ * suite is allowed by local policy.
  */
 public class Policy {
     /**
