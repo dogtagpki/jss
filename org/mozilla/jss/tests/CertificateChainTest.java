@@ -186,4 +186,17 @@ public class CertificateChainTest {
         Assert.assertEquals(subCA, certs[1]);
         Assert.assertEquals(admin, certs[2]);
     }
+
+    @Test
+    public void testSorting() throws Exception {
+
+        CertificateChain chain = new CertificateChain(new X509Certificate[] { admin, subCA, rootCA });
+        chain.sort();
+
+        Assert.assertEquals(3, chain.getCertificates().size());
+
+        Assert.assertEquals(rootCA, chain.getCertificate(0));
+        Assert.assertEquals(subCA, chain.getCertificate(1));
+        Assert.assertEquals(admin, chain.getCertificate(2));
+    }
 }
