@@ -1003,6 +1003,20 @@ public class TestSSLEngine {
         testJSSEToJSSHandshakes(ctx, server_alias);
     }
 
+    public static void testALPNEncoding() throws Exception {
+        JSSEngine eng = new JSSEngineReferenceImpl();
+
+        eng.setApplicationProtocols(new String[] { "http/1.1" });
+        byte[] expectedHTTPOnly = new byte[] { 0x08, 0x68, 0x74, 0x74, 0x70, 0x2f, 0x31, 0x2e, 0x31 };
+        assert Arrays.equals(eng.getALPNWireData(), expectedHTTPOnly);
+
+        eng = new JSSEngineReferenceImpl();
+
+        eng.setApplicationProtocols(new String[] { "http/1.1", "spdy/2" });
+        byte[] expectedHTTPSpdy = new byte[] { 0x08, 0x68, 0x74, 0x74, 0x70, 0x2f, 0x31, 0x2e, 0x31, 0x06, 0x73, 0x70, 0x64, 0x79, 0x2f, 0x32 };
+        assert Arrays.equals(eng.getALPNWireData(), expectedHTTPSpdy);
+    }
+
     public static void main(String[] args) throws Exception {
         // Args:
         //  - nssdb
@@ -1027,5 +1041,8 @@ public class TestSSLEngine {
 
         System.out.println("Testing basic handshake with native TM...");
         testNativeClientServer(args);
+
+        System.out.println("Testing ALPN encoding...");
+        testALPNEncoding();
     }
 }
