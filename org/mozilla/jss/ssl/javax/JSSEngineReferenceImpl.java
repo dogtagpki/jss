@@ -349,10 +349,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         if (alpn_protocols != null) {
             byte[] wire_data = getALPNWireData();
+            if (wire_data == null) {
+                throw new RuntimeException("JSSEngine.init(): ALPN wire data is NULL but alpn_protocols is non-NULL.");
+            }
 
             ret = SSL.SetNextProtoNeg(ssl_fd, wire_data);
-            if (ret == SSL.SECFailure) {
-                throw new RuntimeException("JSSEngine.init(): Unable to set ALPN protocol list.");
+            if (ret != SSL.SECSuccess) {
+                throw new RuntimeException("JSSEngine.init(): Unable to set ALPN protocol list: " + errorText(PR.GetError()) + " " + ret);
             }
         }
     }

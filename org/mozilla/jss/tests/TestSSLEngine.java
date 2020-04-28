@@ -978,6 +978,38 @@ public class TestSSLEngine {
         }
     }
 
+    public static void testALPNHandshake(SSLContext ctx, String server_alias) throws Exception {
+        JSSEngine client_eng = (JSSEngine) ctx.createSSLEngine();
+        JSSParameters client_params = createParameters();
+        client_params.setApplicationProtocols(new String[] { "http/1.1", "h2", "spdy/2" });
+        client_eng.setSSLParameters(client_params);
+        client_eng.setUseClientMode(true);
+
+        if (client_eng instanceof JSSEngineReferenceImpl) {
+            ((JSSEngineReferenceImpl) client_eng).setName("JSS Client for ALPN");
+        }
+
+        JSSEngine server_eng = (JSSEngine) ctx.createSSLEngine();
+        JSSParameters server_params = createParameters(server_alias);
+        server_params.setApplicationProtocols(new String[] { "h2" });
+        server_eng.setSSLParameters(server_params);
+        server_eng.setUseClientMode(false);
+
+        if (server_eng instanceof JSSEngineReferenceImpl) {
+            ((JSSEngineReferenceImpl) server_eng).setName("JSS Server for ALPN");
+            ((JSSEngineReferenceImpl) server_eng).enableSafeDebugLogging(7377);
+        }
+
+        try {
+            testBasicHandshake(client_eng, server_eng, false);
+            assert(server_eng.getApplicationProtocol().equals("h2"));
+        } catch (Exception e) {
+            client_eng.cleanup();
+            server_eng.cleanup();
+            throw e;
+        }
+    }
+
     public static void testBasicClientServer(String[] args) throws Exception {
         SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
         ctx.init(getKMs(), getTMs(), null);
@@ -1001,6 +1033,7 @@ public class TestSSLEngine {
         testAllHandshakes(ctx, client_alias, server_alias, true);
         testPostHandshakeAuth(ctx, client_alias, server_alias);
         testJSSEToJSSHandshakes(ctx, server_alias);
+        testALPNHandshake(ctx, server_alias);
     }
 
     public static void testALPNEncoding() throws Exception {
