@@ -26,9 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.mozilla.jss.netscape.security.pkcs.ContentInfo;
 import org.mozilla.jss.netscape.security.pkcs.PKCS7;
-import org.mozilla.jss.netscape.security.pkcs.SignerInfo;
 
 public class CertificateChain implements Serializable {
 
@@ -111,11 +109,7 @@ public class CertificateChain implements Serializable {
      */
     public void encode(OutputStream out, boolean sort) throws IOException {
         X509Certificate[] certs = getChain();
-        PKCS7 p7 = new PKCS7(
-                new AlgorithmId[0],
-                new ContentInfo(new byte[0]),
-                certs,
-                new SignerInfo[0]);
+        PKCS7 p7 = new PKCS7(certs);
         p7.encodeSignedData(out, sort);
     }
 
