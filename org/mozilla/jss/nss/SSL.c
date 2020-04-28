@@ -817,6 +817,32 @@ Java_org_mozilla_jss_nss_SSL_KeyUpdate(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_SetNextProtoNeg(JNIEnv *env, jclass clazz,
+    jobject fd, jbyteArray wire_data)
+{
+    PRFileDesc *real_fd = NULL;
+    uint8_t *data = NULL;
+    size_t data_length = 0;
+    SECStatus ret = SECFailure;
+
+    PR_ASSERT(env != NULL && fd != NULL && wire_data != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return ret;
+    }
+
+    if (!JSS_FromByteArray(env, wire_data, &data, &data_length)) {
+        return ret;
+    }
+
+    ret = SSL_SetNextProtoNego(real_fd, data, data_length);
+    free(data);
+
+    return ret;
+}
+
+JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_nss_SSL_AttachClientCertCallback(JNIEnv *env, jclass clazz,
     jobject fd)
 {
