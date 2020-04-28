@@ -185,6 +185,11 @@ extends java.lang.Object</pre>
 <div class="block">Unmarshals a PKCS7 block from PEM format.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/mozilla/jss/netscape/security/pkcs/PKCS7.html#PKCS7-java.security.cert.X509Certificate:A-">PKCS7</a></span>(java.security.cert.X509Certificate[]&nbsp;certs)</code>
+<div class="block">Construct PKCS7 from an array of certificates.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -432,7 +437,7 @@ extends java.lang.Object</pre>
 <a name="PKCS7-org.mozilla.jss.netscape.security.x509.AlgorithmId:A-org.mozilla.jss.netscape.security.pkcs.ContentInfo-java.security.cert.X509Certificate:A-org.mozilla.jss.netscape.security.pkcs.SignerInfo:A-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>PKCS7</h4>
 <pre>public&nbsp;PKCS7(<a href="../../../../../../org/mozilla/jss/netscape/security/x509/AlgorithmId.html" title="class in org.mozilla.jss.netscape.security.x509">AlgorithmId</a>[]&nbsp;digestAlgorithmIds,
@@ -446,6 +451,20 @@ extends java.lang.Object</pre>
 <dd><code>contentInfo</code> - the content information.</dd>
 <dd><code>certificates</code> - an array of X.509 certificates.</dd>
 <dd><code>signerInfos</code> - an array of signer information.</dd>
+</dl>
+</li>
+</ul>
+<a name="PKCS7-java.security.cert.X509Certificate:A-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>PKCS7</h4>
+<pre>public&nbsp;PKCS7(java.security.cert.X509Certificate[]&nbsp;certs)</pre>
+<div class="block">Construct PKCS7 from an array of certificates.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>certs</code> - Array of certificates.</dd>
 </dl>
 </li>
 </ul>
