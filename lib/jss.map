@@ -502,6 +502,7 @@ Java_org_mozilla_jss_nss_SSLErrors_getBadCertDomain;
 JSS_4.8.0 {
     global:
 Java_org_mozilla_jss_nss_SSL_SetNextProtoNeg;
+Java_org_mozilla_jss_nss_SSL_GetNextProto;
     local:
         *;
 };
