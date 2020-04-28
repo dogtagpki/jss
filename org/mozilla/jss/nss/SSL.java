@@ -411,6 +411,13 @@ public class SSL {
     public static native int KeyUpdate(SSLFDProxy fd, boolean requestUpdate);
 
     /**
+     * Sets the next protocol negotiation (ALPN) in wire format.
+     *
+     * See also: SSL_SetNextProtoNego in /usr/include/nss3/ssl.h.
+     */
+    public static native int SetNextProtoNeg(SSLFDProxy fd, byte[] wire_data);
+
+    /**
      * Use client authentication; set client certificate from SSLFDProxy.
      *
      * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
