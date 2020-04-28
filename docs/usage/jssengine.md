@@ -65,18 +65,18 @@ First, get an instance of `JSSEngine`:
 
 ```java
 /* If no session resumption hints are provided: */
-// JSSEngine engine = JSSEngine<$Impl>();
+// JSSEngine engine = new JSSEngine<$Impl>();
 
 /* If we already know the peer's host and port: */
 // String peerHost;
 // int peerPort;
-// JSSEngine engine = JSSEngine<$Impl>(peerHost, peerPort);
+// JSSEngine engine = new JSSEngine<$Impl>(peerHost, peerPort);
 
 /* Or laastly, if we know the peer's host and port, and want to set
  * a certificate and key to use for our side of the connection: */
 // X509Certificate localCert;
 // PrivateKey localKey;
-JSSEngine engine = JSSEngine<$Impl>(peerHost, peerPort, localCert, localKey);
+JSSEngine engine = new JSSEngine<$Impl>(peerHost, peerPort, localCert, localKey);
 ```
 
 Replace `JSSEngine<$Impl>` with one of the implementing classes below.
@@ -102,7 +102,39 @@ Checking the current mode can be done via `getUseClientMode(...)`.
 
 #### Choosing Key Material
 
-Key material can be chosen in several ways.
+Key material can be chosen in several ways. In every scenario, a JSSKeyManager
+instance needs to be passed to the JSSEngine:
+
+```java
+// JSSEngine inst;
+inst.setKeyManager(new JSSKeyManager());
+```
+
+For direct selection of key from an existing instance, call `setKeyMaterials`:
+
+```java
+// JSSEngine inst;
+inst.setKeyMaterials(myPK11Cert, myPK11PrivKey);
+```
+
+Note that these must be instances of [`PK11Cert`][jss.pk11-cert] and
+[`PK11PrivKey`][jss.pk11-privkey] respectively. These can be obtained from
+the [`CryptoManager`][jss.cryptomanager] and casting `X509Certificate` to
+`PK11Cert` and `PrivateKey` to `PK11PrivKey`.
+
+For selection of a key via an alias in the certificate database, call
+`setCertFromAlias`:
+
+```java
+// JSSEngine inst;
+inst.setCertFromAlias("server-cert-alias");
+```
+
+Lastly, key material could've been provided when the `JSSEngine` was
+constructed; see the section on direct utilization above.
+
+Note that SNI support isn't yet added so the key selection must occur prior
+to the initial handshake.
 
 #### Choosing TLS protocol version
 
@@ -380,6 +412,8 @@ peer's certificates.
 [javax.ssl-context]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLContext.html "javax.net.ssl.SSLContext"
 [javax.ssl-engine]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLEngine.html "javax.net.ssl.SSLEngine"
 [javax.x509trustmanager]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509TrustManager.html "javax.net.ssl.X509TrustManager"
+[jss.pk11-cert]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/pkcs11/PK11Cert.html "org.mozilla.jss.pkcs11.PK11Cert"
+[jss.pk11-privkey]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/pkcs11/PK11PrivKey.html "org.mozilla.jss.pkcs11.PK11PrivKey"
 [jss.ssl-socket]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/ssl/SSLSocket.html "org.mozilla.jss.ssl.SSLSocket"
 [rfc.tls-1.2]: https://tools.ietf.org/html/rfc5246 "TLSv1.2 RFC 5246"
 [rfc.tls-renegotiation]: https://tools.ietf.org/html/rfc5746#section-5
