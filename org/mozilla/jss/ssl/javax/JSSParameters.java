@@ -26,6 +26,7 @@ public class JSSParameters extends SSLParameters {
     private SSLVersionRange range;
     private String alias;
     private String hostname;
+    private String[] appProtocols;
 
     public JSSParameters() {
         // Choose our default set of SSLParameters here; default to null
@@ -53,6 +54,11 @@ public class JSSParameters extends SSLParameters {
         }
         if (downcast.getNeedClientAuth()) {
             setNeedClientAuth(downcast.getNeedClientAuth());
+        }
+
+        String[] alpn = downcast.getApplicationProtocols(downcast);
+        if (alpn != null) {
+            setApplicationProtocols(alpn);
         }
     }
 
@@ -189,5 +195,28 @@ public class JSSParameters extends SSLParameters {
 
     public void setHostname(String server_hostname) {
         hostname = server_hostname;
+    }
+
+    public void setApplicationProtocols(String[] protocols) throws IllegalArgumentException {
+        if (protocols == null) {
+            appProtocols = null;
+            return;
+        }
+
+        int index = 0;
+        for (String protocol : protocols) {
+            if (protocol.length() > 255 || protocol.getBytes().length > 255) {
+                String msg = "Invalid application protocol " + protocol;
+                msg += ": standard allows up to 255 characters but was ";
+                msg += protocol.length();
+                throw new IllegalArgumentException(msg);
+            }
+        }
+
+        appProtocols = protocols;
+    }
+
+    public String[] getApplicationProtocols() {
+        return appProtocols;
     }
 }

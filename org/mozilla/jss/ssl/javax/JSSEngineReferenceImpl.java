@@ -347,8 +347,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new SSLException("Unable to enable SSL Handshake Callback on this SSLFDProxy instance.");
         }
 
-        // Pass this ssl_fd to the session object so that we can use
-        // SSL methods to invalidate the session.
+        if (alpn_protocols != null) {
+            byte[] wire_data = getALPNWireData();
+
+            ret = SSL.SetNextProtoNeg(ssl_fd, wire_data);
+            if (ret == SSL.SECFailure) {
+                throw new RuntimeException("JSSEngine.init(): Unable to set ALPN protocol list.");
+            }
+        }
     }
 
     private void initClient() throws SSLException {
@@ -935,6 +941,37 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         return data_index;
+    }
+
+    private void updateSession() {
+        if (ssl_fd == null) {
+            return;
+        }
+
+        try {
+            PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
+            session.setPeerCertificates(peer_chain);
+
+            SSLChannelInfo info = SSL.GetChannelInfo(ssl_fd);
+            if (info == null) {
+                return;
+            }
+
+            session.setId(info.getSessionID());
+            session.refreshData();
+        
+            NextProtoResult ret = SSL.GetNextProto(ssl_fd);
+            if (ret != null) {
+                // Only advertise the resulting protocol if we have one.
+                if (ret.state != SSLNextProtoState.SSL_NEXT_PROTO_NO_SUPPORT &&
+                    ret.state != SSLNextProtoState.SSL_NEXT_PROTO_NO_OVERLAP)
+                {
+                    session.setNextProtocol(ret.getProtocol());
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private SSLException checkSSLAlerts() {
