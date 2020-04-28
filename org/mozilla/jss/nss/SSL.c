@@ -140,6 +140,40 @@ finish:
     return result;
 }
 
+jobject JSS_NewNextProtoResult(JNIEnv *env, int state, uint8_t *proto,
+    unsigned int proto_len)
+{
+    jclass resultClass;
+    jmethodID constructor;
+    jobject result = NULL;
+    jbyteArray protocol = NULL;
+
+    PR_ASSERT(env != NULL);
+
+    resultClass = (*env)->FindClass(env, NEXT_PROTO_CLASS_NAME);
+    if (resultClass == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    constructor = (*env)->GetMethodID(env, resultClass, PLAIN_CONSTRUCTOR,
+        NEXT_PROTO_CONSTRUCTOR_SIG);
+    if (constructor == NULL) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+
+    if (proto != NULL) {
+        protocol = JSS_ToByteArray(env, proto, proto_len);
+    }
+
+    result = (*env)->NewObject(env, resultClass, constructor, state,
+                               protocol);
+
+finish:
+    return result;
+}
+
 JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_nss_SSL_ImportFD(JNIEnv *env, jclass clazz, jobject model,
     jobject fd)
@@ -840,6 +874,31 @@ Java_org_mozilla_jss_nss_SSL_SetNextProtoNeg(JNIEnv *env, jclass clazz,
     free(data);
 
     return ret;
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_nss_SSL_GetNextProto(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    SSLNextProtoState state;
+    uint8_t proto[255] = {0};
+    unsigned int proto_len;
+    SECStatus ret;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return NULL;
+    }
+
+    ret = SSL_GetNextProto(real_fd, &state, proto, &proto_len,
+                           sizeof(proto));
+    if (ret != SECSuccess) {
+        return JSS_NewNextProtoResult(env, state, NULL, 0);
+    }
+    return JSS_NewNextProtoResult(env, state, proto, proto_len);
 }
 
 JNIEXPORT jint JNICALL

@@ -444,6 +444,12 @@ PR_BEGIN_EXTERN_C
 #define SSL_PRELIMINARY_CHANNEL_INFO_CLASS_NAME "org/mozilla/jss/nss/SSLPreliminaryChannelInfo"
 #define SSL_PRELIMINARY_CHANNEL_INFO_CONSTRUCTOR_SIG "(JIIZJZIZZII)V"
 
+/*
+ * NextProtoResult classes
+ */
+#define NEXT_PROTO_CLASS_NAME "org/mozilla/jss/nss/NextProtoResult"
+#define NEXT_PROTO_CONSTRUCTOR_SIG "(I[B)V"
+
 PR_END_EXTERN_C
 
 #endif

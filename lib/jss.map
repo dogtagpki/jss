@@ -504,6 +504,7 @@ JSS_4.8.0 {
 Java_org_mozilla_jss_crypto_JSSOAEPParameterSpec_acquireNativeResources;
 Java_org_mozilla_jss_crypto_JSSOAEPParameterSpec_releaseNativeResources;
 Java_org_mozilla_jss_nss_SSL_SetNextProtoNeg;
+Java_org_mozilla_jss_nss_SSL_GetNextProto;
     local:
         *;
 };

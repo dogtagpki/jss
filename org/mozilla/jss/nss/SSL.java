@@ -418,6 +418,13 @@ public class SSL {
     public static native int SetNextProtoNeg(SSLFDProxy fd, byte[] wire_data);
 
     /**
+     * Gets the next negotiated protocol.
+     *
+     * See also: SSL_GetNextProto in /usr/include/nss3/ssl.h.
+     */
+    public static native NextProtoResult GetNextProto(SSLFDProxy fd);
+
+    /**
      * Use client authentication; set client certificate from SSLFDProxy.
      *
      * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
