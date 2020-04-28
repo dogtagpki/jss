@@ -44,7 +44,7 @@ import org.mozilla.jss.crypto.X509Certificate;
 public class JSSEngineReferenceImpl extends JSSEngine {
     private String peer_info;
 
-    private boolean closed_fd;
+    private boolean closed_fd = true;
     private BufferProxy read_buf;
     private BufferProxy write_buf;
 
@@ -1195,7 +1195,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     private void cleanupSSLFD() {
-        if (!closed_fd) {
+        if (!closed_fd && ssl_fd != null) {
             try {
                 SSL.RemoveCallbacks(ssl_fd);
                 PR.Close(ssl_fd);
@@ -1206,7 +1206,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
         }
 
-        Buffer.Free(read_buf);
-        Buffer.Free(write_buf);
+        if (read_buf != null) {
+            Buffer.Free(read_buf);
+            read_buf = null;
+        }
+
+        if (write_buf != null) {
+            Buffer.Free(write_buf);
+            write_buf = null;
+        }
     }
 }
