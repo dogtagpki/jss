@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.mozilla.jss.netscape.security.pkcs.PKCS7;
+import org.mozilla.jss.netscape.security.util.Cert;
 
 public class CertificateChain implements Serializable {
 
@@ -97,6 +98,16 @@ public class CertificateChain implements Serializable {
      */
     public X509Certificate[] getChain() {
         return certs.toArray(new X509Certificate[certs.size()]);
+    }
+
+    /**
+     * Sorts certificate chain from root to leaf.
+     */
+    public void sort() throws Exception {
+        X509Certificate[] certs = getChain();
+        certs = Cert.sortCertificateChain(certs);
+        this.certs.clear();
+        this.certs.addAll(Arrays.asList(certs));
     }
 
     public void encode(OutputStream out)
