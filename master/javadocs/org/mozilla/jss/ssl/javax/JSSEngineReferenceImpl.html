@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -149,7 +149,7 @@ extends <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title=
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.mozilla.jss.ssl.javax.<a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></h3>
-<code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#as_server">as_server</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#BUFFER_SIZE">BUFFER_SIZE</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#cert">cert</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#enabled_ciphers">enabled_ciphers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#handshake_state">handshake_state</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#hostname">hostname</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#is_inbound_closed">is_inbound_closed</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#is_outbound_closed">is_outbound_closed</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#key">key</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#key_managers">key_managers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#logger">logger</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#max_protocol">max_protocol</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#min_protocol">min_protocol</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#need_client_auth">need_client_auth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#session">session</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#ssl_fd">ssl_fd</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#trust_managers">trust_managers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#want_client_auth">want_client_auth</a></code></li>
+<code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#as_server">as_server</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#BUFFER_SIZE">BUFFER_SIZE</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#cert">cert</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#config">config</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#enabled_ciphers">enabled_ciphers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#handshake_state">handshake_state</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#hostname">hostname</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#is_inbound_closed">is_inbound_closed</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#is_outbound_closed">is_outbound_closed</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#key">key</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#key_managers">key_managers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#logger">logger</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#max_protocol">max_protocol</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#min_protocol">min_protocol</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#need_client_auth">need_client_auth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#session">session</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#ssl_fd">ssl_fd</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#trust_managers">trust_managers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#want_client_auth">want_client_auth</a></code></li>
 </ul>
 </li>
 </ul>
@@ -238,31 +238,38 @@ extends <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title=
 </td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#reconfigureClientAuth--">reconfigureClientAuth</a></span>()</code>
+<div class="block">Implementation-specific handler to handle reconfiguration of client
+ authentication after the handshake has completed.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#setName-java.lang.String-">setName</a></span>(java.lang.String&nbsp;name)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#tryCleanup--">tryCleanup</a></span>()</code>
 <div class="block">Calls cleanup only if both inbound and outbound data streams are
  closed.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>javax.net.ssl.SSLEngineResult</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#unwrap-java.nio.ByteBuffer-java.nio.ByteBuffer:A-int-int-">unwrap</a></span>(java.nio.ByteBuffer&nbsp;src,
       java.nio.ByteBuffer[]&nbsp;dsts,
       int&nbsp;offset,
       int&nbsp;length)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>javax.net.ssl.SSLEngineResult</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#wrap-java.nio.ByteBuffer:A-int-int-java.nio.ByteBuffer-">wrap</a></span>(java.nio.ByteBuffer[]&nbsp;srcs,
     int&nbsp;offset,
     int&nbsp;length,
     java.nio.ByteBuffer&nbsp;dst)</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#writeData-java.nio.ByteBuffer:A-int-int-">writeData</a></span>(java.nio.ByteBuffer[]&nbsp;srcs,
          int&nbsp;offset,
@@ -274,7 +281,7 @@ extends <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title=
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.mozilla.jss.ssl.javax.<a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></h3>
-<code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnabledCipherSuites--">getEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnabledProtocols--">getEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnableSessionCreation--">getEnableSessionCreation</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getNeedClientAuth--">getNeedClientAuth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSession--">getSession</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSSLFDProxy--">getSSLFDProxy</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSupportedCipherSuites--">getSupportedCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSupportedProtocols--">getSupportedProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getUseClientMode--">getUseClientMode</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getWantClientAuth--">getWantClientAuth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#isInboundDone--">isInboundDone</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#isOutboundDone--">isOutboundDone</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#queryEnabledCipherSuites--">queryEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#queryEnabledProtocols--">queryEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setCertFromAlias-java.lang.String-">setCertFromAlias</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledCipherSuites-org.mozilla.jss.ssl.SSLCipher:A-">setEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledCipherSuites-java.lang.String:A-">setEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-org.mozilla.jss.ssl.SSLVersionRange-">setEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-org.mozilla.jss.ssl.SSLVersion-org.mozilla.jss.ssl.SSLVersion-">setEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-java.lang.String:A-">setEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnableSessionCreation-boolean-">setEnableSessionCreation</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setHostname-java.lang.String-">setHostname</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyManager-javax.net.ssl.X509KeyManager-">setKeyManager</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyManagers-javax.net.ssl.X509KeyManager:A-">setKeyManagers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyMaterials-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">setKeyMaterials</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setNeedClientAuth-boolean-">setNeedClientAuth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setSSLParameters-javax.net.ssl.SSLParameters-">setSSLParameters</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setTrustManager-org.mozilla.jss.provider.javax.crypto.JSSTrustManager-">setTrustManager</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setTrustManagers-javax.net.ssl.X509TrustManager:A-">setTrustManagers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setUseClientMode-boolean-">setUseClientMode</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setWantClientAuth-boolean-">setWantClientAuth</a></code></li>
+<code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#addConfiguration-int-int-">addConfiguration</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getDefaultConfiguration--">getDefaultConfiguration</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnabledCipherSuites--">getEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnabledProtocols--">getEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnableSessionCreation--">getEnableSessionCreation</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getNeedClientAuth--">getNeedClientAuth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSession--">getSession</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSSLFDProxy--">getSSLFDProxy</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSupportedCipherSuites--">getSupportedCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSupportedProtocols--">getSupportedProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getUseClientMode--">getUseClientMode</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getWantClientAuth--">getWantClientAuth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#isInboundDone--">isInboundDone</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#isOutboundDone--">isOutboundDone</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#queryEnabledCipherSuites--">queryEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#queryEnabledProtocols--">queryEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#removeConfiguration-int-">removeConfiguration</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setCertFromAlias-java.lang.String-">setCertFromAlias</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setConfiguration-java.util.HashMap-">setConfiguration</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledCipherSuites-org.mozilla.jss.ssl.SSLCipher:A-">setEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledCipherSuites-java.lang.String:A-">setEnabledCipherSuites</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-org.mozilla.jss.ssl.SSLVersionRange-">setEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-org.mozilla.jss.ssl.SSLVersion-org.mozilla.jss.ssl.SSLVersion-">setEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-java.lang.String:A-">setEnabledProtocols</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnableSessionCreation-boolean-">setEnableSessionCreation</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setHostname-java.lang.String-">setHostname</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyManager-javax.net.ssl.X509KeyManager-">setKeyManager</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyManagers-javax.net.ssl.X509KeyManager:A-">setKeyManagers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyMaterials-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">setKeyMaterials</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setNeedClientAuth-boolean-">setNeedClientAuth</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setSSLParameters-javax.net.ssl.SSLParameters-">setSSLParameters</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setTrustManager-org.mozilla.jss.provider.javax.crypto.JSSTrustManager-">setTrustManager</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setTrustManagers-javax.net.ssl.X509TrustManager:A-">setTrustManagers</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setUseClientMode-boolean-">setUseClientMode</a>, <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setWantClientAuth-boolean-">setWantClientAuth</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.javax.net.ssl.SSLEngine">
@@ -350,6 +357,25 @@ extends <a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title=
 <li class="blockList">
 <h4>setName</h4>
 <pre>public&nbsp;void&nbsp;setName(java.lang.String&nbsp;name)</pre>
+</li>
+</ul>
+<a name="reconfigureClientAuth--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>reconfigureClientAuth</h4>
+<pre>protected&nbsp;void&nbsp;reconfigureClientAuth()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#reconfigureClientAuth--">JSSEngine</a></code></span></div>
+<div class="block">Implementation-specific handler to handle reconfiguration of client
+ authentication after the handshake has completed.
+
+ Note that this always gets called, regardless of if the handshake has
+ started; it is up to the implementation to handle this appropriately.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#reconfigureClientAuth--">reconfigureClientAuth</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></code></dd>
+</dl>
 </li>
 </ul>
 <a name="beginHandshake--">

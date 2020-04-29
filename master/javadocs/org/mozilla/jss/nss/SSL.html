@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":41,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":41,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -129,14 +129,91 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ENABLE_FALLBACK_SCSV">ENABLE_FALLBACK_SCSV</a></span></code>
+<div class="block">Option for sending SCSV in handshakes.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ENABLE_POST_HANDSHAKE_AUTH">ENABLE_POST_HANDSHAKE_AUTH</a></span></code>
+<div class="block">Enable post-handshake authentication extension.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ENABLE_RENEGOTIATION">ENABLE_RENEGOTIATION</a></span></code>
+<div class="block">Option for configuring renegotiation after initial handshake.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#RENEGOTIATE_NEVER">RENEGOTIATE_NEVER</a></span></code>
+<div class="block">Value for never allowing renegotiation after initial handshake.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#RENEGOTIATE_REQUIRES_XTN">RENEGOTIATE_REQUIRES_XTN</a></span></code>
+<div class="block">Value for allowing renegotiation after initial handshake with the TLS
+ renegotiation_info extension; safe.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#RENEGOTIATE_TRANSITIONAL">RENEGOTIATE_TRANSITIONAL</a></span></code>
+<div class="block">Value for disallowing unsafe renegotiation in server sockets only, but
+ allows clients to continue to renegotiate with vulnerable servers.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#RENEGOTIATE_UNRESTRICTED">RENEGOTIATE_UNRESTRICTED</a></span></code>
+<div class="block">Value for always allowing renegotiation after initial handshake,
+ regardless of whether or not the peer's client hellow bears the
+ renegotiation info extension; unsafe.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUEST_CERTIFICATE">REQUEST_CERTIFICATE</a></span></code>
 <div class="block">Request certificate from the remote peer.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUIRE_ALWAYS">REQUIRE_ALWAYS</a></span></code>
+<div class="block">Value for always requiring a certificate.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUIRE_CERTIFICATE">REQUIRE_CERTIFICATE</a></span></code>
 <div class="block">Require certificate from the remote peer.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUIRE_FIRST_HANDSHAKE">REQUIRE_FIRST_HANDSHAKE</a></span></code>
+<div class="block">Value for requiring a certificate only on the first handshake.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUIRE_NEVER">REQUIRE_NEVER</a></span></code>
+<div class="block">Value for never requiring a certificate.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUIRE_NO_ERROR">REQUIRE_NO_ERROR</a></span></code>
+<div class="block">Value for requiring a certificate but not erring if the peer doesn't
+ provide one.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#REQUIRE_SAFE_NEGOTIATION">REQUIRE_SAFE_NEGOTIATION</a></span></code>
+<div class="block">Option for requiring safe negotiation.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -271,43 +348,54 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#EnableHandshakeCallback-org.mozilla.jss.nss.SSLFDProxy-">EnableHandshakeCallback</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ForceHandshake-org.mozilla.jss.nss.SSLFDProxy-">ForceHandshake</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Force a handshake to occur if not started, else step one.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html" title="class in org.mozilla.jss.nss">SSLChannelInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#GetChannelInfo-org.mozilla.jss.nss.SSLFDProxy-">GetChannelInfo</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Inquire for SSL Channel Information after the handshake has completed.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html" title="class in org.mozilla.jss.nss">SSLPreliminaryChannelInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#GetPreliminaryChannelInfo-org.mozilla.jss.nss.SSLFDProxy-">GetPreliminaryChannelInfo</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Inquire for SSL Channel Information before the handshake has completed.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ImportFD-org.mozilla.jss.nss.PRFDProxy-org.mozilla.jss.nss.PRFDProxy-">ImportFD</a></span>(<a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;model,
         <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in org.mozilla.jss.nss">PRFDProxy</a>&nbsp;fd)</code>
 <div class="block">Import a file descriptor to create a new SSL file descriptor out of it.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#InvalidateSession-org.mozilla.jss.nss.SSLFDProxy-">InvalidateSession</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Invalidate the SSL session associated with this socket.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#KeyUpdate-org.mozilla.jss.nss.SSLFDProxy-boolean-">KeyUpdate</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
+         boolean&nbsp;requestUpdate)</code>
+<div class="block">Send the TLS 1.3 KeyUpdate Request; experimental.</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#OptionGet-org.mozilla.jss.nss.SSLFDProxy-int-">OptionGet</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
          int&nbsp;option)</code>
 <div class="block">Get the value of a SSL option on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#OptionSet-org.mozilla.jss.nss.SSLFDProxy-int-int-">OptionSet</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
          int&nbsp;option,
@@ -315,72 +403,85 @@ extends java.lang.Object</pre>
 <div class="block">Set the value of a SSL option on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#PeerCertificate-org.mozilla.jss.nss.SSLFDProxy-">PeerCertificate</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Introspect the peer's certificate.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#PeerCertificateChain-org.mozilla.jss.nss.SSLFDProxy-">PeerCertificateChain</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Introspect the peer's certificate chain.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ReHandshake-org.mozilla.jss.nss.SSLFDProxy-boolean-">ReHandshake</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
+           boolean&nbsp;flushCache)</code>
+<div class="block">Rehandshake an existing socket, optionally flushing the cache line.</div>
+</td>
+</tr>
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#RemoveCallbacks-org.mozilla.jss.nss.SSLFDProxy-">RemoveCallbacks</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Removes all enabled callbacks.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#ResetHandshake-org.mozilla.jss.nss.SSLFDProxy-boolean-">ResetHandshake</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
               boolean&nbsp;asServer)</code>
 <div class="block">Reset the handshake status, optionally handshaking as a server.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SecurityStatus-org.mozilla.jss.nss.SSLFDProxy-">SecurityStatus</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Check the security status of a SSL handshake.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SendCertificateRequest-org.mozilla.jss.nss.SSLFDProxy-">SendCertificateRequest</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
+<div class="block">Send the TLS 1.3 Certificate Request as a server; experimental.</div>
+</td>
+</tr>
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#SetURL-org.mozilla.jss.nss.SSLFDProxy-java.lang.String-">SetURL</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
       java.lang.String&nbsp;url)</code>
 <div class="block">Set the hostname of a handshake on the specified PRFileDesc.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeGet-org.mozilla.jss.nss.SSLFDProxy-">VersionRangeGet</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</code>
 <div class="block">Get the range of TLS versions enabled by this server.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeGetDefault--">VersionRangeGetDefault</a></span>()</code>
 <div class="block">Get the range of TLS versions enabled in all future PRFileDesc's of the
  default STREAM protocol variant..</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeGetDefault-org.mozilla.jss.ssl.SSLProtocolVariant-">VersionRangeGetDefault</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLProtocolVariant.html" title="class in org.mozilla.jss.ssl">SSLProtocolVariant</a>&nbsp;variant)</code>
 <div class="block">Get the range of TLS versions enabled in all future PRFileDesc's of the
  specified protocol variant.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeSet-org.mozilla.jss.nss.SSLFDProxy-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSet</a></span>(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
                <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;range)</code>
 <div class="block">Set the range of TLS versions enabled by this server by SSLVersionRange.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeSetDefault-org.mozilla.jss.ssl.SSLProtocolVariant-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSetDefault</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLProtocolVariant.html" title="class in org.mozilla.jss.ssl">SSLProtocolVariant</a>&nbsp;variant,
                       <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;range)</code>
@@ -388,7 +489,7 @@ extends java.lang.Object</pre>
  PRFileDesc's of the specified protocol variant.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSL.html#VersionRangeSetDefault-org.mozilla.jss.ssl.SSLVersionRange-">VersionRangeSetDefault</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;range)</code>
 <div class="block">Set the range of TLS versions enabled by default, for all future
@@ -470,13 +571,174 @@ extends java.lang.Object</pre>
 <a name="SECWouldBlock">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>SECWouldBlock</h4>
 <pre>public static final&nbsp;int SECWouldBlock</pre>
 <div class="block">Return value from NSS functions when the operation would block.
 
  See also: SECWouldBlock in /usr/include/nss3/seccomon.h</div>
+</li>
+</ul>
+<a name="ENABLE_POST_HANDSHAKE_AUTH">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ENABLE_POST_HANDSHAKE_AUTH</h4>
+<pre>public static final&nbsp;int ENABLE_POST_HANDSHAKE_AUTH</pre>
+<div class="block">Enable post-handshake authentication extension. Value for use with
+ OptionGet.
+
+ See also: SSL_ENABLE_POST_HANDSHAKE_AUTH in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="ENABLE_RENEGOTIATION">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ENABLE_RENEGOTIATION</h4>
+<pre>public static final&nbsp;int ENABLE_RENEGOTIATION</pre>
+<div class="block">Option for configuring renegotiation after initial handshake. Value for
+ use with OptionGet and OptionSet.
+
+ See also: SSL_ENABLE_RENEGOTIATION in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="REQUIRE_SAFE_NEGOTIATION">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>REQUIRE_SAFE_NEGOTIATION</h4>
+<pre>public static final&nbsp;int REQUIRE_SAFE_NEGOTIATION</pre>
+<div class="block">Option for requiring safe negotiation. Value for use with OptionGet and
+ OptionSet.
+
+ See also: SSL_REQUIRE_SAFE_NEGOTIATION in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="RENEGOTIATE_NEVER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RENEGOTIATE_NEVER</h4>
+<pre>public static final&nbsp;int RENEGOTIATE_NEVER</pre>
+<div class="block">Value for never allowing renegotiation after initial handshake. Value
+ for use with ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+
+ See also: SSL_RENEGOTIATE_NEVER in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="RENEGOTIATE_UNRESTRICTED">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RENEGOTIATE_UNRESTRICTED</h4>
+<pre>public static final&nbsp;int RENEGOTIATE_UNRESTRICTED</pre>
+<div class="block">Value for always allowing renegotiation after initial handshake,
+ regardless of whether or not the peer's client hellow bears the
+ renegotiation info extension; unsafe. Value for use with
+ ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+
+ See also: SSL_RENEGOTIATE_UNRESTRICTED in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="RENEGOTIATE_REQUIRES_XTN">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RENEGOTIATE_REQUIRES_XTN</h4>
+<pre>public static final&nbsp;int RENEGOTIATE_REQUIRES_XTN</pre>
+<div class="block">Value for allowing renegotiation after initial handshake with the TLS
+ renegotiation_info extension; safe. Value for use with
+ ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+
+ See also: SSL_RENEGOTIATE_REQUIRES_XTN in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="RENEGOTIATE_TRANSITIONAL">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RENEGOTIATE_TRANSITIONAL</h4>
+<pre>public static final&nbsp;int RENEGOTIATE_TRANSITIONAL</pre>
+<div class="block">Value for disallowing unsafe renegotiation in server sockets only, but
+ allows clients to continue to renegotiate with vulnerable servers.
+ Value for use with ENABLE_RENEGOTIATION with OptionGet and OptionSet.
+
+ See also: SSL_RENEGOTIATE_TRANSITIONAL in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="ENABLE_FALLBACK_SCSV">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ENABLE_FALLBACK_SCSV</h4>
+<pre>public static final&nbsp;int ENABLE_FALLBACK_SCSV</pre>
+<div class="block">Option for sending SCSV in handshakes. Value for use with OptionGet and
+ OptionSet.
+
+ See also: SSL_ENABLE_FALLBACK_SCSV in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="REQUIRE_NEVER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>REQUIRE_NEVER</h4>
+<pre>public static final&nbsp;int REQUIRE_NEVER</pre>
+<div class="block">Value for never requiring a certificate. Value for use with
+ SSL_REQUIRE_CERTIFICATE with OptionGet and OptionSet.
+
+ See also: SSL_REQUIRE_NEVER in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="REQUIRE_ALWAYS">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>REQUIRE_ALWAYS</h4>
+<pre>public static final&nbsp;int REQUIRE_ALWAYS</pre>
+<div class="block">Value for always requiring a certificate. Value for use with
+ SSL_REQUIRE_CERTIFICATE with OptionGet and OptionSet.
+
+ See also: SSL_REQUIRE_ALWAYS in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="REQUIRE_FIRST_HANDSHAKE">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>REQUIRE_FIRST_HANDSHAKE</h4>
+<pre>public static final&nbsp;int REQUIRE_FIRST_HANDSHAKE</pre>
+<div class="block">Value for requiring a certificate only on the first handshake. Value
+ for use with SSL_REQUIRE_CERTIFICATE with OptionGet and OptionSet.
+
+ See also: SSL_REQUIRE_FIRST_HANDSHAKE in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
+<a name="REQUIRE_NO_ERROR">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>REQUIRE_NO_ERROR</h4>
+<pre>public static final&nbsp;int REQUIRE_NO_ERROR</pre>
+<div class="block">Value for requiring a certificate but not erring if the peer doesn't
+ provide one. Value for use with SSL_REQUIRE_CERTIFICATE with OptionGet
+ and OptionSet.
+
+ See also: SSL_REQUIRE_NO_ERROR in /usr/include/nss3/ssl.h</div>
 </li>
 </ul>
 </li>
@@ -758,6 +1020,19 @@ extends java.lang.Object</pre>
  See also: SSL_ResetHandshake in /usr/include/nss3/ssl.h</div>
 </li>
 </ul>
+<a name="ReHandshake-org.mozilla.jss.nss.SSLFDProxy-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ReHandshake</h4>
+<pre>public static&nbsp;int&nbsp;ReHandshake(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
+                              boolean&nbsp;flushCache)</pre>
+<div class="block">Rehandshake an existing socket, optionally flushing the cache line.
+
+ See also: SSL_ReHandshake in /usr/include/nss3/ssl.h</div>
+</li>
+</ul>
 <a name="ForceHandshake-org.mozilla.jss.nss.SSLFDProxy-">
 <!--   -->
 </a>
@@ -857,6 +1132,31 @@ public static&nbsp;int&nbsp;ConfigSecureServer(<a href="../../../../org/mozilla/
 </dl>
 </li>
 </ul>
+<a name="SendCertificateRequest-org.mozilla.jss.nss.SSLFDProxy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SendCertificateRequest</h4>
+<pre>public static&nbsp;int&nbsp;SendCertificateRequest(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</pre>
+<div class="block">Send the TLS 1.3 Certificate Request as a server; experimental.
+
+ See also: SSL_SendCertificateRequest in /usr/include/nss3/sslexp.h</div>
+</li>
+</ul>
+<a name="KeyUpdate-org.mozilla.jss.nss.SSLFDProxy-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>KeyUpdate</h4>
+<pre>public static&nbsp;int&nbsp;KeyUpdate(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd,
+                            boolean&nbsp;requestUpdate)</pre>
+<div class="block">Send the TLS 1.3 KeyUpdate Request; experimental.
+
+ See also: SSL_KeyUpdate in /usr/include/nss3/sslexp.h</div>
+</li>
+</ul>
 <a name="AttachClientCertCallback-org.mozilla.jss.nss.SSLFDProxy-">
 <!--   -->
 </a>
@@ -900,11 +1200,20 @@ public static&nbsp;int&nbsp;ConfigSecureServer(<a href="../../../../org/mozilla/
 <a name="RemoveCallbacks-org.mozilla.jss.nss.SSLFDProxy-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>RemoveCallbacks</h4>
 <pre>public static&nbsp;void&nbsp;RemoveCallbacks(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</pre>
 <div class="block">Removes all enabled callbacks.</div>
+</li>
+</ul>
+<a name="EnableHandshakeCallback-org.mozilla.jss.nss.SSLFDProxy-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>EnableHandshakeCallback</h4>
+<pre>public static&nbsp;int&nbsp;EnableHandshakeCallback(<a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;fd)</pre>
 </li>
 </ul>
 </li>
