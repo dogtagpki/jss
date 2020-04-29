@@ -175,7 +175,7 @@ public class CertificateChainTest {
             Assert.fail("Getting cert #3 should fail");
 
         } catch (IndexOutOfBoundsException e) {
-            Assert.assertEquals("Index: 3, Size: 3", e.getMessage());
+            // failed as expected
         }
 
         X509Certificate[] certs = chain.getChain();
