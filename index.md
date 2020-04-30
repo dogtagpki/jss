@@ -20,6 +20,12 @@ Documentation
 * [javadoc](master/javadocs/index.html) for the `master` branch.
 * [docs](master/docs/index.html) for the `master` branch.
 
+`v4.6.x`
+========
+
+* [javadoc](v4.6.x/javadocs/index.html) for the `v4.6.x` branch.
+* [docs](v4.6.x/docs/index.html) for the `v4.6.x` branch.
+
 `v4.5.x`
 ========
 
