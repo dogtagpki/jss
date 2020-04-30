@@ -88,13 +88,35 @@ public class JSSContextSpi extends SSLContextSpi {
     }
 
     public SSLServerSocketFactory engineGetServerSocketFactory() {
-        logger.debug("JSSContextSpi.engineGetServerSocketFactory() - not implemented");
-        return null;
+        logger.warn("JSSContextSpi.engineGetServerSocketFactory() - not implemented - stubbing with SunJSSE");
+
+        String protocol = "TLS";
+        try {
+            if (protocol_version != null) {
+                protocol = protocol_version.jdkAlias();
+            }
+
+            SSLContext jsse = SSLContext.getInstance(protocol, "SunJSSE");
+            return jsse.getServerSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to get SunJSSE provider for " + protocol + ": " + e.getMessage(), e);
+        }
     }
 
     public SSLSocketFactory engineGetSocketFactory() {
-        logger.debug("JSSContextSpi.engineGetSocketFactory() - not implemented");
-        return null;
+        logger.warn("JSSContextSpi.engineGetSocketFactory() - not implemented - stubbing with SunJSSE");
+
+        String protocol = "TLS";
+        try {
+            if (protocol_version != null) {
+                protocol = protocol_version.jdkAlias();
+            }
+
+            SSLContext jsse = SSLContext.getInstance(protocol, "SunJSSE");
+            return jsse.getSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to get SunJSSE provider for " + protocol + ": " + e.getMessage(), e);
+        }
     }
 
     public SSLParameters engineGetSupportedSSLParameters() {
