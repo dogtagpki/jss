@@ -138,11 +138,63 @@ to the initial handshake.
 
 #### Choosing TLS protocol version
 
+There are two ways to choose TLS protocol version. The first is via the Java
+Provider interface, selecting the TLS version directly. The `Mozilla-JSS`
+provider understands the following aliases:
+
+ - `SSL` and `TLS`, enabling any allowed SSL and TLS protocol version,
+ - `TLSv1.1` to enable only TLS version 1.1 by default,
+ - `TLSv1.2` to enable only TLS version 1.2 by default, and
+ - `TLSv1.3` to enable only TLS version 1.3 by default.
+
+Alternatively, the standard `SSLEngine` configuration method of passing
+a list of protocols to `setEnabledProtocols` is also allowed. Note that this
+will override any value passed via the Provider interface. Additionally, due
+to restrictions in NSS, a contiguous range of protocols will be enabled. For
+example, the following call:
+
+```java
+// SSLEngine inst;
+inst.setEnabledProtocols(new String[] { "TLSv1.1", "TLSv1.3" });
+```
+
+will enable TLSv1.1, TLSv1.2, and TLSv1.3.
+
+Alternative methods are available that take JSS standard `SSLVersion` and
+`SSLVersionRange` values as parameters; see the `JSSEngine` javadoc for
+more information.
+
 #### Choosing Cipher Suite
+
+Configuring cipher suites is performed using the standard `SSLEngine`
+configuration method of passing a list of cipher suites to
+`setEnabledCipherSuites`. We filter the list of passed cipher suites to
+only those allowed by local policy. For example:
+
+```java
+// SSLEngine inst;
+inst.setEnabledCipherSuites(new String[] { "TLS_AES_128_GCM_SHA256" });
+```
+
+will enable only a single TLSv1.3 cipher suite.
+
+Alternative methods are available that take JSS standard `SSLCipher`
+values as parameters; see the `JSSEngine` javadoc for more information.
 
 #### Using `JSSParameters`
 
 #### Session Control
+
+The `JSSEngine` lacks many of the session control functions other `SSLEngine`
+implementations might have. In particular, we:
+
+ - Always enable session resumption; this cannot be disabled.
+ - Allow forced expiration of a session as long as the `SSLEngine`'s
+   connection isn't yet closed.
+ - Report accurate creation/expiration/last accessed times.
+
+However, other features of sessions (such as configuring location and size of
+the session cache) aren't yet configurable.
 
 
 ## Design of the `JSSEngine`
