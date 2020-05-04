@@ -51,6 +51,11 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected String hostname;
 
     /**
+     * Certificate alias used by the JSSEngine instance.
+     */
+    protected String certAlias;
+
+    /**
      * Certificate used by this JSSEngine instance.
      *
      * Selected and inferred from the KeyManagers passed, when not passed
@@ -231,6 +236,35 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     }
 
     /**
+     * Get the configuration from the current JSSEngine object as a
+     * JSSParameters object.
+     *
+     * This populates the following values, when set:
+     *  - cipher suites
+     *  - protocols
+     *  - need/want client auth
+     *  - certificate alias
+     *  - peer's hostname
+     *  - ALPN protocols
+     */
+    public JSSParameters getSSLParameters() {
+        JSSParameters ret = new JSSParameters();
+
+        ret.setCipherSuites(getEnabledCipherSuites());
+        ret.setProtocols(getEnabledProtocols());
+        if (getNeedClientAuth()) {
+            ret.setNeedClientAuth(true);
+        } else if (getWantClientAuth()) {
+            ret.setWantClientAuth(true);
+        }
+
+        ret.setAlias(certAlias);
+        ret.setHostname(hostname);
+
+        return ret;
+    }
+
+    /**
      * Set the configuration from the given SSLParameters object onto this
      * JSSEngine.
      *
@@ -333,10 +367,13 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         if (alias == null) {
             // Per calling, semantics, get rid of any existing cert/key we
             // might have.
+            certAlias = null;
             cert = null;
             key = null;
             return;
         }
+
+        certAlias = alias;
 
         if (key_managers == null || key_managers.length == 0) {
             String msg = "Missing or null KeyManagers; refusing to search ";
