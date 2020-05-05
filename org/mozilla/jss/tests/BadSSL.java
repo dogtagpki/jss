@@ -1,11 +1,15 @@
 package org.mozilla.jss.tests;
 
+import java.io.IOException;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManager;
+
 import org.mozilla.jss.CryptoManager;
-
-import org.mozilla.jss.ssl.SSLSocket;
-import org.mozilla.jss.ssl.SSLSocketException;
-
-import org.mozilla.jss.util.NativeErrcodes;
+import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
+import org.mozilla.jss.ssl.javax.JSSSocketFactory;
+import org.mozilla.jss.ssl.javax.JSSSocket;
 
 /**
  * The BadSSL test case maintains an internal mapping from badssl.com
@@ -16,6 +20,14 @@ import org.mozilla.jss.util.NativeErrcodes;
  */
 
 public class BadSSL {
+    private static javax.net.ssl.SSLContext ctx;
+    private static JSSSocketFactory jsf;
+
+    public static KeyManager[] getKMs() throws Exception {
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509");
+        return kmf.getKeyManagers();
+    }
+
     public static void main(String[] args) throws Exception {
         boolean ocsp = false;
 
@@ -35,6 +47,9 @@ public class BadSSL {
             cm.setOCSPPolicy(CryptoManager.OCSPPolicy.LEAF_AND_CHAIN);
         }
 
+        ctx = javax.net.ssl.SSLContext.getInstance("TLS", "Mozilla-JSS");
+        ctx.init(getKMs(), new TrustManager[] { new JSSNativeTrustManager() }, null);
+        jsf = (JSSSocketFactory) ctx.getSocketFactory();
 
         // Test cases which should fail due to various certificate errors.
         testExpired();
@@ -163,14 +178,20 @@ public class BadSSL {
     /* Test case helpers. */
 
     public static void testHelper(String host, int port) throws Exception {
-        testSite(host, port);
+        testSiteOldSSLSocket(host, port);
+        testSiteJavaxSSLSocket(host, port);
         System.out.println("\t...ok");
     }
 
     public static void testHelper(String host, int port, String[] substrs) throws Exception {
+        testHelperOld(host, port, substrs);
+        testHelperJavax(host, port, substrs);
+    }
+
+    public static void testHelperOld(String host, int port, String[] substrs) throws Exception {
         try {
-            testSite(host, port);
-        } catch (SSLSocketException sse) {
+            testSiteOldSSLSocket(host, port);
+        } catch (org.mozilla.jss.ssl.SSLSocketException sse) {
             String actual = sse.getMessage().toLowerCase();
 
             for (String expected : substrs) {
@@ -187,29 +208,43 @@ public class BadSSL {
         throw new RuntimeException("Expected to get an exception, but didn't!");
     }
 
-    public static void testHelper(String host, int port, int[] codes) throws Exception {
+    public static void testHelperJavax(String host, int port, String[] substrs) throws Exception {
         try {
-            testSite(host, port);
-        } catch (SSLSocketException sse) {
-            int actual = sse.getErrcode();
-            for (int expected : codes) {
-                if (actual == expected) {
-                    System.out.println("\t...got expected error code.");
+            testSiteJavaxSSLSocket(host, port);
+        } catch (IOException sse) {
+            String actual = sse.getMessage().toLowerCase();
+
+            for (String expected : substrs) {
+                if (actual.contains(expected.toLowerCase())) {
+                    System.out.println("\t...got expected error message.");
                     return;
                 }
             }
 
-            System.err.println("\tUnexpected error code: " + actual);
+            System.err.println("\tUnexpected error message: " + actual);
             throw sse;
         }
 
         throw new RuntimeException("Expected to get an exception, but didn't!");
     }
 
-    public static void testSite(String host, int port) throws Exception {
+    public static void testSiteOldSSLSocket(String host, int port) throws Exception {
         System.out.println("Testing connection to " + host + ":" + port);
-        SSLSocket sock = new SSLSocket(host, 443);
+        org.mozilla.jss.ssl.SSLSocket sock = new org.mozilla.jss.ssl.SSLSocket(host, 443);
         sock.forceHandshake();
+        sock.shutdownOutput();
+        sock.shutdownInput();
+        sock.close();
+    }
+
+    public static void testSiteJavaxSSLSocket(String host, int port) throws Exception {
+        System.out.println("Testing connection to " + host + ":" + port);
+        JSSSocket sock = (JSSSocket) jsf.createSocket(host, port);
+        sock.setUseClientMode(true);
+        sock.setWantClientAuth(false);
+        sock.setNeedClientAuth(false);
+        sock.setHostname(host);
+        sock.startHandshake();
         sock.shutdownOutput();
         sock.shutdownInput();
         sock.close();
