@@ -56,6 +56,9 @@ import org.slf4j.LoggerFactory;
  *  - nss.cooperate -- whether to cooperate with other parts of the program
  *                     already having initialized NSS (default: false)
  *
+ *  - jss.experimental.sslengine -- whether to enable experimental SSLEngine
+ *                                  support
+ *
  *  - jss.fips -- whether to switch this NSS DB into FIPS mode; allowed values
  *                are ENABLED (to force FIPS mode), DISABLED (to force
  *                non-FIPS mode), or UNCHANGED (default, to infer the value
@@ -132,6 +135,8 @@ public class JSSLoader {
 
         parseOCSPPolicy(config, cm);
         parsePasswords(config, cm);
+
+        parseExperimental(config);
     }
 
     /**
@@ -331,6 +336,16 @@ public class JSSLoader {
         if (password != null && !password.isEmpty()) {
             Password pass_cb = new Password(password.toCharArray());
             cm.setPasswordCallback(pass_cb);
+        }
+    }
+
+    /**
+     * Check for exerpimental flags.
+     */
+    private static void parseExperimental(Properties config) {
+        Boolean sslengine = parseBoolean(config, "jss.experimental.sslengine");
+        if (sslengine != null) {
+            JSSProvider.ENABLE_JSSENGINE = sslengine;
         }
     }
 

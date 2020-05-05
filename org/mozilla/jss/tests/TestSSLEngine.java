@@ -699,6 +699,10 @@ public class TestSSLEngine {
         System.out.println("Initializing CryptoManager...");
         initialize(args);
 
+        if (org.mozilla.jss.JSSProvider.ENABLE_JSSENGINE == false) {
+            return;
+        }
+
         assert(SSLVersion.TLS_1_2.matchesAlias("TLSv1.2"));
 
         System.out.println("Testing provided instance...");
