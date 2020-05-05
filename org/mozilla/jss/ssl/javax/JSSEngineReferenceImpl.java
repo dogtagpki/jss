@@ -1039,7 +1039,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         while (index < max_index) {
             // If we don't have any remaining bytes in this buffer, skip it.
-            if (srcs[index].remaining() <= 0) {
+            if (srcs[index] == null || srcs[index].remaining() <= 0) {
                 index += 1;
                 continue;
             }
