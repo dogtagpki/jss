@@ -15,6 +15,9 @@ if [ "$1" == "--gdb" ]; then
 elif [ "$1" == "--valgrind" ]; then
     shift
     valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="$JAVA_SECURITY_CFG" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+elif [ "$1" == "--perf" ]; then
+    shift
+    perf record -- "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="$JAVA_SECURITY_CFG" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
 else
     "${Java_JAVA_EXECUTABLE}" -classpath "$CLASSPATH" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="$JAVA_SECURITY_CFG" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
 fi
