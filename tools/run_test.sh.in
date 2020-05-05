@@ -6,13 +6,15 @@
 # get used.
 
 export LD_LIBRARY_PATH="${NSS_LIBRARIES}:${CMAKE_BINARY_DIR}:${NSPR_LIBRARIES}"
+export CLASSPATH="${TEST_CLASSPATH}"
+export JAVA_SECURITY_CFG="${CONFIG_OUTPUT_DIR}/java.security"
 
 if [ "$1" == "--gdb" ]; then
     shift
-    gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+    gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "$CLASSPATH" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="$JAVA_SECURITY_CFG" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
 elif [ "$1" == "--valgrind" ]; then
     shift
-    valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+    valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="$JAVA_SECURITY_CFG" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
 else
-    "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="${CONFIG_OUTPUT_DIR}/java.security" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+    "${Java_JAVA_EXECUTABLE}" -classpath "$CLASSPATH" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.security.properties="$JAVA_SECURITY_CFG" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
 fi
