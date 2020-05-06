@@ -16,6 +16,8 @@ import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.ssl.javax.JSSEngine;
 import org.mozilla.jss.ssl.javax.JSSEngineReferenceImpl;
 import org.mozilla.jss.ssl.javax.JSSParameters;
+import org.mozilla.jss.ssl.javax.JSSServerSocketFactory;
+import org.mozilla.jss.ssl.javax.JSSSocketFactory;
 import org.mozilla.jss.ssl.SSLVersion;
 
 public class JSSContextSpi extends SSLContextSpi {
@@ -88,35 +90,23 @@ public class JSSContextSpi extends SSLContextSpi {
     }
 
     public SSLServerSocketFactory engineGetServerSocketFactory() {
-        logger.warn("JSSContextSpi.engineGetServerSocketFactory() - not implemented - stubbing with SunJSSE");
-
         String protocol = "TLS";
-        try {
-            if (protocol_version != null) {
-                protocol = protocol_version.jdkAlias();
-            }
-
-            SSLContext jsse = SSLContext.getInstance(protocol, "SunJSSE");
-            return jsse.getServerSocketFactory();
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to get SunJSSE provider for " + protocol + ": " + e.getMessage(), e);
+        if (protocol_version != null) {
+            protocol = protocol_version.jdkAlias();
         }
+
+        logger.debug("JSSContextSpi.engineGetServerSocketFactory() @ " + protocol);
+        return new JSSServerSocketFactory(protocol, key_manager, trust_managers);
     }
 
     public SSLSocketFactory engineGetSocketFactory() {
-        logger.warn("JSSContextSpi.engineGetSocketFactory() - not implemented - stubbing with SunJSSE");
-
         String protocol = "TLS";
-        try {
-            if (protocol_version != null) {
-                protocol = protocol_version.jdkAlias();
-            }
-
-            SSLContext jsse = SSLContext.getInstance(protocol, "SunJSSE");
-            return jsse.getSocketFactory();
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to get SunJSSE provider for " + protocol + ": " + e.getMessage(), e);
+        if (protocol_version != null) {
+            protocol = protocol_version.jdkAlias();
         }
+
+        logger.debug("JSSContextSpi.engineGetSocketFactory() @ " + protocol);
+        return new JSSSocketFactory(protocol, key_manager, trust_managers);
     }
 
     public SSLParameters engineGetSupportedSSLParameters() {
