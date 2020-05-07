@@ -210,6 +210,6 @@ public class SignatureAlgorithm extends Algorithm {
     public static final SignatureAlgorithm
     RSAPSSSignatureWithSHA512Digest =
         new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
-            "RSAPSSSignatureWithSHA512Digest", null, DigestAlgorithm.SHA384,
+            "RSAPSSSignatureWithSHA512Digest", null, DigestAlgorithm.SHA512,
             OBJECT_IDENTIFIER.PKCS1.subBranch(10));
 }
