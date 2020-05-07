@@ -102,7 +102,7 @@ public class SignatureAlgorithm extends Algorithm {
 
     public static final SignatureAlgorithm
     RSAPSSSignatureWithSHA512Digest = new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE, "RSAPSSSignatureWithSHA512Digest",
-            null, DigestAlgorithm.SHA384, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
+            null, DigestAlgorithm.SHA512, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
 
     /**********************************************************************
      * Raw RSA signing. This algorithm does not do any hashing, it merely
