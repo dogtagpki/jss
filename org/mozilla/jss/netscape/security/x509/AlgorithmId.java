@@ -765,7 +765,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
             pssSpec = new PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
         } else if ("SHA384withRSA/PSS".equals(algName)) {
             pssSpec = new PSSParameterSpec("SHA-384", "MGF1", MGF1ParameterSpec.SHA384, 48, 1);
-        } else if ("SHA384withRSA/PSS".equals(algName)) {
+        } else if ("SHA512withRSA/PSS".equals(algName)) {
             pssSpec = new PSSParameterSpec("SHA-512", "MGF1", MGF1ParameterSpec.SHA512, 64, 1);
         } else {
             throw new IllegalArgumentException("Unsupported algorithm: " + algName);
