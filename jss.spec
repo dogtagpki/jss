@@ -148,7 +148,8 @@ cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 %files
 
 %defattr(-,root,root,-)
-%doc jss.html MPL-1.1.txt gpl.txt lgpl.txt
+%doc jss.html
+%license MPL-1.1.txt gpl.txt lgpl.txt
 %{_libdir}/*
 %{_jnidir}/*
 
