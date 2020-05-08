@@ -344,35 +344,66 @@ public class JSSSocketChannel extends SocketChannel {
         // to confirm the peer got the message. Otherwise, only a single write
         // is necessary to send our acknowledgement of the peer's alert.
 
-        synchronized (this) {
-            // Bypass read check.
-            inboundClosed = false;
-            outboundClosed = false;
+        try {
+            synchronized (this) {
+                // unwrap() triggers a call to PR_Read(), which in turn will
+                // execute the received alert callback. However, PR_Read is
+                // effectively a no-op with an empty buffer, resulting in the
+                // callback never triggering. Use a single byte buffer instead,
+                // discarding any data because we're closing the channel. This
+                // should ensure we always get a callback.
+                ByteBuffer read_one = ByteBuffer.allocate(1);
 
-            read(empty);
-            engine.closeOutbound();
-            write(empty);
-            read(empty);
-            engine.closeInbound();
 
-            outboundClosed = true;
-            inboundClosed = true;
-        }
+                // Bypass read check.
+                inboundClosed = false;
+                read(read_one);
 
-        if (parent == null) {
-            if (autoClose) {
-                parentSocket.shutdownInput();
-                parentSocket.shutdownOutput();
-                parentSocket.close();
+                outboundClosed = false;
+                if (!outboundClosed) {
+                    shutdownOutput();
+                }
+
+                int times = 0;
+                while (!engine.isInboundDone()) {
+                    read_one.clear();
+                    read(read_one);
+
+                    times += 1;
+                    if (times > 50) {
+                        break;
+                    }
+
+                    try {
+                        Thread.sleep(times * 10);
+                    } catch (Exception e) {}
+                }
+
+                if (!engine.isInboundDone()) {
+                    String msg = "Premature close of SSLSocket: peer didn't ";
+                    msg += "confirm CLOSE_NOTIFY was received.";
+                    throw new IOException(msg);
+                }
+
+                outboundClosed = true;
+                inboundClosed = true;
+            }
+        } finally {
+            if (parent == null) {
+                if (autoClose) {
+                    parentSocket.shutdownInput();
+                    parentSocket.shutdownOutput();
+                    parentSocket.close();
+                }
+
+                return;
             }
 
-            return;
-        }
-
-        if (autoClose) {
-            parent.shutdownInput();
-            parent.shutdownOutput();
-            parent.close();
+            if (autoClose) {
+                parent.shutdownInput();
+                parent.shutdownOutput();
+                parent.close();
+            }
         }
     }
 
@@ -466,6 +497,7 @@ public class JSSSocketChannel extends SocketChannel {
 
     public JSSSocketChannel shutdownOutput() throws IOException {
         engine.closeOutbound();
+        write(empty);
         outboundClosed = true;
 
         // Hold parent socket/channel open until we've sent CLOSE_NOTIFY
