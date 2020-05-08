@@ -15,10 +15,25 @@ import org.mozilla.jss.provider.javax.crypto.*;
 
 public class TestSSLEngine {
     public static boolean debug = false;
+    public static ByteBuffer empty = ByteBuffer.allocate(0);
+
+    public static int bufferCount = 10;
+    public static ByteBuffer[] readQueue;
+    public static ByteBuffer[] writeQueue;
+
+    public static ByteBuffer CMCs = ByteBuffer.wrap("Cooking MCs".getBytes());
+    public static ByteBuffer LargeCMCs;
+
+    public static ByteBuffer LAPOB = ByteBuffer.wrap("like a pound of bacon.".getBytes());
+    public static ByteBuffer LargeLAPOB;
+
+    public static ByteBuffer LargeReadBuffer;
+    public static ByteBuffer LargeWriteBuffer;
 
     public static void initialize(String[] args) throws Exception {
         CryptoManager cm = CryptoManager.getInstance();
         cm.setPasswordCallback(new FilePasswordCallback(args[1]));
+        sizeBuffers();
     }
 
     public static void testProvided() throws Exception {
@@ -66,12 +81,75 @@ public class TestSSLEngine {
         return tms;
     }
 
+    public static void sizeBuffers() throws Exception {
+        SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
+        ctx.init(getKMs(), getTMs(), null);
+        SSLEngine jss_dummy = ctx.createSSLEngine();
+
+        SSLContext jsse_context = SSLContext.getInstance("TLS", "SunJSSE");
+        jsse_context.init(getKMs(), getTMs(), null);
+        SSLEngine jsse_dummy = jsse_context.createSSLEngine();
+
+        int buffer_size = Math.max(
+            jss_dummy.getSession().getApplicationBufferSize(),
+            jsse_dummy.getSession().getApplicationBufferSize()
+        );
+
+        readQueue = new ByteBuffer[bufferCount];
+        writeQueue = new ByteBuffer[bufferCount];
+
+        for (int i = 0; i < bufferCount; i ++) {
+            readQueue[i] = ByteBuffer.allocate(buffer_size);
+            writeQueue[i] = ByteBuffer.allocate(buffer_size);
+        }
+
+        String clientMessage = "Cooking MCs";
+        for (int i = 1; i < 10; i++) { clientMessage += clientMessage; }
+        LargeCMCs = ByteBuffer.wrap(clientMessage.getBytes());
+
+        String serverMessage = "like a pound of bacon.";
+        for (int i = 1; i < 10; i++) { serverMessage += serverMessage; }
+        LargeLAPOB = ByteBuffer.wrap(serverMessage.getBytes());
+
+        int large_size = 2 * Math.max(
+            clientMessage.length(),
+            serverMessage.length()
+        );
+
+        LargeReadBuffer = ByteBuffer.allocate(large_size);
+        LargeWriteBuffer = ByteBuffer.allocate(large_size);
+    }
+
+    public static void resetBuffers() throws Exception {
+        for (int i = 0; i < bufferCount; i ++) {
+            if (readQueue[i].remaining() != readQueue[i].capacity()) {
+                readQueue[i].clear();
+            }
+
+            if (writeQueue[i].remaining() != writeQueue[i].capacity()) {
+                writeQueue[i].clear();
+            }
+        }
+
+        CMCs.position(0);
+        LargeCMCs.position(0);
+
+        LAPOB.position(0);
+        LargeLAPOB.position(0);
+
+        if (LargeReadBuffer.remaining() != LargeReadBuffer.capacity()) {
+            LargeReadBuffer.clear();
+        }
+
+        if (LargeWriteBuffer.remaining() != LargeWriteBuffer.capacity()) {
+            LargeWriteBuffer.clear();
+        }
+    }
+
     public static void testHandshake(SSLEngine client_eng, SSLEngine server_eng, boolean allowFirst) throws Exception {
         // Ensure we exit in case of a bug... :-)
         int counter = 0;
         int max_steps = 20;
-        int max_data = Math.max(client_eng.getSession().getApplicationBufferSize(), server_eng.getSession().getApplicationBufferSize());
-        max_data = Math.max(max_data, 1 << 20);
 
         boolean client_done = false;
         boolean server_done = false;
@@ -81,6 +159,15 @@ public class TestSSLEngine {
 
         ArrayList<ByteBuffer> c2s_buffers = new ArrayList<ByteBuffer>();
         ArrayList<ByteBuffer> s2c_buffers = new ArrayList<ByteBuffer>();
+
+        // We're allocating buffers from the server's perspective. Client's
+        // wrap buffer goes into a buffer from the readQueue, which gets
+        // unwrapped ("read") by the server. Server's unwrap goes into a buffer
+        // from the writeQueue, which gets wrapped ("written") by the server.
+        resetBuffers();
+        int read_buffer = 0;
+        int write_buffer = 0;
+
         for (counter = 0; counter < max_steps; counter++) {
             SSLEngineResult.HandshakeStatus client_state = client_eng.getHandshakeStatus();
             SSLEngineResult.HandshakeStatus server_state = server_eng.getHandshakeStatus();
@@ -90,8 +177,9 @@ public class TestSSLEngine {
             System.err.println("\n\n=====BEGIN CLIENT=====");
 
             if (!client_done && client_state == SSLEngineResult.HandshakeStatus.NEED_WRAP) {
-                ByteBuffer src = ByteBuffer.allocate(0);
-                ByteBuffer dst = ByteBuffer.allocate(max_data);
+                ByteBuffer src = empty;
+                ByteBuffer dst = readQueue[read_buffer];
+                read_buffer = (read_buffer + 1) % bufferCount;
 
                 SSLEngineResult r = client_eng.wrap(src, dst);
                 if (r.getStatus() != SSLEngineResult.Status.OK) {
@@ -104,11 +192,16 @@ public class TestSSLEngine {
                     // to check if there's data we should unwrap on the client
                     // side. There is, so add it to the candidates.
                     c2s_buffers.add(dst);
+                } else {
+                    dst.clear();
+                    read_buffer = (read_buffer + read_buffer - 1) % bufferCount;
                 }
             } else if (!client_done && client_state == SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
                 while (s2c_buffers.size() > 0) {
                     ByteBuffer src = s2c_buffers.remove(0);
-                    ByteBuffer dst = ByteBuffer.allocate(max_data);
+                    ByteBuffer dst = writeQueue[write_buffer];
+                    // Borrowing a buffer temporarily and then clearing it
+                    // means we don't need to increment our counter.
 
                     SSLEngineResult r = client_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
@@ -117,6 +210,7 @@ public class TestSSLEngine {
 
                     dst.flip();
                     assert(!dst.hasRemaining());
+                    dst.clear();
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
                         // back on the front of the stack.
@@ -125,8 +219,14 @@ public class TestSSLEngine {
                         // After only partially reading a buffer, it is
                         // unlikely that we'll be able to continue, so break.
                         break;
-                    } else if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
-                        break;
+                    } else {
+                        // Reset our buffer so when it gets reused it'll have
+                        // space free and no old contents.
+                        src.clear();
+
+                        if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
+                            break;
+                        }
                     }
                 }
             } else if ((counter > 1 || allowFirst) && !client_done && (client_state == SSLEngineResult.HandshakeStatus.FINISHED || client_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
@@ -148,7 +248,9 @@ public class TestSSLEngine {
                 System.err.println("Client: processing remaining buffers.");
                 while (s2c_buffers.size() > 0) {
                     ByteBuffer src = s2c_buffers.remove(0);
-                    ByteBuffer dst = ByteBuffer.allocate(max_data);
+                    ByteBuffer dst = writeQueue[write_buffer];
+                    // Borrowing a buffer temporarily and then clearing it
+                    // means we don't need to increment our counter.
 
                     SSLEngineResult r = client_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
@@ -157,6 +259,7 @@ public class TestSSLEngine {
 
                     dst.flip();
                     assert(!dst.hasRemaining());
+                    dst.clear();
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
                         // back on the front of the stack.
@@ -165,8 +268,11 @@ public class TestSSLEngine {
                         // After only partially reading a buffer, it is
                         // unlikely that we'll be able to continue, so break.
                         break;
-                    } else if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
-                        break;
+                    } else {
+                        src.clear();
+                        if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
+                            break;
+                        }
                     }
                 }
             }
@@ -175,8 +281,9 @@ public class TestSSLEngine {
             System.err.println("\n\n=====BEGIN SERVER=====");
 
             if (!server_done && server_state == SSLEngineResult.HandshakeStatus.NEED_WRAP) {
-                ByteBuffer src = ByteBuffer.allocate(0);
-                ByteBuffer dst = ByteBuffer.allocate(max_data);
+                ByteBuffer src = empty;
+                ByteBuffer dst = writeQueue[write_buffer];
+                write_buffer = (write_buffer + 1) % bufferCount;
 
                 SSLEngineResult r = server_eng.wrap(src, dst);
                 if (r.getStatus() != SSLEngineResult.Status.OK) {
@@ -189,11 +296,16 @@ public class TestSSLEngine {
                     // to check if there's data we should unwrap on the client
                     // side. There is, so add it to the candidates.
                     s2c_buffers.add(dst);
+                } else {
+                    dst.clear();
+                    write_buffer = (write_buffer + write_buffer - 1) % bufferCount;
                 }
             } else if (!server_done && server_state == SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
                 while (c2s_buffers.size() > 0) {
                     ByteBuffer src = c2s_buffers.remove(0);
-                    ByteBuffer dst = ByteBuffer.allocate(max_data);
+                    ByteBuffer dst = readQueue[read_buffer];
+                    // Borrowing a buffer temporarily and then clearing it
+                    // means we don't need to increment our counter.
 
                     SSLEngineResult r = server_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
@@ -202,6 +314,7 @@ public class TestSSLEngine {
 
                     dst.flip();
                     assert(!dst.hasRemaining());
+                    dst.clear();
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
                         // back on the front of the stack.
@@ -210,8 +323,11 @@ public class TestSSLEngine {
                         // After only partially reading a buffer, it is
                         // unlikely that we'll be able to continue, so break.
                         break;
-                    } else if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
-                        break;
+                    } else {
+                        src.clear();
+                        if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
+                            break;
+                        }
                     }
                 }
             } else if ((counter > 1 || allowFirst) && !server_done && (server_state == SSLEngineResult.HandshakeStatus.FINISHED || server_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
@@ -233,7 +349,9 @@ public class TestSSLEngine {
                 System.err.println("Server: processing remaining buffers.");
                 while (c2s_buffers.size() > 0) {
                     ByteBuffer src = c2s_buffers.remove(0);
-                    ByteBuffer dst = ByteBuffer.allocate(max_data);;
+                    ByteBuffer dst = readQueue[read_buffer];
+                    // Borrowing a buffer temporarily and then clearing it
+                    // means we don't need to increment our counter.
 
                     SSLEngineResult r = server_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
@@ -242,6 +360,7 @@ public class TestSSLEngine {
 
                     dst.flip();
                     assert(!dst.hasRemaining());
+                    dst.clear();
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
                         // back on the front of the stack.
@@ -250,8 +369,11 @@ public class TestSSLEngine {
                         // After only partially reading a buffer, it is
                         // unlikely that we'll be able to continue, so break.
                         break;
-                    } else if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
-                        break;
+                    } else {
+                        src.clear();
+                        if (r.getHandshakeStatus() != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
+                            break;
+                        }
                     }
                 }
             }
@@ -352,36 +474,31 @@ public class TestSSLEngine {
         assert(client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
         assert(server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
 
-        int max_data = Math.max(client_eng.getSession().getApplicationBufferSize(), server_eng.getSession().getApplicationBufferSize());
-        max_data = Math.max(max_data, 1 << 25);
-
-
         System.err.println("Testing post-handshake transfer...");
 
-        ByteBuffer client_msg = ByteBuffer.wrap("Cooking MCs".getBytes());
-        ByteBuffer c2s_buffer = ByteBuffer.allocate(max_data);
-        ByteBuffer server_unwrap = ByteBuffer.allocate(max_data);
+        resetBuffers();
+
+        ByteBuffer client_msg = CMCs;
+        ByteBuffer c2s_buffer = readQueue[0];
+        ByteBuffer server_unwrap = writeQueue[0];
         sendTestData(client_eng, server_eng, client_msg, c2s_buffer, server_unwrap);
 
-        ByteBuffer server_msg = ByteBuffer.wrap("like a pound of bacon.".getBytes());
-        ByteBuffer s2c_buffer = ByteBuffer.allocate(max_data);
-        ByteBuffer client_unwrap = ByteBuffer.allocate(max_data);
+        ByteBuffer server_msg = LAPOB;
+        ByteBuffer s2c_buffer = writeQueue[1];
+        ByteBuffer client_unwrap = readQueue[1];
         sendTestData(server_eng, client_eng, server_msg, s2c_buffer, client_unwrap);
 
-        String clientMessage = "Cooking MCs";
-        for (int i = 1; i < 10; i++) { clientMessage += clientMessage; }
-
-        client_msg = ByteBuffer.wrap(clientMessage.getBytes());
-        c2s_buffer = ByteBuffer.allocate(2*clientMessage.length());
-        server_unwrap = ByteBuffer.allocate(2*clientMessage.length());
+        client_msg = LargeCMCs;
+        c2s_buffer = LargeWriteBuffer;
+        server_unwrap = LargeReadBuffer;
         sendTestData(client_eng, server_eng, client_msg, c2s_buffer, server_unwrap);
 
-        String serverMessage = "like a pound of bacon.";
-        for (int i = 1; i < 10; i++) { serverMessage += serverMessage; }
+        LargeReadBuffer.clear();
+        LargeWriteBuffer.clear();
 
-        server_msg = ByteBuffer.wrap(serverMessage.getBytes());
-        s2c_buffer = ByteBuffer.allocate(2*serverMessage.length());
-        client_unwrap = ByteBuffer.allocate(2*serverMessage.length());
+        server_msg = LargeLAPOB;
+        s2c_buffer = LargeWriteBuffer;
+        client_unwrap = LargeReadBuffer;
         sendTestData(server_eng, client_eng, server_msg, s2c_buffer, client_unwrap);
 
         System.err.println("Done testing post-handshake transfer! Success!");
@@ -390,12 +507,16 @@ public class TestSSLEngine {
     public static void sendCloseData(SSLEngine send, SSLEngine recv) throws Exception {
         int counter = 0;
         int max_tries = 20;
-        int max_data = Math.max(send.getSession().getApplicationBufferSize(), recv.getSession().getApplicationBufferSize());
-        max_data = Math.max(max_data, 1 << 20);
 
-        ByteBuffer src = ByteBuffer.allocate(max_data);
-        ByteBuffer transfer = ByteBuffer.allocate(max_data);
-        ByteBuffer read = ByteBuffer.allocate(max_data);
+        resetBuffers();
+
+        ByteBuffer src = readQueue[0];
+        ByteBuffer transfer = writeQueue[0];
+        ByteBuffer read = readQueue[1];
+
+        System.out.println(src.capacity() + "/" + src.remaining() + "@" + src.position());
+        System.out.println(transfer.capacity() + "/" + transfer.remaining() + "@" + transfer.position());
+        System.out.println(read.capacity() + "/" + read.remaining() + "@" + read.position());
 
         SSLEngineResult r = null;
 
@@ -407,6 +528,8 @@ public class TestSSLEngine {
                 throw new RuntimeException("Unknown result from send.wrap(): " + r.getStatus());
             } else if (transfer.hasRemaining()) {
                 break;
+            } else {
+                transfer.flip();
             }
         }
 
