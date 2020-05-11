@@ -41,12 +41,9 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
 
     public JSSSocketChannel accept() throws IOException {
         if (parent == null) {
-            // Have to be in blocking mode. Call up to sslSocket to handle
-            // the accept. Note that JSSSocket always has a SocketChannel even
-            // when the underlying socket doesn't so the call to getChannel()
-            // will be non-null.
-            JSSSocket acceptedSocket = sslSocket.accept();
-            return acceptedSocket.getInternalChannel();
+            String msg = "Unable to accept() on a JSSServerSocketChannel ";
+            msg += "which wraps a blocking ServerSocket lacking a channel.";
+            throw new IOException(msg);
         }
 
         SocketChannel acceptedChannel = parent.accept();
