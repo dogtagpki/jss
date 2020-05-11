@@ -197,6 +197,12 @@ public final class JSSProvider extends java.security.Provider {
         /////////////////////////////////////////////////////////////
         put("SecureRandom.pkcs11prng",
             "org.mozilla.jss.provider.java.security.JSSSecureRandomSpi");
+        put("Alg.Alias.SecureRandom.sha1prng", "pkcs11prng");
+        put("Alg.Alias.SecureRandom.pkcs11", "pkcs11prng");
+        put("Alg.Alias.SecureRandom.nativeprng", "pkcs11prng");
+        put("Alg.Alias.SecureRandom.nativeprngblocking", "pkcs11prng");
+        put("Alg.Alias.SecureRandom.nativeprngnonblocking", "pkcs11prng");
+        put("Alg.Alias.SecureRandom.windows-prng", "pkcs11prng");
 
         /////////////////////////////////////////////////////////////
         // KeyPairGenerator
