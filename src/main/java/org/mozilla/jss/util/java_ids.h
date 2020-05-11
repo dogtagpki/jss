@@ -443,6 +443,13 @@ PR_BEGIN_EXTERN_C
  */
 #define SSL_PRELIMINARY_CHANNEL_INFO_CLASS_NAME "org/mozilla/jss/nss/SSLPreliminaryChannelInfo"
 #define SSL_PRELIMINARY_CHANNEL_INFO_CONSTRUCTOR_SIG "(JIIZJZIZZII)V"
+#define SECURITY_STATUS_CONSTRUCTOR_SIG "(I[BII[B[B)V"
+
+/*
+ * ByteBufferProxy
+ */
+#define BYTE_BUFFER_PROXY_CLASS_NAME "org/mozilla/jss/nss/ByteBufferProxy"
+#define BYTE_BUFFER_PROXY_CONSTRUCTOR_SIG "([B)V"
 
 PR_END_EXTERN_C
 
