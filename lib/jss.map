@@ -489,6 +489,7 @@ Java_org_mozilla_jss_nss_JByteBuffer_ClearBufferNative;
 Java_org_mozilla_jss_nss_JByteBuffer_SetBufferNative;
 Java_org_mozilla_jss_nss_JByteBuffer_Capacity;
 Java_org_mozilla_jss_nss_JByteBuffer_FreeNative;
+Java_org_mozilla_jss_nss_PR_NewByteBufferPRFD;
     local:
         *;
 };

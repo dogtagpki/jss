@@ -7,7 +7,9 @@
 #include "jss_exceptions.h"
 #include "PRFDProxy.h"
 #include "BufferProxy.h"
+#include "ByteBufferProxy.h"
 #include "BufferPRFD.h"
+#include "ByteBufferPRFD.h"
 
 #include "_jni/org_mozilla_jss_nss_PR.h"
 
@@ -112,6 +114,44 @@ Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd, jboolea
     }
 
     return ret;
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_nss_PR_NewByteBufferPRFD(JNIEnv *env, jclass clazz,
+    jobject read_buf, jobject write_buf, jbyteArray peer_info)
+{
+    j_bytebuffer *real_read_buf = NULL;
+    j_bytebuffer *real_write_buf = NULL;
+    uint8_t *real_peer_info = NULL;
+    size_t peer_info_len = 0;
+
+    PRFileDesc *buf_prfd;
+    jobject result = NULL;
+
+    PR_ASSERT(env != NULL && read_buf != NULL && write_buf != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_unwrapJByteBuffer(env, read_buf, &real_read_buf) != PR_SUCCESS) {
+        return result;
+    }
+
+    if (JSS_PR_unwrapJByteBuffer(env, write_buf, &real_write_buf) != PR_SUCCESS) {
+        return result;
+    }
+
+    if (peer_info != NULL && !JSS_FromByteArray(env, peer_info, &real_peer_info, &peer_info_len)) {
+        return result;
+    }
+
+    buf_prfd = newByteBufferPRFileDesc(real_read_buf, real_write_buf,
+        real_peer_info, peer_info_len);
+    if (buf_prfd == NULL) {
+        return result;
+    }
+
+    result = JSS_PR_wrapPRFDProxy(env, &buf_prfd);
+    free(real_peer_info);
+    return result;
 }
 
 JNIEXPORT int JNICALL
