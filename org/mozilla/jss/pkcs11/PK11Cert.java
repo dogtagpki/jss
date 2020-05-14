@@ -37,6 +37,27 @@ public class PK11Cert
         return nickname;
     }
 
+    public int hashCode() {
+        try {
+            return Arrays.hashCode(getEncoded());
+        } catch (CertificateEncodingException cee) {
+            throw new RuntimeException(cee.getMessage(), cee);
+        }
+    }
+
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof PK11Cert)) {
+            return false;
+        }
+
+        PK11Cert p_other = (PK11Cert) other;
+        try {
+            return Arrays.equals(getEncoded(), p_other.getEncoded());
+        } catch (CertificateEncodingException cee) {
+            throw new RuntimeException(cee.getMessage(), cee);
+        }
+    }
+
     /**
      * A class that implements Principal with a String.
      */
