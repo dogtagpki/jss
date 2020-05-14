@@ -94,24 +94,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: constructor(" + peerHost + ", " + peerPort + ", " + localCert + ", " + localKey + ")");
     }
 
-    private String errorText(int error) {
-        // Convert the given error into a pretty string representation with
-        // as much information as is currently available.
-
-        String error_name = PR.ErrorToName(error);
-        String error_text = PR.GetErrorText();
-
-        if (error == 0) {
-            return "NO ERROR";
-        } else if (error_name.isEmpty()) {
-            return "UNKNOWN (" + error + ")";
-        } else if (error_text.isEmpty()) {
-            return error_name + " (" + error + ")";
-        } else {
-            return error_name + " (" + error + "): " + error_text;
-        }
-    }
-
     private void debug(String msg) {
         logger.debug(prefix + msg);
     }
@@ -202,8 +184,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new RuntimeException("JSSEngine.init(): Error creating buffer-backed PRFileDesc.");
         }
 
+        SSLFDProxy model = null;
+        if (as_server) {
+            model = getServerTemplate(cert, key);
+        }
+
         // Initialize ssl_fd from the model Buffer-backed PRFileDesc.
-        ssl_fd = SSL.ImportFD(null, fd);
+        ssl_fd = SSL.ImportFD(model, fd);
         closed_fd = false;
 
         // Turn on SSL Alert Logging for the ssl_fd object.
@@ -245,11 +232,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine.initServer(): " + cert);
         debug("JSSEngine.initServer(): " + key);
 
-        // Configure SSL server with the given certificate and its private
-        // key.
-        if (SSL.ConfigServerCert(ssl_fd, cert, key) == SSL.SECFailure) {
-            throw new RuntimeException("Unable to initialize server with cert and key: " + errorText(PR.GetError()));
-        }
         session.setLocalCertificates(new PK11Cert[]{ cert } );
 
         // Create a small session cache.
