@@ -9702,6 +9702,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X509Key.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X509Key.html" title="class in org.mozilla.jss.netscape.security.x509">X509Key</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Cert.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Cert.StringPrincipal.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cert.StringPrincipal.html" title="class in org.mozilla.jss.pkcs11">PK11Cert.StringPrincipal</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Token.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Token.html" title="class in org.mozilla.jss.pkcs11">PK11Token</a></dt>
@@ -9742,6 +9744,10 @@
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/CertException.html#err_INVALID_VERSION">err_INVALID_VERSION</a></span> - Static variable in exception org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/CertException.html" title="class in org.mozilla.jss.netscape.security.x509">CertException</a></dt>
 <dd>
 <div class="block">Indicates a problem with the certificate version</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#errorText-int-">errorText(int)</a></span> - Static method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
+<dd>
+<div class="block">Gets the error text from the NSPR layer</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/PR.html#ErrorToName-int-">ErrorToName(int)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/PR.html" title="class in org.mozilla.jss.nss">PR</a></dt>
 <dd>
@@ -13914,6 +13920,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html#getServerAliases-java.lang.String-java.security.Principal:A-">getServerAliases(String, Principal[])</a></span> - Method in class org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSKeyManager</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#getServerTemplate-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">getServerTemplate(PK11Cert, PK11PrivKey)</a></span> - Static method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
+<dd>
+<div class="block">Returns the templated server certificate, if one exists.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/extensions/PresenceServerExtension.html#getServiceLevel--">getServiceLevel()</a></span> - Method in class org.mozilla.jss.netscape.security.extensions.<a href="org/mozilla/jss/netscape/security/extensions/PresenceServerExtension.html" title="class in org.mozilla.jss.netscape.security.extensions">PresenceServerExtension</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#getSession--">getSession()</a></span> - Method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
@@ -15558,6 +15568,8 @@
 <dd>
 <div class="block">Calculates a hash code value for the object.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Cert.html#hashCode--">hashCode()</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Cert.StringPrincipal.html#hashCode--">hashCode()</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Cert.StringPrincipal.html" title="class in org.mozilla.jss.pkcs11">PK11Cert.StringPrincipal</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/util/NativeProxy.html#hashCode--">hashCode()</a></span> - Method in class org.mozilla.jss.util.<a href="org/mozilla/jss/util/NativeProxy.html" title="class in org.mozilla.jss.util">NativeProxy</a></dt>
@@ -21890,6 +21902,11 @@ a symmetric key.</div>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/SerialNumber.html#SerialNumber-java.io.InputStream-">SerialNumber(InputStream)</a></span> - Constructor for class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/SerialNumber.html" title="class in org.mozilla.jss.netscape.security.x509">SerialNumber</a></dt>
 <dd>
 <div class="block">Create the object, decoding the values from the passed stream.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#serverTemplates">serverTemplates</a></span> - Static variable in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
+<dd>
+<div class="block">Set of cached server sockets based on the PK11Cert they were
+ initialized with.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#session">session</a></span> - Variable in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
 <dd>

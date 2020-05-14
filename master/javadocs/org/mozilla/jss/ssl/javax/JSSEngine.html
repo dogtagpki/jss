@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":6,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":6,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":9,"i18":9,"i19":6,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":6};
+var methods = {"i0":10,"i1":6,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":9,"i9":10,"i10":10,"i11":10,"i12":6,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":9,"i20":9,"i21":6,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -248,26 +248,33 @@ extends javax.net.ssl.SSLEngine</pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected static java.util.HashMap&lt;<a href="../../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>,<a href="../../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#serverTemplates">serverTemplates</a></span></code>
+<div class="block">Set of cached server sockets based on the PK11Cert they were
+ initialized with.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html" title="class in org.mozilla.jss.ssl.javax">JSSSession</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#session">session</a></span></code>
 <div class="block">A JSSSession extends the SSLSession, providing useful information not
  otherwise contained in the SSLSession, but exposed by NSS.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#ssl_fd">ssl_fd</a></span></code>
 <div class="block">Internal SSLFDProxy instance; useful for JSSSession support and any
  custom extensions the developer wishes to support.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected javax.net.ssl.X509TrustManager[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#trust_managers">trust_managers</a></span></code>
 <div class="block">A list of all TrustManagers available to this JSSEngine instance.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#want_client_auth">want_client_auth</a></span></code>
 <div class="block">Whether or not we should attempt to handshake with client
@@ -341,128 +348,141 @@ extends javax.net.ssl.SSLEngine</pre>
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>protected static java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#errorText-int-">errorText</a></span>(int&nbsp;error)</code>
+<div class="block">Gets the error text from the NSPR layer</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.util.HashMap&lt;java.lang.Integer,java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getDefaultConfiguration--">getDefaultConfiguration</a></span>()</code>
 <div class="block">Gets the default configuration.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnabledCipherSuites--">getEnabledCipherSuites</a></span>()</code>
 <div class="block">Lists cipher suites currently enabled on this JSSEngine instance.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnabledProtocols--">getEnabledProtocols</a></span>()</code>
 <div class="block">Gets the list of enabled SSL protocol versions on this particular
  JSSEngine instance, as a list of JCA-standardized strings.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getEnableSessionCreation--">getEnableSessionCreation</a></span>()</code>
 <div class="block">Whether or not new sessions can be created by this SSLEngine instance.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getNeedClientAuth--">getNeedClientAuth</a></span>()</code>
 <div class="block">Query whether or not we must have client authentication for the TLS
  handshake to succeed.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>protected static <a href="../../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getServerTemplate-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">getServerTemplate</a></span>(<a href="../../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
+                 <a href="../../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key)</code>
+<div class="block">Returns the templated server certificate, if one exists.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSSession.html" title="class in org.mozilla.jss.ssl.javax">JSSSession</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSession--">getSession</a></span>()</code>
 <div class="block">Gets the JSSSession object which reflects the status of this
  JSS Engine's session.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSSLFDProxy--">getSSLFDProxy</a></span>()</code>
 <div class="block">Get the internal SSLFDProxy object; this should be preferred to
  directly accessing ssl_fd.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/mozilla/jss/ssl/javax/JSSParameters.html" title="class in org.mozilla.jss.ssl.javax">JSSParameters</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSSLParameters--">getSSLParameters</a></span>()</code>
 <div class="block">Get the configuration from the current JSSEngine object as a
  JSSParameters object.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>abstract <a href="../../../../../org/mozilla/jss/nss/SecurityStatusResult.html" title="class in org.mozilla.jss.nss">SecurityStatusResult</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getStatus--">getStatus</a></span>()</code>
 <div class="block">Gets the current security status of this JSSEngine instance.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSupportedCipherSuites--">getSupportedCipherSuites</a></span>()</code>
 <div class="block">Lists all cipher suites supported by JSS/NSS.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getSupportedProtocols--">getSupportedProtocols</a></span>()</code>
 <div class="block">Gets the list of SSL protocols supported, as a list of JCA-standardized
  strings.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getUseClientMode--">getUseClientMode</a></span>()</code>
 <div class="block">Query whether this JSSEngine is a client (true) or a server (false).</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#getWantClientAuth--">getWantClientAuth</a></span>()</code>
 <div class="block">Query whether or not we request client authentication.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#isInboundDone--">isInboundDone</a></span>()</code>
 <div class="block">Query whether or not the inbound side of this connection is closed.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#isOutboundDone--">isOutboundDone</a></span>()</code>
 <div class="block">Query whether or not the outbound side of this connection is closed.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#queryEnabledCipherSuites--">queryEnabledCipherSuites</a></span>()</code>
 <div class="block">Queries the list of cipher suites enabled by default, if a
  corresponding setEnabledCIpherSuites call hasn't yet been made.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#queryEnabledProtocols--">queryEnabledProtocols</a></span>()</code>
 <div class="block">Queries the list of protocols enabled by default.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#reconfigureClientAuth--">reconfigureClientAuth</a></span>()</code>
 <div class="block">Implementation-specific handler to handle reconfiguration of client
  authentication after the handshake has completed.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#removeConfiguration-int-">removeConfiguration</a></span>(int&nbsp;key)</code>
 <div class="block">Removes the given key from the configuration.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setCertFromAlias-java.lang.String-">setCertFromAlias</a></span>(java.lang.String&nbsp;alias)</code>
 <div class="block">Choose a certificate to give to the peer from the specified alias,
@@ -470,33 +490,33 @@ extends javax.net.ssl.SSLEngine</pre>
  a JSSKeyManager.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setConfiguration-java.util.HashMap-">setConfiguration</a></span>(java.util.HashMap&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;config)</code>
 <div class="block">Sets the configuration, replacing all current values.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledCipherSuites-org.mozilla.jss.ssl.SSLCipher:A-">setEnabledCipherSuites</a></span>(<a href="../../../../../org/mozilla/jss/ssl/SSLCipher.html" title="enum in org.mozilla.jss.ssl">SSLCipher</a>[]&nbsp;suites)</code>
 <div class="block">Sets the list of enabled cipher suites from a a list of SSLCipher enum
  instances.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledCipherSuites-java.lang.String:A-">setEnabledCipherSuites</a></span>(java.lang.String[]&nbsp;suites)</code>
 <div class="block">Sets the list of enabled cipher suites from a list of JCA-approved
  String names.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-org.mozilla.jss.ssl.SSLVersionRange-">setEnabledProtocols</a></span>(<a href="../../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;vrange)</code>
 <div class="block">Sets the range of enabled SSL Protocols from a SSLVersionRange object.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-org.mozilla.jss.ssl.SSLVersion-org.mozilla.jss.ssl.SSLVersion-">setEnabledProtocols</a></span>(<a href="../../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>&nbsp;min,
                    <a href="../../../../../org/mozilla/jss/ssl/SSLVersion.html" title="enum in org.mozilla.jss.ssl">SSLVersion</a>&nbsp;max)</code>
@@ -504,40 +524,40 @@ extends javax.net.ssl.SSLEngine</pre>
  SSLVersion value.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnabledProtocols-java.lang.String:A-">setEnabledProtocols</a></span>(java.lang.String[]&nbsp;protocols)</code>
 <div class="block">Set the range of SSL protocols enabled by this SSLEngine instance, from
  a list of JCA-standardized protocol String names.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setEnableSessionCreation-boolean-">setEnableSessionCreation</a></span>(boolean&nbsp;flag)</code>
 <div class="block">Whether or not to enable this SSLEngine instance to create new
  sessions.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setHostname-java.lang.String-">setHostname</a></span>(java.lang.String&nbsp;name)</code>
 <div class="block">Set the hostname used to validate the peer's certificate.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyManager-javax.net.ssl.X509KeyManager-">setKeyManager</a></span>(javax.net.ssl.X509KeyManager&nbsp;km)</code>
 <div class="block">Set the internal KeyManager, when present, replacing all previous
  KeyManagers.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyManagers-javax.net.ssl.X509KeyManager:A-">setKeyManagers</a></span>(javax.net.ssl.X509KeyManager[]&nbsp;xkms)</code>
 <div class="block">Set the internal list of KeyManagers.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setKeyMaterials-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">setKeyMaterials</a></span>(<a href="../../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;our_cert,
                <a href="../../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;our_key)</code>
@@ -545,46 +565,46 @@ extends javax.net.ssl.SSLEngine</pre>
  if this wasn't provided to the constructor.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setNeedClientAuth-boolean-">setNeedClientAuth</a></span>(boolean&nbsp;need)</code>
 <div class="block">Set whether or not client authentication is required for the TLS
  handshake to succeed.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setSSLParameters-javax.net.ssl.SSLParameters-">setSSLParameters</a></span>(javax.net.ssl.SSLParameters&nbsp;params)</code>
 <div class="block">Set the configuration from the given SSLParameters object onto this
  JSSEngine.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setTrustManager-org.mozilla.jss.provider.javax.crypto.JSSTrustManager-">setTrustManager</a></span>(<a href="../../../../../org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto">JSSTrustManager</a>&nbsp;tm)</code>
 <div class="block">Set the internal TrustManager, when present, replacing all previous
  TrustManagers.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setTrustManagers-javax.net.ssl.X509TrustManager:A-">setTrustManagers</a></span>(javax.net.ssl.X509TrustManager[]&nbsp;xtms)</code>
 <div class="block">Set the internal list of TrustManagers.</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setUseClientMode-boolean-">setUseClientMode</a></span>(boolean&nbsp;mode)</code>
 <div class="block">Set whether or not to handshake as a client.</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#setWantClientAuth-boolean-">setWantClientAuth</a></span>(boolean&nbsp;want)</code>
 <div class="block">Set whether or not we should attempt client authentication.</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code>abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/mozilla/jss/ssl/javax/JSSEngine.html#tryCleanup--">tryCleanup</a></span>()</code>
 <div class="block">Calls cleanup only if both inbound and outbound data streams are
@@ -856,11 +876,22 @@ extends javax.net.ssl.SSLEngine</pre>
 <a name="config">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>config</h4>
 <pre>protected&nbsp;java.util.HashMap&lt;java.lang.Integer,java.lang.Integer&gt; config</pre>
 <div class="block">Set of configuration options to enable via SSL_OptionSet(...).</div>
+</li>
+</ul>
+<a name="serverTemplates">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>serverTemplates</h4>
+<pre>protected static&nbsp;java.util.HashMap&lt;<a href="../../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>,<a href="../../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&gt; serverTemplates</pre>
+<div class="block">Set of cached server sockets based on the PK11Cert they were
+ initialized with.</div>
 </li>
 </ul>
 </li>
@@ -926,6 +957,16 @@ extends javax.net.ssl.SSLEngine</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="errorText-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>errorText</h4>
+<pre>protected static&nbsp;java.lang.String&nbsp;errorText(int&nbsp;error)</pre>
+<div class="block">Gets the error text from the NSPR layer</div>
+</li>
+</ul>
 <a name="getSSLFDProxy--">
 <!--   -->
 </a>
@@ -1519,6 +1560,17 @@ extends javax.net.ssl.SSLEngine</pre>
 <h4>setConfiguration</h4>
 <pre>public&nbsp;void&nbsp;setConfiguration(java.util.HashMap&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;config)</pre>
 <div class="block">Sets the configuration, replacing all current values.</div>
+</li>
+</ul>
+<a name="getServerTemplate-org.mozilla.jss.pkcs11.PK11Cert-org.mozilla.jss.pkcs11.PK11PrivKey-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getServerTemplate</h4>
+<pre>protected static&nbsp;<a href="../../../../../org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a>&nbsp;getServerTemplate(<a href="../../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a>&nbsp;cert,
+                                              <a href="../../../../../org/mozilla/jss/pkcs11/PK11PrivKey.html" title="class in org.mozilla.jss.pkcs11">PK11PrivKey</a>&nbsp;key)</pre>
+<div class="block">Returns the templated server certificate, if one exists.</div>
 </li>
 </ul>
 <a name="tryCleanup--">
