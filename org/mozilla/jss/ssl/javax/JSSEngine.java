@@ -171,6 +171,12 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected HashMap<Integer, Integer> config;
 
     /**
+     * Set of cached server sockets based on the PK11Cert they were
+     * initialized with.
+     */
+    protected static HashMap<PK11Cert, SSLFDProxy> serverTemplates = new HashMap<PK11Cert, SSLFDProxy>();
+
+    /**
      * Constructor for a JSSEngine, providing no hints for an internal
      * session reuse strategy and no key.
      *
@@ -221,6 +227,28 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         session.setPeerPort(peerPort);
         config = getDefaultConfiguration();
     }
+
+    /**
+     * Gets the error text from the NSPR layer
+     */
+    protected static String errorText(int error) {
+        // Convert the given error into a pretty string representation with
+        // as much information as is currently available.
+
+        String error_name = PR.ErrorToName(error);
+        String error_text = PR.GetErrorText();
+
+        if (error == 0) {
+            return "NO ERROR";
+        } else if (error_name.isEmpty()) {
+            return "UNKNOWN (" + error + ")";
+        } else if (error_text.isEmpty()) {
+            return error_name + " (" + error + ")";
+        } else {
+            return error_name + " (" + error + "): " + error_text;
+        }
+    }
+
 
     /**
      * Get the internal SSLFDProxy object; this should be preferred to
@@ -916,6 +944,31 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      */
     public void setConfiguration(HashMap<Integer, Integer> config) {
         this.config = config;
+    }
+
+    /**
+     * Returns the templated server certificate, if one exists.
+     */
+    protected static SSLFDProxy getServerTemplate(PK11Cert cert, PK11PrivKey key) {
+        if (cert == null || key == null) {
+            return null;
+        }
+
+        SSLFDProxy fd = serverTemplates.get(cert);
+        if (fd == null) {
+            PRFDProxy base = PR.NewTCPSocket();
+            fd = SSL.ImportFD(null, base);
+            if (SSL.ConfigServerCert(fd, cert, key) != SSL.SECSuccess) {
+                String msg = "Unable to configure certificate and key on ";
+                msg += "model SSL PRFileDesc proxy: ";
+                msg += errorText(PR.GetError());
+                throw new RuntimeException(msg);
+            }
+
+            serverTemplates.put(cert, fd);
+        }
+
+        return fd;
     }
 
     /**
