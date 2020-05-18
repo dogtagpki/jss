@@ -448,6 +448,35 @@ callers via exceptions:
  7. Lastly, we make sure to throw an exception only once and not multiple
     times.
 
+### `wrap`/`unwrap` with large Buffers
+
+While `SSLSession` indiciates the size of its internal buffers (via
+`SSLSession.getApplicationBufferSize()`), we might get `src` and `dst`
+buffers large enough to overflow our internal buffer multiple times. While
+we could indicate this via returning a short read (`bytesConsumed()` or
+`bytesProduced()` on `SSLEngineResult` from a `wrap` or `unwrap`
+respectively), this could make the application allocate multiple buffers or
+invoke `wrap()`/`unwrap()` multiple times. This overhead isn't necessary, as
+we can detect this ourselves within `JSSEngine`.
+
+For a `wrap()` call, there's two places data could be produced: in
+`updateHandshakeState()` when we're handshaing or in `writeData()`. There's
+only one place wire data is placed: `write_buf`. Because `write_buf` is
+limited to `BUFFER_SIZE` bytes, we could produce bytes (up to the capacity
+of `write_buf`), write them to `dst`, and then be able to produce more bytes.
+We stop when we are no longer producing or consuming any bytes. This leaves
+us with one extra invocation of `updateHandshakeState()`, `writeData()`, and
+reading from `write_buf`, but this is necessary to flush the internal NSS
+buffer.
+
+A similar description applies to `unwrap`. To accomplish handling large
+buffers, we simply wrap the core body of `wrap()` and `unwrap()` in a loop,
+stopping when no more data is being produced and consumed. This will stop
+because: the input and output buffers we're given are bounded in size and
+if an exception occurs, after writting the appropriate alert to the wire,
+NSS will quit reading/writing data. This means these loops are bound to
+terminate eventually.
+
 ### Future Improvements
 
 Currently we've only implemented the `JSSEngineReferenceImpl`; the optimized
