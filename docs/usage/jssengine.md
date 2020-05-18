@@ -183,6 +183,15 @@ values as parameters; see the `JSSEngine` javadoc for more information.
 
 #### Using `JSSParameters`
 
+`JSSParameters` largely aligns with `SSLParameters` except that it allows
+two important introductions:
+
+ 1. Selection of key material, like above. See the javadocs on `JSSParameters`
+    for more information.
+ 2. Setting the peer's hostname, for use with validation of certificates. This
+    allows us to tie into NSS's hostname verification directly, instead of
+    responding after the fact by closing the connection.
+
 #### Session Control
 
 The `JSSEngine` lacks many of the session control functions other `SSLEngine`
