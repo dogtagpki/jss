@@ -187,6 +187,11 @@ macro(jss_tests)
         DEPENDS "Generate_known_DSS_cert_pair"
     )
     jss_test_java(
+        NAME "Netscape_Security_PKCS10"
+        COMMAND "org.mozilla.jss.tests.PKCS10Test"
+        DEPENDS "Setup_DBs"
+    )
+    jss_test_java(
         NAME "List_CA_certs"
         COMMAND "org.mozilla.jss.tests.ListCACerts" "${RESULTS_NSSDB_OUTPUT_DIR}" "Verbose"
         DEPENDS "Generate_known_DSS_cert_pair"
@@ -264,12 +269,12 @@ macro(jss_tests)
     jss_test_java(
         NAME "KeyStoreTest"
         COMMAND "org.mozilla.jss.tests.KeyStoreTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" getAliases
-        DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
+        DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth" "Netscape_Security_PKCS10"
     )
     jss_test_java(
         NAME "JSSProvider"
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
-        DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
+        DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth" "Netscape_Security_PKCS10"
     )
     jss_test_java(
         NAME "SSLEngine_RSA"

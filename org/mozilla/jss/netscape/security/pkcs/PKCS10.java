@@ -157,13 +157,10 @@ public class PKCS10 {
         //
         // Inner sequence:  version, name, key, attributes
         //
-        @SuppressWarnings("unused")
-        BigInt serial = seq[0].data.getInteger(); // consume serial
-
-        /*
-        	if (serial.toInt () != 0)
-        	    throw new IllegalArgumentException ("not PKCS #10 v1");
-        */
+        BigInt version = seq[0].data.getInteger(); // consume version number
+        if (version.toInt() != 0) {
+            throw new IllegalArgumentException ("unknown version: not PKCS #10 v1: " + version);
+        }
 
         subject = new X500Name(seq[0].data);
         msg = "Request Subject: " + subject + ": ";
