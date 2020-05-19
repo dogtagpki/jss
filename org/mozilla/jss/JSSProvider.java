@@ -9,7 +9,7 @@ import java.security.Provider;
 import java.io.InputStream;
 
 public final class JSSProvider extends java.security.Provider {
-    public static boolean ENABLE_JSSENGINE = false;
+    public static boolean ENABLE_JSSENGINE = true;
 
     private static final long serialVersionUID = 1L;
     /********************************************************************/
