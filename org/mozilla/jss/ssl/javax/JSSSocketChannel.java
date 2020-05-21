@@ -359,30 +359,8 @@ public class JSSSocketChannel extends SocketChannel {
                 inboundClosed = false;
                 read(read_one);
 
-                outboundClosed = false;
                 if (!outboundClosed) {
                     shutdownOutput();
-                }
-
-                int times = 0;
-                while (!engine.isInboundDone()) {
-                    read_one.clear();
-                    read(read_one);
-
-                    times += 1;
-                    if (times > 50) {
-                        break;
-                    }
-
-                    try {
-                        Thread.sleep(times * 10);
-                    } catch (Exception e) {}
-                }
-
-                if (!engine.isInboundDone()) {
-                    String msg = "Premature close of SSLSocket: peer didn't ";
-                    msg += "confirm CLOSE_NOTIFY was received.";
-                    throw new IOException(msg);
                 }
 
                 outboundClosed = true;
