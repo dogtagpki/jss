@@ -111,7 +111,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         prefix = "[" + this.name + "] " + prefix;
     }
 
-    private void init() {
+    private void init() throws SSLException {
         debug("JSSEngine: init()");
 
         // Initialize our JSSEngine when we begin to handshake; otherwise,
@@ -169,7 +169,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         write_buf = Buffer.Create(BUFFER_SIZE);
     }
 
-    private void createBufferFD() {
+    private void createBufferFD() throws SSLException {
         debug("JSSEngine: createBufferFD()");
 
         // Create the basis for the ssl_fd from the pair of buffers.
@@ -181,7 +181,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         if (fd == null) {
-            throw new RuntimeException("JSSEngine.init(): Error creating buffer-backed PRFileDesc.");
+            throw new SSLException("Error creating buffer-backed PRFileDesc.");
         }
 
         SSLFDProxy model = null;
@@ -196,31 +196,31 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // Turn on SSL Alert Logging for the ssl_fd object.
         int ret = SSL.EnableAlertLogging(ssl_fd);
         if (ret == SSL.SECFailure) {
-            throw new RuntimeException("JSSEngine.init(): Unable to enable SSL Alert Logging on this SSLFDProxy instance.");
+            throw new SSLException("Unable to enable SSL Alert Logging on this SSLFDProxy instance.");
         }
 
         ret = SSL.EnableHandshakeCallback(ssl_fd);
         if (ret == SSL.SECFailure) {
-            throw new RuntimeException("JSSEngine.init(): Unable to enable SSL Handshake Callback on this SSLFDProxy instance.");
+            throw new SSLException("Unable to enable SSL Handshake Callback on this SSLFDProxy instance.");
         }
 
         // Pass this ssl_fd to the session object so that we can use
         // SSL methods to invalidate the session.
     }
 
-    private void initClient() {
+    private void initClient() throws SSLException {
         debug("JSSEngine: initClient()");
 
         if (cert != null && key != null) {
             debug("JSSEngine.initClient(): Enabling client auth: " + cert);
             ssl_fd.SetClientCert(cert);
             if (SSL.AttachClientCertCallback(ssl_fd) != SSL.SECSuccess) {
-                throw new RuntimeException("JSSEngine.init(): Unable to attach client certificate auth callback.");
+                throw new SSLException("Unable to attach client certificate auth callback.");
             }
         }
     }
 
-    private void initServer() {
+    private void initServer() throws SSLException {
         debug("JSSEngine: initServer()");
 
         // The only time cert and key are required are when we're creating a
@@ -244,7 +244,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         configureClientAuth();
     }
 
-    private void configureClientAuth() {
+    private void configureClientAuth() throws SSLException {
         debug("SSLFileDesc: " + ssl_fd);
 
         // Only specify these on the server side as they affect what we
@@ -252,11 +252,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // client auth, but if we were to set these on the client, it would
         // affect server auth.
         if (SSL.OptionSet(ssl_fd, SSL.REQUEST_CERTIFICATE, want_client_auth || need_client_auth ? 1 : 0) == SSL.SECFailure) {
-            throw new RuntimeException("Unable to configure SSL_REQUEST_CERTIFICATE option: " + errorText(PR.GetError()));
+            throw new SSLException("Unable to configure SSL_REQUEST_CERTIFICATE option: " + errorText(PR.GetError()));
         }
 
         if (SSL.OptionSet(ssl_fd, SSL.REQUIRE_CERTIFICATE, need_client_auth ? SSL.REQUIRE_ALWAYS : 0) == SSL.SECFailure) {
-            throw new RuntimeException("Unable to configure SSL_REQUIRE_CERTIFICATE option: " + errorText(PR.GetError()));
+            throw new SSLException("Unable to configure SSL_REQUIRE_CERTIFICATE option: " + errorText(PR.GetError()));
         }
     }
 
@@ -265,10 +265,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             return;
         }
 
-        configureClientAuth();
+        try {
+            configureClientAuth();
+        } catch (SSLException se) {
+            // We cannot throw SSLException from this helper because it
+            // is called from setNeedClientAuth and setWantClientAuth,
+            // both of which don't disclose SSLException.
+            throw new RuntimeException(se.getMessage(), se);
+        }
     }
 
-    private void applyCiphers() {
+    private void applyCiphers() throws SSLException {
         debug("JSSEngine: applyCiphers()");
         // Enabled the ciphersuites specified by setEnabledCipherSuites(...).
         // When this isn't called, enabled_ciphers will be null, so we'll just
@@ -302,7 +309,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
-    private void applyProtocols() {
+    private void applyProtocols() throws SSLException {
         debug("JSSEngine: applyProtocols() min_protocol=" + min_protocol + " max_protocol=" + max_protocol);
         // Enable the protocols only when both a maximum and minimum protocol
         // version are specified.
@@ -315,35 +322,35 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // match the current behavior.
         SSLVersionRange vrange = new SSLVersionRange(min_protocol, max_protocol);
         if (SSL.VersionRangeSet(ssl_fd, vrange) == SSL.SECFailure) {
-            throw new RuntimeException("Unable to set version range: " + errorText(PR.GetError()));
+            throw new SSLException("Unable to set version range: " + errorText(PR.GetError()));
         }
     }
 
-    private void applyConfig() {
+    private void applyConfig() throws SSLException {
         debug("JSSEngine: applyConfig()");
         for (Integer key : config.keySet()) {
             Integer value = config.get(key);
 
             debug("Setting configuration option: " + key + "=" + value);
             if (SSL.OptionSet(ssl_fd, key, value) != SSL.SECSuccess) {
-                throw new RuntimeException("Unable to set configuration value: " + key + "=" + value);
+                throw new SSLException("Unable to set configuration value: " + key + "=" + value);
             }
         }
     }
 
-    private void applyHosts() {
+    private void applyHosts() throws SSLException {
         debug("JSSEngine: applyHosts()");
 
         // This is most useful for the client end of the connection; this
         // specifies what to match the server's certificate against.
         if (hostname != null) {
             if (SSL.SetURL(ssl_fd, hostname) == SSL.SECFailure) {
-                throw new RuntimeException("Unable to configure server hostname: " + errorText(PR.GetError()));
+                throw new SSLException("Unable to configure server hostname: " + errorText(PR.GetError()));
             }
         }
     }
 
-    private void applyTrustManagers() {
+    private void applyTrustManagers() throws SSLException {
         debug("JSSEngine: applyTrustManagers()");
 
         // If none have been specified, exit early.
@@ -360,12 +367,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // validation logic that SSLSocket had.
             debug("JSSEngine: applyTrustManagers() - adding Native TrustManager");
             if (SSL.ConfigJSSDefaultCertAuthCallback(ssl_fd) == SSL.SECFailure) {
-                throw new RuntimeException("Unable to configure JSSNativeTrustManager on this JSSengine: " + errorText(PR.GetError()));
+                throw new SSLException("Unable to configure JSSNativeTrustManager on this JSSengine: " + errorText(PR.GetError()));
             }
         }
     }
 
-    private void createLoggingSocket() {
+    private void createLoggingSocket() throws SSLException {
         if (debug_port == 0) {
             return;
         }
@@ -391,7 +398,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             c_istream = c_socket.getInputStream();
             c_ostream = c_socket.getOutputStream();
         } catch (Exception e) {
-            throw new RuntimeException("Unable to enable debug socket logging! " + e.getMessage(), e);
+            throw new SSLException("Unable to enable debug socket logging! " + e.getMessage(), e);
         }
     }
 
@@ -409,7 +416,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         } catch (Exception e) {}
     }
 
-    public void beginHandshake() {
+    public void beginHandshake() throws SSLException {
         debug("JSSEngine: beginHandshake()");
 
         // We assume beginHandshake(...) is the entry point for initializing
