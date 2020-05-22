@@ -356,7 +356,7 @@ public class SSL {
      *
      * See also: SSL_ConfigServerSessionIDCache in /usr/include/nss3/ssl.h
      */
-    public static native int ConfigServerSessionIDCache(int maxCacheEntries,
+    public synchronized static native int ConfigServerSessionIDCache(int maxCacheEntries,
         long timeout, long ssl3_timeout, String directory);
 
     /**

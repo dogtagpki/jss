@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import javax.net.ssl.SSLException;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.ssl.javax.JSSEngine;
 
 /**
  * SSL server socket.
@@ -266,9 +269,21 @@ public class SSLServerSocket extends java.net.ServerSocket {
      *  will contain the session cache. If null is passed, the server default
      *  is used: <code>/tmp</code> on Unix and <code>\\temp</code> on Windows.
      */
-    public static native void configServerSessionIDCache(int maxSidEntries,
-        int ssl2EntryTimeout, int ssl3EntryTimeout, String cacheFileDirectory)
-        throws SocketException;
+    public static void configServerSessionIDCache(int maxSidEntries,
+        int ssl2EntryTimeout, int ssl3EntryTimeout, String cacheFileDirectory) throws SocketException {
+        try {
+            JSSEngine.initializeSessionCache(maxSidEntries, ssl3EntryTimeout, cacheFileDirectory);
+        } catch (SSLException parent) {
+            // Because JSSEngine.initializeSessionCache is utilized in
+            // javax's SSLEngine implementations, it can only throw a
+            // SSLException. However, in the event it fails, we should
+            // re-throw it here as a SocketException, keeping the signature
+            // the same.
+            SocketException se = new SSLSocketException(parent.getMessage());
+            se.addSuppressed(parent);
+            throw se;
+        }
+    }
 
     /**
      * Sets the certificate to use for server authentication.
