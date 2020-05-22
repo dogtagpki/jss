@@ -1,6 +1,7 @@
 package org.mozilla.jss.ssl.javax;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.*;
 
 import org.slf4j.Logger;
@@ -177,6 +178,15 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected static HashMap<PK11Cert, SSLFDProxy> serverTemplates = new HashMap<PK11Cert, SSLFDProxy>();
 
     /**
+     * Whether or not the session cache has been initialized already.
+     *
+     * A session cache must always be created in order to utilize a
+     * server-side JSSEngine. However, NSS isn't threadsafe when creating
+     * such a cache, so synchronize it within JSSEngine.
+     */
+    private final static AtomicBoolean sessionCacheInitialized = new AtomicBoolean();
+
+    /**
      * Constructor for a JSSEngine, providing no hints for an internal
      * session reuse strategy and no key.
      *
@@ -249,6 +259,20 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         }
     }
 
+    /**
+     * Safely initializes the session cache if not already initialized.
+     */
+    public static void initializeSessionCache(int maxCacheEntries,
+        long timeout, String directory) throws SSLException
+    {
+        if (sessionCacheInitialized.compareAndSet(false, true)) {
+            if (SSL.ConfigServerSessionIDCache(maxCacheEntries, timeout, timeout, directory) == SSL.SECFailure) {
+                String msg = "Unable to configure server session cache: ";
+                msg += errorText(PR.GetError());
+                throw new SSLException(msg);
+            }
+        }
+    }
 
     /**
      * Get the internal SSLFDProxy object; this should be preferred to

@@ -237,9 +237,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // Create a small session cache.
         //
         // TODO: Make this configurable.
-        if (SSL.ConfigServerSessionIDCache(1, 100, 100, null) == SSL.SECFailure) {
-            throw new RuntimeException("Unable to configure server session cache: " + errorText(PR.GetError()));
-        }
+        initializeSessionCache(1, 100, null);
 
         configureClientAuth();
     }
