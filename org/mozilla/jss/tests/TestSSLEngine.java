@@ -62,7 +62,17 @@ public class TestSSLEngine {
     }
 
     public static KeyManager[] getKMs() throws Exception {
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509");
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509", "Mozilla-JSS");
+        return kmf.getKeyManagers();
+    }
+
+    public static KeyManager[] getKSKMs() throws Exception {
+        KeyStore ks = KeyStore.getInstance("PKCS11", "Mozilla-JSS");
+        ks.load(null, null);
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509", "Mozilla-JSS");
+        kmf.init(ks, null);
+
         return kmf.getKeyManagers();
     }
 
@@ -801,7 +811,7 @@ public class TestSSLEngine {
 
     public static void testNativeClientServer(String[] args) throws Exception {
         SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
-        ctx.init(getKMs(), new TrustManager[] { new JSSNativeTrustManager() }, null);
+        ctx.init(getKSKMs(), new TrustManager[] { new JSSNativeTrustManager() }, null);
 
         String client_alias = args[2];
         String server_alias = args[3];
