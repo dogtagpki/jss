@@ -75,6 +75,10 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.UTF8ConverterTest"
     )
     jss_test_java(
+        NAME "Test_Base64_Parsing"
+        COMMAND "org.mozilla.jss.tests.Base64Parsing"
+    )
+    jss_test_java(
         NAME "JSS_DER_Encoding_of_Enumeration_regression_test"
         COMMAND "org.mozilla.jss.tests.EnumerationZeroTest"
     )
