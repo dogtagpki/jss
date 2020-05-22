@@ -404,7 +404,16 @@ public class Utils {
      */
     public static byte[] base64decode(String string) {
         try {
-            return Base64.getMimeDecoder().decode(string);
+            // Java is particular about its base64. We already used the MIME
+            // decoder as it was most flexible about whitespace. However, it
+            // doesn't understand URL-encoded Base64 (using '-' instead of
+            // '+' and '_' instead of '/'). So, detect those characters and
+            // pass it to the correct decoder.
+            if (string.contains("_") || string.contains("-")) {
+                return Base64.getUrlDecoder().decode(string);
+            } else {
+                return Base64.getMimeDecoder().decode(string);
+            }
         } catch (IllegalArgumentException iae) {
             logger.warn("Invalid base64: [" + string + "]: " + iae);
             return new byte[0];
