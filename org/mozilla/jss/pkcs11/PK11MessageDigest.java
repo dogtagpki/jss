@@ -43,8 +43,6 @@ public final class PK11MessageDigest
             throw new DigestException("Digest is not an HMAC or CMAC digest");
         }
 
-        reset();
-
         if( ! (key instanceof PK11SymKey) ) {
             throw new InvalidKeyException("HMAC key is not a PKCS #11 key");
         }
