@@ -57,6 +57,7 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
     CK_MECHANISM_TYPE mech;
     SECItem param;
     jobject contextObj=NULL;
+    bool freeNewKey = true;
 
     mech = JSS_getPK11MechFromAlg(env, algObj);
     PR_ASSERT( mech != CKM_INVALID_MECHANISM ); /* we checked already in Java */
@@ -74,6 +75,7 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
 
     if( newKey == NULL ) {
         newKey = origKey;
+        freeNewKey = false;
     }
 
     param.data = NULL;
@@ -88,7 +90,7 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC
 
     contextObj = JSS_PK11_wrapCipherContextProxy(env, &context);
 finish:
-    if(newKey && (newKey != origKey)) {
+    if(freeNewKey) {
         /* SymKeys are ref counted, and the context will free it's ref
          * when it is destroyed */
         PK11_FreeSymKey(newKey);
