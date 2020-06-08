@@ -54,6 +54,13 @@ used by the SSLEngine and all supported SSLParameters, respectively.
 
 For more information about configuring the `JSSEngine`, see the section below.
 
+Note that the `Mozilla-JSS` provider's `SSLContext` instance also provides
+methods for creating `SSLSocket` factories which conform to the same
+`javax.net.ssl` interfaces. These sockets utilize the `JSSEngine` internally
+and expose many of the same configuration methods under the `JSSSocket` class
+namespace. The results of these factories can be directly cast to `JSSSocket`
+or `JSSServerSocket` as appropriate.
+
 
 ### Direct Utilization
 
@@ -490,7 +497,11 @@ terminate eventually.
 
 Currently we've only implemented the `JSSEngineReferenceImpl`; the optimized
 implementation still needs to be written. In particular, the performance of
-multiple JNI calls per step (`wrap` or `unwrap`) needs to be evaluated.
+multiple JNI calls per step (`wrap` or `unwrap`) needs to be evaluated. We
+could replace this with a copy of the contents of the underlying ByteBuffer,
+perform a PR_Read or PR_Write operation, and then (in the event of a write),
+copy the modified data back. This would give us better performance for large
+buffers.
 
 We only have a single `JSSKeyManager` that doesn't understand SNI; we should
 make sure we support SNI from a client and server perspective.
