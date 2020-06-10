@@ -81,7 +81,6 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 ################################################################################
 
 Summary:        Java Security Services (JSS) Javadocs
-Group:          Documentation
 Requires:       jss = %{version}-%{release}
 
 %description javadoc
