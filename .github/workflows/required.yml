@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'fedora_30'
           - 'fedora_31'
+          - 'fedora_32'
           - 'fedora_latest_jdk11'
           - 'symbolcheck'
     steps:
