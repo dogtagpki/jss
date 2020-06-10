@@ -683,7 +683,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             ssl_fd.inboundOffset += 1;
 
             if (event.getLevelEnum() == SSLAlertLevel.WARNING && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
-                warn("Got inbound CLOSE_NOTIFY alert");
+                debug("Got inbound CLOSE_NOTIFY alert");
                 closeInbound();
             }
 
@@ -700,7 +700,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             ssl_fd.outboundOffset += 1;
 
             if (event.getLevelEnum() == SSLAlertLevel.WARNING && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
-                warn("Sent outbound CLOSE_NOTIFY alert.");
+                debug("Sent outbound CLOSE_NOTIFY alert.");
                 closeOutbound();
             }
 
@@ -1066,7 +1066,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             if (this_write < 0) {
                 int error = PR.GetError();
                 if (error == PRErrors.SOCKET_SHUTDOWN_ERROR) {
-                    warn("NSPR reports outbound socket is shutdown.");
+                    debug("NSPR reports outbound socket is shutdown.");
                     is_outbound_closed = true;
                 } else if (error != PRErrors.WOULD_BLOCK_ERROR) {
                     throw new RuntimeException("Unable to write to internal ssl_fd: " + errorText(PR.GetError()));
