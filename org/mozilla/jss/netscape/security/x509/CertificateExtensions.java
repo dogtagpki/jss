@@ -27,8 +27,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.cert.CertificateException;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Vector;
 
 import org.mozilla.jss.netscape.security.util.DerInputStream;
@@ -59,7 +60,7 @@ public class CertificateExtensions extends Vector<Extension>
      */
     public static final String NAME = "extensions";
 
-    private Hashtable<String, Extension> map;
+    private LinkedHashMap<String, Extension> map;
 
     // Parse the encoded extension
     public void parseExtension(Extension ext) throws IOException {
@@ -108,7 +109,7 @@ public class CertificateExtensions extends Vector<Extension>
      * Default constructor for the certificate attribute.
      */
     public CertificateExtensions() {
-        map = new Hashtable<String, Extension>();
+        map = new LinkedHashMap<String, Extension>();
     }
 
     /**
@@ -120,7 +121,7 @@ public class CertificateExtensions extends Vector<Extension>
     public CertificateExtensions(DerInputStream in)
             throws IOException {
 
-        map = new Hashtable<String, Extension>();
+        map = new LinkedHashMap<String, Extension>();
         DerValue[] exts = in.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {
@@ -139,7 +140,7 @@ public class CertificateExtensions extends Vector<Extension>
         DerValue val = new DerValue(in);
         DerInputStream str = val.toDerInputStream();
 
-        map = new Hashtable<String, Extension>();
+        map = new LinkedHashMap<String, Extension>();
         DerValue[] exts = str.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {
@@ -163,7 +164,7 @@ public class CertificateExtensions extends Vector<Extension>
             str = val.toDerInputStream();
         }
 
-        map = new Hashtable<String, Extension>();
+        map = new LinkedHashMap<String, Extension>();
         DerValue[] exts = str.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {
@@ -253,7 +254,7 @@ public class CertificateExtensions extends Vector<Extension>
     }
 
     public Enumeration<String> getNames() {
-        return map.keys();
+        return Collections.enumeration(map.keySet());
     }
 
     /**
@@ -261,11 +262,11 @@ public class CertificateExtensions extends Vector<Extension>
      * attribute.
      */
     public Enumeration<Extension> getAttributes() {
-        return (map.elements());
+        return Collections.enumeration(map.values());
     }
 
     public Enumeration<String> getAttributeNames() {
-        return (map.keys());
+        return getNames();
     }
 
     /**
