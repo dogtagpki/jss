@@ -27,6 +27,8 @@ import org.mozilla.jss.netscape.security.util.DerEncoder;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the PKCS10 attributes for the request.
@@ -36,6 +38,8 @@ import org.mozilla.jss.netscape.security.util.DerValue;
  * @version 1.10
  */
 public class PKCS10Attributes extends Vector<PKCS10Attribute> implements DerEncoder {
+
+    public final static Logger logger = LoggerFactory.getLogger(PKCS10Attributes.class);
 
     /**
      *
@@ -66,7 +70,7 @@ public class PKCS10Attributes extends Vector<PKCS10Attribute> implements DerEnco
             for (int i = 0; i < attrs.length; i++) {
                 PKCS10Attribute attr = new PKCS10Attribute(attrs[i]);
                 addElement(attr);
-                System.out.println("PKCS10Attributes: adding attribute: " +
+                logger.debug("PKCS10Attributes: adding attribute: " +
                         attr.getAttributeValue().getName());
                 map.put(attr.getAttributeValue().getName(), attr);
             }
