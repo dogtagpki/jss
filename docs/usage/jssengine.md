@@ -17,6 +17,12 @@ There are two ways to use the `JSSEngine`: via the JCA Provider interface,
 or constructing a `JSSEngine` instance directly. The former method is
 preferred out of the two.
 
+Please refer to the [`JSSEngine` test cases][jss.jssengine.tests] or to
+the [Oracle `SSLEngine` demo][oracle.sslengine.demo] for information on
+using it. Usually a `SSLEngine` instance is asked by an external API
+(e.g., Tomcat) or used inside a `SSLSocket` implementation, such as the
+`SSLSocket` implementation provided by `Mozilla-JSS`'s SSLContext`.
+
 
 ### Via the JSSProvider
 
@@ -199,6 +205,10 @@ two important introductions:
     allows us to tie into NSS's hostname verification directly, instead of
     responding after the fact by closing the connection.
 
+Generally, using `SSLParameters` should be sufficient for most applications.
+Two exceptions are when we wish to explicitly select key material (e.g., from
+a certificate nickname) or when using NSS for SSL hostname validation.
+
 #### Session Control
 
 The `JSSEngine` lacks many of the session control functions other `SSLEngine`
@@ -237,8 +247,8 @@ We expect two primary implementations:
 
  - `JSSEngineReferenceImpl`, a reference implementation with more logging
    and debugging statements. This also includes port-based debugging, so
-   situations where a `SSLEngine` is without writing to the network can
-   still be tracked and analyzed in Wireshark. Each call to `wrap` or `unwrap`
+   situations where a `SSLEngine` isn't writing to the network can still
+   be tracked and analyzed in Wireshark. Each call to `wrap` or `unwrap`
    makes several JNI calls, incurring lots of overhead.
  - `JSSEngineOptimizedImpl`, an optimized, production-ready implementation.
    This one is harder to debug due to fewer logging statements, but does
@@ -246,6 +256,14 @@ We expect two primary implementations:
 
 
 ### Non-Blocking IO
+
+In order to implement `wrap` and `unwrap` on the SSLEngine, we use NSPR
+sockets configured in non-blocking mode. Data is held in buffers rather
+than being written to the network; in this way, data is passed from a
+`unwrap` call to `NSPR` so that `NSS` can decrypt the wire data, with
+the result being returned from `unwrap`.
+
+This is implemented as follows:
 
 NSPR introduces a platform-independent abstraction over C's file descriptors
 (usually an `int`) in the form of the `PRFileDesc` structure. This is
@@ -513,9 +531,11 @@ peer's certificates.
 [javax.ssl-context]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLContext.html "javax.net.ssl.SSLContext"
 [javax.ssl-engine]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLEngine.html "javax.net.ssl.SSLEngine"
 [javax.x509trustmanager]: https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509TrustManager.html "javax.net.ssl.X509TrustManager"
+[jss.jssengine-tests]: https://github.com/dogtagpki/jss/blob/master/org/mozilla/jss/tests/TestSSLEngine.java "JSS SSLEngine tests"
 [jss.pk11-cert]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/pkcs11/PK11Cert.html "org.mozilla.jss.pkcs11.PK11Cert"
 [jss.pk11-privkey]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/pkcs11/PK11PrivKey.html "org.mozilla.jss.pkcs11.PK11PrivKey"
 [jss.ssl-socket]: https://dogtagpki.github.io/jss/master/javadocs/org/mozilla/jss/ssl/SSLSocket.html "org.mozilla.jss.ssl.SSLSocket"
+[oracle.sslengine.demo]: https://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/samples/sslengine/SSLEngineSimpleDemo.java "Oracle SSLEngineSimpleDemo"
 [rfc.tls-1.2]: https://tools.ietf.org/html/rfc5246 "TLSv1.2 RFC 5246"
 [rfc.tls-renegotiation]: https://tools.ietf.org/html/rfc5746#section-5
 [rfc.tls-1.3]: https://tools.ietf.org/html/rfc8446 "TLSv1.3 RFC 8446"
