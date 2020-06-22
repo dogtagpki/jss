@@ -32,3 +32,6 @@ JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data);
 
 SECStatus
 JSSL_SSLFDAsyncCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig, PRBool isServer);
+
+SECStatus
+JSSL_SSLFDSyncCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig, PRBool isServer);
