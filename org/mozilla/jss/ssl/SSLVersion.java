@@ -10,24 +10,27 @@ public enum SSLVersion {
      *    [0] - JSS name
      *    [1] - JDK name
      */
-    SSL_2_0(new String[] {"SSL2", "SSLv2"},   SocketBase.SSL_LIBRARY_VERSION_2),
-    SSL_3_0(new String[] {"SSL3", "SSLv3"},   SocketBase.SSL_LIBRARY_VERSION_3_0),
-    TLS_1_0(new String[] {"TLS1_0", "TLSv1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_0),
-    TLS_1_1(new String[] {"TLS1_1", "TLSv1.1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_1),
-    TLS_1_2(new String[] {"TLS1_2", "TLSv1.2"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_2),
-    TLS_1_3(new String[] {"TLS1_3", "TLSv1.3"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_3);
+    SSL_2_0(new String[] {"SSL2", "SSLv2"},   SocketBase.SSL_LIBRARY_VERSION_2, 0x0002),
+    SSL_3_0(new String[] {"SSL3", "SSLv3"},   SocketBase.SSL_LIBRARY_VERSION_3_0, 0x0300),
+    TLS_1_0(new String[] {"TLS1_0", "TLSv1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_0, 0x0301),
+    TLS_1_1(new String[] {"TLS1_1", "TLSv1.1"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_1, 0x0302),
+    TLS_1_2(new String[] {"TLS1_2", "TLSv1.2"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_2, 0x0303),
+    TLS_1_3(new String[] {"TLS1_3", "TLSv1.3"}, SocketBase.SSL_LIBRARY_VERSION_TLS_1_3, 0x0304);
 
     private String[] aliases;
     private int value;
+    private int nssValue;
 
-    private SSLVersion(String alias, int value) {
+    private SSLVersion(String alias, int value, int nssValue) {
         this.aliases = new String[] {alias};
         this.value = value;
+        this.nssValue = nssValue;
     }
 
-    private SSLVersion(String[] aliases, int value) {
+    private SSLVersion(String[] aliases, int value, int nssValue) {
         this.aliases = aliases;
         this.value = value;
+        this.nssValue = nssValue;
     }
 
     public String alias() {
@@ -49,6 +52,11 @@ public enum SSLVersion {
     public static SSLVersion valueOf(int value) {
         for (SSLVersion version : SSLVersion.values()) {
             if (version.value == value) return version;
+
+            // The only value we'd have issues with is the broken
+            // SSLv2: this could either be SSLv2 or someone passing
+            // the garbage value of SSL_ENABLE_TLS to us.
+            if (version.nssValue == value) return version;
         }
 
         throw new IllegalArgumentException("Invalid SSLVersion value: " + value);
