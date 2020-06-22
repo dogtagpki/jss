@@ -423,6 +423,10 @@ public enum SSLCipher {
         return this.name().contains("_ECDSA_") || this.name().contains("ECDH_RSA");
     }
 
+    public boolean requiresDSSCert() {
+        return this.name().contains("_DSS_");
+    }
+
     public static SSLCipher valueOf(int id) {
         for (SSLCipher cipher : SSLCipher.class.getEnumConstants()) {
             if (cipher.id == id) return cipher;
