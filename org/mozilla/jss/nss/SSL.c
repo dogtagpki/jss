@@ -480,7 +480,7 @@ Java_org_mozilla_jss_nss_SSL_GetChannelInfo(JNIEnv *env, jclass clazz,
         return NULL;
     }
 
-    pV = info.protocolVersion;
+    pV = JSSL_enums_reverse(info.protocolVersion);
     cS = info.cipherSuite;
 
     aKB = info.authKeyBits;
@@ -555,7 +555,7 @@ Java_org_mozilla_jss_nss_SSL_GetPreliminaryChannelInfo(JNIEnv *env,
 
     vS = info.valuesSet;
 
-    pV = info.protocolVersion;
+    pV = JSSL_enums_reverse(info.protocolVersion);
     cS = info.cipherSuite;
 
     cSED = info.canSendEarlyData;
@@ -871,6 +871,43 @@ Java_org_mozilla_jss_nss_SSL_ConfigJSSDefaultCertAuthCallback(JNIEnv *env, jclas
     }
 
     return SSL_AuthCertificateHook(real_fd, JSSL_DefaultCertAuthCallback, NULL);
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_ConfigAsyncTrustManagerCertAuthCallback(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    jobject fd_ref = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_NSS_getGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_AuthCertificateHook(real_fd, JSSL_SSLFDAsyncCertAuthCallback, fd_ref);
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_AuthCertificateComplete(JNIEnv *env, jclass clazz,
+    jobject fd, jint error)
+{
+    PRFileDesc *real_fd = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_AuthCertificateComplete(real_fd, error);
 }
 
 JNIEXPORT void JNICALL

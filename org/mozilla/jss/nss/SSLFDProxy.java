@@ -18,6 +18,7 @@ public class SSLFDProxy extends PRFDProxy {
     public ArrayList<SSLAlertEvent> outboundAlerts;
     public int outboundOffset;
 
+    public boolean needCertValidation;
     public boolean handshakeComplete;
 
     public SSLFDProxy(byte[] pointer) {

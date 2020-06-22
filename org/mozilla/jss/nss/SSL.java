@@ -421,13 +421,35 @@ public class SSL {
     private static native int EnableAlertLoggingNative(SSLFDProxy fd);
 
     /**
-     * Use the default JSS certificate checking handler (which understands CryptoManager
-     * OCSP status).
+     * Use the default JSS certificate checking handler (which understands
+     * CryptoManager OCSP status).
      *
      * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
      *           JSSL_DefaultCertAuthCallback in jss/ssl/callbacks.c
      */
     public static native int ConfigJSSDefaultCertAuthCallback(SSLFDProxy fd);
+
+    /**
+     * Use an asynchronous certificate checking handler which allows us to
+     * invoke an arbitrary number of TrustManagers. This makes functions like
+     * SSL_ForceHandshake, PR_Read, and PR_Write return back to the caller
+     * when cert auth is required. We set the SSLFDProxy.needCertValidation
+     * field to true in this case. Set this field to false and call
+     * SSL_AuthCertificateComplete with the status code of the error (0 if
+     * the cert is valid), and resume handshaking.
+     *
+     * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
+     *           JSSL_SSLFDAsyncCertAuthCallback in jss/nss/SSLFDProxy.c
+     */
+    public static native int ConfigAsyncTrustManagerCertAuthCallback(SSLFDProxy fd);
+
+    /**
+     * Inform NSS that the asynchronous certificate check handler has
+     * completed, allowing us to continue the handshake.
+     *
+     * See also: SSL_AuthCertificateComplete in /usr/include/nss3/ssl.h
+     */
+    public static native int AuthCertificateComplete(SSLFDProxy fd, int error);
 
     /**
      * Removes all enabled callbacks.
