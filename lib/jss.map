@@ -472,6 +472,8 @@ Java_org_mozilla_jss_nss_SSL_getSSLRequireAlways;
 Java_org_mozilla_jss_nss_SSL_getSSLRequireFirstHandshake;
 Java_org_mozilla_jss_nss_SSL_getSSLRequireNoError;
 Java_org_mozilla_jss_nss_SSL_KeyUpdate;
+Java_org_mozilla_jss_nss_SSL_ConfigAsyncTrustManagerCertAuthCallback;
+Java_org_mozilla_jss_nss_SSL_AuthCertificateComplete;
     local:
         *;
 };
