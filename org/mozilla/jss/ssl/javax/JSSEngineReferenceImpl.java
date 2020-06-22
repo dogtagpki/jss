@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.WritableByteChannel;
 import java.nio.channels.Channels;
+import java.security.PublicKey;
+import java.security.cert.CertificateException;
 
 import java.nio.ByteBuffer;
 
@@ -66,6 +68,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
     private String name;
     private String prefix = "";
+
+    private CertValidationTask task;
 
     public JSSEngineReferenceImpl() {
         super();
@@ -353,11 +357,15 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         // If none have been specified, exit early.
         if (trust_managers == null || trust_managers.length == 0) {
+            // Use the default NSS certificate authentication handler. We
+            // don't need to do anything to use it.
             debug("JSSEngine: no TrustManagers to apply.");
             return;
         }
 
-        // Check if we have a single JSSNativeTrustManager.
+        // Determine which configuration to use for checking certificates. Our
+        // options are a Native trust manager (most performant) or using a set
+        // of X509TrustManagers.
         if (trust_managers.length == 1 && trust_managers[0] instanceof JSSNativeTrustManager) {
             // This is a dummy TrustManager. It signifies that we should call
             // SSL.ConfigJSSDefaultCertAuthCallback(...) on this SSL
@@ -366,6 +374,28 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             debug("JSSEngine: applyTrustManagers() - adding Native TrustManager");
             if (SSL.ConfigJSSDefaultCertAuthCallback(ssl_fd) == SSL.SECFailure) {
                 throw new SSLException("Unable to configure JSSNativeTrustManager on this JSSengine: " + errorText(PR.GetError()));
+            }
+            return;
+        }
+
+        if (as_server) {
+            // We need to manually invoke the async cert auth handler. However,
+            // SSLFDProxy makes this easy for us: our CertAuthHandler derives
+            // from Runnable, so we can reuse it here as well. We can create
+            // it ahead of time though. In this case, checkNeedCertValidation()
+            // is never called.
+            ssl_fd.handler = new CertValidationTask(ssl_fd);
+
+            if (SSL.ConfigSyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
+                throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
+            }
+        } else {
+            // Otherwise, we need a hook from NSS into the SSLFDProxy.
+            //
+            // This hook executes all TrustManagers and if any exception
+            // occurs, we'll turn it into the proper response within NSS.
+            if (SSL.ConfigAsyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
+                throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
             }
         }
     }
@@ -531,15 +561,84 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     public Runnable getDelegatedTask() {
         debug("JSSEngine: getDelegatedTask()");
 
-        // We fake being a non-blocking SSLEngine. In particular, we never
-        // export tasks as delegated tasks (e.g., OCSP checking), so this
-        // method will always return null.
+        checkNeedCertValidation();
 
-        return null;
+        return task;
+    }
+
+    private boolean checkNeedCertValidation() {
+        debug("JSSEngine: checkNeedCertValidation()");
+        if (task != null) {
+            if (!task.finished) {
+                // Already created runnable task; exit with true status to
+                // show it still needs to be run.
+                debug("JSSEngine: checkNeedCertValidation() - task not done");
+                return true;
+            }
+
+            debug("JSSEngine: checkNeedCertValidation() - task done with code " + task.result);
+
+            // Since the task has finished, we now need to inform NSS about
+            // the results of our certificate validation step.
+            if (SSL.AuthCertificateComplete(ssl_fd, task.result) != SSL.SECSuccess) {
+                String msg = "Got unexpected failure finishing cert ";
+                msg += "authentication in NSS. Returned code ";
+                msg += task.result;
+                throw new RuntimeException(msg);
+            }
+
+            // After checking certificates, our best guess will be that we
+            // need to run wrap again. This is because we either need to
+            // inform the caller of an error that occurred, or continue the
+            // handshake. Worst case, we'll call updateHandshakeState() and
+            // it'll correct our mmistake eventually.
+
+            debug("JSSEngine: checkNeedCertValidation() - task done, removing");
+
+            task = null;
+            handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
+            ssl_fd.needCertValidation = false;
+
+            return false;
+        }
+
+        if (ssl_fd == null) {
+            // If we don't have a SSLFDProxy instance, nothing we can do but
+            // skip checking if the task exists. Return false to show that
+            // we don't yet have a runnable task.
+            debug("JSSEngine: checkNeedCertValidation() - no ssl_fd");
+            return false;
+        }
+
+        if (!ssl_fd.needCertValidation) {
+            // We don't yet need certificate validation. Don't create a
+            // runnable task for now.
+            debug("JSSEngine: checkNeedCertValidation() - no need for cert validation");
+            return false;
+        }
+
+        debug("JSSEngine: checkNeedCertValidation() - creating task");
+
+        // OK, time to create our runnable task.
+        task = new CertValidationTask(ssl_fd);
+
+        // Update our handshake state so we know what to do next.
+        handshake_state = SSLEngineResult.HandshakeStatus.NEED_TASK;
+
+        return true;
     }
 
     public SSLEngineResult.HandshakeStatus getHandshakeStatus() {
         debug("JSSEngine: getHandshakeStatus()");
+
+        // If task is NULL, we need to update the state to check if the
+        // task has been "run". Even if it isn't, it would be good to
+        // update the status here as well. However, we DO NOT want to
+        // call updateHandshakeState() in the event we have a task to
+        // run: we need to run it still!
+        if (checkNeedCertValidation()) {
+            return handshake_state;
+        }
 
         // Always update the handshake state; this ensures that we catch
         // looping due to missing data and flip our expected direction.
@@ -883,6 +982,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             beginHandshake();
         }
 
+        // Before going much further, check to see if we need to run a
+        // delegated task. So far, the only delegated tasks we have are
+        // for checking TrustManagers.
+        if (checkNeedCertValidation()) {
+            return new SSLEngineResult(SSLEngineResult.Status.OK, handshake_state, 0, 0);
+        }
+
         logUnwrap(src);
 
         // Order of operations:
@@ -1142,6 +1248,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             beginHandshake();
         }
 
+        // Before going much further, check to see if we need to run a
+        // delegated task. So far, the only delegated tasks we have are
+        // for checking TrustManagers.
+        if (checkNeedCertValidation()) {
+            return new SSLEngineResult(SSLEngineResult.Status.OK, handshake_state, 0, 0);
+        }
+
         // Order of operations:
         //  1. Step the handshake
         //  2. Write data from srcs to ssl_fd
@@ -1358,6 +1471,162 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (write_buf != null) {
             Buffer.Free(write_buf);
             write_buf = null;
+        }
+    }
+
+    private class CertValidationTask extends CertAuthHandler {
+        public CertValidationTask(SSLFDProxy fd) {
+            super(fd);
+        }
+
+        public String findAuthType(SSLFDProxy ssl_fd, PK11Cert[] chain) throws Exception {
+            SSLPreliminaryChannelInfo info = SSL.GetPreliminaryChannelInfo(ssl_fd);
+            if (info == null) {
+                String msg = "Expected non-null result from GetPreliminaryChannelInfo!";
+                throw new RuntimeException(msg);
+            }
+
+            if (!info.haveProtocolVersion()) {
+                String msg = "Expected SSLPreliminaryChannelInfo (";
+                msg += info + ") to have protocol information.";
+                throw new RuntimeException(msg);
+            }
+
+            if (!info.haveCipherSuite()) {
+                String msg = "Expected SSLPreliminaryChannelInfo (";
+                msg += info + ") to have cipher suite information.";
+                throw new RuntimeException(msg);
+            }
+
+            SSLVersion version = info.getProtocolVersion();
+            SSLCipher suite = info.getCipherSuite();
+
+            if (version.value() < SSLVersion.TLS_1_3.value()) {
+                // When we're doing a TLSv1.2 or earlier protocol exchange,
+                // we can simply check the cipher suite value for the
+                // authentication type.
+                if (suite.requiresRSACert()) {
+                    // Java expects RSA_EXPORT to be handled properly.
+                    // However, rather than checking the actual bits in
+                    // the RSA certificate, return it purely based on
+                    // cipher suite name. In modern reality, these ciphers
+                    // should _NEVER_ be negotiated!
+                    if (suite.name().contains("RSA_EXPORT")) {
+                        return "RSA_EXPORT";
+                    }
+
+                    return "RSA";
+                } else if (suite.requiresECDSACert()) {
+                    return "ECDSA";
+                } else if (suite.requiresDSSCert()) {
+                    // Notably, DSS is the same as DSA, but the suite names
+                    // all use DSS while the JDK uses DSA.
+                    return "DSA";
+                }
+                // Implicit else: authType == null, causing TrustManager
+                // check to fail.
+            } else {
+                // For TLSv1.3 and any later protocols, we can't rely on
+                // the above requires() checks, because the actual
+                // signature type depends on the type of the certificate
+                // provided. This makes the TrustManager field redundant,
+                // but yet we still have to provide it.
+                if (chain != null && chain.length > 0 && chain[0] != null) {
+                    PK11Cert cert = chain[0];
+                    PublicKey key = cert.getPublicKey();
+                    return key.getAlgorithm();
+                }
+                // Implicit else here and above: authType == null, which
+                // will cause the TrustManager check to fail.
+            }
+
+            return null;
+        }
+
+        public int check(SSLFDProxy fd) {
+            // Needs to be available for assignException() below.
+            PK11Cert[] chain = null;
+
+            try {
+                chain = SSL.PeerCertificateChain(fd);
+                String authType = findAuthType(fd, chain);
+                debug("CertAuthType: " + authType);
+
+                if (chain == null || chain.length == 0) {
+                    // When the chain is NULL, we'd always fail in the
+                    // TrustManager calls, beacuse they expect a non-NULL,
+                    // non-empty chain. However, this is sometimes desired,
+                    // for instance, if we requested the peer to provide a
+                    // certificate chain and they didn't.
+                    if (as_server == true && !need_client_auth) {
+                        // Since we're a server validating the client's
+                        // chain (and they didn't provide one), we should
+                        // ignore it instead of forcing the problem.
+                        debug("No client certificate chain and client cert not needed.");
+                        return 0;
+                    }
+                }
+
+                for (X509TrustManager tm : trust_managers) {
+                    // X509ExtendedTrustManager lets the TM access the
+                    // SSLEngine while validating certificates. Otherwise,
+                    // the X509TrustManager doesn't have access to that
+                    // parameter. Facilitate it if possible.
+                    if (tm instanceof X509ExtendedTrustManager) {
+                        X509ExtendedTrustManager etm = (X509ExtendedTrustManager) tm;
+                        if (as_server) {
+                            etm.checkClientTrusted(chain, authType, JSSEngineReferenceImpl.this);
+                        } else {
+                            etm.checkServerTrusted(chain, authType, JSSEngineReferenceImpl.this);
+                        }
+                    } else {
+                        if (as_server) {
+                            tm.checkClientTrusted(chain, authType);
+                        } else {
+                            tm.checkServerTrusted(chain, authType);
+                        }
+                    }
+                }
+            } catch (Exception excpt) {
+                return assignException(excpt, chain);
+            }
+
+            return 0;
+        }
+
+        private int assignException(Exception excpt, PK11Cert[] chain) {
+            int nss_code = Cert.MatchExceptionToNSSError(excpt);
+
+            if (seen_exception) {
+                return nss_code;
+            }
+
+            String msg = "Got exception while trying to validate ";
+            msg += "peer's certificate chain:\n";
+            if (chain == null) {
+                msg += " - (null chain)\n";
+            } else if (chain.length == 0) {
+                msg += " - (0 length chain)\n";
+            } else {
+                for (PK11Cert cert : chain) {
+                    msg += " - " + cert + "\n";
+                }
+            }
+            msg += "with given TrustManagers:\n";
+            if (trust_managers == null) {
+                msg += " - (null TrustManagers)\n";
+            } else if (trust_managers.length == 0) {
+                msg += " - (0 length TrustManagers)\n";
+            } else {
+                for (X509TrustManager tm : trust_managers) {
+                    msg += " - " + tm + "\n";
+                }
+            }
+            msg += "exception message: " + excpt.getMessage();
+
+            seen_exception = true;
+            ssl_exception = new SSLException(msg, excpt);
+            return nss_code;
         }
     }
 }
