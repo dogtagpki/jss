@@ -444,6 +444,18 @@ public class SSL {
     public static native int ConfigAsyncTrustManagerCertAuthCallback(SSLFDProxy fd);
 
     /**
+     * Use a synchronous certificate checking handler based off the SSLFDProxy
+     * proper. This allows us to invoke an arbitrary number of TrustManagers,
+     * but with the caveat that it needs to be synchronous and respond via the
+     * auth callback hook. This should only be called on the server side of
+     * the connection, because it doesn't support the superior async method.
+     *
+     * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
+     *           JSSL_SSLFDSyncCertAuthCallback in jss/nss/SSLFDProxy.c
+     */
+    public static native int ConfigSyncTrustManagerCertAuthCallback(SSLFDProxy fd);
+
+    /**
      * Inform NSS that the asynchronous certificate check handler has
      * completed, allowing us to continue the handshake.
      *

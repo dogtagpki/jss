@@ -21,6 +21,8 @@ public class SSLFDProxy extends PRFDProxy {
     public boolean needCertValidation;
     public boolean handshakeComplete;
 
+    public CertAuthHandler handler;
+
     public SSLFDProxy(byte[] pointer) {
         super(pointer);
 
@@ -46,5 +48,9 @@ public class SSLFDProxy extends PRFDProxy {
                 }
             }
         }
+    }
+
+    public int invokeCertAuthHandler() {
+        return handler.check(this);
     }
 }

@@ -895,6 +895,27 @@ Java_org_mozilla_jss_nss_SSL_ConfigAsyncTrustManagerCertAuthCallback(JNIEnv *env
 }
 
 JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_ConfigSyncTrustManagerCertAuthCallback(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    jobject fd_ref = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_NSS_getGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_AuthCertificateHook(real_fd, JSSL_SSLFDSyncCertAuthCallback, fd_ref);
+}
+
+JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_nss_SSL_AuthCertificateComplete(JNIEnv *env, jclass clazz,
     jobject fd, jint error)
 {
