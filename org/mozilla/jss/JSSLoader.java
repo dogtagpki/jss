@@ -92,7 +92,7 @@ public class JSSLoader {
     /**
      * Initialize JSS from the specified path to a configuration file.
      */
-    public static void init(String config_path) throws Exception {
+    public static CryptoManager init(String config_path) throws Exception {
         if (config_path == null) {
             String msg = "Please specify the path to the JSS configuration ";
             msg += "file in the java.security provider list.";
@@ -100,17 +100,16 @@ public class JSSLoader {
         }
 
         try (FileInputStream fistream = new FileInputStream(config_path)) {
-            init(fistream);
-            return;
+            return init(fistream);
         }
     }
 
     /**
      * Initialize JSS from an InputStream.
      */
-    public static void init(InputStream istream) throws Exception {
+    public static CryptoManager init(InputStream istream) throws Exception {
         if (loaded()) {
-            return;
+            return CryptoManager.getInstance();
         }
 
         if (istream == null) {
@@ -137,6 +136,8 @@ public class JSSLoader {
         parsePasswords(config, cm);
 
         parseExperimental(config);
+
+        return cm;
     }
 
     /**
