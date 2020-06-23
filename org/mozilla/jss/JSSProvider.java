@@ -26,6 +26,8 @@ public final class JSSProvider extends java.security.Provider {
 
     private static JSSLoader loader = new JSSLoader();
 
+    private static CryptoManager cm;
+
     public JSSProvider() {
         this(loader.loaded());
     }
@@ -48,7 +50,7 @@ public final class JSSProvider extends java.security.Provider {
     public JSSProvider(InputStream config) throws Exception {
         this(false);
 
-        loader.init(config);
+        cm = loader.init(config);
         initializeProvider();
     }
 
@@ -63,7 +65,7 @@ public final class JSSProvider extends java.security.Provider {
      */
     public Provider configure(String arg) {
         try {
-            loader.init(arg);
+            cm = loader.init(arg);
         } catch (NullPointerException npe) {
             throw npe;
         } catch (Exception e) {
@@ -73,6 +75,18 @@ public final class JSSProvider extends java.security.Provider {
         initializeProvider();
 
         return this;
+    }
+
+    /**
+     * Return the CryptoManager this instance was initialized with.
+     */
+    public CryptoManager getCryptoManager() {
+        if (cm == null) {
+            try {
+                cm = CryptoManager.getInstance();
+            } catch (NotInitializedException nie) {}
+        }
+        return cm;
     }
 
     protected void initializeProvider() {

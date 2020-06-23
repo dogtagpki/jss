@@ -340,31 +340,54 @@ public final class CryptoManager implements TokenSupplier
      *      called.
      * @return CryptoManager instance.
      */
-    public synchronized static CryptoManager getInstance()
+    public static CryptoManager getInstance()
         throws NotInitializedException
     {
-        if (instance == null) {
-            /* Java has lazy-loading Security providers; until a provider
-             * is requested, it won't be loaded. This means we could've
-             * initialized the CryptoManager via the JSSLoader but we won't
-             * know about it until it is explicitly requested.
-             *
-             * This breaks tests looking to configure a file-based password
-             * handler: if the very first call is to getInstance(...) instead
-             * of a Provider call, we'd fail.
-             *
-             * Try to get the Mozilla-JSS provider by name before reporting
-             * that we're not initialized.
-             */
-            if (Security.getProvider("Mozilla-JSS") != null) {
-                if (instance != null) {
-                    return instance;
-                }
+        synchronized (CryptoManager.class) {
+            if (instance != null) {
+                return instance;
+            }
+        }
+
+        /* Java has lazy-loading Security providers; until a provider
+         * is requested, it won't be loaded. This means we could've
+         * initialized the CryptoManager via the JSSLoader but we won't
+         * know about it until it is explicitly requested.
+         *
+         * This breaks tests looking to configure a file-based password
+         * handler: if the very first call is to getInstance(...) instead
+         * of a Provider call, we'd fail.
+         *
+         * Try to get the Mozilla-JSS provider by name before reporting
+         * that we're not initialized.
+         *
+         * However, in order for the JSSProvider to load, we need to
+         * release our lock on CryptoManager (and in particular, on
+         * CryptoManager.instance).
+         */
+        java.security.Provider p = Security.getProvider("Mozilla-JSS");
+
+        synchronized (CryptoManager.class) {
+            // When instance is properly configured, use that.
+            if (instance != null) {
+                return instance;
             }
 
-            throw new NotInitializedException();
+            // Otherwise, work around this by looking at what JSSProvider
+            // created.
+            if (p instanceof JSSProvider) {
+                JSSProvider jssProvider = (JSSProvider) p;
+                assert jssProvider.getCryptoManager() != null;
+
+                if (instance == null) {
+                    instance = jssProvider.getCryptoManager();
+                }
+
+                return instance;
+            }
         }
-        return instance;
+
+        throw new NotInitializedException();
     }
 
     /**
