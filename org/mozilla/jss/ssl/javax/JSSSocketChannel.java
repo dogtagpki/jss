@@ -147,6 +147,11 @@ public class JSSSocketChannel extends SocketChannel {
                 } else if (state == SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
                     // Read into an empty buffer to unwrap.
                     read(empty);
+                } else if (state == SSLEngineResult.HandshakeStatus.NEED_TASK) {
+                    // Run the task, synchronously, because we're a mostly
+                    // blocking SSLSocket.
+                    Runnable task = engine.getDelegatedTask();
+                    task.run();
                 } else {
                     String msg = "Error attempting to handshake: unknown ";
                     msg += "handshake status code `" + state + "`";
