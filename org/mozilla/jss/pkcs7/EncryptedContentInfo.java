@@ -40,7 +40,6 @@ import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.PBEParameter;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.Password;
 
 /**
@@ -267,37 +266,41 @@ public class EncryptedContentInfo implements ASN1Value {
         PBEKeyGenParams kgp = new PBEKeyGenParams(pass,
                     pbeParams.getSalt(), pbeParams.getIterations() );
 
-
-        // compute the key and IV
-        CryptoToken token =
-            CryptoManager.getInstance().getInternalCryptoToken();
-        KeyGenerator kg = token.getKeyGenerator( kgAlg );
-        if( charToByteConverter != null ) {
-            kg.setCharToByteConverter( charToByteConverter );
-        }
-        kg.initialize( kgp );
-        SymmetricKey key = kg.generate();
-
-        // compute algorithm parameters
-        EncryptionAlgorithm encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
-        AlgorithmParameterSpec algParams = null;
-        Class<?> [] paramClasses = encAlg.getParameterClasses();
-        for (int i = 0; i < paramClasses.length; i ++) {
-            if ( paramClasses[i].equals(
-                      javax.crypto.spec.IvParameterSpec.class ) ) {
-                algParams = new IVParameterSpec( kg.generatePBE_IV() );
-                break;
-            } else if ( paramClasses[i].equals(RC2ParameterSpec.class ) ) {
-                algParams = new RC2ParameterSpec(key.getStrength(),
-                                                 kg.generatePBE_IV());
-                break;
+        try {
+            // compute the key and IV
+            CryptoToken token =
+                CryptoManager.getInstance().getInternalCryptoToken();
+            KeyGenerator kg = token.getKeyGenerator( kgAlg );
+            if( charToByteConverter != null ) {
+                kg.setCharToByteConverter( charToByteConverter );
             }
-        }
+            kg.initialize( kgp );
+            SymmetricKey key = kg.generate();
 
-        // perform the decryption
-        Cipher cipher = token.getCipherContext( encAlg );
-        cipher.initDecrypt(key, algParams);
-        return Cipher.unPad(cipher.doFinal( encryptedContent.toByteArray() ));
+            // compute algorithm parameters
+            EncryptionAlgorithm encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
+            AlgorithmParameterSpec algParams = null;
+            Class<?> [] paramClasses = encAlg.getParameterClasses();
+            for (int i = 0; i < paramClasses.length; i ++) {
+                if ( paramClasses[i].equals(
+                          javax.crypto.spec.IvParameterSpec.class ) ) {
+                    algParams = new IVParameterSpec( kg.generatePBE_IV() );
+                    break;
+                } else if ( paramClasses[i].equals(RC2ParameterSpec.class ) ) {
+                    algParams = new RC2ParameterSpec(key.getStrength(),
+                                                     kg.generatePBE_IV());
+                    break;
+                }
+            }
+
+            // perform the decryption
+            Cipher cipher = token.getCipherContext( encAlg );
+            cipher.initDecrypt(key, algParams);
+            return Cipher.unPad(cipher.doFinal( encryptedContent.toByteArray() ));
+
+        } finally {
+            kgp.clear();
+        }
     }
 
 
