@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -150,16 +150,24 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#globalRef">globalRef</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#handler">handler</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#handshakeComplete">handshakeComplete</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html" title="class in org.mozilla.jss.ssl">SSLAlertEvent</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#inboundAlerts">inboundAlerts</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#inboundOffset">inboundOffset</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#needCertValidation">needCertValidation</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html" title="class in org.mozilla.jss.ssl">SSLAlertEvent</a>&gt;</code></td>
@@ -209,12 +217,16 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#invokeCertAuthHandler--">invokeCertAuthHandler</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#releaseNativeResources--">releaseNativeResources</a></span>()</code>
 <div class="block">Release the native resources used by this proxy.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#SetClientCert-org.mozilla.jss.crypto.X509Certificate-">SetClientCert</a></span>(<a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert)</code>&nbsp;</td>
 </tr>
@@ -308,13 +320,31 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <pre>public&nbsp;int outboundOffset</pre>
 </li>
 </ul>
+<a name="needCertValidation">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>needCertValidation</h4>
+<pre>public&nbsp;boolean needCertValidation</pre>
+</li>
+</ul>
 <a name="handshakeComplete">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>handshakeComplete</h4>
+<pre>public&nbsp;boolean handshakeComplete</pre>
+</li>
+</ul>
+<a name="handler">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>handshakeComplete</h4>
-<pre>public&nbsp;boolean handshakeComplete</pre>
+<h4>handler</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a> handler</pre>
 </li>
 </ul>
 </li>
@@ -359,7 +389,7 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <a name="releaseNativeResources--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>releaseNativeResources</h4>
 <pre>protected&nbsp;void&nbsp;releaseNativeResources()
@@ -379,6 +409,15 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.Exception</code></dd>
 </dl>
+</li>
+</ul>
+<a name="invokeCertAuthHandler--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>invokeCertAuthHandler</h4>
+<pre>public&nbsp;int&nbsp;invokeCertAuthHandler()</pre>
 </li>
 </ul>
 </li>
