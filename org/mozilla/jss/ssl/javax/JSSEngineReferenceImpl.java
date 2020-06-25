@@ -509,13 +509,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                     throw new RuntimeException("Unable to rehandshake: " + errorText(PR.GetError()));
                 }
             }
-
-            // Lastly, force a step of the handshake. Ignore all errors; we'll
-            // come back to this later in updateHandshake. We just need this
-            // to kick the process off.
-            try {
-                SSL.ForceHandshake(ssl_fd);
-            } catch (Exception e) {}
         }
 
         // Make sure we reset the handshake completion status in order for the
@@ -752,27 +745,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         return data_index;
     }
 
-    private void updateSession() {
-        if (ssl_fd == null) {
-            return;
-        }
-
-        try {
-            PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
-            session.setPeerCertificates(peer_chain);
-
-            SSLChannelInfo info = SSL.GetChannelInfo(ssl_fd);
-            if (info == null) {
-                return;
-            }
-
-            session.setId(info.getSessionID());
-            session.refreshData();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
     private SSLException checkSSLAlerts() {
         debug("JSSEngine: Checking inbound and outbound SSL Alerts. Have " + ssl_fd.inboundAlerts.size() + " inbound and " + ssl_fd.outboundAlerts.size() + " outbound alerts.");
 
@@ -824,16 +796,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (seen_exception) {
             return;
         }
-
-        // Before we step the handshake, check our current security status.
-        // This informs us of our possible return codes. Also, if we're
-        // currently on, update our handshake status. This happens even if
-        // we later exit before calling SSL.ForceHandshake() so that we can
-        // see what the session data contains.
-        if (ssl_fd.handshakeComplete) {
-            updateSession();
-        }
-
 
         // If we're already done, we should check for SSL ALerts.
         if (!step_handshake && handshake_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
@@ -910,6 +872,23 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             step_handshake = false;
             handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
             unknown_state_count = 0;
+
+            // Only update peer certificate chain when we've finished
+            // handshaking.
+            try {
+                PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
+                session.setPeerCertificates(peer_chain);
+            } catch (Exception e) {
+                String msg = "Unable to get peer's certificate chain: ";
+                msg += e.getMessage();
+
+                seen_exception = true;
+                ssl_exception = new SSLException(msg, e);
+            }
+
+            // Also update our session information here.
+            session.refreshData();
+
             return;
         }
 
@@ -1458,6 +1437,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 PR.Close(ssl_fd);
                 ssl_fd.close();
             } catch (Exception e) {
+                debug("Got exception trying to cleanup SSLFD: " + e.getMessage());
             } finally {
                 closed_fd = true;
             }

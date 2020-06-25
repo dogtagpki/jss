@@ -88,7 +88,10 @@ public class JSSSession implements SSLSession {
     }
 
     public long getCreationTime() {
-        refreshData();
+        if (creationTime == 0) {
+            refreshData();
+        }
+
         return creationTime;
     }
 
@@ -115,20 +118,13 @@ public class JSSSession implements SSLSession {
         if (info != null) {
             // NSS returns the values as seconds, but we have to report them
             // in milliseconds to our callers. Multiply by a thousand here.
+            setId(info.getSessionID());
             setCreationTime(info.getCreationTime() * 1000);
             setLastAccessedTime(info.getLastAccessTime() * 1000);
             setExpirationTime(info.getExpirationTime() * 1000);
 
             setCipherSuite(info.getCipherSuite());
             setProtocol(info.getProtocolVersion());
-        }
-
-        SSLFDProxy ssl_fd = parent.getSSLFDProxy();
-        if (ssl_fd != null) {
-            try {
-                PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
-                setPeerCertificates(peer_chain);
-            } catch (Exception e) {}
         }
     }
 
@@ -184,7 +180,6 @@ public class JSSSession implements SSLSession {
     }
 
     public Certificate[] getPeerCertificates() {
-        refreshData();
         return peerCertificates;
     }
 
@@ -222,7 +217,9 @@ public class JSSSession implements SSLSession {
     }
 
     public String getCipherSuite() {
-        refreshData();
+        if (cipherSuite == null) {
+            refreshData();
+        }
 
         if (cipherSuite == null) {
             return null;
@@ -240,7 +237,9 @@ public class JSSSession implements SSLSession {
     }
 
     public String getProtocol() {
-        refreshData();
+        if (protocolVersion == null) {
+            refreshData();
+        }
 
         if (protocolVersion == null) {
             return null;
