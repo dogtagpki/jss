@@ -230,23 +230,23 @@ public class BadSSL {
 
     public static void testSiteOldSSLSocket(String host, int port) throws Exception {
         System.out.println("Testing connection to " + host + ":" + port);
-        org.mozilla.jss.ssl.SSLSocket sock = new org.mozilla.jss.ssl.SSLSocket(host, 443);
-        sock.forceHandshake();
-        sock.shutdownOutput();
-        sock.shutdownInput();
-        sock.close();
+        try (org.mozilla.jss.ssl.SSLSocket sock = new org.mozilla.jss.ssl.SSLSocket(host, 443)) {
+            sock.forceHandshake();
+            sock.shutdownOutput();
+            sock.shutdownInput();
+        }
     }
 
     public static void testSiteJavaxSSLSocket(String host, int port) throws Exception {
         System.out.println("Testing connection to " + host + ":" + port);
-        JSSSocket sock = (JSSSocket) jsf.createSocket(host, port);
-        sock.setUseClientMode(true);
-        sock.setWantClientAuth(false);
-        sock.setNeedClientAuth(false);
-        sock.setHostname(host);
-        sock.startHandshake();
-        sock.shutdownOutput();
-        sock.shutdownInput();
-        sock.close();
+        try (JSSSocket sock = (JSSSocket) jsf.createSocket(host, port)) {
+            sock.setUseClientMode(true);
+            sock.setWantClientAuth(false);
+            sock.setNeedClientAuth(false);
+            sock.setHostname(host);
+            sock.startHandshake();
+            sock.shutdownOutput();
+            sock.shutdownInput();
+        }
     }
 }
