@@ -12,14 +12,6 @@
 /* Use a modern pragma guard... */
 #pragma once
 
-/* Free a Buffer-backed PRFileDesc. Note that it is usually sufficient to call
- * PR_Close(...) on the buffer instead. This is provided for completeness and
- * should not be called in a SSL context as the buffer PRFileDesc is wrapped
- * by the SSL PRFileDesc. Note that this only removes references to the
- * underlying j_buffers and does not free them; it is up to the caller to
- * do so. */
-void freeBufferPRFileDesc(PRFileDesc *fd);
-
 /* Construct a new PRFileDesc backed by a pair of buffers. Note that these
  * should be separate buffers, but need not be unique to this PRFileDesc;
  * that is, a client and server could share (but be swapped) j_buffers.
