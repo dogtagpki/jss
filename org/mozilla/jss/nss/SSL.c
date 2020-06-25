@@ -60,6 +60,10 @@ jobject JSS_NewSecurityStatusResult(JNIEnv *env, int on, char *cipher,
         keySize, secretKeySize, issuer_java, subject_java);
 
 finish:
+    PORT_Free(cipher);
+    PORT_Free(issuer);
+    PORT_Free(subject);
+
     return result;
 }
 
