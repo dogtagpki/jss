@@ -217,7 +217,9 @@
 <li type="circle">org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/ByteArrayLexOrder.html" title="class in org.mozilla.jss.netscape.security.util"><span class="typeNameLink">ByteArrayLexOrder</span></a> (implements java.util.Comparator&lt;T&gt;, java.io.Serializable)</li>
 <li type="circle">org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/ByteArrayTagOrder.html" title="class in org.mozilla.jss.netscape.security.util"><span class="typeNameLink">ByteArrayTagOrder</span></a> (implements java.util.Comparator&lt;T&gt;, java.io.Serializable)</li>
 <li type="circle">org.mozilla.jss.netscape.security.util.<a href="org/mozilla/jss/netscape/security/util/Cert.html" title="class in org.mozilla.jss.netscape.security.util"><span class="typeNameLink">Cert</span></a></li>
+<li type="circle">org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/Cert.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Cert</span></a></li>
 <li type="circle">org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/CertAndKeyGen.html" title="class in org.mozilla.jss.netscape.security.x509"><span class="typeNameLink">CertAndKeyGen</span></a></li>
+<li type="circle">org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">CertAuthHandler</span></a> (implements java.lang.Runnable)</li>
 <li type="circle">org.mozilla.jss.pkcs12.<a href="org/mozilla/jss/pkcs12/CertBag.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">CertBag</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Value.html" title="interface in org.mozilla.jss.asn1">ASN1Value</a>)</li>
 <li type="circle">org.mozilla.jss.pkcs12.<a href="org/mozilla/jss/pkcs12/CertBag.Template.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">CertBag.Template</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Template.html" title="interface in org.mozilla.jss.asn1">ASN1Template</a>)</li>
 <li type="circle">org.mozilla.jss.pkix.crmf.<a href="org/mozilla/jss/pkix/crmf/CertId.html" title="class in org.mozilla.jss.pkix.crmf"><span class="typeNameLink">CertId</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Value.html" title="interface in org.mozilla.jss.asn1">ASN1Value</a>)</li>
@@ -556,7 +558,6 @@
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/IVParameterSpec.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">IVParameterSpec</span></a></li>
 </ul>
 </li>
-<li type="circle">org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSKeyManager</span></a> (implements javax.net.ssl.X509KeyManager)</li>
 <li type="circle">org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss"><span class="typeNameLink">JSSLoader</span></a></li>
 <li type="circle">org.mozilla.jss.provider.java.security.<a href="org/mozilla/jss/provider/java/security/JSSLoadStoreParameter.html" title="class in org.mozilla.jss.provider.java.security"><span class="typeNameLink">JSSLoadStoreParameter</span></a> (implements java.security.KeyStore.LoadStoreParameter)</li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/JSSMessageDigest.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">JSSMessageDigest</span></a>
@@ -566,6 +567,7 @@
 </li>
 <li type="circle">org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSNativeTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSNativeTrustManager</span></a> (implements javax.net.ssl.X509TrustManager)</li>
 <li type="circle">org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSSession.html" title="class in org.mozilla.jss.ssl.javax"><span class="typeNameLink">JSSSession</span></a> (implements javax.net.ssl.SSLSession)</li>
+<li type="circle">org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTokenKeyManager.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSTokenKeyManager</span></a> (implements org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html" title="interface in org.mozilla.jss.provider.javax.crypto">JSSKeyManager</a>)</li>
 <li type="circle">org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSTrustManager.html" title="class in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSTrustManager</span></a> (implements javax.net.ssl.X509TrustManager)</li>
 <li type="circle">org.mozilla.jss.netscape.security.extensions.<a href="org/mozilla/jss/netscape/security/extensions/KerberosName.html" title="class in org.mozilla.jss.netscape.security.extensions"><span class="typeNameLink">KerberosName</span></a></li>
 <li type="circle">java.security.KeyFactorySpi
@@ -935,6 +937,7 @@
 </li>
 <li type="circle">org.mozilla.jss.pkcs12.<a href="org/mozilla/jss/pkcs12/SafeBag.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">SafeBag</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Value.html" title="interface in org.mozilla.jss.asn1">ASN1Value</a>)</li>
 <li type="circle">org.mozilla.jss.pkcs12.<a href="org/mozilla/jss/pkcs12/SafeBag.Template.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">SafeBag.Template</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Template.html" title="interface in org.mozilla.jss.asn1">ASN1Template</a>)</li>
+<li type="circle">org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SECErrors.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">SECErrors</span></a></li>
 <li type="circle">org.mozilla.jss.pkcs12.<a href="org/mozilla/jss/pkcs12/SecretBag.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">SecretBag</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Value.html" title="interface in org.mozilla.jss.asn1">ASN1Value</a>)</li>
 <li type="circle">org.mozilla.jss.pkcs12.<a href="org/mozilla/jss/pkcs12/SecretBag.Template.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">SecretBag.Template</span></a> (implements org.mozilla.jss.asn1.<a href="org/mozilla/jss/asn1/ASN1Template.html" title="interface in org.mozilla.jss.asn1">ASN1Template</a>)</li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/SecretDecoderRing.html" title="class in org.mozilla.jss.crypto"><span class="typeNameLink">SecretDecoderRing</span></a></li>
@@ -1299,6 +1302,15 @@
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenAlgorithm.KeyStrengthValidator.html" title="interface in org.mozilla.jss.crypto"><span class="typeNameLink">KeyGenAlgorithm.KeyStrengthValidator</span></a></li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenerator.html" title="interface in org.mozilla.jss.crypto"><span class="typeNameLink">KeyGenerator</span></a></li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyGenerator.CharToByteConverter.html" title="interface in org.mozilla.jss.crypto"><span class="typeNameLink">KeyGenerator.CharToByteConverter</span></a></li>
+<li type="circle">javax.net.ssl.KeyManager
+<ul>
+<li type="circle">javax.net.ssl.X509KeyManager
+<ul>
+<li type="circle">org.mozilla.jss.provider.javax.crypto.<a href="org/mozilla/jss/provider/javax/crypto/JSSKeyManager.html" title="interface in org.mozilla.jss.provider.javax.crypto"><span class="typeNameLink">JSSKeyManager</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li type="circle">org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/KeyWrapper.html" title="interface in org.mozilla.jss.crypto"><span class="typeNameLink">KeyWrapper</span></a></li>
 <li type="circle">org.mozilla.jss.util.<a href="org/mozilla/jss/util/PasswordCallback.html" title="interface in org.mozilla.jss.util"><span class="typeNameLink">PasswordCallback</span></a></li>
 <li type="circle">org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PKCS11Constants.html" title="interface in org.mozilla.jss.pkcs11"><span class="typeNameLink">PKCS11Constants</span></a></li>
