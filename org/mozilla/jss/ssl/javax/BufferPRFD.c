@@ -41,6 +41,8 @@ struct PRFilePrivate {
     uint8_t *peer_addr;
 };
 
+static PRDescIdentity buffer_layer_id = 0;
+
 // This function is provided as a stub for all unimplemented calls.
 static PRIntn invalidInternalCall(/* anything */)
 {
@@ -71,6 +73,8 @@ static PRStatus PRBufferShutdown(PRFileDesc *fd, PRIntn how)
 // This function mimics closing a buffer and frees our associated data.
 static PRStatus PRBufferClose(PRFileDesc *fd)
 {
+    PRStatus rv = PR_SUCCESS;
+
     if (fd->secret != NULL) {
         // We intentionally don't free read_buffer or write_buffer; we assume
         // the caller has a copy of these data structures as well, and could
@@ -87,8 +91,11 @@ static PRStatus PRBufferClose(PRFileDesc *fd)
         fd->secret = NULL;
     }
 
-    fd->secret = NULL;
-    return PR_SUCCESS;
+    PR_ASSERT(fd->identity == buffer_layer_id);
+    PR_ASSERT(fd->higher == NULL);
+    PR_ASSERT(fd->lower == NULL);
+
+    return rv;
 }
 
 // Fake getting the name of the remote peer
@@ -309,27 +316,6 @@ static const PRIOMethods PRIOBufferMethods = {
     (PRReservedFN)invalidInternalCall
 };
 
-/* Free a Buffer-backed PRFileDesc. Note that it is usually sufficient to call
- * PR_Close(...) on the buffer instead. This is provided for completeness and
- * should not be called in a SSL context as the buffer PRFileDesc is wrapped
- * by the SSL PRFileDesc. Note that this only removes references to the
- * underlying j_buffers and does not free them; it is up to the caller to
- * do so. */
-void freeBufferPRFileDesc(PRFileDesc *fd)
-{
-    /* Leave it to the caller to free the bytes; they should maintain a
-     * reference to it as well. */
-
-    /* If fd->secret is none, close() was called first so we can just exit. */
-    if (fd->secret == NULL) {
-        return;
-    }
-
-    fd->secret->read_buffer = NULL;
-    fd->secret->write_buffer = NULL;
-    fd->secret = NULL;
-}
-
 /* Construct a new PRFileDesc backed by a pair of buffers. Note that these
  * should be separate buffers, but need not be unique to this PRFileDesc;
  * that is, a client and server could share (but be swapped) j_buffers.
@@ -343,9 +329,12 @@ PRFileDesc *newBufferPRFileDesc(j_buffer *read_buf, j_buffer *write_buf,
 {
     PRFileDesc *fd;
 
-    fd = PR_NEW(PRFileDesc);
+    if (buffer_layer_id == 0) {
+        buffer_layer_id = PR_GetUniqueIdentity("Buffer");
+    }
+
+    fd = PR_CreateIOLayerStub(buffer_layer_id, &PRIOBufferMethods);
     if (fd) {
-        fd->methods = &PRIOBufferMethods;
         fd->secret = PR_NEW(PRFilePrivate);
 
         fd->secret->read_buffer = read_buf;
@@ -356,10 +345,6 @@ PRFileDesc *newBufferPRFileDesc(j_buffer *read_buf, j_buffer *write_buf,
 
         fd->secret->peer_addr = calloc(16, sizeof(uint8_t));
         memcpy(fd->secret->peer_addr, peer_info, len);
-
-        fd->lower = NULL;
-        fd->higher = NULL;
-        fd->dtor = freeBufferPRFileDesc;
     }
 
     return fd;
