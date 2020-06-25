@@ -687,6 +687,8 @@ public class JSSSocket extends SSLSocket {
     @Override
     public void close() throws IOException {
         getInternalChannel().close();
+        engine.cleanup();
+        engine = null;
     }
 
     @Override

@@ -359,6 +359,7 @@ public class JSSSocketChannel extends SocketChannel {
                 // should ensure we always get a callback.
                 ByteBuffer read_one = ByteBuffer.allocate(1);
 
+                shutdownInput();
 
                 // Bypass read check.
                 inboundClosed = false;
@@ -372,6 +373,9 @@ public class JSSSocketChannel extends SocketChannel {
                 inboundClosed = true;
             }
         } finally {
+            engine.cleanup();
+            engine = null;
+
             if (parent == null) {
                 if (autoClose) {
                     parentSocket.shutdownInput();
