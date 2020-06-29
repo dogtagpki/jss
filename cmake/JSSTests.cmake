@@ -71,6 +71,10 @@ macro(jss_tests)
         COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD"
     )
     jss_test_java(
+        NAME "TestJByteBuffer"
+        COMMAND "org.mozilla.jss.tests.TestJByteBuffer"
+    )
+    jss_test_java(
         NAME "Test_UTF-8_Converter"
         COMMAND "org.mozilla.jss.tests.UTF8ConverterTest"
     )
