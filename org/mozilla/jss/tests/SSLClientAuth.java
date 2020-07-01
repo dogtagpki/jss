@@ -28,7 +28,7 @@ public class SSLClientAuth implements Runnable {
     
     private CryptoManager cm;
     public static final SignatureAlgorithm sigAlg =
-            SignatureAlgorithm.RSASignatureWithSHA1Digest;
+            SignatureAlgorithm.RSASignatureWithSHA256Digest;
     
     /**
      * Method that generates a certificate for given credential
