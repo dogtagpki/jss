@@ -170,11 +170,6 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "30" "localhost" "SHA-256/EC" "CA_ECDSA" "Server_ECDSA" "Client_ECDSA"
         DEPENDS "Generate_known_RSA_cert_pair"
     )
-    jss_test_java(
-        NAME "Generate_known_DSS_cert_pair"
-        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "SHA-1/DSA" "CA_DSS" "Server_DSS" "Client_DSS"
-        DEPENDS "Generate_known_ECDSA_cert_pair"
-    )
     jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_rsa.pfx"
         COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/rsa.pfx" "-n" "CA_RSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
@@ -185,15 +180,10 @@ macro(jss_tests)
         COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/ecdsa.pfx" "-n" "CA_ECDSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
         DEPENDS "Generate_known_ECDSA_cert_pair"
     )
-    jss_test_exec(
-        NAME "Create_PKCS11_cert_to_PKCS12_dss.pfx"
-        COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/dss.pfx" "-n" "CA_DSS" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
-        DEPENDS "Generate_known_DSS_cert_pair"
-    )
     jss_test_java(
         NAME "List_CA_certs"
         COMMAND "org.mozilla.jss.tests.ListCACerts" "${RESULTS_NSSDB_OUTPUT_DIR}" "Verbose"
-        DEPENDS "Generate_known_DSS_cert_pair"
+        DEPENDS "Generate_known_ECDSA_cert_pair"
     )
     jss_test_java(
         NAME "SSLClientAuth"
