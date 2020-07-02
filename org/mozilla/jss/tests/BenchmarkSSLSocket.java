@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -36,11 +37,14 @@ public class BenchmarkSSLSocket {
     public String headers = "HTTP/1.1 200 OK\r\nConnection: Closed\r\n";
     public String message;
 
+    public int limit = 150;
+
     public BenchmarkSSLSocket(String type, String nickname, int port, int size) throws Exception {
         this.type = type;
         this.nickname = nickname;
         this.port = port;
         this.size = size;
+        this.limit = limit;
 
         headers = headers + "Content-Length: " + size + "\r\n";
 
@@ -187,11 +191,29 @@ public class BenchmarkSSLSocket {
     }
 
     public void run() throws Exception {
+        ArrayList<Thread> existing = new ArrayList<Thread>(limit);
+
         try (
             ServerSocket server_socket = getServerSocket();
         ) {
             System.err.println("Listening for connections...");
             while (true) {
+                int length = existing.size();
+                while (length > limit) {
+                    int index = 0;
+
+                    while (index < length) {
+                        Thread.sleep(10);
+
+                        if (existing.get(index).isAlive()) {
+                            index += 1;
+                        } else {
+                            existing.remove(index);
+                            length -= 1;
+                        }
+                    }
+                }
+
                 Socket peer_socket = server_socket.accept();
                 Runnable task = new PeerTask(peer_socket, message);
                 Thread thread = new Thread(task);
