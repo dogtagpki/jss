@@ -39,6 +39,8 @@ public class JSSSocketChannel extends SocketChannel {
 
     private boolean handshakeCompleted = false;
 
+    private SSLEngineResult.HandshakeStatus state;
+
     public JSSSocketChannel(JSSSocket sslSocket, SocketChannel parent, Socket parentSocket, ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
         super(null);
 
@@ -119,7 +121,7 @@ public class JSSSocketChannel extends SocketChannel {
             }
         }
 
-        SSLEngineResult.HandshakeStatus state = engine.getHandshakeStatus();
+        state = engine.getHandshakeStatus();
         if (state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
             return true;
         }
@@ -207,8 +209,8 @@ public class JSSSocketChannel extends SocketChannel {
      * Compute the total size of a list of buffers from the specified offest
      * and length.
      */
-    private static long computeSize(ByteBuffer[] buffers, int offset, int length) throws IOException {
-        long result = 0;
+    private static int computeSize(ByteBuffer[] buffers, int offset, int length) throws IOException {
+        int result = 0;
 
         if (buffers == null || buffers.length == 0) {
             return result;
@@ -242,6 +244,7 @@ public class JSSSocketChannel extends SocketChannel {
             return -1;
         }
 
+        long remoteRead = 0;
         long unwrapped = 0;
         long decrypted = 0;
 
