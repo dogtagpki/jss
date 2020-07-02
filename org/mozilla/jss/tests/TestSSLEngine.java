@@ -43,7 +43,11 @@ public class TestSSLEngine {
         SSLEngine raw_eng = ctx.createSSLEngine();
         assert(raw_eng instanceof JSSEngine);
 
+        System.out.println("Testing basic assumptions...");
         testBasics(ctx);
+
+        System.out.println("Testing byte buffer semantics...");
+        testByteBufferSemantics(ctx);
     }
 
     public static void testBasics(SSLContext ctx) throws Exception {
@@ -97,6 +101,42 @@ public class TestSSLEngine {
             ssle.unwrap(random_buf, buf);
             assert false;
         } catch (SSLException e) {
+            assert true;
+        }
+    }
+
+    public static void testByteBufferSemantics(SSLContext ctx) throws Exception {
+        // Tests adapted from jdk11u test suite for compliance. Unlike JDK, we
+        // gracefully handle null buffers when possible.
+        SSLEngine ssle = ctx.createSSLEngine();
+
+        ByteBuffer roBB = ByteBuffer.allocate(40).asReadOnlyBuffer();
+
+        ByteBuffer bb1K = ByteBuffer.allocate(1024);
+        ByteBuffer bb2K = ByteBuffer.allocate(2048);
+        ByteBuffer bb4K = ByteBuffer.allocate(5096);
+        ByteBuffer bb8K = ByteBuffer.allocate(10192);
+
+        ByteBuffer[] bufs = new ByteBuffer[]{ bb1K, bb2K, bb4K, bb8K };
+
+        try {
+            ssle.unwrap(bb1K, bufs, 1, 5);
+            assert false;
+        } catch (IllegalArgumentException iae) {
+            assert true;
+        }
+
+        try {
+            ssle.unwrap(bb1K, bufs, -1, 5);
+            assert false;
+        } catch (IndexOutOfBoundsException iae) {
+            assert true;
+        }
+
+        try {
+            ssle.unwrap(bb1K, bufs, -3, 4);
+            assert false;
+        } catch (IndexOutOfBoundsException iae) {
             assert true;
         }
     }
