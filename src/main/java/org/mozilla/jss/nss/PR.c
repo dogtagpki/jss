@@ -104,7 +104,7 @@ Java_org_mozilla_jss_nss_PR_Close(JNIEnv *env, jclass clazz, jobject fd, jboolea
         return PR_SUCCESS;
     }
 
-    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL) {
         return PR_FAILURE;
     }
 
@@ -167,7 +167,7 @@ Java_org_mozilla_jss_nss_PR_Shutdown(JNIEnv *env, jclass clazz, jobject fd,
         return PR_SUCCESS;
     }
 
-    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL) {
         return PR_FAILURE;
     }
 
@@ -189,7 +189,7 @@ Java_org_mozilla_jss_nss_PR_Read(JNIEnv *env, jclass clazz, jobject fd,
     PR_ASSERT(env != NULL && fd != NULL && amount >= 0);
     PR_SetError(0, 0);
 
-    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL) {
         return NULL;
     }
 
@@ -261,7 +261,7 @@ Java_org_mozilla_jss_nss_PR_Write(JNIEnv *env, jclass clazz, jobject fd,
     PR_ASSERT(env != NULL && fd != NULL);
     PR_SetError(0, 0);
 
-    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL) {
         return 0;
     }
 
@@ -303,7 +303,7 @@ Java_org_mozilla_jss_nss_PR_Recv(JNIEnv *env, jclass clazz, jobject fd,
               timeout >= 0 && timeout <= UINT32_MAX);
     PR_SetError(0, 0);
 
-    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL) {
         return NULL;
     }
 
@@ -338,7 +338,7 @@ Java_org_mozilla_jss_nss_PR_Send(JNIEnv *env, jclass clazz, jobject fd,
               timeout >= 0 && timeout <= UINT32_MAX);
     PR_SetError(0, 0);
 
-    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL) {
         return 0;
     }
 
