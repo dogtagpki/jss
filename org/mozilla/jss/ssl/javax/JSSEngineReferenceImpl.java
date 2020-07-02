@@ -1060,7 +1060,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         SSLEngineResult.Status handshake_status = SSLEngineResult.Status.OK;
 
 
-        if (is_inbound_closed && is_outbound_closed) {
+        if (is_inbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
         }
@@ -1264,6 +1264,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // write_buf, and the size of dst, if present.
         int wire_data = 0;
 
+        if (is_inbound_closed && !is_outbound_closed) {
+            closeOutbound();
+        }
+
         int this_src_write;
         int this_dst_write;
         do {
@@ -1356,7 +1360,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             closeOutbound();
         }
 
-        if (is_inbound_closed && is_outbound_closed) {
+        if (is_outbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
         }
