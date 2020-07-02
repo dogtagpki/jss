@@ -180,6 +180,11 @@ macro(jss_tests)
         DEPENDS "Generate_known_RSA_cert_pair"
     )
     jss_test_exec(
+        NAME "Create_PKCS11_cert_to_PKCS12_server_rsa.pfx"
+        COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/rsa-server.pfx" "-n" "Server_RSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
+        DEPENDS "Generate_known_RSA_cert_pair"
+    )
+    jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_ecdsa.pfx"
         COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/ecdsa.pfx" "-n" "CA_ECDSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
         DEPENDS "Generate_known_ECDSA_cert_pair"

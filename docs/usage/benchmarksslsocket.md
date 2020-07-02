@@ -37,7 +37,10 @@ java.security. When utilizing SunJSSE, for best results, do not load
 JSS via java.security.
 
 It is suggested to use `run_test.sh` from the `build/` directory for
-executing this utility.
+executing this utility. `run_java.sh` can be used when benchmarking
+`SunJSSE.SSLSocket` as it doesn't load JSS via the `java.security`
+file by default. Additionally, a RSA server certificate is placed
+under `build/results/nssdb/rsa-ssl.pfx` with the default password.
 
 # Past Performance
 
