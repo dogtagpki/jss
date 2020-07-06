@@ -968,6 +968,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             return new SSLEngineResult(SSLEngineResult.Status.OK, handshake_state, 0, 0);
         }
 
+        boolean handshake_already_complete = ssl_fd.handshakeComplete;
+        int src_capacity = src.remaining();
+
         logUnwrap(src);
 
         // Order of operations:
@@ -1063,6 +1066,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (is_inbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
+        } else if (handshake_already_complete && src_capacity > 0 && app_data == 0) {
+            debug("Underflowed: produced no application data when we expected to.");
+            handshake_status = SSLEngineResult.Status.BUFFER_UNDERFLOW;
         }
 
         // Need a way to introspect the open/closed state of the TLS
