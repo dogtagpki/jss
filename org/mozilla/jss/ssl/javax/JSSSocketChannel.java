@@ -133,7 +133,7 @@ public class JSSSocketChannel extends SocketChannel {
         if (!isBlocking()) {
             // When we're a non-blocking socket/channel, we'd far rather
             // return false than take too much time in this method. Most
-            // handshakes, if all data is available, should only take 
+            // handshakes, if all data is available, should only take
             // a couple of passes.
             maxHandshakeAttempts = 10;
         }
@@ -244,31 +244,40 @@ public class JSSSocketChannel extends SocketChannel {
 
         readBuffer.clear();
 
-        int buffer_size = boundRead(readBuffer.capacity());
-        ByteBuffer src = ByteBuffer.wrap(readBuffer.array(), 0, buffer_size);
-
         long remoteRead = 0;
-        if (consumed != null) {
-            remoteRead = consumedChannel.read(src);
-        } else {
-            remoteRead = readChannel.read(src);
-        }
-
-        if (remoteRead == 0) {
-            return 0;
-        }
-
-        src.flip();
-
         long unwrapped = 0;
         long decrypted = 0;
 
         try {
             do {
-                SSLEngineResult result = engine.unwrap(src, dsts, offset, length);
-                if (result.getStatus() != SSLEngineResult.Status.OK && result.getStatus() != SSLEngineResult.Status.CLOSED) {
+                int buffer_size = boundRead(readBuffer.remaining());
+                ByteBuffer src = ByteBuffer.wrap(readBuffer.array(), readBuffer.position(), buffer_size);
+
+                int this_read = 0;
+                if (consumed != null) {
+                    this_read += consumedChannel.read(src);
+                } else {
+                    this_read += readChannel.read(src);
+                }
+
+                readBuffer.position(readBuffer.position() + this_read);
+                remoteRead += this_read;
+
+                if (remoteRead == 0) {
+                    return 0;
+                }
+
+                readBuffer.flip();
+
+                SSLEngineResult result = engine.unwrap(readBuffer, dsts, offset, length);
+                if (result.getStatus() != SSLEngineResult.Status.OK &&
+                    result.getStatus() != SSLEngineResult.Status.BUFFER_UNDERFLOW &&
+                    result.getStatus() != SSLEngineResult.Status.CLOSED) {
                     throw new IOException("Unexpected status from unwrap: " + result);
                 }
+
+                readBuffer.flip();
+                readBuffer.compact();
 
                 unwrapped += result.bytesConsumed();
                 decrypted += result.bytesProduced();
