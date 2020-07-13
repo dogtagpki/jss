@@ -1,17 +1,28 @@
 package org.mozilla.jss.tests;
 
-import java.lang.*;
-import java.nio.*;
-import java.net.*;
-import java.util.*;
-import java.security.*;
-import javax.net.ssl.*;
+import java.nio.ByteBuffer;
+import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import org.mozilla.jss.*;
-import org.mozilla.jss.nss.*;
-import org.mozilla.jss.ssl.*;
-import org.mozilla.jss.ssl.javax.*;
-import org.mozilla.jss.provider.javax.crypto.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
+import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
+import org.mozilla.jss.ssl.SSLCipher;
+import org.mozilla.jss.ssl.SSLVersion;
+import org.mozilla.jss.ssl.javax.JSSEngine;
+import org.mozilla.jss.ssl.javax.JSSEngineReferenceImpl;
+import org.mozilla.jss.ssl.javax.JSSParameters;
 
 public class TestSSLEngine {
     public static boolean debug = false;
@@ -66,13 +77,16 @@ public class TestSSLEngine {
 
         // Tests {get,set}EnabledProtocols()
         String[] protocols = ssle.getSupportedProtocols();
-        assert protocols.length >= 2;
-        String secondProtocol = protocols[1];
-        String[] oneProtocols = new String[]{ secondProtocol };
+
+        // Fedora returns at least 2 supported protocols
+        // in FIPS mode, but RHEL returns only 1.
+        assert protocols.length >= 1;
+        String firstProtocol = protocols[0];
+        String[] oneProtocols = new String[]{ firstProtocol };
         ssle.setEnabledProtocols(oneProtocols);
         protocols = ssle.getEnabledProtocols();
         assert protocols.length == 1;
-        assert protocols[0].equals(secondProtocol);
+        assert protocols[0].equals(firstProtocol);
 
         // Tests {get,set}UseClientMode
         ssle.setUseClientMode(true);
