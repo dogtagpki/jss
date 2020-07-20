@@ -29,6 +29,24 @@ public class JSSContextSpi extends SSLContextSpi {
     SSLVersion protocol_version;
 
     public void engineInit(KeyManager[] kms, TrustManager[] tms, SecureRandom sr) throws KeyManagementException {
+        if (kms == null && key_manager == null) {
+            try {
+                KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509", "Mozilla-JSS");
+                kms = kmf.getKeyManagers();
+            } catch (Exception e) {
+                throw new KeyManagementException("Unable to create default KeyManagers: " + e.getMessage(), e);
+            }
+        }
+
+        if (tms == null && (trust_managers == null || trust_managers.length == 0)) {
+            try {
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance("NssX509", "Mozilla-JSS");
+                tms = tmf.getTrustManagers();
+            } catch (Exception e) {
+                throw new KeyManagementException("Unable to create default TrustManagers: " + e.getMessage(), e);
+            }
+        }
+
         logger.debug("JSSContextSpi.engineInit(" + kms + ", " + tms + ", " + sr + ")");
 
         if (kms != null) {

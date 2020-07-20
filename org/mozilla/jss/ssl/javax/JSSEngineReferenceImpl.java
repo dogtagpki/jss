@@ -345,7 +345,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         // This is most useful for the client end of the connection; this
         // specifies what to match the server's certificate against.
-        if (hostname != null) {
+        if (hostname != null && !hostname.isEmpty()) {
+            debug("JSSEngine: setting hostname for cert validation: " + hostname);
             if (SSL.SetURL(ssl_fd, hostname) == SSL.SECFailure) {
                 throw new SSLException("Unable to configure server hostname: " + errorText(PR.GetError()));
             }
