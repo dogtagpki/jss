@@ -118,8 +118,10 @@ public class JSSTokenKeyManager implements JSSKeyManager {
 
         try {
             if (jks == null) {
-                org.mozilla.jss.crypto.X509Certificate cert = cm.findCertByNickname(alias);
-                return cm.findPrivKeyByCert(cert);
+                try (PK11Cert cert = (PK11Cert) cm.findCertByNickname(alias)) {
+                    PrivateKey key = cm.findPrivKeyByCert(cert);
+                    return key;
+                }
             }
 
             return (PrivateKey) jks.getKey(alias, password);

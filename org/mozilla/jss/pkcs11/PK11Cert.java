@@ -410,7 +410,16 @@ public class PK11Cert
         // This object also contains a token proxy; these are reference
         // counted objects and long-lived; freeing them is of little benefit
         // as they'll persist as long as CryptoManager holds a copy of all
-        // known tokens.
+        // known tokens. However, we still need to attempt to release our
+        // reference to them, otherwise the JVM will persist its reference
+        // to them.
+        if (tokenProxy != null) {
+            try {
+                tokenProxy.close();
+            } finally {
+                tokenProxy = null;
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////
