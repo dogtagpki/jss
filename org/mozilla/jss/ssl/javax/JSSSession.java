@@ -1,5 +1,6 @@
 package org.mozilla.jss.ssl.javax;
 
+import java.lang.AutoCloseable;
 import java.security.cert.Certificate;
 import javax.security.cert.X509Certificate;
 import java.security.Principal;
@@ -11,7 +12,7 @@ import org.mozilla.jss.nss.*;
 import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.ssl.*;
 
-public class JSSSession implements SSLSession {
+public class JSSSession implements SSLSession, AutoCloseable {
     private JSSEngine parent;
 
     private int applicationBufferSize;
@@ -36,6 +37,8 @@ public class JSSSession implements SSLSession {
     private Principal peerPrincipal;
     private X509Certificate[] peerChain;
     private Certificate[] peerCertificates;
+
+    private boolean closed;
 
     protected JSSSession(JSSEngine engine, int buffer_size) {
         this.parent = engine;
@@ -133,13 +136,18 @@ public class JSSSession implements SSLSession {
     }
 
     public boolean isValid() {
-        return System.currentTimeMillis() < getExpirationTime();
+        return !closed && System.currentTimeMillis() < getExpirationTime();
     }
 
     public void invalidate() {
         if (parent.getSSLFDProxy() != null) {
              SSL.InvalidateSession(parent.getSSLFDProxy());
         }
+    }
+
+    public void close() {
+        closed = true;
+        setPeerCertificates(null);
     }
 
     public void putValue(String name, Object value) {
@@ -184,6 +192,19 @@ public class JSSSession implements SSLSession {
     }
 
     protected void setPeerCertificates(Certificate[] new_certs) {
+        // Free existing certificates prior to setting new ones.
+        if (peerCertificates != null) {
+            for (Certificate cert : peerCertificates) {
+                try {
+                    ((PK11Cert) cert).close();
+                } catch (Exception e) {
+                    // We can't reasonably handle this exception. Raising
+                    // a RuntimeException instead.
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            }
+        }
+
         peerCertificates = new_certs;
     }
 
