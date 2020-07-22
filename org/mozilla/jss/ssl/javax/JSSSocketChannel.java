@@ -378,6 +378,9 @@ public class JSSSocketChannel extends SocketChannel {
                     shutdownOutput();
                 }
 
+                // Make sure we close the input side of the SSLEngine.
+                engine.closeInbound();
+
                 outboundClosed = true;
                 inboundClosed = true;
             }
