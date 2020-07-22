@@ -101,6 +101,11 @@ public class JSSSocket extends SSLSocket {
     private boolean autoClose = true;
 
     /**
+     * Whether or not this socket has been closed.
+     */
+    private boolean closed;
+
+    /**
      * Start building a new JSSSocket.
      *
      * We specifically avoid creating any other constructors as we wish to
@@ -123,6 +128,11 @@ public class JSSSocket extends SSLSocket {
             throw new IOException(msg);
         }
 
+        if (closed) {
+            String msg = "Unable to perform operations on a closed socket!";
+            throw new IOException(msg);
+        }
+
         this.parent = parent;
     }
 
@@ -132,6 +142,11 @@ public class JSSSocket extends SSLSocket {
      * This is used by initSSLEngine(..) to create the underlying SSLEngine.
      */
     protected SSLContext getSSLContext() throws IOException {
+        if (closed) {
+            String msg = "Unable to perform operations on a closed socket!";
+            throw new IOException(msg);
+        }
+
         if (jssContext == null) {
             try {
                 jssContext = SSLContext.getInstance(engineProviderProtocol, engineProvider);
@@ -159,6 +174,11 @@ public class JSSSocket extends SSLSocket {
      * Initialize the underlying SocketChannel.
      */
     private void init() throws IOException {
+        if (closed) {
+            String msg = "Unable to perform operations on a closed socket!";
+            throw new IOException(msg);
+        }
+
         if (engine == null) {
             initEngine();
         }
@@ -689,6 +709,8 @@ public class JSSSocket extends SSLSocket {
         getInternalChannel().close();
         engine.cleanup();
         engine = null;
+        channel = null;
+        closed = true;
     }
 
     @Override
