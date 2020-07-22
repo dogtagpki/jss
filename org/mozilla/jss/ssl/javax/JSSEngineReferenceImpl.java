@@ -195,6 +195,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         // Initialize ssl_fd from the model Buffer-backed PRFileDesc.
         ssl_fd = SSL.ImportFD(model, fd);
+        if (ssl_fd == null) {
+            PR.Close(fd);
+            throw new SSLException("Error creating SSL socket on top of buffer-backed PRFileDesc.");
+        }
+
+        fd.clear();
+        fd = null;
         closed_fd = false;
 
         // Turn on SSL Alert Logging for the ssl_fd object.
@@ -1422,6 +1429,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         // Then clean up the NSS state.
         cleanupSSLFD();
+
+        // Clean up the session.
+        if (session != null) {
+            session.close();
+            session = null;
+        }
     }
 
     private void cleanupLoggingSocket() {
