@@ -94,6 +94,7 @@ static PRStatus PRBufferClose(PRFileDesc *fd)
     PR_ASSERT(fd->identity == buffer_layer_id);
     PR_ASSERT(fd->higher == NULL);
     PR_ASSERT(fd->lower == NULL);
+    fd->dtor(fd);
 
     return rv;
 }
