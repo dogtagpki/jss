@@ -142,6 +142,8 @@ static CERTCertificate *get_cert(char *host)
         }
     }
 
+    CERT_DestroyCertList(clist);
+
     return NULL;
 }
 
@@ -180,7 +182,7 @@ static SECKEYPrivateKey *get_privkey(CERTCertificate *cert, char *password)
     return PK11_FindPrivateKeyFromCert(slot, cert, NULL);
 }
 
-static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *password, char *nickname)
+static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *password, char *nickname, SECKEYPrivateKey **priv_key)
 {
     /* Set up the server end of the SSL connection and find certificates. */
     /* Adapted from aforementioned Fedora developer guide and mod_nss. */
@@ -190,8 +192,8 @@ static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *passwo
         exit(1);
     }
 
-    SECKEYPrivateKey *priv_key = get_privkey(cert, password);
-    if (priv_key == NULL) {
+    *priv_key = get_privkey(cert, password);
+    if (*priv_key == NULL) {
         printf("Failed to find private key for certificate for host: %s\n", host);
         const PRErrorCode err = PR_GetError();
         fprintf(stderr, "error %d: %s\n",
@@ -221,7 +223,7 @@ static PRFileDesc *setup_nss_server(PRFileDesc *s_nspr, char *host, char *passwo
 
     /* This part differs from the client side: set the certificate and
      * private key we're using. */
-    if (SSL_ConfigServerCert(s_nspr, cert, priv_key, NULL, 0) != SECSuccess) {
+    if (SSL_ConfigServerCert(s_nspr, cert, *priv_key, NULL, 0) != SECSuccess) {
         const PRErrorCode err = PR_GetError();
         fprintf(stderr, "error: SSL_ConfigServerCert error %d: %s\n",
             err, PR_ErrorToName(err));
@@ -304,8 +306,9 @@ int main(int argc, char** argv)
 
     /* Set up client and server sockets with NSSL */
     char *host = "localhost";
+    SECKEYPrivateKey *priv_key;
     c_nspr = setup_nss_client(c_nspr, host);
-    s_nspr = setup_nss_server(s_nspr, host, argv[2], argv[3]);
+    s_nspr = setup_nss_server(s_nspr, host, argv[2], argv[3], &priv_key);
 
     /* In the handshake step, we blindly try to step both the client and
      * server ends of the handshake. As NSS stores the contents of what we're
@@ -420,6 +423,13 @@ int main(int argc, char** argv)
     /* Free the buffers and their contents */
     jb_free(c_read_buf);
     jb_free(c_write_buf);
+
+    free(buf);
+    free(buf2);
+
+    SECKEY_DestroyPrivateKey(priv_key);
+
+    NSS_Shutdown();
 
     return 0;
 }
