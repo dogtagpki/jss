@@ -237,7 +237,7 @@ JSSL_SSLFDCertSelectionCallback(void *arg,
         return SECFailure;
     }
 
-    *pRetCert = cert;
+    *pRetCert = CERT_DupCertificate(cert);
     *pRetKey = privkey;
     return SECSuccess;
 }
