@@ -109,12 +109,12 @@ export CFLAGS
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
 # The Makefile is not thread-safe
-rm -rf build && mkdir -p build && cd build
 %cmake \
     -DJAVA_HOME=%{java_home} \
     -DJAVA_LIB_INSTALL_DIR=%{_jnidir} \
-    ..
+    -B %{_vpath_builddir}
 
+cd %{_vpath_builddir}
 %{__make} all
 %{__make} javadoc
 ctest --output-on-failure
@@ -126,19 +126,19 @@ ctest --output-on-failure
 
 # jars
 install -d -m 0755 $RPM_BUILD_ROOT%{_jnidir}
-install -m 644 build/jss4.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
+install -m 644 %{_vpath_builddir}/jss4.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
 
 # We have to use the name libjss4.so because this is dynamically
 # loaded by the jar file.
 install -d -m 0755 $RPM_BUILD_ROOT%{_libdir}/jss
-install -m 0755 build/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
+install -m 0755 %{_vpath_builddir}/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
 pushd  ${RPM_BUILD_ROOT}%{_libdir}/jss
     ln -fs %{_jnidir}/jss4.jar jss4.jar
 popd
 
 # javadoc
 install -d -m 0755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -rp build/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -rp %{_vpath_builddir}/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -p jss.html $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 
