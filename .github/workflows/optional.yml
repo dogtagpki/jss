@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: 
+        image:
           - 'pkcs11check'
           - 'debian_jdk11'
           - 'ubuntu_jdk8'
@@ -20,6 +20,6 @@ jobs:
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
-  
+
     - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "${{ matrix.image }}" || echo "::warning ::Job exited with status $?"
+      run: bash tools/run_container.sh "${{ matrix.image }}"
