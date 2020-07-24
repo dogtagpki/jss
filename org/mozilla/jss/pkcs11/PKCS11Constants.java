@@ -67,13 +67,6 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CK_INVALID_SESSION = 0x00000000L;
-
-    /**
-     * Content automatically generated; see NSS documentation for more information.
-     *
-     * Source file: /usr/include/nss3/pkcs11t.h
-     */
     public static final long CK_EFFECTIVELY_INFINITE = 0x00000000L;
 
     /**
@@ -236,6 +229,13 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKF_SO_PIN_TO_BE_CHANGED = 0x00800000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_ERROR_STATE = 0x01000000L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -641,7 +641,224 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKK_SEED = 0x00000026L;
+    public static final long CKK_SEED = 0x0000002FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_ARIA = 0x00000026L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_MD5_HMAC = 0x00000027L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA_1_HMAC = 0x00000028L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_RIPEMD128_HMAC = 0x00000029L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_RIPEMD160_HMAC = 0x0000002AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA256_HMAC = 0x0000002BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA384_HMAC = 0x0000002CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA512_HMAC = 0x0000002DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA224_HMAC = 0x0000002EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_GOSTR3410 = 0x00000030L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_GOSTR3411 = 0x00000031L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_GOST28147 = 0x00000032L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_CHACHA20 = 0x00000033L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_POLY1305 = 0x00000034L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_AES_XTS = 0x00000035L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA3_224_HMAC = 0x00000036L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA3_256_HMAC = 0x00000037L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA3_384_HMAC = 0x00000038L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA3_512_HMAC = 0x00000039L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_BLAKE2B_160_HMAC = 0x0000003AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_BLAKE2B_256_HMAC = 0x0000003BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_BLAKE2B_384_HMAC = 0x0000003CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_BLAKE2B_512_HMAC = 0x0000003DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SALSA20 = 0x0000003EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_X2RATCHET = 0x0000003FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_EC_EDWARDS = 0x00000040L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_EC_MONTGOMERY = 0x00000041L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_HKDF = 0x00000042L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA512_224_HMAC = 0x00000043L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA512_256_HMAC = 0x00000044L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKK_SHA512_T_HMAC = 0x00000045L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -677,6 +894,111 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKC_VENDOR_DEFINED = 0x80000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_CERTIFICATE_CATEGORY_UNSPECIFIED = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_CERTIFICATE_CATEGORY_TOKEN_USER = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_CERTIFICATE_CATEGORY_AUTHORITY = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_CERTIFICATE_CATEGORY_OTHER_ENTITY = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SECURITY_DOMAIN_UNSPECIFIED = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SECURITY_DOMAIN_MANUFACTURER = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SECURITY_DOMAIN_OPERATOR = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_SECURITY_DOMAIN_THIRD_PARTY = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_FORMAT_DECIMAL = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_FORMAT_HEXADECIMAL = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_FORMAT_ALPHANUMERIC = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_FORMAT_BINARY = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_PARAM_IGNORED = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_PARAM_OPTIONAL = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_PARAM_MANDATORY = 0x00000002L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -1103,6 +1425,20 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKA_COPYABLE = 0x00000171L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_DESTROYABLE = 0x00000172L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKA_ECDSA_PARAMS = 0x00000180L;
 
     /**
@@ -1160,6 +1496,132 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKA_UNWRAP_TEMPLATE = 0x40000212L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_DERIVE_TEMPLATE = 0x40000213L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_FORMAT = 0x00000220L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_LENGTH = 0x00000221L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_TIME_INTERVAL = 0x00000222L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_USER_FRIENDLY_MODE = 0x00000223L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_CHALLENGE_REQUIREMENT = 0x00000224L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_TIME_REQUIREMENT = 0x00000225L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_COUNTER_REQUIREMENT = 0x00000226L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_PIN_REQUIREMENT = 0x00000227L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_COUNTER = 0x0000022EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_TIME = 0x0000022FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_USER_IDENTIFIER = 0x0000022AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_SERVICE_IDENTIFIER = 0x0000022BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_SERVICE_LOGO = 0x0000022CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_OTP_SERVICE_LOGO_TYPE = 0x0000022DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_GOSTR3410_PARAMS = 0x00000250L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_GOSTR3411_PARAMS = 0x00000251L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_GOST28147_PARAMS = 0x00000252L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -1299,6 +1761,125 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKA_X2RATCHET_BAG = 0x00000602L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_BAGSIZE = 0x00000603L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_BOBS1STMSG = 0x00000604L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_CKR = 0x00000605L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_CKS = 0x00000606L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_DHP = 0x00000607L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_DHR = 0x00000608L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_DHS = 0x00000609L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_HKR = 0x0000060AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_HKS = 0x0000060BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_ISALICE = 0x0000060CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_NHKR = 0x0000060DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_NHKS = 0x0000060EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_NR = 0x0000060FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_NS = 0x00000610L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_PNS = 0x00000611L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKA_X2RATCHET_RK = 0x00000612L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKA_VENDOR_DEFINED = 0x80000000L;
 
     /**
@@ -1432,6 +2013,62 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_DSA_SHA224 = 0x00000013L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA256 = 0x00000014L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA384 = 0x00000015L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA512 = 0x00000016L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA3_224 = 0x00000018L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA3_256 = 0x00000019L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA3_384 = 0x0000001AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHA3_512 = 0x0000001BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_DH_PKCS_KEY_PAIR_GEN = 0x00000020L;
 
     /**
@@ -1524,6 +2161,146 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKM_SHA224_RSA_PKCS_PSS = 0x00000047L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_224 = 0x00000048L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_224_HMAC = 0x00000049L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_224_HMAC_GENERAL = 0x0000004AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_224_KEY_DERIVATION = 0x0000004BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_256 = 0x0000004CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_256_HMAC = 0x0000004DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_256_HMAC_GENERAL = 0x0000004EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_256_KEY_DERIVATION = 0x0000004FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_T = 0x00000050L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_T_HMAC = 0x00000051L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_T_HMAC_GENERAL = 0x00000052L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_T_KEY_DERIVATION = 0x00000053L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_256_RSA_PKCS = 0x00000060L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384_RSA_PKCS = 0x00000061L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512_RSA_PKCS = 0x00000062L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_256_RSA_PKCS_PSS = 0x00000063L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384_RSA_PKCS_PSS = 0x00000064L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512_RSA_PKCS_PSS = 0x00000065L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224_RSA_PKCS = 0x00000066L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224_RSA_PKCS_PSS = 0x00000067L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -1930,6 +2707,160 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKM_SHA224_HMAC_GENERAL = 0x00000257L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SECURID_KEY_GEN = 0x00000280L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SECURID = 0x00000282L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_HOTP_KEY_GEN = 0x00000290L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_HOTP = 0x00000291L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ACTI = 0x000002A0L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ACTI_KEY_GEN = 0x000002A1L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_256 = 0x000002B0L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_256_HMAC = 0x000002B1L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_256_HMAC_GENERAL = 0x000002B2L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_256_KEY_GEN = 0x000002B3L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224 = 0x000002B5L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224_HMAC = 0x000002B6L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224_HMAC_GENERAL = 0x000002B7L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224_KEY_GEN = 0x000002B8L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384 = 0x000002C0L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384_HMAC = 0x000002C1L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384_HMAC_GENERAL = 0x000002C2L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384_KEY_GEN = 0x000002C3L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512 = 0x000002D0L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512_HMAC = 0x000002D1L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512_HMAC_GENERAL = 0x000002D2L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512_KEY_GEN = 0x000002D3L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -2356,6 +3287,48 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_SHA3_256_KEY_DERIVATION = 0x00000397L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_224_KEY_DERIVATION = 0x00000398L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_384_KEY_DERIVATION = 0x00000399L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA3_512_KEY_DERIVATION = 0x0000039AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHAKE_128_KEY_DERIVATION = 0x0000039BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHAKE_256_KEY_DERIVATION = 0x0000039CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_PBE_MD2_DES_CBC = 0x000003A0L;
 
     /**
@@ -2538,7 +3511,14 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKM_TLS12_MAC = 0x000003E4L;
+    public static final long CKM_TLS12_MAC = 0x000003D8L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_TLS12_KDF = 0x000003D9L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -2574,6 +3554,27 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKM_CMS_SIG = 0x00000500L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_KIP_DERIVE = 0x00000510L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_KIP_WRAP = 0x00000511L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_KIP_MAC = 0x00000512L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -2755,6 +3756,41 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_ECDSA_SHA224 = 0x00001043L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDSA_SHA256 = 0x00001044L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDSA_SHA384 = 0x00001045L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDSA_SHA512 = 0x00001046L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_EC_KEY_PAIR_GEN_W_EXTRA_BITS = 0x0000140BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_ECDH1_DERIVE = 0x00001050L;
 
     /**
@@ -2770,6 +3806,20 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKM_ECMQV_DERIVE = 0x00001052L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDH_AES_KEY_WRAP = 0x00001053L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_RSA_AES_KEY_WRAP = 0x00001054L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -2951,6 +4001,20 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_BLOWFISH_CBC_PAD = 0x00001094L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_TWOFISH_CBC_PAD = 0x00001095L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_CAMELLIA_KEY_GEN = 0x00000550L;
 
     /**
@@ -3001,6 +4065,62 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKM_CAMELLIA_CBC_ENCRYPT_DATA = 0x00000557L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_KEY_GEN = 0x00000560L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_ECB = 0x00000561L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_CBC = 0x00000562L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_MAC = 0x00000563L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_MAC_GENERAL = 0x00000564L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_CBC_PAD = 0x00000565L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_ECB_ENCRYPT_DATA = 0x00000566L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ARIA_CBC_ENCRYPT_DATA = 0x00000567L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -3063,6 +4183,55 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_ECDSA_SHA3_224 = 0x00001047L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDSA_SHA3_256 = 0x00001048L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDSA_SHA3_384 = 0x00001049L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_ECDSA_SHA3_512 = 0x0000104AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_EC_EDWARDS_KEY_PAIR_GEN = 0x00001055L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_EC_MONTGOMERY_KEY_PAIR_GEN = 0x00001056L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_EDDSA = 0x00001057L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_DES_ECB_ENCRYPT_DATA = 0x00001100L;
 
     /**
@@ -3105,6 +4274,118 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_GOSTR3410_KEY_PAIR_GEN = 0x00001200L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOSTR3410 = 0x00001201L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOSTR3410_WITH_GOSTR3411 = 0x00001202L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOSTR3410_KEY_WRAP = 0x00001203L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOSTR3410_DERIVE = 0x00001204L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOSTR3411 = 0x00001210L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOSTR3411_HMAC = 0x00001211L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOST28147_KEY_GEN = 0x00001220L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOST28147_ECB = 0x00001221L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOST28147 = 0x00001222L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOST28147_MAC = 0x00001223L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_GOST28147_KEY_WRAP = 0x00001224L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_CHACHA20_KEY_GEN = 0x00001225L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_CHACHA20 = 0x00001226L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_POLY1305_KEY_GEN = 0x00001227L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_POLY1305 = 0x00001228L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_DSA_PARAMETER_GEN = 0x00002000L;
 
     /**
@@ -3120,6 +4401,55 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKM_X9_42_DH_PARAMETER_GEN = 0x00002002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_PROBABILISTIC_PARAMETER_GEN = 0x00002003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_SHAWE_TAYLOR_PARAMETER_GEN = 0x00002004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_DSA_FIPS_G_GEN = 0x00002005L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_CFB1 = 0x00002108L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_KEY_WRAP = 0x00002109L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_KEY_WRAP_PAD = 0x0000210AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_AES_KEY_WRAP_KWP = 0x0000210BL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -3147,6 +4477,321 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKM_RSA_PKCS_TPM_1_1 = 0x00004001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_RSA_PKCS_OAEP_TPM_1_1 = 0x00004002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA_1_KEY_GEN = 0x00004003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA224_KEY_GEN = 0x00004004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA256_KEY_GEN = 0x00004005L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA384_KEY_GEN = 0x00004006L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_KEY_GEN = 0x00004007L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_224_KEY_GEN = 0x00004008L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_256_KEY_GEN = 0x00004009L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SHA512_T_KEY_GEN = 0x0000400AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_NULL = 0x0000400BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_160 = 0x0000400CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_160_HMAC = 0x0000400DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_160_HMAC_GENERAL = 0x0000400EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_160_KEY_DERIVE = 0x0000400FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_160_KEY_GEN = 0x00004010L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_256 = 0x00004011L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_256_HMAC = 0x00004012L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_256_HMAC_GENERAL = 0x00004013L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_256_KEY_DERIVE = 0x00004014L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_256_KEY_GEN = 0x00004015L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_384 = 0x00004016L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_384_HMAC = 0x00004017L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_384_HMAC_GENERAL = 0x00004018L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_384_KEY_DERIVE = 0x00004019L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_384_KEY_GEN = 0x0000401AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_512 = 0x0000401BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_512_HMAC = 0x0000401CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_512_HMAC_GENERAL = 0x0000401DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_512_KEY_DERIVE = 0x0000401EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_BLAKE2B_512_KEY_GEN = 0x0000401FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SALSA20 = 0x00004020L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_CHACHA20_POLY1305 = 0x00004021L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SALSA20_POLY1305 = 0x00004022L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_X3DH_INITIALIZE = 0x00004023L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_X3DH_RESPOND = 0x00004024L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_X2RATCHET_INITIALIZE = 0x00004025L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_X2RATCHET_RESPOND = 0x00004026L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_X2RATCHET_ENCRYPT = 0x00004027L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_X2RATCHET_DECRYPT = 0x00004028L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_XEDDSA = 0x00004029L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_HKDF_DERIVE = 0x0000402AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_HKDF_DATA = 0x0000402BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_HKDF_KEY_GEN = 0x0000402CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKM_SALSA20_KEY_GEN = 0x0000402DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKM_VENDOR_DEFINED = 0x80000000L;
 
     /**
@@ -3155,6 +4800,48 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKF_HW = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_MESSAGE_ENCRYPT = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_MESSAGE_DECRYPT = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_MESSAGE_SIGN = 0x00000008L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_MESSAGE_VERIFY = 0x00000010L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_MULTI_MESSAGE = 0x00000020L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_FIND_OBJECTS = 0x00000040L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -3260,6 +4947,13 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKF_EC_ECPARAMETERS = 0x00400000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_EC_OID = 0x00800000L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -3386,6 +5080,13 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKR_ATTRIBUTE_VALUE_INVALID = 0x00000013L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_ACTION_PROHIBITED = 0x0000001BL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -3826,6 +5527,13 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKR_CURVE_NOT_SUPPORTED = 0x00000140L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKR_BUFFER_TOO_SMALL = 0x00000150L;
 
     /**
@@ -3882,6 +5590,55 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKR_NEW_PIN_MODE = 0x000001B0L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_NEXT_OTP = 0x000001B1L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_EXCEEDED_MAX_ITERATIONS = 0x000001B5L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_FIPS_SELF_TEST_FAILED = 0x000001B6L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_LIBRARY_LOAD_FAILED = 0x000001B7L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_PIN_TOO_WEAK = 0x000001B8L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_PUBLIC_KEY_INVALID = 0x0000001BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKR_FUNCTION_REJECTED = 0x00000200L;
 
     /**
@@ -3889,7 +5646,35 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKR_TOKEN_RESOURCE_EXCEEDED = 0x00000201L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKR_OPERATION_CANCEL_FAILED = 0x00000202L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKR_VENDOR_DEFINED = 0x80000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_END_OF_MESSAGE = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_INTERFACE_FORK_SAFE = 0x00000001L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -3952,6 +5737,34 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKG_MGF1_SHA3_224 = 0x00000006L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_MGF1_SHA3_256 = 0x00000007L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_MGF1_SHA3_384 = 0x00000008L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_MGF1_SHA3_512 = 0x00000009L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKZ_DATA_SPECIFIED = 0x00000001L;
 
     /**
@@ -4001,6 +5814,132 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKD_CPDIVERSIFY_KDF = 0x00000009L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_224_KDF = 0x0000000AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_256_KDF = 0x0000000BL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_384_KDF = 0x0000000CL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_512_KDF = 0x0000000DL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA1_KDF_SP800 = 0x0000000EL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA224_KDF_SP800 = 0x0000000FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA256_KDF_SP800 = 0x00000010L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA384_KDF_SP800 = 0x00000011L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA512_KDF_SP800 = 0x00000012L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_224_KDF_SP800 = 0x00000013L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_256_KDF_SP800 = 0x00000014L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_384_KDF_SP800 = 0x00000015L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_SHA3_512_KDF_SP800 = 0x00000016L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_BLAKE2B_160_KDF = 0x00000017L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_BLAKE2B_256_KDF = 0x00000018L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_BLAKE2B_384_KDF = 0x00000019L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKD_BLAKE2B_512_KDF = 0x0000001AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKD_SHA1_KDF_ASN1 = 0x00000003L;
 
     /**
@@ -4009,6 +5948,62 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11t.h
      */
     public static final long CKD_SHA1_KDF_CONCATENATE = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_NO_GENERATE = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_GENERATE = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_GENERATE_COUNTER = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_GENERATE_RANDOM = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKG_GENERATE_COUNTER_XOR = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_HKDF_SALT_NULL = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_HKDF_SALT_DATA = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_HKDF_SALT_KEY = 0x00000004L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -4127,21 +6122,98 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKO_KG_PARAMETERS = 0x00000006L;
+    public static final long CK_OTP_VALUE = 0x00000000L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKF_EC_FP = 0x00100000L;
+    public static final long CK_OTP_PIN = 0x00000001L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKR_KEY_PARAMS_INVALID = 0x0000006BL;
+    public static final long CK_OTP_CHALLENGE = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_TIME = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_COUNTER = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_FLAGS = 0x00000005L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_OUTPUT_LENGTH = 0x00000006L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CK_OTP_OUTPUT_FORMAT = 0x00000007L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_NEXT_OTP = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_EXCLUDE_TIME = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_EXCLUDE_COUNTER = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_EXCLUDE_CHALLENGE = 0x00000008L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_EXCLUDE_PIN = 0x00000010L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
+    public static final long CKF_USER_FRIENDLY_OTP = 0x00000020L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -4254,6 +6326,20 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKA_DIGEST = 0x81000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_MESSAGE = 0x82000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_MESSAGE_MASK = 0xFF000000L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -4582,14 +6668,14 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKA_NETSCAPE_DB = 0xD5A0DB00L;
+    public static final long CKA_NSS_DB = 0xD5A0DB00L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKA_NETSCAPE_TRUST = 0x80000001L;
+    public static final long CKA_NSS_TRUST = 0x80000001L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -4911,70 +6997,70 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_DES_CBC = 0x80000002L;
+    public static final long CKM_NSS_PBE_SHA1_DES_CBC = 0x80000002L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_TRIPLE_DES_CBC = 0x80000003L;
+    public static final long CKM_NSS_PBE_SHA1_TRIPLE_DES_CBC = 0x80000003L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_40_BIT_RC2_CBC = 0x80000004L;
+    public static final long CKM_NSS_PBE_SHA1_40_BIT_RC2_CBC = 0x80000004L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_128_BIT_RC2_CBC = 0x80000005L;
+    public static final long CKM_NSS_PBE_SHA1_128_BIT_RC2_CBC = 0x80000005L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_40_BIT_RC4 = 0x80000006L;
+    public static final long CKM_NSS_PBE_SHA1_40_BIT_RC4 = 0x80000006L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_128_BIT_RC4 = 0x80000007L;
+    public static final long CKM_NSS_PBE_SHA1_128_BIT_RC4 = 0x80000007L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_FAULTY_3DES_CBC = 0x80000008L;
+    public static final long CKM_NSS_PBE_SHA1_FAULTY_3DES_CBC = 0x80000008L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_SHA1_HMAC_KEY_GEN = 0x80000009L;
+    public static final long CKM_NSS_PBE_SHA1_HMAC_KEY_GEN = 0x80000009L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_MD5_HMAC_KEY_GEN = 0x8000000AL;
+    public static final long CKM_NSS_PBE_MD5_HMAC_KEY_GEN = 0x8000000AL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
-    public static final long CKM_NETSCAPE_PBE_MD2_HMAC_KEY_GEN = 0x8000000BL;
+    public static final long CKM_NSS_PBE_MD2_HMAC_KEY_GEN = 0x8000000BL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -5080,6 +7166,62 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKT_NSS_MUST_VERIFY = 0xCE534354L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long SFTK_MIN_USER_SLOT_ID = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long SFTK_MAX_USER_SLOT_ID = 0x00000064L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long SFTK_MIN_FIPS_USER_SLOT_ID = 0x00000065L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long SFTK_MAX_FIPS_USER_SLOT_ID = 0x0000007FL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKF_EC_FP = 0x00100000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKO_KG_PARAMETERS = 0x00000006L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CK_INVALID_SESSION = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKR_KEY_PARAMS_INVALID = 0x0000006BL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -5226,6 +7368,20 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKA_NETSCAPE_DB = 0xD5A0DB00L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NETSCAPE_TRUST = 0x80000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKM_NETSCAPE_AES_KEY_WRAP = 0xCE534351L;
 
     /**
@@ -5234,6 +7390,76 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKM_NETSCAPE_AES_KEY_WRAP_PAD = 0xCE534352L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_DES_CBC = 0x80000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_TRIPLE_DES_CBC = 0x80000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_40_BIT_RC2_CBC = 0x80000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_128_BIT_RC2_CBC = 0x80000005L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_40_BIT_RC4 = 0x80000006L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_128_BIT_RC4 = 0x80000007L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_FAULTY_3DES_CBC = 0x80000008L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_SHA1_HMAC_KEY_GEN = 0x80000009L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_MD5_HMAC_KEY_GEN = 0x8000000AL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKM_NETSCAPE_PBE_MD2_HMAC_KEY_GEN = 0x8000000BL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
@@ -5297,32 +7523,4 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKT_NETSCAPE_VALID_DELEGATOR = 0xCE53435BL;
-
-    /**
-     * Content automatically generated; see NSS documentation for more information.
-     *
-     * Source file: /usr/include/nss3/pkcs11n.h
-     */
-    public static final long SFTK_MIN_USER_SLOT_ID = 0x00000004L;
-
-    /**
-     * Content automatically generated; see NSS documentation for more information.
-     *
-     * Source file: /usr/include/nss3/pkcs11n.h
-     */
-    public static final long SFTK_MAX_USER_SLOT_ID = 0x00000064L;
-
-    /**
-     * Content automatically generated; see NSS documentation for more information.
-     *
-     * Source file: /usr/include/nss3/pkcs11n.h
-     */
-    public static final long SFTK_MIN_FIPS_USER_SLOT_ID = 0x00000065L;
-
-    /**
-     * Content automatically generated; see NSS documentation for more information.
-     *
-     * Source file: /usr/include/nss3/pkcs11n.h
-     */
-    public static final long SFTK_MAX_FIPS_USER_SLOT_ID = 0x0000007FL;
 }
