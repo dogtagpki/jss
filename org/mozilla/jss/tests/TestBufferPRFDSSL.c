@@ -25,6 +25,7 @@
 #include <certt.h>
 #include <secmod.h>
 #include <sslproto.h>
+#include <keyhi.h>
 
 /* Standard includes */
 #include <errno.h>
