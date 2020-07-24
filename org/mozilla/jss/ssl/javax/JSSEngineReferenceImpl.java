@@ -543,14 +543,20 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     public void closeInbound() {
         debug("JSSEngine: closeInbound()");
 
-        PR.Shutdown(ssl_fd, PR.SHUTDOWN_RCV);
+        if (!is_inbound_closed && ssl_fd != null && !closed_fd) {
+            PR.Shutdown(ssl_fd, PR.SHUTDOWN_RCV);
+        }
+
         is_inbound_closed = true;
     }
 
     public void closeOutbound() {
         debug("JSSEngine: closeOutbound()");
 
-        PR.Shutdown(ssl_fd, PR.SHUTDOWN_SEND);
+        if (!is_outbound_closed && ssl_fd != null && !closed_fd) {
+            PR.Shutdown(ssl_fd, PR.SHUTDOWN_SEND);
+        }
+
         is_outbound_closed = true;
     }
 
@@ -561,7 +567,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     public Runnable getDelegatedTask() {
         debug("JSSEngine: getDelegatedTask()");
 
-        checkNeedCertValidation();
+        if (ssl_fd != null) {
+            checkNeedCertValidation();
+        }
 
         return task;
     }
