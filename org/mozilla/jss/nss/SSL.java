@@ -158,7 +158,23 @@ public class SSL {
      *
      * See also: SSL_ImportFD in /usr/include/nss3/ssl.h
      */
-    public static native SSLFDProxy ImportFD(PRFDProxy model, PRFDProxy fd);
+    public static SSLFDProxy ImportFD(PRFDProxy model, PRFDProxy fd) {
+        if (fd == null) {
+            throw new NullPointerException("Expected fd != null");
+        }
+
+        byte[] ptr = ImportFDNative(model, fd);
+        if (ptr == null || ptr.length == 0) {
+            int error = PR.GetError();
+            throw new NullPointerException("SSL_ImportFD failed: " + PR.ErrorToName(error) + " (" + error + ")");
+        }
+
+        fd.clear();
+
+        return new SSLFDProxy(ptr);
+    }
+
+    public static native byte[] ImportFDNative(PRFDProxy model, PRFDProxy fd);
 
     /**
      * Set the value of a SSL option on the specified PRFileDesc.

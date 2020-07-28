@@ -200,7 +200,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new SSLException("Error creating SSL socket on top of buffer-backed PRFileDesc.");
         }
 
-        fd.clear();
         fd = null;
         closed_fd = false;
 
