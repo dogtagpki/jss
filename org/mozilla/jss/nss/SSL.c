@@ -144,6 +144,15 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_nss_SSL_ImportFD(JNIEnv *env, jclass clazz, jobject model,
     jobject fd)
 {
+    PR_ASSERT(0);
+    JSS_throwMsg(env, NULL_POINTER_EXCEPTION, "JSS JAR/DLL version mismatch");
+    return NULL;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_nss_SSL_ImportFDNative(JNIEnv *env, jclass clazz, jobject model,
+    jobject fd)
+{
     PRFileDesc *result = NULL;
     PRFileDesc *real_model = NULL;
     PRFileDesc *real_fd = NULL;
@@ -153,11 +162,11 @@ Java_org_mozilla_jss_nss_SSL_ImportFD(JNIEnv *env, jclass clazz, jobject model,
 
     /* Note: NSS calling semantics state that either model or fd can be
      * NULL; so when the Java Object is not-NULL, dereference it. */
-    if (model != NULL && JSS_PR_getPRFileDesc(env, model, &real_model) != PR_SUCCESS) {
+    if (model != NULL && (JSS_PR_getPRFileDesc(env, model, &real_model) != PR_SUCCESS || real_model == NULL)) {
         return NULL;
     }
 
-    if (fd != NULL && JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+    if (fd != NULL && (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS || real_fd == NULL)) {
         return NULL;
     }
 
@@ -166,7 +175,7 @@ Java_org_mozilla_jss_nss_SSL_ImportFD(JNIEnv *env, jclass clazz, jobject model,
         return NULL;
     }
 
-    return JSS_PR_wrapSSLFDProxy(env, &result);
+    return JSS_ptrToByteArray(env, result);
 }
 
 JNIEXPORT int JNICALL
