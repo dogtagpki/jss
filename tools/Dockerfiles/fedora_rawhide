@@ -29,4 +29,5 @@ CMD true \
         && cmake .. \
         && make all \
         && ctest --output-on-failure \
+        && make javadoc \
         && true
