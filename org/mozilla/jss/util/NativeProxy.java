@@ -4,12 +4,14 @@
 
 package org.mozilla.jss.util;
 
-import java.util.HashSet;
-
 import java.lang.AutoCloseable;
 import java.lang.Thread;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mozilla.jss.CryptoManager;
@@ -59,13 +61,11 @@ public abstract class NativeProxy implements AutoCloseable
             mHashCode += Arrays.hashCode(mPointer);
         }
 
-        if (track) {
+        if (track && saveStacktraces) {
             assert(pointer != null);
             registry.add(this);
 
-            if (saveStacktraces) {
-                mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
-            }
+            mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
         }
     }
 
@@ -165,7 +165,7 @@ public abstract class NativeProxy implements AutoCloseable
      */
     public final void clear() {
         this.mPointer = null;
-        registry.remove(this);
+        // registry.remove(this);
     }
 
     /**
@@ -199,7 +199,7 @@ public abstract class NativeProxy implements AutoCloseable
      * NativeProxy.finalize() from their subclasses of NativeProxy, so that
      * releaseNativeResources() gets called.
      */
-    static HashSet<NativeProxy> registry = new HashSet<NativeProxy>();
+    static Set<NativeProxy> registry = Collections.newSetFromMap(new WeakHashMap<NativeProxy, Boolean>());
     static AtomicInteger registryIndex = new AtomicInteger();
 
     public String toString() {
