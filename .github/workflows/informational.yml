@@ -9,7 +9,6 @@ jobs:
       matrix:
         image:
           - 'pkcs11check'
-          - 'fedora_sandbox'
           - 'pki_build'
 
     steps:
