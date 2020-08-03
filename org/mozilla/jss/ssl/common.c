@@ -454,7 +454,7 @@ Java_org_mozilla_jss_ssl_SocketBase_socketBind
     jclass socketBaseClass;
     jboolean supportsIPV6 = 0;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) {
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) {
         /* exception was thrown */
         goto finish;
     }
@@ -546,7 +546,7 @@ Java_org_mozilla_jss_ssl_SocketBase_requestClientAuthNoExpiryCheckNative
     JSSL_SocketData *sock = NULL;
     SECStatus status;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     /*
      * Set the option on the socket
@@ -584,7 +584,7 @@ Java_org_mozilla_jss_ssl_SocketBase_setSSLOption
     JSSL_SocketData *sock = NULL;
 
     /* get my fd */
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) {
         goto finish;
     }
 
@@ -608,7 +608,7 @@ Java_org_mozilla_jss_ssl_SocketBase_setSSLOptionMode
     JSSL_SocketData *sock = NULL;
 
     /* get my fd */
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) {
         goto finish;
     }
 
@@ -633,7 +633,7 @@ Java_org_mozilla_jss_ssl_SocketBase_getSSLOption(JNIEnv *env,
     SECStatus status = SECSuccess;
     PRBool bOption = PR_FALSE;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) {
         goto finish;
     }
 
@@ -658,7 +658,7 @@ JSSL_getSockAddr
     PRStatus status=PR_FAILURE;
 
     /* get my fd */
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS ) {
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) {
         goto finish;
     }
 
@@ -807,7 +807,7 @@ Java_org_mozilla_jss_ssl_SocketBase_setClientCert(
         goto finish;
     }
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     /*
      * Store the cert and slot in the SocketData.

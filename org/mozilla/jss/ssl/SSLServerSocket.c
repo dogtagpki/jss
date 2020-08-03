@@ -25,7 +25,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketListen
 {
     JSSL_SocketData *sock;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     if( PR_Listen(sock->fd, backlog) != PR_SUCCESS ) {
         JSSL_throwSSLSocketException(env,
@@ -51,7 +51,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_socketAccept
     SECStatus status;
     PRThread *me;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     ivtimeout = (timeout > 0) ? PR_MillisecondsToInterval(timeout)
                               : PR_INTERVAL_NO_TIMEOUT;
@@ -146,7 +146,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_abortAccept(
 {
     JSSL_SocketData *sock = NULL;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     /*
      * The java layer prevents I/O once close has been 
@@ -223,7 +223,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_setServerCert(
         goto finish;
     }
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     if( JSS_PK11_getCertPtr(env, certObj, &cert) != PR_SUCCESS ) {
         goto finish;
@@ -261,7 +261,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_setReuseAddress(
     PRStatus status;
     PRSocketOptionData sockOptData;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     sockOptData.option = PR_SockOpt_Reuseaddr;
     sockOptData.value.reuse_addr = ((reuse == JNI_TRUE) ? PR_TRUE : PR_FALSE );
@@ -284,7 +284,7 @@ Java_org_mozilla_jss_ssl_SSLServerSocket_getReuseAddress(
     PRStatus status;
     PRSocketOptionData sockOptData;
 
-    if( JSSL_getSockData(env, self, &sock) != PR_SUCCESS) goto finish;
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) goto finish;
 
     sockOptData.option = PR_SockOpt_Reuseaddr;
 
