@@ -1,4 +1,4 @@
-name: Optional Tests
+name: Known Failing Tests
 
 on: [push, pull_request]
 
@@ -8,14 +8,12 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'debian_jdk11'
-          - 'ubuntu_jdk8'
-          - 'centos_7'
-          - 'centos_8'
+          - 'fedora_rawhide'
+          - 'fedora_sandbox'
 
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
 
     - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "${{ matrix.image }}"
+      run: bash tools/run_container.sh "${{ matrix.image }}" || echo "::warning ::Job exited with status $?"
