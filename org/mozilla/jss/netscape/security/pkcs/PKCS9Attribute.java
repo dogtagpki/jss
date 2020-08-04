@@ -353,7 +353,8 @@ public class PKCS9Attribute implements DerEncoder {
      * The following table gives the class that <code>value</code> must have for a given attribute.
      *
      * <P>
-     * <TABLE BORDER CELLPADDING=8 ALIGN=CENTER summary="">
+     * <TABLE>
+     *  <caption>value</caption>
      *
      * <TR>
      * <TH>OID</TH>
@@ -480,7 +481,8 @@ public class PKCS9Attribute implements DerEncoder {
      * of these attributes are accepted; in particular, case does not matter.
      *
      * <P>
-     * <TABLE BORDER CELLPADDING=8 ALIGN=CENTER summary="">
+     * <TABLE>
+     *  <caption>value</caption>
      *
      * <TR>
      * <TH>OID</TH>
@@ -877,7 +879,8 @@ public class PKCS9Attribute implements DerEncoder {
      * The following table gives the class of the value returned, depending on the type of this attribute.
      *
      * <P>
-     * <TABLE BORDER CELLPADDING=8 ALIGN=CENTER summary="">
+     * <TABLE>
+     *  <caption>value</caption>
      *
      * <TR>
      * <TH>OID</TH>
