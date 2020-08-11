@@ -240,7 +240,7 @@ public class PKCS12Util {
                 content = create_EPKI_with_PBE_PKCS5_PBES2(token, privateKey, password);
 
             } else {
-                throw new Exception("Unsupported key encryption: " + keyEncryption);
+                throw new Exception("Unsupported key encryption for non-empty private keys: " + keyEncryption);
             }
         }
 
@@ -561,6 +561,10 @@ public class PKCS12Util {
     }
 
     public PFX generatePFX(PKCS12 pkcs12, Password password) throws Exception {
+        return generatePFX(pkcs12, password, true);
+    }
+
+    public PFX generatePFX(PKCS12 pkcs12, Password password, boolean macData) throws Exception {
 
         logger.info("Generating PKCS #12 data");
 
@@ -608,18 +612,22 @@ public class PKCS12Util {
 
         PFX pfx = new PFX(authSafes);
 
-        // Use the same salt size and number of iterations as in pk12util.
-
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        pfx.computeMacData(password, salt, 100000);
+        if (macData || !keyInfos.isEmpty()) {
+            // Use the same salt size and number of iterations as in pk12util.
+            byte[] salt = new byte[16];
+            random.nextBytes(salt);
+            pfx.computeMacData(password, salt, 100000);
+        }
 
         return pfx;
     }
 
     public void storeIntoFile(PKCS12 pkcs12, String filename, Password password) throws Exception {
+        storeIntoFile(pkcs12, filename, password, true);
+    }
 
-        PFX pfx = generatePFX(pkcs12, password);
+    public void storeIntoFile(PKCS12 pkcs12, String filename, Password password, boolean macData) throws Exception {
+        PFX pfx = generatePFX(pkcs12, password, macData);
 
         logger.info("Storing PKCS #12 data into " + filename);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
