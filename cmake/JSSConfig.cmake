@@ -211,7 +211,7 @@ macro(jss_config_java)
     )
     find_jar(
         LANG_JAR
-        NAMES apache-commons-lang commons-lang
+        NAMES apache-commons-lang3 commons-lang3
     )
     find_jar(
         JAXB_JAR

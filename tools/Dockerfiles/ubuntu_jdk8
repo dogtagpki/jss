@@ -8,7 +8,7 @@ RUN true \
         && apt-get install -y debhelper libnss3-dev libnss3-tools libnss3 \
                               openjdk-8-jdk pkg-config quilt g++ mercurial \
                               zlib1g-dev libslf4j-java liblog4j2-java \
-                              libcommons-lang-java libjaxb-api-java cmake \
+                              libcommons-lang3-java libjaxb-api-java cmake \
                               zip unzip junit4 \
         && mkdir -p /home/sandbox \
         && apt-get autoremove -y \
