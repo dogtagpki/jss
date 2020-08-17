@@ -6,7 +6,7 @@ package org.mozilla.jss.tests;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.UTF8Converter;
 

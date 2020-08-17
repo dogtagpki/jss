@@ -19,7 +19,7 @@ package org.mozilla.jss.netscape.security.x509;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The RevocationReasonAdapter class provides custom marshaling for RevocationReason.

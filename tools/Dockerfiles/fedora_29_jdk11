@@ -5,7 +5,7 @@ RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build cmake \
                           glassfish-jaxb-api java-11-openjdk nss-tools \
-                          apache-commons-lang gcc-c++ java-11-openjdk-devel \
+                          apache-commons-lang3 gcc-c++ java-11-openjdk-devel \
                           jpackage-utils slf4j nss zlib-devel nss-devel \
                           nspr-devel perl slf4j-jdk14 junit \
         && mkdir -p /home/sandbox \
