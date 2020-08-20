@@ -1,4 +1,4 @@
-FROM fedora:32
+FROM registry.fedoraproject.org/fedora:32
 
 # Install generic dependencies to build jss
 RUN true \

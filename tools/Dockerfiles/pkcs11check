@@ -1,4 +1,4 @@
-FROM fedora:latest
+FROM registry.fedoraproject.org/fedora:latest
 
 # Install generic dependencies to check style
 RUN true \
