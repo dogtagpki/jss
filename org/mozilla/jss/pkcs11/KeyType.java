@@ -123,7 +123,8 @@ public final class KeyType {
                     SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest,
                     SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest,
                     SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest,
-                    KeyWrapAlgorithm.RSA
+                    KeyWrapAlgorithm.RSA,
+                    KeyWrapAlgorithm.RSA_OAEP,
                     },
                     "RSA"
                 );
