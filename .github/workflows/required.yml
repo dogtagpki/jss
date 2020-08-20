@@ -10,6 +10,7 @@ jobs:
         image:
           - 'fedora_31'
           - 'fedora_32'
+          - 'fedora_33'
           - 'fedora_latest_jdk11'
           - 'symbolcheck'
     steps:
