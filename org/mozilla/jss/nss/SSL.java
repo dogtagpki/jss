@@ -472,8 +472,36 @@ public class SSL {
     public static native int ConfigSyncTrustManagerCertAuthCallback(SSLFDProxy fd);
 
     /**
+     * Use an asynchronous bad certificate handler which allows us to approve
+     * rejected certificates. This allows us to bypass the hostname check
+     * failure caused by the Java socket having no knowledge of the hostname
+     * we use for certificate validation; no HostnameVerifier is passed in.
+     * As a result, NSS has no value for the hostname and validation will fail.
+     *
+     * Note: This does NOT work for server-side connections.
+     *
+     * See also: SSL_BadCertHook in /usr/include/nss3/ssl.h and
+     *           JSSL_SSLFDAsyncBadCertCallback in jss/nss/SSLFDProxy.c
+     */
+    public static native int ConfigAsyncBadCertCallback(SSLFDProxy fd);
+
+    /**
+     * Use a synchronous bad certificate handler which allows us to approve
+     * rejected certificates. This allows us to bypass the hostname check
+     * failure caused by the Java socket having no knowledge of the hostname
+     * we use for certificate validation; no HostnameVerifier is passed in.
+     * As a result, NSS has no value for the hostname and validation will fail.
+     *
+     * See also: SSL_BadCertHook in /usr/include/nss3/ssl.h and
+     *           JSSL_SSLFDSyncBadCertCallback in jss/nss/SSLFDProxy.c
+     */
+    public static native int ConfigSyncBadCertCallback(SSLFDProxy fd);
+
+    /**
      * Inform NSS that the asynchronous certificate check handler has
      * completed, allowing us to continue the handshake.
+     *
+     * This is also used for the async bad certificate handler as well.
      *
      * See also: SSL_AuthCertificateComplete in /usr/include/nss3/ssl.h
      */

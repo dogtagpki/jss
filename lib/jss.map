@@ -491,3 +491,10 @@ Java_org_mozilla_jss_nss_SSL_ImportFDNative;
     local:
         *;
 };
+JSS_4.7.3 {
+    global:
+Java_org_mozilla_jss_nss_SSL_ConfigAsyncBadCertCallback;
+Java_org_mozilla_jss_nss_SSL_ConfigSyncBadCertCallback;
+    local:
+        *;
+};

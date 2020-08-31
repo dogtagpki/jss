@@ -19,9 +19,12 @@ public class SSLFDProxy extends PRFDProxy {
     public int outboundOffset;
 
     public boolean needCertValidation;
+    public boolean needBadCertValidation;
+    public int badCertError;
     public boolean handshakeComplete;
 
-    public CertAuthHandler handler;
+    public CertAuthHandler certAuthHandler;
+    public BadCertHandler badCertHandler;
 
     public SSLFDProxy(byte[] pointer) {
         super(pointer);
@@ -51,6 +54,10 @@ public class SSLFDProxy extends PRFDProxy {
     }
 
     public int invokeCertAuthHandler() {
-        return handler.check(this);
+        return certAuthHandler.check(this);
+    }
+
+    public int invokeBadCertHandler(int error) {
+        return badCertHandler.check(this, error);
     }
 }

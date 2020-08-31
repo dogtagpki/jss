@@ -390,7 +390,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // from Runnable, so we can reuse it here as well. We can create
             // it ahead of time though. In this case, checkNeedCertValidation()
             // is never called.
-            ssl_fd.handler = new CertValidationTask(ssl_fd);
+            ssl_fd.certAuthHandler = new CertValidationTask(ssl_fd);
 
             if (SSL.ConfigSyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
                 throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));

@@ -35,3 +35,9 @@ JSSL_SSLFDAsyncCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig, PRBo
 
 SECStatus
 JSSL_SSLFDSyncCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig, PRBool isServer);
+
+SECStatus
+JSSL_SSLFDAsyncBadCertCallback(void *arg, PRFileDesc *fd);
+
+SECStatus
+JSSL_SSLFDSyncBadCertCallback(void *arg, PRFileDesc *fd);
