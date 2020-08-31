@@ -932,6 +932,48 @@ Java_org_mozilla_jss_nss_SSL_ConfigSyncTrustManagerCertAuthCallback(JNIEnv *env,
 }
 
 JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_ConfigAsyncBadCertCallback(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    jobject fd_ref = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_NSS_getGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_BadCertHook(real_fd, JSSL_SSLFDAsyncBadCertCallback, fd_ref);
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_nss_SSL_ConfigSyncBadCertCallback(JNIEnv *env, jclass clazz,
+    jobject fd)
+{
+    PRFileDesc *real_fd = NULL;
+    jobject fd_ref = NULL;
+
+    PR_ASSERT(env != NULL && fd != NULL);
+    PR_SetError(0, 0);
+
+    if (JSS_PR_getPRFileDesc(env, fd, &real_fd) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    if (JSS_NSS_getGlobalRef(env, fd, &fd_ref) != PR_SUCCESS) {
+        return SECFailure;
+    }
+
+    return SSL_BadCertHook(real_fd, JSSL_SSLFDSyncBadCertCallback, fd_ref);
+}
+
+JNIEXPORT jint JNICALL
 Java_org_mozilla_jss_nss_SSL_AuthCertificateComplete(JNIEnv *env, jclass clazz,
     jobject fd, jint error)
 {

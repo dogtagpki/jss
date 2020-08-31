@@ -322,8 +322,8 @@ JSSL_SSLFDSyncCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig, PRBoo
      * because we have no control over whether or not our TrustManagers do
      * signature verification (we hope they do!) we ignore checkSig as well.
      *
-     * All we need to do then is set SSLFDProxy@fd_ref's needCertValidation
-     * to true.
+     * All we need to do then is call SSLFDProxy@fd_ref's
+     * invokeCertAuthHandler() method.
      */
     JNIEnv *env = NULL;
     jobject sslfd_proxy = (jobject) arg;
@@ -367,3 +367,106 @@ JSSL_SSLFDSyncCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig, PRBoo
 
     return SECFailure;
 }
+
+SECStatus
+JSSL_SSLFDAsyncBadCertCallback(void *arg, PRFileDesc *fd)
+{
+    /* We know that arg is our GlobalRefProxy instance pointing to the
+     * SSLFDProxy class instance. This lets us ignore the PRFileDesc
+     * parameter because we already have a reference to it via arg.
+     *
+     * All we need to do then is set SSLFDProxy@fd_ref's needBadCertValidation
+     * to true.
+     */
+    JNIEnv *env = NULL;
+    jobject sslfd_proxy = (jobject) arg;
+    jclass sslfdProxyClass;
+    jfieldID needBadCertValidationField;
+    jfieldID badCertErrorField;
+    int cert_error = PR_GetError();
+
+    if (arg == NULL || fd == NULL || JSS_javaVM == NULL) {
+        return SECFailure;
+    }
+
+    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env == NULL) {
+        return SECFailure;
+    }
+
+    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+    if (sslfdProxyClass == NULL) {
+        return SECFailure;
+    }
+
+    needBadCertValidationField = (*env)->GetFieldID(env, sslfdProxyClass,
+                                                    "needBadCertValidation", "Z");
+    if (needBadCertValidationField == NULL) {
+        return SECFailure;
+    }
+
+    badCertErrorField = (*env)->GetFieldID(env, sslfdProxyClass,
+                                           "badCertError", "I");
+    if (badCertErrorField == NULL) {
+        return SECFailure;
+    }
+
+    (*env)->SetBooleanField(env, sslfd_proxy, needBadCertValidationField, JNI_TRUE);
+    (*env)->SetIntField(env, sslfd_proxy, needBadCertValidationField, cert_error);
+
+    return SECWouldBlock;
+}
+
+SECStatus
+JSSL_SSLFDSyncBadCertCallback(void *arg, PRFileDesc *fd)
+{
+    /* We know that arg is our GlobalRefProxy instance pointing to the
+     * SSLFDProxy class instance. This lets us ignore the PRFileDesc
+     * parameter because we already have a reference to it via arg.
+     *
+     * All we need to do then is call SSLFDProxy@fd_ref's
+     * invokeBadCertHandler() method.
+     */
+    JNIEnv *env = NULL;
+    jobject sslfd_proxy = (jobject) arg;
+    jclass sslfdProxyClass;
+    jmethodID badCertHandlerMethod;
+    PRErrorCode ret;
+    int cert_error = PR_GetError();
+
+    if (arg == NULL || fd == NULL || JSS_javaVM == NULL) {
+        PR_SetError(SEC_ERROR_INVALID_ARGS, 0);
+        return SECFailure;
+    }
+
+    if ((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != JNI_OK || env == NULL) {
+        PR_SetError(PR_UNKNOWN_ERROR, 0);
+        return SECFailure;
+    }
+
+    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+    if (sslfdProxyClass == NULL) {
+        PR_SetError(PR_UNKNOWN_ERROR, 0);
+        return SECFailure;
+    }
+
+    badCertHandlerMethod = (*env)->GetMethodID(env, sslfdProxyClass,
+        "invokeBadCertHandler", "(I)I");
+    if (badCertHandlerMethod == NULL) {
+        PR_SetError(PR_UNKNOWN_ERROR, 0);
+        return SECFailure;
+    }
+
+    ret = (*env)->CallIntMethod(env, sslfd_proxy, badCertHandlerMethod, cert_error);
+    if ((*env)->ExceptionOccurred(env) != NULL) {
+        ret = PR_UNKNOWN_ERROR;
+    }
+
+    PR_SetError(ret, 0);
+
+    if (ret == 0) {
+        return SECSuccess;
+    }
+
+    return SECFailure;
+}
+
