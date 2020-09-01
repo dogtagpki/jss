@@ -106,7 +106,7 @@ JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd);
 
 
 extern PRInt32 JSSL_enums[];
-#define JSSL_enums_size 36
+#define JSSL_enums_size 37
 int JSSL_enums_reverse(PRInt32 value);
 
 JSSL_SocketData*
