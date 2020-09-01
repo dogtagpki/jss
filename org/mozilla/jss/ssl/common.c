@@ -422,6 +422,7 @@ PRInt32 JSSL_enums[] = {
     ssl_variant_stream,           /* 33 */      /* sslt.h */
     ssl_variant_datagram,         /* 34 */      /* sslt.h */
     SSL_LIBRARY_VERSION_TLS_1_3,  /* 35 */      /* sslproto.h */
+    SSL_ENABLE_POST_HANDSHAKE_AUTH, /* 36 */      /* ssl.h */
     0
 };
 

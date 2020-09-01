@@ -101,6 +101,7 @@ class SocketBase {
     /* ssl/sslt.h */
     static final int SSL_Variant_Stream = 33;
     static final int SSL_Variant_Datagram = 34;
+    static final int SSL_ENABLE_POST_HANDSHAKE_AUTH = 36;
 
     static final int SSL_AF_INET = 50;
     static final int SSL_AF_INET6 = 51;
@@ -173,6 +174,10 @@ class SocketBase {
 
     void enableV2CompatibleHello(boolean enable) throws SocketException {
         setSSLOption(SSL_V2_COMPATIBLE_HELLO, enable);
+    }
+
+    void enablePostHandshakeAuth(boolean enable) throws SocketException {
+        setSSLOption(SSL_ENABLE_POST_HANDSHAKE_AUTH, enable);
     }
 
     void setSSLOption(int option, boolean on)
