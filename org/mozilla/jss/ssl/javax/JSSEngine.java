@@ -945,7 +945,6 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         // TLS < 1.3.
         result.put(SSL.ENABLE_RENEGOTIATION, SSL.RENEGOTIATE_REQUIRES_XTN);
         result.put(SSL.REQUIRE_SAFE_NEGOTIATION, 1);
-        result.put(SSL.ENABLE_FALLBACK_SCSV, 1);
         return result;
     }
 
