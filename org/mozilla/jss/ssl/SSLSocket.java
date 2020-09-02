@@ -1095,6 +1095,24 @@ public class SSLSocket extends java.net.Socket {
     }
 
     /**
+     * Enable or disable post-handshake auth for a single socket.
+     */
+    public void enablePostHandshakeAuth(boolean enable)
+    throws SocketException
+    {
+        base.enablePostHandshakeAuth(enable);
+    }
+
+    /**
+     * Sets the default to allow post-handshake auth globally.
+     */
+    public static void enablePostHandshakeAuthDefault(boolean enable)
+    throws SocketException
+    {
+        setSSLDefaultOption(SocketBase.SSL_ENABLE_POST_HANDSHAKE_AUTH, enable);
+    }
+
+    /**
      * @return a String listing the current SSLOptions for this SSLSocket.
      */
     public String getSSLOptions() {
