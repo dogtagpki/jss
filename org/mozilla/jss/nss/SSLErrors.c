@@ -14,7 +14,7 @@
 #include "_jni/org_mozilla_jss_nss_SECErrors.h"
 
 JNIEXPORT int JNICALL
-Java_org_mozilla_jss_nss_SECErrors_getBadCertDomain(JNIEnv *env, jclass clazz)
+Java_org_mozilla_jss_nss_SSLErrors_getBadCertDomain(JNIEnv *env, jclass clazz)
 {
     return SSL_ERROR_BAD_CERT_DOMAIN;
 }
