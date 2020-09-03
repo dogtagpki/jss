@@ -497,8 +497,13 @@ JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
     if (hostname && hostname[0]) {
         rv = CERT_VerifyCertName(peerCert, hostname);
         PORT_Free(hostname); 
-    } else
+    } else {
         rv = SECFailure;
+    }
+
+    if (rv == SECFailure) {
+        PR_SetError(SSL_ERROR_BAD_CERT_DOMAIN, 0);
+    }
 
     if (peerCert) CERT_DestroyCertificate(peerCert);
     return rv;
