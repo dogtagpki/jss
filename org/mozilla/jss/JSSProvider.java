@@ -29,7 +29,7 @@ public final class JSSProvider extends java.security.Provider {
     private static CryptoManager cm;
 
     public JSSProvider() {
-        this(loader.loaded());
+        this(CryptoManager.isInitialized());
     }
 
     public JSSProvider(boolean initialize) {

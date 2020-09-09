@@ -330,6 +330,12 @@ public final class CryptoManager implements TokenSupplier
         reloadModules();
     }
 
+    public static boolean isInitialized() {
+        synchronized (CryptoManager.class) {
+            return instance != null;
+        }
+    }
+
     /**
      * Retrieve the single instance of CryptoManager.
      * This cannot be called before initialization.
