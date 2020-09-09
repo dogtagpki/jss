@@ -163,6 +163,28 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             peer_info = peerHost + ":" + peerPort;
         }
 
+        // Massive hack for compatibility. In particular, Java usually
+        // specifies the peer information here. NSS uses SSL_SetURL not only
+        // for hostname verification, but also for SNI (!!) on the client.
+        // This means that there's no way to indicate (to those servers like
+        // google.com which require SNI) hostname for the client WITHOUT
+        // also validating the hostname at certificate verification time.
+        // Because the certificate hostname explicitly isn't provided (per
+        // JCA specification) for validation, this might break other clients
+        // which don't provide this information. However, the alternative is
+        // that we never add SNI indication, ever.
+        //
+        // Specifically, this breaks a dead-simple Apache HTTP Components
+        // client:
+        //
+        //     CloseableHttpClient client = HttpClients.createDefault();
+        //     HttpGet request = new HttpGet("https://google.com/");
+        //     HttpResponse response = client.execute(request);
+        //     System.out.println(response);
+        //
+        // Without this, we have no way for the above to work.
+        setHostname(peerHost);
+
         debug("JSSEngine: constructor(" + peerHost + ", " + peerPort + ")");
     }
 
@@ -176,6 +198,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (peerHost != null && peerPort != 0) {
             peer_info = peerHost + ":" + peerPort;
         }
+
+        // See above.
+        setHostname(peerHost);
 
         prefix = prefix + "[" + peer_info + "] ";
 
