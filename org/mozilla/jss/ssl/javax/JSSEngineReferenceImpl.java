@@ -44,19 +44,80 @@ import org.mozilla.jss.crypto.X509Certificate;
  * as being from the appropriate side of the TLS connection.
  */
 public class JSSEngineReferenceImpl extends JSSEngine {
+    /**
+     * Faked peer information that we pass to the underlying BufferPRFD
+     * implementation.
+     *
+     * This is used by NSS for session resumption. However, because we
+     * don't have the exact peer information at the JSSEngine level, at
+     * best we can guess.
+     */
     private String peer_info;
 
+    /**
+     * Whether or not the underlying ssl_fd is closed or not.
+     *
+     * Because the socket isn't open yet, we set it to true, to indicate
+     * that no data can be sent or received.
+     */
     private boolean closed_fd = true;
+
+    /**
+     * Data to be read by the NSS SSL implementation; data from the peer.
+     */
     private BufferProxy read_buf;
+
+    /**
+     * Data written by the NSS SSL implementation; data sent to the peer.
+     */
     private BufferProxy write_buf;
 
+    /**
+     * Number of times heuristic has not matched the current state.
+     *
+     * Because this JSSEngine uses a heuristic for determining when the
+     * handshake is completed (or, when we need to switch from WRAP to
+     * UNWRAP), and the heuristic is sometimes wrong, we track how many
+     * times it is in an unknown state. When we hit some internal
+     * threshold, we swap states.
+     */
     private int unknown_state_count;
+
+    /**
+     * Whether or not to step the handshake.
+     */
     private boolean step_handshake;
+
+    /**
+     * Whether or not a FINISHED handshake status has been returned to our
+     * caller.
+     *
+     * Because this JSSEngine implementation re-enters the
+     * updateHandshakeState() method potentially multiple times during a
+     * single call to wrap() or unwrap(), we need to know whether or not
+     * the top-level call has returned a FINISHED result. If it hasn't,
+     * we want to keep the state on FINISHED until it has been returned,
+     * otherwise we'll skip straight to NOT_HANDSHAKING, confusing our
+     * peer.
+     */
     private boolean returned_finished;
 
+    /**
+     * Value of the SSLException we've encountered.
+     */
     private SSLException ssl_exception;
+
+    /**
+     * Whether or not we've seen an ssl exception.
+     *
+     * Note that, when the exception ultimately gets thrown to the caller,
+     * ssl_exception will be NULLed; this tracks whether or not the connection
+     * has failed previously for some reason.
+     */
     private boolean seen_exception;
 
+    // In this reference implementation, we allow logging of (encrypted) data
+    // to a Socket for ease of testing. By default, this socket is disabled.
     private int debug_port;
     private ServerSocket ss_socket;
     private Socket s_socket;
@@ -66,15 +127,29 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private InputStream c_istream;
     private OutputStream c_ostream;
 
+    /**
+     * Internal name for this JSSEngine instance; most commonly used during
+     * testing.
+     */
     private String name;
+
+    /**
+     * Automatically generated prefix for debug information.
+     */
     private String prefix = "";
 
+    /**
+     * Runnable task; this performs certificate validation against user-provided
+     * TrustManager instances, passing the result back to NSS.
+     */
     private CertValidationTask task;
 
     public JSSEngineReferenceImpl() {
         super();
 
-        peer_info = "";
+        // We were given no hints about our peer so we have no information
+        // to signal to NSS for session resumption.
+        peer_info = null;
 
         debug("JSSEngine: constructor()");
     }
@@ -82,7 +157,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     public JSSEngineReferenceImpl(String peerHost, int peerPort) {
         super(peerHost, peerPort);
 
-        peer_info = peerHost + ":" + peerPort;
+        // Signal host and port for session resumption. Only do it when we've
+        // been given valid information.
+        if (peerHost != null && peerPort != 0) {
+            peer_info = peerHost + ":" + peerPort;
+        }
 
         debug("JSSEngine: constructor(" + peerHost + ", " + peerPort + ")");
     }
@@ -92,7 +171,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                      org.mozilla.jss.crypto.PrivateKey localKey) {
         super(peerHost, peerPort, localCert, localKey);
 
-        peer_info = peerHost + ":" + peerPort;
+        // Signal host and port for session resumption. Only do it when we've
+        // been given valid information.
+        if (peerHost != null && peerPort != 0) {
+            peer_info = peerHost + ":" + peerPort;
+        }
+
         prefix = prefix + "[" + peer_info + "] ";
 
         debug("JSSEngine: constructor(" + peerHost + ", " + peerPort + ", " + localCert + ", " + localKey + ")");
@@ -110,6 +194,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         logger.warn(prefix + msg);
     }
 
+    /**
+     * Set the name of this JSSEngine instance, to be printed in logging calls.
+     *
+     * This helps when debugging output from multiple JSSEngine instances at
+     * the same time, such as within the JSS test suite.
+     */
     public void setName(String name) {
         this.name = name;
         prefix = "[" + this.name + "] " + prefix;
@@ -119,8 +209,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: init()");
 
         // Initialize our JSSEngine when we begin to handshake; otherwise,
-        // calls to Set<Option>(...) won't be processed if we call it too
-        // early; some of these need to be applied at initialization.
+        // calls to Set<Option>(...) won't be processed if we initialize it
+        // too early; some of these need to be applied at initialization time
+        // in order to take affect.
 
         // Ensure we don't leak ssl_fd if we're called multiple times.
         if (ssl_fd != null && !closed_fd) {
@@ -147,7 +238,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         applyCiphers();
         applyConfig();
 
-        // Apply hostname information (via setURL).
+        // Apply hostname information (via setURL). Note that this is an
+        // extension to SSLEngine for use with NSS; we don't always get this
+        // information and so need to work around it sometimes. See
+        // initClient() for the workaround.
         applyHosts();
 
         // Apply TrustManager(s) information for validating the peer's
@@ -161,7 +255,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private void createBuffers() {
         debug("JSSEngine: createBuffers()");
 
-        // If the buffers exist, destroy them and recreate.
+        // If the buffers exist, destroy them and then recreate them.
+
         if (read_buf != null) {
             Buffer.Free(read_buf);
         }
@@ -176,9 +271,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private void createBufferFD() throws SSLException {
         debug("JSSEngine: createBufferFD()");
 
-        // Create the basis for the ssl_fd from the pair of buffers.
+        // Create the basis for the ssl_fd from the pair of buffers we created
+        // above.
+
         PRFDProxy fd;
         if (peer_info != null && peer_info.length() != 0) {
+            // When we have peer information, indicate it via BufferPRFD so
+            // that NSS can use it for session resumption.
             fd = PR.NewBufferPRFD(read_buf, write_buf, peer_info.getBytes());
         } else {
             fd = PR.NewBufferPRFD(read_buf, write_buf, null);
@@ -190,6 +289,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         SSLFDProxy model = null;
         if (as_server) {
+            // As a performance improvement, we can copy the server template
+            // (containing the desired key and certificate) rather than
+            // re-creating it from scratch. This saves a significant amount of
+            // time during construction. The implementation lives in JSSEngine,
+            // to be shared by all other JSSEngine implementations.
             model = getServerTemplate(cert, key);
         }
 
@@ -209,6 +313,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new SSLException("Unable to enable SSL Alert Logging on this SSLFDProxy instance.");
         }
 
+        // Turn on notifications of handshake completion. This is the best
+        // source of this information, compared to SSL_SecurityStatus().on;
+        // the latter can indicate "on" before the final FINISHED method has
+        // been sent.
         ret = SSL.EnableHandshakeCallback(ssl_fd);
         if (ret == SSL.SECFailure) {
             throw new SSLException("Unable to enable SSL Handshake Callback on this SSLFDProxy instance.");
@@ -222,6 +330,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: initClient()");
 
         if (cert != null && key != null) {
+            // NSS uses a callback to check for the client certificate; we
+            // assume we have knowledge of it ahead of time and set it
+            // directly on our SSLFDProxy instance.
+            //
+            // In the future, we could use a KeyManager for inquiring at
+            // selection time which certificate to use.
             debug("JSSEngine.initClient(): Enabling client auth: " + cert);
             ssl_fd.SetClientCert(cert);
             if (SSL.AttachClientCertCallback(ssl_fd) != SSL.SECSuccess) {
@@ -233,7 +347,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // When we're a client with no hostname, assume we're running
             // under standard JDK JCA semantics with no hostname available.
             // Bypass NSS's hostname check by adding a BadCertHandler, which
-            // check ONLY for the bad hostname error and allows it.
+            // check ONLY for the bad hostname error and allows it. This is
+            // safe since this is the LAST check in every (NSS, PKIX, and
+            // JSS) certificate validation step. And, under JCA semantics, we
+            // can assume the caller checks the hostname for us.
             ssl_fd.badCertHandler = new BypassBadHostname(ssl_fd, 0);
             if (SSL.ConfigSyncBadCertCallback(ssl_fd) != SSL.SECSuccess) {
                 throw new SSLException("Unable to attach bad cert callback.");
@@ -244,8 +361,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private void initServer() throws SSLException {
         debug("JSSEngine: initServer()");
 
-        // The only time cert and key are required are when we're creating a
-        // server SSLEngine.
+        // The only time cert and key are strictly required are when we're
+        // creating a server SSLEngine.
         if (cert == null || key == null) {
             throw new IllegalArgumentException("JSSEngine: must be initialized with server certificate and key!");
         }
@@ -255,7 +372,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         session.setLocalCertificates(new PK11Cert[]{ cert } );
 
-        // Create a small session cache.
+        // Create a small server session cache.
         //
         // TODO: Make this configurable.
         initializeSessionCache(1, 100, null);
@@ -283,6 +400,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (ssl_fd == null || !as_server) {
             return;
         }
+
+        // This method is called by JSSEngine's setNeedClientAuth and
+        // setWantClientAuth to inform us of a change in value here. When
+        // we've already configured ssl_fd and we're a server, we need to
+        // inform NSS of this change; this usually indicates Post-Handshake
+        // Authentication is required.
 
         try {
             configureClientAuth();
@@ -338,7 +461,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         // We should bound this range by crypto-policies in the future to
-        // match the current behavior.
+        // match the current behavior. However, Tomcat already bounds
+        // what we set in the server.xml config by what the JSSEngine
+        // indicates it supports. Because we only indicate we support
+        // what is allowed under crypto-policies, it effective does
+        // this bounding for us.
         SSLVersionRange vrange = new SSLVersionRange(min_protocol, max_protocol);
         if (SSL.VersionRangeSet(ssl_fd, vrange) == SSL.SECFailure) {
             throw new SSLException("Unable to set version range: " + errorText(PR.GetError()));
@@ -554,6 +681,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: closeInbound()");
 
         if (!is_inbound_closed && ssl_fd != null && !closed_fd) {
+            // Send PR_SHUTDOWN_RCV only once. Additionally, this call
+            // crashes when ssl_fd == NULL or when the socket is already
+            // closed.
             PR.Shutdown(ssl_fd, PR.SHUTDOWN_RCV);
         }
 
@@ -564,6 +694,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: closeOutbound()");
 
         if (!is_outbound_closed && ssl_fd != null && !closed_fd) {
+            // Send PR_SHUTDOWN_SEND only once. Additionally, this call
+            // crashes when ssl_fd == NULL or when the socket is already
+            // closed.
             PR.Shutdown(ssl_fd, PR.SHUTDOWN_SEND);
         }
 
@@ -577,7 +710,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     public Runnable getDelegatedTask() {
         debug("JSSEngine: getDelegatedTask()");
 
+        // task can either contain a task instance or null; task gets
+        // populated also during getHandshakeStatus(), wrap(), and
+        // unwrap(). Since wrap()/unwrap() populate the task early (if
+        // one is needed) -- but can return NEED_TASK later with null
+        // task, this could result in a stall if we didn't also check
+        // here. Best to do it (it is cheap if one isn't necessary),
+        // so that way we always return up-to-date information.
         if (ssl_fd != null) {
+            // Return code is a boolean, whether or not we have a task.
+            // We can safely ignore it here.
             checkNeedCertValidation();
         }
 
@@ -609,7 +751,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // need to run wrap again. This is because we either need to
             // inform the caller of an error that occurred, or continue the
             // handshake. Worst case, we'll call updateHandshakeState() and
-            // it'll correct our mmistake eventually.
+            // it'll correct our mistake eventually.
 
             debug("JSSEngine: checkNeedCertValidation() - task done, removing");
 
@@ -710,7 +852,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 // everything else. This commonly happens when null is passed
                 // as the src parameter to wrap or when null is passed as the
                 // dst parameter to unwrap.
-                debug("JSSEngine.compueSize(): null first buffer - result=" + result);
+                debug("JSSEngine.computeSize(): null first buffer - result=" + result);
                 return result;
             }
 
@@ -721,7 +863,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             result += buffers[index].remaining();
         }
 
-        debug("JSSEngine.compueSize(): result=" + result);
+        debug("JSSEngine.computeSize(): result=" + result);
 
         return result;
     }
@@ -785,6 +927,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             debug("JSSEngine: Got inbound alert: " + event);
 
+            // Not every SSL Alert is fatal; toException() only returns a
+            // SSLException on fatal instances. We shouldn't return NULL
+            // early without checking all alerts.
             SSLException exception = event.toException();
             if (exception != null) {
                 return exception;
@@ -934,12 +1079,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
             unknown_state_count = 1;
         }
-    }
-
-    private boolean isHandshakeFinished() {
-        debug("JSSEngine: isHandshakeFinished()");
-        return (handshake_state == SSLEngineResult.HandshakeStatus.FINISHED ||
-                (ssl_fd != null && handshake_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING));
     }
 
     private void logUnwrap(ByteBuffer src) {
@@ -1337,7 +1476,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 app_data += this_src_write;
                 debug("JSSEngine.wrap(): wrote " + this_src_write + " from srcs to buffer.");
             } else {
-                debug("JSSEngine.wrap(): not writing from srcs to buffer: this_src_write=" + this_src_write + " handshake_finished=" + isHandshakeFinished());
+                debug("JSSEngine.wrap(): not writing from srcs to buffer: this_src_write=" + this_src_write);
             }
 
             if (dst != null) {
@@ -1501,6 +1640,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         public String findAuthType(SSLFDProxy ssl_fd, PK11Cert[] chain) throws Exception {
+            // Java's CryptoManager is supposed to validate that the auth type
+            // chosen by the underlying protocol is compatible with the
+            // certificates in the channel. With TLSv1.3, this is less of a
+            // concern. However, NSS doesn't directly expose an authType
+            // compatible with Java; we're left inquiring for similar
+            // information from the channel info.
+
             SSLPreliminaryChannelInfo info = SSL.GetPreliminaryChannelInfo(ssl_fd);
             if (info == null) {
                 String msg = "Expected non-null result from GetPreliminaryChannelInfo!";
@@ -1657,6 +1803,24 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         public int check(SSLFDProxy fd, int error) {
+            // NSS enforces strict hostname verification via the SSL_SetURL
+            // function call. Java doesn't pass this information to either
+            // SSLSocket or SSLEngine, so we can at best try and infer this
+            // information. However, since this only needs to be validated
+            // on the client side, we can elide this check (like the JCA
+            // suggests and as the SunJSSE implementation does). In order
+            // to do so, we need to check for the BAD_CERT_DOMAIN error
+            // and tell NSS to ignore it.
+            //
+            // This makes the assumptions:
+            //  1. The hostname check is the very last check in the NSS
+            //     certificate validation handler.
+            //  2. As a consequence of (1) an otherwise valid certificate
+            //     will pass all other checks but fail due to hostname==NULL.
+            //  3. As a consequence of (1), all invalid certificates will
+            //     fail earlier.
+            //  4. No other paths report BAD_CERT_DOMAIN earlier than the
+            //     final hostname check.
             if (error == SSLErrors.BAD_CERT_DOMAIN) {
                 return 0;
             }
