@@ -79,17 +79,6 @@ public class JSSLoader {
     public static Logger logger = LoggerFactory.getLogger(JSSLoader.class);
 
     /**
-     * Check if this provider has been configured.
-     */
-    public static boolean loaded() {
-        try {
-            return CryptoManager.getInstance() != null;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
      * Initialize JSS from the specified path to a configuration file.
      */
     public static CryptoManager init(String config_path) throws Exception {
@@ -108,7 +97,7 @@ public class JSSLoader {
      * Initialize JSS from an InputStream.
      */
     public static CryptoManager init(InputStream istream) throws Exception {
-        if (loaded()) {
+        if (CryptoManager.isInitialized()) {
             return CryptoManager.getInstance();
         }
 
