@@ -118,6 +118,9 @@ public class JSSLoader {
         parseProviderSettings(config, ivs);
         parseNSSSettings(config, ivs);
 
+        // For more information about the interactions between JSSLoader and
+        // CryptoManager, see docs/usage/cryptomanager.md in the source
+        // distribution.
         CryptoManager.initialize(ivs);
         CryptoManager cm = CryptoManager.getInstance();
 
