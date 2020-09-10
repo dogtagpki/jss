@@ -912,7 +912,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             return data_index;
         }
 
-        for (data_index = 0; data_index < data.length; data_index++) {
+        for (data_index = 0; data_index < data.length;) {
             // Ensure we have have a buffer with capacity.
             while ((buffers[buffer_index] == null || buffers[buffer_index].remaining() <= 0) &&
                     (buffer_index < offset + length)) {
