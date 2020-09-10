@@ -302,12 +302,20 @@ public class TestSSLEngine {
                 ByteBuffer dst = readQueue[read_buffer];
                 read_buffer = (read_buffer + 1) % bufferCount;
 
+                int consumed = src.position();
+
                 SSLEngineResult r = client_eng.wrap(src, dst);
                 if (r.getStatus() != SSLEngineResult.Status.OK) {
                     throw new RuntimeException("Unknown result from client_eng.wrap(): " + r.getStatus());
                 }
 
+                consumed = src.position() - consumed;
+
                 dst.flip();
+
+                assert r.bytesConsumed() == consumed;
+                assert r.bytesProduced() == dst.remaining();
+
                 if (dst.hasRemaining()) {
                     // Since we flipped our buffer, we can use hasRemaining()
                     // to check if there's data we should unwrap on the client
@@ -324,14 +332,23 @@ public class TestSSLEngine {
                     // Borrowing a buffer temporarily and then clearing it
                     // means we don't need to increment our counter.
 
+                    int consumed = src.position();
+
                     SSLEngineResult r = client_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
                         throw new RuntimeException("Unknown result from client_eng.unwrap(): " + r.getStatus());
                     }
 
+                    consumed = src.position() - consumed;
+
                     dst.flip();
-                    assert(!dst.hasRemaining());
+
+                    assert r.bytesConsumed() == consumed;
+                    assert r.bytesProduced() == dst.remaining();
+                    assert !dst.hasRemaining();
+
                     dst.clear();
+
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
                         // back on the front of the stack.
@@ -373,14 +390,23 @@ public class TestSSLEngine {
                     // Borrowing a buffer temporarily and then clearing it
                     // means we don't need to increment our counter.
 
+                    int consumed = src.position();
+
                     SSLEngineResult r = client_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
                         throw new RuntimeException("Unknown result from client_eng.unwrap(): " + r.getStatus());
                     }
 
+                    consumed = src.position() - consumed;
+
                     dst.flip();
-                    assert(!dst.hasRemaining());
+
+                    assert r.bytesConsumed() == consumed;
+                    assert r.bytesProduced() == dst.remaining();
+                    assert !dst.hasRemaining();
+
                     dst.clear();
+
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
                         // back on the front of the stack.
@@ -406,12 +432,20 @@ public class TestSSLEngine {
                 ByteBuffer dst = writeQueue[write_buffer];
                 write_buffer = (write_buffer + 1) % bufferCount;
 
+                int consumed = src.position();
+
                 SSLEngineResult r = server_eng.wrap(src, dst);
                 if (r.getStatus() != SSLEngineResult.Status.OK) {
                     throw new RuntimeException("Unknown result from server_eng.wrap(): " + r.getStatus());
                 }
 
+                consumed = src.position() - consumed;
+
                 dst.flip();
+
+                assert r.bytesConsumed() == consumed;
+                assert r.bytesProduced() == dst.remaining();
+
                 if (dst.hasRemaining()) {
                     // Since we flipped our buffer, we can use hasRemaining()
                     // to check if there's data we should unwrap on the client
@@ -428,13 +462,21 @@ public class TestSSLEngine {
                     // Borrowing a buffer temporarily and then clearing it
                     // means we don't need to increment our counter.
 
+                    int consumed = src.position();
+
                     SSLEngineResult r = server_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
                         throw new RuntimeException("Unknown result from server_eng.unwrap(): " + r.getStatus());
                     }
 
+                    consumed = src.position() - consumed;
+
                     dst.flip();
-                    assert(!dst.hasRemaining());
+
+                    assert r.bytesConsumed() == consumed;
+                    assert r.bytesProduced() == dst.remaining();
+                    assert !dst.hasRemaining();
+
                     dst.clear();
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
@@ -474,13 +516,21 @@ public class TestSSLEngine {
                     // Borrowing a buffer temporarily and then clearing it
                     // means we don't need to increment our counter.
 
+                    int consumed = src.position();
+
                     SSLEngineResult r = server_eng.unwrap(src, dst);
                     if (r.getStatus() != SSLEngineResult.Status.OK) {
                         throw new RuntimeException("Unknown result from server_eng.unwrap(): " + r.getStatus());
                     }
 
+                    consumed = src.position() - consumed;
+
                     dst.flip();
-                    assert(!dst.hasRemaining());
+
+                    assert r.bytesConsumed() == consumed;
+                    assert r.bytesProduced() == dst.remaining();
+                    assert !dst.hasRemaining();
+
                     dst.clear();
                     if (src.hasRemaining()) {
                         // Since we have bytes left after reading it, put it
@@ -531,7 +581,17 @@ public class TestSSLEngine {
         SSLEngineResult r;
 
         for (counter = 0; counter < max_counter; counter++) {
+            int consumed = mesg.position();
+            int produced = inter.position();
+
             r = send.wrap(mesg, inter);
+
+            consumed = mesg.position() - consumed;
+            produced = inter.position() - produced;
+
+            assert r.bytesConsumed() == consumed;
+            assert r.bytesProduced() == produced;
+
             inter.flip();
 
             System.err.println("Bytes of plaintext message: " + mesg_size);
@@ -556,7 +616,17 @@ public class TestSSLEngine {
         assert(dest.remaining() > inter.remaining());
 
         for (counter = 0; counter < max_counter; counter++) {
+            int consumed = inter.position();
+            int produced = dest.position();
+
             r = recv.unwrap(inter, dest);
+
+            consumed = inter.position() - consumed;
+            produced = dest.position() - produced;
+
+            assert r.bytesConsumed() == consumed;
+            assert r.bytesProduced() == produced;
+
             dest.flip();
 
             if (r.getStatus() != SSLEngineResult.Status.OK) {
