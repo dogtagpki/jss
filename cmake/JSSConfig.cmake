@@ -2,7 +2,7 @@ macro(jss_config)
     # Set the current JSS release number. Arguments are:
     #   MAJOR MINOR PATCH BETA
     # When BETA is zero, it isn't a beta release.
-    jss_config_version(4 7 2 0)
+    jss_config_version(4 7 3 0)
 
     # Configure output directories
     jss_config_outputs()
