@@ -211,6 +211,11 @@ macro(jss_tests)
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
+        NAME "JSS-KeyWrapping"
+        COMMAND "org.mozilla.jss.tests.KeyWrapping" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+        DEPENDS "Setup_DBs"
+    )
+    jss_test_java(
         NAME "Mozilla_JSS_JCA_Signature"
         COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
