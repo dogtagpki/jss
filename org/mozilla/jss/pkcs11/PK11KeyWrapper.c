@@ -17,6 +17,7 @@
 #include <jssutil.h>
 #include <pk11util.h>
 #include <Algorithm.h>
+#include "StaticVoidPointer.h"
 
 #define MAX_PRIVATE_KEY_LEN     MAX_RSA_MODULUS_LEN
 
@@ -120,11 +121,14 @@ finish:
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapSymWithPub
     (JNIEnv *env, jobject this, jobject tokenObj, jobject toBeWrappedObj,
-        jobject wrappingKeyObj, jobject algObj, jbyteArray ivBA)
+        jobject wrappingKeyObj, jobject algObj, jobject paramsPtr,
+        jlong paramsSize)
 {
     SECKEYPublicKey *wrapping = NULL;
     PK11SymKey *toBeWrapped = NULL;
     CK_MECHANISM_TYPE mech;
+    CK_VOID_PTR params = NULL;
+    SECItem paramItem;
     SECItem wrapped;
     jbyteArray wrappedBA=NULL;
     SECStatus status;
@@ -147,6 +151,14 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapSymWithPub
         return NULL;
     }
 
+    if (paramsPtr != NULL) {
+        if (JSS_PR_getStaticVoidRef(env, paramsPtr, &params) != PR_SUCCESS) {
+            JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to extract parameters "
+                "to pass with the wrapping mechanism");
+            return NULL;
+        }
+    }
+
     /* get the mechanism */
     mech = JSS_getPK11MechFromAlg(env, algObj);
     if(mech == CKM_INVALID_MECHANISM) {
@@ -162,8 +174,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapSymWithPub
         goto finish;
     }
 
+    paramItem.data = params;
+    paramItem.len = paramsSize;
+
     /* perform the wrap */
-    status = PK11_PubWrapSymKey(mech, wrapping, toBeWrapped, &wrapped);
+    status = PK11_PubWrapSymKeyWithMechanism(wrapping, mech, &paramItem, toBeWrapped, &wrapped);
     if( status != SECSuccess ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Wrap operation failed on token");
         goto finish;
@@ -595,12 +610,14 @@ JNIEXPORT jobject JNICALL
 Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
     (JNIEnv *env, jclass clazz, jobject tokenObj, jobject unwrapperObj,
         jbyteArray wrappedBA, jobject wrapAlgObj, jobject typeAlgObj,
-        jint keyLen, jbyteArray ivBA, jint usageEnum)
+        jint keyLen, jobject paramsPtr, jlong paramsSize, jint usageEnum)
 {
     PK11SymKey *symKey=NULL;
-    CK_MECHANISM_TYPE wrappingMech=0, keyTypeMech=0;
-    SECItem *wrappedKey=NULL, *iv=NULL, *param=NULL;
+    CK_MECHANISM_TYPE keyTypeMech=0, mech=0;
+    SECItem *wrappedKey=NULL;
     jobject keyObj=NULL;
+    CK_VOID_PTR params;
+    SECItem paramItem;
     SECKEYPrivateKey *wrappingKey=NULL;
     CK_ULONG operation;
 
@@ -618,18 +635,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
     }
 
     /* get the mechanism parameter (IV) */
-    if (ivBA == NULL) {
-        param = PK11_ParamFromIV(wrappingMech, NULL);
-    } else {
-        iv = JSS_ByteArrayToSECItem(env, ivBA);
-        if( iv == NULL ) {
-            goto finish; /* exception was thrown */
-        }
-        param = PK11_ParamFromIV(wrappingMech, iv);
-        if( param == NULL ) {
-            JSS_throwMsg(env, TOKEN_EXCEPTION,
-                "Failed to convert initialization vector to parameter");
-            goto finish;
+    if (paramsPtr != NULL) {
+        if (JSS_PR_getStaticVoidRef(env, paramsPtr, &params) != PR_SUCCESS) {
+            JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to extract parameters "
+                "to pass with the wrapping mechanism");
+            return NULL;
         }
     }
 
@@ -651,8 +661,18 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
         operation = JSS_symkeyUsage[usageEnum];
     }
 
-    symKey = PK11_PubUnwrapSymKey(wrappingKey, wrappedKey, keyTypeMech,
-        operation, keyLen);
+    /* get the mechanism */
+    mech = JSS_getPK11MechFromAlg(env, wrapAlgObj);
+    if(mech == CKM_INVALID_MECHANISM) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unrecognized algorithm");
+        goto finish;
+    }
+
+    paramItem.data = params;
+    paramItem.len = paramsSize;
+
+    symKey = PK11_PubUnwrapSymKeyWithMechanism(wrappingKey, mech, &paramItem,
+            wrappedKey, keyTypeMech, operation, keyLen);
     if( symKey == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
@@ -664,12 +684,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
 finish:
     if(wrappedKey) {
         SECITEM_FreeItem(wrappedKey, PR_TRUE /*free wrappedKey*/);
-    }
-    if(iv) {
-        SECITEM_FreeItem(iv, PR_TRUE /*free iv*/);
-    }
-    if(param) {
-        SECITEM_FreeItem(param, PR_TRUE /*free param*/);
     }
     if( symKey ) {
         PK11_FreeSymKey(symKey);
