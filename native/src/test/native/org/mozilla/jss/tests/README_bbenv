@@ -1,0 +1,72 @@
+# This file has been renamed to "jss/org/mozilla/jss/tests/README_bbenv", and
+# the build/test procedure documented below has been replaced; the new build/test
+# procedure has been documented in top-level "jss/README".
+
+Procedure for building nspr/nss/jss and testing jss by using the provided
+sample run and bbenv scripts located in the jss/org/mozilla/jss/tests directory:
+
+1. Create working directories:
+
+   % mkdir -p work4jss/hg
+
+2. Checkout all the needed sources:
+
+   % cd work4jss/hg
+   % hg clone https://hg.mozilla.org/projects/nspr
+   % hg clone https://hg.mozilla.org/projects/nss
+   % hg clone https://hg.mozilla.org/projects/jss 
+   % cd .. 
+
+3. Copy runSample.sh renaming it to run.sh:
+
+   % cp hg/jss/org/mozilla/jss/tests/runSample.sh run.sh
+
+4. Copy bbenvSample.sh renaming it to bbenv.sh:
+
+   % cp hg/jss/org/mozilla/jss/tests/bbenvSample.sh bbenv.sh
+
+5. Edit bbenv.sh to comply with the system that is being tested:
+
+   (a) Set/reset the DOMSUF variable so that it can be resolved locally:
+
+       NOTE: By default, DOMSUF=localdomain is set.
+
+   (b) Set/reset the JAVA_HOME_64 variable in the bbenv script accordingly:
+
+       On Linux (e. g. - Fedora 25), update java-1.8.0-openjdk to the latest
+       and then run sudo /usr/sbin/alternatives --config java and hit enter.
+
+       To check/select your Java version on Linux:
+
+       % sudo /usr/sbin/alternatives --config java
+
+       There is 1 program that provides 'java'.
+
+         Selection    Command
+       -----------------------------------------------
+       *+ 1           java-1.8.0-openjdk.x86_64 (/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.111-3.b16.fc25.x86_64/jre/bin/java)
+
+       Enter to keep the current selection[+], or type selection number:
+
+       NOTE:  You may have multiple entries (like on RHEl-7.x) or only one.
+
+       Per this example, set:
+
+       JAVA_HOME_64=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.111-3.b16.fc25.x86_64
+
+
+
+       Alternatively, on macOS, you'll have something like this:
+
+       JAVA_HOME_64=/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home
+
+6. Build nspr, nss, and jss and run the jss tests:
+
+   % run.sh 1> run.log 2>&1
+
+7. View the results captured in the various log files, for example:
+
+   % less run.log
+   % less output/all.log
+   % less output/tmp.log
+
