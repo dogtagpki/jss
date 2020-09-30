@@ -11,3 +11,5 @@ org/mozilla/jss/util/jssver.h
 org/mozilla/jss/jssconfig.h
 src/main/java/org/mozilla/jss/util/jssver.h
 src/main/java/org/mozilla/jss/jssconfig.h
+native/src/main/native/org/mozilla/jss/util/jssver.h
+native/src/main/native/org/mozilla/jss/jssconfig.h

@@ -5,57 +5,22 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dogtagpki</groupId>
-    <artifactId>jss</artifactId>
-    <version>5.3.0-SNAPSHOT</version>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.32</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.32</version>
-            <scope>runtime</scope>
-        </dependency>
-
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <artifactId>jss-parent</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
 
     <properties>
+        <revision>5.3.0-SNAPSHOT</revision>
         <sonar.projectKey>dogtagpki_jss</sonar.projectKey>
         <sonar.organization>dogtagpki</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <modules>
+        <module>base</module>
+        <module>native</module>
+        <module>examples</module>
+    </modules>
 
 </project>

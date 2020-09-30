@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="src" path="src/broken_test/java"/>
+	<classpathentry kind="src" path="base/src/main/java"/>
+	<classpathentry kind="src" path="base/src/test/java"/>
+	<classpathentry kind="src" path="base/src/broken_test/java"/>
 	<classpathentry kind="src" path="examples/src/main/java"/>
 	<classpathentry kind="src" path="symkey/src/main/java"/>
 	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-api.jar"/>
