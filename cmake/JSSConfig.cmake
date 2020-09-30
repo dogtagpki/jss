@@ -268,7 +268,7 @@ macro(jss_config_java)
     list(APPEND JSS_JAVAC_FLAGS "-classpath")
     list(APPEND JSS_JAVAC_FLAGS "${JAVAC_CLASSPATH}")
     list(APPEND JSS_JAVAC_FLAGS "-sourcepath")
-    list(APPEND JSS_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/src/main/java")
+    list(APPEND JSS_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/base/src/main/java")
 
     # Ensure we're compatible with JDK 17
     list(APPEND JSS_JAVAC_FLAGS "-target")
@@ -293,7 +293,7 @@ macro(jss_config_java)
     list(APPEND JSS_TEST_JAVAC_FLAGS "-classpath")
     list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT4_JAR}:${CLASSES_OUTPUT_DIR}")
     list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/src/main/java")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/base/src/main/java:${PROJECT_SOURCE_DIR}/base/src/test/java")
 
     # Ensure we're compatible with JDK 17
     list(APPEND JSS_TEST_JAVAC_FLAGS "-target")
@@ -330,12 +330,12 @@ endmacro()
 macro(jss_config_template)
     # Template files
     configure_file(
-        "${PROJECT_SOURCE_DIR}/src/main/java/org/mozilla/jss/jssconfig.h.in"
-        "${PROJECT_SOURCE_DIR}/src/main/java/org/mozilla/jss/jssconfig.h"
+        "${PROJECT_SOURCE_DIR}/native/src/main/native/org/mozilla/jss/jssconfig.h.in"
+        "${PROJECT_SOURCE_DIR}/native/src/main/native/org/mozilla/jss/jssconfig.h"
     )
     configure_file(
-        "${PROJECT_SOURCE_DIR}/src/main/java/org/mozilla/jss/util/jssver.h.in"
-        "${PROJECT_SOURCE_DIR}/src/main/java/org/mozilla/jss/util/jssver.h"
+        "${PROJECT_SOURCE_DIR}/native/src/main/native/org/mozilla/jss/util/jssver.h.in"
+        "${PROJECT_SOURCE_DIR}/native/src/main/native/org/mozilla/jss/util/jssver.h"
     )
     configure_file(
         "${PROJECT_SOURCE_DIR}/lib/MANIFEST.MF.in"
@@ -480,7 +480,7 @@ endmacro()
 
 macro(jss_config_tests)
     # Common variables used as arguments to several tests
-    set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/src/test/java/org/mozilla/jss/tests")
+    set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/base/src/test/java/org/mozilla/jss/tests")
     set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")
     set(DB_PWD "m1oZilla")
 endmacro()

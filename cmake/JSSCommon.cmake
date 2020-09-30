@@ -28,8 +28,15 @@ macro(jss_build)
 endmacro()
 
 macro(jss_build_globs)
-    file(GLOB_RECURSE JAVA_SOURCES src/main/java/*.java)
-    file(GLOB_RECURSE JAVA_TEST_SOURCES src/test/java/*.java)
+    file(GLOB_RECURSE _JAVA_SOURCES base/src/main/java/*.java)
+    foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
+        list(APPEND JAVA_SOURCES "${_JAVA_SOURCE}")
+    endforeach()
+
+    file(GLOB_RECURSE _JAVA_SOURCES base/src/test/java/*.java)
+    foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
+        list(APPEND JAVA_TEST_SOURCES "${_JAVA_SOURCE}")
+    endforeach()
 
     # Write the Java sources to a file to reduce the size of the javac
     # command line.
@@ -42,21 +49,29 @@ macro(jss_build_globs)
     file(WRITE "${JAVA_TEST_SOURCES_FILE}" "${JAVA_TEST_SOURCES_CONTENTS}")
 
 
-    file(GLOB_RECURSE _C_HEADERS src/main/java/*.h)
+    file(GLOB_RECURSE _C_HEADERS native/src/main/native/*.h)
     foreach(_C_HEADER ${_C_HEADERS})
-        if(${_C_HEADER} MATCHES "mozilla/jss/tests/")
-            list(APPEND C_TEST_HEADERS "${_C_HEADER}")
-        else()
-            list(APPEND C_HEADERS "${_C_HEADER}")
-        endif()
+        list(APPEND C_HEADERS "${_C_HEADER}")
+    endforeach()
+
+    file(GLOB_RECURSE _C_HEADERS native/src/test/native/*.h)
+    foreach(_C_HEADER ${_C_HEADERS})
+        list(APPEND C_TEST_HEADERS "${_C_HEADER}")
     endforeach()
 
     # We exclude any C files in the tests directory because they shouldn't
     # contribute to our library. They should instead be built as part of the
     # test suite and probably be built as stand alone binaries which link
     # against libjss.so (at most).
-    file(GLOB_RECURSE C_SOURCES src/main/java/*.c)
-    file(GLOB_RECURSE C_TEST_SOURCES src/test/java/*.c)
+    file(GLOB_RECURSE _C_SOURCES native/src/main/native/*.c)
+    foreach(_C_SOURCE ${_C_SOURCES})
+        list(APPEND C_SOURCES "${_C_SOURCE}")
+    endforeach()
+
+    file(GLOB_RECURSE _C_SOURCES native/src/main/native/*.c)
+    foreach(_C_SOURCE ${_C_SOURCES})
+        list(APPEND C_TEST_SOURCES "${_C_SOURCE}")
+    endforeach()
 endmacro()
 
 # Build all Java sources into classes and generate JNI headers
