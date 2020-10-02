@@ -7,6 +7,7 @@ package org.mozilla.jss.ssl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -547,16 +548,46 @@ public class SSLSocket extends java.net.Socket {
         SSLClientCertificateSelectionCallback clientCertSelectionCallback)
             throws IOException
     {
-        this(address, address.getHostName(), port, localAddr, localPort,
+        this(address, address.getHostName(), port, localAddr, localPort, null /* alpn */,
             certApprovalCallback, clientCertSelectionCallback);
     }
 
+    /** Write an ALPN protocol name to the OutputStream.  The protocol name
+     * will be prefixed by its length (as a single byte).
+     *
+     * @throws IllegalArgumentException if length of protocol name is
+     *         zero or greater than 255.
+     */
+    private static void writeALPNProtocol(OutputStream out, byte[] s)
+            throws IOException {
+        if (s.length < 1) throw new IllegalArgumentException("ALPN protocol cannot be empty");
+        if (s.length > 255) throw new IllegalArgumentException("ALPN protocol is too long");
+        out.write(s.length);
+        out.write(s);
+    }
+
     private SSLSocket(InetAddress address, String hostname, int port,
-        InetAddress localAddr,
-        int localPort, SSLCertificateApprovalCallback certApprovalCallback,
+        InetAddress localAddr, int localPort,
+        byte[][] alpn,
+        SSLCertificateApprovalCallback certApprovalCallback,
         SSLClientCertificateSelectionCallback clientCertSelectionCallback)
             throws IOException
     {
+        /* Create ALPN data
+         *
+         * Due to an historical quirk, SSL_SetNextProtoNego moves the first
+         * protocol to the end.  Therefore we put the last protocol at the
+         * beginning of the formatted string.
+         */
+        byte[] alpnData = null;
+        if (alpn != null && alpn.length > 0) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            writeALPNProtocol(out, alpn[alpn.length - 1]);
+            for (int i = 0; i < alpn.length - 1; i++) {
+                writeALPNProtocol(out, alpn[i]);
+            }
+            alpnData = out.toByteArray();
+        }
 
         int socketFamily = SocketBase.SSL_AF_INET;
         if(SocketBase.supportsIPV6()) {
@@ -581,7 +612,7 @@ public class SSLSocket extends java.net.Socket {
         }
 
         /* connect to the remote socket */
-        socketConnect(address.getAddress(), hostname, port, null);
+        socketConnect(address.getAddress(), hostname, port, alpnData);
     }
 
     /**
