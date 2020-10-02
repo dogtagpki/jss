@@ -574,7 +574,7 @@ Java_org_mozilla_jss_ssl_SSLSocket_getPort(JNIEnv *env,
 
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
-    (JNIEnv *env, jobject self, jbyteArray addrBA, jstring hostname, jint port)
+    (JNIEnv *env, jobject self, jbyteArray addrBA, jstring hostname, jint port, jbyteArray alpn)
 {
     JSSL_SocketData *sock;
     PRNetAddr addr;
@@ -583,6 +583,9 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     PRStatus status;
     int stat;
     const char *hostnameStr=NULL;
+
+    unsigned char *alpnData = NULL;
+    int alpnLength = 0;
 
     jmethodID supportsIPV6ID;
     jclass socketBaseClass;
@@ -630,6 +633,14 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
         goto finish;
     }
 
+    /* Set ALPN extension */
+    if (alpn != NULL) {
+        JSS_RefByteArray(env, alpn, (jbyte**)&alpnData, &alpnLength);
+        if (alpnLength > 0) {
+            SSL_SetNextProtoNego(sock->fd, alpnData, alpnLength);
+        }
+    }
+
     if(addrBALen != 4 && addrBALen != 16) {
         JSSL_throwSSLSocketException(env, "Invalid address in connect!");
         goto finish;
@@ -672,6 +683,7 @@ finish:
 
     JSS_DerefJString(env, hostname, hostnameStr);
     JSS_DerefByteArray(env, addrBA, addrBAelems, JNI_ABORT);
+    JSS_DerefByteArray(env, alpn, alpnData, JNI_ABORT);
 }
 
 JNIEXPORT jobject JNICALL

@@ -581,7 +581,7 @@ public class SSLSocket extends java.net.Socket {
         }
 
         /* connect to the remote socket */
-        socketConnect(address.getAddress(), hostname, port);
+        socketConnect(address.getAddress(), hostname, port, null);
     }
 
     /**
@@ -789,7 +789,16 @@ public class SSLSocket extends java.net.Socket {
         }
     }
 
-    private native void socketConnect(byte[] addr, String hostname, int port)
+    /**
+     * Connect socket
+     *
+     * @param addr IPv4 or IPv6 address
+     * @param hostname server name (used for SNI)
+     * @param port port number
+     * @param alpn *formatted* ALPN extension data (see SSL_SetNextProtoNego),
+     *             or null if ALPN extension is not to be sent
+     */
+    private native void socketConnect(byte[] addr, String hostname, int port, byte[] alpn)
         throws SocketException;
 
     ////////////////////////////////////////////////////////////////////
