@@ -18,13 +18,19 @@ think the issue exists upstream as well, feel free to file an upstream issue.
 
 ## Filing an Upstream Issue
 
-Most of the [Dogtag](https://github.com/dogtagpki) software (the new home of
-JSS) uses Fedora's [pagure.io](https://pagure.io/) for bug tracking; JSS's
-issue tracker can be found [there](https://pagure.io/jss/issues) as well.
-Note that this requires a Fedora account to create bugs. If this isn't of
-interest to you, feel free to file an issue on
-[GitHub](https://github.com/dogtagpki/jss/issues) instead; it will still get
-read and responded to.
+JSS's issue tracker can be found on
+[GitHub](https://github.com/dogtagpki/jss/issues) under the
+[Dogtag PKI organization](https://github.com/dogtagpki).
+Note that this requires a GitHub account to create bugs.
+
+### Legacy Issue Trackers
+
+In the past, JSS has used the following issue trackers. Unfortunately, we
+cannot monitor them and we were not able to migrate all issues to the new
+sites.
+
+ - [Pagure](https://pagure.io/jss/issues)
+ - [Mozilla's Bugzilla instance](https://bugzilla.mozilla.org/buglist.cgi?classification=Components&list_id=15438920&query_format=advanced&product=JSS&component=Documentation&component=Library&component=Sample%20Code&component=Tests&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&resolution=---)
 
 
 ## Opening a Pull Request
