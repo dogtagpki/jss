@@ -27,5 +27,5 @@ CMD true \
                    --pkcs11n /usr/include/nss3/pkcs11n.h \
                    -o PKCS11Constants-py3.java \
         && diff PKCS11Constants-py2.java PKCS11Constants-py3.java \
-        && diff PKCS11Constants-py3.java org/mozilla/jss/pkcs11/PKCS11Constants.java \
+        && diff PKCS11Constants-py3.java jss/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java \
         && true
