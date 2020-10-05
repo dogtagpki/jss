@@ -90,4 +90,4 @@ jobs:
                    --pkcs11n /usr/include/nss3/pkcs11n.h \
                    -o PKCS11Constants.java \
                    --verbose
-          docker exec jss diff PKCS11Constants.java $SHARED/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
+          docker exec jss diff PKCS11Constants.java $SHARED/base/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
