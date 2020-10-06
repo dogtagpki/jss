@@ -3,6 +3,7 @@ package org.mozilla.jss.ssl.javax;
 import javax.net.ssl.*;
 import java.util.*;
 
+import org.mozilla.jss.util.JDKCompat;
 import org.mozilla.jss.ssl.*;
 
 /**
@@ -56,7 +57,7 @@ public class JSSParameters extends SSLParameters {
             setNeedClientAuth(downcast.getNeedClientAuth());
         }
 
-        String[] alpn = downcast.getApplicationProtocols(downcast);
+        String[] alpn = JDKCompat.SSLParametersHelper.getApplicationProtocols(downcast);
         if (alpn != null) {
             setApplicationProtocols(alpn);
         }
