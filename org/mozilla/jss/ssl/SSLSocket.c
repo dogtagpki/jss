@@ -618,9 +618,9 @@ Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
         goto finish;
     }
 
-    /*
-     * Tell SSL the URL we think we want to connect to.
-     * This prevents man-in-the-middle attacks.
+    /* Set the Server Name Indication (SNI) extension, to help the
+     * server choose the correct certificate.  This does not prevent
+     * man-in-the-middle attacks (certificate validation does that).
      */
     hostnameStr = JSS_RefJString(env, hostname);
     if( hostnameStr == NULL ) goto finish;
