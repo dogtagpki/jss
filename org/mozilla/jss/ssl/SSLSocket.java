@@ -644,6 +644,14 @@ public class SSLSocket extends java.net.Socket {
         resetHandshake();
     }
 
+    /* Get result of ALPN negotiation.
+     *
+     * Prior to the handshake this will always return null.
+     * After the handshake, returns the negotiated protocol
+     * or null (e.g. when the server does not support ALPN).
+     */
+    public native byte[] getNegotiatedProtocol() throws SocketException;
+
     /**
      * @return The remote peer's IP address or null if the SSLSocket is closed.
      */

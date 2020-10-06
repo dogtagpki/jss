@@ -572,6 +572,29 @@ Java_org_mozilla_jss_ssl_SSLSocket_getPort(JNIEnv *env,
     }
 }
 
+JNIEXPORT jbyteArray JNICALL
+Java_org_mozilla_jss_ssl_SSLSocket_getNegotiatedProtocol(JNIEnv *env, jobject self)
+{
+    JSSL_SocketData *sock;
+    SECStatus status;
+    SSLNextProtoState npState;
+    unsigned char buf[255];
+    unsigned int bufLen = 0;
+
+    if (JSSL_getSockData(env, self, &sock) != PR_SUCCESS || sock == NULL) {
+        /* exception was thrown */
+        EXCEPTION_CHECK(env, sock);
+        return NULL;
+    }
+
+    status = SSL_GetNextProto(sock->fd, &npState, buf, &bufLen, sizeof(buf));
+    if (status == SECSuccess && bufLen > 0 && bufLen <= sizeof(buf)) {
+        return JSS_ToByteArray(env, buf, bufLen);
+    } else {
+        return NULL;
+    }
+}
+
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_ssl_SSLSocket_socketConnect
     (JNIEnv *env, jobject self, jbyteArray addrBA, jstring hostname, jint port, jbyteArray alpn)
