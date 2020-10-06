@@ -552,6 +552,36 @@ public class SSLSocket extends java.net.Socket {
             certApprovalCallback, clientCertSelectionCallback);
     }
 
+    /**
+     * Create an SSL client socket and connects to the specified
+     * address and port. Installs the given callbacks for
+     * certificate approval and client certificate selection.
+     * Supports Application Layer Protocol Negotiation (ALPN)
+     * extension.
+     *
+     * @param address The IP address to connect to.
+     * @param port The port to connect to.
+     * @param hostname Hostname to use for SNI
+     * @param alpn Array of ALPN protocol IDS.  If empty, extension is not
+     *      added.  Each protocol ID must have a length between 1 and 255
+     *      bytes.
+     * @param certApprovalCallback A callback that can be used to override
+     *      approval of the peer's certificate.
+     * @param clientCertSelectionCallback A callback to select the client
+     *      certificate to present to the peer.
+     */
+    public SSLSocket(
+        InetAddress address, int port,
+        String hostname, byte[][]alpn,
+        SSLCertificateApprovalCallback certApprovalCallback,
+        SSLClientCertificateSelectionCallback clientCertSelectionCallback)
+            throws IOException {
+        this(
+            address, hostname, port, null, 0, alpn,
+            certApprovalCallback, clientCertSelectionCallback);
+    }
+
+
     /** Write an ALPN protocol name to the OutputStream.  The protocol name
      * will be prefixed by its length (as a single byte).
      *
