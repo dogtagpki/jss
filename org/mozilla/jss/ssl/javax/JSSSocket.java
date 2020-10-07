@@ -665,6 +665,27 @@ public class JSSSocket extends SSLSocket {
     }
 
     /**
+     * Set a specific list of protocols to negotiate next for ALPN support.
+     */
+    public void setApplicationProtocols(String[] protocols) {
+        engine.setApplicationProtocols(protocols);
+    }
+
+    /**
+     * Get the most recently negotiated application protocol.
+     */
+    public String getApplicationProtocol() {
+        return engine.getApplicationProtocol();
+    }
+
+    /**
+     * Get the application protocol negotiated during the initial handshake.
+     */
+    public String getHandshakeApplicationProtocol() {
+        return engine.getHandshakeApplicationProtocol();
+    }
+
+    /**
      * Get the configuration of this SSLSocket as a JSSParameters object.
      *
      * @see JSSEngine#getSSLParameters()
