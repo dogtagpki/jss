@@ -28,13 +28,14 @@ macro(jss_build)
 endmacro()
 
 macro(jss_build_globs)
-    file(GLOB_RECURSE _JAVA_SOURCES org/*.java)
+    file(GLOB_RECURSE _JAVA_SOURCES jss/src/main/java/*.java)
     foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
-        if(${_JAVA_SOURCE} MATCHES "mozilla/jss/tests/")
-            list(APPEND JAVA_TEST_SOURCES "${_JAVA_SOURCE}")
-        else()
-            list(APPEND JAVA_SOURCES "${_JAVA_SOURCE}")
-        endif()
+        list(APPEND JAVA_SOURCES "${_JAVA_SOURCE}")
+    endforeach()
+
+    file(GLOB_RECURSE _JAVA_SOURCES jss/src/test/java/*.java)
+    foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
+        list(APPEND JAVA_TEST_SOURCES "${_JAVA_SOURCE}")
     endforeach()
 
     # Write the Java sources to a file to reduce the size of the javac
@@ -48,26 +49,28 @@ macro(jss_build_globs)
     file(WRITE "${JAVA_TEST_SOURCES_FILE}" "${JAVA_TEST_SOURCES_CONTENTS}")
 
 
-    file(GLOB_RECURSE _C_HEADERS org/*.h)
+    file(GLOB_RECURSE _C_HEADERS native/src/main/native/*.h)
     foreach(_C_HEADER ${_C_HEADERS})
-        if(${_C_HEADER} MATCHES "mozilla/jss/tests/")
-            list(APPEND C_TEST_HEADERS "${_C_HEADER}")
-        else()
-            list(APPEND C_HEADERS "${_C_HEADER}")
-        endif()
+        list(APPEND C_HEADERS "${_C_HEADER}")
     endforeach()
 
-    file(GLOB_RECURSE _C_SOURCES org/*.c)
+    file(GLOB_RECURSE _C_HEADERS native/src/test/native/*.h)
+    foreach(_C_HEADER ${_C_HEADERS})
+        list(APPEND C_TEST_HEADERS "${_C_HEADER}")
+    endforeach()
+
     # We exclude any C files in the tests directory because they shouldn't
     # contribute to our library. They should instead be built as part of the
     # test suite and probably be built as stand alone binaries which link
     # against libjss4.so (at most).
+    file(GLOB_RECURSE _C_SOURCES native/src/main/native/*.c)
     foreach(_C_SOURCE ${_C_SOURCES})
-        if(${_C_SOURCE} MATCHES "mozilla/jss/tests/")
-            list(APPEND C_TEST_SOURCES "${_C_SOURCE}")
-        else()
-            list(APPEND C_SOURCES "${_C_SOURCE}")
-        endif()
+        list(APPEND C_SOURCES "${_C_SOURCE}")
+    endforeach()
+
+    file(GLOB_RECURSE _C_SOURCES native/src/main/native/*.c)
+    foreach(_C_SOURCE ${_C_SOURCES})
+        list(APPEND C_TEST_SOURCES "${_C_SOURCE}")
     endforeach()
 endmacro()
 
