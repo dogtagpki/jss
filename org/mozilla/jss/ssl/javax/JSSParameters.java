@@ -1,7 +1,8 @@
 package org.mozilla.jss.ssl.javax;
 
-import javax.net.ssl.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import javax.net.ssl.*;
 
 import org.mozilla.jss.util.JDKCompat;
 import org.mozilla.jss.ssl.*;
@@ -206,7 +207,7 @@ public class JSSParameters extends SSLParameters {
 
         int index = 0;
         for (String protocol : protocols) {
-            if (protocol.length() > 255 || protocol.getBytes().length > 255) {
+            if (protocol != "" && protocol.getBytes(StandardCharsets.UTF_8).length > 255) {
                 String msg = "Invalid application protocol " + protocol;
                 msg += ": standard allows up to 255 characters but was ";
                 msg += protocol.length();

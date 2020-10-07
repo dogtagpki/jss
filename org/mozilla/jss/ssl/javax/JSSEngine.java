@@ -1,5 +1,6 @@
 package org.mozilla.jss.ssl.javax;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.*;
@@ -951,14 +952,14 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public byte[] getALPNWireData() {
         int length = 0;
         for (String protocol : alpn_protocols) {
-            length += 1 + protocol.getBytes().length;
+            length += 1 + protocol.getBytes(StandardCharsets.UTF_8).length;
         }
 
         byte[] result = new byte[length];
         int offset = 0;
 
         for (String protocol : alpn_protocols) {
-            byte[] p_bytes = protocol.getBytes();
+            byte[] p_bytes = protocol.getBytes(StandardCharsets.UTF_8);
             result[offset] = (byte) p_bytes.length;
             offset += 1;
             System.arraycopy(p_bytes, 0, result, offset, p_bytes.length);

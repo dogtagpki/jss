@@ -1108,22 +1108,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
             unknown_state_count = 0;
 
-            // Only update peer certificate chain when we've finished
-            // handshaking.
-            try {
-                PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
-                session.setPeerCertificates(peer_chain);
-            } catch (Exception e) {
-                String msg = "Unable to get peer's certificate chain: ";
-                msg += e.getMessage();
-
-                seen_exception = true;
-                ssl_exception = new SSLException(msg, e);
-            }
-
-            // Also update our session information here.
-            session.refreshData();
-
+            updateSession();
             return;
         }
 
