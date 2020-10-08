@@ -77,13 +77,13 @@ public class OIDMap {
                                           NameConstraintsExtension.NAME;
     private static final String POLICY_CONSTRAINTS = ROOT + "." +
                                           PolicyConstraintsExtension.NAME;
-    private static final String CERT_POLICIES = //ROOT + "." +
+    private static final String CERT_POLICIES = ROOT + "." +
             CertificatePoliciesExtension.NAME;
-    private static final String SUBJ_DIR_ATTR = //ROOT + "." +
+    private static final String SUBJ_DIR_ATTR = ROOT + "." +
             SubjectDirAttributesExtension.NAME;
     public static final String EXT_KEY_USAGE_NAME = "ExtendedKeyUsageExtension";
     public static final String EXT_INHIBIT_ANY_POLICY_NAME = "InhibitAnyPolicyExtension";
-    private static final String EXT_KEY_USAGE = //ROOT + "." +
+    private static final String EXT_KEY_USAGE = ROOT + "." +
             EXT_KEY_USAGE_NAME;
 
     private static final String CRL_NUMBER = ROOT + "." +
