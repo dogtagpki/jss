@@ -133,7 +133,22 @@ public class JSSTrustManager implements X509TrustManager {
             } else if (allowedToSkip) {
                 logger.debug("JSSTrustManager: configured to allow null extended key usages field");
             } else {
-                throw new CertificateException("Missing extended key usage: " + keyUsage);
+                String msg = "Missing EKU: " + keyUsage +
+                    ". Certificate with subject DN `" + cert.getSubjectDN() + "` had ";
+                if (extendedKeyUsages == null) {
+                    msg += "no EKU extension";
+                } else {
+                    msg += "EKUs { ";
+                    boolean first = true;
+                    for (String eku : extendedKeyUsages) {
+                        if (!first) msg += " , ";
+                        msg += eku;
+                        first = false;
+                    }
+                    msg += " }";
+                }
+                msg += ".  class = " + cert.getClass();
+                throw new CertificateException(msg);
             }
         }
     }
