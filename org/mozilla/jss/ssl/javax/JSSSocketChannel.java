@@ -38,6 +38,8 @@ public class JSSSocketChannel extends SocketChannel {
     private ByteBuffer readBuffer;
     private ByteBuffer writeBuffer;
 
+    private boolean handshakeCompleted = false;
+
     public JSSSocketChannel(JSSSocket sslSocket, SocketChannel parent, Socket parentSocket, ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
         super(null);
 
@@ -86,33 +88,28 @@ public class JSSSocketChannel extends SocketChannel {
         autoClose = on;
     }
 
-    /**
-     * Internal helper to bound the size of a blocking read to the maximum
-     * data available.
-     */
-    private int boundRead(int suggested) throws IOException {
-        // When there's consumed data left to read, ensure we bound by the
-        // amount available there before continuing.
-        if (consumed != null && consumed.available() > 0) {
-            return Math.min(consumed.available(), suggested);
+    private int remoteRead() throws IOException {
+        if (consumed != null) {
+            int n = consumedChannel.read(readBuffer);
+            if (n < 0) {
+                consumed = null;
+                consumedChannel = null;
+                return 0;
+            }
+            return n;
+        } else if (isBlocking()) {
+            // blocking channel; we have to bound the read to what is available
+            ByteBuffer slice = readBuffer.slice();
+            int available = parentSocket.getInputStream().available();
+            if (slice.limit() > available)
+                slice.limit(available);
+            int n = readChannel.read(slice);
+            readBuffer.position(readBuffer.position() + Math.max(n, 0));
+            return n;
+        } else {
+            // non-blocking; read whatever is available
+            return readChannel.read(readBuffer);
         }
-
-        // By setting consumed = null when consumed no longer has bytes
-        // available, we provide an easy check for which channel to read
-        // from.
-        consumed = null;
-        consumedChannel = null;
-
-        // If its a non-blocking underlying socket, then return suggested;
-        // it'll read as much as currently available.
-        if (!isBlocking()) {
-            return suggested;
-        }
-
-        // In both remaining cases (no channel or channel is blocking), bound
-        // the read above by the available data in the socket's input stream.
-        int available = parentSocket.getInputStream().available();
-        return Math.min(suggested, available);
     }
 
     public boolean finishConnect() throws IOException {
@@ -200,6 +197,7 @@ public class JSSSocketChannel extends SocketChannel {
             throw new IOException(msg, ssle);
         }
 
+        handshakeCompleted = true;
         sslSocket.notifyHandshakeCompletedListeners();
 
         return true;
@@ -242,53 +240,52 @@ public class JSSSocketChannel extends SocketChannel {
             return -1;
         }
 
-        readBuffer.clear();
-
-        long remoteRead = 0;
         long unwrapped = 0;
         long decrypted = 0;
 
         try {
+            SSLEngineResult result;
             do {
-                int buffer_size = boundRead(readBuffer.remaining());
-                ByteBuffer src = ByteBuffer.wrap(readBuffer.array(), readBuffer.position(), buffer_size);
+                int n = remoteRead();
 
-                int this_read = 0;
-                if (consumed != null) {
-                    this_read += consumedChannel.read(src);
-                } else {
-                    this_read += readChannel.read(src);
-                }
-
-                readBuffer.position(readBuffer.position() + this_read);
-                remoteRead += this_read;
-
-                if (remoteRead == 0) {
-                    return 0;
+                if (readBuffer.position() == 0) {
+                    // We didn't read anything and there is no left-over data.
+                    // If handshake already completed, we can continue because
+                    // there may be data in the unwrapped buffer FD that has yet
+                    // to be delivered to the application.
+                    //
+                    // But if we did not finish the handshake and there were no
+                    // new data, we have to return here.  Calling unwrap() with
+                    // no data, prior to handshake completion, causes the
+                    // handshake to never complete.  This might be a bug, but
+                    // for now we have this workaround.
+                    //
+                    // Note we cannot call engine.getHandshakeStatus() to perform
+                    // this check; it is NOT a passive routine and reading it
+                    // early triggers the same failure.
+                    //
+                    if (!handshakeCompleted) {
+                        return decrypted > 0 ? decrypted : n;
+                    }
                 }
 
                 readBuffer.flip();
 
-                SSLEngineResult result = engine.unwrap(readBuffer, dsts, offset, length);
+                result = engine.unwrap(readBuffer, dsts, offset, length);
                 if (result.getStatus() != SSLEngineResult.Status.OK &&
                     result.getStatus() != SSLEngineResult.Status.BUFFER_UNDERFLOW &&
                     result.getStatus() != SSLEngineResult.Status.CLOSED) {
                     throw new IOException("Unexpected status from unwrap: " + result);
                 }
-
-                readBuffer.flip();
-                readBuffer.compact();
-
                 unwrapped += result.bytesConsumed();
                 decrypted += result.bytesProduced();
 
-                if (unwrapped < remoteRead && result.bytesConsumed() == 0 && result.bytesProduced() == 0) {
-                    String msg = "Calls to unwrap stalled, consuming and ";
-                    msg += "producing no data: unwrapped " + unwrapped;
-                    msg += " bytes of " + remoteRead + " bytes.";
-                    throw new IOException(msg);
-                }
-            } while (unwrapped < remoteRead);
+                readBuffer.compact();
+
+                // If we consumed bytes, there is now room in readBuffer for some
+                // more.  Even if dsts are full, we may be able to consume more
+                // bytes in another call to unwrap().
+            } while (result.bytesConsumed() > 0);
         } catch (SSLException ssle) {
             String msg = "Unable to unwrap data using SSLEngine: ";
             msg += ssle.getMessage();
