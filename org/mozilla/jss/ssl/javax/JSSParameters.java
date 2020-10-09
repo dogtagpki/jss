@@ -28,7 +28,7 @@ public class JSSParameters extends SSLParameters {
     private SSLVersionRange range;
     private String alias;
     private String hostname;
-    private String[] appProtocols;
+    private byte[][] appProtocols;
 
     public JSSParameters() {
         // Choose our default set of SSLParameters here; default to null
@@ -205,20 +205,74 @@ public class JSSParameters extends SSLParameters {
             return;
         }
 
-        int index = 0;
-        for (String protocol : protocols) {
-            if (protocol != "" && protocol.getBytes(StandardCharsets.UTF_8).length > 255) {
-                String msg = "Invalid application protocol " + protocol;
-                msg += ": standard allows up to 255 characters but was ";
-                msg += protocol.length();
+        byte[][] converted = new byte[protocols.length][];
+        for (int index = 0; index < protocols.length; index++) {
+            if (protocols[index] == null) {
+                String msg = "Invalid application protocol (index: ";
+                msg       += index + "): null";
                 throw new IllegalArgumentException(msg);
             }
+
+            converted[index] = protocols[index].getBytes(StandardCharsets.UTF_8);
         }
 
-        appProtocols = protocols;
+        setApplicationProtocols(converted);
+    }
+
+    public void setApplicationProtocols(byte[][] protocols) throws IllegalArgumentException {
+        if (protocols == null || protocols.length == 0) {
+            appProtocols = null;
+            return;
+        }
+
+        int total_length = 0;
+        byte[][] result = new byte[protocols.length][];
+        for (int index = 0; index < protocols.length; index++) {
+            byte[] protocol = protocols[index];
+            if (protocol == null) {
+                String msg = "Invalid application protocol (index: ";
+                msg       += index + "): null";
+                throw new IllegalArgumentException(msg);
+            }
+
+            if (protocol.length == 0 || protocol.length > 255) {
+                String msg = "Invalid application protocol (index: ";
+                msg       += index + "): RFC 7301 allows up to 255 ";
+                msg       += "characters but was " + protocol.length;
+                msg       += ": " + new String(protocol);
+                throw new IllegalArgumentException(msg);
+            }
+
+            result[index] = Arrays.copyOf(protocol, protocol.length);
+            total_length += 1 + protocol.length;
+        }
+
+        // XXX: NSS's ssl3_ValidateAppProtocol doesn't validate the total
+        // length. Stop early.
+        if (total_length >= (1 << 16)) {
+            String msg = "Total length of encoded protocols exceeds encoded ";
+            msg       += "maximum allowable by RFC 7301: " + total_length;
+            msg       += ">= 65536";
+            throw new IllegalArgumentException(msg);
+        }
+
+        appProtocols = result;
+    }
+
+    public byte[][] getRawApplicationProtocols() {
+        return appProtocols;
     }
 
     public String[] getApplicationProtocols() {
-        return appProtocols;
+        if (appProtocols == null) {
+            return null;
+        }
+
+        String[] result = new String[appProtocols.length];
+        for (int index = 0; index < appProtocols.length; index++) {
+            result[index] = new String(appProtocols[index], StandardCharsets.UTF_8);
+        }
+
+        return result;
     }
 }

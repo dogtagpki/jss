@@ -24,7 +24,7 @@ public class NextProtoResult {
     }
 
     public String getProtocol() {
-        if (protocol == null || protocol.length == 0) {
+        if (protocol == null) {
             return null;
         }
 

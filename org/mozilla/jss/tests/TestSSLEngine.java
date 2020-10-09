@@ -1001,8 +1001,10 @@ public class TestSSLEngine {
         }
 
         try {
-            testBasicHandshake(client_eng, server_eng, false);
-            assert(server_eng.getApplicationProtocol().equals("h2"));
+            testInitialHandshake(client_eng, server_eng);
+            assert client_eng.getApplicationProtocol().equals("h2");
+            assert server_eng.getApplicationProtocol().equals("h2");
+            testClose(client_eng, server_eng);
         } catch (Exception e) {
             client_eng.cleanup();
             server_eng.cleanup();
@@ -1046,7 +1048,7 @@ public class TestSSLEngine {
         eng = new JSSEngineReferenceImpl();
 
         eng.setApplicationProtocols(new String[] { "http/1.1", "spdy/2" });
-        byte[] expectedHTTPSpdy = new byte[] { 0x08, 0x68, 0x74, 0x74, 0x70, 0x2f, 0x31, 0x2e, 0x31, 0x06, 0x73, 0x70, 0x64, 0x79, 0x2f, 0x32 };
+        byte[] expectedHTTPSpdy = new byte[] { 0x06, 0x73, 0x70, 0x64, 0x79, 0x2f, 0x32, 0x08, 0x68, 0x74, 0x74, 0x70, 0x2f, 0x31, 0x2e, 0x31 };
         assert Arrays.equals(eng.getALPNWireData(), expectedHTTPSpdy);
     }
 

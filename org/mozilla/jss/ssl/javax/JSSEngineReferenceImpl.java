@@ -970,6 +970,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                     ret.state != SSLNextProtoState.SSL_NEXT_PROTO_NO_OVERLAP)
                 {
                     session.setNextProtocol(ret.getProtocol());
+                } else {
+                    session.setNextProtocol("");
                 }
             }
         } catch (Exception e) {
