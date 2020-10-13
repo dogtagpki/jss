@@ -272,10 +272,14 @@ public class JSSSocketChannel extends SocketChannel {
                 readBuffer.flip();
 
                 result = engine.unwrap(readBuffer, dsts, offset, length);
-                if (result.getStatus() != SSLEngineResult.Status.OK &&
-                    result.getStatus() != SSLEngineResult.Status.BUFFER_UNDERFLOW &&
-                    result.getStatus() != SSLEngineResult.Status.CLOSED) {
-                    throw new IOException("Unexpected status from unwrap: " + result);
+                switch (result.getStatus()) {
+                    case CLOSED:
+                        shutdownInput();
+                    case OK:
+                    case BUFFER_UNDERFLOW:
+                        break; // CLOSED, OK and BUFFER_UNDERFLOW are expected
+                    default:
+                        throw new IOException("Unexpected status from unwrap: " + result);
                 }
                 unwrapped += result.bytesConsumed();
                 decrypted += result.bytesProduced();
