@@ -347,6 +347,10 @@ macro(jss_config_template)
         "${PROJECT_SOURCE_DIR}/tools/run_test.sh.in"
         "${CMAKE_BINARY_DIR}/run_test.sh"
     )
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/tools/run_java.sh.in"
+        "${CMAKE_BINARY_DIR}/run_java.sh"
+    )
     set(JSS_CFG_PATH "${CONFIG_OUTPUT_DIR}/jss.cfg")
     configure_file(
         "${PROJECT_SOURCE_DIR}/tools/java.security.in"

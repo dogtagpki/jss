@@ -14,7 +14,7 @@ import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.ssl.javax.JSSEngine;
-import org.mozilla.jss.ssl.javax.JSSEngineReferenceImpl;
+import org.mozilla.jss.ssl.javax.JSSEngineOptimizedImpl;
 import org.mozilla.jss.ssl.javax.JSSParameters;
 import org.mozilla.jss.ssl.javax.JSSServerSocketFactory;
 import org.mozilla.jss.ssl.javax.JSSSocketFactory;
@@ -55,7 +55,7 @@ public class JSSContextSpi extends SSLContextSpi {
     public SSLEngine engineCreateSSLEngine() {
         logger.debug("JSSContextSpi.engineCreateSSLEngine()");
 
-        JSSEngine ret = new JSSEngineReferenceImpl();
+        JSSEngine ret = new JSSEngineOptimizedImpl();
         initializeEngine(ret);
 
         return ret;
@@ -64,7 +64,7 @@ public class JSSContextSpi extends SSLContextSpi {
     public SSLEngine engineCreateSSLEngine(String host, int port) {
         logger.debug("JSSContextSpi.engineCreateSSLEngine(" + host + ", " + port + ")");
 
-        JSSEngine ret = new JSSEngineReferenceImpl(host, port);
+        JSSEngine ret = new JSSEngineOptimizedImpl(host, port);
         initializeEngine(ret);
 
         return ret;

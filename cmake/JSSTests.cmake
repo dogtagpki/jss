@@ -71,6 +71,10 @@ macro(jss_tests)
         COMMAND "${BIN_OUTPUT_DIR}/TestBufferPRFD"
     )
     jss_test_java(
+        NAME "TestJByteBuffer"
+        COMMAND "org.mozilla.jss.tests.TestJByteBuffer"
+    )
+    jss_test_java(
         NAME "Test_UTF-8_Converter"
         COMMAND "org.mozilla.jss.tests.UTF8ConverterTest"
     )
@@ -173,6 +177,11 @@ macro(jss_tests)
     jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_rsa.pfx"
         COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/rsa.pfx" "-n" "CA_RSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
+        DEPENDS "Generate_known_RSA_cert_pair"
+    )
+    jss_test_exec(
+        NAME "Create_PKCS11_cert_to_PKCS12_server_rsa.pfx"
+        COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/rsa-server.pfx" "-n" "Server_RSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
         DEPENDS "Generate_known_RSA_cert_pair"
     )
     jss_test_exec(

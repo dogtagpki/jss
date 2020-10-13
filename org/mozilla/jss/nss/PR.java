@@ -65,6 +65,17 @@ public class PR {
     public static native PRFDProxy NewBufferPRFD(BufferProxy read_buf,
                                                  BufferProxy write_buf,
                                                  byte[] peer_info);
+
+    /**
+     * Create a new j_bytebuffer backed PRFileDesc, mimicing a TCP socket with
+     * the specified peer_info.
+     *
+     * See also: newByteBufferPRFileDesc in org/mozilla/jss/ssl/javax/ByteBufferPRFD.h
+     */
+    public static native PRFDProxy NewByteBufferPRFD(ByteBufferProxy read_buf,
+                                                     ByteBufferProxy write_buf,
+                                                     byte[] peer_info);
+
     /**
      * Close an existing PRFDProxy, clearing the pointer if successful.
      *

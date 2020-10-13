@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# This utility gets templated to build/run_java.sh to help with running a
+# single test after building JSS. This gives the caller more flexibility
+# with command line arguments and ensures that the correct build artifacts
+# get used. Unlike run_test.sh however, this utility runs without loading
+# JSS via java.security, allowing it to be used for benchmarking SSLSocket
+# with non-JSS implementations.
+
+export LD_LIBRARY_PATH="${NSS_LIBRARIES}:${CMAKE_BINARY_DIR}:${NSPR_LIBRARIES}"
+export CLASSPATH="${TEST_CLASSPATH}"
+
+if [ "$1" == "--gdb" ]; then
+    shift
+    gdb --args "${Java_JAVA_EXECUTABLE}" -classpath "$CLASSPATH" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+elif [ "$1" == "--valgrind" ]; then
+    shift
+    valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+elif [ "$1" == "--perf" ]; then
+    shift
+    perf record -- "${Java_JAVA_EXECUTABLE}" -classpath "${TEST_CLASSPATH}" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+else
+    "${Java_JAVA_EXECUTABLE}" -classpath "$CLASSPATH" -ea -Djava.library.path="$LD_LIBRARY_PATH" -Djava.util.logging.config.file="${PROJECT_SOURCE_DIR}/tools/logging.properties" "$@"
+fi
