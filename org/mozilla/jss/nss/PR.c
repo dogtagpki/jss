@@ -176,6 +176,10 @@ Java_org_mozilla_jss_nss_PR_Read(JNIEnv *env, jclass clazz, jobject fd,
     while (read_amount < amount) {
         this_read = PR_Read(real_fd, buffer + read_amount, amount - read_amount);
         if (this_read <= 0) {
+            if (PR_GetError() == 0) {
+                /* End of data */
+                break;
+            }
             if (PR_GetError() == PR_WOULD_BLOCK_ERROR && read_amount > 0) {
                 /* If we've previously gotten data and we would block this
                  * time, then we're at the end of our data. Reset the error
