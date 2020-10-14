@@ -11,6 +11,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -1050,6 +1051,22 @@ public class TestSSLEngine {
         eng.setApplicationProtocols(new String[] { "http/1.1", "spdy/2" });
         byte[] expectedHTTPSpdy = new byte[] { 0x06, 0x73, 0x70, 0x64, 0x79, 0x2f, 0x32, 0x08, 0x68, 0x74, 0x74, 0x70, 0x2f, 0x31, 0x2e, 0x31 };
         assert Arrays.equals(eng.getALPNWireData(), expectedHTTPSpdy);
+
+        // Handles default value
+        SSLParameters s_params = new SSLParameters();
+        JSSParameters j_params = new JSSParameters(s_params);
+        assert j_params.getApplicationProtocols() == null;
+
+        // Handles empty list
+        j_params = new JSSParameters();
+        j_params.setApplicationProtocols(new String[0]);
+        assert j_params.getApplicationProtocols() == null;
+
+        // Handles null list
+        j_params = new JSSParameters();
+        String[] protos = null;
+        j_params.setApplicationProtocols(protos);
+        assert j_params.getApplicationProtocols() == null;
     }
 
     public static void main(String[] args) throws Exception {
