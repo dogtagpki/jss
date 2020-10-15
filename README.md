@@ -23,7 +23,8 @@ This project has the following dependencies:
 
  - [NSPR](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSPR)
  - [NSS](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS)
-    - Minimum version: 3.30
+    - Minimum version: 3.44
+    - Recommended version: 3.48 and above
     - A c and c++ compiler such as [gcc](ttps://gcc.gnu.org/)
     - [zlib](https://zlib.net/)
  - [OpenJDK 1.8.0 or newer](https://openjdk.java.net/)
