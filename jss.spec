@@ -108,13 +108,26 @@ export CFLAGS
 # Check if we're in FIPS mode
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
+# RHEL's CMake doesn't support -B flag.
+%if 0%{?rhel}
+%{__mkdir_p} %{_vpath_builddir}
+cd %{_vpath_builddir}
+%endif
+
 # The Makefile is not thread-safe
 %cmake \
     -DJAVA_HOME=%{java_home} \
     -DJAVA_LIB_INSTALL_DIR=%{_jnidir} \
+%if 0%{?rhel}
+    ..
+%else
     -B %{_vpath_builddir}
+%endif
 
+%if 0%{?fedora}
 cd %{_vpath_builddir}
+%endif
+
 %{__make} all
 %{__make} javadoc
 ctest --output-on-failure
