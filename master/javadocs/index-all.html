@@ -894,6 +894,10 @@
 <dl>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmc/OtherInfo.html#BAD_ALG">BAD_ALG</a></span> - Static variable in class org.mozilla.jss.pkix.cmc.<a href="org/mozilla/jss/pkix/cmc/OtherInfo.html" title="class in org.mozilla.jss.pkix.cmc">OtherInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLErrors.html#BAD_CERT_DOMAIN">BAD_CERT_DOMAIN</a></span> - Static variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLErrors.html" title="class in org.mozilla.jss.nss">SSLErrors</a></dt>
+<dd>
+<div class="block">Certificate has a bad hostname.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLCertificateApprovalCallback.ValidityStatus.html#BAD_CERT_DOMAIN">BAD_CERT_DOMAIN</a></span> - Static variable in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLCertificateApprovalCallback.ValidityStatus.html" title="class in org.mozilla.jss.ssl">SSLCertificateApprovalCallback.ValidityStatus</a></dt>
 <dd>
 <div class="block">this indicates common-name mismatch</div>
@@ -917,6 +921,19 @@
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmc/OtherInfo.html#BAD_TIME">BAD_TIME</a></span> - Static variable in class org.mozilla.jss.pkix.cmc.<a href="org/mozilla/jss/pkix/cmc/OtherInfo.html" title="class in org.mozilla.jss.pkix.cmc">OtherInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmmf/PKIStatusInfo.html#badAlg">badAlg</a></span> - Static variable in class org.mozilla.jss.pkix.cmmf.<a href="org/mozilla/jss/pkix/cmmf/PKIStatusInfo.html" title="class in org.mozilla.jss.pkix.cmmf">PKIStatusInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#badCertError">badCertError</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">BadCertHandler</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>
+<div class="block">BadAuthHandler interface enables arbitrary certificate authentication
+ from a NSS cert auth hook.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BadCertHandler.html#BadCertHandler-org.mozilla.jss.nss.SSLFDProxy-int-">BadCertHandler(SSLFDProxy, int)</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></dt>
+<dd>
+<div class="block">Constructor to store SSLFDProxy, error information.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#badCertHandler">badCertHandler</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkix/cmmf/PKIStatusInfo.html#badCertId">badCertId</a></span> - Static variable in class org.mozilla.jss.pkix.cmmf.<a href="org/mozilla/jss/pkix/cmmf/PKIStatusInfo.html" title="class in org.mozilla.jss.pkix.cmmf">PKIStatusInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -1315,6 +1332,8 @@
 <dd>
 <div class="block">Constructor to store SSLFDProxy information.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#certAuthHandler">certAuthHandler</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/pkcs12/CertBag.html" title="class in org.mozilla.jss.pkcs12"><span class="typeNameLink">CertBag</span></a> - Class in <a href="org/mozilla/jss/pkcs12/package-summary.html">org.mozilla.jss.pkcs12</a></dt>
 <dd>
 <div class="block">A PKCS #12 cert bag.</div>
@@ -1966,6 +1985,11 @@
 <dd>
 <div class="block">Converts a char array to a null-terminated byte array using a standard
  encoding, which is currently UTF8.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BadCertHandler.html#check-org.mozilla.jss.nss.SSLFDProxy-int-">check(SSLFDProxy, int)</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></dt>
+<dd>
+<div class="block">Returns the PRErrorCode the error validating certificate
+ auth, else 0.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/CertAuthHandler.html#check-org.mozilla.jss.nss.SSLFDProxy-">check(SSLFDProxy)</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a></dt>
 <dd>
@@ -6903,6 +6927,11 @@
 <dd>
 <div class="block">Set of configuration options to enable via SSL_OptionSet(...).</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigAsyncBadCertCallback-org.mozilla.jss.nss.SSLFDProxy-">ConfigAsyncBadCertCallback(SSLFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Use an asynchronous bad certificate handler which allows us to approve
+ rejected certificates.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigAsyncTrustManagerCertAuthCallback-org.mozilla.jss.nss.SSLFDProxy-">ConfigAsyncTrustManagerCertAuthCallback(SSLFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>
 <div class="block">Use an asynchronous certificate checking handler which allows us to
@@ -6933,6 +6962,11 @@
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#configServerSessionIDCache-int-int-int-java.lang.String-">configServerSessionIDCache(int, int, int, String)</a></span> - Static method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServerSocket.html" title="class in org.mozilla.jss.ssl">SSLServerSocket</a></dt>
 <dd>
 <div class="block">Configures the session ID cache.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigSyncBadCertCallback-org.mozilla.jss.nss.SSLFDProxy-">ConfigSyncBadCertCallback(SSLFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
+<dd>
+<div class="block">Use a synchronous bad certificate handler which allows us to approve
+ rejected certificates.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#ConfigSyncTrustManagerCertAuthCallback-org.mozilla.jss.nss.SSLFDProxy-">ConfigSyncTrustManagerCertAuthCallback(SSLFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>
@@ -9232,6 +9266,14 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSL.html#EnableHandshakeCallback-org.mozilla.jss.nss.SSLFDProxy-">EnableHandshakeCallback(SSLFDProxy)</a></span> - Static method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSL.html" title="class in org.mozilla.jss.nss">SSL</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLSocket.html#enablePostHandshakeAuth-boolean-">enablePostHandshakeAuth(boolean)</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></dt>
+<dd>
+<div class="block">Enable or disable post-handshake auth for a single socket.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLSocket.html#enablePostHandshakeAuthDefault-boolean-">enablePostHandshakeAuthDefault(boolean)</a></span> - Static method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLSocket.html" title="class in org.mozilla.jss.ssl">SSLSocket</a></dt>
+<dd>
+<div class="block">Sets the default to allow post-handshake auth globally.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServerSocket.html#enableRenegotiation-int-">enableRenegotiation(int)</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServerSocket.html" title="class in org.mozilla.jss.ssl">SSLServerSocket</a></dt>
 <dd>
 <div class="block">Enables the mode of renegotiation that the peer must use.</div>
@@ -11048,6 +11090,11 @@
 <dd>
 <div class="block">Indicates a problem with the certificate version</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BadCertHandler.html#error">error</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></dt>
+<dd>
+<div class="block">When invoked via run(), the error code to pass to the
+ check operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#errorText-int-">errorText(int)</a></span> - Static method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
 <dd>
 <div class="block">Gets the error text from the NSPR layer</div>
@@ -11338,6 +11385,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSSocketChannel.html#finishConnect--">finishConnect()</a></span> - Method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSSocketChannel.html" title="class in org.mozilla.jss.ssl.javax">JSSSocketChannel</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BadCertHandler.html#finished">finished</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></dt>
+<dd>
+<div class="block">Whether or not the check operation has been executed
+ yet, when invoked via run().</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/CertAuthHandler.html#finished">finished</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a></dt>
 <dd>
 <div class="block">Whether or not the check operation has been executed
@@ -16758,8 +16810,6 @@
 <dl>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/SSLServer.html#handleConnection-org.mozilla.jss.ssl.SSLSocket-">handleConnection(SSLSocket)</a></span> - Method in class org.mozilla.jss.ssl.<a href="org/mozilla/jss/ssl/SSLServer.html" title="class in org.mozilla.jss.ssl">SSLServer</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#handler">handler</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#handshake_state">handshake_state</a></span> - Variable in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
 <dd>
 <div class="block">What the official SSLEngineResult handshake status is, at the present
@@ -17921,6 +17971,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12.html#INVISIBLE_CA">INVISIBLE_CA</a></span> - Static variable in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#invokeBadCertHandler-int-">invokeBadCertHandler(int)</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#invokeCertAuthHandler--">invokeCertAuthHandler()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/x509/X500Name.html#ipAddress_oid">ipAddress_oid</a></span> - Static variable in class org.mozilla.jss.netscape.security.x509.<a href="org/mozilla/jss/netscape/security/x509/X500Name.html" title="class in org.mozilla.jss.netscape.security.x509">X500Name</a></dt>
@@ -18044,6 +18096,8 @@
 <dd>
 <div class="block">Query whether or not the inbound side of this connection is closed.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/CryptoManager.html#isInitialized--">isInitialized()</a></span> - Static method in class org.mozilla.jss.<a href="org/mozilla/jss/CryptoManager.html" title="class in org.mozilla.jss">CryptoManager</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSSocket.html#isInputShutdown--">isInputShutdown()</a></span> - Method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSSocket.html" title="class in org.mozilla.jss.ssl.javax">JSSSocket</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/pkcs11/PK11Token.html#isInternalCryptoToken--">isInternalCryptoToken()</a></span> - Method in class org.mozilla.jss.pkcs11.<a href="org/mozilla/jss/pkcs11/PK11Token.html" title="class in org.mozilla.jss.pkcs11">PK11Token</a></dt>
@@ -19121,10 +19175,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#loadCertFromNSS-org.mozilla.jss.netscape.security.pkcs.PKCS12-org.mozilla.jss.crypto.X509Certificate-boolean-boolean-java.lang.String-">loadCertFromNSS(PKCS12, X509Certificate, boolean, boolean, String)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/mozilla/jss/JSSLoader.html#loaded--">loaded()</a></span> - Static method in class org.mozilla.jss.<a href="org/mozilla/jss/JSSLoader.html" title="class in org.mozilla.jss">JSSLoader</a></dt>
-<dd>
-<div class="block">Check if this provider has been configured.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#loadFromByteArray-byte:A-org.mozilla.jss.util.Password-">loadFromByteArray(byte[], Password)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html#loadFromFile-java.lang.String-org.mozilla.jss.util.Password-">loadFromFile(String, Password)</a></span> - Method in class org.mozilla.jss.netscape.security.pkcs.<a href="org/mozilla/jss/netscape/security/pkcs/PKCS12Util.html" title="class in org.mozilla.jss.netscape.security.pkcs">PKCS12Util</a></dt>
@@ -19695,6 +19745,8 @@
  is not passed by the peer and we are a server; if we are a client,
  whether or not we offer our certificate to the server.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#needBadCertValidation">needBadCertValidation</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLFDProxy.html#needCertValidation">needCertValidation</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss">SSLFDProxy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/CryptoToken.html#needsLogin--">needsLogin()</a></span> - Method in interface org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/CryptoToken.html" title="interface in org.mozilla.jss.crypto">CryptoToken</a></dt>
@@ -22464,6 +22516,11 @@ a symmetric key.</div>
 <dd>
 <div class="block">A template for decoding an ResponseBody from its BER encoding.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BadCertHandler.html#result">result</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></dt>
+<dd>
+<div class="block">When invoked via run(), the result of the check
+ operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/CertAuthHandler.html#result">result</a></span> - Variable in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a></dt>
 <dd>
 <div class="block">When invoked via run(), the result of the check
@@ -22714,6 +22771,8 @@ a symmetric key.</div>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/SignatureAlgorithm.html#RSASignatureWithSHA384Digest">RSASignatureWithSHA384Digest</a></span> - Static variable in class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/crypto/SignatureAlgorithm.html#RSASignatureWithSHA512Digest">RSASignatureWithSHA512Digest</a></span> - Static variable in class org.mozilla.jss.crypto.<a href="org/mozilla/jss/crypto/SignatureAlgorithm.html" title="class in org.mozilla.jss.crypto">SignatureAlgorithm</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/BadCertHandler.html#run--">run()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/CertAuthHandler.html#run--">run()</a></span> - Method in class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a></dt>
 <dd>&nbsp;</dd>
@@ -23925,7 +23984,9 @@ a symmetric key.</div>
 <div class="block">Set the name of this attribute.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html#setName-java.lang.String-">setName(String)</a></span> - Method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngineReferenceImpl.html" title="class in org.mozilla.jss.ssl.javax">JSSEngineReferenceImpl</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Set the name of this JSSEngine instance, to be printed in logging calls.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/mozilla/jss/ssl/javax/JSSEngine.html#setNeedClientAuth-boolean-">setNeedClientAuth(boolean)</a></span> - Method in class org.mozilla.jss.ssl.javax.<a href="org/mozilla/jss/ssl/javax/JSSEngine.html" title="class in org.mozilla.jss.ssl.javax">JSSEngine</a></dt>
 <dd>
 <div class="block">Set whether or not client authentication is required for the TLS
@@ -25344,6 +25405,13 @@ a symmetric key.</div>
  should be presented for client authentication.</div>
 </dd>
 <dt><a href="org/mozilla/jss/ssl/SSLCompressionMethod.html" title="enum in org.mozilla.jss.ssl"><span class="typeNameLink">SSLCompressionMethod</span></a> - Enum in <a href="org/mozilla/jss/ssl/package-summary.html">org.mozilla.jss.ssl</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/mozilla/jss/nss/SSLErrors.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">SSLErrors</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
+<dd>
+<div class="block">This class provides access to useful NSS/SSL errors, getting their values
+ from a JNI call.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/mozilla/jss/nss/SSLErrors.html#SSLErrors--">SSLErrors()</a></span> - Constructor for class org.mozilla.jss.nss.<a href="org/mozilla/jss/nss/SSLErrors.html" title="class in org.mozilla.jss.nss">SSLErrors</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/mozilla/jss/nss/SSLFDProxy.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">SSLFDProxy</span></a> - Class in <a href="org/mozilla/jss/nss/package-summary.html">org.mozilla.jss.nss</a></dt>
 <dd>&nbsp;</dd>
