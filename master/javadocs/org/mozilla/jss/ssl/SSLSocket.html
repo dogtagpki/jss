@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":9,"i3":10,"i4":10,"i5":10,"i6":9,"i7":10,"i8":9,"i9":10,"i10":10,"i11":9,"i12":10,"i13":9,"i14":10,"i15":9,"i16":10,"i17":10,"i18":9,"i19":10,"i20":42,"i21":10,"i22":10,"i23":9,"i24":9,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":9,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":9,"i43":10,"i44":10,"i45":10,"i46":10,"i47":10,"i48":42,"i49":10,"i50":42,"i51":9,"i52":10,"i53":9,"i54":10,"i55":9,"i56":10,"i57":10,"i58":10,"i59":42,"i60":42,"i61":10,"i62":10,"i63":10,"i64":10,"i65":9,"i66":10,"i67":10,"i68":10,"i69":10,"i70":10,"i71":10,"i72":10};
+var methods = {"i0":10,"i1":10,"i2":9,"i3":10,"i4":10,"i5":10,"i6":9,"i7":10,"i8":9,"i9":10,"i10":9,"i11":10,"i12":10,"i13":9,"i14":10,"i15":9,"i16":10,"i17":9,"i18":10,"i19":10,"i20":9,"i21":10,"i22":42,"i23":10,"i24":10,"i25":9,"i26":9,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":9,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":9,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10,"i50":42,"i51":10,"i52":42,"i53":9,"i54":10,"i55":9,"i56":10,"i57":9,"i58":10,"i59":10,"i60":10,"i61":42,"i62":42,"i63":10,"i64":10,"i65":10,"i66":10,"i67":9,"i68":10,"i69":10,"i70":10,"i71":10,"i72":10,"i73":10,"i74":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -1059,19 +1059,31 @@ extends java.net.Socket</pre>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enablePostHandshakeAuth-boolean-">enablePostHandshakeAuth</a></span>(boolean&nbsp;enable)</code>
+<div class="block">Enable or disable post-handshake auth for a single socket.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enablePostHandshakeAuthDefault-boolean-">enablePostHandshakeAuthDefault</a></span>(boolean&nbsp;enable)</code>
+<div class="block">Sets the default to allow post-handshake auth globally.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableRenegotiation-int-">enableRenegotiation</a></span>(int&nbsp;mode)</code>
 <div class="block">Enables the mode of renegotiation that the peer must use on this
   socket.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableRenegotiationDefault-int-">enableRenegotiationDefault</a></span>(int&nbsp;mode)</code>
 <div class="block">Set the mode of renegotiation that the peer must use for all new
  sockets.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableRequireSafeNegotiation-boolean-">enableRequireSafeNegotiation</a></span>(boolean&nbsp;enable)</code>
 <div class="block">For this socket require that the peer must send
@@ -1079,7 +1091,7 @@ extends java.net.Socket</pre>
  extension in ALL handshakes.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableRequireSafeNegotiationDefault-boolean-">enableRequireSafeNegotiationDefault</a></span>(boolean&nbsp;enable)</code>
 <div class="block">For this socket require that the peer must send
@@ -1087,74 +1099,74 @@ extends java.net.Socket</pre>
  extension in ALL handshakes.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableRollbackDetection-boolean-">enableRollbackDetection</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enable rollback detection for this socket.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableSessionTickets-boolean-">enableSessionTickets</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enables Session tickets on this socket.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableSessionTicketsDefault-boolean-">enableSessionTicketsDefault</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Sets the default for Session Tickets for all new sockets.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableSSL2-boolean-">enableSSL2</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enables SSL v2 on this socket.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableSSL2Default-boolean-">enableSSL2Default</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Sets the default for SSL v2 for all new sockets.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableSSL3-boolean-">enableSSL3</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enables SSL v3 on this socket.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableSSL3Default-boolean-">enableSSL3Default</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Sets the default for SSL v3 for all new sockets.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableStepDown-boolean-">enableStepDown</a></span>(boolean&nbsp;enable)</code>
 <div class="block">This option, enableStepDown, is concerned with the generation
  of step-down keys which are used with export suites.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableTLS-boolean-">enableTLS</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enables TLS on this socket.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableTLSDefault-boolean-">enableTLSDefault</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Sets the default for TLS for all new sockets.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#enableV2CompatibleHello-boolean-">enableV2CompatibleHello</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enable sending v3 client hello in v2 format for this socket.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#finalize--">finalize</a></span>()</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
@@ -1162,155 +1174,155 @@ extends java.net.Socket</pre>
 </div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#forceHandshake--">forceHandshake</a></span>()</code>
 <div class="block">Force an already started SSL handshake to complete.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getCipherPreference-int-">getCipherPreference</a></span>(int&nbsp;cipher)</code>
 <div class="block">Returns whether this cipher is enabled or disabled on this socket.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getCipherPreferenceDefault-int-">getCipherPreferenceDefault</a></span>(int&nbsp;cipher)</code>
 <div class="block">Returns the default for whether this cipher is enabled or disabled.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>static int[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getImplementedCipherSuites--">getImplementedCipherSuites</a></span>()</code>
 <div class="block">Returns a list of cipher suites that are implemented by NSS.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>java.net.InetAddress</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getInetAddress--">getInetAddress</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>java.io.InputStream</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getInputStream--">getInputStream</a></span>()</code>
 <div class="block">Returns the input stream for reading from this socket.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getKeepAlive--">getKeepAlive</a></span>()</code>
 <div class="block">Returns the current setting of the SO_KEEPALIVE socket option.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>java.net.InetAddress</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getLocalAddress--">getLocalAddress</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getLocalPort--">getLocalPort</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>java.io.OutputStream</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getOutputStream--">getOutputStream</a></span>()</code>
 <div class="block">Returns the output stream for writing to this socket.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getPort--">getPort</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getReceiveBufferSize--">getReceiveBufferSize</a></span>()</code>
 <div class="block">Returnst he size (in bytes) of the receive buffer.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getSendBufferSize--">getSendBufferSize</a></span>()</code>
 <div class="block">Returns the size (in bytes) of the send buffer.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getSoLinger--">getSoLinger</a></span>()</code>
 <div class="block">Returns the current value of the SO_LINGER socket option.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getSoTimeout--">getSoTimeout</a></span>()</code>
 <div class="block">Returns the current value of the SO_TIMEOUT socket option.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getSSLDefaultOptions--">getSSLDefaultOptions</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getSSLOptions--">getSSLOptions</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/ssl/SSLSecurityStatus.html" title="class in org.mozilla.jss.ssl">SSLSecurityStatus</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getStatus--">getStatus</a></span>()</code>
 <div class="block">Returns the security status of this socket.</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getTcpNoDelay--">getTcpNoDelay</a></span>()</code>
 <div class="block">Returns the current setting of the TCP_NO_DELAY socket option.</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i42" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#getUseClientMode--">getUseClientMode</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i41" class="rowColor">
+<tr id="i43" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#invalidateSession--">invalidateSession</a></span>()</code>
 <div class="block">Removes the current session from the session cache.</div>
 </td>
 </tr>
-<tr id="i42" class="altColor">
+<tr id="i44" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#isFipsCipherSuite-int-">isFipsCipherSuite</a></span>(int&nbsp;ciphersuite)</code>
 <div class="block">isFipsCipherSuite</div>
 </td>
 </tr>
-<tr id="i43" class="rowColor">
+<tr id="i45" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#redoHandshake--">redoHandshake</a></span>()</code>
 <div class="block">Causes SSL to begin a full, new SSL 3.0 handshake from scratch
  on a connection that has already completed one handshake.</div>
 </td>
 </tr>
-<tr id="i44" class="altColor">
+<tr id="i46" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#redoHandshake-boolean-">redoHandshake</a></span>(boolean&nbsp;flushCache)</code>
 <div class="block">Causes SSL to begin a full, new SSL 3.0 handshake from scratch
  on a connection that has already completed one handshake.</div>
 </td>
 </tr>
-<tr id="i45" class="rowColor">
+<tr id="i47" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#removeHandshakeCompletedListener-org.mozilla.jss.ssl.SSLHandshakeCompletedListener-">removeHandshakeCompletedListener</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLHandshakeCompletedListener.html" title="interface in org.mozilla.jss.ssl">SSLHandshakeCompletedListener</a>&nbsp;listener)</code>
 <div class="block">Removes a previously registered listener for handshake completion.</div>
 </td>
 </tr>
-<tr id="i46" class="altColor">
+<tr id="i48" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#removeSocketListener-org.mozilla.jss.ssl.SSLSocketListener-">removeSocketListener</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLSocketListener.html" title="interface in org.mozilla.jss.ssl">SSLSocketListener</a>&nbsp;listener)</code>&nbsp;</td>
 </tr>
-<tr id="i47" class="rowColor">
+<tr id="i49" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#requestClientAuth-boolean-">requestClientAuth</a></span>(boolean&nbsp;b)</code>
 <div class="block">Enables/disables the request of client authentication.</div>
 </td>
 </tr>
-<tr id="i48" class="altColor">
+<tr id="i50" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#requireClientAuth-boolean-boolean-">requireClientAuth</a></span>(boolean&nbsp;require,
                  boolean&nbsp;onRedo)</code>
@@ -1319,14 +1331,14 @@ extends java.net.Socket</pre>
 </div>
 </td>
 </tr>
-<tr id="i49" class="rowColor">
+<tr id="i51" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#requireClientAuth-int-">requireClientAuth</a></span>(int&nbsp;mode)</code>
 <div class="block">Sets whether the socket requires client authentication from the remote
   peer.</div>
 </td>
 </tr>
-<tr id="i50" class="altColor">
+<tr id="i52" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#requireClientAuthDefault-boolean-boolean-">requireClientAuthDefault</a></span>(boolean&nbsp;require,
                         boolean&nbsp;onRedo)</code>
@@ -1335,57 +1347,57 @@ extends java.net.Socket</pre>
 </div>
 </td>
 </tr>
-<tr id="i51" class="rowColor">
+<tr id="i53" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#requireClientAuthDefault-int-">requireClientAuthDefault</a></span>(int&nbsp;mode)</code>
 <div class="block">Sets the default setting for requiring client authorization.</div>
 </td>
 </tr>
-<tr id="i52" class="altColor">
+<tr id="i54" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#resetHandshake--">resetHandshake</a></span>()</code>
 <div class="block">Resets the handshake state.</div>
 </td>
 </tr>
-<tr id="i53" class="rowColor">
+<tr id="i55" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setCipherPolicy-org.mozilla.jss.ssl.CipherPolicy-">setCipherPolicy</a></span>(<a href="../../../../org/mozilla/jss/ssl/CipherPolicy.html" title="class in org.mozilla.jss.ssl">CipherPolicy</a>&nbsp;cp)</code>
 <div class="block">Sets the SSL cipher policy.</div>
 </td>
 </tr>
-<tr id="i54" class="altColor">
+<tr id="i56" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setCipherPreference-int-boolean-">setCipherPreference</a></span>(int&nbsp;cipher,
                    boolean&nbsp;enable)</code>
 <div class="block">Enables/disables the cipher on this socket.</div>
 </td>
 </tr>
-<tr id="i55" class="rowColor">
+<tr id="i57" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setCipherPreferenceDefault-int-boolean-">setCipherPreferenceDefault</a></span>(int&nbsp;cipher,
                           boolean&nbsp;enable)</code>
 <div class="block">Sets the default for whether this cipher is enabled or disabled.</div>
 </td>
 </tr>
-<tr id="i56" class="altColor">
+<tr id="i58" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setClientCert-org.mozilla.jss.crypto.X509Certificate-">setClientCert</a></span>(<a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert)</code>
 <div class="block">Sets the certificate to use for client authentication.</div>
 </td>
 </tr>
-<tr id="i57" class="rowColor">
+<tr id="i59" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setClientCertNickname-java.lang.String-">setClientCertNickname</a></span>(java.lang.String&nbsp;nick)</code>
 <div class="block">Sets the nickname of the certificate to use for client authentication.</div>
 </td>
 </tr>
-<tr id="i58" class="altColor">
+<tr id="i60" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setKeepAlive-boolean-">setKeepAlive</a></span>(boolean&nbsp;on)</code>
 <div class="block">Enables or disables the SO_KEEPALIVE socket option.</div>
 </td>
 </tr>
-<tr id="i59" class="rowColor">
+<tr id="i61" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setNeedClientAuth-boolean-">setNeedClientAuth</a></span>(boolean&nbsp;b)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
@@ -1394,7 +1406,7 @@ extends java.net.Socket</pre>
 </div>
 </td>
 </tr>
-<tr id="i60" class="altColor">
+<tr id="i62" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setNeedClientAuthNoExpiryCheck-boolean-">setNeedClientAuthNoExpiryCheck</a></span>(boolean&nbsp;b)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
@@ -1403,75 +1415,75 @@ extends java.net.Socket</pre>
 </div>
 </td>
 </tr>
-<tr id="i61" class="rowColor">
+<tr id="i63" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setReceiveBufferSize-int-">setReceiveBufferSize</a></span>(int&nbsp;size)</code>
 <div class="block">Sets the size (in bytes) of the receive buffer.</div>
 </td>
 </tr>
-<tr id="i62" class="altColor">
+<tr id="i64" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setSendBufferSize-int-">setSendBufferSize</a></span>(int&nbsp;size)</code>
 <div class="block">Sets the size (in bytes) of the send buffer.</div>
 </td>
 </tr>
-<tr id="i63" class="rowColor">
+<tr id="i65" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setSoLinger-boolean-int-">setSoLinger</a></span>(boolean&nbsp;on,
            int&nbsp;linger)</code>
 <div class="block">Sets the SO_LINGER socket option.</div>
 </td>
 </tr>
-<tr id="i64" class="altColor">
+<tr id="i66" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setSoTimeout-int-">setSoTimeout</a></span>(int&nbsp;timeout)</code>
 <div class="block">Sets the SO_TIMEOUT socket option.</div>
 </td>
 </tr>
-<tr id="i65" class="rowColor">
+<tr id="i67" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setSSLVersionRangeDefault-org.mozilla.jss.ssl.SSLProtocolVariant-org.mozilla.jss.ssl.SSLVersionRange-">setSSLVersionRangeDefault</a></span>(<a href="../../../../org/mozilla/jss/ssl/SSLProtocolVariant.html" title="class in org.mozilla.jss.ssl">SSLProtocolVariant</a>&nbsp;ssl_variant,
                          <a href="../../../../org/mozilla/jss/ssl/SSLVersionRange.html" title="class in org.mozilla.jss.ssl">SSLVersionRange</a>&nbsp;range)</code>&nbsp;</td>
 </tr>
-<tr id="i66" class="altColor">
+<tr id="i68" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setTcpNoDelay-boolean-">setTcpNoDelay</a></span>(boolean&nbsp;on)</code>
 <div class="block">Enables or disables the TCP_NO_DELAY socket option.</div>
 </td>
 </tr>
-<tr id="i67" class="rowColor">
+<tr id="i69" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#setUseClientMode-boolean-">setUseClientMode</a></span>(boolean&nbsp;b)</code>
 <div class="block">Determines whether this end of the socket is the client or the server
   for purposes of the SSL protocol.</div>
 </td>
 </tr>
-<tr id="i68" class="altColor">
+<tr id="i70" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#shutdownInput--">shutdownInput</a></span>()</code>
 <div class="block">Shuts down the input side of the socket.</div>
 </td>
 </tr>
-<tr id="i69" class="rowColor">
+<tr id="i71" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#shutdownOutput--">shutdownOutput</a></span>()</code>
 <div class="block">Shuts down the output side of the socket.</div>
 </td>
 </tr>
-<tr id="i70" class="altColor">
+<tr id="i72" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#toString--">toString</a></span>()</code>
 <div class="block">Returns the addresses and ports of this socket
  or an error message if the socket is not in a valid state.</div>
 </td>
 </tr>
-<tr id="i71" class="rowColor">
+<tr id="i73" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#useCache-boolean-">useCache</a></span>(boolean&nbsp;b)</code>
 <div class="block">Enables/disables the session cache.</div>
 </td>
 </tr>
-<tr id="i72" class="altColor">
+<tr id="i74" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/ssl/SSLSocket.html#useCacheDefault-boolean-">useCacheDefault</a></span>(boolean&nbsp;b)</code>
 <div class="block">Sets the default setting for use of the session cache.</div>
@@ -4723,6 +4735,36 @@ public&nbsp;SSLSocket(java.net.InetAddress&nbsp;address,
 <div class="block">Enable sending v3 client hello in v2 format for this socket.
  It is enabled by default, unless the default has been changed
  with <code>enableV2CompatibleHelloDefault</code>.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.net.SocketException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="enablePostHandshakeAuth-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>enablePostHandshakeAuth</h4>
+<pre>public&nbsp;void&nbsp;enablePostHandshakeAuth(boolean&nbsp;enable)
+                             throws java.net.SocketException</pre>
+<div class="block">Enable or disable post-handshake auth for a single socket.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.net.SocketException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="enablePostHandshakeAuthDefault-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>enablePostHandshakeAuthDefault</h4>
+<pre>public static&nbsp;void&nbsp;enablePostHandshakeAuthDefault(boolean&nbsp;enable)
+                                           throws java.net.SocketException</pre>
+<div class="block">Sets the default to allow post-handshake auth globally.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.net.SocketException</code></dd>

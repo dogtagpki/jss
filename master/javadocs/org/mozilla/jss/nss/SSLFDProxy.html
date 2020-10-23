@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/mozilla/jss/nss/SSLErrors.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -142,16 +142,24 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#clientCert">clientCert</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#badCertError">badCertError</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/mozilla/jss/util/GlobalRefProxy.html" title="class in org.mozilla.jss.util">GlobalRefProxy</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#globalRef">globalRef</a></span></code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#badCertHandler">badCertHandler</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#handler">handler</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#certAuthHandler">certAuthHandler</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/pkcs11/PK11Cert.html" title="class in org.mozilla.jss.pkcs11">PK11Cert</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#clientCert">clientCert</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../org/mozilla/jss/util/GlobalRefProxy.html" title="class in org.mozilla.jss.util">GlobalRefProxy</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#globalRef">globalRef</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -167,13 +175,17 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#needCertValidation">needCertValidation</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#needBadCertValidation">needBadCertValidation</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#needCertValidation">needCertValidation</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../org/mozilla/jss/ssl/SSLAlertEvent.html" title="class in org.mozilla.jss.ssl">SSLAlertEvent</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#outboundAlerts">outboundAlerts</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#outboundOffset">outboundOffset</a></span></code>&nbsp;</td>
 </tr>
@@ -218,15 +230,19 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#invokeCertAuthHandler--">invokeCertAuthHandler</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#invokeBadCertHandler-int-">invokeBadCertHandler</a></span>(int&nbsp;error)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#invokeCertAuthHandler--">invokeCertAuthHandler</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#releaseNativeResources--">releaseNativeResources</a></span>()</code>
 <div class="block">Release the native resources used by this proxy.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/mozilla/jss/nss/SSLFDProxy.html#SetClientCert-org.mozilla.jss.crypto.X509Certificate-">SetClientCert</a></span>(<a href="../../../../org/mozilla/jss/crypto/X509Certificate.html" title="interface in org.mozilla.jss.crypto">X509Certificate</a>&nbsp;cert)</code>&nbsp;</td>
 </tr>
@@ -329,6 +345,24 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <pre>public&nbsp;boolean needCertValidation</pre>
 </li>
 </ul>
+<a name="needBadCertValidation">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>needBadCertValidation</h4>
+<pre>public&nbsp;boolean needBadCertValidation</pre>
+</li>
+</ul>
+<a name="badCertError">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>badCertError</h4>
+<pre>public&nbsp;int badCertError</pre>
+</li>
+</ul>
 <a name="handshakeComplete">
 <!--   -->
 </a>
@@ -338,13 +372,22 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <pre>public&nbsp;boolean handshakeComplete</pre>
 </li>
 </ul>
-<a name="handler">
+<a name="certAuthHandler">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>certAuthHandler</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a> certAuthHandler</pre>
+</li>
+</ul>
+<a name="badCertHandler">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>handler</h4>
-<pre>public&nbsp;<a href="../../../../org/mozilla/jss/nss/CertAuthHandler.html" title="class in org.mozilla.jss.nss">CertAuthHandler</a> handler</pre>
+<h4>badCertHandler</h4>
+<pre>public&nbsp;<a href="../../../../org/mozilla/jss/nss/BadCertHandler.html" title="class in org.mozilla.jss.nss">BadCertHandler</a> badCertHandler</pre>
 </li>
 </ul>
 </li>
@@ -414,10 +457,19 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 <a name="invokeCertAuthHandler--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>invokeCertAuthHandler</h4>
 <pre>public&nbsp;int&nbsp;invokeCertAuthHandler()</pre>
+</li>
+</ul>
+<a name="invokeBadCertHandler-int-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>invokeBadCertHandler</h4>
+<pre>public&nbsp;int&nbsp;invokeBadCertHandler(int&nbsp;error)</pre>
 </li>
 </ul>
 </li>
@@ -447,7 +499,7 @@ extends <a href="../../../../org/mozilla/jss/nss/PRFDProxy.html" title="class in
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/mozilla/jss/nss/SSLChannelInfo.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/mozilla/jss/nss/SSLErrors.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/mozilla/jss/nss/SSLPreliminaryChannelInfo.html" title="class in org.mozilla.jss.nss"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
