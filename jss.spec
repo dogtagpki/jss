@@ -7,8 +7,8 @@ URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 Version:        4.8.0
-Release:        0.1%{?_timestamp}%{?_commit_id}%{?dist}
-%global         _phase -a1
+Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
+#global         _phase -a1
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
