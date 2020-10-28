@@ -87,12 +87,12 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initSigContext
     }
 
     if (ctxt == NULL) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create signing context");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Unable to create signing context");
         goto finish;
     }
 
     if (SGN_Begin(ctxt) != SECSuccess) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to begin signing context");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Unable to begin signing context");
         goto finish;
     }
 
@@ -148,7 +148,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
         unsigned key_bits = SECKEY_PublicKeyStrengthInBits(pubk);
         privk = SECKEY_CreateRSAPrivateKey(key_bits, &tempPubKey, NULL);
         if (privk == NULL) {
-            JSS_throwMsg(env, TOKEN_EXCEPTION,
+            JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
                          "Unable to create temporary RSA key");
             goto finish;
         }
@@ -175,13 +175,13 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_initVfyContext
     }
 
     if (ctxt == NULL) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to create vfy context");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Unable to create vfy context");
         goto finish;
     }
 
     if (VFY_Begin(ctxt) != SECSuccess) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
-                     "Unable to begin verification context");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+                          "Unable to begin verification context");
         goto finish;
     }
 
@@ -251,7 +251,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
                         (unsigned char*)bytes + offset,
                         (unsigned)length ) != SECSuccess)
         {
-            JSS_throwMsg(env, SIGNATURE_EXCEPTION, "update failed");
+            JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION, "update failed");
             goto finish;
         }
     } else {
@@ -260,7 +260,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineUpdateNative
                         (unsigned char*)bytes + offset,
                         (unsigned) length ) != SECSuccess)
         {
-            JSS_throwMsg(env, SIGNATURE_EXCEPTION, "update failed");
+            JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION, "update failed");
             goto finish;
         }
     }
@@ -338,13 +338,13 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineVerifyNative
 	 */
 	if( getSigContext(env, this, (void**)&ctxt, &type) != PR_SUCCESS) {
 		PR_ASSERT(PR_FALSE);
-		JSS_throwMsg(env, SIGNATURE_EXCEPTION,
+		JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION,
 			"Unable to retrieve verification context");
 		goto finish;
 	}
 	if(type != VFY_CONTEXT) {
 		PR_ASSERT(PR_FALSE);
-		JSS_throwMsg(env, SIGNATURE_EXCEPTION,
+		JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION,
 			"Verification engine has signature context");
 		goto finish;
 	}
@@ -364,7 +364,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineVerifyNative
 		verified = JNI_TRUE;
 	} else if( PR_GetError() != SEC_ERROR_BAD_SIGNATURE) {
 		PR_ASSERT(PR_FALSE);
-		JSS_throwMsg(env, SIGNATURE_EXCEPTION,
+		JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION,
 			"Failed to complete verification operation");
 		goto finish;
 	}
@@ -470,7 +470,7 @@ getRSAPSSParamsAndSigningAlg(JNIEnv *env, jobject this, PRArenaPool *arena,
                        SEC_OID_PKCS1_RSA_PSS_SIGNATURE, digestAlg, NULL,
                        privk);
     if (sigAlgParams == NULL) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
                      "Unable to create signature algorithm parameters");
         return rv;
     }
@@ -479,7 +479,7 @@ getRSAPSSParamsAndSigningAlg(JNIEnv *env, jobject this, PRArenaPool *arena,
     rv = SECOID_SetAlgorithmID(arena, *alg, SEC_OID_PKCS1_RSA_PSS_SIGNATURE,
                                sigAlgParams);
     if (rv != SECSuccess) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
                      "Unable to set RSA-PSS Algorithm ID");
     }
 
@@ -831,7 +831,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineRawSignNative
 
     /* perform the signature operation */
     if( PK11_Sign(key, sig, hash) != SECSuccess ) {
-        JSS_throwMsg(env, SIGNATURE_EXCEPTION, "Signature operation failed"
+        JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION, "Signature operation failed"
             " on token");
         goto finish;
     }
@@ -884,7 +884,7 @@ Java_org_mozilla_jss_pkcs11_PK11Signature_engineRawVerifyNative
     if( status == SECSuccess ) {
         verified = JNI_TRUE;
     } else if( PR_GetError() != SEC_ERROR_BAD_SIGNATURE ) {
-        JSS_throwMsg(env, SIGNATURE_EXCEPTION, "Verification operation"
+        JSS_throwMsgPrErr(env, SIGNATURE_EXCEPTION, "Verification operation"
             " failed on token");
         goto finish;
     }
