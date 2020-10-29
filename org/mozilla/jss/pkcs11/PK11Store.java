@@ -6,7 +6,7 @@ package org.mozilla.jss.pkcs11;
 
 import java.math.BigInteger;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,11 +86,11 @@ public final class PK11Store implements CryptoStore {
         // NSS does not provide a function to find the public key of a private key,
         // so it has to be done manually.
 
-        if (privateKey instanceof RSAPrivateKey) {
+        if (privateKey instanceof RSAKey) {
 
             logger.debug("PKCS11Store: searching for RSA public key");
 
-            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) privateKey;
+            RSAKey rsaPrivateKey = (RSAKey) privateKey;
             BigInteger modulus = rsaPrivateKey.getModulus();
 
             // Find the RSA public key by comparing the modulus.
