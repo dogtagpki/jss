@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PK11RSAPrivateKey
-    extends PK11PrivKey implements java.security.interfaces.RSAPrivateKey
+    extends PK11PrivKey implements java.security.interfaces.RSAKey
 {
     public static Logger logger = LoggerFactory.getLogger(PK11RSAPrivateKey.class);
 
