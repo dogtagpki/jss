@@ -68,8 +68,8 @@ Requires:       apache-commons-lang3
 
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
-Conflicts:      tomcatjss < 7.3.4
-Conflicts:      pki-base < 10.6.5
+Conflicts:      tomcatjss < 7.6.0
+Conflicts:      pki-base < 10.10.0
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
