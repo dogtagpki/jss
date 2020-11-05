@@ -112,7 +112,7 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.TestGlobalReference"
         MODE "NONE"
     )
-    if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9))
+    if ((${Java_VERSION_MAJOR} EQUAL 1) AND (${Java_VERSION_MINOR} LESS 9) AND (${JSS_VERSION_BETA} EQUAL 1))
         jss_test_java(
             NAME "Test_PKCS11Constants.java_for_Sun_compatibility"
             COMMAND "org.mozilla.jss.tests.TestPKCS11Constants"
