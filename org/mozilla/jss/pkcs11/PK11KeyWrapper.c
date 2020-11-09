@@ -18,6 +18,7 @@
 #include <pk11util.h>
 #include <Algorithm.h>
 #include "StaticVoidPointer.h"
+#include "jssconfig.h"
 
 #define MAX_PRIVATE_KEY_LEN     MAX_RSA_MODULUS_LEN
 
@@ -178,7 +179,16 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapSymWithPub
     paramItem.len = paramsSize;
 
     /* perform the wrap */
+#ifdef HAVE_NSS_OAEP
     status = PK11_PubWrapSymKeyWithMechanism(wrapping, mech, &paramItem, toBeWrapped, &wrapped);
+#else
+    if (mech == CKM_RSA_PKCS_OAEP) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "RSA-OAEP not supported by the NSS version used to build JSS");
+        goto finish;
+    }
+
+    status = PK11_PubWrapSymKey(mech, wrapping, toBeWrapped, &wrapped);
+#endif
     if( status != SECSuccess ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Wrap operation failed on token");
         goto finish;
@@ -671,8 +681,19 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
     paramItem.data = params;
     paramItem.len = paramsSize;
 
+#ifdef HAVE_NSS_OAEP
     symKey = PK11_PubUnwrapSymKeyWithMechanism(wrappingKey, mech, &paramItem,
             wrappedKey, keyTypeMech, operation, keyLen);
+#else
+    if (mech == CKM_RSA_PKCS_OAEP) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "RSA-OAEP not supported by the NSS version used to build JSS");
+        goto finish;
+    }
+
+    symKey = PK11_PubUnwrapSymKey(wrappingKey, wrappedKey, keyTypeMech,
+                                  operation, keyLen);
+#endif
+
     if( symKey == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
