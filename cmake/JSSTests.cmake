@@ -217,6 +217,22 @@ macro(jss_tests)
             DEPENDS "Setup_DBs"
         )
     endif()
+    jss_test_exec(
+        NAME "Setup_Bouncy_Castle_Jar"
+        COMMAND "wget" "https://www.bouncycastle.org/download/bcprov-jdk15on-167.jar" "-P" "/tmp/"
+    )
+    jss_test_exec(
+	NAME "Compile_RSAOAEPSHA2_with_BC_classpath"
+        COMMAND "javac" "-classpath" "/tmp/bcprov-jdk15on-167.jar:./" "${JSS_TEST_DIR}/VerifyRSAOAEPSHA2.java"
+	DEPENDS "Setup_Bouncy_Castle_Jar"
+    )
+    if(HAVE_NSS_OAEP)
+        jss_test_java(
+	    NAME "JSS-OAEP-Vector-Test"
+            COMMAND "org.mozilla.jss.tests.VerifyRSAOAEPSHA2"
+            DEPENDS "Setup_Bouncy_Castle_Jar"
+        )
+    endif()
     jss_test_java(
         NAME "Mozilla_JSS_JCA_Signature"
         COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
