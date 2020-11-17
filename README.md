@@ -67,6 +67,16 @@ To view more detailed instructions for building JSS, please refer to
 the build documentation: [`docs/building.md`](docs/building.md).
 
 
+In Distributions
+----------------
+
+JSS is currently shipped in Fedora-based distributions under the package
+name `jss`; to install issue `sudo dnf install jss`.
+
+JSS is also shipped in Debian-based distributions under the package
+name `libjss-java`; to install, issue `sudo apt-get install libjss-java`.
+
+
 Contributing
 ------------
 
