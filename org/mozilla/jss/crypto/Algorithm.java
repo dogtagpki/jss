@@ -261,4 +261,7 @@ public class Algorithm {
 
     // RSA-OAEP
     protected static final int CKM_RSA_PKCS_OAEP = 79;
+
+    // CKM_AES_KEY_WRAP_KWP for HSM support
+    protected static final int CKM_AES_KEY_WRAP_KWP = 80;
 }
