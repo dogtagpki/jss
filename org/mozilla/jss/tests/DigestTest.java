@@ -21,8 +21,7 @@ public class DigestTest {
     /**
      * List all the Digest Algorithms that JSS implements.
      */
-    static final String JSS_Digest_Algs[] = { "MD2", "MD5", "SHA-1",
-                                            "SHA-256", "SHA-384","SHA-512"};
+    static final String JSS_Digest_Algs[] = { "SHA-256", "SHA-384","SHA-512" };
 
     public static boolean messageDigestCompare(String alg, byte[] toBeDigested)
     throws Exception {

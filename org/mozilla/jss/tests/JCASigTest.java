@@ -101,9 +101,6 @@ public class JCASigTest {
             System.exit(1);
         }
 
-        sigTest("MD5/RSA", keyPair);
-        sigTest("MD2/RSA", keyPair);
-        sigTest("SHA-1/RSA", keyPair);
         sigTest("SHA-256/RSA", keyPair);
         sigTest("SHA-384/RSA", keyPair);
         sigTest("SHA-512/RSA", keyPair);
@@ -111,24 +108,6 @@ public class JCASigTest {
         sigTest("SHA384withRSA/PSS", keyPair);
         sigTest("SHA512withRSA/PSS", keyPair);
         sigTest("RSASSA-PSS",keyPair);
-
-        // Generate an DSA keypair
-        kpgen = KeyPairGenerator.getInstance("DSA");
-        kpgen.initialize(1024);
-        keyPair = kpgen.generateKeyPair();
-        provider = kpgen.getProvider();
-
-        System.out.println("The provider used to Generate the Keys was "
-                            + provider.getName() );
-        System.out.println("provider info " + provider.getInfo() );
-
-        if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
-            System.out.println("Mozilla-JSS is supposed to be the " +
-                "default provider for JCASigTest");
-            System.exit(1);
-        }
-
-        sigTest("SHA-1/DSA", keyPair);
 
         kpgen = KeyPairGenerator.getInstance("EC");
         kpgen.initialize(256);
@@ -145,7 +124,6 @@ public class JCASigTest {
             System.exit(1);
         }
 
-        sigTest("SHA-1/EC", keyPair);
         sigTest("SHA-256/EC", keyPair);
         sigTest("SHA-384/EC", keyPair);
         sigTest("SHA-512/EC", keyPair);
