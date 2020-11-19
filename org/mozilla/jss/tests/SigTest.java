@@ -81,9 +81,9 @@ public class SigTest {
         kpgen.setKeyPairUsages(usages, usages_mask);
         keyPair = kpgen.genKeyPair();
 
-        // RSA MD5
+        // RSA SHA256
         signer = token.getSignatureContext(
-                SignatureAlgorithm.RSASignatureWithMD5Digest);
+                SignatureAlgorithm.RSASignatureWithSHA256Digest);
         System.out.println("Created a signing context");
         signer.initSign(
                 (org.mozilla.jss.crypto.PrivateKey) keyPair.getPrivate());
