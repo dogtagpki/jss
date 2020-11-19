@@ -8,6 +8,17 @@ import javax.crypto.spec.PSource;
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 import org.mozilla.jss.util.NativeEnclosure;
 
+/**
+ * This class is utilized by JSS to implement OAEP support.
+ *
+ * Unlike the existing OAEPParameterSpec in the JCA, this class supports
+ * NativeEnclosure, allowing it to be used within low-level JNI calls. We
+ * support copying from an existing OAEPParameterSpec instance (so use is
+ * interchangeable within JSS) and support setting members from JSS-specific
+ * types.
+ *
+ * Note that this class cannot be used with other JCA providers natively.
+ */
 public class JSSOAEPParameterSpec extends NativeEnclosure implements AlgorithmParameterSpec {
     public long hashAlg;
     public long mgf;
