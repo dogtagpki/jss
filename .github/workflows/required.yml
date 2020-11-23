@@ -9,13 +9,6 @@ on:
     - v4.6.x
 
 jobs:
-  fedora30:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "fedora_30"
   fedora31:
     runs-on: ubuntu-latest
     steps:
@@ -23,3 +16,10 @@ jobs:
       uses: actions/checkout@v2
     - name: Build and Run the Docker Image
       run: bash tools/run_container.sh "fedora_31"
+  fedora32:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone the repository
+      uses: actions/checkout@v2
+    - name: Build and Run the Docker Image
+      run: bash tools/run_container.sh "fedora_32"
