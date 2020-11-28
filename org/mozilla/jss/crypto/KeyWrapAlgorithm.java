@@ -9,6 +9,7 @@ import java.util.Hashtable;
 
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
+import javax.crypto.spec.OAEPParameterSpec;
 
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
@@ -94,6 +95,10 @@ public class KeyWrapAlgorithm extends Algorithm {
     public static final KeyWrapAlgorithm
     RSA = new KeyWrapAlgorithm(SEC_OID_PKCS1_RSA_ENCRYPTION, "RSA",
             (Class<?>) null, false, 0);
+
+    public static final KeyWrapAlgorithm
+    RSA_OAEP = new KeyWrapAlgorithm(CKM_RSA_PKCS_OAEP, "RSAES-OAEP",
+                                    OAEPParameterSpec.class, true, 0);
 
     public static final KeyWrapAlgorithm
     PLAINTEXT = new KeyWrapAlgorithm(0, "Plaintext", (Class<?>) null,

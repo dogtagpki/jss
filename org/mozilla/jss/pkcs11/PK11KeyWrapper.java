@@ -14,9 +14,11 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 
 import javax.crypto.spec.RC2ParameterSpec;
+import javax.crypto.spec.OAEPParameterSpec;
 
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.JSSOAEPParameterSpec;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
@@ -25,7 +27,8 @@ import org.mozilla.jss.crypto.KeyWrapper;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.util.Assert;
+import org.mozilla.jss.util.NativeProxy;
+import org.mozilla.jss.util.NativeEnclosure;
 
 public final class PK11KeyWrapper implements KeyWrapper {
 
@@ -86,9 +89,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
     {
         reset();
 
-        checkParams(parameters);
-
-        this.parameters = parameters;
+        this.parameters = checkParams(parameters);
         state = WRAP;
     }
 
@@ -128,9 +129,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
     {
         reset();
 
-        checkParams(parameters);
-
-        this.parameters = parameters;
+        this.parameters = checkParams(parameters);
         state = UNWRAP;
     }
 
@@ -144,8 +143,9 @@ public final class PK11KeyWrapper implements KeyWrapper {
         if( ! (key instanceof PK11PubKey) ) {
             throw new InvalidKeyException("Key is not a PKCS #11 key");
         }
+        KeyType type = null;
         try {
-            KeyType type = KeyType.getKeyTypeFromAlgorithm(algorithm);
+            type = KeyType.getKeyTypeFromAlgorithm(algorithm);
             if( (type == KeyType.RSA && !(key instanceof RSAPublicKey)) ||
 		// requires JAVA 1.5
                 // (type == KeyType.EC && !(key instanceof ECPublicKey)) ||
@@ -154,7 +154,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
                     "this algorithm");
             }
         } catch( NoSuchAlgorithmException e ) {
-            throw new RuntimeException("Unable to find algorithm from key type: " + e.getMessage(), e);
+            throw new RuntimeException("Unable to find algorithm (" + algorithm + ") from key type (" + type + ") : " + e.getMessage(), e);
         }
     }
 
@@ -206,7 +206,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         }
     }
 
-    private void checkParams(AlgorithmParameterSpec params)
+    private AlgorithmParameterSpec checkParams(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException
     {
         if( ! algorithm.isValidParameterObject(params) ) {
@@ -217,13 +217,20 @@ public final class PK11KeyWrapper implements KeyWrapper {
             throw new InvalidAlgorithmParameterException(
                 algorithm + " cannot use a " + name + " parameter");
         }
-        if( params instanceof IVParameterSpec ) {
+
+        if (params instanceof IVParameterSpec) {
             IV = ((IVParameterSpec)params).getIV();
-        } else if( params instanceof javax.crypto.spec.IvParameterSpec ) {
+        } else if (params instanceof javax.crypto.spec.IvParameterSpec) {
             IV = ((javax.crypto.spec.IvParameterSpec)params).getIV();
-        } else if( params instanceof RC2ParameterSpec ) {
+        } else if (params instanceof RC2ParameterSpec) {
             IV = ((RC2ParameterSpec)params).getIV();
         }
+
+        if (algorithm == KeyWrapAlgorithm.RSA_OAEP && params != null && params instanceof OAEPParameterSpec) {
+            params = new JSSOAEPParameterSpec((OAEPParameterSpec) params);
+        }
+
+        return params;
     }
 
     public byte[]
@@ -272,10 +279,32 @@ public final class PK11KeyWrapper implements KeyWrapper {
             assert( privKey==null && pubKey==null );
             return nativeWrapSymWithSym(token, toBeWrapped, symKey, algorithm,
                         IV);
-        } else {
-            assert( pubKey!=null && privKey==null && symKey==null );
-            return nativeWrapSymWithPub(token, toBeWrapped, pubKey, algorithm,
-                        IV);
+        }
+
+        assert( pubKey!=null && privKey==null && symKey==null );
+        NativeProxy params = null;
+        long params_size = 0;
+        if (parameters != null) {
+            try {
+                ((NativeEnclosure) parameters).open();
+                params = ((NativeEnclosure) parameters).mPointer;
+                params_size = ((NativeEnclosure) parameters).mPointerSize;
+            } catch (Exception e) {
+                throw new TokenException(e.getMessage(), e);
+            }
+        }
+
+        try {
+            return nativeWrapSymWithPub(token, toBeWrapped, pubKey,
+                                        algorithm, params, params_size);
+        } finally {
+            if (parameters != null) {
+                try {
+                    ((NativeEnclosure) parameters).close();
+                } catch (Exception e) {
+                    throw new TokenException(e.getMessage(), e);
+                }
+            }
         }
     }
 
@@ -320,7 +349,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
      */
     private static native byte[]
     nativeWrapSymWithPub(PK11Token token, SymmetricKey toBeWrapped,
-        PublicKey wrappingKey, KeyWrapAlgorithm alg, byte[] IV)
+        PublicKey wrappingKey, KeyWrapAlgorithm alg, NativeProxy params, long params_size)
             throws TokenException;
 
     /**
@@ -558,15 +587,38 @@ public final class PK11KeyWrapper implements KeyWrapper {
         if( algorithm == KeyWrapAlgorithm.PLAINTEXT ) {
             return nativeUnwrapSymPlaintext(token, wrapped, algFromType(type),
                 usageEnum, temporary );
-        } else {
-            if( symKey != null ) {
-                assert(pubKey==null && privKey==null);
-                return nativeUnwrapSymWithSym(token, symKey, wrapped, algorithm,
-                        algFromType(type), keyLen, IV, usageEnum,temporary);
-            } else {
-                assert(privKey!=null && pubKey==null && symKey==null);
-                return nativeUnwrapSymWithPriv(token, privKey, wrapped,
-                    algorithm, algFromType(type), keyLen, IV, usageEnum );
+        }
+
+        if( symKey != null ) {
+            assert(pubKey==null && privKey==null);
+            return nativeUnwrapSymWithSym(token, symKey, wrapped, algorithm,
+                    algFromType(type), keyLen, IV, usageEnum,temporary);
+        }
+
+        assert(privKey!=null && pubKey==null && symKey==null);
+        NativeProxy params = null;
+        long params_size = 0;
+        if (parameters != null) {
+            try {
+                ((NativeEnclosure) parameters).open();
+                params = ((NativeEnclosure) parameters).mPointer;
+                params_size = ((NativeEnclosure) parameters).mPointerSize;
+            } catch (Exception e) {
+                throw new TokenException(e.getMessage(), e);
+            }
+        }
+
+        try {
+            return nativeUnwrapSymWithPriv(token, privKey, wrapped,
+                    algorithm, algFromType(type), keyLen, params,
+                    params_size, usageEnum);
+        } finally {
+            if (parameters != null) {
+                try {
+                    ((NativeEnclosure) parameters).close();
+                } catch (Exception e) {
+                    throw new TokenException(e.getMessage(), e);
+                }
             }
         }
     }
@@ -637,7 +689,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
     private static native SymmetricKey
     nativeUnwrapSymWithPriv(PK11Token token, PrivateKey unwrappingKey,
         byte[] wrappedKey, KeyWrapAlgorithm alg, Algorithm type, int keyLen,
-        byte[] IV, int usageEnum)
+        NativeProxy params, long params_size, int usageEnum)
             throws TokenException;
 
     private static native SymmetricKey

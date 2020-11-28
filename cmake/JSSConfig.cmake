@@ -134,6 +134,7 @@ macro(jss_config_cflags)
     list(APPEND JSS_RAW_C_FLAGS "-Wno-cast-function-type")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-unused-parameter")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-unknown-warning-option")
+    list(APPEND JSS_RAW_C_FLAGS "-Wno-unused-but-set-variable")
     list(APPEND JSS_RAW_C_FLAGS "-Werror-implicit-function-declaration")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-switch")
     list(APPEND JSS_RAW_C_FLAGS "-I${INCLUDE_OUTPUT_DIR}")
@@ -399,9 +400,25 @@ macro(jss_config_symbols)
         message(WARNING "Your NSS version doesn't support NIST SP800-108 KBKDF; some features of JSS won't work.")
     endif()
 
+    try_compile(CK_HAVE_COMPILING_OAEP
+                ${CMAKE_BINARY_DIR}/results
+                ${CMAKE_SOURCE_DIR}/tools/tests/oaep.c
+                CMAKE_FLAGS
+                    "-DINCLUDE_DIRECTORIES=${CMAKE_REQUIRED_INCLUDES}"
+                    "-DREQUIRED_FLAGS=${CMAKE_REQUIRED_FLAGS}"
+                LINK_OPTIONS ${JSS_LD_FLAGS}
+                OUTPUT_VARIABLE COMP_OUT)
+    if (CK_HAVE_COMPILING_OAEP)
+        set(HAVE_NSS_OAEP TRUE)
+    else()
+        message(WARNING "Your NSS version doesn't support RSA-OAEP key wra/unwrap; some features of JSS won't work.")
+        message(WARNING "Compile output: ${COMP_OUT}")
+    endif()
+
+
     if(HAVE_NSS_CMAC)
-        try_run(CK_HAVE_WORKING_NSS
-                CK_HAVE_COMPILING_NSS
+        try_run(CK_HAVE_WORKING_CMAC
+                CK_HAVE_COMPILING_CMAC
                 ${CMAKE_BINARY_DIR}/results
                 ${CMAKE_SOURCE_DIR}/tools/tests/cmac.c
                 CMAKE_FLAGS
@@ -410,10 +427,12 @@ macro(jss_config_symbols)
                 COMPILE_OUTPUT_VARIABLE COMP_OUT
                 RUN_OUTPUT_VARIABLE RUN_OUT)
 
-        if (NOT CK_HAVE_WORKING_NSS STREQUAL "0" OR NOT CK_HAVE_COMPILING_NSS)
+        if (NOT CK_HAVE_WORKING_CMAC STREQUAL "0" OR NOT CK_HAVE_COMPILING_CMAC)
             set(HAVE_NSS_CMAC FALSE)
             set(HAVE_NSS_KBKDF FALSE)
             message(WARNING "Your NSS version is broken: between NSS v3.47 and v3.50, the values of CKM_AES_CMAC and CKM_AES_CMAC_GENERAL were swapped. Disabling CMAC and KBKDF support.")
+            message(WARNING "Compile output: ${COMP_OUT}")
+            message(WARNING "Run output: ${RUN_OUT}")
         endif()
     endif()
 

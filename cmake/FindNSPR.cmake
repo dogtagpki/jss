@@ -27,6 +27,7 @@ if (SANDBOX)
   # Directly set the NSS include and library directories
   set(NSPR_INCLUDE_DIRS "${DIST_DIR}/${LATEST_BUILD}/include/nspr")
   set(NSPR_LIBRARIES "${DIST_DIR}/${LATEST_BUILD}/lib")
+  list(APPEND JSS_LD_FLAGS "-L${DIST_DIR}/${LATEST_BUILD}/lib")
   list(APPEND JSS_LD_FLAGS "-Wl,-rpath,${DIST_DIR}/${LATEST_BUILD}/lib")
 elseif (NSPR_LIBRARIES AND NSPR_INCLUDE_DIRS)
   # in cache already
