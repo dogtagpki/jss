@@ -4,7 +4,7 @@ FROM centos:8
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build \
-        && dnf config-manager --enable PowerTools \
+        && ( dnf config-manager --enable powertools || dnf config-manager --enable PowerTools ) \
         && dnf module enable -y pki-deps maven javapackages-tools \
         && dnf build-dep -y jss \
         && mkdir -p /home/sandbox \
