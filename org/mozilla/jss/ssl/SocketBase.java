@@ -468,9 +468,13 @@ class SocketBase {
         try {
             netInter = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e) {
-
             return false;
         }
+
+        if (netInter == null) {
+            return false;
+        }
+
         while (netInter.hasMoreElements()) {
             NetworkInterface ni = netInter.nextElement();
             Enumeration<InetAddress> addrs = ni.getInetAddresses();
