@@ -589,7 +589,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithSym
     }
 
     if( symKey == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
     }
 
@@ -695,7 +695,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
 #endif
 
     if( symKey == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
     }
     
@@ -768,7 +768,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
     symKey = PK11_ImportSymKeyWithFlags(slot, keyTypeMech, PK11_OriginUnwrap,
         operation, wrappedKey, flags, isPerm, NULL);
     if( symKey == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to unwrap key");
+        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
     }
 
