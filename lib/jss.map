@@ -499,7 +499,7 @@ Java_org_mozilla_jss_nss_SSLErrors_getBadCertDomain;
     local:
         *;
 };
-JSS_4.8.0 {
+JSS_4.8.1 {
     global:
 Java_org_mozilla_jss_crypto_JSSOAEPParameterSpec_acquireNativeResources;
 Java_org_mozilla_jss_crypto_JSSOAEPParameterSpec_releaseNativeResources;
