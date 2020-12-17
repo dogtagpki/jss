@@ -11,6 +11,8 @@ RUN true \
                               libcommons-lang3-java libjaxb-api-java cmake \
                               zip unzip junit4 \
         && mkdir -p /home/sandbox \
+        && apt-get install -y iproute2 \
+        && ip link show \
         && apt-get autoremove -y \
         && apt-get clean -y \
         && apt-get autoclean -y \
