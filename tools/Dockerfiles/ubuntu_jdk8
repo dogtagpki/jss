@@ -12,7 +12,7 @@ RUN true \
                               zip unzip junit4 \
         && mkdir -p /home/sandbox \
         && apt-get install -y iproute2 \
-        && ip link show \
+        && ip addr show \
         && apt-get autoremove -y \
         && apt-get clean -y \
         && apt-get autoclean -y \
