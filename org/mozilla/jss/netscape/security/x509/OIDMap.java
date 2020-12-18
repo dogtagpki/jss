@@ -331,7 +331,7 @@ public class OIDMap {
             return (extClass);
         } catch (Exception e) {
             throw new CertificateException("Error instantiating class for "
-                                   + name + " " + e.toString());
+                                   + name + " " +  e.getMessage(), e);
         }
     }
 }
