@@ -131,7 +131,7 @@ public class PKCS10Attribute implements DerEncoder, Serializable {
         } catch (InvocationTargetException invk) {
             throw new IOException(invk.getTargetException().getMessage(), invk);
         } catch (Exception e) {
-            throw new IOException(e.toString());
+            throw new IOException(e);
         }
     }
 
