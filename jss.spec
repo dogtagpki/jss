@@ -33,7 +33,7 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # autosetup
 BuildRequires:  git
 BuildRequires:  make
-BuildRequires:  cmake
+BuildRequires:  cmake >= 3.14
 BuildRequires:  zip
 BuildRequires:  unzip
 
