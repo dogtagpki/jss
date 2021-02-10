@@ -147,7 +147,7 @@ public class Cert {
         try {
             p7 = new PKCS7(rawPub);
         } catch (Exception e) {
-            throw new IOException("p7 is null");
+            throw new IOException("Unable to parse PKCS #7 data: " + e.getMessage(), e);
         }
         return p7.getCertificates();
     }
