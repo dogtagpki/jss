@@ -344,11 +344,9 @@ public class PKCS7 {
                 implCerts[i] = (X509CertImpl) certificates[i];
             }
         } catch (ClassCastException e) {
-            IOException ioe =
-                    new IOException("Certificates in PKCS7 " +
-                            "must be of class " +
-                            "org.mozilla.jss.netscape.security.X509CertImpl");
-            ioe.fillInStackTrace();
+            throw new IOException(
+                    "Certificates in PKCS7 must be of class " +
+                    "org.mozilla.jss.netscape.security.X509CertImpl: " + e.getMessage(), e);
         }
 
         // Add the certificate set (tagged with [0] IMPLICIT)
