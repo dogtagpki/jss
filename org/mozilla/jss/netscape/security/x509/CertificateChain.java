@@ -20,7 +20,9 @@ package org.mozilla.jss.netscape.security.x509;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,7 @@ import java.util.List;
 
 import org.mozilla.jss.netscape.security.pkcs.PKCS7;
 import org.mozilla.jss.netscape.security.util.Cert;
+import org.mozilla.jss.netscape.security.util.Utils;
 
 public class CertificateChain implements Serializable {
 
@@ -148,6 +151,95 @@ public class CertificateChain implements Serializable {
     private void readObject(java.io.ObjectInputStream in)
             throws IOException {
         decode(in);
+    }
+
+    public void addCertificate(X509Certificate cert) {
+        certs.add(cert);
+    }
+
+    public void addCertificateChain(CertificateChain certChain) {
+        certs.addAll(certChain.certs);
+    }
+
+    public void addPKCS7(PKCS7 pkcs7) {
+        certs.addAll(Arrays.asList(pkcs7.getCertificates()));
+    }
+
+    /**
+     * Convert a series of PEM certificates or a PKCS #7 data into a certificate chain.
+     * This method will only accept a single chain, so it cannot be used to load CA bundle.
+     */
+    public static CertificateChain fromPEMString(String input) throws Exception {
+
+        CertificateChain certChain = new CertificateChain();
+
+        StringBuilder sb = new StringBuilder();
+        String[] lines = input.split("\\r?\\n");
+
+        for (String line : lines) {
+            line = line.trim();
+
+            if (Cert.HEADER.equals(line)) {
+                sb.setLength(0);
+
+            } else if (Cert.FOOTER.equals(line)) {
+                byte[] bytes = Utils.base64decode(sb.toString());
+                certChain.addCertificate(new X509CertImpl(bytes));
+
+            } else if (PKCS7.HEADER.equals(line)) {
+                sb.setLength(0);
+
+            } else if (PKCS7.FOOTER.equals(line)) {
+                byte[] bytes = Utils.base64decode(sb.toString());
+                PKCS7 pkcs7 = new PKCS7(bytes);
+                certChain.addPKCS7(pkcs7);
+
+            } else {
+                sb.append(line);
+            }
+        }
+
+        // sort and validate the certificate chain
+        certChain.sort();
+
+        return certChain;
+    }
+
+    /**
+     * Convert the certificate chain into a series of PEM certificates.
+     */
+    public String toPEMString() throws Exception {
+
+        // sort and validate the certificate chain
+        sort();
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+
+        for (X509Certificate cert : certs) {
+            pw.println(Cert.HEADER);
+            pw.print(Utils.base64encodeMultiLine(cert.getEncoded()));
+            pw.println(Cert.FOOTER);
+        }
+
+        return sw.toString();
+    }
+
+    /**
+     * Convert the certificate chain into a PKCS #7 object.
+     */
+    public PKCS7 toPKCS7() throws Exception {
+
+        // sort and validate the certificate chain
+        sort();
+
+        // convert X509Certificate into X509CertImpl
+        List<X509CertImpl> certImpls = new ArrayList<>();
+        for (X509Certificate cert : certs) {
+            certImpls.add(new X509CertImpl(cert.getEncoded()));
+        }
+
+        return new PKCS7(certImpls.toArray(new X509CertImpl[0]));
     }
 
     /**
