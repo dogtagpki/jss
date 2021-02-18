@@ -193,7 +193,7 @@ public class SSLClientAuth implements Runnable {
             // generate server cert
             kpg.initialize(keyLength);
             KeyPair serverPair = kpg.genKeyPair();
-            Certificate serverCert = makeCert("CACert", "localhost",
+            Certificate serverCert = makeCert("CACert", "127.0.0.1",
                     serialNum+1, caPair.getPrivate(), serverPair.getPublic(),
                     serialNum, null);
             nssServerCert = cm.importCertPackage(
@@ -329,7 +329,7 @@ public class SSLClientAuth implements Runnable {
         
         // connect to the server
         System.out.println("client about to connect");
-        SSLSocket sock = new SSLSocket("localhost", port);
+        SSLSocket sock = new SSLSocket("127.0.0.1", port);
         if( useNickname ) {
             sock.setClientCertNickname(clientCertNick);
             System.out.println("Client specified cert by nickname");
