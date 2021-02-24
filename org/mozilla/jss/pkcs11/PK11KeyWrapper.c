@@ -886,17 +886,17 @@ CK_MECHANISM_TYPE getSupportedWrappingMechanism(JNIEnv *env, jobject algObj, PK1
      */
     if ( mech == CKM_AES_KEY_WRAP ||
              mech == CKM_NSS_AES_KEY_WRAP) {
-        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
-            mech = CKM_NSS_AES_KEY_WRAP;
-        } else {
+        if (PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP)) {
             mech = CKM_AES_KEY_WRAP;
+        } else {
+            mech = CKM_NSS_AES_KEY_WRAP;
         }
     } else if ( mech == CKM_AES_KEY_WRAP_PAD
             || mech == CKM_NSS_AES_KEY_WRAP_PAD) {
-        if (!PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
-            mech = CKM_NSS_AES_KEY_WRAP_PAD;
-        } else {
+        if (PK11_DoesMechanism(slot, CKM_AES_KEY_WRAP_PAD)) {
             mech = CKM_AES_KEY_WRAP_PAD;
+        } else {
+            mech = CKM_NSS_AES_KEY_WRAP_PAD;
         }
     }
     return mech;
