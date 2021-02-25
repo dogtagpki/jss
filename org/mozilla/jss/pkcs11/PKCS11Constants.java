@@ -5632,7 +5632,7 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
-    public static final long CKR_PUBLIC_KEY_INVALID = 0x0000001BL;
+    public static final long CKR_PUBLIC_KEY_INVALID = 0x000001B9L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
