@@ -712,6 +712,61 @@ finish:
     return keyObj;
 }
 
+PK11SymKey *JSS_PK11_ImportSymKeyWithFlagsFIPS(PK11SlotInfo *slot, CK_MECHANISM_TYPE type,
+        CK_ATTRIBUTE_TYPE operation, SECItem *key, CK_FLAGS flags,
+        PRBool isPerm, void *wincx)
+{
+    PK11SymKey *result = NULL;
+    PK11SymKey *wrapper = NULL;
+    SECStatus ret = SECFailure;
+    unsigned int wrapped_len = 0;
+    unsigned int wrapped_max = key->len + 64;
+    unsigned char *wrapped_key = calloc(wrapped_max, sizeof(unsigned char));
+    SECItem wrapped_item = { siBuffer, wrapped_key, 0 };
+    SECItem *param = NULL;
+
+    /* Steps:
+     * 1. Generate a temporary key to encrypt and unwrap with,
+     * 2. Encrypt our key to import using the wrapping key,
+     * 3. Unwrap into the token using the wrapping key.
+     */
+
+#define FIPS_KEYGEN_ALGO CKM_AES_KEY_GEN
+#define FIPS_ENCRYPT_UNWRAP_ALGO CKM_AES_KEY_WRAP_PAD
+
+    wrapper = PK11_KeyGen(slot, FIPS_KEYGEN_ALGO, NULL, 32, wincx);
+    if (wrapper == NULL) {
+        goto done;
+    }
+
+    param = PK11_GenerateNewParam(FIPS_ENCRYPT_UNWRAP_ALGO, wrapper);
+    if (param == NULL) {
+        goto done;
+    }
+
+    ret = PK11_Encrypt(wrapper, FIPS_ENCRYPT_UNWRAP_ALGO, param,
+            wrapped_key, &wrapped_len, wrapped_max,
+            key->data, key->len);
+    if (ret != SECSuccess) {
+        goto done;
+    }
+
+    wrapped_item.len = wrapped_len;
+
+    result = PK11_UnwrapSymKeyWithFlagsPerm(wrapper, FIPS_ENCRYPT_UNWRAP_ALGO,
+            param, &wrapped_item, type, operation, key->len, flags,
+            isPerm);
+
+done:
+    free(wrapped_key);
+    SECITEM_FreeItem(param, PR_TRUE);
+    if (wrapper != NULL) {
+        PK11_DeleteTokenSymKey(wrapper);
+        PK11_FreeSymKey(wrapper);
+    }
+    return result;
+}
+
 /***********************************************************************
  *
  * PK11KeyWrapper.nativeUnwrapSymPlaintext
@@ -765,8 +820,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymPlaintext
     }
 
     /* pull in the key */
-    symKey = PK11_ImportSymKeyWithFlags(slot, keyTypeMech, PK11_OriginUnwrap,
-        operation, wrappedKey, flags, isPerm, NULL);
+    if (PK11_IsFIPS()) {
+        symKey = JSS_PK11_ImportSymKeyWithFlagsFIPS(slot, keyTypeMech, operation, wrappedKey, flags, isPerm, NULL);
+    } else {
+        symKey = PK11_ImportSymKeyWithFlags(slot, keyTypeMech, PK11_OriginUnwrap, operation, wrappedKey, flags, isPerm, NULL);
+    }
     if( symKey == NULL ) {
         JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "Failed to unwrap key");
         goto finish;
