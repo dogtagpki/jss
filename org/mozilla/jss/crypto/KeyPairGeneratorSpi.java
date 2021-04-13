@@ -10,6 +10,8 @@ import java.security.KeyPair;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
+import org.mozilla.jss.pkcs11.PKCS11Constants;
+
 public abstract class KeyPairGeneratorSpi {
 
     public KeyPairGeneratorSpi() {
@@ -44,24 +46,34 @@ public abstract class KeyPairGeneratorSpi {
      * that behavior in the mask as well as the flags.
      *
      */
-    public final static class Usage {
-        private Usage() { }
-        private Usage(int val) { this.val = val;}
-        private int val;
+    public enum Usage {
 
-        public int getVal() { return val; }
+        ENCRYPT        (PKCS11Constants.CKF_ENCRYPT),
+        DECRYPT        (PKCS11Constants.CKF_DECRYPT),
+        SIGN           (PKCS11Constants.CKF_SIGN),
+        SIGN_RECOVER   (PKCS11Constants.CKF_SIGN_RECOVER),
+        VERIFY         (PKCS11Constants.CKF_VERIFY),
+        VERIFY_RECOVER (PKCS11Constants.CKF_VERIFY_RECOVER),
+        WRAP           (PKCS11Constants.CKF_WRAP),
+        UNWRAP         (PKCS11Constants.CKF_UNWRAP),
+        DERIVE         (PKCS11Constants.CKF_DERIVE);
 
-        // these enums must match the
-        // opFlagForUsage listed in PK11KeyPairGenerator.java
-        public static final Usage ENCRYPT = new Usage(0);
-        public static final Usage DECRYPT = new Usage(1);
-        public static final Usage SIGN = new Usage(2);
-        public static final Usage SIGN_RECOVER = new Usage(3);
-        public static final Usage VERIFY = new Usage(4);
-        public static final Usage VERIFY_RECOVER = new Usage(5);
-        public static final Usage WRAP = new Usage(6);
-        public static final Usage UNWRAP = new Usage(7);
-        public static final Usage DERIVE = new Usage(8);
+        long value;
+
+        Usage(long value) {
+            this.value = value;
+        }
+
+        /**
+         * @deprecated Use <code>ordinal()</code> instead.
+         */
+        @Deprecated
+        public int getVal() { return ordinal(); }
+
+        /**
+         * Get PKCS #11 constant.
+         */
+        public long value() { return value; }
     }
 
     /**

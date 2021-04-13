@@ -5,7 +5,6 @@
 package org.mozilla.jss.pkcs11;
 
 import java.math.BigInteger;
-import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidParameterException;
 import java.security.KeyPair;
@@ -20,13 +19,11 @@ import java.util.Hashtable;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
-import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.crypto.PQGParams;
+import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.crypto.RSAParameterSpec;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.ECCurve;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -280,37 +277,10 @@ public final class PK11KeyPairGenerator
             "c2tnb431r1", ECCurve_Code.c2tnb431r1);
     }
 
-    // opFlag constants: each of these flags specifies a crypto operation
-    // the key will support.  Their values must match the same-named C
-    // preprocessor macros defined in the PKCS #11 header pkcs11t.h.
-    private static final int CKF_ENCRYPT = 0x00000100;
-    private static final int CKF_DECRYPT = 0x00000200;
-    private static final int CKF_SIGN = 0x00000800;
-    private static final int CKF_SIGN_RECOVER = 0x00001000;
-    private static final int CKF_VERIFY = 0x00002000;
-    private static final int CKF_VERIFY_RECOVER = 0x00004000;
-    private static final int CKF_WRAP = 0x00020000;
-    private static final int CKF_UNWRAP = 0x00040000;
-    private static final int CKF_DERIVE = 0x00080000;
-
-    // A table for mapping SymmetricKey.Usage to opFlag.  This must be
-    // synchronized with SymmetricKey.Usage.
-    private static final int opFlagForUsage[] = {
-        CKF_ENCRYPT,        /* 0 */
-        CKF_DECRYPT,        /* 1 */
-        CKF_SIGN,           /* 2 */
-        CKF_SIGN_RECOVER,   /* 3 */
-        CKF_VERIFY,         /* 4 */
-        CKF_VERIFY_RECOVER, /* 5 */
-        CKF_WRAP,           /* 6 */
-        CKF_UNWRAP,         /* 7 */
-        CKF_DERIVE          /* 8 */
-    };
-
     // The crypto operations the key will support.  It is the logical OR
     // of the opFlag constants, each specifying a supported operation.
-    private int opFlags = 0;
-    private int opFlagsMask = 0;
+    private long opFlags = 0;
+    private long opFlagsMask = 0;
 
 
     ///////////////////////////////////////////////////////////////////////
@@ -506,7 +476,8 @@ public final class PK11KeyPairGenerator
                                     temporaryPairMode,
                                     sensitivePairMode,
                                     extractablePairMode,
-                                    opFlags, opFlagsMask);
+                                    (int) opFlags,
+                                    (int) opFlagsMask);
             } else {
                 return generateRSAKeyPairWithOpFlags(
                                     token,
@@ -515,7 +486,8 @@ public final class PK11KeyPairGenerator
                                     temporaryPairMode,
                                     sensitivePairMode,
                                     extractablePairMode,
-                                    opFlags, opFlagsMask);
+                                    (int) opFlags,
+                                    (int) opFlagsMask);
             }
         } else if(algorithm == KeyPairAlgorithm.DSA ) {
             if(params==null) {
@@ -530,7 +502,8 @@ public final class PK11KeyPairGenerator
                 temporaryPairMode,
                 sensitivePairMode,
                 extractablePairMode,
-                opFlags, opFlagsMask);
+                (int) opFlags,
+                (int) opFlagsMask);
         } else {
             assert( algorithm == KeyPairAlgorithm.EC );
             // requires JAVA 1.5 for ECParameters.
@@ -546,8 +519,8 @@ public final class PK11KeyPairGenerator
                 temporaryPairMode,
                 sensitivePairMode,
                 extractablePairMode,
-                opFlags,
-                opFlagsMask);
+                (int) opFlags,
+                (int) opFlagsMask);
         }
     }
 
@@ -760,7 +733,7 @@ public final class PK11KeyPairGenerator
         if(usages != null) {
             for( int i = 0; i < usages.length; i++ ) {
                 if( usages[i] != null ) {
-                    this.opFlags |= opFlagForUsage[usages[i].getVal()];
+                    this.opFlags |= usages[i].value();
                 }
             }
         }
@@ -768,7 +741,7 @@ public final class PK11KeyPairGenerator
         if(usages_mask != null) {
             for( int i = 0; i < usages_mask.length; i++ ) {
                 if( usages_mask[i] != null ) {
-                    this.opFlagsMask |= opFlagForUsage[usages_mask[i].getVal()];
+                    this.opFlagsMask |= usages_mask[i].value();
                 }
             }
         }
