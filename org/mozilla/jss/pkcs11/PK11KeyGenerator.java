@@ -22,27 +22,6 @@ import org.mozilla.jss.util.UTF8Converter;
 
 public final class PK11KeyGenerator implements KeyGenerator {
 
-    // opFlag constants: each of these flags specifies a crypto operation
-    // the key will support.  Their values must match the same-named C
-    // preprocessor macros defined in the PKCS #11 header pkcs11t.h.
-    private static final int CKF_ENCRYPT = 0x00000100;
-    private static final int CKF_DECRYPT = 0x00000200;
-    private static final int CKF_SIGN = 0x00000800;
-    private static final int CKF_VERIFY = 0x00002000;
-    private static final int CKF_WRAP = 0x00020000;
-    private static final int CKF_UNWRAP = 0x00040000;
-
-    // A table for mapping SymmetricKey.Usage to opFlag.  This must be
-    // synchronized with SymmetricKey.Usage.
-    private static final int opFlagForUsage[] = {
-        CKF_ENCRYPT,    /* 0 */
-        CKF_DECRYPT,    /* 1 */
-        CKF_WRAP,       /* 2 */
-        CKF_UNWRAP,     /* 3 */
-        CKF_SIGN,       /* 4 */
-        CKF_VERIFY      /* 5 */
-    };
-
     // The token this key will be generated on.
     private PK11Token token;
 
@@ -58,7 +37,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
     // The crypto operations the key will support.  It is the logical OR
     // of the opFlag constants, each specifying a supported operation.
-    private int opFlags = CKF_SIGN | CKF_ENCRYPT;
+    private long opFlags = PKCS11Constants.CKF_SIGN | PKCS11Constants.CKF_ENCRYPT;
 
     // Whether the key will be temporary or permanent
     private boolean temporaryKeyMode = true;
@@ -151,9 +130,13 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.opFlags = 0;
         for( int i = 0; i < usages.length; i++ ) {
             if( usages[i] != null ) {
-                this.opFlags |= opFlagForUsage[usages[i].getVal()];
+                this.opFlags |= usages[i].value();
             }
         }
+    }
+
+    public void setKeyUsages(long opFlags) {
+        this.opFlags = opFlags;
     }
 
     public void temporaryKeys(boolean temp)
@@ -207,7 +190,8 @@ public final class PK11KeyGenerator implements KeyGenerator {
                     result = generateKBKDF(token, kps.prfKey, pkcs11_alg,
                                            kps.mPointer, kps.mPointerSize,
                                            kps.derivedKeyAlgorithm,
-                                           kps.keySize, opFlags,
+                                           kps.keySize,
+                                           (int) opFlags,
                                            temporaryKeyMode, sensitiveKeyMode);
                 } finally {
                     kps.close();
@@ -218,8 +202,13 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
             return result;
         } else {
-            return generateNormal(token, algorithm, strength,
-                opFlags, temporaryKeyMode, sensitiveKeyMode);
+            return generateNormal(
+                    token,
+                    algorithm,
+                    strength,
+                    (int) opFlags,
+                    temporaryKeyMode,
+                    sensitiveKeyMode);
         }
     }
 

@@ -58,7 +58,7 @@ public abstract class KeyPairGeneratorSpi {
         UNWRAP         (PKCS11Constants.CKF_UNWRAP),
         DERIVE         (PKCS11Constants.CKF_DERIVE);
 
-        long value;
+        private final long value;
 
         Usage(long value) {
             this.value = value;
@@ -71,7 +71,7 @@ public abstract class KeyPairGeneratorSpi {
         public int getVal() { return ordinal(); }
 
         /**
-         * Get PKCS #11 constant.
+         * Get PKCS #11 CKF_ value.
          */
         public long value() { return value; }
     }

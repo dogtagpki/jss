@@ -13,22 +13,22 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 
-import javax.crypto.spec.RC2ParameterSpec;
 import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.RC2ParameterSpec;
 
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
-import org.mozilla.jss.crypto.JSSOAEPParameterSpec;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.IVParameterSpec;
+import org.mozilla.jss.crypto.JSSOAEPParameterSpec;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapper;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.util.NativeProxy;
 import org.mozilla.jss.util.NativeEnclosure;
+import org.mozilla.jss.util.NativeProxy;
 
 public final class PK11KeyWrapper implements KeyWrapper {
 
@@ -491,7 +491,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         throws TokenException, IllegalStateException,
             InvalidAlgorithmParameterException
     {
-        return unwrapSymmetric(wrapped, type, usage.getVal(), keyLen);
+        return unwrapSymmetric(wrapped, type, usage.ordinal(), keyLen);
     }
 
     public SymmetricKey
@@ -508,7 +508,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         throws TokenException, IllegalStateException,
             InvalidAlgorithmParameterException
     {
-        return unwrapSymmetricPerm(wrapped, type, usage.getVal(), keyLen);
+        return unwrapSymmetricPerm(wrapped, type, usage.ordinal(), keyLen);
     }
 
     public SymmetricKey
