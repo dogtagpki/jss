@@ -130,6 +130,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapSymWithPub
     CK_MECHANISM_TYPE mech;
     CK_VOID_PTR params = NULL;
     SECItem paramItem;
+    SECItem *paramsItemPtr = NULL;
     SECItem wrapped;
     jbyteArray wrappedBA=NULL;
     SECStatus status;
@@ -175,12 +176,16 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeWrapSymWithPub
         goto finish;
     }
 
-    paramItem.data = params;
-    paramItem.len = paramsSize;
+    if (params != NULL && paramsSize != 0) {
+        /* Only provision parameters when present. */
+        paramItem.data = params;
+        paramItem.len = paramsSize;
+        paramsItemPtr = &paramItem;
+    }
 
     /* perform the wrap */
 #ifdef HAVE_NSS_OAEP
-    status = PK11_PubWrapSymKeyWithMechanism(wrapping, mech, &paramItem, toBeWrapped, &wrapped);
+    status = PK11_PubWrapSymKeyWithMechanism(wrapping, mech, paramsItemPtr, toBeWrapped, &wrapped);
 #else
     if (mech == CKM_RSA_PKCS_OAEP) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "RSA-OAEP not supported by the NSS version used to build JSS");
@@ -626,8 +631,9 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
     CK_MECHANISM_TYPE keyTypeMech=0, mech=0;
     SECItem *wrappedKey=NULL;
     jobject keyObj=NULL;
-    CK_VOID_PTR params;
+    CK_VOID_PTR params=NULL;
     SECItem paramItem;
+    SECItem *paramsItemPtr=NULL;
     SECKEYPrivateKey *wrappingKey=NULL;
     CK_ULONG operation;
 
@@ -678,11 +684,16 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapSymWithPriv
         goto finish;
     }
 
-    paramItem.data = params;
-    paramItem.len = paramsSize;
+    if (params != NULL && paramsSize != 0) {
+        /* Only provision parameters when they're present. Otherwise, leave
+         * it as a NULL pointer. */
+        paramItem.data = params;
+        paramItem.len = paramsSize;
+        paramsItemPtr = &paramItem;
+    }
 
 #ifdef HAVE_NSS_OAEP
-    symKey = PK11_PubUnwrapSymKeyWithMechanism(wrappingKey, mech, &paramItem,
+    symKey = PK11_PubUnwrapSymKeyWithMechanism(wrappingKey, mech, paramsItemPtr,
             wrappedKey, keyTypeMech, operation, keyLen);
 #else
     if (mech == CKM_RSA_PKCS_OAEP) {
