@@ -1,5 +1,6 @@
 package org.mozilla.jss.ssl.javax;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.*;
@@ -185,6 +186,11 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * such a cache, so synchronize it within JSSEngine.
      */
     private final static AtomicBoolean sessionCacheInitialized = new AtomicBoolean();
+
+    /**
+     * Set of possible application protocols to negotiate.
+     */
+    protected byte[][] alpn_protocols;
 
     /**
      * Constructor for a JSSEngine, providing no hints for an internal
@@ -382,6 +388,12 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         // it.
         if (parsed.getHostname() != null) {
             setHostname(parsed.getHostname());
+        }
+
+        // When we have a non-zero number of ALPNs, use them in the
+        // negotiation.
+        if (parsed.getRawApplicationProtocols() != null) {
+            setApplicationProtocols(parsed.getRawApplicationProtocols());
         }
     }
 
@@ -903,6 +915,79 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      */
     public boolean getWantClientAuth() {
         return want_client_auth;
+    }
+
+    /**
+     * Set a specific list of protocols to negotiate next for ALPN support.
+     */
+    public void setApplicationProtocols(String[] protocols) {
+        JSSParameters parser = new JSSParameters();
+        parser.setApplicationProtocols(protocols);
+        alpn_protocols = parser.getRawApplicationProtocols();
+    }
+
+    /**
+     * Set a specific list of protocols to negotiate next for ALPN support.
+     */
+    public void setApplicationProtocols(byte[][] protocols) {
+        alpn_protocols = protocols;
+    }
+
+    /**
+     * Get the most recently negotiated application protocol.
+     *
+     * Note that NSS only allows selection on the initial handshake so
+     * this is implemented via a call to getHandshakeApplicationProtocol().
+     */
+    public String getApplicationProtocol() {
+        return getHandshakeApplicationProtocol();
+    }
+
+    /**
+     * Get the application protocol negotiated during the initial handshake.
+     */
+    public String getHandshakeApplicationProtocol() {
+        if (session == null) {
+            return null;
+        }
+
+        return session.getNextProtocol();
+    }
+
+    /**
+     * Helper method for implementations: encodes ALPN protocols into wire
+     * format (8-bit length prefixed byte encoding).
+     */
+    public byte[] getALPNWireData() {
+        int length = 0;
+        for (byte[] protocol : alpn_protocols) {
+            length += 1 + protocol.length;
+        }
+
+        byte[] result = new byte[length];
+        int offset = 0;
+
+        // XXX: Handle custom encoding left over from NPN draft: NSS's
+        // SSL_SetNextProtoNego takes the first protocol and helpfully puts
+        // it at the end of the list for us... So when we're validating using
+        // the default ALPN callback handler, switch the first to the last to
+        // ensure we're passing it in the caller's specified order.
+        byte[] last = alpn_protocols[alpn_protocols.length - 1];
+        result[offset] = (byte) last.length;
+        offset += 1;
+        System.arraycopy(last, 0, result, offset, last.length);
+        offset += last.length;
+
+        // Now copy the rest of the protocols.
+        for (int index = 0; index < alpn_protocols.length - 1; index++) {
+            byte[] protocol = alpn_protocols[index];
+            result[offset] = (byte) protocol.length;
+            offset += 1;
+            System.arraycopy(protocol, 0, result, offset, protocol.length);
+            offset += protocol.length;
+        }
+
+        return result;
     }
 
     /**
