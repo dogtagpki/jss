@@ -125,6 +125,12 @@ public final class CertAndKeyGen {
         if (publicKey instanceof X509Key) {
             this.publicKey = (X509Key) publicKey;
 
+        } else if (publicKey instanceof java.security.interfaces.RSAPublicKey) {
+            java.security.interfaces.RSAPublicKey rsa = (java.security.interfaces.RSAPublicKey) publicKey;
+            this.publicKey = new org.mozilla.jss.netscape.security.provider.RSAPublicKey(
+                rsa.getModulus(),
+                rsa.getPublicExponent()
+            );
         } else {
             throw new InvalidKeyException("public key " + publicKey +
                       " not an X509Key.");

@@ -4,9 +4,6 @@
 
 package org.mozilla.jss.pkcs10;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -246,78 +243,5 @@ public class CertificationRequest implements ASN1Value {
                                     signature
                         );
         }
-    }
-
-    public static void main(String argv[]) {
-
-      try {
-
-        if(argv.length > 2 || argv.length < 1) {
-            System.out.println("Usage: CertificationRequest <dbdir> [<certfile>]");
-            System.exit(0);
-        }
-
-        CryptoManager.initialize( argv[0] );
-        CryptoManager cm = CryptoManager.getInstance();
-
-        CertificationRequest cert;
-
-        // read in a cert
-        FileInputStream fis = new FileInputStream(argv[1]);
-        try (BufferedInputStream bis = new BufferedInputStream(fis)) {
-            cert = (CertificationRequest) CertificationRequest.getTemplate().decode(bis);
-        }
-
-        CertificationRequestInfo info = cert.getInfo();
-
-        info.print(System.out);
-
-        //X509CertificationRequest hardcore = cm.findCertByNickname("Hardcore");
-        //PublicKey key = hardcore.getPublicKey();
-
-        cert.verify();
-        System.out.println("verified");
-
-        FileOutputStream fos = new FileOutputStream("certinfo.der");
-        info.encode(fos);
-        fos.close();
-
-        // make a new public key
-        CryptoToken token = cm.getInternalKeyStorageToken();
-        KeyPairGenerator kpg = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
-        kpg.initialize(512);
-        System.out.println("Generating a new key pair...");
-        KeyPair kp = kpg.genKeyPair();
-        System.out.println("Generated key pair");
-
-        // set the CertificationRequest's public key
-        info.setSubjectPublicKeyInfo(kp.getPublic());
-
-        // make new Name
-        Name name = new Name();
-        name.addCommonName("asldkj");
-        name.addCountryName("US");
-        name.addOrganizationName("Some Corp");
-        name.addOrganizationalUnitName("Some Org Unit");
-        name.addLocalityName("Silicon Valley");
-        name.addStateOrProvinceName("California");
-        info.setSubject(name);
-
-        System.out.println("About to create a new cert request...");
-        // create a new cert requestfrom this certReqinfo
-        CertificationRequest genCert = new CertificationRequest(info, kp.getPrivate(),
-                SignatureAlgorithm.RSASignatureWithMD5Digest);
-        System.out.println("Created new cert request");
-
-        genCert.verify();
-        System.out.println("Cert verifies!");
-
-        fos = new FileOutputStream("gencert.der");
-        genCert.encode(fos);
-        fos.close();
-
-      } catch( Exception e ) {
-        e.printStackTrace();
-      }
     }
 }

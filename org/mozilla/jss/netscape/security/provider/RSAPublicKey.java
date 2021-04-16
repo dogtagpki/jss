@@ -19,6 +19,7 @@ package org.mozilla.jss.netscape.security.provider;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.security.InvalidKeyException;
 
 import org.mozilla.jss.netscape.security.util.BigInt;
@@ -62,6 +63,14 @@ public final class RSAPublicKey extends X509Key implements Serializable {
      * Keep this constructor for backwards compatibility with JDK1.1.
      */
     public RSAPublicKey() {
+    }
+
+    /*
+     * Make a RSA public key out of a public exponent and modulus
+     * in the standard classes (BigInteger).
+     */
+    public RSAPublicKey(BigInteger modulus, BigInteger exponent) throws InvalidKeyException {
+        this(new BigInt(modulus), new BigInt(exponent));
     }
 
     /**
