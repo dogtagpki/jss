@@ -13,8 +13,15 @@ jobs:
           - 'fedora_33'
           - 'fedora_latest_jdk11'
           - 'symbolcheck'
+          - 'debian_jdk11'
+          - 'ubuntu_jdk8'
+          # Disable tests due to missing dependencies
+          # - 'centos_7'
+          # - 'centos_8'
+
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
+
     - name: Build and Run the Docker Image
       run: bash tools/run_container.sh "${{ matrix.image }}"
