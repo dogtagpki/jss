@@ -8,7 +8,6 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'pkcs11check'
           - 'pki_build'
 
     steps:
