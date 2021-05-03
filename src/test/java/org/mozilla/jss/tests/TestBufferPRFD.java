@@ -1,9 +1,6 @@
 package org.mozilla.jss.tests;
 
-import java.util.*;
-
 import org.mozilla.jss.*;
-import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.nss.*;
 import org.mozilla.jss.ssl.*;

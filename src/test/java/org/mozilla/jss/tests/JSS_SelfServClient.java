@@ -15,16 +15,11 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.InitializationValues;
-import org.mozilla.jss.KeyDatabaseException;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.X509Certificate;

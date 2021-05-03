@@ -10,8 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.mozilla.jss.util.Assert;
-
 public abstract class TimeBase implements ASN1Value {
 
     public static final Form FORM = Form.PRIMITIVE;

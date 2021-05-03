@@ -5,9 +5,6 @@ import java.security.*;
 import javax.crypto.*;
 import javax.net.ssl.*;
 
-import org.mozilla.jss.*;
-import org.mozilla.jss.pkcs11.*;
-
 public class JSSProvider {
     public static String BASE_PACKAGE = "org.mozilla.jss.provider.";
 

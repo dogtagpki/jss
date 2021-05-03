@@ -4,17 +4,6 @@
 
 package org.mozilla.jss.util;
 
-import java.util.HashSet;
-
-import java.lang.AutoCloseable;
-import java.lang.Thread;
-import java.util.Arrays;
-
-import org.mozilla.jss.CryptoManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * StaticVoidPointer is a Java class that mirror a statically allocated
  * `void *` pointer in C.

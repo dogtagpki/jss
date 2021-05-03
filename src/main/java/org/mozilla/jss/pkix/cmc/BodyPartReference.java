@@ -48,7 +48,6 @@ import org.mozilla.jss.asn1.INTEGER;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
-import org.mozilla.jss.util.Assert;
 
 /**
  * CMC <i>BodyPartReference</i>:

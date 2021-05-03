@@ -17,14 +17,6 @@ import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
-import org.mozilla.jss.asn1.ASN1Template;
-import org.mozilla.jss.asn1.ASN1Value;
-import org.mozilla.jss.asn1.INTEGER;
-import org.mozilla.jss.asn1.InvalidBERException;
-import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import org.mozilla.jss.asn1.OCTET_STRING;
-import org.mozilla.jss.asn1.SEQUENCE;
-import org.mozilla.jss.asn1.Tag;
 
 /**
  * A RSAPSSAlgorithmParameter implements the trandcoding between a

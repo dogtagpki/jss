@@ -11,8 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
 
-import org.mozilla.jss.util.Assert;
-
 /**
  * An ASN.1 SET, which is an unordered collection of ASN.1 values.
  * It has an interface like a Java Vector, but the ordering is arbitrary.

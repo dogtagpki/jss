@@ -11,7 +11,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

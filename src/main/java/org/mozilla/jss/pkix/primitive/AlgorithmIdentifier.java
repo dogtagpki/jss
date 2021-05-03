@@ -4,12 +4,9 @@
 package org.mozilla.jss.pkix.primitive;
 
 import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.crypto.SignatureAlgorithm;
-import org.mozilla.jss.util.Assert;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class AlgorithmIdentifier implements ASN1Value {
 

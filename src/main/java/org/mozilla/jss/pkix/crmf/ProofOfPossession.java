@@ -15,7 +15,6 @@ import org.mozilla.jss.asn1.EXPLICIT;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.NULL;
 import org.mozilla.jss.asn1.Tag;
-import org.mozilla.jss.util.Assert;
 
 /**
  * CRMF <i>ProofOfPossession</i>:

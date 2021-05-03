@@ -1,7 +1,6 @@
 package org.mozilla.jss.crypto;
 
 import org.mozilla.jss.pkcs11.PKCS11Constants;
-import org.mozilla.jss.crypto.Algorithm;
 
 public enum PKCS11Algorithm {
     CKM_AES_CBC (Algorithm.CKM_AES_CBC, PKCS11Constants.CKM_AES_CBC),

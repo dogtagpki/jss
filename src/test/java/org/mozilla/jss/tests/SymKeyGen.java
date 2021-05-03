@@ -4,7 +4,6 @@
 
 package org.mozilla.jss.tests;
 
-import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.LinkedList;
@@ -12,11 +11,8 @@ import java.util.List;
 
 import javax.crypto.spec.RC2ParameterSpec;
 
-import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.KeyDatabaseException;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.crypto.Cipher;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;

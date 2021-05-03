@@ -1,6 +1,5 @@
 package org.mozilla.jss.nss;
 
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;

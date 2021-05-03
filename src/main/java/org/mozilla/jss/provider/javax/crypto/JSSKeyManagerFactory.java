@@ -5,7 +5,6 @@ import javax.net.ssl.*;
 
 import org.mozilla.jss.*;
 import org.mozilla.jss.util.*;
-import org.mozilla.jss.provider.java.security.*;
 
 public class JSSKeyManagerFactory extends KeyManagerFactorySpi {
     private KeyStore internalStorage;

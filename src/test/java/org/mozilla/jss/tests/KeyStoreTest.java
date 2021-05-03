@@ -22,8 +22,6 @@ import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
 import org.mozilla.jss.crypto.KeyGenerator;
 import org.mozilla.jss.crypto.SecretKeyFacade;
-import org.mozilla.jss.pkcs11.PK11Token;
-import org.mozilla.jss.util.ConsolePasswordCallback;
 
 public class KeyStoreTest {
 

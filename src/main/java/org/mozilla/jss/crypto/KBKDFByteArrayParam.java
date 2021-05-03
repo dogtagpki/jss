@@ -2,7 +2,6 @@ package org.mozilla.jss.crypto;
 
 import java.util.Arrays;
 
-import org.mozilla.jss.util.NativeEnclosure;
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 /**

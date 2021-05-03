@@ -48,7 +48,6 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.asn1.UTF8String;
-import org.mozilla.jss.util.Assert;
 
 /**
  * CMCStatusInfoV2 replaces CMCStatusInfo in rfc 5272

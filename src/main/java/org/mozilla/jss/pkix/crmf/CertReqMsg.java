@@ -16,7 +16,6 @@ import java.security.SignatureException;
 import java.text.DateFormat;
 
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.BIT_STRING;
@@ -31,7 +30,6 @@ import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.pkix.primitive.AVA;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
-import org.mozilla.jss.util.Assert;
 
 /**
  * This class models a CRMF <i>CertReqMsg</i> structure.

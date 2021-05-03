@@ -1,9 +1,10 @@
 package org.mozilla.jss.tests;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
-import org.mozilla.jss.netscape.security.util.*;
+import org.mozilla.jss.netscape.security.util.DerInputStream;
+import org.mozilla.jss.netscape.security.util.DerOutputStream;
+import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 
 public class BigObjectIdentifier {
     public static void main(String[] args) throws Exception {

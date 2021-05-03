@@ -7,7 +7,6 @@ package org.mozilla.jss.pkix.cmc;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.crmf.*;
 import java.io.*;
-import org.mozilla.jss.util.Assert;
 
 /**
  * CMC <i>TaggedRequest</i>:

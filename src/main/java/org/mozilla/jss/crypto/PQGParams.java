@@ -6,7 +6,6 @@ package org.mozilla.jss.crypto;
 
 import java.math.BigInteger;
 import java.security.spec.DSAParameterSpec;
-import org.mozilla.jss.util.Assert;
 
 /**
  * PQG parameters for DSA key generation, along with the seed, counter,

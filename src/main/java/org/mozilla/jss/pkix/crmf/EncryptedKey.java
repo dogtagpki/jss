@@ -15,7 +15,6 @@ import org.mozilla.jss.asn1.CHOICE;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
-import org.mozilla.jss.util.Assert;
 
 public class EncryptedKey implements ASN1Value {
 

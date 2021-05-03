@@ -16,7 +16,6 @@ import org.mozilla.jss.asn1.EXPLICIT;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.Tag;
-import org.mozilla.jss.util.Assert;
 
 public class PKIArchiveOptions implements ASN1Value {
 

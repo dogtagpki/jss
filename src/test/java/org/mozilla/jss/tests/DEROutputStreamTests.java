@@ -1,7 +1,6 @@
 package org.mozilla.jss.tests;
 
 import org.mozilla.jss.netscape.security.util.*;
-import java.math.*;
 
 public class DEROutputStreamTests {
     public static void assert_f(boolean expr, String location) {

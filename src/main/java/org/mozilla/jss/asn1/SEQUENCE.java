@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
 
-import org.mozilla.jss.util.Assert;
-
 /**
  * An ASN.1 SEQUENCE.  This class is an ordered collection of ASN.1 values.
  * It has an interface similar to a Java <code>Vector</code>.

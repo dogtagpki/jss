@@ -5,7 +5,6 @@
 package org.mozilla.jss.pkcs12;
 
 import org.mozilla.jss.crypto.KeyGenerator;
-import org.mozilla.jss.util.Assert;
 
 /**
  * Converts password chars to bytes.  The output format is big-endian Unicode,

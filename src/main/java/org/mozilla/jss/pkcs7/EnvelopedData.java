@@ -15,7 +15,6 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.asn1.Tag;
-import org.mozilla.jss.util.Assert;
 
 public class EnvelopedData implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG;

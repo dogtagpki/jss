@@ -15,7 +15,6 @@ import java.security.PublicKey;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.KeyPairGenerator;

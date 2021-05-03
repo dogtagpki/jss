@@ -28,7 +28,6 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.InitializationValues;
 
 /**
  * JSSE SSLServer class that acts as SSL Server

@@ -7,7 +7,6 @@ package org.mozilla.jss.tests;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.InitializationValues;
 import org.mozilla.jss.NoSuchTokenException;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.crypto.AlreadyInitializedException;

@@ -13,8 +13,6 @@ import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.PSSParameterSpec;
-import java.security.SecureRandom;
-
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.util.*;
 import org.slf4j.Logger;

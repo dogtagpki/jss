@@ -1,9 +1,6 @@
 package org.mozilla.jss.crypto;
 
 import java.util.Arrays;
-import java.security.InvalidKeyException;
-import javax.crypto.SecretKey;
-
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 public class KBKDFFeedbackParams extends KBKDFParameterSpec {

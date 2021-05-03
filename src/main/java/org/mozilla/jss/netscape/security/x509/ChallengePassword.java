@@ -26,7 +26,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.mozilla.jss.netscape.security.util.DerValue;
-import org.mozilla.jss.netscape.security.x509.CertAttrSet;
 
 /**
  * Class for handling the decoding of a SCEP Challenge Password

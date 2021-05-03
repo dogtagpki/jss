@@ -7,7 +7,6 @@ package org.mozilla.jss.pkix.cert;
 import java.io.IOException;
 import java.io.InputStream;
 import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.util.Assert;
 
 /**
  * Represent the Subject Key Identifier Extension.

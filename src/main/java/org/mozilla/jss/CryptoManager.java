@@ -34,7 +34,6 @@ import org.mozilla.jss.pkcs11.PK11Module;
 import org.mozilla.jss.pkcs11.PK11SecureRandom;
 import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.provider.java.security.JSSMessageDigestSpi;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.InvalidNicknameException;
 import org.mozilla.jss.util.NativeProxy;
 import org.mozilla.jss.util.PasswordCallback;

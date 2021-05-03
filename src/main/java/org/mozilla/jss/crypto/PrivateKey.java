@@ -8,7 +8,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import org.mozilla.jss.util.Assert;
 
 /**
  * Private Keys used by JSS.  All the private keys handled by JSS are

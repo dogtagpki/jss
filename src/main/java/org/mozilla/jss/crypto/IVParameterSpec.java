@@ -4,8 +4,6 @@
 
 package org.mozilla.jss.crypto;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 import javax.crypto.spec.IvParameterSpec;
 
 /**

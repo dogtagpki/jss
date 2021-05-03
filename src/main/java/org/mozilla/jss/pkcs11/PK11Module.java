@@ -7,7 +7,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.util.Assert;
 
 public final class PK11Module {
 

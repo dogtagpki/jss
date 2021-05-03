@@ -1,8 +1,5 @@
 package org.mozilla.jss.crypto;
 
-import java.security.InvalidKeyException;
-import javax.crypto.SecretKey;
-
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 public class KBKDFCounterParams extends KBKDFParameterSpec {

@@ -1,8 +1,5 @@
 package org.mozilla.jss.ssl.javax;
 
-import java.lang.*;
-import java.util.*;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -10,23 +7,14 @@ import java.net.Socket;
 import java.nio.channels.WritableByteChannel;
 import java.nio.channels.Channels;
 import java.security.PublicKey;
-import java.security.cert.CertificateException;
-
 import java.nio.ByteBuffer;
 
 import javax.net.ssl.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.mozilla.jss.nss.*;
 import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.provider.javax.crypto.*;
 import org.mozilla.jss.ssl.*;
-
-import org.mozilla.jss.crypto.Policy;
-import org.mozilla.jss.crypto.PrivateKey;
-import org.mozilla.jss.crypto.X509Certificate;
 
 /**
  * The reference JSSEngine implementation.

@@ -4,7 +4,6 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.util.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;

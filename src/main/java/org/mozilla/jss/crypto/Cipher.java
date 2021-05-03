@@ -10,8 +10,6 @@ import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.BadPaddingException;
 
-import org.mozilla.jss.util.Assert;
-
 /**
  * A context for performing symmetric encryption and decryption.
  * First, the context must be initialized. Then, it can be updated

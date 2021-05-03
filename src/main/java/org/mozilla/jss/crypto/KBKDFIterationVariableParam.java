@@ -1,9 +1,6 @@
 package org.mozilla.jss.crypto;
 
-import java.util.Arrays;
-
 import org.mozilla.jss.pkcs11.PKCS11Constants;
-import org.mozilla.jss.util.NativeEnclosure;
 
 /**
  * A KBKDF Iteration Variable Parameter is a type of KBKDF Data Parameter that

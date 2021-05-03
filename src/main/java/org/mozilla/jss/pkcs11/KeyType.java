@@ -13,7 +13,6 @@ import org.mozilla.jss.crypto.CMACAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
-import org.mozilla.jss.util.Assert;
 
 /**
  * PKCS #11 Key Types

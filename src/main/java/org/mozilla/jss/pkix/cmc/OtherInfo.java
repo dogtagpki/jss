@@ -6,7 +6,6 @@ package org.mozilla.jss.pkix.cmc;
 
 import org.mozilla.jss.asn1.*;
 import java.io.*;
-import org.mozilla.jss.util.Assert;
 
 /**
  * CMCStatusInfoV2 <i>OtherInfo</i>:

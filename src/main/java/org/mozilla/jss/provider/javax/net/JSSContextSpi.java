@@ -8,11 +8,7 @@ import javax.net.ssl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.provider.javax.crypto.JSSKeyManager;
-import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
-import org.mozilla.jss.pkcs11.PK11Cert;
-import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.ssl.javax.JSSEngine;
 import org.mozilla.jss.ssl.javax.JSSEngineReferenceImpl;
 import org.mozilla.jss.ssl.javax.JSSParameters;

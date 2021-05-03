@@ -27,11 +27,8 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.net.ssl.X509KeyManager;
-
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.pkcs11.PK11Cert;
 
 import org.slf4j.Logger;

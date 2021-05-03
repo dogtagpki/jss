@@ -3,17 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.tests;
 
-import java.io.IOException;
 import java.math.BigInteger;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.PrivateKey;
-import java.security.cert.CertificateException;
-import java.security.interfaces.RSAPublicKey;
-import java.security.interfaces.ECPublicKey;
+import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;

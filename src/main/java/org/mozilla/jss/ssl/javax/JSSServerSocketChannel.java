@@ -2,12 +2,8 @@ package org.mozilla.jss.ssl.javax;
 
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.security.*;
 import java.util.*;
-
-import javax.net.ssl.*;
 
 public class JSSServerSocketChannel extends ServerSocketChannel {
     private JSSServerSocket sslSocket;

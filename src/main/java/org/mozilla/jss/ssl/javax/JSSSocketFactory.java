@@ -2,8 +2,6 @@ package org.mozilla.jss.ssl.javax;
 
 import java.io.*;
 import java.net.*;
-import java.security.*;
-
 import javax.net.ssl.*;
 
 import org.mozilla.jss.provider.javax.crypto.JSSKeyManager;

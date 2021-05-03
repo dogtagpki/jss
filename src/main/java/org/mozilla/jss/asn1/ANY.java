@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.mozilla.jss.util.Assert;
-
 /**
  * Represents an ASN.1 <code>ANY</code> value. An ANY is just an arbitrary
  * ASN.1 value. It can be thought of as the simplest implementation of the

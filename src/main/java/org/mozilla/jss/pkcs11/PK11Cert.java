@@ -10,7 +10,6 @@ import java.security.*;
 import java.security.cert.*;
 
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 
 import org.slf4j.Logger;

@@ -5,7 +5,6 @@ import java.security.spec.ECParameterSpec;
 import java.math.BigInteger;
 
 import org.mozilla.jss.crypto.PrivateKey;
-import org.mozilla.jss.util.EC;
 
 public class PK11ECPrivateKey
     extends PK11PrivKey

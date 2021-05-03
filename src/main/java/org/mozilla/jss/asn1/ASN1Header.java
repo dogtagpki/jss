@@ -10,8 +10,6 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Vector;
 
-import org.mozilla.jss.util.Assert;
-
 /**
  * The portion of a BER encoding that precedes the contents octets.  Consists
  * of the tag, form, and length octets.

@@ -15,7 +15,6 @@ import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
-import org.mozilla.jss.util.Assert;
 
 public class DigestInfo implements ASN1Value {
 

@@ -9,8 +9,6 @@ import java.security.spec.ECParameterSpec;
 import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
-import org.mozilla.jss.util.ECCurve;
-
 import org.mozilla.jss.netscape.security.util.Utils;
 
 public class EC {

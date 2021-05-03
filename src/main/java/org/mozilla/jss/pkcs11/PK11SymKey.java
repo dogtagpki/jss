@@ -6,7 +6,6 @@ package org.mozilla.jss.pkcs11;
 
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.SymmetricKey;
-import org.mozilla.jss.util.Assert;
 
 // We've updated jss.crypto.SymmetricKey to extend javax.crypto.SecretKey, so
 // PK11SymKey implements that interface as well.

@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.security.*;
 import java.util.*;
 
 import javax.net.ssl.*;

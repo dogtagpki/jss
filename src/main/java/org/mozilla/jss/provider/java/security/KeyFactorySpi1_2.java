@@ -35,7 +35,6 @@ import org.mozilla.jss.pkcs11.PK11PubKey;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
 import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
-import org.mozilla.jss.util.Assert;
 
 public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
 {

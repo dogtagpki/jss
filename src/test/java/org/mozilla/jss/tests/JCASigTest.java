@@ -13,8 +13,6 @@ import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PSSParameterSpec;
 
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.InitializationValues;
-
 import org.mozilla.jss.crypto.Policy;
 
 

@@ -30,7 +30,6 @@ import org.mozilla.jss.asn1.UTCTime;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.Name;
 import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
-import org.mozilla.jss.util.Assert;
 
 /**
  * A TBSCertificate (to-be-signed certificate), the actual information in

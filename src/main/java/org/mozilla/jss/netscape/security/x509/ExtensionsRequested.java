@@ -27,8 +27,6 @@ import java.util.Vector;
 
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
-import org.mozilla.jss.netscape.security.x509.CertAttrSet;
-import org.mozilla.jss.netscape.security.x509.Extension;
 
 public class ExtensionsRequested implements CertAttrSet {
 

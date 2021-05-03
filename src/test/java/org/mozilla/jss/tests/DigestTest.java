@@ -8,8 +8,6 @@ import java.security.MessageDigest;
 import java.security.Provider;
 import java.security.Security;
 
-import org.mozilla.jss.CryptoManager;
-
 public class DigestTest {
 
     /**

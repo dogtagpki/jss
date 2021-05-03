@@ -38,8 +38,6 @@ package org.mozilla.jss.tests;
 
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.InitializationValues;
-
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 import java.nio.ByteBuffer;
 import java.util.Arrays;

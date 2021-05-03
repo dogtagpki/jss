@@ -1,6 +1,5 @@
 package org.mozilla.jss.tests;
 
-import java.io.IOException;
 import org.mozilla.jss.netscape.security.util.DerValue;
 
 /*

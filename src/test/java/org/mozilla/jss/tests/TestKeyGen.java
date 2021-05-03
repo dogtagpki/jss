@@ -29,7 +29,6 @@ import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.RSAParameterSpec;
 import org.mozilla.jss.pkcs11.PK11KeyPairGenerator;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.Base64OutputStream;
 
 public class TestKeyGen {

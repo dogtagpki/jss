@@ -3,20 +3,15 @@ package org.mozilla.jss.tests;
 
 
 import java.security.Key;
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
-import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.InitializationValues;
 
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.SecretKeyFacade;
-import org.mozilla.jss.crypto.SymmetricKey;
 
 
 public class HmacTest {

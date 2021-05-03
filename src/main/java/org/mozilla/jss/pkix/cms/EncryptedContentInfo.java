@@ -38,7 +38,6 @@ import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.PBEParameter;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.Password;
 
 /**

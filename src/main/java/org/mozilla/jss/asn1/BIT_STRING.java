@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.BitSet;
 
-import org.mozilla.jss.util.Assert;
-
 /**
  * An ASN.1 <code>BIT STRING</code>, which is an ordered sequence of bits.
  * The bits are stored the same way they are encoded in BER: as an array

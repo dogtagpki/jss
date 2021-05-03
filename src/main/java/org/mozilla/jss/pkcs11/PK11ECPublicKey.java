@@ -7,9 +7,6 @@ package org.mozilla.jss.pkcs11;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECPoint;
 import java.security.spec.ECParameterSpec;
-import java.math.BigInteger;
-
-import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.util.EC;
 
 public final class PK11ECPublicKey extends PK11PubKey implements ECPublicKey {

@@ -28,7 +28,6 @@ import org.mozilla.jss.crypto.PQGParams;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.util.Assert;
 import org.mozilla.jss.util.IncorrectPasswordException;
 import org.mozilla.jss.util.NotImplementedException;
 import org.mozilla.jss.util.NullPasswordCallback;

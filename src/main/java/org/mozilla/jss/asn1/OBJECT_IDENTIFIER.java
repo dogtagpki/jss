@@ -10,8 +10,6 @@ import java.io.OutputStream;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.mozilla.jss.util.Assert;
-
 public class OBJECT_IDENTIFIER implements ASN1Value {
 
     ///////////////////////////////////////////////////////////////////////

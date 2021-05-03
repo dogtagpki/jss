@@ -15,7 +15,6 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.pkcs10.CertificationRequest;
-import org.mozilla.jss.util.Assert;
 
 /**
  * CMC <i>TaggedCertificationRequest</i>:

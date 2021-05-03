@@ -3,15 +3,12 @@ package org.mozilla.jss.tests;
 import java.util.Arrays;
 import java.util.Base64;
 
-import java.security.spec.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 
 import org.mozilla.jss.*;
 import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.pkcs11.*;
-import org.mozilla.jss.pkcs11.attrs.*;
-import org.mozilla.jss.util.*;
 
 public class TestKBKDF {
     public static void main(String[] args) throws Exception {

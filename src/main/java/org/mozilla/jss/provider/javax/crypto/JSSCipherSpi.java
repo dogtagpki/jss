@@ -39,7 +39,6 @@ import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.pkcs11.PK11PubKey;
 import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
-import org.mozilla.jss.util.Assert;
 
 public class JSSCipherSpi extends javax.crypto.CipherSpi {
     private String algFamily=null;

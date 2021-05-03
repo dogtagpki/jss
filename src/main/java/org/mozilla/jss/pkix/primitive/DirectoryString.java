@@ -20,7 +20,6 @@ import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.asn1.TeletexString;
 import org.mozilla.jss.asn1.UTF8String;
 import org.mozilla.jss.asn1.UniversalString;
-import org.mozilla.jss.util.Assert;
 
 /**
  * An X.500 <i>DirectoryString</i>.

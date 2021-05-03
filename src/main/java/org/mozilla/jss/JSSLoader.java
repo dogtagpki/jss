@@ -3,7 +3,6 @@ package org.mozilla.jss;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.NullPointerException;
-import java.security.Provider;
 import java.util.Properties;
 
 import org.mozilla.jss.util.Password;

@@ -15,7 +15,6 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.pkix.primitive.Name;
-import org.mozilla.jss.util.Assert;
 
 /**
  * An issuer name and serial number, used to uniquely identify a certificate.

@@ -3,13 +3,11 @@ package org.mozilla.jss.ssl.javax;
 import java.io.*;
 import java.net.*;
 import java.nio.channels.*;
-import java.security.*;
 import java.util.*;
 import javax.net.ssl.*;
 
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
-import org.mozilla.jss.provider.javax.crypto.JSSKeyManager;
 import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
 
 /**
