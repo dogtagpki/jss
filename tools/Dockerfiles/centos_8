@@ -8,6 +8,8 @@ RUN true \
         && dnf module enable -y pki-deps maven javapackages-tools \
         && dnf build-dep -y jss \
         && mkdir -p /home/sandbox \
+        && dnf install -y net-tools \
+        && ip link show \
         && dnf clean -y all \
         && rm -rf /usr/share/doc /usr/share/doc-base \
                   /usr/share/man /usr/share/locale /usr/share/zoneinfo \
