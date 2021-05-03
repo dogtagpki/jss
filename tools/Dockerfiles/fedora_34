@@ -29,4 +29,20 @@ WORKDIR /home/sandbox/jss
 CMD true \
         && bash ./build.sh --with-timestamp --with-commit-id rpm \
         && dnf install -y /root/build/jss/RPMS/*.rpm \
+        && echo "############################################################" \
+        && echo "## Generating PKCS #11 constants with Python 2" \
+        && python2 ./tools/build_pkcs11_constants.py \
+                   --pkcs11t /usr/include/nss3/pkcs11t.h \
+                   --pkcs11n /usr/include/nss3/pkcs11n.h \
+                   -o PKCS11Constants-py2.java \
+                   --verbose \
+        && echo "############################################################" \
+        && echo "## Generating PKCS #11 constants with Python 3" \
+        && python3 ./tools/build_pkcs11_constants.py -s \
+                   --pkcs11t /usr/include/nss3/pkcs11t.h \
+                   --pkcs11n /usr/include/nss3/pkcs11n.h \
+                   -o PKCS11Constants-py3.java \
+                   --verbose \
+        && diff PKCS11Constants-py2.java PKCS11Constants-py3.java \
+        && diff PKCS11Constants-py3.java src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java \
         && true

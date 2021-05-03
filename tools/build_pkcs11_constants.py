@@ -202,7 +202,11 @@ class ConstantDefinition(object):
         # Build a minimal cc call; note that nss_args is the output from
         # pkg-config such that we can correctly link this program and
         # have the correct includes for nss.
-        cc_call = ["cc", "-o", exec_path, path] + nss_args
+        #
+        # Define NSS_PKCS11_2_0_COMPAT due to NSS changes:
+        # https://fedoraproject.org/wiki/Changes/NssGCMParams
+
+        cc_call = ["cc", "-DNSS_PKCS11_2_0_COMPAT", "-o", exec_path, path] + nss_args
         logger.debug("Command: %s", ' '.join(cc_call))
 
         proc = subprocess.Popen(cc_call, stdout=subprocess.PIPE,
