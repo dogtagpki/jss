@@ -5,5 +5,5 @@ bin
 build/
 
 # These files are automatically generated from their .in equivalents
-org/mozilla/jss/util/jssver.h
-org/mozilla/jss/jssconfig.h
+src/main/java/org/mozilla/jss/util/jssver.h
+src/main/java/org/mozilla/jss/jssconfig.h

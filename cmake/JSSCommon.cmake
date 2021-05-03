@@ -5,10 +5,10 @@ macro(jss_build)
     # "set(..)" in CMake defines a globally-scoped variable (or more
     # precisely, a variable that exists in all scopes _after_ this one)
     # by default. These are three helpful globs of files for dependencies:
-    # all java, headers, and c source files. Note that org/*.java differs
+    # all java, headers, and c source files. Note that src/main/java/*.java differs
     # from the bash-style glob in that it matches all files which begin with
-    # "org" and end with ".java". This includes, e.g.,
-    # "org/mozilla/jss/CryptoManager.java". Because these globs are computed
+    # "src/main/java/" and end with ".java". This includes, e.g.,
+    # "src/main/java/org/mozilla/jss/CryptoManager.java". Because these globs are computed
     # at cmake time (prior to the make step) incremental builds are not
     # possible; each time the build directory should be removed and recreated
     # prior to building again.
@@ -28,14 +28,8 @@ macro(jss_build)
 endmacro()
 
 macro(jss_build_globs)
-    file(GLOB_RECURSE _JAVA_SOURCES org/*.java)
-    foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
-        if(${_JAVA_SOURCE} MATCHES "mozilla/jss/tests/")
-            list(APPEND JAVA_TEST_SOURCES "${_JAVA_SOURCE}")
-        else()
-            list(APPEND JAVA_SOURCES "${_JAVA_SOURCE}")
-        endif()
-    endforeach()
+    file(GLOB_RECURSE JAVA_SOURCES src/main/java/*.java)
+    file(GLOB_RECURSE JAVA_TEST_SOURCES src/test/java/*.java)
 
     # Write the Java sources to a file to reduce the size of the javac
     # command line.
@@ -48,7 +42,7 @@ macro(jss_build_globs)
     file(WRITE "${JAVA_TEST_SOURCES_FILE}" "${JAVA_TEST_SOURCES_CONTENTS}")
 
 
-    file(GLOB_RECURSE _C_HEADERS org/*.h)
+    file(GLOB_RECURSE _C_HEADERS src/main/java/*.h)
     foreach(_C_HEADER ${_C_HEADERS})
         if(${_C_HEADER} MATCHES "mozilla/jss/tests/")
             list(APPEND C_TEST_HEADERS "${_C_HEADER}")
@@ -57,18 +51,12 @@ macro(jss_build_globs)
         endif()
     endforeach()
 
-    file(GLOB_RECURSE _C_SOURCES org/*.c)
     # We exclude any C files in the tests directory because they shouldn't
     # contribute to our library. They should instead be built as part of the
     # test suite and probably be built as stand alone binaries which link
     # against libjss4.so (at most).
-    foreach(_C_SOURCE ${_C_SOURCES})
-        if(${_C_SOURCE} MATCHES "mozilla/jss/tests/")
-            list(APPEND C_TEST_SOURCES "${_C_SOURCE}")
-        else()
-            list(APPEND C_SOURCES "${_C_SOURCE}")
-        endif()
-    endforeach()
+    file(GLOB_RECURSE C_SOURCES src/main/java/*.c)
+    file(GLOB_RECURSE C_TEST_SOURCES src/test/java/*.c)
 endmacro()
 
 # Build all Java sources into classes and generate JNI headers
