@@ -29,6 +29,15 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Patch: jss-VERSION-RELEASE.patch
 
 ################################################################################
+# Build Options
+################################################################################
+
+# By default the build will execute unit tests unless --without test
+# option is specified.
+
+%bcond_without test
+
+################################################################################
 # Build Dependencies
 ################################################################################
 
@@ -119,7 +128,10 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 cd %{_vpath_builddir}
 %{__make} all
 %{__make} javadoc
+
+%if %{with_test}
 ctest --output-on-failure
+%endif
 
 ################################################################################
 %install
