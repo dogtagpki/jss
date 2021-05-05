@@ -20,6 +20,8 @@ WITH_TIMESTAMP=
 WITH_COMMIT_ID=
 DIST=
 
+WITHOUT_TEST=
+
 VERBOSE=
 DEBUG=
 
@@ -33,6 +35,7 @@ usage() {
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
+    echo "    --without-test         Do not run unit tests."
     echo " -v,--verbose              Run in verbose mode."
     echo "    --debug                Run in debug mode."
     echo "    --help                 Show help message."
@@ -123,6 +126,13 @@ generate_rpm_spec() {
         commands="${commands}; s/# Patch: jss-VERSION-RELEASE.patch/Patch: $PATCH/g"
     fi
 
+    # hard-code test option
+    if [ "$WITHOUT_TEST" = true ] ; then
+        commands="${commands}; s/%\(bcond_without *test\)\$/# \1\n%global with_test 0/g"
+    else
+        commands="${commands}; s/%\(bcond_without *test\)\$/# \1\n%global with_test 1/g"
+    fi
+
     sed "$commands" "$SPEC_TEMPLATE" > "$WORK_DIR/SPECS/$RPM_SPEC"
 
     # rpmlint "$WORK_DIR/SPECS/$RPM_SPEC"
@@ -154,6 +164,9 @@ while getopts v-: arg ; do
             ;;
         dist=?*)
             DIST="$LONG_OPTARG"
+            ;;
+        without-test)
+            WITHOUT_TEST=true
             ;;
         verbose)
             VERBOSE=true
@@ -321,6 +334,10 @@ fi
 
 if [ "$DIST" != "" ] ; then
     OPTIONS+=(--define "dist .$DIST")
+fi
+
+if [ "$WITHOUT_TEST" = true ] ; then
+    OPTIONS+=(--without test)
 fi
 
 if [ "$DEBUG" = true ] ; then
