@@ -17,11 +17,10 @@ FILE=
 
 
 CLASSES = \
-	Capabilities.java \
-	ListerForAll.java
+	CapabilitiesList.java
 
 
-MAIN = ListerForAll
+MAIN = CapabilitiesList
 
 
 default: classes
