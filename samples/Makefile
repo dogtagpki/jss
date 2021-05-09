@@ -1,0 +1,42 @@
+# Invoked by build.sh script where the user can set
+# the BUILDROOT and SLF4JPATH for the makefile and the target
+
+export LD_LIBRARY_PATH=${BUILDROOT}/jss/build:/usr/share/java
+export CLASSPATH=.:${BUILDROOT}/jss/build/jss4.jar:${SLF4JPATH}
+
+
+JFLAGS = -g  -classpath ${CLASSPATH} -sourcepath . -d .
+JC = javac
+JVM= java 
+FILE=
+
+.SUFFIXES: .java .class
+
+.java.class:
+	$(JC) $(JFLAGS) $*.java
+
+
+CLASSES = \
+	Capabilities.java \
+	ListerForAll.java
+
+
+MAIN = ListerForAll
+
+
+default: classes
+
+classes: $(CLASSES:.java=.class)
+
+#
+# List capabilities of all providers
+#
+run: $(MAIN).class
+	$(JVM) -classpath ${CLASSPATH} $(MAIN)
+
+clean:
+	$(RM) *.class
+
+remove-listings:
+	$(RM) -r listings
+

@@ -1,0 +1,13 @@
+Builds against the system jss need manual adjustments
+As stated in systemjssMakefile change
+ 
+ export LD_LIBRARY_PATH=${librarypath4fedora}
+ export CLASSPATH=${classpath4fedora}
+  
+ to
+
+ export LD_LIBRARY_PATH=${librarypath4opensuse}
+ export CLASSPATH=${classpath4opensuse}
+
+ These are meant to be strictly local changes.
+
