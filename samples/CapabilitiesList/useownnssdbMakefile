@@ -20,7 +20,6 @@ FILE=
 CLASSES = \
 	CapabilitiesList.java
 
-
 MAIN = CapabilitiesList
 
 
@@ -41,5 +40,5 @@ remove-nssdb:
 	$(RM) -r ${BUILDROOT}/jss/build/results/nssdb
 
 remove-listings:
-	$(RM) -rf listings
+	$(RM) -r listings
 

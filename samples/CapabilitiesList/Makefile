@@ -19,7 +19,6 @@ FILE=
 CLASSES = \
 	CapabilitiesList.java
 
-
 MAIN = CapabilitiesList
 
 
