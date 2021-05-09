@@ -1,10 +1,10 @@
-Capabilities
+CapabilitiesList
 ========================================
 
 Overview
 ========================================
 
-**Capabilities** has a Java application to list the capabilities
+**CapabilitiesList** has a Java application to list the capabilities
 of the "Mozilla-JSS" provider and other installed providers
 
 Dependencies
@@ -24,11 +24,11 @@ To install these dependencies on Fedora, execute the following:
 
 Building
 ========================================
-To build Capabilities:
+To build CapabilitiesList:
 
-    git clone https://github.com/emaldona/capabilities.git
-    cd capabilities
-    and launch build.sh [with-some-options]
+    Once jss has been cloned
+    cd jss/samples/capabilitiesList
+    Launch build.sh [with-some-options]
     where ./build.sh -h will enumerate the options
 
 LIMITATIONS:
