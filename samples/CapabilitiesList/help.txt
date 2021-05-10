@@ -7,7 +7,8 @@ Capabilities build tool options:
     -h               display this help and exit
     -b               path to where jss was built
     -s               path to slf4j jar file, either system's or latest built
-    -t               target for makefile [ clean | empty for build | run ]
+    -t               target for makefile [ empty for build | run ]
 
-To cleanup, remove classes and listings directory, you have to use the Makefile
-directly as './build.sh -t clean' is not working.
+
+Since './build.sh -t clean' is not working, use the Makefile directly to
+remove classes and/or the listings directory.
