@@ -123,6 +123,10 @@ macro(jss_tests)
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.BMPStringTest"
     )
     jss_test_java(
+        NAME "JUnit_DirStrConverterTest"
+        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.DirStrConverterTest"
+    )
+    jss_test_java(
         NAME "JUnit_IA5StringTest"
         COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.IA5StringTest"
     )
