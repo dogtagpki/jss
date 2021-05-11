@@ -11,5 +11,17 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v2
 
-    - name: Build JSS package
-      run: mvn package
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Build JSS
+      run: mvn install
+
+    - name: Build examples
+      run: mvn compile
+      working-directory: examples
+
+    # TODO: Run examples
