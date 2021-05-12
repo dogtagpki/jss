@@ -95,16 +95,58 @@ public class CapabilitiesList {
             Iterator it = keySet.iterator();
             assert(it != null);
             it = p.keySet().iterator();
+
+            // In the verbose listing, we want to create a mapping from
+            // an implementation onto all of its aliases. To do this in one
+            // pass, we create a hashmap of strings (impl classes) to sets
+            // (of aliases).
+            HashMap<String, HashSet<String>> mapping = new HashMap<>();
+
             while (it.hasNext()) {
                 String entry = (String)it.next();
-                if (entry.startsWith("Alg.alias.")) {
-                    entry = entry.substring("Alg.Alias.".length());
+                if (entry.startsWith("Alg.Alias.")) {
+                    String implementation = (String)p.get(entry);
+                    assert !implementation.startsWith("Alg.Alias.");
+
+                    // We need to do a little bit of "fixup" here. Each alias
+                    // (entry) has a "Alg.Alias" prefix and the next component
+                    // is the algorithm base class of choice. However, the
+                    // implementation elides this base class, so to prevent
+                    // duplicates-with-empty-sets, we need to go back and
+                    // move this base class over to the implementation part.
+                    String withoutPrefix = entry.replaceFirst("Alg.Alias.", "");
+                    String factoryClass = withoutPrefix.substring(0, withoutPrefix.indexOf('.'));
+                    implementation = factoryClass + "." + implementation;
+
+                    if (mapping.get(implementation) == null) {
+                        mapping.put(implementation, new HashSet());
+                    }
+
+                    mapping.get(implementation).add(withoutPrefix);
+                } else {
+                    mapping.put(entry, new HashSet());
                 }
+            }
+
+            // To make the results predictable, sort both the top-level keys
+            // and any inner aliases before printing them.
+            ArrayList<String> entries = new ArrayList(mapping.keySet());
+            Collections.sort(entries);
+            for (String entry : entries) {
                 String factoryClass = entry.substring(0, entry.indexOf('.'));
                 String name = entry.substring(factoryClass.length()+1);
                 assert(name != null);
                 fw.write(String.format("\t %s : %s", factoryClass, name));
                 fw.write(System.lineSeparator());
+
+                if (mapping.get(entry) != null) {
+                    ArrayList<String> subentries = new ArrayList(mapping.get(entry));
+                    Collections.sort(subentries);
+                    for (String subentry : subentries) {
+                        fw.write(String.format("\t\t Alias: %s", subentry));
+                        fw.write(System.lineSeparator());
+                    }
+                }
             }
         }
 
