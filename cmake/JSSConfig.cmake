@@ -293,7 +293,7 @@ macro(jss_config_java)
     list(APPEND JSS_TEST_JAVAC_FLAGS "-classpath")
     list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT4_JAR}:${CLASSES_OUTPUT_DIR}")
     list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/src/test/java")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/src/main/java")
 
     # Ensure we're compatible with JDK 8
     list(APPEND JSS_TEST_JAVAC_FLAGS "-target")
