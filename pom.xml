@@ -57,4 +57,10 @@
         </plugins>
     </build>
 
+    <properties>
+        <sonar.projectKey>dogtagpki_jss</sonar.projectKey>
+        <sonar.organization>dogtagpki</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+
 </project>
