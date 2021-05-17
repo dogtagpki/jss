@@ -8,8 +8,8 @@ import javax.net.ssl.TrustManager;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
-import org.mozilla.jss.ssl.javax.JSSSocketFactory;
 import org.mozilla.jss.ssl.javax.JSSSocket;
+import org.mozilla.jss.ssl.javax.JSSSocketFactory;
 
 /**
  * The BadSSL test case maintains an internal mapping from badssl.com
@@ -44,7 +44,7 @@ public class BadSSL {
         CryptoManager cm = CryptoManager.getInstance();
 
         if (ocsp) {
-            cm.setOCSPPolicy(CryptoManager.OCSPPolicy.LEAF_AND_CHAIN);
+            CryptoManager.setOCSPPolicy(CryptoManager.OCSPPolicy.LEAF_AND_CHAIN);
         }
 
         ctx = javax.net.ssl.SSLContext.getInstance("TLS", "Mozilla-JSS");
@@ -249,7 +249,7 @@ public class BadSSL {
 
     public static void testSiteJavaxSSLSocket(String host, int port) throws Exception {
         System.out.println("Testing connection to " + host + ":" + port);
-        try (JSSSocket sock = (JSSSocket) jsf.createSocket(host, port)) {
+        try (JSSSocket sock = jsf.createSocket(host, port)) {
             sock.setUseClientMode(true);
             sock.setWantClientAuth(false);
             sock.setNeedClientAuth(false);
