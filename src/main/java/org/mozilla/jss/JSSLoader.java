@@ -2,11 +2,9 @@ package org.mozilla.jss;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.NullPointerException;
 import java.util.Properties;
 
 import org.mozilla.jss.util.Password;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -305,11 +303,11 @@ public class JSSLoader {
         String policy = config.getProperty("jss.ocsp.policy", "NONE");
 
         if (policy.equalsIgnoreCase("none")) {
-            cm.setOCSPPolicy(CryptoManager.OCSPPolicy.NONE);
+            CryptoManager.setOCSPPolicy(CryptoManager.OCSPPolicy.NONE);
         } else if (policy.equalsIgnoreCase("normal")) {
-            cm.setOCSPPolicy(CryptoManager.OCSPPolicy.NORMAL);
+            CryptoManager.setOCSPPolicy(CryptoManager.OCSPPolicy.NORMAL);
         } else if (policy.equalsIgnoreCase("leaf_and_chain")) {
-            cm.setOCSPPolicy(CryptoManager.OCSPPolicy.LEAF_AND_CHAIN);
+            CryptoManager.setOCSPPolicy(CryptoManager.OCSPPolicy.LEAF_AND_CHAIN);
         } else {
             String msg = "Unknown value for jss.ocsp.policy: " + policy + ".";
             msg += "Expecting one of NONE, NORMAL, or LEAF_AND_CHAIN.";
