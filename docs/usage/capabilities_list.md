@@ -27,23 +27,23 @@ and you should see a listings directory
 
 Running `tree listings` should produce something like
 
-listings/
-├── brief
-│   ├── Capabilities4JdkSASL.txt
-│   ├── Capabilities4Mozilla-JSS.txt
-│   ├── Capabilities4SunJCE.txt
-│   ├── Capabilities4SunJSSE.txt
-│   ├── Capabilities4SunPKCS11.txt
-│   ├── Capabilities4SunRsaSign.txt
-│   └── Capabilities4SUN.txt
-└── verbose
-    ├── Capabilities4JdkSASL.txt
-    ├── Capabilities4Mozilla-JSS.txt
-    ├── Capabilities4SunJCE.txt
-    ├── Capabilities4SunJSSE.txt
-    ├── Capabilities4SunPKCS11.txt
-    ├── Capabilities4SunRsaSign.txt
-    └── Capabilities4SUN.txt
+    listings/
+    ├── brief
+    │   ├── Capabilities4JdkSASL.txt
+    │   ├── Capabilities4Mozilla-JSS.txt
+    │   ├── Capabilities4SunJCE.txt
+    │   ├── Capabilities4SunJSSE.txt
+    │   ├── Capabilities4SunPKCS11.txt
+    │   ├── Capabilities4SunRsaSign.txt
+    │   └── Capabilities4SUN.txt
+    └── verbose
+        ├── Capabilities4JdkSASL.txt
+        ├── Capabilities4Mozilla-JSS.txt
+        ├── Capabilities4SunJCE.txt
+        ├── Capabilities4SunJSSE.txt
+        ├── Capabilities4SunPKCS11.txt
+        ├── Capabilities4SunRsaSign.txt
+        └── Capabilities4SUN.txt
 
 Here is a brief clip of Capabilities4Mozilla-JSS.txt
 	 AlgorithmParameters : IvAlgorithmParameters
@@ -72,4 +72,3 @@ Here is a brief clip of Capabilities4Mozilla-JSS.txt
 
 Notice that the Alias: lines have extra indentation which makes it
 easier to compare against the other providers.
-
