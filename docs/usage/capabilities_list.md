@@ -21,7 +21,8 @@ First build jss according to the instructions in jss/README.md
 You should see in the build directory tests_jss4.jar which is what
 contains the application along with the regular tests.
 From the jss/build directory execute
-./run_test org.mozilla.jss.tests.Capabilities
+
+    ./run_test.sh org.mozilla.jss.tests.CapabilitiesList
 
 and you should see a listings directory
 
