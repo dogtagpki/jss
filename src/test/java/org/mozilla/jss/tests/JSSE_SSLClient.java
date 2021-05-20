@@ -13,12 +13,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.HandshakeCompletedListener;
@@ -529,7 +529,7 @@ public class JSSE_SSLClient {
                 keystoreLocation = args[0];
             }
             if ( args.length >= 2) {
-                testPort         = new Integer(args[1]).intValue();
+                testPort         = Integer.parseInt(args[1]);
                 System.out.println("using port: " + testPort);
             }
             if ( args.length >= 3) {

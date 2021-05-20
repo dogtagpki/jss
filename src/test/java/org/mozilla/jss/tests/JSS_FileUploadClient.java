@@ -333,7 +333,7 @@ public class JSS_FileUploadClient {
                 System.out.println(usage);
                 System.exit(1);
             } else {
-                socketCntr = new Integer(args[0]).intValue();
+                socketCntr = Integer.parseInt(args[0]);
                 System.out.println("Socket Counter = " + socketCntr);
             }
             testCipher = args[1];
@@ -347,7 +347,7 @@ public class JSS_FileUploadClient {
             if ( args.length >= 5 ) {
                 uploadFile = args[4];
                 testhost   = args[5];
-                testport   = new Integer(args[6]).intValue();
+                testport   = Integer.parseInt(args[6]);
             }
         } catch (Exception e) { }
 
@@ -376,7 +376,7 @@ public class JSS_FileUploadClient {
 
                 if ( testCipher != null ) {
                     try {
-                        jssTest.setCipher(new Integer(testCipher).intValue());
+                        jssTest.setCipher(Integer.parseInt(testCipher));
                         jssTest.setEOF(testCipher);
                         jssTest.doIt();
                     } catch (Exception ex) {

@@ -115,12 +115,12 @@ public class SSLClientAuth implements Runnable {
         tok.login(cb);
         
         if (args.length >= 3) {
-            port = new Integer(args[2]).intValue();
+            port = Integer.parseInt(args[2]);
             System.out.println("using port:" + port);
         }
         
         if (args.length >= 4) {
-            serialNum = new Integer(args[3]).intValue();
+            serialNum = Integer.parseInt(args[3]);
         } else {
              SecureRandom rng= SecureRandom.getInstance("pkcs11prng",
                 "Mozilla-JSS");
