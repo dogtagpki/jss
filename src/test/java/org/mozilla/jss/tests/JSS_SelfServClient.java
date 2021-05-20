@@ -273,7 +273,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 if (bFipsMode) {
                     try {
                         if (SSLSocket.isFipsCipherSuite(ciphers[i])) {
-                            ciphersToTest.add(new Integer(ciphers[i]));
+                            ciphersToTest.add(ciphers[i]);
                             if (bVerbose)
                                 System.out.print(" - FIPS Testing");
                         } else if (bVerbose) System.out.print(" -");
@@ -281,7 +281,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                         ex.printStackTrace();
                     }
                 } else {
-                    ciphersToTest.add(new Integer(ciphers[i]));
+                    ciphersToTest.add(ciphers[i]);
                     if (bVerbose) System.out.print(" - Testing");
                 }
             }
@@ -919,7 +919,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 System.out.println(usage);
                 System.exit(1);
             } else {
-                numOfThreads = new Integer(args[0]).intValue();
+                numOfThreads = Integer.parseInt(args[0]);
                 System.out.println("Number of Threads to create: "
                         + numOfThreads);
             }
@@ -927,7 +927,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 if (args[1].startsWith("0x") || args[1].startsWith("0X")) {
                     testCipher = Integer.decode(args[1]).intValue();
                 } else {
-                    testCipher = new Integer(args[1]).intValue();
+                    testCipher = Integer.parseInt(args[1]);
                 }
             }
             if (args.length >= 3) {
@@ -940,7 +940,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
                 testhost   = args[4];
             }
             if (args.length >= 6) {
-                testport   = new Integer(args[5]).intValue();
+                testport   = Integer.parseInt(args[5]);
             }
             if ((args.length >= 7) && args[6].equalsIgnoreCase("verbose")
             == true) {

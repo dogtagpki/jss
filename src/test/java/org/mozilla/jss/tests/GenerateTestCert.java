@@ -3,32 +3,41 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
- * GenerateTestCert is a class for generating SSL test certificates for 
- * the JSS tests (all.pl). You should use certutil to create 
+ * GenerateTestCert is a class for generating SSL test certificates for
+ * the JSS tests (all.pl). You should use certutil to create
  * your certificates.
  *
  */
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.pkix.cert.*;
-import org.mozilla.jss.pkix.cert.Certificate;
-import org.mozilla.jss.util.PasswordCallback;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Calendar;
 import java.util.Date;
-import java.security.*;
-import java.security.PrivateKey;
 
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.BOOLEAN;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkix.cert.Certificate;
+import org.mozilla.jss.pkix.cert.CertificateInfo;
+import org.mozilla.jss.pkix.cert.Extension;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.Name;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
+import org.mozilla.jss.util.PasswordCallback;
 
 public class GenerateTestCert {
-    
+
     private X509Certificate nssServerCert, nssClientCert;
     static final private String CACERT_NICKNAME = "JSSCATestCert";
     static final private String SERVERCERT_NICKNAME = "JSSTestServerCert";
@@ -37,8 +46,8 @@ public class GenerateTestCert {
     private int keyLength = 4096;
     private SignatureAlgorithm sigAlg =
         SignatureAlgorithm.RSASignatureWithSHA256Digest;
-    
-    
+
+
     /**
      * Main method for testing and generating cert pairs.
      */
@@ -50,7 +59,7 @@ public class GenerateTestCert {
             gtc.usage();
         }
     }
-    
+
     public void usage() {
         System.out.println("USAGE: " +
             "java org.mozilla.jss.tests.GenerateTestCert " +
@@ -74,12 +83,12 @@ public class GenerateTestCert {
             "\tSHA-256/EC" +
             "\tSHA-384/EC" +
             "\tSHA-512/EC");
-        
+
         System.exit(1);
     }
-    
+
     private void setSigAlg(String alg) {
-        
+
         if (alg.equalsIgnoreCase("SHA-1/RSA")) {
             sigAlg = SignatureAlgorithm.RSASignatureWithSHA1Digest;
         } else if (alg.equalsIgnoreCase("SHA-256/RSA")) {
@@ -99,7 +108,7 @@ public class GenerateTestCert {
         } else if (alg.equalsIgnoreCase("SHA-512/EC")) {
             sigAlg = SignatureAlgorithm.ECSignatureWithSHA512Digest;
         } else { usage(); }
-        
+
         if (alg.endsWith("RSA")) {
             keyType = "RSA";
         } else if (alg.endsWith("DSA")) {
@@ -109,10 +118,10 @@ public class GenerateTestCert {
             keyType = "EC";
             keyLength = 256;
         } else { usage(); }
-        
+
     }
-    
-    
+
+
     /**
      * Based on the input parameters, generate a cert
      * pair.
@@ -121,26 +130,26 @@ public class GenerateTestCert {
         String caCertNick = CACERT_NICKNAME;
         String serverCertNick = SERVERCERT_NICKNAME;
         String clientCertNick = CLIENTCERT_NICKNAME;
-        
+
         if ( args.length < 3 ) {
             usage();
         }
-        
+
         try {
             CryptoManager cm = CryptoManager.getInstance();
-            
+
             CryptoToken tok = cm.getInternalKeyStorageToken();
-            
+
             PasswordCallback cb = new FilePasswordCallback(args[1]);
             tok.login(cb);
-            
-            int serialNum = new Integer(args[2]).intValue();
-            
+
+            int serialNum = Integer.parseInt(args[2]);
+
             X509Certificate[] permCerts = cm.getPermCerts();
             int originalPermCerts = permCerts.length;
             System.out.println("Number of certificates stored in the " +
                 " database: " + originalPermCerts);
-            
+
             String hostname = "localhost";
             if (args.length > 4) {
                 hostname = args[3];
@@ -150,19 +159,19 @@ public class GenerateTestCert {
                 alg = args[4];
             }
             setSigAlg(alg);
-            
+
             X509Certificate[] certs;
             if (args.length > 6) {
                 caCertNick = args[5];
             }
-            
+
             /* ensure certificate does not already exists */
             certs = cm.findCertsByNickname(caCertNick);
             if (certs.length > 0) {
                 System.out.println(caCertNick + " already exists!");
                 System.exit(1);
             }
-            
+
             if (args.length > 7) {
                 serverCertNick = args[6];
             }
@@ -171,7 +180,7 @@ public class GenerateTestCert {
                 System.out.println(serverCertNick + " already exists!");
                 System.exit(1);
             }
-            
+
             if (args.length == 8) {
                 clientCertNick = args[7];
             }
@@ -180,17 +189,17 @@ public class GenerateTestCert {
                 System.out.println(clientCertNick + " already exists!");
                 System.exit(1);
             }
-            
+
             // generate CA cert
             java.security.KeyPairGenerator kpg =
                 java.security.KeyPairGenerator.getInstance(
                     keyType, "Mozilla-JSS");
             kpg.initialize(keyLength);
             KeyPair caPair = kpg.genKeyPair();
-            
+
             SEQUENCE extensions = new SEQUENCE();
             extensions.addElement(makeBasicConstraintsExtension());
-            
+
             Certificate caCert = makeCert("CACert", "CACert", serialNum,
                 caPair.getPrivate(), caPair.getPublic(), serialNum, extensions);
             X509Certificate nssCaCert = cm.importUserCACertPackage(
@@ -200,42 +209,42 @@ public class GenerateTestCert {
                 InternalCertificate.TRUSTED_CA |
                 InternalCertificate.TRUSTED_CLIENT_CA |
                 InternalCertificate.VALID_CA);
-            
+
             // generate server cert
             kpg.initialize(keyLength);
             KeyPair serverPair = kpg.genKeyPair();
-            Certificate serverCert = makeCert("CACert", hostname, 
-                serialNum+1, caPair.getPrivate(), 
+            Certificate serverCert = makeCert("CACert", hostname,
+                serialNum+1, caPair.getPrivate(),
                 serverPair.getPublic(), serialNum, null);
             nssServerCert = cm.importCertPackage(
                 ASN1Util.encode(serverCert), serverCertNick);
-            
+
             // generate client auth cert
             kpg.initialize(keyLength);
             KeyPair clientPair = kpg.genKeyPair();
-            Certificate clientCert = makeCert("CACert", "ClientCert", 
-                serialNum+2, caPair.getPrivate(), clientPair.getPublic(), 
+            Certificate clientCert = makeCert("CACert", "ClientCert",
+                serialNum+2, caPair.getPrivate(), clientPair.getPublic(),
                 serialNum, null);
             nssClientCert = cm.importCertPackage(
                 ASN1Util.encode(clientCert), clientCertNick);
-            
+
             System.out.println("\nThis program created certificates with \n" +
                 "following cert nicknames:" +
                 "\n\t" + caCertNick +
                 "\n\t" + serverCertNick +
                 "\n\t" + clientCertNick);
-            
+
             permCerts = cm.getPermCerts();
             if ( (originalPermCerts + 3) !=  permCerts.length) {
                 System.out.println("Error there should be three more " +
                     " certificates stored in the database");
                 System.exit(1);
             } else {
-            
+
                 System.out.println("Number of certificates stored in the " +
                 " database: " + permCerts.length);
             }
-                        
+
             /* ensure certificates exists */
             certs = cm.findCertsByNickname(caCertNick);
             if (certs.length == 0) {
@@ -252,14 +261,14 @@ public class GenerateTestCert {
                 System.out.println(clientCertNick + " should exist!");
                 System.exit(1);
             }
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
         System.exit(0);
     }
-    
+
     /**
      * Make basic extension.
      */
@@ -271,7 +280,7 @@ public class GenerateTestCert {
         OCTET_STRING enc = new OCTET_STRING(ASN1Util.encode(bc));
         return new Extension(bcOID, true, enc);
     }
-    
+
     /**
      * Method that generates a certificate for given credential
      *
@@ -292,40 +301,40 @@ public class GenerateTestCert {
         PublicKey pubKey,
         int rand,
         SEQUENCE extensions) throws Exception {
-        
+
         AlgorithmIdentifier sigAlgID = new AlgorithmIdentifier(sigAlg.toOID());
-        
+
         Name issuer = new Name();
         issuer.addCountryName("US");
         issuer.addOrganizationName("Mozilla");
         issuer.addOrganizationalUnitName("JSS Testing" + rand);
         issuer.addCommonName(issuerName);
-        
+
         Name subject = new Name();
         subject.addCountryName("US");
         subject.addOrganizationName("Mozilla");
         subject.addOrganizationalUnitName("JSS Testing" + rand);
         subject.addCommonName(subjectName);
-        
+
         Calendar cal = Calendar.getInstance();
         Date notBefore = cal.getTime();
         cal.add(Calendar.YEAR, 1);
         Date notAfter = cal.getTime();
-        
+
         SubjectPublicKeyInfo.Template spkiTemp =
             new SubjectPublicKeyInfo.Template();
         SubjectPublicKeyInfo spki =
             (SubjectPublicKeyInfo) ASN1Util.decode(spkiTemp,
             pubKey.getEncoded());
-        
+
         CertificateInfo info = new CertificateInfo(
             CertificateInfo.v3, new INTEGER(serialNumber), sigAlgID,
             issuer, notBefore, notAfter, subject, spki);
         if( extensions != null ) {
             info.setExtensions(extensions);
         }
-        
+
         return new Certificate(info, privKey, sigAlg);
     }
-    
+
 }
