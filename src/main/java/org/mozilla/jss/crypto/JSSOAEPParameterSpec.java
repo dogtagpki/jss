@@ -2,6 +2,7 @@ package org.mozilla.jss.crypto;
 
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.MGF1ParameterSpec;
+
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
 
@@ -40,33 +41,33 @@ public class JSSOAEPParameterSpec extends NativeEnclosure implements AlgorithmPa
 
     public void setDigestAlgorithm(String algo) throws IllegalArgumentException {
         switch (algo.toLowerCase()) {
-            case "md5":
-            case "ckm_md5":
-                hashAlg = PKCS11Constants.CKM_MD5;
-                break;
-            case "sha1":
-            case "sha-1":
-            case "ckm_sha_1":
-                hashAlg = PKCS11Constants.CKM_SHA_1;
-                break;
-            case "sha256":
-            case "sha-256":
-            case "ckm_sha256":
-                hashAlg = PKCS11Constants.CKM_SHA256;
-                break;
-            case "sha384":
-            case "sha-384":
-            case "ckm_sha384":
-                hashAlg = PKCS11Constants.CKM_SHA384;
-                break;
-            case "sha512":
-            case "sha-512":
-            case "ckm_sha512":
-                hashAlg = PKCS11Constants.CKM_SHA512;
-                break;
-            default:
-                String msg = "Unknown algorithm identifier: " + algo;
-                throw new IllegalArgumentException(msg);
+        case "md5":
+        case "ckm_md5":
+            hashAlg = PKCS11Constants.CKM_MD5;
+            break;
+        case "sha1":
+        case "sha-1":
+        case "ckm_sha_1":
+            hashAlg = PKCS11Constants.CKM_SHA_1;
+            break;
+        case "sha256":
+        case "sha-256":
+        case "ckm_sha256":
+            hashAlg = PKCS11Constants.CKM_SHA256;
+            break;
+        case "sha384":
+        case "sha-384":
+        case "ckm_sha384":
+            hashAlg = PKCS11Constants.CKM_SHA384;
+            break;
+        case "sha512":
+        case "sha-512":
+        case "ckm_sha512":
+            hashAlg = PKCS11Constants.CKM_SHA512;
+            break;
+        default:
+            String msg = "Unknown algorithm identifier: " + algo;
+            throw new IllegalArgumentException(msg);
         }
     }
 
@@ -96,29 +97,29 @@ public class JSSOAEPParameterSpec extends NativeEnclosure implements AlgorithmPa
 
     public void setMaskGenAlgorithmType(String algo) throws IllegalArgumentException {
         switch (algo.toLowerCase()) {
-            case "sha1":
-            case "sha-1":
-            case "ckm_sha_1":
-                hashAlg = PKCS11Constants.CKG_MGF1_SHA1;
-                break;
-            case "sha256":
-            case "sha-256":
-            case "ckm_sha256":
-                hashAlg = PKCS11Constants.CKG_MGF1_SHA256;
-                break;
-            case "sha384":
-            case "sha-384":
-            case "ckm_sha384":
-                hashAlg = PKCS11Constants.CKG_MGF1_SHA384;
-                break;
-            case "sha512":
-            case "sha-512":
-            case "ckm_sha512":
-                hashAlg = PKCS11Constants.CKG_MGF1_SHA512;
-                break;
-            default:
-                String msg = "Unknown mask generation algorithm identifier: " + algo;
-                throw new IllegalArgumentException(msg);
+        case "sha1":
+        case "sha-1":
+        case "ckm_sha_1":
+            hashAlg = PKCS11Constants.CKG_MGF1_SHA1;
+            break;
+        case "sha256":
+        case "sha-256":
+        case "ckm_sha256":
+            hashAlg = PKCS11Constants.CKG_MGF1_SHA256;
+            break;
+        case "sha384":
+        case "sha-384":
+        case "ckm_sha384":
+            hashAlg = PKCS11Constants.CKG_MGF1_SHA384;
+            break;
+        case "sha512":
+        case "sha-512":
+        case "ckm_sha512":
+            hashAlg = PKCS11Constants.CKG_MGF1_SHA512;
+            break;
+        default:
+            String msg = "Unknown mask generation algorithm identifier: " + algo;
+            throw new IllegalArgumentException(msg);
         }
     }
 
@@ -131,26 +132,26 @@ public class JSSOAEPParameterSpec extends NativeEnclosure implements AlgorithmPa
 
         MGF1ParameterSpec mgf1 = (MGF1ParameterSpec) algo;
         switch (mgf1.getDigestAlgorithm().toLowerCase()) {
-            case "sha1":
-            case "sha-1":
-                mgf = PKCS11Constants.CKG_MGF1_SHA1;
-                break;
-            case "sha256":
-            case "sha-256":
-                mgf = PKCS11Constants.CKG_MGF1_SHA256;
-                break;
-            case "sha384":
-            case "sha-384":
-                mgf = PKCS11Constants.CKG_MGF1_SHA384;
-                break;
-            case "sha512":
-            case "sha-512":
-                mgf = PKCS11Constants.CKG_MGF1_SHA512;
-                break;
-            default:
-                String msg = "Unknown mask generation algorithm identifier: ";
-                msg += mgf1.getDigestAlgorithm();
-                throw new IllegalArgumentException(msg);
+        case "sha1":
+        case "sha-1":
+            mgf = PKCS11Constants.CKG_MGF1_SHA1;
+            break;
+        case "sha256":
+        case "sha-256":
+            mgf = PKCS11Constants.CKG_MGF1_SHA256;
+            break;
+        case "sha384":
+        case "sha-384":
+            mgf = PKCS11Constants.CKG_MGF1_SHA384;
+            break;
+        case "sha512":
+        case "sha-512":
+            mgf = PKCS11Constants.CKG_MGF1_SHA512;
+            break;
+        default:
+            String msg = "Unknown mask generation algorithm identifier: ";
+            msg += mgf1.getDigestAlgorithm();
+            throw new IllegalArgumentException(msg);
         }
     }
 

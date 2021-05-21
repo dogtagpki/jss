@@ -3,11 +3,11 @@ package org.mozilla.jss.crypto;
 import java.security.InvalidKeyException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-
-import java.util.Arrays;
-import java.util.ArrayList;
 
 import org.mozilla.jss.pkcs11.PK11SymKey;
 import org.mozilla.jss.util.NativeEnclosure;
@@ -61,12 +61,12 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
      */
     public void setPRFKey(SecretKey key) throws InvalidKeyException {
         if (key instanceof PK11SymKey) {
-            prfKey = (PK11SymKey)key;
+            prfKey = (PK11SymKey) key;
             return;
         }
 
         if (key instanceof SecretKeyFacade) {
-            setPRFKey(((SecretKeyFacade)key).key);
+            setPRFKey(((SecretKeyFacade) key).key);
             return;
         }
 
@@ -79,7 +79,7 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
             }
 
             if (translated instanceof SecretKeyFacade) {
-                setPRFKey(((SecretKeyFacade)translated).key);
+                setPRFKey(((SecretKeyFacade) translated).key);
                 return;
             }
 
@@ -187,9 +187,9 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
 
         ArrayList<KBKDFDerivedKey> keys;
         if (additional_keys == null) {
-           keys = new ArrayList<KBKDFDerivedKey>(1);
+            keys = new ArrayList<KBKDFDerivedKey>(1);
         } else {
-           keys = new ArrayList<KBKDFDerivedKey>(Arrays.asList(additional_keys));
+            keys = new ArrayList<KBKDFDerivedKey>(Arrays.asList(additional_keys));
         }
         keys.add(derived_key);
 
@@ -233,6 +233,7 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
     }
 
     protected abstract void acquireNativeResourcesInternal() throws Exception;
+
     protected abstract void releaseNativeResourcesInternal() throws Exception;
 
     /**

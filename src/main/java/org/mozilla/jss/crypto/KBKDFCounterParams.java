@@ -3,7 +3,8 @@ package org.mozilla.jss.crypto;
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 public class KBKDFCounterParams extends KBKDFParameterSpec {
-    public KBKDFCounterParams() {}
+    public KBKDFCounterParams() {
+    }
 
     @Override
     protected void validateParameters() throws IllegalArgumentException {
@@ -39,7 +40,7 @@ public class KBKDFCounterParams extends KBKDFParameterSpec {
             }
 
             if (param instanceof KBKDFIterationVariableParam) {
-                KBKDFIterationVariableParam kivp = (KBKDFIterationVariableParam)param;
+                KBKDFIterationVariableParam kivp = (KBKDFIterationVariableParam) param;
                 if (kivp.widthInBits == -1) {
                     String msg = "Got unexpected data in KBKDF Iteration ";
                     msg += "Variable Parameter at index " + index + ": ";
@@ -51,7 +52,7 @@ public class KBKDFCounterParams extends KBKDFParameterSpec {
             }
 
             if (param instanceof KBKDFDKMLengthParam) {
-                KBKDFDKMLengthParam kdlp = (KBKDFDKMLengthParam)param;
+                KBKDFDKMLengthParam kdlp = (KBKDFDKMLengthParam) param;
                 if (kdlp.widthInBits == 0) {
                     String msg = "Got unexpected data in KBKDF DKM Length ";
                     msg += "Parameter at index " + index + ": Expected valid ";
@@ -70,6 +71,7 @@ public class KBKDFCounterParams extends KBKDFParameterSpec {
 
     @Override
     protected native void acquireNativeResourcesInternal() throws Exception;
+
     @Override
     protected native void releaseNativeResourcesInternal() throws Exception;
 }

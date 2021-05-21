@@ -65,5 +65,6 @@ public class KBKDFByteArrayParam extends KBKDFDataParameter {
     }
 
     private native void acquireNativeResourcesInternal() throws Exception;
+
     private native void releaseNativeResourcesInternal() throws Exception;
 }

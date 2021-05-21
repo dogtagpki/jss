@@ -17,12 +17,14 @@ public class KBKDFDKMLengthParam extends KBKDFDataParameter {
         super(PKCS11Constants.CK_SP800_108_DKM_LENGTH);
     }
 
-    public KBKDFDKMLengthParam(long lengthMethod, boolean littleEndian, long widthInBits) throws IllegalArgumentException {
+    public KBKDFDKMLengthParam(long lengthMethod, boolean littleEndian, long widthInBits)
+            throws IllegalArgumentException {
         this();
         setLengthSpec(lengthMethod, littleEndian, widthInBits);
     }
 
-    public void setLengthSpec(long lengthMethod, boolean littleEndian, long widthInBits) throws IllegalArgumentException {
+    public void setLengthSpec(long lengthMethod, boolean littleEndian, long widthInBits)
+            throws IllegalArgumentException {
         if (widthInBits < 8 || widthInBits > 64) {
             throw new IllegalArgumentException("Expected to have width between 8 and 64, but was " + widthInBits);
         }
@@ -37,6 +39,7 @@ public class KBKDFDKMLengthParam extends KBKDFDataParameter {
 
     @Override
     protected native void acquireNativeResources() throws Exception;
+
     @Override
     protected native void releaseNativeResources() throws Exception;
 }
