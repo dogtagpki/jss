@@ -179,6 +179,7 @@ public class JSSServerSocket extends SSLServerSocket {
      *
      * @see java.net.ServerSocket#getChannel()
      */
+    @Override
     public JSSServerSocketChannel getChannel() {
         if (parent.getChannel() == null) {
             return null;

@@ -299,6 +299,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      *  - peer's hostname
      *  - ALPN protocols
      */
+    @Override
     public JSSParameters getSSLParameters() {
         JSSParameters ret = new JSSParameters();
 
@@ -339,6 +340,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * not already an instance of JSSParameters), simplifying the other
      * function calls and reducing duplicate parsing.
      */
+    @Override
     public void setSSLParameters(SSLParameters params) {
         JSSParameters parsed;
 
@@ -479,6 +481,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * construct its own JSSParameters instance internally and translate
      * between JCA String names and SSLCipher instances.
      */
+    @Override
     public void setEnabledCipherSuites(String[] suites) throws IllegalArgumentException {
         JSSParameters parser = new JSSParameters();
         parser.setCipherSuites(suites);
@@ -548,6 +551,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Lists cipher suites currently enabled on this JSSEngine instance.
      */
+    @Override
     public String[] getEnabledCipherSuites() {
         logger.debug("JSSEngine: getEnabledCipherSuites()");
 
@@ -571,6 +575,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Note that this list isn't just all values in SSLCipher: it is only
      * those which are supported and allowed by local policy.
      */
+    @Override
     public String[] getSupportedCipherSuites() {
         logger.debug("JSSEngine: getSupportedCipherSuites()");
         ArrayList<String> result = new ArrayList<String>();
@@ -597,6 +602,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * and pass it to setSSLParameters(...), rather than calling this method
      * directly.
      */
+    @Override
     public void setEnabledProtocols(String[] protocols) throws IllegalArgumentException {
         logger.debug("JSSEngine: setEnabledProtocols(");
         for (String protocol : protocols) {
@@ -681,6 +687,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Gets the list of enabled SSL protocol versions on this particular
      * JSSEngine instance, as a list of JCA-standardized strings.
      */
+    @Override
     public String[] getEnabledProtocols() {
         logger.debug("JSSEngine: getEnabledProtocols()");
 
@@ -701,6 +708,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Gets the list of SSL protocols supported, as a list of JCA-standardized
      * strings.
      */
+    @Override
     public String[] getSupportedProtocols() {
         logger.debug("JSSEngine: getSupportedProtocols()");
         ArrayList<String> result = new ArrayList<String>();
@@ -808,6 +816,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Gets the JSSSession object which reflects the status of this
      * JSS Engine's session.
      */
+    @Override
     public JSSSession getSession() {
         logger.debug("JSSEngine: getSession()");
         return session;
@@ -821,6 +830,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * throw a RuntimeException, stating that all JSS Engines do not support
      * restricting to only resuming existing sessions.
      */
+    @Override
     public void setEnableSessionCreation(boolean flag) {
         logger.debug("JSSEngine: setEnableSessionCreation(" + flag + ") - not implemented");
         if (!flag) {
@@ -834,6 +844,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      *
      * This always returns true.
      */
+    @Override
     public boolean getEnableSessionCreation() {
         logger.debug("JSSEngine: getEnableSessionCreation() - not implemented");
         return true;
@@ -842,6 +853,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Set whether or not to handshake as a client.
      */
+    @Override
     public void setUseClientMode(boolean mode) throws IllegalArgumentException {
         logger.debug("JSSEngine.setUseClientMode(" + mode + ")");
         if (ssl_fd != null) {
@@ -857,6 +869,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Set whether or not client authentication is required for the TLS
      * handshake to succeed.
      */
+    @Override
     public void setNeedClientAuth(boolean need) {
         logger.debug("JSSEngine.setNeedClientAuth(" + need + ")");
         need_client_auth = need;
@@ -867,6 +880,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Set whether or not we should attempt client authentication.
      */
+    @Override
     public void setWantClientAuth(boolean want) {
         logger.debug("JSSEngine.setWantClientAuth(" + want + ")");
         want_client_auth = want;
@@ -886,6 +900,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Query whether this JSSEngine is a client (true) or a server (false).
      */
+    @Override
     public boolean getUseClientMode() {
         return !as_server;
     }
@@ -894,6 +909,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Query whether or not we must have client authentication for the TLS
      * handshake to succeed.
      */
+    @Override
     public boolean getNeedClientAuth() {
         return need_client_auth;
     }
@@ -901,6 +917,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Query whether or not we request client authentication.
      */
+    @Override
     public boolean getWantClientAuth() {
         return want_client_auth;
     }
@@ -908,6 +925,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Query whether or not the inbound side of this connection is closed.
      */
+    @Override
     public boolean isInboundDone() {
         logger.debug("JSSEngine.isInboundDone()? " + is_inbound_closed);
         return is_inbound_closed;
@@ -916,6 +934,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Query whether or not the outbound side of this connection is closed.
      */
+    @Override
     public boolean isOutboundDone() {
         logger.debug("JSSEngine.isOutboundDone()? " + is_outbound_closed);
         return is_outbound_closed;

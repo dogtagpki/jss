@@ -24,6 +24,7 @@ public class JSSServerSocketFactory extends SSLServerSocketFactory {
         trust_managers = tms;
     }
 
+    @Override
     public String[] getDefaultCipherSuites() {
         SSLCipher[] ciphers = JSSEngine.queryEnabledCipherSuites();
         String[] result = new String[ciphers.length];
@@ -35,11 +36,13 @@ public class JSSServerSocketFactory extends SSLServerSocketFactory {
         return result;
     }
 
+    @Override
     public String[] getSupportedCipherSuites() {
         JSSEngineReferenceImpl engine = new JSSEngineReferenceImpl();
         return engine.getSupportedCipherSuites();
     }
 
+    @Override
     public JSSServerSocket createServerSocket() throws IOException {
         JSSServerSocket ret = new JSSServerSocket();
         ret.consumeSocket(new ServerSocket());
@@ -51,6 +54,7 @@ public class JSSServerSocketFactory extends SSLServerSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSServerSocket createServerSocket(int port) throws IOException {
         JSSServerSocket ret = new JSSServerSocket();
         ret.consumeSocket(new ServerSocket(port));
@@ -62,6 +66,7 @@ public class JSSServerSocketFactory extends SSLServerSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSServerSocket createServerSocket(int port, int backlog) throws IOException {
         JSSServerSocket ret = new JSSServerSocket();
         ret.consumeSocket(new ServerSocket(port, backlog));
@@ -73,6 +78,7 @@ public class JSSServerSocketFactory extends SSLServerSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSServerSocket createServerSocket(int port, int backlog, InetAddress ifAddress) throws IOException {
         JSSServerSocket ret = new JSSServerSocket();
         ret.consumeSocket(new ServerSocket(port, backlog, ifAddress));

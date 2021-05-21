@@ -64,6 +64,7 @@ public class JSSParameters extends SSLParameters {
         super(cipherSuites, protocols);
     }
 
+    @Override
     public void setCipherSuites(String[] cipherSuites) throws IllegalArgumentException {
         if (cipherSuites == null || cipherSuites.length == 0) {
             suites = null;
@@ -95,6 +96,7 @@ public class JSSParameters extends SSLParameters {
         }
     }
 
+    @Override
     public String[] getCipherSuites() {
         if (suites == null) {
             return null;
@@ -112,6 +114,7 @@ public class JSSParameters extends SSLParameters {
         return suites;
     }
 
+    @Override
     public void setProtocols(String[] protocols) throws IllegalArgumentException {
         if (protocols == null || protocols.length == 0) {
             range = null;
@@ -147,6 +150,7 @@ public class JSSParameters extends SSLParameters {
         range = vrange;
     }
 
+    @Override
     public String[] getProtocols() {
         if (range == null) {
             return null;
