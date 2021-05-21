@@ -10,8 +10,10 @@ class SocketProxy extends org.mozilla.jss.util.NativeProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 
+    @Override
     protected void finalize() throws Throwable {
         super.finalize();
     }
