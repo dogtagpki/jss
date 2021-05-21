@@ -199,6 +199,7 @@ public class PKCS10Attribute implements DerEncoder, Serializable {
      *
      * @exception IOException on encoding errors.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         try {
             encode(out);
@@ -226,6 +227,7 @@ public class PKCS10Attribute implements DerEncoder, Serializable {
     /**
      * Returns the attribute in user readable form.
      */
+    @Override
     public String toString() {
         String s = "AttributeId: " + attributeId.toString() + "\n";
         s += "AttributeValue: " + attributeValue.toString();
