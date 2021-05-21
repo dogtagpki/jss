@@ -41,6 +41,7 @@ public class KBKDFIterationVariableParam extends KBKDFDataParameter {
 
     @Override
     protected native void acquireNativeResources() throws Exception;
+
     @Override
     protected native void releaseNativeResources() throws Exception;
 }

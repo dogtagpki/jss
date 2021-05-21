@@ -4,21 +4,28 @@
 
 package org.mozilla.jss.crypto;
 
-import org.mozilla.jss.util.*;
-import java.security.*;
+import java.security.DigestException;
+import java.security.InvalidKeyException;
+import java.security.InvalidParameterException;
+import java.security.PublicKey;
+
+import org.mozilla.jss.util.IncorrectPasswordException;
+import org.mozilla.jss.util.PasswordCallback;
 
 /**
  * A CryptoToken performs cryptographic operations and stores
- * cryptographic items, such as keys and certs.  It corresponds to a
+ * cryptographic items, such as keys and certs. It corresponds to a
  * Cryptographic Service Provider (CSP) in CDSA, and to a PKCS #11 token.
- * <p>Instances of CryptoToken are obtained from CryptoManager.
+ * <p>
+ * Instances of CryptoToken are obtained from CryptoManager.
+ *
  * @see org.mozilla.jss.CryptoManager
  */
 public interface CryptoToken {
 
-//
-// SERVICES
-//
+    //
+    // SERVICES
+    //
     /**
      * Creates a Signature object, which can perform signing and signature
      * verification. Signing and verification cryptographic operations will
@@ -27,23 +34,21 @@ public interface CryptoToken {
      *
      * @param algorithm The algorithm used for the signing/verification.
      * @exception java.security.NoSuchAlgorithmException If the given
-     *      algorithm is not supported by this provider.
+     *                algorithm is not supported by this provider.
      */
-    public abstract org.mozilla.jss.crypto.Signature
-    getSignatureContext(SignatureAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException;
+    public abstract org.mozilla.jss.crypto.Signature getSignatureContext(SignatureAlgorithm algorithm)
+            throws java.security.NoSuchAlgorithmException, TokenException;
 
     /**
-     * Creates a Digest object.  Digesting cryptographic operations will
+     * Creates a Digest object. Digesting cryptographic operations will
      * take place on this token.
      *
      * @param algorithm The algorithm used for digesting.
      * @exception java.security.NoSuchAlgorithmException If this provider
-     *  does not support the given algorithm.
+     *                does not support the given algorithm.
      */
-    public abstract JSSMessageDigest
-    getDigestContext(DigestAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, DigestException;
+    public abstract JSSMessageDigest getDigestContext(DigestAlgorithm algorithm)
+            throws java.security.NoSuchAlgorithmException, DigestException;
 
     // !!! MAC ???
 
@@ -54,24 +59,22 @@ public interface CryptoToken {
      *
      * @param algorithm The algorithm used for encryption/decryption.
      * @exception java.security.NoSuchAlgorithmException If this provider
-     *      does not support the given algorithm.
+     *                does not support the given algorithm.
      */
-    public abstract Cipher
-    getCipherContext(EncryptionAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException;
+    public abstract Cipher getCipherContext(EncryptionAlgorithm algorithm)
+            throws java.security.NoSuchAlgorithmException, TokenException;
 
     public abstract SymmetricKeyDeriver getSymmetricKeyDeriver()
-        throws TokenException;
+            throws TokenException;
 
-    public abstract KeyWrapper
-    getKeyWrapper(KeyWrapAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException;
+    public abstract KeyWrapper getKeyWrapper(KeyWrapAlgorithm algorithm)
+            throws java.security.NoSuchAlgorithmException, TokenException;
 
     /**
      * Returns a Random Number Generator implemented on this token.
      *
      * @exception org.mozilla.jss.crypto.ServiceNotProvidedException If this token
-     *      does not perform random number generation
+     *                does not perform random number generation
      */
     /*
     public abstract SecureRandom getRandomGenerator()
@@ -82,27 +85,26 @@ public interface CryptoToken {
 
     /**
      * Creates a KeyGenerator object, which can be used to generate
-     * symmetric encryption keys.  Any keys generated with this KeyGenerator
+     * symmetric encryption keys. Any keys generated with this KeyGenerator
      * will be generated on this token.
      *
      * @param algorithm The algorithm that the keys will be used with.
      * @exception java.security.NoSuchAlgorithmException If this token does not
-     *      support the given algorithm.
+     *                support the given algorithm.
      */
-    public abstract KeyGenerator
-    getKeyGenerator(KeyGenAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException;
+    public abstract KeyGenerator getKeyGenerator(KeyGenAlgorithm algorithm)
+            throws java.security.NoSuchAlgorithmException, TokenException;
 
     /**
      * Clones a SymmetricKey from a different token onto this token.
      *
      * @exception SymmetricKey.NotExtractableException If the key material
-     *      cannot be extracted from the current token.
+     *                cannot be extracted from the current token.
      * @exception InvalidKeyException If the owning token cannot process
-     *      the key to be cloned.
+     *                the key to be cloned.
      */
     public SymmetricKey cloneKey(SymmetricKey key)
-        throws SymmetricKey.NotExtractableException,
+            throws SymmetricKey.NotExtractableException,
             InvalidKeyException, TokenException;
 
     /**
@@ -111,43 +113,42 @@ public interface CryptoToken {
      * on this token.
      *
      * @param algorithm The algorithm that the keys will be used with (RSA,
-     *      DSA, EC, etc.)
+     *            DSA, EC, etc.)
      * @exception java.security.NoSuchAlgorithmException If this token does
-     *      not support the given algorithm.
+     *                not support the given algorithm.
      */
-    public abstract KeyPairGenerator
-    getKeyPairGenerator(KeyPairAlgorithm algorithm)
-        throws java.security.NoSuchAlgorithmException, TokenException;
+    public abstract KeyPairGenerator getKeyPairGenerator(KeyPairAlgorithm algorithm)
+            throws java.security.NoSuchAlgorithmException, TokenException;
 
-	/**
-	 * Generates a b64 encoded PKCS10 blob used for making cert
-	 *	 request.  Begin/End brackets included.
-	 * @param subject subject dn of the certificate
-	 * @param keysize size of the key
-	 * @param keyType "rsa" or "dsa"
+    /**
+     * Generates a b64 encoded PKCS10 blob used for making cert
+     * request. Begin/End brackets included.
+     *
+     * @param subject subject dn of the certificate
+     * @param keysize size of the key
+     * @param keyType "rsa" or "dsa"
      * @param P The DSA prime parameter
      * @param Q The DSA sub-prime parameter
      * @param G The DSA base parameter
-	 * @return base64 encoded pkcs10 certificate request with
-	 *	 Begin/end brackets
-	 */
-	public abstract String generateCertRequest(String subject, int
-											   keysize,
-											   String keyType,
-											   byte[] P, byte[] Q,
-											   byte[] G)
-		throws TokenException, InvalidParameterException,
-												   PQGParamGenException;
+     * @return base64 encoded pkcs10 certificate request with
+     *         Begin/end brackets
+     */
+    public abstract String generateCertRequest(String subject, int keysize,
+            String keyType,
+            byte[] P, byte[] Q,
+            byte[] G)
+            throws TokenException, InvalidParameterException,
+            PQGParamGenException;
 
     /**
      * Determines whether this token supports the given algorithm.
      *
-     * @param alg A JSS algorithm.  Note that for Signature, a token may
-     *      fail to support a specific SignatureAlgorithm (such as
-     *      RSASignatureWithMD5Digest) even though it does support the
-     *      generic algorithm (RSASignature). In this case, the signature
-     *      operation will be performed on that token, but the digest
-     *      operation will be performed on the internal token.
+     * @param alg A JSS algorithm. Note that for Signature, a token may
+     *            fail to support a specific SignatureAlgorithm (such as
+     *            RSASignatureWithMD5Digest) even though it does support the
+     *            generic algorithm (RSASignature). In this case, the signature
+     *            operation will be performed on that token, but the digest
+     *            operation will be performed on the internal token.
      * @return true if the token supports the algorithm.
      */
     public boolean doesAlgorithm(Algorithm alg);
@@ -158,12 +159,12 @@ public interface CryptoToken {
      *
      * @param pwcb The password callback for this token.
      * @exception IncorrectPasswordException If the supplied password is
-     *  incorrect.
+     *                incorrect.
      * @see #setLoginMode
      * @see org.mozilla.jss.CryptoManager#setPasswordCallback
      */
     public abstract void login(PasswordCallback pwcb)
-        throws IncorrectPasswordException, TokenException;
+            throws IncorrectPasswordException, TokenException;
 
     /**
      * Logout of the token.
@@ -174,20 +175,22 @@ public interface CryptoToken {
     /**
      * Login once, never need to re-enter the password until you log out.
      */
-    public static final int ONE_TIME=0;
+    public static final int ONE_TIME = 0;
     /**
      * Need to re-login after a period of time.
+     *
      * @see org.mozilla.jss.crypto.CryptoToken#setLoginTimeoutMinutes
      */
-    public static final int TIMEOUT=1;
+    public static final int TIMEOUT = 1;
     /**
      * Need to provide a password before each crypto operation.
      */
-    public static final int EVERY_TIME=2;
+    public static final int EVERY_TIME = 2;
 
     /**
      * Returns the login mode of this token: ONE_TIME, TIMEOUT, or
-     * EVERY_TIME.  The default is ONE_TIME.
+     * EVERY_TIME. The default is ONE_TIME.
+     *
      * @see #getLoginTimeoutMinutes
      * @exception TokenException If an error occurs on the token.
      */
@@ -198,14 +201,14 @@ public interface CryptoToken {
      *
      * @param mode ONE_TIME, TIMEOUT, or EVERY_TIME
      * @exception TokenException If this mode is not supported by this token,
-     *  or an error occurs on the token.
+     *                or an error occurs on the token.
      * @see #login
      * @see #setLoginTimeoutMinutes
      */
     public abstract void setLoginMode(int mode) throws TokenException;
 
     /**
-     * Returns the login timeout period.  The timeout is only used if the
+     * Returns the login timeout period. The timeout is only used if the
      * login mode is TIMEOUT.
      *
      * @see #getLoginMode
@@ -218,11 +221,11 @@ public interface CryptoToken {
      * if the login mode is TIMEOUT.
      *
      * @exception TokenException If timeouts are not supported by this
-     *      token, or an error occurs on the token.
+     *                token, or an error occurs on the token.
      * @see #setLoginMode
      */
     public abstract void setLoginTimeoutMinutes(int timeoutMinutes)
-        throws TokenException;
+            throws TokenException;
 
     /**
      * Find out if the token is currently logged in.
@@ -241,49 +244,45 @@ public interface CryptoToken {
      */
     public boolean needsLogin() throws TokenException;
 
-
-	/**
-	 * Initialize the password of this token.
-	 *
-	 * @param securityOfficerPW A callback to obtain the password of the
-	 * 		SecurityOfficer.  Pass in a NullPasswordCallback if there is
-	 * 		no security officer password. Must not be null.
-	 * @param userPW A callback to obtain the new password for this token.
-	 *		Must not be null.
-	 * @exception IncorrectPasswordException If the supplied security officer
-	 *		password is incorrect.
-	 * @exception AlreadyInitializedException If the token only allows one
-	 *		password initialization, and it has already occurred.
+    /**
+     * Initialize the password of this token.
+     *
+     * @param securityOfficerPW A callback to obtain the password of the
+     *            SecurityOfficer. Pass in a NullPasswordCallback if there is
+     *            no security officer password. Must not be null.
+     * @param userPW A callback to obtain the new password for this token.
+     *            Must not be null.
+     * @exception IncorrectPasswordException If the supplied security officer
+     *                password is incorrect.
+     * @exception AlreadyInitializedException If the token only allows one
+     *                password initialization, and it has already occurred.
      * @exception TokenException If an error occurs on the token.
-	 */
-	public abstract void
-	initPassword(PasswordCallback securityOfficerPW, PasswordCallback userPW)
-		throws IncorrectPasswordException, AlreadyInitializedException,
-		TokenException;
+     */
+    public abstract void initPassword(PasswordCallback securityOfficerPW, PasswordCallback userPW)
+            throws IncorrectPasswordException, AlreadyInitializedException,
+            TokenException;
 
-	/**
-	 * Determine whether the password has been initialized yet.  Some tokens
-	 * (such as the Netscape Internal Key Token) don't allow initializing
-	 * the PIN more than once.
+    /**
+     * Determine whether the password has been initialized yet. Some tokens
+     * (such as the Netscape Internal Key Token) don't allow initializing
+     * the PIN more than once.
      *
      * @exception TokenException If an error occurs on the token.
-	 */
-	public abstract boolean
-	passwordIsInitialized() throws TokenException;
+     */
+    public abstract boolean passwordIsInitialized() throws TokenException;
 
     /**
      * Change the password of this token.
      *
      * @exception IncorrectPasswordException If the supplied old password is
-     *      incorrect.
+     *                incorrect.
      * @param oldpw A callback (which could be just a Password) to retrieve
-     *      the current password.
+     *            the current password.
      * @param newpw A callback (which could be just a Password) to retrieve
-     *      the new password.
+     *            the new password.
      */
-    public abstract void
-    changePassword(PasswordCallback oldpw, PasswordCallback newpw)
-        throws IncorrectPasswordException, TokenException;
+    public abstract void changePassword(PasswordCallback oldpw, PasswordCallback newpw)
+            throws IncorrectPasswordException, TokenException;
 
     /**
      * Obtain the nickname, or label, of this token.
