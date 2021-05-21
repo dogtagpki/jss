@@ -231,6 +231,7 @@ public class JSSSocket extends SSLSocket {
      *
      * @see java.net.Socket#getChannel()
      */
+    @Override
     public JSSSocketChannel getChannel() {
         if (parent.getChannel() == null) {
             return null;
@@ -260,6 +261,7 @@ public class JSSSocket extends SSLSocket {
      *
      * @see java.net.Socket#getInputStream()
      */
+    @Override
     public InputStream getInputStream() throws IOException {
         if (channel == null) {
             init();
@@ -273,6 +275,7 @@ public class JSSSocket extends SSLSocket {
      *
      * @see java.net.Socket#getOutputStream()
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         if (channel == null) {
             init();
@@ -888,15 +891,18 @@ public class JSSSocket extends SSLSocket {
 
     /* == stubs for Java 9 Socket == */
 
+    @Override
     public <T> Socket setOption(SocketOption<T> name, T value) throws IOException {
         getInternalChannel().setOption(name, value);
         return this;
     }
 
+    @Override
     public <T> T getOption(SocketOption<T> name) throws IOException {
         return getInternalChannel().getOption(name);
     }
 
+    @Override
     public Set<SocketOption<?>> supportedOptions() {
         return getInternalChannel().supportedOptions();
     }

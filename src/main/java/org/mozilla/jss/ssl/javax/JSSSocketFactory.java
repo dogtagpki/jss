@@ -24,6 +24,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         trust_managers = tms;
     }
 
+    @Override
     public String[] getDefaultCipherSuites() {
         SSLCipher[] ciphers = JSSEngine.queryEnabledCipherSuites();
         String[] result = new String[ciphers.length];
@@ -35,11 +36,13 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return result;
     }
 
+    @Override
     public String[] getSupportedCipherSuites() {
         JSSEngineReferenceImpl engine = new JSSEngineReferenceImpl();
         return engine.getSupportedCipherSuites();
     }
 
+    @Override
     public JSSSocket createSocket() throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(new Socket());
@@ -51,6 +54,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSSocket createSocket(InetAddress host, int port) throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(new Socket(host, port));
@@ -62,6 +66,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSSocket createSocket(InetAddress host, int port, InetAddress localAddress, int localPort) throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(new Socket(host, port, localAddress, localPort));
@@ -73,6 +78,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSSocket createSocket(String host, int port) throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(new Socket(host, port));
@@ -84,6 +90,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSSocket createSocket(String host, int port, InetAddress localAddress, int localPort) throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(new Socket(host, port, localAddress, localPort));
@@ -95,6 +102,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSSocket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(s);
@@ -107,6 +115,7 @@ public class JSSSocketFactory extends SSLSocketFactory {
         return ret;
     }
 
+    @Override
     public JSSSocket createSocket(Socket s, InputStream consumed, boolean autoClose) throws IOException {
         JSSSocket ret = new JSSSocket();
         ret.consumeSocket(s);

@@ -409,6 +409,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
+    @Override
     protected void reconfigureClientAuth() {
         if (ssl_fd == null || !as_server) {
             return;
@@ -601,6 +602,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         } catch (Exception e) {}
     }
 
+    @Override
     public void beginHandshake() throws SSLException {
         debug("JSSEngine: beginHandshake()");
 
@@ -690,6 +692,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         returned_finished = false;
     }
 
+    @Override
     public void closeInbound() {
         debug("JSSEngine: closeInbound()");
 
@@ -703,6 +706,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         is_inbound_closed = true;
     }
 
+    @Override
     public void closeOutbound() {
         debug("JSSEngine: closeOutbound()");
 
@@ -720,6 +724,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         return hostname;
     }
 
+    @Override
     public Runnable getDelegatedTask() {
         debug("JSSEngine: getDelegatedTask()");
 
@@ -801,6 +806,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         return true;
     }
 
+    @Override
     public SSLEngineResult.HandshakeStatus getHandshakeStatus() {
         debug("JSSEngine: getHandshakeStatus()");
 
@@ -820,6 +826,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         return handshake_state;
     }
 
+    @Override
     public SecurityStatusResult getStatus() {
         if (ssl_fd == null) {
             return null;
@@ -1123,6 +1130,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
+    @Override
     public SSLEngineResult unwrap(ByteBuffer src, ByteBuffer[] dsts, int offset, int length) throws IllegalArgumentException, SSLException {
         debug("JSSEngine: unwrap(ssl_fd=" + ssl_fd + ")");
 
@@ -1397,6 +1405,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
+    @Override
     public SSLEngineResult wrap(ByteBuffer[] srcs, int offset, int length, ByteBuffer dst) throws IllegalArgumentException, SSLException {
         debug("JSSEngine: wrap(ssl_fd=" + ssl_fd + ")");
         // In this method, we're taking the application data from the various
@@ -1569,6 +1578,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * This prevents accidental cleanup in the case of a partially open
      * connection.
      */
+    @Override
     public void tryCleanup() {
         debug("JSSEngine: tryCleanup()");
         if (is_inbound_closed && is_outbound_closed) {
@@ -1581,6 +1591,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * Performs cleanup of internal data, closing both inbound and outbound
      * data streams if still open.
      */
+    @Override
     public void cleanup() {
         debug("JSSEngine: cleanup()");
 
@@ -1723,6 +1734,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             return null;
         }
 
+        @Override
         public int check(SSLFDProxy fd) {
             // Needs to be available for assignException() below.
             PK11Cert[] chain = null;
@@ -1815,6 +1827,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             super(fd, error);
         }
 
+        @Override
         public int check(SSLFDProxy fd, int error) {
             // NSS enforces strict hostname verification via the SSL_SetURL
             // function call. Java doesn't pass this information to either
