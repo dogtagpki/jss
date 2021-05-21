@@ -19,6 +19,7 @@ import org.mozilla.jss.asn1.Tag;
 
 public class Extension implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -49,10 +50,12 @@ public class Extension implements ASN1Value {
         this.extnValue = extnValue;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicit, OutputStream ostream) throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
@@ -82,16 +85,19 @@ public class Extension implements ASN1Value {
             seqt.addElement( OCTET_STRING.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag t) {
             return TAG.equals(t);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {

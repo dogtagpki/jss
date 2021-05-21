@@ -65,16 +65,19 @@ public class SubjectKeyIdentifier extends Extension {
             seqt.addElement( OCTET_STRING.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag t) {
             return TAG.equals(t);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {
