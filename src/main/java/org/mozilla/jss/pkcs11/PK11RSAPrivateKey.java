@@ -19,10 +19,12 @@ public class PK11RSAPrivateKey
         super(pointer);
     }
 
+    @Override
     public PrivateKey.Type getType() {
         return PrivateKey.Type.RSA;
     }
 
+    @Override
     public BigInteger getModulus() {
         logger.debug("PK11RSAPrivateKey: getModulus()");
         return new BigInteger(1, getModulusByteArray());

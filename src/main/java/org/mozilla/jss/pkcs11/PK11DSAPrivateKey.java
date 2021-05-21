@@ -18,6 +18,7 @@ public class PK11DSAPrivateKey
         super(pointer);
     }
 
+    @Override
     public PrivateKey.Type getType() {
         return PrivateKey.Type.DSA;
     }
@@ -25,6 +26,7 @@ public class PK11DSAPrivateKey
     /**
      * If this fails, we just return null, since no exceptions are allowed.
      */
+    @Override
     public DSAParams getParams() {
       try {
         return getDSAParams();
@@ -37,6 +39,7 @@ public class PK11DSAPrivateKey
      * Not implemented. NSS doesn't support extracting private key material
      * like this.
      */
+    @Override
     public BigInteger getX() {
         return null;
     }

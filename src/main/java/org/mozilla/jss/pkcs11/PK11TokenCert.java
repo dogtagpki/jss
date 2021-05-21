@@ -11,10 +11,12 @@ import org.mozilla.jss.crypto.*;
  */
 public final class PK11TokenCert extends PK11Cert implements TokenCertificate
 {
+    @Override
     public byte[] getUniqueID() {
         return super.getUniqueID();
     }
 
+    @Override
     public CryptoToken getOwningToken() {
         return super.getOwningToken();
     }

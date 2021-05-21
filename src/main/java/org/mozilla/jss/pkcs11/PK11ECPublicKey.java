@@ -16,6 +16,7 @@ public final class PK11ECPublicKey extends PK11PubKey implements ECPublicKey {
         super(pointer);
     }
 
+    @Override
     public ECParameterSpec getParams() {
         byte[] curveData = getCurveByteArray();
         return EC.decodeNSSOID(curveData);
@@ -25,6 +26,7 @@ public final class PK11ECPublicKey extends PK11PubKey implements ECPublicKey {
         return getCurveByteArray();
     }
 
+    @Override
     public ECPoint getW() {
         byte[] pointData = getWByteArray();
         return EC.decodeNSSPoint(pointData);

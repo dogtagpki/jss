@@ -26,6 +26,7 @@ public final class PK11SymKey implements SymmetricKey {
     private SymKeyProxy keyProxy;
     private String nickName;
 
+    @Override
     public SymmetricKey.Type getType() {
         KeyType kt = getKeyType();
 
@@ -37,6 +38,7 @@ public final class PK11SymKey implements SymmetricKey {
         return result;
     }
 
+    @Override
     public native CryptoToken getOwningToken();
 
     /**
@@ -48,6 +50,7 @@ public final class PK11SymKey implements SymmetricKey {
      * this method will correctly return 56, but for a PBE-generated DES key,
      * the security library bug causes it to return 64.
      */
+    @Override
     public native int getStrength();
 
 
@@ -55,17 +58,21 @@ public final class PK11SymKey implements SymmetricKey {
      * Returns the length of the key in bytes, as returned by
      * PK11_GetKeyLength().
      */
+    @Override
     public native int getLength();
 
+    @Override
     public native byte[] getKeyData()
         throws SymmetricKey.NotExtractableException;
 
     public native KeyType getKeyType();
 
+    @Override
     public String getAlgorithm() {
         return getKeyType().toString();
     }
 
+    @Override
     public byte[] getEncoded() {
         try {
             return getKeyData();
@@ -74,14 +81,17 @@ public final class PK11SymKey implements SymmetricKey {
         }
     }
 
+    @Override
     public String getFormat() {
         return "RAW";
     }
 
+    @Override
     public String getNickName() {
         return nickName;
     }
 
+    @Override
     public void setNickName(String nickName) {
         this.nickName = nickName;
 
@@ -99,8 +109,10 @@ class SymKeyProxy extends KeyProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 
+    @Override
     protected void finalize() throws Throwable {
         super.finalize();
     }

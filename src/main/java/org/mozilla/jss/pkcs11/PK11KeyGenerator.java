@@ -61,6 +61,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.token = token;
         this.algorithm = algorithm;
         charToByte = new KeyGenerator.CharToByteConverter() {
+            @Override
             public byte[] convert(char[] chars) throws CharConversionException {
                 return UTF8Converter.UnicodeToUTF8(chars);
             }
@@ -72,6 +73,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * Sets the character to byte converter for passwords. The default
      * conversion is UTF8 with no null termination.
      */
+    @Override
     public void setCharToByteConverter(
                     KeyGenerator.CharToByteConverter charToByte)
     {
@@ -84,6 +86,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
     /**
      * @param strength Key size in bits. Must be evenly divisible by 8.
      */
+    @Override
     public void initialize(int strength)
         throws InvalidAlgorithmParameterException
     {
@@ -111,6 +114,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.strength = strength;
     }
 
+    @Override
     public void initialize(AlgorithmParameterSpec parameters)
         throws InvalidAlgorithmParameterException
     {
@@ -125,6 +129,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.parameters = parameters;
     }
 
+    @Override
     public void setKeyUsages(SymmetricKey.Usage[] usages)
     {
         this.opFlags = 0;
@@ -139,11 +144,13 @@ public final class PK11KeyGenerator implements KeyGenerator {
         this.opFlags = opFlags;
     }
 
+    @Override
     public void temporaryKeys(boolean temp)
     {
         this.temporaryKeyMode = temp;
     }
 
+    @Override
     public void sensitiveKeys(boolean sensitive)
     {
         this.sensitiveKeyMode = sensitive ? 1 : 0;
@@ -153,6 +160,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * Generates the key. This is the public interface, the actual
      * work is done by native methods.
      */
+    @Override
     public SymmetricKey generate()
         throws IllegalStateException, TokenException, CharConversionException
     {
@@ -221,6 +229,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * @return The initialization vector derived from the password and salt
      *      using the PBE algorithm.
      */
+    @Override
     public byte[] generatePBE_IV()
         throws TokenException, CharConversionException
     {
@@ -266,6 +275,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * @exception InvalidKeyException If the owning token cannot process
      *      the key to be cloned.
      */
+    @Override
     public SymmetricKey clone(SymmetricKey key)
         throws SymmetricKey.NotExtractableException,
             InvalidKeyException, TokenException

@@ -37,12 +37,15 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
      *
      * @return The PK11Token that owns this key.
      */
+    @Override
     public native CryptoToken getOwningToken();
 
+    @Override
     public native byte[] getUniqueID() throws TokenException;
 
     public native KeyType getKeyType();
 
+    @Override
     public PrivateKey.Type getType() {
         KeyType kt = getKeyType();
 
@@ -56,6 +59,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
 	}
     }
 
+    @Override
     public String getAlgorithm() {
         return getType().toString();
     }
@@ -64,6 +68,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
      * Returns the size in bits of the modulus of an RSA Private key.
      * Returns -1 for other types of keys.
      */
+    @Override
     public native int getStrength();
 
     /**
@@ -135,5 +140,6 @@ class PrivateKeyProxy extends KeyProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 }

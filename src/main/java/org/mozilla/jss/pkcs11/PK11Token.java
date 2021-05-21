@@ -69,6 +69,7 @@ public final class PK11Token implements CryptoToken {
     ////////////////////////////////////////////////////
     //  public routines
     ////////////////////////////////////////////////////
+    @Override
     public org.mozilla.jss.crypto.Signature
     getSignatureContext(SignatureAlgorithm algorithm)
             throws NoSuchAlgorithmException, TokenException
@@ -78,6 +79,7 @@ public final class PK11Token implements CryptoToken {
                 new PK11Signature(this, algorithm) );
     }
 
+    @Override
     public JSSMessageDigest
     getDigestContext(DigestAlgorithm algorithm)
             throws NoSuchAlgorithmException,
@@ -90,6 +92,7 @@ public final class PK11Token implements CryptoToken {
         return new PK11MessageDigest(this, algorithm);
     }
 
+    @Override
     public Cipher
     getCipherContext(EncryptionAlgorithm algorithm)
             throws NoSuchAlgorithmException, TokenException
@@ -101,6 +104,7 @@ public final class PK11Token implements CryptoToken {
         return new PK11Cipher(this, algorithm);
     }
 
+    @Override
     public KeyGenerator
     getKeyGenerator(KeyGenAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
@@ -123,6 +127,7 @@ public final class PK11Token implements CryptoToken {
      * @exception InvalidKeyException If the owning token cannot process
      *      the key to be cloned.
      */
+    @Override
     public SymmetricKey cloneKey(SymmetricKey key)
         throws SymmetricKey.NotExtractableException,
             InvalidKeyException, TokenException
@@ -130,11 +135,13 @@ public final class PK11Token implements CryptoToken {
         return PK11KeyGenerator.clone(key, this);
     }
 
+    @Override
     public PK11SymmetricKeyDeriver getSymmetricKeyDeriver()
     {
          return new PK11SymmetricKeyDeriver(this);
     }
 
+    @Override
     public KeyWrapper
     getKeyWrapper(KeyWrapAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
@@ -156,6 +163,7 @@ public final class PK11Token implements CryptoToken {
         throw new NotImplementedException();
     }
 
+    @Override
     public org.mozilla.jss.crypto.KeyPairGenerator
     getKeyPairGenerator(KeyPairAlgorithm algorithm)
             throws NoSuchAlgorithmException, TokenException
@@ -165,8 +173,10 @@ public final class PK11Token implements CryptoToken {
                 new PK11KeyPairGenerator(this, algorithm));
     }
 
+    @Override
     public native boolean isLoggedIn() throws TokenException;
 
+    @Override
     public native boolean needsLogin() throws TokenException;
 
 
@@ -181,6 +191,7 @@ public final class PK11Token implements CryptoToken {
      * @exception IncorrectPasswordException The specified password
      *      was incorrect.
      */
+    @Override
     public void login(PasswordCallback callback)
         throws NotInitializedException, IncorrectPasswordException,
 			TokenException
@@ -207,6 +218,7 @@ public final class PK11Token implements CryptoToken {
      * This would return false, for example, for a smart card reader
      * that didn't have a card inserted.
      */
+    @Override
     public native boolean isPresent();
 
     /**
@@ -215,14 +227,19 @@ public final class PK11Token implements CryptoToken {
      * @exception TokenException If you are already logged in, or an
      *  unspecified error occurs.
      */
+    @Override
     public native void logout() throws TokenException;
 
+    @Override
     public native int getLoginMode() throws TokenException;
 
+    @Override
     public native void setLoginMode(int mode) throws TokenException;
 
+    @Override
     public native int getLoginTimeoutMinutes() throws TokenException;
 
+    @Override
     public native void setLoginTimeoutMinutes(int timeoutMinutes)
             throws TokenException;
 
@@ -247,6 +264,7 @@ public final class PK11Token implements CryptoToken {
      * @exception TokenException If the PIN was already initialized,
      *  or there was an unspecified error in the token.
      */
+    @Override
     public void initPassword(PasswordCallback ssopwcb,
 		PasswordCallback userpwcb)
         throws IncorrectPasswordException, AlreadyInitializedException,
@@ -327,7 +345,8 @@ public final class PK11Token implements CryptoToken {
 	/**
 	 * Determine whether the token has been initialized yet.
 	 */
-	public native boolean
+	@Override
+    public native boolean
 	passwordIsInitialized() throws TokenException;
 
     /**
@@ -340,6 +359,7 @@ public final class PK11Token implements CryptoToken {
      * @exception TokenException If some other error occurs on the token.
      *
      */
+    @Override
     public void changePassword(PasswordCallback oldPINcb,
 			PasswordCallback newPINcb)
         throws IncorrectPasswordException, TokenException
@@ -411,6 +431,7 @@ public final class PK11Token implements CryptoToken {
     protected native void changePassword(byte[] oldPIN, byte[] newPIN)
         throws IncorrectPasswordException, TokenException;
 
+    @Override
     public native String getName();
 
 	public java.security.Provider
@@ -418,7 +439,8 @@ public final class PK11Token implements CryptoToken {
 	    throw new RuntimeException("PK11Token.getProvider() is not yet implemented");
 	}
 
-	public CryptoStore
+	@Override
+    public CryptoStore
 	getCryptoStore() {
 		return cryptoStore;
 	}
@@ -439,6 +461,7 @@ public final class PK11Token implements CryptoToken {
      * @return true if these tokens point to the same underlying native token.
      *  false otherwise, or if <code>compare</code> is null.
      */
+    @Override
     public boolean equals(Object obj) {
         if(obj==null) {
             return false;
@@ -456,6 +479,7 @@ public final class PK11Token implements CryptoToken {
 	 * Determines whether this token is capable of performing the given
 	 * algorithm.
 	 */
+    @Override
     public native boolean doesAlgorithm(Algorithm alg);
 
 	/**
@@ -469,7 +493,8 @@ public final class PK11Token implements CryptoToken {
 	 * @return String that represents a PKCS#10 b64 encoded blob with
 	 * begin/end brackets
 	 */
-	public String generateCertRequest(String subject, int keysize,
+	@Override
+    public String generateCertRequest(String subject, int keysize,
 											 String keyType,
 											 byte[] P, byte[] Q,
 											 byte[] G)
@@ -580,6 +605,7 @@ public final class PK11Token implements CryptoToken {
         return mIsInternalKeyStorageToken;
     }
 
+    @Override
     public native void importPublicKey(
             PublicKey pubKey,
             boolean permanent)

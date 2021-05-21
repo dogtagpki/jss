@@ -53,6 +53,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         this.algorithm = algorithm;
     }
 
+    @Override
     public void initWrap(SymmetricKey wrappingKey,
                     AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -62,6 +63,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         this.symKey = wrappingKey;
     }
 
+    @Override
     public void initWrap(PublicKey wrappingKey,
                             AlgorithmParameterSpec parameters)
             throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -71,6 +73,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         this.pubKey = wrappingKey;
     }
 
+    @Override
     public void initWrap()
             throws InvalidKeyException, InvalidAlgorithmParameterException
     {
@@ -93,6 +96,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         state = WRAP;
     }
 
+    @Override
     public void initUnwrap(PrivateKey unwrappingKey,
                     AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -102,6 +106,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         this.privKey = unwrappingKey;
     }
 
+    @Override
     public void initUnwrap(SymmetricKey unwrappingKey,
                     AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -111,6 +116,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         this.symKey = unwrappingKey;
     }
 
+    @Override
     public void initUnwrap()
         throws InvalidKeyException, InvalidAlgorithmParameterException
     {
@@ -233,6 +239,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         return params;
     }
 
+    @Override
     public byte[]
     wrap(PrivateKey toBeWrapped)
         throws InvalidKeyException, IllegalStateException, TokenException
@@ -262,6 +269,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         }
     }
 
+    @Override
     public byte[]
     wrap(SymmetricKey toBeWrapped)
         throws InvalidKeyException, IllegalStateException, TokenException
@@ -375,6 +383,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
      * A permanent private key object resides on a token until it is
      * explicitly deleted from the token.
      */
+    @Override
     public PrivateKey
     unwrapPrivate(byte[] wrapped, PrivateKey.Type type, PublicKey publicKey)
         throws TokenException, InvalidKeyException, IllegalStateException
@@ -388,6 +397,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
      * private key is one that does not permanently reside on a token.
      * As soon as it is garbage-collected, it is gone forever.
      */
+    @Override
     public PrivateKey
     unwrapTemporaryPrivate(byte[] wrapped, PrivateKey.Type type,
         PublicKey publicKey)
@@ -485,6 +495,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
     }
 
 
+    @Override
     public SymmetricKey
     unwrapSymmetric(byte[] wrapped, SymmetricKey.Type type,
         SymmetricKey.Usage usage, int keyLen)
@@ -494,6 +505,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         return unwrapSymmetric(wrapped, type, usage.ordinal(), keyLen);
     }
 
+    @Override
     public SymmetricKey
     unwrapSymmetric(byte[] wrapped, SymmetricKey.Type type, int keyLen)
         throws TokenException, IllegalStateException,
@@ -502,6 +514,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         return unwrapSymmetric(wrapped, type, -1, keyLen);
     }
 
+    @Override
     public SymmetricKey
     unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type,
         SymmetricKey.Usage usage, int keyLen)
@@ -511,6 +524,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         return unwrapSymmetricPerm(wrapped, type, usage.ordinal(), keyLen);
     }
 
+    @Override
     public SymmetricKey
     unwrapSymmetricPerm(byte[] wrapped, SymmetricKey.Type type, int keyLen)
         throws TokenException, IllegalStateException,

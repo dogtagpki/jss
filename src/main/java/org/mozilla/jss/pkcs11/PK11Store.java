@@ -43,17 +43,20 @@ public final class PK11Store implements CryptoStore {
      * @exception TokenException If the key cannot be imported to this token.
      * @exception KeyAlreadyImportedException If the key already on this token.
      */
+    @Override
     public PrivateKey
     importPrivateKey(byte[] key, PrivateKey.Type type)
             throws TokenException,KeyAlreadyImportedException {
         return importPrivateKey(key, type, false);
     }
 
+    @Override
     public native PrivateKey
     importPrivateKey(
         byte[] key, PrivateKey.Type type, boolean temporary)
         throws TokenException,KeyAlreadyImportedException;
 
+    @Override
     public synchronized PrivateKey[] getPrivateKeys() throws TokenException {
 
         ArrayList<PrivateKey> list = new ArrayList<>();
@@ -67,6 +70,7 @@ public final class PK11Store implements CryptoStore {
 
     protected native void loadPrivateKeys(Collection<PrivateKey> privateKeys) throws TokenException;
 
+    @Override
     public synchronized PublicKey[] getPublicKeys() throws TokenException {
 
         ArrayList<PublicKey> list = new ArrayList<>();
@@ -80,6 +84,7 @@ public final class PK11Store implements CryptoStore {
 
     protected native void loadPublicKeys(Collection<PublicKey> privateKeys) throws TokenException;
 
+    @Override
     public PublicKey findPublicKey(PrivateKey privateKey) throws TokenException, ObjectNotFoundException {
 
         // NSS does not provide a function to find the public key of a private key,
@@ -118,6 +123,7 @@ public final class PK11Store implements CryptoStore {
         throw new ObjectNotFoundException("Unable to find public key");
     }
 
+    @Override
     public synchronized SymmetricKey[]
     getSymmetricKeys() throws TokenException {
 
@@ -131,12 +137,15 @@ public final class PK11Store implements CryptoStore {
     protected native void putSymKeysInVector(Vector<SymmetricKey> symKeys) throws TokenException;
 
 
+    @Override
     public native void deletePrivateKey(PrivateKey privateKey)
         throws NoSuchItemOnTokenException, TokenException;
 
+    @Override
     public native void deletePublicKey(PublicKey publicKey)
             throws NoSuchItemOnTokenException, TokenException;
 
+    @Override
     public byte[] getEncryptedPrivateKeyInfo(
             X509Certificate cert,
             PBEAlgorithm pbeAlg,
@@ -153,6 +162,7 @@ public final class PK11Store implements CryptoStore {
         );
     }
 
+    @Override
     public native byte[] getEncryptedPrivateKeyInfo(
         KeyGenerator.CharToByteConverter conv,
         Password pw,
@@ -160,6 +170,7 @@ public final class PK11Store implements CryptoStore {
         int n,
         PrivateKey k);
 
+    @Override
     public native void importEncryptedPrivateKeyInfo(
         KeyGenerator.CharToByteConverter conv,
         Password pw,
@@ -171,6 +182,7 @@ public final class PK11Store implements CryptoStore {
     // Certs
     ////////////////////////////////////////////////////////////
 
+    @Override
     public X509Certificate[]
     getCertificates() throws TokenException
     {
@@ -192,6 +204,7 @@ public final class PK11Store implements CryptoStore {
      */
 	// Currently have to use PK11_DeleteTokenObject + PK11_FindObjectForCert
 	// or maybe SEC_DeletePermCertificate.
+    @Override
     public native void deleteCert(X509Certificate cert)
         throws NoSuchItemOnTokenException, TokenException;
 
@@ -202,6 +215,7 @@ public final class PK11Store implements CryptoStore {
      * @exception NoSuchItemOnTokenException If the certificate not found
      * @exception TokenException General token error
      */
+    @Override
     public native void deleteCertOnly(X509Certificate cert)
         throws NoSuchItemOnTokenException, TokenException;
 

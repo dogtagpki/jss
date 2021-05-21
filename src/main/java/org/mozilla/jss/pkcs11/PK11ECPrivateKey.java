@@ -19,10 +19,12 @@ public class PK11ECPrivateKey
         super(pointer);
     }
 
+    @Override
     public PrivateKey.Type getType() {
         return PrivateKey.Type.EC;
     }
 
+    @Override
     public ECParameterSpec getParams() {
         PK11PubKey publicKey = getPublicKey();
         if (!(publicKey instanceof PK11ECPublicKey)) {
@@ -37,6 +39,7 @@ public class PK11ECPrivateKey
      * Not implemented. NSS doesn't support extracting private key material
      * like this.
      */
+    @Override
     public BigInteger getS() {
         return null;
     }

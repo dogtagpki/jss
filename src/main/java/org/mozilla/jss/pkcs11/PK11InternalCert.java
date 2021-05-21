@@ -26,6 +26,7 @@ public class PK11InternalCert extends PK11Cert
      * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
      *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
+    @Override
     public void setSSLTrust(int trust)
     {
         super.setTrust(SSL, trust);
@@ -37,6 +38,7 @@ public class PK11InternalCert extends PK11Cert
      * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
      *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
+    @Override
     public void setEmailTrust(int trust)
     {
         super.setTrust(EMAIL, trust);
@@ -48,6 +50,7 @@ public class PK11InternalCert extends PK11Cert
      * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
      *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
+    @Override
     public void setObjectSigningTrust(int trust)
     {
         super.setTrust(OBJECT_SIGNING, trust);
@@ -59,6 +62,7 @@ public class PK11InternalCert extends PK11Cert
      * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
      *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
+    @Override
     public int getSSLTrust()
     {
         return super.getTrust(SSL);
@@ -70,6 +74,7 @@ public class PK11InternalCert extends PK11Cert
      * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
      *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
+    @Override
     public int getEmailTrust()
     {
         return super.getTrust(EMAIL);
@@ -81,6 +86,7 @@ public class PK11InternalCert extends PK11Cert
      * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
      *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
+    @Override
     public int getObjectSigningTrust()
     {
         return super.getTrust(OBJECT_SIGNING);

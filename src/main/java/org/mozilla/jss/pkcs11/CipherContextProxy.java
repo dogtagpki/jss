@@ -11,8 +11,10 @@ final class CipherContextProxy extends NativeProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 
+    @Override
     protected void finalize() throws Throwable {
       super.finalize();
     }
