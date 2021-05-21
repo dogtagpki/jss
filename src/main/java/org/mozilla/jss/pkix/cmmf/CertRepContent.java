@@ -90,14 +90,17 @@ public class CertRepContent implements ASN1Value {
     }
 
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
