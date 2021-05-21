@@ -214,6 +214,7 @@ public class PKCS8Key implements PrivateKey {
     /**
      * Returns the algorithm to be used with this key.
      */
+    @Override
     public String getAlgorithm() {
         return algid.getName();
     }
@@ -235,6 +236,7 @@ public class PKCS8Key implements PrivateKey {
     /**
      * Returns the DER-encoded form of the key as a byte array.
      */
+    @Override
     public synchronized byte[] getEncoded() {
         byte[] result = null;
         try {
@@ -247,6 +249,7 @@ public class PKCS8Key implements PrivateKey {
     /**
      * Returns the format for this key: "PKCS#8"
      */
+    @Override
     public String getFormat() {
         return "PKCS#8";
     }
@@ -276,6 +279,7 @@ public class PKCS8Key implements PrivateKey {
     /*
      * Returns a printable representation of the key
      */
+    @Override
     public String toString() {
         org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
                 new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
@@ -386,6 +390,7 @@ public class PKCS8Key implements PrivateKey {
      * @return <code>true</code> if this key has the same encoding as the
      *         object argument; <code>false</code> otherwise.
      */
+    @Override
     public boolean equals(Object object) {
         if (this == object) {
             return true;
@@ -423,6 +428,7 @@ public class PKCS8Key implements PrivateKey {
      * Calculates a hash code value for this object. Objects
      * which are equal will also have the same hashcode.
      */
+    @Override
     public int hashCode() {
         int retval = 0;
         byte[] b1 = getEncoded();

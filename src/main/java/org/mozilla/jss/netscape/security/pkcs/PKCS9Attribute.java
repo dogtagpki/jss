@@ -759,6 +759,7 @@ public class PKCS9Attribute implements DerEncoder {
      * N.B.: This method always encodes values of ChallengePassword and UnstructuredAddress attributes as ASN.1
      * <code>PrintableString</code>s, without checking whether they should be encoded as <code>T61String</code>s.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         try (DerOutputStream temp = new DerOutputStream();
              DerOutputStream temp2 = new DerOutputStream();
@@ -1034,6 +1035,7 @@ public class PKCS9Attribute implements DerEncoder {
     /**
      * Returns a string representation of this attribute.
      */
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer(100);
 

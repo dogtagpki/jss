@@ -147,6 +147,7 @@ public class SignerInfo implements DerEncoder {
      *
      * @exception IOException on encoding error.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         try (DerOutputStream tmp = new DerOutputStream()) {
             DerOutputStream seq = new DerOutputStream();
@@ -317,6 +318,7 @@ public class SignerInfo implements DerEncoder {
         return unauthenticatedAttributes;
     }
 
+    @Override
     public String toString() {
         org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
                 new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);

@@ -502,6 +502,7 @@ public class PKCS7 {
     /**
      * Returns the PKCS7 block in a printable string form.
      */
+    @Override
     public String toString() {
         StringBuffer out = new StringBuffer("PKCS7 :: version: " + version + "\n");
 

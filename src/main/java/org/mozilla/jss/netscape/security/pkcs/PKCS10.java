@@ -349,6 +349,7 @@ public class PKCS10 {
     /**
      * Provides a short description of this request.
      */
+    @Override
     public String toString() {
         return "[PKCS #10 certificate request:\n"
                 + subjectPublicKeyInfo.toString()

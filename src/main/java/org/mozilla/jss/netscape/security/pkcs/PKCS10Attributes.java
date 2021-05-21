@@ -96,6 +96,7 @@ public class PKCS10Attributes extends Vector<PKCS10Attribute> implements DerEnco
      * @param out the OutputStream to marshal the contents to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void derEncode(OutputStream out)
             throws IOException {
         try (DerOutputStream attrOut = new DerOutputStream()) {
