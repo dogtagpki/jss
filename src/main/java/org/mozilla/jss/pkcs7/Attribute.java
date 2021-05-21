@@ -31,6 +31,7 @@ public class Attribute implements ASN1Value {
     private SET values;
 
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -59,10 +60,12 @@ public class Attribute implements ASN1Value {
         return values;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicit, OutputStream ostream)
         throws IOException
     {
@@ -83,16 +86,19 @@ public class Attribute implements ASN1Value {
  */
 public static class Template implements ASN1Template {
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
         return decode(TAG, istream);
     }
 
+    @Override
     public ASN1Value decode(Tag implicit, InputStream istream)
         throws IOException, InvalidBERException
     {

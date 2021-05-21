@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 public class EnvelopedData implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -54,10 +55,12 @@ public class EnvelopedData implements ASN1Value {
         sequence.addElement(encryptedContentInfo);
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(),ostream);
     }
 
+    @Override
     public void encode(Tag tag, OutputStream ostream) throws IOException {
         sequence.encode(tag,ostream);
     }
@@ -73,16 +76,19 @@ public class EnvelopedData implements ASN1Value {
             return EnvelopedData.TAG;
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return (tag.equals(EnvelopedData.TAG));
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(getTag(),istream);
             }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
             {
