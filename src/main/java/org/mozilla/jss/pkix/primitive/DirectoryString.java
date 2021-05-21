@@ -92,18 +92,22 @@ public class DirectoryString implements ASN1Value {
     /**
      * Converts an ASN.1 DirectoryString to a Java string.
      */
+    @Override
     public String toString() {
         return asn1String.toString();
     }
 
+    @Override
     public Tag getTag() {
         return asn1String.getTag();
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         asn1String.encode(ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -133,10 +137,12 @@ public class DirectoryString implements ASN1Value {
             choicet.addElement( UniversalString.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
@@ -151,6 +157,7 @@ public class DirectoryString implements ASN1Value {
          * @exception InvalidBERException If the encoding does not contain a
          *      valid DirectoryString.
          */
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
         {
