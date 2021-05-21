@@ -44,7 +44,8 @@ public class Base64OutputStream extends FilterOutputStream {
 	}
 		
 
-	public void write(int oneByte) throws IOException {
+	@Override
+    public void write(int oneByte) throws IOException {
 		input[inputCount++] = (byte)(0xff & oneByte);
 		if(inputCount==3) {
 			outputOneAtom();
@@ -62,7 +63,8 @@ public class Base64OutputStream extends FilterOutputStream {
 	/**
 	 * This flushes the stream and closes the next stream downstream.
 	 */
-	public void close() throws IOException {
+	@Override
+    public void close() throws IOException {
 		flush();
 		out.close();
 	}
@@ -72,7 +74,8 @@ public class Base64OutputStream extends FilterOutputStream {
 	 * so don't call it until you have no data left.  The class does no
 	 * unnecessary buffering, so you probably shouldn't call it at all.
 	 */
-	public void flush() throws IOException {
+	@Override
+    public void flush() throws IOException {
 		if(inputCount > 0) {
 			outputOneAtom();
 		}
@@ -82,11 +85,13 @@ public class Base64OutputStream extends FilterOutputStream {
 		}
 	}
 
-	public void write(byte[] buffer) throws IOException {
+	@Override
+    public void write(byte[] buffer) throws IOException {
 		write(buffer, 0, buffer.length);
 	}
 
-	public void write(byte[] buffer, int offset, int count) throws IOException {
+	@Override
+    public void write(byte[] buffer, int offset, int count) throws IOException {
 		int i;
 		int byteCount;
 
