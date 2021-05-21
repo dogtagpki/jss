@@ -61,6 +61,7 @@ public abstract class BadCertHandler implements Runnable {
      */
     public abstract int check(SSLFDProxy fd, int error);
 
+    @Override
     public void run() {
         try {
             result = check(ssl_fd, error);

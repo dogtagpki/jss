@@ -52,6 +52,7 @@ public abstract class CertAuthHandler implements Runnable {
      */
     public abstract int check(SSLFDProxy fd);
 
+    @Override
     public void run() {
         try {
             result = check(ssl_fd);
