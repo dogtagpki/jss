@@ -125,6 +125,7 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
             "The PBEKeySpec in JCE 1.2.1 and earlier does NOT work.");
     }
 
+    @Override
     public SecretKey
     engineGenerateSecret(KeySpec spec) throws InvalidKeySpecException
     {
@@ -185,6 +186,7 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
       }
     }
 
+    @Override
     public KeySpec engineGetKeySpec(SecretKey key, Class<?> keySpec)
             throws InvalidKeySpecException
     {
@@ -223,6 +225,7 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
       }
     }
 
+    @Override
     public SecretKey engineTranslateKey(SecretKey key)
         throws InvalidKeyException
     {

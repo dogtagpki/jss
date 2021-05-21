@@ -10,6 +10,7 @@ public class JSSKeyManagerFactory extends KeyManagerFactorySpi {
     private KeyStore internalStorage;
     char[] password;
 
+    @Override
     protected void engineInit(KeyStore ks, char[] password) throws KeyStoreException {
         if (password != null) {
             engineInitCryptoManager(password);
@@ -54,12 +55,14 @@ public class JSSKeyManagerFactory extends KeyManagerFactorySpi {
         }
     }
 
+    @Override
     protected void engineInit(ManagerFactoryParameters spec) {
         // There is nothing we can do here, so exit without initializing
         // anything. In the future, we can provide a method to return
         // multiple token-specific KeyManagers.
     }
 
+    @Override
     protected KeyManager[] engineGetKeyManagers() {
         KeyManager[] kms = new KeyManager[1];
         kms[0] = new JSSTokenKeyManager(internalStorage, password);

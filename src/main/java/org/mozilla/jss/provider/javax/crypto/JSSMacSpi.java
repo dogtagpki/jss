@@ -46,10 +46,12 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
       }
     }
 
+    @Override
     public int engineGetMacLength() {
         return alg.getOutputSize();
     }
 
+    @Override
     public void engineInit(Key key, AlgorithmParameterSpec params)
         throws InvalidKeyException, InvalidAlgorithmParameterException
     {
@@ -96,6 +98,7 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
       }
     }
 
+    @Override
     public void engineUpdate(byte input) {
       try {
         digest.update(input);
@@ -104,6 +107,7 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
       }
     }
 
+    @Override
     public void engineUpdate(byte[] input, int offset, int len) {
       try {
         digest.update(input, offset, len);
@@ -112,6 +116,7 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
       }
     }
 
+    @Override
     public byte[] engineDoFinal() {
       try {
         return digest.digest();
@@ -120,6 +125,7 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
       }
     }
 
+    @Override
     public void engineReset() {
       try {
         digest.reset();
@@ -128,6 +134,7 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
       }
     }
 
+    @Override
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }

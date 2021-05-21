@@ -36,6 +36,7 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
       }
     }
 
+    @Override
     protected void engineInit(int keysize,  SecureRandom random)
             throws InvalidParameterException
     {
@@ -46,6 +47,7 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
       }
     }
 
+    @Override
     protected void engineInit( SecureRandom random)
             throws InvalidParameterException
     {
@@ -53,6 +55,7 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
         // are no arguments.
     }
 
+    @Override
     protected void engineInit(AlgorithmParameterSpec params,
                     SecureRandom random)
         throws InvalidAlgorithmParameterException
@@ -60,6 +63,7 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
         keyGenerator.initialize(params);
     }
 
+    @Override
     protected SecretKey engineGenerateKey() {
       try {
         return new SecretKeyFacade( keyGenerator.generate() );
