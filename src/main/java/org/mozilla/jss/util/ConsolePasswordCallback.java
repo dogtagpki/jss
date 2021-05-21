@@ -10,6 +10,7 @@ package org.mozilla.jss.util;
  */
 public class ConsolePasswordCallback implements PasswordCallback {
     public ConsolePasswordCallback() {}
+    @Override
     public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
         throws PasswordCallback.GiveUpException
     {
@@ -17,6 +18,7 @@ public class ConsolePasswordCallback implements PasswordCallback {
         return Password.readPasswordFromConsole();
     }
 
+    @Override
     public Password getPasswordAgain(PasswordCallbackInfo token)
         throws PasswordCallback.GiveUpException
     {

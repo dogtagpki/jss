@@ -18,6 +18,7 @@ public class StaticVoidPointer extends NativeProxy
         super(pointer, false);
     }
 
+    @Override
     protected void releaseNativeResources() {
         /* Do nothing: this is a static pointer that doesn't need freeing. */
     }

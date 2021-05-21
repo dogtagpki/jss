@@ -74,6 +74,7 @@ public abstract class NativeProxy implements AutoCloseable
      *      pointer. false if the <code>obj</code> is null or has
      *      a different underlying native pointer.
      */
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -98,6 +99,7 @@ public abstract class NativeProxy implements AutoCloseable
      * we construct it up front based on an incrementing counter and cache it
      * throughout the lifetime of this object.
      */
+    @Override
     public int hashCode() {
         return mHashCode;
     }
@@ -132,6 +134,7 @@ public abstract class NativeProxy implements AutoCloseable
      * @deprecated finalize() in Object has been deprecated. Use close(...)
      * from the AutoCloseable interface instead.
      */
+    @Override
     @Deprecated
     protected void finalize() throws Throwable {
         close();
@@ -143,6 +146,7 @@ public abstract class NativeProxy implements AutoCloseable
      *
      * See comment in finalize.
      */
+    @Override
     public final void close() throws Exception {
         try {
             if (mPointer != null) {
@@ -201,6 +205,7 @@ public abstract class NativeProxy implements AutoCloseable
     static Set<NativeProxy> registry = Collections.newSetFromMap(new WeakHashMap<NativeProxy, Boolean>());
     static AtomicInteger registryIndex = new AtomicInteger();
 
+    @Override
     public String toString() {
         if (mPointer == null) {
             return this.getClass().getName() + "[" + mHashCode + "@null]";

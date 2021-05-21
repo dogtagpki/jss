@@ -65,6 +65,7 @@ public class Password implements PasswordCallback, Cloneable,
      * @return A copy of the password.  The caller is responsible for
      *  clearing this copy.
      */
+    @Override
     public synchronized Password
 	getPasswordFirstAttempt(PasswordCallbackInfo info)
         throws PasswordCallback.GiveUpException {
@@ -78,7 +79,8 @@ public class Password implements PasswordCallback, Cloneable,
 	 * Compares this password to another and returns true if they
 	 * 	are the same.
 	 */
-	public synchronized boolean
+	@Override
+    public synchronized boolean
 	equals(Object obj) {
 		if(obj == null || !(obj instanceof Password)) {
 			return false;
@@ -106,6 +108,7 @@ public class Password implements PasswordCallback, Cloneable,
      * password.  This means the password is incorrect and there's no
      * sense returning it again, so a <code>GiveUpException</code> is thrown.
      */
+    @Override
     public synchronized Password
 	getPasswordAgain(PasswordCallbackInfo info)
         throws PasswordCallback.GiveUpException {
@@ -159,6 +162,7 @@ public class Password implements PasswordCallback, Cloneable,
      * Clones the password.  The resulting clone will be completely independent
      * of the parent, which means it will have to be separately cleared.
      */
+    @Override
     public synchronized Object clone() {
         Password dolly = new Password();
 
@@ -175,6 +179,7 @@ public class Password implements PasswordCallback, Cloneable,
      *
      * @deprecated finalize() in Object has been deprecated
      */
+    @Override
     @Deprecated
     protected void finalize() throws Throwable {
 

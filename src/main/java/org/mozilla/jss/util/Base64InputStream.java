@@ -66,6 +66,7 @@ public class Base64InputStream extends FilterInputStream {
         super(in);
     }
 
+    @Override
     public long skip(long n) throws IOException {
         long count = 0;
         while( (count < n) && (read() != -1) ) {
@@ -162,10 +163,12 @@ public class Base64InputStream extends FilterInputStream {
         return ret;
     }
 
+    @Override
     public int read() throws IOException {
         return read(true);
     }
 
+    @Override
     public int read(byte[] b, int off, int len) throws IOException {
         int count = 0;
 
@@ -196,26 +199,31 @@ public class Base64InputStream extends FilterInputStream {
         return count;
     }
 
+    @Override
     public int available() throws IOException {
         // We really don't know how much is left. in.available() could all
         // be whitespace.
         return 0;
     }
 
+    @Override
     public boolean markSupported() {
         return in.markSupported();
     }
 
+    @Override
     public void mark(int readlimit) {
         in.mark(readlimit);
         savedPrev = prev;
         savedState = state;
     }
 
+    @Override
     public void close() throws IOException {
         in.close();
     }
 
+    @Override
     public void reset() throws IOException {
         in.reset();
         prev = savedPrev;
