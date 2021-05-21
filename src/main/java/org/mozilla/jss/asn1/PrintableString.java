@@ -15,6 +15,7 @@ public class PrintableString extends CharacterString implements ASN1Value {
         super(s);
     }
 
+    @Override
     CharConverter getCharConverter() {
         return new PrintableConverter();
     }
@@ -22,6 +23,7 @@ public class PrintableString extends CharacterString implements ASN1Value {
     public static final Tag TAG = new Tag( Tag.UNIVERSAL, 19 );
     public static final Form FORM = Form.PRIMITIVE;
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -39,24 +41,29 @@ public class PrintableString extends CharacterString implements ASN1Value {
 public static class Template
     extends CharacterString.Template implements ASN1Template
 {
+    @Override
     protected Tag getTag() {
         return TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
 
+    @Override
     protected CharConverter getCharConverter() {
         return new PrintableConverter();
     }
 
+    @Override
     protected CharacterString generateInstance(char[] chars)
         throws CharConversionException
     {
         return new PrintableString(chars);
     }
 
+    @Override
     protected String typeName() {
         return "PrintableString";
     }
@@ -90,6 +97,7 @@ private static class PrintableConverter implements CharConverter {
         isPrintable['?'] = true;
     }
 
+    @Override
     public char[] byteToChar(byte[] bytes, int offset, int len)
         throws CharConversionException
     {
@@ -109,6 +117,7 @@ private static class PrintableConverter implements CharConverter {
         return chars;
     }
 
+    @Override
     public byte[] charToByte(char[] chars, int offset, int len)
         throws CharConversionException
     {

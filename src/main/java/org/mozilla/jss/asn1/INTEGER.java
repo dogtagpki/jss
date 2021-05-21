@@ -62,15 +62,18 @@ public class INTEGER extends BigInteger implements ASN1Value {
     }
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 2);
+    @Override
     public Tag getTag() {
         return TAG;
     }
     public static final Form FORM = Form.PRIMITIVE;
 
+    @Override
     public void encode(OutputStream outStream) throws IOException {
         encode(getTag(), outStream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream outStream)
         throws IOException
     {
@@ -189,10 +192,12 @@ public static class Template implements ASN1Template {
     Tag getTag() {
         return INTEGER.TAG;
     }
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals(INTEGER.TAG));
     }
 
+    @Override
     public ASN1Value
     decode(InputStream derStream)
         throws InvalidBERException, IOException
@@ -200,6 +205,7 @@ public static class Template implements ASN1Template {
         return decode( getTag(), derStream );
     }
 
+    @Override
     public ASN1Value
     decode(Tag tag, InputStream derStream)
         throws InvalidBERException, IOException

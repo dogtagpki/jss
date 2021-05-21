@@ -62,6 +62,7 @@ public class ANY implements ASN1Value {
     /**
      * Returns the tag of this value.
      */
+    @Override
     public Tag getTag() {
         return tag;
     }
@@ -118,6 +119,7 @@ public class ANY implements ASN1Value {
       }
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         ostream.write(encoded);
     }
@@ -167,6 +169,7 @@ public class ANY implements ASN1Value {
      * ANY values cannot have implicit tags.
      * @throws IOException If an error occurred.
      */
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -213,11 +216,13 @@ public class ANY implements ASN1Value {
  */
 public static class Template implements ASN1Template {
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return true; // wheeeeee...it's ANY!
 
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -260,6 +265,7 @@ public static class Template implements ASN1Template {
       }
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

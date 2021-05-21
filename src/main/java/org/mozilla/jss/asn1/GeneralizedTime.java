@@ -11,6 +11,7 @@ import java.util.Date;
 public class GeneralizedTime extends TimeBase implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 24);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -23,6 +24,7 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
         super(date);
     }
 
+    @Override
     protected boolean isUTC() {
         return false;
     }
@@ -39,18 +41,22 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
     public static class Template extends TimeBase.Template
         implements ASN1Template
     {
+        @Override
         protected Tag getTag() {
             return TAG;
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         protected boolean isUTC() {
             return false;
         }
 
+        @Override
         protected TimeBase generateInstance(Date date) {
             return new GeneralizedTime(date);
         }

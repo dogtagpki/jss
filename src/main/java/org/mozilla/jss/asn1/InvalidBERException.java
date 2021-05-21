@@ -40,6 +40,7 @@ public class InvalidBERException extends java.lang.Exception {
         sb.append(getMessage());
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append( this.getClass().getName() );

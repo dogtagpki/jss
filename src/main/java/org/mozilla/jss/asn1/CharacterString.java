@@ -16,6 +16,7 @@ public abstract class CharacterString implements ASN1Value {
 
     abstract CharConverter getCharConverter();
 
+    @Override
     public abstract Tag getTag();
     static final Form FORM = Form.PRIMITIVE;
 
@@ -25,6 +26,7 @@ public abstract class CharacterString implements ASN1Value {
      * Converts this ASN.1 character string to a Java String.
      * @return ASN.1 character string as String.
      */
+    @Override
     public String toString() {
         return new String(chars);
     }
@@ -61,10 +63,12 @@ public abstract class CharacterString implements ASN1Value {
         return contents;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode( getTag(), ostream );
     }
 
+    @Override
     public void encode( Tag implicitTag, OutputStream ostream )
         throws IOException
     {
@@ -84,6 +88,7 @@ public abstract static class Template implements ASN1Template {
      */
     protected abstract Tag getTag();
 
+    @Override
     public abstract boolean tagMatch(Tag tag);
 
     /**
@@ -110,12 +115,14 @@ public abstract static class Template implements ASN1Template {
      */
     protected abstract String typeName();
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
         return decode(getTag(), istream);
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

@@ -15,12 +15,14 @@ public class IA5String extends CharacterString implements ASN1Value {
         super(s);
     }
 
+    @Override
     CharConverter getCharConverter() {
         return new IA5Converter();
     }
 
     public static final Tag TAG = new Tag( Tag.Class.UNIVERSAL, 22 );
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -34,23 +36,28 @@ public class IA5String extends CharacterString implements ASN1Value {
 public static class Template
     extends CharacterString.Template implements ASN1Template
 {
+    @Override
     public Tag getTag() {
         return IA5String.TAG;
     }
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals( IA5String.TAG ));
     }
 
+    @Override
     protected CharConverter getCharConverter() {
         return new IA5Converter();
     }
 
+    @Override
     protected CharacterString generateInstance(char[] chars)
         throws CharConversionException
     {
         return new IA5String(chars);
     }
 
+    @Override
     protected String typeName() {
         return "IA5String";
     }
@@ -59,6 +66,7 @@ public static class Template
 // nested class
 private static class IA5Converter implements CharConverter {
 
+    @Override
     public char[] byteToChar(byte[] bytes, int offset, int len)
         throws CharConversionException
     {
@@ -76,6 +84,7 @@ private static class IA5Converter implements CharConverter {
         return chars;
     }
 
+    @Override
     public byte[] charToByte(char[] chars, int offset, int len)
         throws CharConversionException
     {

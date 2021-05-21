@@ -35,6 +35,7 @@ public class BMPString extends CharacterString implements ASN1Value {
      * array an an array of Java characters.
      * @return Character converter.
      */
+    @Override
     CharConverter getCharConverter() {
         return converterInstance;
     }
@@ -43,6 +44,7 @@ public class BMPString extends CharacterString implements ASN1Value {
     static final Tag TAG = new Tag( Tag.UNIVERSAL, 30 );
     static final Form FORM = Form.PRIMITIVE;
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -61,24 +63,29 @@ public class BMPString extends CharacterString implements ASN1Value {
 public static class Template
     extends CharacterString.Template implements ASN1Template
 {
+    @Override
     protected Tag getTag() {
         return TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
 
+    @Override
     protected CharConverter getCharConverter() {
         return new BMPConverter();
     }
 
+    @Override
     protected CharacterString generateInstance(char[] chars)
         throws CharConversionException
     {
         return new BMPString(chars);
     }
 
+    @Override
     protected String typeName() {
         return "BMPString";
     }
@@ -86,6 +93,7 @@ public static class Template
 
 private static class BMPConverter implements CharConverter {
 
+    @Override
     public char[] byteToChar(byte[] bytes, int offset, int len)
         throws CharConversionException
     {
@@ -99,6 +107,7 @@ private static class BMPConverter implements CharConverter {
         }
     }
 
+    @Override
     public byte[] charToByte(char[] chars, int offset, int len)
         throws CharConversionException
     {
