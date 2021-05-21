@@ -88,6 +88,7 @@ public final class DSAPrivateKey extends PKCS8Key
      * Returns the DSA parameters associated with this key, or null if the
      * parameters could not be parsed.
      */
+    @Override
     public DSAParams getParams() {
         try {
             if (algid instanceof DSAParams) {
@@ -108,6 +109,7 @@ public final class DSAPrivateKey extends PKCS8Key
      * Get the raw private key, x, without the parameters.
      *
      */
+    @Override
     public BigInteger getX() {
         return x;
     }
@@ -126,11 +128,13 @@ public final class DSAPrivateKey extends PKCS8Key
         }
     }
 
+    @Override
     public String toString() {
         return "Sun DSA Private Key \nparameters:" + algid + "\nx: " +
                 x.toString(16) + "\n";
     }
 
+    @Override
     protected void parseKeyBits() throws InvalidKeyException {
         DerInputStream in = new DerInputStream(key);
 

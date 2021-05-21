@@ -37,6 +37,7 @@ public final class CMS extends Provider {
         super("CMS", 1.0, INFO);
 
         AccessController.doPrivileged(new java.security.PrivilegedAction<Object>() {
+            @Override
             public Object run() {
                 /*
                 * Certificates
