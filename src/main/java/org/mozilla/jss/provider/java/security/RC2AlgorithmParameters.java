@@ -19,10 +19,12 @@ public class RC2AlgorithmParameters extends AlgorithmParametersSpi {
 
     private RC2ParameterSpec RC2ParamSpec;
 
+    @Override
     public void engineInit(AlgorithmParameterSpec paramSpec) {
         RC2ParamSpec = (RC2ParameterSpec) paramSpec;
     }
 
+    @Override
     public <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> clazz)
             throws InvalidParameterSpecException
     {
@@ -34,22 +36,27 @@ public class RC2AlgorithmParameters extends AlgorithmParametersSpi {
         return clazz.cast(RC2ParamSpec);
     }
 
+    @Override
     public void engineInit(byte[] params) throws IOException {
         throw new IOException("engineInit(byte[]) not supported");
     }
 
+    @Override
     public void engineInit(byte[] params, String format) throws IOException {
         throw new IOException("engineInit(byte[],String) not supported");
     }
 
+    @Override
     public byte[] engineGetEncoded() throws IOException {
         throw new IOException("encoding RC2AlgorithmParameters not supported");
     }
 
+    @Override
     public byte[] engineGetEncoded(String format) throws IOException {
         throw new IOException("encoding RC2AlgorithmParameters not supported");
     }
 
+    @Override
     public String engineToString() {
         String str = new String("Mozilla-JSS RC2AlgorithmParameters " +  getClass().getName());
         return str;

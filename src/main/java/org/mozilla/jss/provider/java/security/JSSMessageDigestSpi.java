@@ -47,10 +47,12 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
         }
     }
 
+    @Override
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
 
+    @Override
     public byte[] engineDigest() {
       try {
         return digest.digest();
@@ -59,16 +61,19 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
       }
     }
 
+    @Override
     public int engineDigest(byte[] buf, int offset, int len)
         throws DigestException
     {
         return digest.digest(buf, offset, len);
     }
 
+    @Override
     public int engineGetDigestLength() {
         return digest.getOutputSize();
     }
 
+    @Override
     public void engineReset() {
       try {
         digest.reset();
@@ -77,6 +82,7 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
       }
     }
 
+    @Override
     public void engineUpdate(byte input) {
       try {
         digest.update(input);
@@ -85,6 +91,7 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
       }
     }
 
+    @Override
     public void engineUpdate(byte[] input, int offset, int len) {
       try {
         digest.update(input,offset,len);

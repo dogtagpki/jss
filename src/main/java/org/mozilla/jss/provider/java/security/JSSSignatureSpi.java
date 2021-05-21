@@ -31,10 +31,12 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         this.alg = alg;
     }
 
+    @Override
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
 
+    @Override
     public void engineInitSign(java.security.PrivateKey privateKey,
         SecureRandom random) throws InvalidKeyException
     {
@@ -42,6 +44,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         engineInitSign(privateKey);
     }
 
+    @Override
     public void engineInitSign(java.security.PrivateKey privateKey)
         throws InvalidKeyException
     {
@@ -77,6 +80,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         return token.getSignatureContext(alg);
     }
 
+    @Override
     public void engineInitVerify(PublicKey publicKey)
         throws InvalidKeyException
     {
@@ -113,6 +117,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         }
     }
 
+    @Override
     public void engineUpdate(byte b)
         throws SignatureException
     {
@@ -123,6 +128,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         }
     }
 
+    @Override
     public void engineUpdate(byte[] b, int off, int len)
         throws SignatureException
     {
@@ -133,6 +139,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         }
     }
 
+    @Override
     public byte[] engineSign() throws SignatureException {
         try {
             return sig.sign();
@@ -141,6 +148,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         }
     }
 
+    @Override
     public int engineSign(byte[] outbuf, int offset, int len)
         throws SignatureException
     {
@@ -151,6 +159,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         }
     }
 
+    @Override
     public boolean engineVerify(byte[] sigBytes) throws SignatureException {
         try {
             return sig.verify(sigBytes);
@@ -159,12 +168,14 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         }
     }
 
+    @Override
     public void engineSetParameter(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException
     {
         paramSpec = params;
     }
 
+    @Override
     public Object engineGetParameter(String param)
             throws InvalidParameterException
     {
@@ -172,6 +183,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
             "name/value parameters not supported");
     }
 
+    @Override
     public void engineSetParameter(String param, Object value)
             throws InvalidParameterException
     {

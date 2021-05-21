@@ -40,16 +40,19 @@ public class JSSKeyPairGeneratorSpi
         }
     }
 
+    @Override
     public void initialize(AlgorithmParameterSpec params,
         SecureRandom random) throws InvalidAlgorithmParameterException
     {
         kpg.initialize(params, random);
     }
 
+    @Override
     public void initialize(int keysize, SecureRandom random) {
         kpg.initialize(keysize, random);
     }
 
+    @Override
     public KeyPair generateKeyPair()  {
       try {
         return kpg.genKeyPair();
