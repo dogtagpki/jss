@@ -28,10 +28,12 @@ public class CertOrEncCert implements ASN1Value {
     }
 
     public static final Tag TAG = new Tag(0);
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         ostream.write(encoding);
     }
@@ -40,6 +42,7 @@ public class CertOrEncCert implements ASN1Value {
      * @param implicitTag <b>This parameter is ignored</b>, because a CHOICE
      *  cannot have an implicit tag.
      */
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
