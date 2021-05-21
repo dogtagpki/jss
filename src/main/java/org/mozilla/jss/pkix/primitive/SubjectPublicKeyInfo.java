@@ -24,6 +24,7 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
     private AlgorithmIdentifier algorithm;
     private BIT_STRING subjectPublicKey;
 
+    @Override
     public String getAlgorithm() {
         try {
             return PrivateKey.Type.fromOID(algorithm.getOID()).toString();
@@ -33,6 +34,7 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
         }
     }
 
+    @Override
     public byte[] getEncoded() {
         return ASN1Util.encode(this);
     }
@@ -68,14 +70,17 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
 
     public static final Tag TAG = SEQUENCE.TAG;
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicit, OutputStream ostream)
         throws IOException
     {
@@ -120,16 +125,19 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
             seqt.addElement( BIT_STRING.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {
