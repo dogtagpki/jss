@@ -193,14 +193,17 @@ public class Certificate implements ASN1Value
     }
 
     private static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -224,16 +227,19 @@ public class Certificate implements ASN1Value
             seqt.addElement( BIT_STRING.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws InvalidBERException, IOException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws InvalidBERException, IOException
         {
