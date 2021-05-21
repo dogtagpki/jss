@@ -73,6 +73,7 @@ class DerInputBuffer extends ByteArrayInputStream implements Cloneable {
      * Compares this DerInputBuffer for equality with the specified
      * object.
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof DerInputBuffer)
             return equals((DerInputBuffer) other);

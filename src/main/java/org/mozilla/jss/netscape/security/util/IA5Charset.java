@@ -10,14 +10,17 @@ public class IA5Charset extends Charset {
         super("ASN.1-IA5", null);
     }
 
+    @Override
     public boolean contains(Charset cs) {
         return false;
     }
 
+    @Override
     public CharsetDecoder newDecoder() {
         return new IA5CharsetDecoder(this);
     }
 
+    @Override
     public CharsetEncoder newEncoder() {
         return new IA5CharsetEncoder(this);
     }
