@@ -127,6 +127,7 @@ public class TaggedRequest implements ASN1Value {
     // DER decoding/encoding
     ///////////////////////////////////////////////////////////////////////
 
+    @Override
     public Tag getTag() {
         if( type == PKCS10 ) {
             return Tag.get(0);
@@ -138,6 +139,7 @@ public class TaggedRequest implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
 
         if( type == PKCS10 ) {
@@ -159,6 +161,7 @@ public class TaggedRequest implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
 				//Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
@@ -195,10 +198,12 @@ public class TaggedRequest implements ASN1Value {
             choicet.addElement( Tag.get(2), OtherReqMsg.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
@@ -224,6 +229,7 @@ public class TaggedRequest implements ASN1Value {
             }
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
 					//Assert.notReached("A CHOICE cannot be implicitly tagged");

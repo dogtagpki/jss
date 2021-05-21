@@ -132,6 +132,7 @@ public class BodyPartReference implements ASN1Value {
     // decoding/encoding
     ///////////////////////////////////////////////////////////////////////
 
+    @Override
     public Tag getTag() {
         //return the subType's tag
         if (type == BodyPartID ) {
@@ -142,6 +143,7 @@ public class BodyPartReference implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         if (type == BodyPartID ) {
             bodyPartID.encode(ostream);
@@ -151,6 +153,7 @@ public class BodyPartReference implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -176,10 +179,12 @@ public class BodyPartReference implements ASN1Value {
             choicet.addElement( new SEQUENCE.OF_Template(INTEGER.getTemplate()) );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
@@ -192,6 +197,7 @@ public class BodyPartReference implements ASN1Value {
             }
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
             //A CHOICE cannot be implicitly tagged

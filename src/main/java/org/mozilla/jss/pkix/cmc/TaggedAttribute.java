@@ -95,14 +95,17 @@ public class TaggedAttribute implements ASN1Value {
     // DER encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicit, OutputStream ostream)
         throws IOException
     {
@@ -128,17 +131,20 @@ public class TaggedAttribute implements ASN1Value {
         }
 
 
-		public boolean tagMatch(Tag tag) {
+		@Override
+        public boolean tagMatch(Tag tag) {
 			return TAG.equals(tag);
 		}
 
-		public ASN1Value decode(InputStream istream)
+		@Override
+        public ASN1Value decode(InputStream istream)
 			 throws IOException, InvalidBERException
 		{
 			return decode(TAG, istream);
 		}
 
-		public ASN1Value decode(Tag implicit, InputStream istream)
+		@Override
+        public ASN1Value decode(Tag implicit, InputStream istream)
 			 throws IOException, InvalidBERException
 		{
 			SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
