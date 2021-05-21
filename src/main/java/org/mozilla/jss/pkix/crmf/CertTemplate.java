@@ -330,10 +330,12 @@ public class CertTemplate implements ASN1Value {
     }
 
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
@@ -358,6 +360,7 @@ public class CertTemplate implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(Tag t, OutputStream ostream) throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
@@ -403,6 +406,7 @@ public class CertTemplate implements ASN1Value {
      */
     public static class Template implements ASN1Template {
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
@@ -411,12 +415,14 @@ public class CertTemplate implements ASN1Value {
          * Decodes a <i>CertTemplate</i> from its BER encoding.  The return
          * value of this method
          */
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {

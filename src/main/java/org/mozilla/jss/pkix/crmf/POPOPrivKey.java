@@ -140,6 +140,7 @@ public class POPOPrivKey implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
 
+    @Override
     public Tag getTag() {
         if(type == THIS_MESSAGE) {
             return Tag.get(0);
@@ -151,6 +152,7 @@ public class POPOPrivKey implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         if(type == THIS_MESSAGE) {
             thisMessage.encode(Tag.get(0), ostream);
@@ -166,6 +168,7 @@ public class POPOPrivKey implements ASN1Value {
      * Should not be called, because POPOPrivKey is a CHOICE and cannot have
      * an implicit tag.
      */
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
         throw new RuntimeException("POPOPrivKey is a CHOICE and cannot have an implicit tag");
@@ -192,6 +195,7 @@ public class POPOPrivKey implements ASN1Value {
             choicet.addElement( Tag.get(2), BIT_STRING.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
@@ -200,12 +204,14 @@ public class POPOPrivKey implements ASN1Value {
          * Should not be called, because POPOPrivKey is a CHOICE and cannot
          * have an implicit tag.
          */
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
             throw new RuntimeException("POPOPrivKey is a CHOICE and cannot have an implicitTag");
             // return decode(istream);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
 

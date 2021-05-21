@@ -124,14 +124,17 @@ public class PKIPublicationInfo implements ASN1Value {
 
     private static final Tag TAG = SEQUENCE.TAG;
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
         SEQUENCE seq = new SEQUENCE();
@@ -166,15 +169,18 @@ public class PKIPublicationInfo implements ASN1Value {
             seqt.addOptionalElement( new SEQUENCE.OF_Template(pubInfot) );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);

@@ -81,14 +81,17 @@ public class EncryptedKey implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private Tag tag; // set by constructor based on type
+    @Override
     public Tag getTag() {
         return tag;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(), ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
 
@@ -124,10 +127,12 @@ public class EncryptedKey implements ASN1Value {
             choicet.addElement( new Tag(0), ANY.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
           try {
@@ -150,6 +155,7 @@ public class EncryptedKey implements ASN1Value {
          * @param implicitTag This parameter is ignored, because a CHOICE
          *      cannot have an implicitTag.
          */
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
             throw new RuntimeException("EncryptedKey, being a CHOICE, cannot be"+
