@@ -129,6 +129,7 @@ public class Extensions extends Vector<Extension>
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue val = new DerValue(in);
         DerInputStream str = val.toDerInputStream();
@@ -149,6 +150,7 @@ public class Extensions extends Vector<Extension>
      * @exception CertificateException on encoding errors.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
         DerOutputStream extOut = new DerOutputStream();
@@ -175,6 +177,7 @@ public class Extensions extends Vector<Extension>
      * @param obj the object to set.
      * @exception IOException if the object could not be cached.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         map.put(name, (Extension) obj);
         addElement((Extension) obj);
@@ -186,6 +189,7 @@ public class Extensions extends Vector<Extension>
      * @param name the extension name used in the lookup.
      * @exception IOException if named extension is not found.
      */
+    @Override
     public Object get(String name) throws IOException {
         Object obj = map.get(name);
         if (obj == null) {
@@ -200,6 +204,7 @@ public class Extensions extends Vector<Extension>
      * @param name the extension name used in the lookup.
      * @exception IOException if named extension is not found.
      */
+    @Override
     public void delete(String name) throws IOException {
         Object obj = map.get(name);
         if (obj == null) {
@@ -213,6 +218,7 @@ public class Extensions extends Vector<Extension>
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         return map.keys();
     }
@@ -220,6 +226,7 @@ public class Extensions extends Vector<Extension>
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

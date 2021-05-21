@@ -126,6 +126,7 @@ public class SubjectKeyIdentifierExtension extends Extension
     /**
      * Returns a printable representation.
      */
+    @Override
     public String toString() {
         if (id == null)
             return "";
@@ -140,6 +141,7 @@ public class SubjectKeyIdentifierExtension extends Extension
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -157,6 +159,7 @@ public class SubjectKeyIdentifierExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -164,6 +167,7 @@ public class SubjectKeyIdentifierExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         clearValue();
         if (name.equalsIgnoreCase(KEY_ID)) {
@@ -181,6 +185,7 @@ public class SubjectKeyIdentifierExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(KEY_ID)) {
             return (id);
@@ -193,6 +198,7 @@ public class SubjectKeyIdentifierExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(KEY_ID)) {
             id = null;
@@ -206,6 +212,7 @@ public class SubjectKeyIdentifierExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(KEY_ID);
@@ -216,6 +223,7 @@ public class SubjectKeyIdentifierExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

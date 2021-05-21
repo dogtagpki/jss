@@ -150,6 +150,7 @@ public class CertException extends SecurityException {
     /**
      * Returns a string describing the certificate exception.
      */
+    @Override
     public String toString() {
         return "[Certificate Exception: " + getMessage() + "]";
     }
@@ -157,6 +158,7 @@ public class CertException extends SecurityException {
     /**
      * Returns a string describing the certificate exception.
      */
+    @Override
     public String getMessage() {
         return getVerfDescription()
                 + ((moreData != null)

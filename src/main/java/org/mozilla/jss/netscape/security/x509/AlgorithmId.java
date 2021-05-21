@@ -328,6 +328,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      *
      * @exception IOException on encoding error.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         try (DerOutputStream tmp = new DerOutputStream()) {
             DerOutputStream bytes = new DerOutputStream();
@@ -631,6 +632,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * Use toStringWithParams() for algorithm name and paramaters, or
      * paramsToString() for just parameters.
      */
+    @Override
     public String toString() {
         return algName();
     }
@@ -695,6 +697,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      *
      * @param other preferably an AlgorithmId, else an ObjectIdentifier
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof AlgorithmId)
             return equals((AlgorithmId) other);

@@ -51,6 +51,7 @@ public class CPSuri extends Qualifier {
      * @param out the DerOutputStream to write the object to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         out.putIA5String(mURI);
     }

@@ -115,6 +115,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
         this.extensions = crlEntryExts;
     }
 
+    @Override
     public byte[] getEncoded() throws CRLException {
         // XXX NOT IMPLEMENTED
         if (revokedCert == null) {
@@ -129,6 +130,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
         return revokedCert;
     }
 
+    @Override
     public boolean hasUnsupportedCriticalExtension() {
         // XXX NOT IMPLEMENTED
         return true;
@@ -185,6 +187,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      *
      * @return true if this CRL entry has extensions, otherwise false.
      */
+    @Override
     public boolean hasExtensions() {
         if (extensions == null)
             return false;
@@ -252,6 +255,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      *
      * @return the serial number.
      */
+    @Override
     public BigInteger getSerialNumber() {
         return serialNumber.getNumber().toBigInteger();
     }
@@ -261,6 +265,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      *
      * @return the revocation date.
      */
+    @Override
     public Date getRevocationDate() {
         return (new Date(revocationDate.getTime()));
     }
@@ -270,6 +275,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      *
      * @return the CRLExtensions
      */
+    @Override
     public CRLExtensions getExtensions() {
         return extensions;
     }
@@ -279,6 +285,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      *
      * @return value of this revoked certificate in a printable form.
      */
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer(serialNumber.toString() + "  On: " + revocationDate.toString());
 
@@ -299,6 +306,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      * @return a set of the extension oid strings in the
      *         Object that are marked critical.
      */
+    @Override
     public Set<String> getCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
@@ -319,6 +327,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      * @return a set of the extension oid strings in the
      *         Object that are marked critical.
      */
+    @Override
     public Set<String> getNonCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
@@ -344,6 +353,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      * @param oid the Object Identifier value for the extension.
      * @return the DER encoded octet string of the extension value.
      */
+    @Override
     public byte[] getExtensionValue(String oid) {
         if (extensions == null)
             return null;

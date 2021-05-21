@@ -143,6 +143,7 @@ public class IssuerAlternativeNameExtension
     /**
      * Returns a printable representation of the IssuerAlternativeName.
      */
+    @Override
     public String toString() {
         if (names == null)
             return "";
@@ -157,6 +158,7 @@ public class IssuerAlternativeNameExtension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -167,6 +169,7 @@ public class IssuerAlternativeNameExtension
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding error.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -181,6 +184,7 @@ public class IssuerAlternativeNameExtension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         clearValue();
         if (name.equalsIgnoreCase(ISSUER_NAME)) {
@@ -198,6 +202,7 @@ public class IssuerAlternativeNameExtension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(ISSUER_NAME)) {
             return (names);
@@ -210,6 +215,7 @@ public class IssuerAlternativeNameExtension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(ISSUER_NAME)) {
             names = null;
@@ -223,6 +229,7 @@ public class IssuerAlternativeNameExtension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(ISSUER_NAME);
@@ -233,6 +240,7 @@ public class IssuerAlternativeNameExtension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

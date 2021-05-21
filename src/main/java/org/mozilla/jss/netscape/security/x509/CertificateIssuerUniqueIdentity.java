@@ -96,6 +96,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Return the identity as user readable string.
      */
+    @Override
     public String toString() {
         if (id == null)
             return "";
@@ -108,6 +109,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue val = new DerValue(in);
         id = new UniqueIdentity(val);
@@ -119,6 +121,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
      * @param out the DerOutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         id.encode(tmp, DerValue.createTag(DerValue.TAG_CONTEXT, false, (byte) 1));
@@ -129,6 +132,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof UniqueIdentity)) {
             throw new IOException("Attribute must be of type UniqueIdentity.");
@@ -144,6 +148,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(ID)) {
             return (id);
@@ -156,6 +161,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(ID)) {
             id = null;
@@ -169,6 +175,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(ID);
@@ -179,6 +186,7 @@ public class CertificateIssuerUniqueIdentity implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

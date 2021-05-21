@@ -183,6 +183,7 @@ public class PolicyConstraintsExtension extends Extension
     /**
      * Return the extension as user readable string.
      */
+    @Override
     public String toString() {
         String s;
         s = super.toString() + "PolicyConstraints: [" + "  Require: ";
@@ -205,6 +206,7 @@ public class PolicyConstraintsExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -215,6 +217,7 @@ public class PolicyConstraintsExtension extends Extension
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -228,6 +231,7 @@ public class PolicyConstraintsExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         clearValue();
         if (!(obj instanceof Integer)) {
@@ -247,6 +251,7 @@ public class PolicyConstraintsExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(REQUIRE)) {
             return Integer.valueOf(require);
@@ -261,6 +266,7 @@ public class PolicyConstraintsExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(REQUIRE)) {
             require = -1;
@@ -276,6 +282,7 @@ public class PolicyConstraintsExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(REQUIRE);
@@ -287,6 +294,7 @@ public class PolicyConstraintsExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

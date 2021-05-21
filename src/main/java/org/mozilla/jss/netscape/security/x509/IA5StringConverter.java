@@ -54,11 +54,13 @@ public class IA5StringConverter implements AVAValueConverter {
      * @exception IOException	if a IA5String encoder is not
      *				available for the conversion.
      */
+    @Override
     public DerValue getValue(String valueString)
             throws IOException {
         return getValue(valueString, null);
     }
 
+    @Override
     public DerValue getValue(String valueString, byte[] tags) throws IOException {
         try {
             CharsetEncoder encoder = ASN1CharStrConvMap.getDefault().getEncoder(DerValue.tag_IA5String);
@@ -89,6 +91,7 @@ public class IA5StringConverter implements AVAValueConverter {
      * @exception IOException   if the BER value cannot be converted
      *				to a IA5String DER value.
      */
+    @Override
     public DerValue getValue(byte[] berStream)
             throws IOException {
         DerValue value = new DerValue(berStream);
@@ -111,6 +114,7 @@ public class IA5StringConverter implements AVAValueConverter {
      *				The DerValue cannot be converted to a string
      *				with IA5String characters.
      */
+    @Override
     public String getAsString(DerValue avaValue)
             throws IOException {
         if (avaValue.tag == DerValue.tag_IA5String)

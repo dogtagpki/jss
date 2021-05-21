@@ -231,6 +231,7 @@ public class KeyUsageExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         clearValue();
         if (!(obj instanceof Boolean)) {
@@ -265,6 +266,7 @@ public class KeyUsageExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(DIGITAL_SIGNATURE)) {
             return Boolean.valueOf(isSet(0));
@@ -293,6 +295,7 @@ public class KeyUsageExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(DIGITAL_SIGNATURE)) {
             set(0, false);
@@ -321,6 +324,7 @@ public class KeyUsageExtension extends Extension
     /**
      * Returns a printable representation of the KeyUsage.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "KeyUsage [\n";
 
@@ -366,6 +370,7 @@ public class KeyUsageExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -376,6 +381,7 @@ public class KeyUsageExtension extends Extension
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -392,6 +398,7 @@ public class KeyUsageExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(DIGITAL_SIGNATURE);
@@ -414,6 +421,7 @@ public class KeyUsageExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

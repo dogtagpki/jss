@@ -69,6 +69,7 @@ public class GeneralSubtrees implements Serializable {
     /**
      * Return a printable string of the GeneralSubtree.
      */
+    @Override
     public String toString() {
         String s = "   GeneralSubtrees:\n" + trees.toString()
                    + "\n";

@@ -264,6 +264,7 @@ public class HoldInstructionExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (name.equalsIgnoreCase(HOLD_INSTRUCTION)) {
             if (!(obj instanceof ObjectIdentifier)) {
@@ -279,6 +280,7 @@ public class HoldInstructionExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(HOLD_INSTRUCTION)) {
             return holdInstructionCodeOID;
@@ -291,6 +293,7 @@ public class HoldInstructionExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(HOLD_INSTRUCTION)) {
             holdInstructionCodeOID = null;
@@ -303,6 +306,7 @@ public class HoldInstructionExtension extends Extension
     /**
      * Returns a printable representation of the HoldInstructionExtension.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "Hold Instruction Code: " +
                    getHoldInstructionDescription(holdInstructionCodeOID) + "\n";
@@ -315,6 +319,7 @@ public class HoldInstructionExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -325,6 +330,7 @@ public class HoldInstructionExtension extends Extension
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -341,6 +347,7 @@ public class HoldInstructionExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(HOLD_INSTRUCTION);
@@ -350,6 +357,7 @@ public class HoldInstructionExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

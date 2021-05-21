@@ -245,6 +245,7 @@ public class CertificateChain implements Serializable {
     /**
      * Converts the certificate chain to a readable string.
      */
+    @Override
     public String toString() {
 
         if (certs.isEmpty()) {

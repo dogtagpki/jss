@@ -62,6 +62,7 @@ public class RFC822Name implements GeneralNameInterface {
     /**
      * Return the type of the GeneralName.
      */
+    @Override
     public int getType() {
         return (GeneralNameInterface.NAME_RFC822);
     }
@@ -72,6 +73,7 @@ public class RFC822Name implements GeneralNameInterface {
      * @param out the DER stream to encode the RFC822Name to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         out.putIA5String(name);
     }
@@ -79,6 +81,7 @@ public class RFC822Name implements GeneralNameInterface {
     /**
      * Convert the name into user readable string.
      */
+    @Override
     public String toString() {
         return ("RFC822Name: " + name);
     }

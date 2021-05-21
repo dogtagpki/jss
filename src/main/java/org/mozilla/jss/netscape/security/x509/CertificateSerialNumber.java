@@ -102,6 +102,7 @@ public class CertificateSerialNumber implements CertAttrSet {
     /**
      * Return the serial number as user readable string.
      */
+    @Override
     public String toString() {
         if (serial == null)
             return "";
@@ -114,6 +115,7 @@ public class CertificateSerialNumber implements CertAttrSet {
      * @param out the DerOutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         serial.encode(tmp);
@@ -127,6 +129,7 @@ public class CertificateSerialNumber implements CertAttrSet {
      * @param in the InputStream to marshal the contents from.
      * @exception IOException on errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue derVal = new DerValue(in);
         serial = new SerialNumber(derVal);
@@ -135,6 +138,7 @@ public class CertificateSerialNumber implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof SerialNumber)) {
             throw new IOException("Attribute must be of type SerialNumber.");
@@ -150,6 +154,7 @@ public class CertificateSerialNumber implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(NUMBER)) {
             return (serial);
@@ -162,6 +167,7 @@ public class CertificateSerialNumber implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(NUMBER)) {
             serial = null;
@@ -175,6 +181,7 @@ public class CertificateSerialNumber implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(NUMBER);
@@ -185,6 +192,7 @@ public class CertificateSerialNumber implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

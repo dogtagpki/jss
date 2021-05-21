@@ -153,6 +153,7 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Returns a printable representation of the policy map.
      */
+    @Override
     public String toString() {
         if (maps == null)
             return "";
@@ -168,6 +169,7 @@ public class PolicyMappingsExtension extends Extension
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -185,6 +187,7 @@ public class PolicyMappingsExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -192,6 +195,7 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void set(String name, Object obj) throws IOException {
         clearValue();
@@ -210,6 +214,7 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(MAP)) {
             return (maps);
@@ -222,6 +227,7 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(MAP)) {
             maps = null;
@@ -235,6 +241,7 @@ public class PolicyMappingsExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(MAP);
@@ -245,6 +252,7 @@ public class PolicyMappingsExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

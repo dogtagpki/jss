@@ -289,6 +289,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @exception CRLException if an encoding error occurs.
      */
+    @Override
     public byte[] getEncoded() throws CRLException {
         if (signedCRL == null)
             throw new CRLException("Null CRL to encode");
@@ -312,6 +313,7 @@ public class X509CRLImpl extends X509CRL {
         return done;
     }
 
+    @Override
     public boolean hasUnsupportedCriticalExtension() {
         // XXX NOT IMPLEMENTED
         return true;
@@ -372,6 +374,7 @@ public class X509CRLImpl extends X509CRL {
      * @exception SignatureException on signature errors.
      * @exception CRLException on encoding errors.
      */
+    @Override
     public void verify(PublicKey key)
             throws CRLException, NoSuchAlgorithmException, InvalidKeyException,
             NoSuchProviderException, SignatureException {
@@ -395,6 +398,7 @@ public class X509CRLImpl extends X509CRL {
      * @exception SignatureException on signature errors.
      * @exception CRLException on encoding errors.
      */
+    @Override
     public void verify(PublicKey key, String sigProvider)
             throws CRLException, NoSuchAlgorithmException, InvalidKeyException,
             NoSuchProviderException, SignatureException {
@@ -526,6 +530,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return value of this CRL in a printable form.
      */
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("X.509 CRL v" + (version + 1) + "\n" + "Signature Algorithm: " + sigAlgId +
                 ", OID=" + sigAlgId.getOID() + "\n" + "Issuer: " + issuer + "\n" + "\nThis Update: " + thisUpdate
@@ -565,6 +570,7 @@ public class X509CRLImpl extends X509CRL {
         return revokedCerts.containsKey(serialNumber);
     }
 
+    @Override
     public boolean isRevoked(Certificate cert) {
         if (cert == null)
             return false;
@@ -587,6 +593,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the version number.
      */
+    @Override
     public int getVersion() {
         return version;
     }
@@ -622,6 +629,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the issuer name.
      */
+    @Override
     public Principal getIssuerDN() {
         return issuer;
     }
@@ -632,6 +640,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the thisUpdate date from the CRL.
      */
+    @Override
     public Date getThisUpdate() {
         return (new Date(thisUpdate.getTime()));
     }
@@ -642,6 +651,7 @@ public class X509CRLImpl extends X509CRL {
      * @return the nextUpdate date from the CRL, or null if
      *         not present.
      */
+    @Override
     public Date getNextUpdate() {
         if (nextUpdate == null)
             return null;
@@ -656,6 +666,7 @@ public class X509CRLImpl extends X509CRL {
      *         no entry in the CRL marked with the provided serial number.
      * @see RevokedCertificate
      */
+    @Override
     public X509CRLEntry getRevokedCertificate(BigInteger serialNumber) {
         if (revokedCerts == null || revokedCerts.isEmpty())
             return null;
@@ -670,6 +681,7 @@ public class X509CRLImpl extends X509CRL {
      *         none.
      * @see RevokedCertificate
      */
+    @Override
     public Set<RevokedCertificate> getRevokedCertificates() {
         if (revokedCerts == null || revokedCerts.isEmpty())
             return null;
@@ -702,6 +714,7 @@ public class X509CRLImpl extends X509CRL {
      * @return the DER encoded CRL information.
      * @exception CRLException on parsing errors.
      */
+    @Override
     public byte[] getTBSCertList()
             throws CRLException {
         if (tbsCertList == null)
@@ -716,6 +729,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the signature.
      */
+    @Override
     public byte[] getSignature() {
         if (signature == null)
             return null;
@@ -755,6 +769,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the signature algorithm name.
      */
+    @Override
     public String getSigAlgName() {
         if (sigAlgId == null)
             return null;
@@ -771,6 +786,7 @@ public class X509CRLImpl extends X509CRL {
      *
      * @return the signature algorithm oid string.
      */
+    @Override
     public String getSigAlgOID() {
         if (sigAlgId == null)
             return null;
@@ -787,6 +803,7 @@ public class X509CRLImpl extends X509CRL {
      * @return the DER encoded signature algorithm parameters, or
      *         null if no parameters are present.
      */
+    @Override
     public byte[] getSigAlgParams() {
         if (sigAlgId == null)
             return null;
@@ -804,6 +821,7 @@ public class X509CRLImpl extends X509CRL {
      * @return a set of the extension oid strings in the
      *         CRL that are marked critical.
      */
+    @Override
     public Set<String> getCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
@@ -825,6 +843,7 @@ public class X509CRLImpl extends X509CRL {
      * @return a set of the extension oid strings in the
      *         CRL that are NOT marked critical.
      */
+    @Override
     public Set<String> getNonCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
@@ -849,6 +868,7 @@ public class X509CRLImpl extends X509CRL {
      * @param oid the Object Identifier value for the extension.
      * @return the der encoded octet string of the extension value.
      */
+    @Override
     public byte[] getExtensionValue(String oid) {
         if (extensions == null)
             return null;

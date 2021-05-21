@@ -147,6 +147,7 @@ public class CertificatePoliciesExtension extends Extension
     /**
      * Returns a printable representation of the policy extension.
      */
+    @Override
     public String toString() {
         if (mInfos == null)
             return "";
@@ -162,6 +163,7 @@ public class CertificatePoliciesExtension extends Extension
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -179,6 +181,7 @@ public class CertificatePoliciesExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -186,6 +189,7 @@ public class CertificatePoliciesExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void set(String name, Object obj) throws IOException {
         clearValue();
@@ -204,6 +208,7 @@ public class CertificatePoliciesExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(INFOS)) {
             return (mInfos);
@@ -216,6 +221,7 @@ public class CertificatePoliciesExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(INFOS)) {
             mInfos = null;
@@ -246,6 +252,7 @@ public class CertificatePoliciesExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

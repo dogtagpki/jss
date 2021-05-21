@@ -185,6 +185,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * @exception CertificateParsingException on decoding errors.
      * @exception IOException on other errors.
      */
+    @Override
     public void decode(InputStream in)
             throws CertificateParsingException, IOException {
         DerValue val = new DerValue(in);
@@ -199,6 +200,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * @exception CertificateException on encoding errors.
      * @exception IOException on other errors.
      */
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
         encode(out, false);
@@ -225,6 +227,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(VERSION);
@@ -244,6 +247,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }
@@ -282,6 +286,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * @param other the object being compared with this one
      * @return true iff the certificates are equivalent
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof X509CertInfo) {
             return equals((X509CertInfo) other);
@@ -317,6 +322,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * Calculates a hash code value for the object. Objects
      * which are equal will also have the same hashcode.
      */
+    @Override
     public int hashCode() {
         int retval = 0;
 
@@ -329,6 +335,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
     /**
      * Returns a printable representation of the certificate.
      */
+    @Override
     public String toString() {
 
         if (subject == null || pubKey == null || interval == null
@@ -397,6 +404,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * @exception CertificateException on invalid attributes.
      * @exception IOException on other errors.
      */
+    @Override
     public void set(String name, Object val)
             throws CertificateException, IOException {
         X509AttributeName attrName = new X509AttributeName(name);
@@ -499,6 +507,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * @exception CertificateException on invalid attributes.
      * @exception IOException on other errors.
      */
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
         X509AttributeName attrName = new X509AttributeName(name);
@@ -593,6 +602,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      * @exception CertificateException on invalid attributes.
      * @exception IOException on other errors.
      */
+    @Override
     public Object get(String name)
             throws CertificateException, IOException {
         X509AttributeName attrName = new X509AttributeName(name);

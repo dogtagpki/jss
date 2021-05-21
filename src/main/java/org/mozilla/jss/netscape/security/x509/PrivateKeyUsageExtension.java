@@ -178,6 +178,7 @@ public class PrivateKeyUsageExtension extends Extension
     /**
      * Return the printable string.
      */
+    @Override
     public String toString() {
         return (super.toString() +
                 "PrivateKeyUsage: [From: " +
@@ -245,6 +246,7 @@ public class PrivateKeyUsageExtension extends Extension
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -262,6 +264,7 @@ public class PrivateKeyUsageExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception CertificateException on decoding errors.
      */
+    @Override
     public void decode(InputStream in) throws CertificateException {
         throw new CertificateException("Method not to be called directly.");
     }
@@ -271,6 +274,7 @@ public class PrivateKeyUsageExtension extends Extension
      *
      * @exception CertificateException on attribute handling errors.
      */
+    @Override
     public void set(String name, Object obj)
             throws CertificateException {
         clearValue();
@@ -292,6 +296,7 @@ public class PrivateKeyUsageExtension extends Extension
      *
      * @exception CertificateException on attribute handling errors.
      */
+    @Override
     public Object get(String name) throws CertificateException {
         if (name.equalsIgnoreCase(NOT_BEFORE)) {
             return (new Date(notBefore.getTime()));
@@ -308,6 +313,7 @@ public class PrivateKeyUsageExtension extends Extension
      *
      * @exception CertificateException on attribute handling errors.
      */
+    @Override
     public void delete(String name) throws CertificateException {
         if (name.equalsIgnoreCase(NOT_BEFORE)) {
             notBefore = null;
@@ -323,6 +329,7 @@ public class PrivateKeyUsageExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(NOT_BEFORE);
@@ -334,6 +341,7 @@ public class PrivateKeyUsageExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

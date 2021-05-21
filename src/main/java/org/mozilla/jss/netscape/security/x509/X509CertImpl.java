@@ -234,6 +234,7 @@ public class X509CertImpl extends X509Certificate
         }
     }
 
+    @Override
     public boolean hasUnsupportedCriticalExtension() {
         // XXX NOT IMPLEMENTED
         return true;
@@ -281,6 +282,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @exception IOException on encoding error.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         if (signedCert == null)
             throw new IOException("Missing certificate to encode");
@@ -296,6 +298,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @exception CertificateEncodingException if an encoding error occurs.
      */
+    @Override
     public byte[] getEncoded() throws CertificateEncodingException {
         if (signedCert == null)
             throw new CertificateEncodingException(
@@ -320,6 +323,7 @@ public class X509CertImpl extends X509Certificate
      * @exception SignatureException on signature errors.
      * @exception CertificateException on encoding errors.
      */
+    @Override
     public void verify(PublicKey key)
             throws CertificateException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchProviderException, SignatureException {
@@ -343,6 +347,7 @@ public class X509CertImpl extends X509Certificate
      * @exception SignatureException on signature errors.
      * @exception CertificateException on encoding errors.
      */
+    @Override
     public void verify(PublicKey key, String sigProvider)
             throws CertificateException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchProviderException, SignatureException {
@@ -452,6 +457,7 @@ public class X509CertImpl extends X509Certificate
      * @exception CertificateNotYetValidException if the certificate is not
      *                yet valid.
      */
+    @Override
     public void checkValidity()
             throws CertificateExpiredException, CertificateNotYetValidException {
         Date date = new Date();
@@ -471,6 +477,7 @@ public class X509CertImpl extends X509Certificate
      * @exception CertificateNotYetValidException if the certificate is not
      *                yet valid with respect to the <code>date</code> supplied.
      */
+    @Override
     public void checkValidity(Date date)
             throws CertificateExpiredException, CertificateNotYetValidException {
 
@@ -636,6 +643,7 @@ public class X509CertImpl extends X509Certificate
      * other certificate. The certificate must be fully constructed
      * before this function may be called.
      */
+    @Override
     public String toString() {
         if (info == null || algId == null || signature == null)
             return "";
@@ -658,6 +666,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the publickey.
      */
+    @Override
     public PublicKey getPublicKey() {
         if (info == null)
             return null;
@@ -675,6 +684,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the version number.
      */
+    @Override
     public int getVersion() {
         if (info == null)
             return -1;
@@ -692,6 +702,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the serial number.
      */
+    @Override
     public BigInteger getSerialNumber() {
         if (info == null)
             return null;
@@ -710,6 +721,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the subject name.
      */
+    @Override
     public Principal getSubjectDN() {
         if (info == null)
             return null;
@@ -736,6 +748,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the issuer name.
      */
+    @Override
     public Principal getIssuerDN() {
         if (info == null)
             return null;
@@ -758,6 +771,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the start date of the validity period.
      */
+    @Override
     public Date getNotBefore() {
         if (info == null)
             return null;
@@ -775,6 +789,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the end date of the validity period.
      */
+    @Override
     public Date getNotAfter() {
         if (info == null)
             return null;
@@ -794,6 +809,7 @@ public class X509CertImpl extends X509Certificate
      * @return the DER encoded certificate information.
      * @exception CertificateEncodingException if an encoding error occurs.
      */
+    @Override
     public byte[] getTBSCertificate() throws CertificateEncodingException {
         if (info != null) {
             return info.getEncodedInfo();
@@ -806,6 +822,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the signature.
      */
+    @Override
     public byte[] getSignature() {
         if (signature == null)
             return null;
@@ -821,6 +838,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the signature algorithm name.
      */
+    @Override
     public String getSigAlgName() {
         if (algId == null)
             return null;
@@ -833,6 +851,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the signature algorithm oid string.
      */
+    @Override
     public String getSigAlgOID() {
         if (algId == null)
             return null;
@@ -847,6 +866,7 @@ public class X509CertImpl extends X509Certificate
      * @return the DER encoded signature algorithm parameters, or
      *         null if no parameters are present.
      */
+    @Override
     public byte[] getSigAlgParams() {
         if (algId == null)
             return null;
@@ -862,6 +882,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the Issuer Unique Identity.
      */
+    @Override
     public boolean[] getIssuerUniqueID() {
         if (info == null)
             return null;
@@ -883,6 +904,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the Subject Unique Identity.
      */
+    @Override
     public boolean[] getSubjectUniqueID() {
         if (info == null)
             return null;
@@ -906,6 +928,7 @@ public class X509CertImpl extends X509Certificate
      * @return a set of the extension oid strings in the
      *         certificate that are marked critical.
      */
+    @Override
     public Set<String> getCriticalExtensionOIDs() {
         if (info == null)
             return null;
@@ -934,6 +957,7 @@ public class X509CertImpl extends X509Certificate
      * @return a set of the extension oid strings in the
      *         certificate that are NOT marked critical.
      */
+    @Override
     public Set<String> getNonCriticalExtensionOIDs() {
         if (info == null)
             return null;
@@ -984,6 +1008,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @param oid the Object Identifier value for the extension.
      */
+    @Override
     public byte[] getExtensionValue(String oid) {
         DerOutputStream out = null;
         try {
@@ -1040,6 +1065,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the bit values of this extension as an array of booleans.
      */
+    @Override
     public boolean[] getKeyUsage() {
         try {
             String extAlias = OIDMap.getName(new ObjectIdentifier(
@@ -1063,6 +1089,7 @@ public class X509CertImpl extends X509Certificate
      *
      * @return the length of the constraint.
      */
+    @Override
     public int getBasicConstraints() {
         try {
             String extAlias = OIDMap.getName(new ObjectIdentifier(
@@ -1223,6 +1250,7 @@ public class X509CertImpl extends X509Certificate
 
     }
 
+    @Override
     protected Object writeReplace() throws java.io.ObjectStreamException {
         try {
             return new CertificateRep1("X.509", getEncoded());

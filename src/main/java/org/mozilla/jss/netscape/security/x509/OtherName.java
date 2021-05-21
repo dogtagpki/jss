@@ -121,6 +121,7 @@ public class OtherName implements GeneralNameInterface {
     /**
      * Return the type of the GeneralName.
      */
+    @Override
     public int getType() {
         return (GeneralNameInterface.NAME_ANY);
     }
@@ -131,6 +132,7 @@ public class OtherName implements GeneralNameInterface {
      * @param out the DER stream to encode the IPAddressName to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -172,6 +174,7 @@ public class OtherName implements GeneralNameInterface {
     /**
      * Return a printable string of IPaddress
      */
+    @Override
     public String toString() {
         if (mData != null) {
             try {
