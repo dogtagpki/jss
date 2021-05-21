@@ -33,6 +33,8 @@ public class KBKDFOptionalCounterParam extends KBKDFDataParameter {
         this.widthInBits = widthInBits;
     }
 
+    @Override
     protected native void acquireNativeResources() throws Exception;
+    @Override
     protected native void releaseNativeResources() throws Exception;
 }

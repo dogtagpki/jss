@@ -42,10 +42,13 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
         }
     }
 
+    @Override
     String getAlgorithm();
 
+    @Override
     byte[] getEncoded();
 
+    @Override
     String getFormat();
 
     String getNickName();
@@ -94,6 +97,7 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
         public static final Type AES = new Type(new String[]{ "AES" }, KeyGenAlgorithm.AES, KeyType.AES);
 
 
+        @Override
         public String toString() {
             return names[0];
         }

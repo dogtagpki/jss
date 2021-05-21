@@ -27,6 +27,7 @@ public class KeyGenAlgorithm extends Algorithm {
             this.strength = strength;
         }
 
+        @Override
         public boolean isValidKeyStrength(int strength) {
             return this.strength == strength;
         }
@@ -35,6 +36,7 @@ public class KeyGenAlgorithm extends Algorithm {
     protected static class AnyKeyStrengthValidator
             implements KeyStrengthValidator
     {
+        @Override
         public boolean isValidKeyStrength(int strength) {
             return true;
         }
@@ -182,6 +184,7 @@ public class KeyGenAlgorithm extends Algorithm {
         CKM_AES_KEY_GEN,
         "AES",
         new KeyStrengthValidator() {
+            @Override
             public boolean isValidKeyStrength(int strength) {
                 return strength==128 || strength==192 || strength==256;
             }
@@ -195,6 +198,7 @@ public class KeyGenAlgorithm extends Algorithm {
         CKM_RC2_KEY_GEN,
         "RC2",
         new KeyStrengthValidator() {
+            @Override
             public boolean isValidKeyStrength(int strength) {
                 // Allow any key of size between 1 byte and 128 bytes
                 return strength>=8 && strength <= (128*8);

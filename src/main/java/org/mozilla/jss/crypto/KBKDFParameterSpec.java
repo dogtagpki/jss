@@ -196,6 +196,7 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
         additional_keys = keys.toArray(new KBKDFDerivedKey[keys.size()]);
     }
 
+    @Override
     protected void acquireNativeResources() throws Exception {
         validateParameters();
 
@@ -214,6 +215,7 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
         acquireNativeResourcesInternal();
     }
 
+    @Override
     protected void releaseNativeResources() throws Exception {
         if (additional_keys != null) {
             for (KBKDFDerivedKey key : additional_keys) {

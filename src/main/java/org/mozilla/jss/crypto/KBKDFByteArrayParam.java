@@ -47,6 +47,7 @@ public class KBKDFByteArrayParam extends KBKDFDataParameter {
         }
     }
 
+    @Override
     protected void acquireNativeResources() throws Exception {
         if (data == null || data.length == 0) {
             String msg = "Expected non-null byte array in ";
@@ -58,6 +59,7 @@ public class KBKDFByteArrayParam extends KBKDFDataParameter {
         acquireNativeResourcesInternal();
     }
 
+    @Override
     protected void releaseNativeResources() throws Exception {
         releaseNativeResourcesInternal();
     }

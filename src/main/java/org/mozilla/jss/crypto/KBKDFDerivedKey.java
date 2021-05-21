@@ -50,6 +50,7 @@ public class KBKDFDerivedKey extends NativeEnclosure {
         this.attrs = ck_attrs.toArray(new CKAttribute[ck_attrs.size()]);
     }
 
+    @Override
     protected void acquireNativeResources() throws Exception {
         if (attrs == null) {
             String msg = "Expected non-null attributes when trying to ";
@@ -66,6 +67,7 @@ public class KBKDFDerivedKey extends NativeEnclosure {
         acquireNativeResourcesInternal();
     }
 
+    @Override
     protected void releaseNativeResources() throws Exception {
         if (attrs != null) {
             for (CKAttribute attr : attrs) {

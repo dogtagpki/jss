@@ -13,14 +13,17 @@ public class SecretKeyFacade implements javax.crypto.SecretKey {
         key = symk;
     }
 
+    @Override
     public String getAlgorithm() {
         return key.getAlgorithm();
     }
 
+    @Override
     public byte[] getEncoded() {
         return key.getEncoded();
     }
 
+    @Override
     public String getFormat() {
         return key.getFormat();
     }
