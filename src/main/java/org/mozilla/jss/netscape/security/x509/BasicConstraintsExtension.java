@@ -180,6 +180,7 @@ public class BasicConstraintsExtension extends Extension
     /**
      * Return user readable form of extension.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "BasicConstraints:[\n";
 
@@ -198,6 +199,7 @@ public class BasicConstraintsExtension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -207,6 +209,7 @@ public class BasicConstraintsExtension extends Extension
      *
      * @param out the DerOutputStream to encode the extension to.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (extensionValue == null) {
@@ -229,6 +232,7 @@ public class BasicConstraintsExtension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         clearValue();
         if (name.equalsIgnoreCase(IS_CA)) {
@@ -250,6 +254,7 @@ public class BasicConstraintsExtension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(IS_CA)) {
             return (Boolean.valueOf(ca));
@@ -264,6 +269,7 @@ public class BasicConstraintsExtension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(IS_CA)) {
             ca = false;
@@ -279,6 +285,7 @@ public class BasicConstraintsExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(IS_CA);
@@ -290,6 +297,7 @@ public class BasicConstraintsExtension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

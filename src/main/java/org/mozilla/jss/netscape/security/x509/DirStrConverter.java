@@ -83,6 +83,7 @@ public class DirStrConverter implements AVAValueConverter {
         DefEncodingOrder = defEncodingOrder;
     }
 
+    @Override
     public DerValue getValue(String ds)
             throws IOException {
         return getValue(ds, DefEncodingOrder);
@@ -91,6 +92,7 @@ public class DirStrConverter implements AVAValueConverter {
     /**
      * Like getValue(String) with specified DER tags as encoding order.
      */
+    @Override
     public DerValue getValue(String valueString, byte[] tags) throws IOException {
         // try to convert to printable, then t61 the universal -
         // i.e. from minimal to the most liberal.
@@ -132,6 +134,7 @@ public class DirStrConverter implements AVAValueConverter {
      * @exception IOException If the BER value cannot be converted to a
      *                valid Directory String DER value.
      */
+    @Override
     public DerValue getValue(byte[] berByteStream)
             throws IOException {
         DerValue value = new DerValue(berByteStream);
@@ -155,6 +158,7 @@ public class DirStrConverter implements AVAValueConverter {
      * @exception IOException if a decoder needed for the
      *                conversion is not available.
      */
+    @Override
     public String getAsString(DerValue avaValue)
             throws IOException {
         /*

@@ -71,6 +71,7 @@ public class DisplayText implements Serializable {
         return mS;
     }
 
+    @Override
     public String toString() {
         if (mTag == tag_IA5String) {
             return "IA5String: " + mS;

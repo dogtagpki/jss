@@ -95,6 +95,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * @return a X500Name
      * @exception IOException if an error occurs during the conversion.
      */
+    @Override
     public X500Name parseDN(String dn)
             throws IOException {
         return parseDN(dn, null);
@@ -104,6 +105,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * Like parseDN(String) with a DER encoding order given as argument for
      * Directory Strings.
      */
+    @Override
     public X500Name parseDN(String dn, byte[] encodingOrder)
             throws IOException {
         StringReader dn_reader = new StringReader(dn);
@@ -119,6 +121,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * @return a RDN
      * @exception IOException if an error occurs during the conversion.
      */
+    @Override
     public RDN parseRDN(String rdn)
             throws IOException {
         return parseRDN(rdn, null);
@@ -128,6 +131,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * Like parseRDN(String) with a DER encoding order given as argument for
      * Directory Strings.
      */
+    @Override
     public RDN parseRDN(String rdn, byte[] encodingOrder)
             throws IOException {
         StringReader rdn_reader = new StringReader(rdn);
@@ -142,6 +146,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * @param ava a LDAP v3 DN string
      * @return a AVA
      */
+    @Override
     public AVA parseAVA(String ava)
             throws IOException {
         return parseAVA(ava, null);
@@ -151,6 +156,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * Like parseDN(String) with a DER encoding order given as argument for
      * Directory Strings.
      */
+    @Override
     public AVA parseAVA(String ava, byte[] encodingOrder)
             throws IOException {
         StringReader ava_reader = new StringReader(ava);
@@ -536,6 +542,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      *
      * @exception IOException if an error is encountered during conversion.
      */
+    @Override
     public String encodeDN(X500Name x500name)
             throws IOException {
         RDN[] rdns = x500name.getNames();
@@ -565,6 +572,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      *
      * @exception IOException if an error is encountered during conversion.
      */
+    @Override
     public String encodeRDN(RDN rdn)
             throws IOException {
         AVA[] avas = rdn.getAssertion();
@@ -592,6 +600,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      *
      * @exception IOException If an error is encountered during exception.
      */
+    @Override
     public String encodeAVA(AVA ava)
             throws IOException {
         if (ava == null) {

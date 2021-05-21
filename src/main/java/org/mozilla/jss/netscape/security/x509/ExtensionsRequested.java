@@ -51,10 +51,12 @@ public class ExtensionsRequested implements CertAttrSet {
         }
     }
 
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
     }
 
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
         DerValue derVal = new DerValue(in);
@@ -62,10 +64,12 @@ public class ExtensionsRequested implements CertAttrSet {
         construct(derVal);
     }
 
+    @Override
     public void set(String name, Object obj)
             throws CertificateException, IOException {
     }
 
+    @Override
     public Object get(String name)
             throws CertificateException, IOException {
         if (name.equalsIgnoreCase(KUE_DIGITAL_SIGNATURE)) {
@@ -78,14 +82,17 @@ public class ExtensionsRequested implements CertAttrSet {
         throw new IOException("Unsupported attribute queried");
     }
 
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
     }
 
+    @Override
     public Enumeration<String> getAttributeNames() {
         return (new Vector<String>()).elements();
     }
 
+    @Override
     public String getName() {
         return NAME;
     }

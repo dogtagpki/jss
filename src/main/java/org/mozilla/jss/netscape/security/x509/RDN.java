@@ -189,10 +189,12 @@ public class RDN {
             index = 0;
         }
 
+        @Override
         public boolean hasMoreElements() {
             return (index < assertion.length);
         }
 
+        @Override
         public AVA nextElement() {
             if (index >= assertion.length)
                 return null;
@@ -291,6 +293,7 @@ public class RDN {
      * @return the Ldap DN String with this RDN component, null if an error
      *         occurs in the conversion.
      */
+    @Override
     public String toString() {
         String s;
         try {

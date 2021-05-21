@@ -205,6 +205,7 @@ public final class Attribute implements Serializable, DerEncoder {
      *
      * @exception IOException on encoding error.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         encodeThis(out);
     }
@@ -212,6 +213,7 @@ public final class Attribute implements Serializable, DerEncoder {
     /**
      * Prints a string version of this extension.
      */
+    @Override
     public String toString() {
         String theoid = "Attribute: " + oid + "\n";
         StringBuffer values = new StringBuffer("Values: ");

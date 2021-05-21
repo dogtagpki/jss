@@ -196,6 +196,7 @@ public final class AVA implements DerEncoder {
      * @param other the other object.
      * @return true iff other object is an AVA and has same oid and value.
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof AVA)
             return equals((AVA) other);
@@ -231,6 +232,7 @@ public final class AVA implements DerEncoder {
      *
      * @exception IOException on encoding error.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         try (DerOutputStream tmp2 = new DerOutputStream()) {
             DerOutputStream tmp = new DerOutputStream();
@@ -277,6 +279,7 @@ public final class AVA implements DerEncoder {
      * @return a Ldap DN string containing the AVA, or null if an
      *         error occurs in the conversion.
      */
+    @Override
     public String toString() {
         String s;
         try {

@@ -53,16 +53,19 @@ public final class AlgIdDSA extends AlgorithmId implements DSAParams {
     private BigInteger p, q, g;
 
     /** Returns the DSS/DSA parameter "P" */
+    @Override
     public BigInteger getP() {
         return p;
     }
 
     /** Returns the DSS/DSA parameter "Q" */
+    @Override
     public BigInteger getQ() {
         return q;
     }
 
     /** Returns the DSS/DSA parameter "G" */
+    @Override
     public BigInteger getG() {
         return g;
     }
@@ -120,6 +123,7 @@ public final class AlgIdDSA extends AlgorithmId implements DSAParams {
      * Returns "DSA", indicating the Digital Signature Algorithm (DSA) as
      * defined by the Digital Signature Standard (DSS), FIPS 186.
      */
+    @Override
     public String getName() {
         return "DSA";
     }
@@ -142,6 +146,7 @@ public final class AlgIdDSA extends AlgorithmId implements DSAParams {
      * Parses algorithm parameters P, Q, and G. They're found
      * in the "params" member, which never needs to be changed.
      */
+    @Override
     protected void decodeParams()
             throws IOException {
         if (params == null || params.tag != DerValue.tag_Sequence)
@@ -161,6 +166,7 @@ public final class AlgIdDSA extends AlgorithmId implements DSAParams {
     /*
      * Returns a formatted string describing the parameters.
      */
+    @Override
     public String toString() {
         return paramsToString();
     }
@@ -168,6 +174,7 @@ public final class AlgIdDSA extends AlgorithmId implements DSAParams {
     /*
      * Returns a string describing the parameters.
      */
+    @Override
     protected String paramsToString() {
         return "\n    p:\n" + (new BigInt(p)).toString() +
                 "\n    q:\n" + (new BigInt(q)).toString() +

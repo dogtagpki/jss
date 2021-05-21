@@ -44,6 +44,7 @@ public class ChallengePassword implements CertAttrSet {
      *
      * @return the challenge password
      */
+    @Override
     public String toString() {
         return cpw;
     }
@@ -73,10 +74,12 @@ public class ChallengePassword implements CertAttrSet {
     /**
      * Currently Unimplemented
      */
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
     }
 
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
         DerValue derVal = new DerValue(in);
@@ -96,6 +99,7 @@ public class ChallengePassword implements CertAttrSet {
     /**
      * Currently Unimplemented
      */
+    @Override
     public void set(String name, Object obj)
             throws CertificateException, IOException {
     }
@@ -106,6 +110,7 @@ public class ChallengePassword implements CertAttrSet {
      * @param name the name of the attribute of this object to get. The only
      *            supported attribute is "password"
      */
+    @Override
     public Object get(String name)
             throws CertificateException, IOException {
         if (name.equalsIgnoreCase(PASSWORD)) {
@@ -119,6 +124,7 @@ public class ChallengePassword implements CertAttrSet {
     /**
      * Currently Unimplemented
      */
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
     }
@@ -126,6 +132,7 @@ public class ChallengePassword implements CertAttrSet {
     /**
      * @return an empty set of elements
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         return (new Vector<String>()).elements();
     }
@@ -133,6 +140,7 @@ public class ChallengePassword implements CertAttrSet {
     /**
      * @return the String "ChallengePassword"
      */
+    @Override
     public String getName() {
         return NAME;
     }

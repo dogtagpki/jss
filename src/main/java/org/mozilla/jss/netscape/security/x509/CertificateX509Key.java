@@ -91,6 +91,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
     /**
      * Return the key as printable string.
      */
+    @Override
     public String toString() {
         if (key == null)
             return "";
@@ -103,6 +104,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
      * @param in the InputStream to unmarshal the contents from
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue val = new DerValue(in);
         key = X509Key.parse(val);
@@ -122,6 +124,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
      * @param out the OutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         key.encode(tmp);
@@ -132,6 +135,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof X509Key)) {
             throw new IOException("Attribute must be of type X509Key.");
@@ -147,6 +151,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(KEY)) {
             return (key);
@@ -159,6 +164,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(KEY)) {
             key = null;
@@ -172,6 +178,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(KEY);
@@ -182,6 +189,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

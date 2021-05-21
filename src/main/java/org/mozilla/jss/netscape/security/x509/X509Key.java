@@ -229,6 +229,7 @@ public class X509Key implements PublicKey {
     /**
      * Returns the algorithm to be used with this key.
      */
+    @Override
     public String getAlgorithm() {
         return algid.getName();
     }
@@ -252,6 +253,7 @@ public class X509Key implements PublicKey {
     /**
      * Returns the DER-encoded form of the key as a byte array.
      */
+    @Override
     public synchronized byte[] getEncoded() {
         byte[] result = null;
         try {
@@ -264,6 +266,7 @@ public class X509Key implements PublicKey {
     /**
      * Returns the format for this key: "X.509"
      */
+    @Override
     public String getFormat() {
         return "X.509";
     }
@@ -300,6 +303,7 @@ public class X509Key implements PublicKey {
     /*
      * Returns a printable representation of the key
      */
+    @Override
     public String toString() {
         org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
                 new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
@@ -377,6 +381,7 @@ public class X509Key implements PublicKey {
         }
     }
 
+    @Override
     public boolean equals(Object object) {
         if (this == object) {
             return true;
@@ -403,6 +408,7 @@ public class X509Key implements PublicKey {
      * Calculates a hash code value for the object. Objects
      * which are equal will also have the same hashcode.
      */
+    @Override
     public int hashCode() {
         int retval = 0;
         byte[] b1 = getEncoded();

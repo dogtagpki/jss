@@ -65,11 +65,13 @@ public class GenericValueConverter implements AVAValueConverter {
      *                when an encoder needed is
      *                unavailable.
      */
+    @Override
     public DerValue getValue(String s)
             throws IOException {
         return getValue(s, null);
     }
 
+    @Override
     public DerValue getValue(String valueString, byte[] tags) throws IOException {
         // try to convert to printable, then t61 the universal -
         // i.e. from minimal coverage to the broadest.
@@ -109,6 +111,7 @@ public class GenericValueConverter implements AVAValueConverter {
      * @exception IOException If the BER value cannot be converted to a
      *                valid Directory String DER value.
      */
+    @Override
     public DerValue getValue(byte[] berByteStream)
             throws IOException {
         // accepts any tag.
@@ -127,6 +130,7 @@ public class GenericValueConverter implements AVAValueConverter {
      *                is not one of the ASN1 character string types
      *                here.
      */
+    @Override
     public String getAsString(DerValue avaValue)
             throws IOException {
         return avaValue.getASN1CharString();

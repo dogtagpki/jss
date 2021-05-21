@@ -104,6 +104,7 @@ public class SerialNumber implements Serializable {
     /**
      * Return the SerialNumber as user readable string.
      */
+    @Override
     public String toString() {
         return ("SerialNumber: [" + serialNum.toString() + "]");
     }

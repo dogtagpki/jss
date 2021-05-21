@@ -49,6 +49,7 @@ public class ACertAttrSet implements CertAttrSet {
      * @return value of this certificate attribute in
      *         printable form.
      */
+    @Override
     public String toString() {
         return "ACertAttrSet value " + (mDerValue == null ? "null" : "not null");
     }
@@ -62,6 +63,7 @@ public class ACertAttrSet implements CertAttrSet {
      * @exception CertificateException on encoding or validity errors.
      * @exception IOException on other errors.
      */
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
         mDerValue.encode((DerOutputStream) out);
@@ -75,6 +77,7 @@ public class ACertAttrSet implements CertAttrSet {
      * @exception CertificateException on decoding or validity errors.
      * @exception IOException on other errors.
      */
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
         throw new IOException("not supported");
@@ -89,6 +92,7 @@ public class ACertAttrSet implements CertAttrSet {
      * @exception CertificateException on attribute handling errors.
      * @exception IOException on other errors.
      */
+    @Override
     public void set(String name, Object obj)
             throws CertificateException, IOException {
         throw new IOException("not supported");
@@ -102,6 +106,7 @@ public class ACertAttrSet implements CertAttrSet {
      * @exception CertificateException on attribute handling errors.
      * @exception IOException on other errors.
      */
+    @Override
     public Object get(String name)
             throws CertificateException, IOException {
         throw new IOException("not supported");
@@ -115,6 +120,7 @@ public class ACertAttrSet implements CertAttrSet {
      * @exception CertificateException on attribute handling errors.
      * @exception IOException on other errors.
      */
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
         throw new IOException("not supported");
@@ -126,6 +132,7 @@ public class ACertAttrSet implements CertAttrSet {
      *
      * @return an enumeration of the attribute names.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         return null;
     }
@@ -135,6 +142,7 @@ public class ACertAttrSet implements CertAttrSet {
      *
      * @return the name of this CertAttrSet.
      */
+    @Override
     public String getName() {
         return "Generic Extension";
     }

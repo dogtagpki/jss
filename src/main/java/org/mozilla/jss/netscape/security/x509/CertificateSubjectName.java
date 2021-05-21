@@ -90,6 +90,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
     /**
      * Return the name as user readable string.
      */
+    @Override
     public String toString() {
         if (dnName == null)
             return "";
@@ -110,6 +111,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
      * @param out the DerOutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         dnName.encode(tmp);
@@ -136,6 +138,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
      * @param in the InputStream to marshal the contents from.
      * @exception IOException on errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue derVal = new DerValue(in);
 
@@ -145,6 +148,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof X500Name)) {
             throw new IOException("Attribute must be of type X500Name.");
@@ -160,6 +164,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(DN_NAME)) {
             return (dnName);
@@ -182,6 +187,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(DN_NAME)) {
             dnName = null;
@@ -195,6 +201,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(DN_NAME);
@@ -205,6 +212,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

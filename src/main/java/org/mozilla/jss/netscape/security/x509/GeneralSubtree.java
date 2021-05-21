@@ -99,6 +99,7 @@ public class GeneralSubtree implements Serializable {
     /**
      * Return a printable string of the GeneralSubtree.
      */
+    @Override
     public String toString() {
         String s = "\n   GeneralSubtree: [\n" +
                 "    GeneralName: " + ((name == null) ? "" : name.toString()) +

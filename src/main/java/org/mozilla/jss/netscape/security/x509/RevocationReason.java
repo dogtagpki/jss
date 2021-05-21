@@ -95,6 +95,7 @@ public final class RevocationReason implements Serializable {
         return code;
     }
 
+    @Override
     public String toString() {
         return label;
     }

@@ -71,6 +71,7 @@ public class RFC1779StrConverter extends LdapV3DNStrConverter {
      *
      * @exception IOException if an error occurs during the conversion.
      */
+    @Override
     public String encodeOID(ObjectIdentifier oid)
             throws IOException {
         String keyword = attrMap.getName(oid);
@@ -91,6 +92,7 @@ public class RFC1779StrConverter extends LdapV3DNStrConverter {
      * @return a string in RFC1779 syntax.
      * @exception IOException if an error occurs during the conversion.
      */
+    @Override
     public String encodeValue(DerValue attrValue, ObjectIdentifier oid)
             throws IOException {
         String s = super.encodeValue(attrValue, oid);

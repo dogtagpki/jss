@@ -28,10 +28,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class RevocationReasonAdapter extends XmlAdapter<String, RevocationReason> {
 
+    @Override
     public RevocationReason unmarshal(String value) throws Exception {
         return StringUtils.isEmpty(value) ? null : RevocationReason.valueOf(value);
     }
 
+    @Override
     public String marshal(RevocationReason value) throws Exception {
         return value == null ? null : value.toString();
     }

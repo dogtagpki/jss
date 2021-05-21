@@ -179,6 +179,7 @@ public class X509Cert implements Certificate, Serializable {
      * @param in an input stream holding at least one certificate
      * @exception IOException when the certificate is improperly encoded.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue val = new DerValue(in);
 
@@ -194,6 +195,7 @@ public class X509Cert implements Certificate, Serializable {
      * @param out an input stream to which the certificate is appended.
      * @exception IOException when appending fails.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         out.write(getSignedCert());
     }
@@ -206,6 +208,7 @@ public class X509Cert implements Certificate, Serializable {
      * @param other the object being compared with this one
      * @return true iff the certificates are equivalent
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof X509Cert)
             return equals((X509Cert) other);
@@ -234,18 +237,21 @@ public class X509Cert implements Certificate, Serializable {
     }
 
     /** Returns the "X.509" format identifier. */
+    @Override
     public String getFormat() // for Certificate
     {
         return "X.509";
     }
 
     /** Returns <a href="#getIssuerName">getIssuerName</a> */
+    @Override
     public Principal getGuarantor() // for Certificate
     {
         return getIssuerName();
     }
 
     /** Returns <a href="#getSubjectName">getSubjectName</a> */
+    @Override
     public Principal getPrincipal() {
         return getSubjectName();
     }
@@ -519,6 +525,7 @@ public class X509Cert implements Certificate, Serializable {
      * in the chain of issuers; and Diffie-Hellman, with a similar solution although the CA then needs both a
      * Diffie-Hellman certificate and a signature capable certificate.
      */
+    @Override
     public PublicKey getPublicKey() {
         return pubkey;
     }
@@ -537,6 +544,7 @@ public class X509Cert implements Certificate, Serializable {
      * Calculates a hash code value for the object. Objects
      * which are equal will also have the same hashcode.
      */
+    @Override
     public int hashCode() {
         int retval = 0;
 
@@ -553,6 +561,7 @@ public class X509Cert implements Certificate, Serializable {
      * creating certificates you must call encodeAndSign() before calling
      * this function.
      */
+    @Override
     public String toString() {
         String s;
 
@@ -580,6 +589,7 @@ public class X509Cert implements Certificate, Serializable {
      *
      * @param detailed true iff lots of detail is requested
      */
+    @Override
     public String toString(boolean detailed) {
         return toString();
     }

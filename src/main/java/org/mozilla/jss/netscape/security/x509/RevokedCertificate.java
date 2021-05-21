@@ -62,6 +62,7 @@ public abstract class RevokedCertificate extends X509CRLEntry {
      *
      * @return the serial number.
      */
+    @Override
     public abstract BigInteger getSerialNumber();
 
     /**
@@ -70,6 +71,7 @@ public abstract class RevokedCertificate extends X509CRLEntry {
      *
      * @return the revocation date.
      */
+    @Override
     public abstract Date getRevocationDate();
 
     /**
@@ -78,6 +80,7 @@ public abstract class RevokedCertificate extends X509CRLEntry {
      *
      * @return true if this entry has extensions, false otherwise.
      */
+    @Override
     public abstract boolean hasExtensions();
 
     /**
@@ -85,6 +88,7 @@ public abstract class RevokedCertificate extends X509CRLEntry {
      *
      * @return a string representation of this revoked certificate.
      */
+    @Override
     public abstract String toString();
 
     public abstract CRLExtensions getExtensions();

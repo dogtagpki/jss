@@ -154,6 +154,7 @@ public class GeneralName implements GeneralNameInterface {
     /**
      * Return the type of the general name.
      */
+    @Override
     public int getType() {
         return (name.getType());
     }
@@ -161,6 +162,7 @@ public class GeneralName implements GeneralNameInterface {
     /**
      * Return the name as user readable string
      */
+    @Override
     public String toString() {
         return (name.toString());
     }
@@ -171,6 +173,7 @@ public class GeneralName implements GeneralNameInterface {
      * @param out the DerOutputStream to encode the the GeneralName to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         name.encode(tmp);

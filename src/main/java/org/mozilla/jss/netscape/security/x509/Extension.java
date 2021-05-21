@@ -183,6 +183,7 @@ public class Extension implements Serializable {
     /**
      * Returns the Extension in user readable form.
      */
+    @Override
     public String toString() {
         String s = "ObjectId: " + extensionId.toString();
         if (critical) {

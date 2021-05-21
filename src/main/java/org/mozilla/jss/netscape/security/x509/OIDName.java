@@ -67,6 +67,7 @@ public class OIDName implements GeneralNameInterface {
     /**
      * Return the type of the GeneralName.
      */
+    @Override
     public int getType() {
         return (GeneralNameInterface.NAME_OID);
     }
@@ -77,6 +78,7 @@ public class OIDName implements GeneralNameInterface {
      * @param out the DER stream to encode the OIDName to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         out.putOID(oid);
     }
@@ -84,6 +86,7 @@ public class OIDName implements GeneralNameInterface {
     /**
      * Convert the name into user readable string.
      */
+    @Override
     public String toString() {
         return ("OIDName: " + oid.toString());
     }

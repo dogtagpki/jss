@@ -90,6 +90,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
     /**
      * Return the algorithm identifier as user readable string.
      */
+    @Override
     public String toString() {
         if (algId == null)
             return "";
@@ -111,6 +112,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
      * @param out the DerOutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         algId.encode(tmp);
@@ -124,6 +126,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue derVal = new DerValue(in);
         algId = AlgorithmId.parse(derVal);
@@ -132,6 +135,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof AlgorithmId)) {
             throw new IOException("Attribute must be of type AlgorithmId.");
@@ -147,6 +151,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(ALGORITHM)) {
             return (algId);
@@ -159,6 +164,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(ALGORITHM)) {
             algId = null;
@@ -172,6 +178,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(ALGORITHM);
@@ -181,6 +188,7 @@ public class CertificateAlgorithmId implements CertAttrSet, Serializable {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

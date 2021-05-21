@@ -110,6 +110,7 @@ public class EDIPartyName implements GeneralNameInterface {
     /**
      * Return the type of the GeneralName.
      */
+    @Override
     public int getType() {
         return (GeneralNameInterface.NAME_EDI);
     }
@@ -120,6 +121,7 @@ public class EDIPartyName implements GeneralNameInterface {
      * @param out the DER stream to encode the EDIPartyName to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         DerOutputStream tagged = new DerOutputStream();
         DerOutputStream tmp = new DerOutputStream();
@@ -148,6 +150,7 @@ public class EDIPartyName implements GeneralNameInterface {
     /**
      * Return the printable string.
      */
+    @Override
     public String toString() {
         return ("EDIPartyName: " +
                  ((assigner == null) ? "" :

@@ -136,6 +136,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
     /**
      * Return the validity period as user readable string.
      */
+    @Override
     public String toString() {
         if (notBefore == null || notAfter == null)
             return "";
@@ -149,6 +150,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue derVal = new DerValue(in);
         construct(derVal);
@@ -168,6 +170,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
      * @param out the OutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         // in cases where default constructor is used check for
         // null values
@@ -196,6 +199,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof Date)) {
             throw new IOException("Attribute must be of type Date.");
@@ -213,6 +217,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(NOT_BEFORE)) {
             return (getNotBefore());
@@ -227,6 +232,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(NOT_BEFORE)) {
             notBefore = null;
@@ -242,6 +248,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(NOT_BEFORE);
@@ -253,6 +260,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

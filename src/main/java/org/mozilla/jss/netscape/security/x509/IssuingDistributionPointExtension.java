@@ -252,6 +252,7 @@ public class IssuingDistributionPointExtension extends Extension
      * extension SHOULD be critical, so applications can make it not critical
      * if they have a very good reason. By default, the extension is critical.
      */
+    @Override
     public void setCritical(boolean critical) {
         this.critical = critical;
     }
@@ -269,6 +270,7 @@ public class IssuingDistributionPointExtension extends Extension
      * This method re-encodes each time it is called, so it is not very
      * efficient.
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         extensionValue = ASN1Util.encode(issuingDistributionPoint);
         super.encode(out);
@@ -293,6 +295,7 @@ public class IssuingDistributionPointExtension extends Extension
     /**
      * DER-encodes this extension to the given OutputStream.
      */
+    @Override
     public void encode(OutputStream ostream)
             throws CertificateException, IOException {
         if (cachedEncoding == null) {
@@ -304,11 +307,13 @@ public class IssuingDistributionPointExtension extends Extension
         ostream.write(cachedEncoding);
     }
 
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
         throw new IOException("Not supported");
     }
 
+    @Override
     public void set(String name, Object obj)
             throws CertificateException, IOException {
         if (name.equalsIgnoreCase(ISSUING_DISTRIBUTION_POINT)) {
@@ -322,6 +327,7 @@ public class IssuingDistributionPointExtension extends Extension
         }
     }
 
+    @Override
     public Object get(String name)
             throws CertificateException, IOException {
         if (name.equalsIgnoreCase(ISSUING_DISTRIBUTION_POINT)) {
@@ -332,6 +338,7 @@ public class IssuingDistributionPointExtension extends Extension
         }
     }
 
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
         if (name.equalsIgnoreCase(ISSUING_DISTRIBUTION_POINT)) {
@@ -342,6 +349,7 @@ public class IssuingDistributionPointExtension extends Extension
         }
     }
 
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(ISSUING_DISTRIBUTION_POINT);
@@ -349,6 +357,7 @@ public class IssuingDistributionPointExtension extends Extension
         //        return (new Vector()).elements();
     }
 
+    @Override
     public String getName() {
         return NAME;
     }

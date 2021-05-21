@@ -200,6 +200,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
     /**
      * Return the printable string.
      */
+    @Override
     public String toString() {
         return (super.toString() + "NameConstraints: [" +
                 ((permitted == null) ? "" :
@@ -223,6 +224,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -233,6 +235,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         if (this.extensionValue == null) {
@@ -246,6 +249,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         clearValue();
         if (name.equalsIgnoreCase(PERMITTED_SUBTREES)) {
@@ -269,6 +273,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(PERMITTED_SUBTREES)) {
             return (permitted);
@@ -283,6 +288,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(PERMITTED_SUBTREES)) {
             permitted = null;
@@ -298,6 +304,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(PERMITTED_SUBTREES);
@@ -309,6 +316,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

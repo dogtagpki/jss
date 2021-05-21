@@ -125,6 +125,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof RevocationReason)) {
             throw new IOException("Attribute must be of type RevocationReason.");
@@ -140,6 +141,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(REASON)) {
             return mReason;
@@ -151,6 +153,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(REASON)) {
             mReason = null;
@@ -162,6 +165,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     /**
      * Returns a printable representation of the ReasonFlags.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "CRL Reason [" + mReason + "]\n";
         return (s);
@@ -173,6 +177,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -193,6 +198,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
      * @param out the OutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -208,6 +214,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(REASON);
@@ -218,10 +225,12 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }
 
+    @Override
     public boolean equals(Object other) {
         if (this == other)
             return true;

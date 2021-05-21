@@ -145,6 +145,7 @@ public class CertificateVersion implements CertAttrSet {
     /**
      * Return the version number of the certificate.
      */
+    @Override
     public String toString() {
         return ("Version: V" + (version + 1));
     }
@@ -155,6 +156,7 @@ public class CertificateVersion implements CertAttrSet {
      * @param out the OutputStream to marshal the contents to.
      * @exception IOException on errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         // Nothing for default
         if (version == V1) {
@@ -177,6 +179,7 @@ public class CertificateVersion implements CertAttrSet {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         DerValue derVal = new DerValue(in);
         construct(derVal);
@@ -185,6 +188,7 @@ public class CertificateVersion implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         if (!(obj instanceof Integer)) {
             throw new IOException("Attribute must be of type Integer.");
@@ -200,6 +204,7 @@ public class CertificateVersion implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         if (name.equalsIgnoreCase(VERSION)) {
             return (Integer.valueOf(getVersion()));
@@ -212,6 +217,7 @@ public class CertificateVersion implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         if (name.equalsIgnoreCase(VERSION)) {
             version = V1;
@@ -225,6 +231,7 @@ public class CertificateVersion implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement(VERSION);
@@ -235,6 +242,7 @@ public class CertificateVersion implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

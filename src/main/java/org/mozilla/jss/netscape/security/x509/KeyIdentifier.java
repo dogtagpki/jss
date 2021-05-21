@@ -64,6 +64,7 @@ public class KeyIdentifier implements java.io.Serializable {
     /**
      * Returns a printable representation of the KeyUsage.
      */
+    @Override
     public String toString() {
         org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
                 new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);

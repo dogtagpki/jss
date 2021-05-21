@@ -337,6 +337,7 @@ public class X500Name implements Principal, GeneralNameInterface {
     /**
      * Return type of GeneralName.
      */
+    @Override
     public int getType() {
         return (GeneralNameInterface.NAME_DIRECTORY);
     }
@@ -493,6 +494,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      * Returns a Ldap DN string, using the global default LdapDNStrConverter
      * or null if an error occurs in the conversion.
      */
+    @Override
     public String toString() {
         String s;
         if (names == null) {
@@ -511,6 +513,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      * Returns the value of toString(). This call is needed to
      * implement the java.security.Principal interface.
      */
+    @Override
     public String getName() {
         return toString();
     }
@@ -587,6 +590,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      *
      * @param out where to put the DER-encoded X.500 name
      */
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
         int i;
@@ -654,10 +658,12 @@ public class X500Name implements Principal, GeneralNameInterface {
             index = 0;
         }
 
+        @Override
         public boolean hasMoreElements() {
             return (index < names.length);
         }
 
+        @Override
         public RDN nextElement() {
             if (index >= names.length)
                 return null;
