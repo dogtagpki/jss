@@ -91,14 +91,17 @@ public class CertificationRequestInfo implements ASN1Value {
     }
 
     static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -139,16 +142,19 @@ public class CertificationRequestInfo implements ASN1Value {
             seqt.addElement(Tag.get(0), new SET.OF_Template(Attribute.getTemplate()));
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws InvalidBERException, IOException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws InvalidBERException, IOException
         {
