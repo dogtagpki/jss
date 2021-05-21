@@ -477,6 +477,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             socketID = tName;
         }
 
+        @Override
         public void run() {
 
             try {
@@ -852,6 +853,7 @@ public class JSS_SelfServClient implements ConstantsBase, Constants {
             this.who = who;
             this.boss = boss;
         }
+        @Override
         public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
             try {
                 String mesg = who + " got a completed handshake ";

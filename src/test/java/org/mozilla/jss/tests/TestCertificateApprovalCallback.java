@@ -23,6 +23,7 @@ public class TestCertificateApprovalCallback
 
     public static Logger logger = LoggerFactory.getLogger(TestCertificateApprovalCallback.class);
 
+    @Override
     public boolean approve(
         org.mozilla.jss.crypto.X509Certificate servercert,
         SSLCertificateApprovalCallback.ValidityStatus status) {
