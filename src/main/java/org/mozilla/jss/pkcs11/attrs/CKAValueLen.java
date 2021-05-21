@@ -42,6 +42,8 @@ public class CKAValueLen extends CKAttribute {
         return length;
     }
 
+    @Override
     protected native void acquireNativeResources();
+    @Override
     protected native void releaseNativeResources();
 }
