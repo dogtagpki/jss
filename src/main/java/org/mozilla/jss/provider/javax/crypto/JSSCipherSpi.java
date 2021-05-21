@@ -60,10 +60,12 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         token = TokenSupplierManager.getTokenSupplier().getThreadToken();
     }
 
+    @Override
     public void engineSetMode(String mode) {
         this.algMode = mode;
     }
 
+    @Override
     public void engineSetPadding(String padding) {
         this.algPadding = padding;
     }
@@ -93,6 +95,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
     }
 
+    @Override
     public void engineInit(int opmode, Key key,
         AlgorithmParameterSpec givenParams, SecureRandom random)
         throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -207,6 +210,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
       }
     }
 
+    @Override
     public void engineInit(int opmode, Key key,
             AlgorithmParameters givenParams, SecureRandom random)
         throws InvalidKeyException, InvalidAlgorithmParameterException
@@ -231,6 +235,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
     }
 
+    @Override
     public void engineInit(int opmode, Key key, SecureRandom random)
         throws InvalidKeyException
     {
@@ -275,10 +280,12 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
     private static class NoAlgParams implements AlgorithmParameterSpec { }
     private static final NoAlgParams noAlgParams = new NoAlgParams();
 
+    @Override
     public int engineGetBlockSize() {
         return blockSize;
     }
 
+    @Override
     public byte[] engineGetIV() {
         if( params == null ) {
             return null;
@@ -292,6 +299,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
     }
 
+    @Override
     public AlgorithmParameters engineGetParameters() {
         AlgorithmParameters algParams = null;
          try {
@@ -308,11 +316,13 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         return algParams;
     }
 
+    @Override
     public int engineGetOutputSize(int inputLen) {
         int total = (blockSize-1) + inputLen;
         return ((total / blockSize) + 1) * blockSize;
     }
 
+    @Override
     public byte[] engineUpdate(byte[] input, int inputOffset, int inputLen) {
         if(cipher == null) {
             // Cipher is supposed to catch an illegal state, so we should never
@@ -326,6 +336,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
     }
 
+    @Override
     public int engineUpdate(byte[] input, int inputOffset, int inputLen,
         byte[] output, int outputOffset) throws ShortBufferException
     {
@@ -338,6 +349,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         return bytes.length;
     }
 
+    @Override
     public byte[] engineDoFinal(byte[] input, int inputOffset, int inputLen)
         throws IllegalBlockSizeException, BadPaddingException
     {
@@ -361,6 +373,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
     }
 
+    @Override
     public int engineDoFinal(byte[] input, int inputOffset, int inputLen,
         byte[] output, int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException,
@@ -375,6 +388,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         return bytes.length;
     }
 
+    @Override
     public byte[] engineWrap(Key key)
         throws IllegalBlockSizeException, InvalidKeyException
     {
@@ -398,6 +412,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
         }
     }
 
+    @Override
     public Key engineUnwrap(byte[] wrappedKey, String wrappedKeyAlgorithm,
             int wrappedKeyType)
         throws InvalidKeyException, NoSuchAlgorithmException
@@ -461,6 +476,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
             "http://bugzilla.mozilla.org/show_bug.cgi?id=135328");
     }
 
+    @Override
     public int engineGetKeySize(Key key) throws InvalidKeyException {
         if( key instanceof PK11PrivKey ) {
             return ((PK11PrivKey)key).getStrength();

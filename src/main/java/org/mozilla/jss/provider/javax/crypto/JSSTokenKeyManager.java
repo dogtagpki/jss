@@ -67,6 +67,7 @@ public class JSSTokenKeyManager implements JSSKeyManager {
         return null;
     }
 
+    @Override
     public org.mozilla.jss.crypto.X509Certificate getCertificate(String alias) {
         try {
             if (jks == null) {
