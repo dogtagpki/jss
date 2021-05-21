@@ -87,6 +87,7 @@ public class CertificateScopeOfUseExtension extends Extension
         decodeThis();
     }
 
+    @Override
     public String getName() {
         return NAME;
     }
@@ -98,6 +99,7 @@ public class CertificateScopeOfUseExtension extends Extension
     /**
      * Sets extension attribute.
      */
+    @Override
     public void set(String name, Object obj) throws CertificateException {
         // NOT USED
     }
@@ -105,6 +107,7 @@ public class CertificateScopeOfUseExtension extends Extension
     /**
      * Retrieves extension attribute.
      */
+    @Override
     public Object get(String name) throws CertificateException {
         // NOT USED
         return null;
@@ -113,6 +116,7 @@ public class CertificateScopeOfUseExtension extends Extension
     /**
      * Deletes attribute.
      */
+    @Override
     public void delete(String name) throws CertificateException {
         // NOT USED
     }
@@ -120,6 +124,7 @@ public class CertificateScopeOfUseExtension extends Extension
     /**
      * Decodes this extension.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         // NOT USED
     }
@@ -128,6 +133,7 @@ public class CertificateScopeOfUseExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         // NOT USED
         return null;
@@ -170,6 +176,7 @@ public class CertificateScopeOfUseExtension extends Extension
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -183,6 +190,7 @@ public class CertificateScopeOfUseExtension extends Extension
     /**
      * Returns a printable representation of the CertificateRenewalWindow.
      */
+    @Override
     public String toString() {
         StringBuffer s = new StringBuffer(super.toString() + "CertificateUseOfScope [\n");
 

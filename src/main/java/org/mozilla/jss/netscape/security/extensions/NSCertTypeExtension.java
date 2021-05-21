@@ -266,6 +266,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws CertificateException {
         if (!(obj instanceof Boolean)) {
             throw new CertificateException("Attribute must be of type Boolean.");
@@ -278,6 +279,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws CertificateException {
         return Boolean.valueOf(isSet(getPosition(name)));
     }
@@ -285,6 +287,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws CertificateException {
         set(getPosition(name), false);
     }
@@ -292,6 +295,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
     /**
      * Returns a printable representation of the NSCertType.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "NSCertType [\n";
 
@@ -340,6 +344,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -350,6 +355,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -366,6 +372,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         return mAttributeNames.elements();
     }
@@ -373,6 +380,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return (NAME);
     }

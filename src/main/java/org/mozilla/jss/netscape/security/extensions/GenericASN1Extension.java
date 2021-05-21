@@ -254,6 +254,7 @@ public class GenericASN1Extension extends Extension
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -261,6 +262,7 @@ public class GenericASN1Extension extends Extension
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         return null;
     }
@@ -268,6 +270,7 @@ public class GenericASN1Extension extends Extension
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -286,6 +289,7 @@ public class GenericASN1Extension extends Extension
      * @param in the InputStream to unmarshal the contents from.
      * @exception IOException on decoding or validity errors.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -296,6 +300,7 @@ public class GenericASN1Extension extends Extension
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out)
             throws IOException {
         DerOutputStream tmp = new DerOutputStream();
@@ -316,6 +321,7 @@ public class GenericASN1Extension extends Extension
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -345,6 +351,7 @@ public class GenericASN1Extension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         Vector<String> elements = new Vector<String>();
         elements.addElement("octet");

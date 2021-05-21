@@ -91,6 +91,7 @@ public class InhibitAnyPolicyExtension
         decodeThis();
     }
 
+    @Override
     public void setCritical(boolean newValue) {
         if (critical != newValue) {
             critical = newValue;
@@ -118,28 +119,34 @@ public class InhibitAnyPolicyExtension
         return presentation;
     }
 
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
     }
 
+    @Override
     public void set(String name, Object obj)
             throws CertificateException, IOException {
         // NOT USED
     }
 
+    @Override
     public Object get(String name) throws CertificateException, IOException {
         // NOT USED
         return null;
     }
 
+    @Override
     public Enumeration<String> getAttributeNames() {
         return null;
     }
 
+    @Override
     public String getName() {
         return NAME;
     }
 
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
         // NOT USED
@@ -151,6 +158,7 @@ public class InhibitAnyPolicyExtension
         mSkipCerts = val.getInteger();
     }
 
+    @Override
     public void encode(OutputStream out) throws IOException {
         try (DerOutputStream os = new DerOutputStream()) {
             DerOutputStream tmp = new DerOutputStream();

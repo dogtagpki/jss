@@ -110,6 +110,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     /**
      * Sets extension attribute.
      */
+    @Override
     public void set(String name, Object obj) throws CertificateException {
         // NOT USED
     }
@@ -117,6 +118,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     /**
      * Retrieves extension attribute.
      */
+    @Override
     public Object get(String name) throws CertificateException {
         // NOT USED
         return null;
@@ -125,6 +127,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     /**
      * Deletes attribute.
      */
+    @Override
     public void delete(String name) throws CertificateException {
         // NOT USED
     }
@@ -132,6 +135,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     /**
      * Decodes this extension.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         // NOT USED
     }
@@ -140,6 +144,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         // NOT USED
         return null;
@@ -148,6 +153,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return NAME;
     }
@@ -211,6 +217,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -224,6 +231,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     /**
      * Returns a printable representation of the AuthInfoAccess.
      */
+    @Override
     public String toString() {
         StringBuffer s = new StringBuffer();
         String b = super.toString() + "AuthInfoAccess [\n";

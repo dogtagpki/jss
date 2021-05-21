@@ -74,6 +74,7 @@ public class CertificateRenewalWindowExtension extends Extension
         decodeThis();
     }
 
+    @Override
     public String getName() {
         return NAME;
     }
@@ -81,6 +82,7 @@ public class CertificateRenewalWindowExtension extends Extension
     /**
      * Sets extension attribute.
      */
+    @Override
     public void set(String name, Object obj) throws CertificateException {
         // NOT USED
     }
@@ -88,6 +90,7 @@ public class CertificateRenewalWindowExtension extends Extension
     /**
      * Retrieves extension attribute.
      */
+    @Override
     public Object get(String name) throws CertificateException {
         // NOT USED
         return null;
@@ -96,6 +99,7 @@ public class CertificateRenewalWindowExtension extends Extension
     /**
      * Deletes attribute.
      */
+    @Override
     public void delete(String name) throws CertificateException {
         // NOT USED
     }
@@ -103,6 +107,7 @@ public class CertificateRenewalWindowExtension extends Extension
     /**
      * Decodes this extension.
      */
+    @Override
     public void decode(InputStream in) throws IOException {
         // NOT USED
     }
@@ -111,6 +116,7 @@ public class CertificateRenewalWindowExtension extends Extension
      * Return an enumeration of names of attributes existing within this
      * attribute.
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
         // NOT USED
         return null;
@@ -166,6 +172,7 @@ public class CertificateRenewalWindowExtension extends Extension
      * @param out the DerOutputStream to write the extension to.
      * @exception IOException on encoding errors.
      */
+    @Override
     public void encode(OutputStream out) throws IOException {
         DerOutputStream tmp = new DerOutputStream();
 
@@ -179,6 +186,7 @@ public class CertificateRenewalWindowExtension extends Extension
     /**
      * Returns a printable representation of the CertificateRenewalWindow.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "CertificateRenewalWindow [\n";
 

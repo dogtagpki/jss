@@ -198,10 +198,12 @@ public class PresenceServerExtension extends Extension implements CertAttrSet {
         mServiceLevel = seq[8].getInteger().toInt();
     }
 
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
     }
 
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
         DerOutputStream dos = new DerOutputStream();
@@ -212,6 +214,7 @@ public class PresenceServerExtension extends Extension implements CertAttrSet {
     /**
      * Set the attribute value.
      */
+    @Override
     public void set(String name, Object obj) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
@@ -219,6 +222,7 @@ public class PresenceServerExtension extends Extension implements CertAttrSet {
     /**
      * Get the attribute value.
      */
+    @Override
     public Object get(String name) throws IOException {
         return null;
     }
@@ -226,10 +230,12 @@ public class PresenceServerExtension extends Extension implements CertAttrSet {
     /**
      * Delete the attribute value.
      */
+    @Override
     public void delete(String name) throws IOException {
         throw new IOException("Method not to be called directly.");
     }
 
+    @Override
     public Enumeration<String> getAttributeNames() {
         return null;
     }
@@ -237,6 +243,7 @@ public class PresenceServerExtension extends Extension implements CertAttrSet {
     /**
      * Return the name of this attribute.
      */
+    @Override
     public String getName() {
         return "PresenceServerExtension";
     }

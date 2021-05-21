@@ -93,6 +93,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         decodeThis();
     }
 
+    @Override
     public void setCritical(boolean newValue) {
         if (critical != newValue) {
             critical = newValue;
@@ -123,6 +124,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         mCached = null;
     }
 
+    @Override
     public void encode(DerOutputStream out) throws IOException {
         if (mCached == null) {
             encodeExtValue();
@@ -148,10 +150,12 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         return presentation;
     }
 
+    @Override
     public void decode(InputStream in)
             throws CertificateException, IOException {
     }
 
+    @Override
     public void encode(OutputStream out)
             throws CertificateException, IOException {
         if (mCached == null) {
@@ -162,24 +166,29 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         out.write(mCached);
     }
 
+    @Override
     public void set(String name, Object obj)
             throws CertificateException, IOException {
         // NOT USED
     }
 
+    @Override
     public Object get(String name) throws CertificateException, IOException {
         // NOT USED
         return null;
     }
 
+    @Override
     public Enumeration<String> getAttributeNames() {
         return null;
     }
 
+    @Override
     public String getName() {
         return NAME;
     }
 
+    @Override
     public void delete(String name)
             throws CertificateException, IOException {
         // NOT USED

@@ -91,6 +91,7 @@ public class CertificateScopeEntry {
     /**
      * Returns a printable representation of the CertificateRenewalWindow.
      */
+    @Override
     public String toString() {
         String s = super.toString() + "CertificateScopeEntry [\n";
 
