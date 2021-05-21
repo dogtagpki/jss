@@ -108,6 +108,7 @@ public final class CryptoManager implements TokenSupplier
             return list.iterator();
 
         }
+        @Override
         public String toString() {
             return name;
         }
@@ -140,6 +141,7 @@ public final class CryptoManager implements TokenSupplier
      *
      * @return The internal cryptographic services token.
      */
+    @Override
     public synchronized CryptoToken getInternalCryptoToken() {
         return internalCryptoToken;
     }
@@ -1039,6 +1041,7 @@ public final class CryptoManager implements TokenSupplier
      *
      * @return A JSS SecureRandom implemented with FIPS-validated NSS.
      */
+    @Override
     public org.mozilla.jss.crypto.JSSSecureRandom
     getSecureRNG() {
         return new PK11SecureRandom();
@@ -1078,6 +1081,7 @@ public final class CryptoManager implements TokenSupplier
      * @param token The token to use for crypto operations. Specifying
      * <code>null</code> will cause the InternalKeyStorageToken to be used.
      */
+    @Override
     public void setThreadToken(CryptoToken token) {
         if( token != null ) {
             perThreadTokenTable.put(Thread.currentThread(), token);
@@ -1098,6 +1102,7 @@ public final class CryptoManager implements TokenSupplier
      * @return The default token for this thread. If it has not been specified,
      * it will be the InternalKeyStorageToken.
      */
+    @Override
     public CryptoToken getThreadToken() {
         CryptoToken tok =
             perThreadTokenTable.get(Thread.currentThread());
