@@ -124,6 +124,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return new String[] { tokenName, nickname };
     }
 
+    @Override
     public Enumeration<String> engineAliases() {
         logger.debug("JSSKeyStoreSpi: engineAliases()");
         return Collections.enumeration(getAliases());
@@ -204,6 +205,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         }
     }
 
+    @Override
     public boolean engineContainsAlias(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineContainsAlias(" + alias + ")");
@@ -211,6 +213,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return getAliases().contains(alias);
     }
 
+    @Override
     public void engineDeleteEntry(String alias) throws KeyStoreException {
 
         try {
@@ -298,6 +301,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         }
     }
 
+    @Override
     public Certificate engineGetCertificate(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificate(" + alias + ")");
@@ -336,6 +340,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         }
     }
 
+    @Override
     public String engineGetCertificateAlias(Certificate cert) {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificateAlias()");
@@ -354,6 +359,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
     private native String getCertNickname(byte[] derCert);
 
+    @Override
     public Certificate[] engineGetCertificateChain(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificateChain(" + alias + ")");
@@ -405,6 +411,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     /*
      * Not supported.
      */
+    @Override
     public java.util.Date engineGetCreationDate(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineGetCreationDate(" + alias + ")");
@@ -412,6 +419,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return null;
     }
 
+    @Override
     public Key engineGetKey(String alias, char[] password) {
 
         logger.debug("JSSKeyStoreSpi: engineGetKey(" + alias + ")");
@@ -491,6 +499,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
      * Returns true if there is a cert with this nickname but there is no
      * key associated with the cert.
      */
+    @Override
     public boolean engineIsCertificateEntry(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineIsCertificateEntry(" + alias + ")");
@@ -518,6 +527,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
      * Returns true if there is a key with this alias, or if
      * there is a cert with this alias that has an associated key.
      */
+    @Override
     public boolean engineIsKeyEntry(String alias) {
 
         logger.debug("JSSKeyStoreSpi: engineIsKeyEntry(" + alias + ")");
@@ -526,12 +536,14 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return engineGetKey(alias, null) != null;
     }
 
+    @Override
     public void engineLoad(InputStream stream, char[] password)
         throws IOException
     {
         logger.debug("JSSKeyStoreSpi: engineLoad(stream, password)");
     }
 
+    @Override
     public void engineLoad(KeyStore.LoadStoreParameter param)
         throws IOException
     {
@@ -556,6 +568,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
      * unless it has an associated private key.  That rules out
      * trusted certificate entries, so we can't supply this method currently.
      */
+    @Override
     public void engineSetCertificateEntry(String alias, Certificate cert)
             throws KeyStoreException
     {
@@ -568,6 +581,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     }
 
 
+    @Override
     public void engineSetKeyEntry(String alias, byte[] key, Certificate[] chain)
         throws KeyStoreException
     {
@@ -578,6 +592,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
             "Store the key as a handle instead.");
     }
 
+    @Override
     public void engineSetKeyEntry(String alias, Key key, char[] password,
         Certificate[] chain) throws KeyStoreException
     {
@@ -595,6 +610,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     private native void engineSetKeyEntryNative(String alias, Object key,
         char[] password, Certificate[] chain) throws KeyStoreException;
 
+    @Override
     public int engineSize() {
 
         logger.debug("JSSKeyStoreSpi: engineSize()");
@@ -602,6 +618,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
         return getAliases().size();
     }
 
+    @Override
     public void engineStore(OutputStream stream, char[] password)
             throws IOException
     {

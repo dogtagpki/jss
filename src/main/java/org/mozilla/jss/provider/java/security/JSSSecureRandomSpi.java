@@ -17,6 +17,7 @@ public class JSSSecureRandomSpi extends java.security.SecureRandomSpi {
         engine = TokenSupplierManager.getTokenSupplier().getSecureRNG();
     }
 
+    @Override
     protected byte[]
     engineGenerateSeed(int numBytes) {
         byte[] bytes = new byte[numBytes];
@@ -24,11 +25,13 @@ public class JSSSecureRandomSpi extends java.security.SecureRandomSpi {
         return bytes;
     }
 
+    @Override
     protected void
     engineNextBytes(byte[] bytes) {
         engine.nextBytes(bytes);
     }
 
+    @Override
     protected void
     engineSetSeed(byte[] seed) {
         engine.setSeed(seed);

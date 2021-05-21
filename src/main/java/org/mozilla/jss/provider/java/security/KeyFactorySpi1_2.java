@@ -39,6 +39,7 @@ import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
 {
 
+    @Override
     protected PublicKey engineGeneratePublic(KeySpec keySpec)
         throws InvalidKeySpecException
     {
@@ -126,6 +127,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
      * We don't support RSAPrivateKeySpec because it doesn't have enough
      * information. You need to provide an RSAPrivateCrtKeySpec.
      */
+    @Override
     protected java.security.PrivateKey engineGeneratePrivate(KeySpec keySpec)
         throws InvalidKeySpecException
     {
@@ -207,6 +209,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
       }
     }
 
+    @Override
     protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec)
         throws InvalidKeySpecException
     {
@@ -225,6 +228,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
      * to move keys around by wrapping and unwrapping them; or by manually
      * translating to a KeySpec, then manually translating back to a Key.
      */
+    @Override
     protected Key engineTranslateKey(Key key)
         throws InvalidKeyException
     {
