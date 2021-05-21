@@ -13,6 +13,7 @@ import org.mozilla.jss.crypto.KeyGenerator;
 public final class PasswordConverter
     implements KeyGenerator.CharToByteConverter {
 
+        @Override
         public byte[] convert(char[] chars) {
             byte[] bytes = new byte[ (chars.length+1) * 2 ];
 
