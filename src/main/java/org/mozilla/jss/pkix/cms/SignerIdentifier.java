@@ -104,6 +104,7 @@ public class SignerIdentifier implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
 
+    @Override
     public Tag getTag() {
         if( type == SUBJECT_KEY_IDENTIFIER ) {
             return Tag.get(0);
@@ -113,6 +114,7 @@ public class SignerIdentifier implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
 
         if( type == SUBJECT_KEY_IDENTIFIER ) {
@@ -126,6 +128,7 @@ public class SignerIdentifier implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
 				//Assert.notReached("A CHOICE cannot be implicitly tagged");
@@ -154,10 +157,12 @@ public class SignerIdentifier implements ASN1Value {
             choicet.addElement(IssuerAndSerialNumber.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
@@ -174,6 +179,7 @@ public class SignerIdentifier implements ASN1Value {
             }
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
 					//Assert.notReached("A CHOICE cannot be implicitly tagged");

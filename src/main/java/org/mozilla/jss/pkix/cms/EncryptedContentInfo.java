@@ -294,14 +294,17 @@ public class EncryptedContentInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(),ostream);
     }
 
+    @Override
     public void encode(Tag tag, OutputStream ostream) throws IOException {
         sequence.encode(tag,ostream);
     }
@@ -318,16 +321,19 @@ public class EncryptedContentInfo implements ASN1Value {
 
     public static class Template implements ASN1Template {
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return (tag.equals(EncryptedContentInfo.TAG));
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(TAG,istream);
             }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
             {

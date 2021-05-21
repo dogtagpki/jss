@@ -19,6 +19,7 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 public class RecipientInfo implements ASN1Value {
 
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -77,10 +78,12 @@ public class RecipientInfo implements ASN1Value {
 
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(),ostream);
     }
 
+    @Override
     public void encode(Tag tag, OutputStream ostream) throws IOException {
         sequence.encode(tag,ostream);
     }
@@ -96,16 +99,19 @@ public class RecipientInfo implements ASN1Value {
             return RecipientInfo.TAG;
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return (tag.equals(RecipientInfo.TAG));
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(getTag(),istream);
             }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
             {
