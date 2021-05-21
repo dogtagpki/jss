@@ -42,6 +42,7 @@ public class CHOICE implements ASN1Value {
      * Returns the tag that the chosen element is encoded with, which is
      * either the underlying tag of the element or an implicit tag.
      */
+    @Override
     public Tag getTag() {
         return tag;
     }
@@ -62,6 +63,7 @@ public class CHOICE implements ASN1Value {
      * element with an implicit tag, if one was given in the constructor,
      * or with its own underlying tag.
      */
+    @Override
     public void encode( OutputStream ostream ) throws IOException {
         val.encode( tag, ostream );
     }
@@ -75,6 +77,7 @@ public class CHOICE implements ASN1Value {
      *      is merely the tag of the chosen element of the CHOICE.  A
      *      CHOICE cannot itself have an implicit tag.
      */
+    @Override
     public void encode( Tag implicitTag, OutputStream ostream )
         throws IOException
     {
@@ -157,6 +160,7 @@ public static class Template implements ASN1Template {
      * @param t The tag.
      * @return True if the tag satisfies any sub-template.
      */
+    @Override
     public boolean tagMatch(Tag t) {
         int size = size();
         for(int i = 0; i < size; i++) {
@@ -179,6 +183,7 @@ public static class Template implements ASN1Template {
         return false;
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -216,6 +221,7 @@ public static class Template implements ASN1Template {
      * @param implicitTag <b>This parameter is ignored.</b> A choice
      *      cannot have an implicit tag.
      */
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

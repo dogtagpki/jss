@@ -16,6 +16,7 @@ public class UTF8String extends CharacterString implements ASN1Value {
         super(s);
     }
 
+    @Override
     CharConverter getCharConverter() {
         return new UTF8Converter();
     }
@@ -23,6 +24,7 @@ public class UTF8String extends CharacterString implements ASN1Value {
     public static final Tag TAG = new Tag( Tag.UNIVERSAL, 12 );
     public static final Form FORM = Form.PRIMITIVE;
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -41,24 +43,29 @@ public class UTF8String extends CharacterString implements ASN1Value {
 public static class Template
     extends CharacterString.Template implements ASN1Template
 {
+    @Override
     protected Tag getTag() {
         return TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
 
+    @Override
     protected CharConverter getCharConverter() {
         return new UTF8Converter();
     }
 
+    @Override
     protected CharacterString generateInstance(char[] chars)
         throws CharConversionException
     {
         return new UTF8String(chars);
     }
 
+    @Override
     protected String typeName() {
         return "UTF8String";
     }
@@ -66,6 +73,7 @@ public static class Template
 
 private static class UTF8Converter implements CharConverter {
 
+    @Override
     public char[] byteToChar(byte[] bytes, int offset, int len)
         throws CharConversionException
     {
@@ -80,6 +88,7 @@ private static class UTF8Converter implements CharConverter {
         }
     }
 
+    @Override
     public byte[] charToByte(char[] chars, int offset, int len)
         throws CharConversionException
     {

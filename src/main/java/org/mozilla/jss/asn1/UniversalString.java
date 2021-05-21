@@ -13,6 +13,7 @@ import java.io.CharConversionException;
 public class UniversalString extends CharacterString implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 28);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -25,6 +26,7 @@ public class UniversalString extends CharacterString implements ASN1Value {
         super(s);
     }
 
+    @Override
     CharConverter getCharConverter() {
         return new UniversalConverter();
     }
@@ -42,24 +44,29 @@ public class UniversalString extends CharacterString implements ASN1Value {
 public static class Template
     extends CharacterString.Template implements ASN1Template
 {
+    @Override
     protected Tag getTag() {
         return TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
 
+    @Override
     protected CharConverter getCharConverter() {
         return new UniversalConverter();
     }
 
+    @Override
     protected CharacterString generateInstance(char[] chars)
         throws CharConversionException
     {
         return new UniversalString( chars );
     }
 
+    @Override
     protected String typeName() {
         return "UniversalString";
     }
@@ -104,6 +111,7 @@ public static class Template
         /**
          * Turns big-endian UCS4 characters into Unicode Java characters
          */
+        @Override
         public char[] byteToChar(byte[] bytes, int offset, int len)
             throws CharConversionException
         {
@@ -154,6 +162,7 @@ public static class Template
         }
 
         // Convert Unicode chars to UCS4 chars
+        @Override
         public byte[] charToByte(char[] chars, int offset, int len)
             throws CharConversionException
         {

@@ -11,6 +11,7 @@ import java.io.OutputStream;
 public class OCTET_STRING implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 4);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -26,11 +27,13 @@ public class OCTET_STRING implements ASN1Value {
         return data;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         // use getTag() so we can be subclassed
         encode(getTag(), ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -52,10 +55,12 @@ public static class Template implements ASN1Template {
         return TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return( TAG.equals(tag) );
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -72,6 +77,7 @@ public static class Template implements ASN1Template {
         return "OCTET_STRING";
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

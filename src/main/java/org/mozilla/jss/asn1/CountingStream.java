@@ -25,10 +25,12 @@ class CountingStream extends InputStream {
         this.source = source;
     }
 
+    @Override
     public int available() throws IOException {
         return source.available();
     }
 
+    @Override
     public void mark(int readlimit) {
         source.mark(readlimit);
         markpos = count;
@@ -37,10 +39,12 @@ class CountingStream extends InputStream {
         }
     }
 
+    @Override
     public boolean markSupported() {
         return source.markSupported();
     }
 
+    @Override
     public int read() throws IOException {
         int n = source.read();
         if( n != -1 ) {
@@ -52,6 +56,7 @@ class CountingStream extends InputStream {
         return n;
     }
 
+    @Override
     public int read(byte[] buffer) throws IOException {
         int n = source.read(buffer);
         if( n != -1 ) {
@@ -63,6 +68,7 @@ class CountingStream extends InputStream {
         return n;
     }
 
+    @Override
     public int read(byte[] buffer, int offset, int count) throws IOException {
         int n = source.read(buffer, offset, count);
         if( n != -1 ) {
@@ -74,6 +80,7 @@ class CountingStream extends InputStream {
         return n;
     }
 
+    @Override
     public void reset() throws IOException {
         source.reset();
         if(DEBUG) {
@@ -82,6 +89,7 @@ class CountingStream extends InputStream {
         count = markpos;
     }
 
+    @Override
     public long skip(long count) throws IOException {
         this.count += count;
         if(DEBUG) {

@@ -172,6 +172,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
 
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 6);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -249,6 +250,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
         return numbers;
     }
 
+    @Override
     public int hashCode() {
         int code = 1;
         for(int i = 0; i < numbers.length; i++) {
@@ -290,6 +292,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
         return new OBJECT_IDENTIFIER(nums);
     }
 
+    @Override
     public boolean equals(Object obj) {
         if(obj == null || ! (obj instanceof OBJECT_IDENTIFIER)) {
             return false;
@@ -306,6 +309,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
         return true;
     }
 
+    @Override
     public String toString() {
         String ret = "{" + String.valueOf(numbers[0]);
         for(int i=1; i < numbers.length; i++) {
@@ -323,6 +327,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
         return ret;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
@@ -424,6 +429,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
     }
 
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -443,6 +449,7 @@ public static class Template implements ASN1Template {
     public Tag getTag() {
         return OBJECT_IDENTIFIER.TAG;
     }
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals(OBJECT_IDENTIFIER.TAG) );
     }
@@ -454,12 +461,14 @@ public static class Template implements ASN1Template {
         return( form == OBJECT_IDENTIFIER.FORM );
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
         return decode(getTag(), istream);
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

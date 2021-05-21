@@ -14,6 +14,7 @@ public class ENUMERATED extends INTEGER implements ASN1Value {
 
     private static final long serialVersionUID = 1L;
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 10);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -52,13 +53,16 @@ public class ENUMERATED extends INTEGER implements ASN1Value {
 public static class Template
     extends INTEGER.Template implements ASN1Template
 {
+    @Override
     Tag getTag() {
         return ENUMERATED.TAG;
     }
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals(ENUMERATED.TAG) );
     }
 
+    @Override
     public ASN1Value
     decode(Tag tag, InputStream derStream)
         throws InvalidBERException, IOException

@@ -19,6 +19,7 @@ public class Form {
     public static final Form PRIMITIVE = new Form("PRIMITIVE");
     public static final Form CONSTRUCTED = new Form("CONSTRUCTED");
 
+    @Override
     public String toString() {
         return name;
     }

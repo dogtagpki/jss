@@ -20,6 +20,7 @@ public class SET implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 17);
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -153,6 +154,7 @@ public class SET implements ASN1Value {
      * Writes the DER encoding to the given output stream.
      * @param ostream Output stream.
      */
+    @Override
     public void encode(OutputStream ostream)
         throws IOException
     {
@@ -166,6 +168,7 @@ public class SET implements ASN1Value {
      * @param implicitTag Implicit tag.
      * @param ostream Output stream.
      */
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -629,6 +632,7 @@ public static class Template implements ASN1Template {
      * @param tag Tag.
      * @return True if tag satisfies this template.
      */
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals(SET.TAG) );
     }
@@ -638,6 +642,7 @@ public static class Template implements ASN1Template {
      * @param istream Input stream.
      * @return Decoded SET value.
      */
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -651,6 +656,7 @@ public static class Template implements ASN1Template {
      * @param istream Input stream.
      * @return Decoded SET value.
      */
+    @Override
     public ASN1Value decode(Tag tag, InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -887,6 +893,7 @@ public static class OF_Template implements ASN1Template {
         template.addElement( el );
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
@@ -894,6 +901,7 @@ public static class OF_Template implements ASN1Template {
     /**
      * Decodes a <code>SET OF</code> from its BER encoding.
      */
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -904,6 +912,7 @@ public static class OF_Template implements ASN1Template {
      * Decodes a <code>SET OF</code> with an implicit tag from its BER
      * encoding.
      */
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

@@ -10,15 +10,18 @@ import java.io.IOException;
 public class NULL implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 5);
+    @Override
     public Tag getTag() {
         return TAG;
     }
     public static final Form FORM = Form.PRIMITIVE;
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -41,16 +44,19 @@ public static class Template implements ASN1Template {
     public Tag getTag() {
         return NULL.TAG;
     }
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals(NULL.TAG) );
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
         return decode(getTag(), istream);
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

@@ -18,6 +18,7 @@ import java.util.Vector;
 public class SEQUENCE extends SET implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 16);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -30,6 +31,7 @@ public class SEQUENCE extends SET implements ASN1Value {
      * Writes the DER encoding to the given output stream,
      * using the given implicit tag.
      */
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -317,6 +319,7 @@ public static class Template implements ASN1Template {
         return SEQUENCE.TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return( tag.equals(SEQUENCE.TAG) );
     }
@@ -325,6 +328,7 @@ public static class Template implements ASN1Template {
      * Decodes a SEQUENCE from its BER encoding.
      * @param istream Input stream.
      */
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -337,6 +341,7 @@ public static class Template implements ASN1Template {
      * @param tag Tag.
      * @param istream Input stream.
      */
+    @Override
     public ASN1Value decode(Tag tag, InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -598,6 +603,7 @@ public static class OF_Template implements ASN1Template {
         return t;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
@@ -605,6 +611,7 @@ public static class OF_Template implements ASN1Template {
     /**
      * Decodes a SEQUENCE OF from an input stream.
      */
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
@@ -614,6 +621,7 @@ public static class OF_Template implements ASN1Template {
     /**
      * Decodes a SEQUENCE OF with an implicit tag from an input stream.
      */
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

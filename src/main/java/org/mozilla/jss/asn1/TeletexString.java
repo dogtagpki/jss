@@ -11,6 +11,7 @@ import java.io.CharConversionException;
 public class TeletexString extends CharacterString implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 20);
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -23,6 +24,7 @@ public class TeletexString extends CharacterString implements ASN1Value {
         super(s);
     }
 
+    @Override
     CharConverter getCharConverter() {
         return new TeletexConverter();
     }
@@ -41,24 +43,29 @@ public static class Template
     extends CharacterString.Template implements ASN1Template
 {
 
+    @Override
     protected Tag getTag() {
         return TAG;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return TAG.equals(tag);
     }
 
+    @Override
     protected CharConverter getCharConverter() {
         return new TeletexConverter();
     }
 
+    @Override
     protected CharacterString generateInstance(char[] bytes)
         throws CharConversionException
     {
         return new TeletexString( bytes );
     }
 
+    @Override
     protected String typeName() {
         return "TeletexString";
     }
@@ -66,6 +73,7 @@ public static class Template
 
     private static class TeletexConverter implements CharConverter {
 
+        @Override
         public char[] byteToChar(byte[] bytes, int offset, int len)
             throws CharConversionException
         {
@@ -79,6 +87,7 @@ public static class Template
             return chars;
         }
 
+        @Override
         public byte[] charToByte(char[] chars, int offset, int len)
             throws CharConversionException
         {

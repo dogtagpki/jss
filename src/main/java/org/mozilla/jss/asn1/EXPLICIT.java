@@ -48,14 +48,17 @@ public class EXPLICIT implements ASN1Value {
     /**
      * Returns the Tag of this EXPLICIT tag.
      */
+    @Override
     public Tag getTag() {
         return tag;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(tag, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -101,16 +104,19 @@ public static class Template implements ASN1Template {
         this.tag = tag;
     }
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return( this.tag.equals(tag) );
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
         return decode(tag, istream);
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

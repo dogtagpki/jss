@@ -13,6 +13,7 @@ import java.util.TimeZone;
 public abstract class TimeBase implements ASN1Value {
 
     public static final Form FORM = Form.PRIMITIVE;
+    @Override
     abstract public Tag getTag();
 
     private Date date;
@@ -27,6 +28,7 @@ public abstract class TimeBase implements ASN1Value {
         this.date = date;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(), ostream);
     }
@@ -34,6 +36,7 @@ public abstract class TimeBase implements ASN1Value {
     /**
      * Write the DER-encoding of this TimeBase.
      */
+    @Override
     public void encode(Tag implicit, OutputStream ostream) throws IOException {
 
         if( isUTC() ) {

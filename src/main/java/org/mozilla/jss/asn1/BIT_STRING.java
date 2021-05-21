@@ -158,14 +158,17 @@ public class BIT_STRING implements ASN1Value {
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 3);
     public static final Form FORM = Form.PRIMITIVE;
 
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -223,16 +226,19 @@ public class BIT_STRING implements ASN1Value {
 public static class Template implements ASN1Template {
 
 
+    @Override
     public boolean tagMatch(Tag tag) {
         return( TAG.equals(tag) );
     }
 
+    @Override
     public ASN1Value decode(InputStream istream)
         throws IOException, InvalidBERException
     {
         return decode(TAG, istream);
     }
 
+    @Override
     public ASN1Value decode(Tag implicitTag, InputStream istream)
         throws IOException, InvalidBERException
     {

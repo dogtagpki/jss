@@ -99,6 +99,7 @@ public class Tag {
         }
     }
 
+    @Override
     public int hashCode() {
         return (tClass.toInt() * 131) + (int)num;
     }
@@ -109,6 +110,7 @@ public class Tag {
      * @param obj Tag.
      * @return True if equal.
      */
+    @Override
     public boolean equals(Object obj) {
         if(obj == null) {
             return false;
@@ -130,6 +132,7 @@ public class Tag {
      * whose class was UNIVERSAL and whose number was 16 would return
      * "UNIVERSAL 16".
      */
+    @Override
     public String toString() {
         return tClass+" "+num;
     }
@@ -157,6 +160,7 @@ public class Tag {
             return encoding;
         }
 
+        @Override
         public String toString() {
             return name;
         }
