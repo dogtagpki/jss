@@ -34,6 +34,7 @@ public class ByteArrayTagOrder implements Comparator<byte[]>, java.io.Serializab
      *         positive number if {@literal bytes1 > bytes2}.
      */
 
+    @Override
     public final int compare(byte[] bytes1, byte[] bytes2) {
 
         // tag order is same as byte order ignoring any difference in

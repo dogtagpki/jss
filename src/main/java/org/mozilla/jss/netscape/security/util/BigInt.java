@@ -128,6 +128,7 @@ public final class BigInt implements Serializable {
      * embedded newlines. Words are separated for readability,
      * with eight words (32 bytes) per line.
      */
+    @Override
     public String toString() {
         return hexify();
     }
@@ -187,6 +188,7 @@ public final class BigInt implements Serializable {
      *
      * @param other the object being compared with this one.
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof BigInt)
             return equals((BigInt) other);

@@ -38,6 +38,7 @@ public class UniversalCharsetDecoder extends CharsetDecoder {
         super(cs, 0.25f, 1);
     }
 
+    @Override
     protected CoderResult decodeLoop(ByteBuffer in, CharBuffer out) {
 
         while (true) {

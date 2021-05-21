@@ -10,14 +10,17 @@ public class UniversalCharset extends Charset {
         super("ASN.1-Universal", null);
     }
 
+    @Override
     public boolean contains(Charset cs) {
         return false;
     }
 
+    @Override
     public CharsetDecoder newDecoder() {
         return new UniversalCharsetDecoder(this);
     }
 
+    @Override
     public CharsetEncoder newEncoder() {
         return new UniversalCharsetEncoder(this);
     }

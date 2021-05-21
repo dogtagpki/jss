@@ -635,6 +635,7 @@ public class DerValue {
      *
      * @param other the object being compared with this one
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof DerValue)
             return equals((DerValue) other);
@@ -677,6 +678,7 @@ public class DerValue {
      *
      * @return printable representation of the value
      */
+    @Override
     public String toString() {
         try {
             String s = getAsString();

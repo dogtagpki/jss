@@ -723,6 +723,7 @@ public class DerOutputStream
      *
      * @exception IOException on output error.
      */
+    @Override
     public void derEncode(OutputStream out) throws IOException {
         out.write(toByteArray());
     }

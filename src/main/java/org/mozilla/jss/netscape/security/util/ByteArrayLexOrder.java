@@ -41,6 +41,7 @@ public class ByteArrayLexOrder implements Comparator<byte[]>, java.io.Serializab
      * @return negative number if {@literal bytes1 < bytes2}, 0 if bytes1 == bytes2,
      *         positive number if {@literal bytes1 > bytes2}.
      */
+    @Override
     public final int compare(byte[] bytes1, byte[] bytes2) {
 
         int diff;

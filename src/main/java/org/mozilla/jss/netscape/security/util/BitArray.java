@@ -159,6 +159,7 @@ public class BitArray {
         return repn.clone();
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
@@ -194,6 +195,7 @@ public class BitArray {
      *
      * @return a hash code value for this bit array.
      */
+    @Override
     public int hashCode() {
         int hashCode = 0;
 
@@ -203,6 +205,7 @@ public class BitArray {
         return hashCode ^ length;
     }
 
+    @Override
     public Object clone() {
         return new BitArray(this);
     }
@@ -231,6 +234,7 @@ public class BitArray {
     /**
      * Returns a string representation of this BitArray.
      */
+    @Override
     public String toString() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 

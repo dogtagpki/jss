@@ -119,6 +119,7 @@ public class ExtPrettyPrint {
      *
      * @return string representation of the certificate
      */
+    @Override
     public String toString() {
 
         StringBuffer sb = new StringBuffer();

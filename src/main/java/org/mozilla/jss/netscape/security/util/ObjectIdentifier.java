@@ -352,6 +352,7 @@ final public class ObjectIdentifier implements Serializable {
         return false;
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other instanceof ObjectIdentifier)
             return equals((ObjectIdentifier) other);
@@ -378,6 +379,7 @@ final public class ObjectIdentifier implements Serializable {
         return true;
     }
 
+    @Override
     public int hashCode() {
         int h = 0;
         int oflow = 0;
@@ -397,6 +399,7 @@ final public class ObjectIdentifier implements Serializable {
      * user-friendly descriptive strings, since those strings
      * will not be understood everywhere.
      */
+    @Override
     public String toString() {
         StringBuffer retval = new StringBuffer();
 
