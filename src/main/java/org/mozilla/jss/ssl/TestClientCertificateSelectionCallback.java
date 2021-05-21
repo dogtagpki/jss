@@ -31,7 +31,8 @@ public class TestClientCertificateSelectionCallback
 	 *    wish to use. You can return null if you do not wish to send
      *    a certificate.
 	 */
-	public String select(Vector<String> nicknames) {
+	@Override
+    public String select(Vector<String> nicknames) {
 		Enumeration<String> e = nicknames.elements();
 		String s="",first=null;
 

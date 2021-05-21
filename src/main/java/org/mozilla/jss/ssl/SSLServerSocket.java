@@ -148,6 +148,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * @throws SocketTimeoutException  If the socket times out trying to connect
      * @throws SSLSocketException  JSS subclass of java.net.SocketException
      */
+    @Override
     public Socket accept() throws IOException {
         synchronized (acceptLock) {
             synchronized (this) {
@@ -183,6 +184,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * Sets the SO_TIMEOUT socket option.
      * @param timeout The timeout time in milliseconds.
      */
+    @Override
     public void setSoTimeout(int timeout) {
         base.setTimeout(timeout);
     }
@@ -191,11 +193,14 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * Returns the current value of the SO_TIMEOUT socket option.
      * @return The timeout time in milliseconds.
      */
+    @Override
     public int getSoTimeout() {
         return base.getTimeout();
     }
 
+    @Override
     public native void setReuseAddress(boolean reuse) throws SocketException;
+    @Override
     public native boolean getReuseAddress() throws SocketException;
     private native void abortAccept() throws SocketException;
     private native byte[] socketAccept(SSLSocket s, int timeout,
@@ -210,6 +215,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     /**
      * @deprecated finalize() in Object has been deprecated
      */
+    @Override
     @Deprecated
     protected void finalize() throws Throwable {
         close(); /* in case user never called close */
@@ -219,6 +225,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     /**
      * @return The local port.
      */
+    @Override
     public int getLocalPort() {
         return base.getLocalPort();
     }
@@ -226,6 +233,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     /**
      * Closes this socket.
      */
+    @Override
     public void close() throws IOException {
         synchronized (this) {
             if( isClosed ) {
@@ -487,6 +495,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
     /**
      * @return the local address of this server socket.
      */
+    @Override
     public InetAddress getInetAddress() {
         return base.getLocalAddress();
     }
@@ -566,6 +575,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * Returns the addresses and ports of this socket
      * or an error message if the socket is not in a valid state.
      */
+    @Override
     public String toString() {
 
         try {

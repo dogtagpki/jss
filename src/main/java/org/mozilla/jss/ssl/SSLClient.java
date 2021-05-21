@@ -439,7 +439,8 @@ class ClientHandshakeCB implements SSLHandshakeCompletedListener {
     this.sc = sc;
   }
 
-  public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
+  @Override
+public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
   try {
     sc.handshakeEventHappened = true;
     SSLSecurityStatus status = event.getStatus();

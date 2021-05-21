@@ -616,6 +616,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * @return The remote peer's IP address or null if the SSLSocket is closed.
      */
+    @Override
     public InetAddress getInetAddress() {
         synchronized (this) {
             if( isClosed ) {
@@ -628,6 +629,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * @return The local IP address or null if the SSLSocket is closed.
      */
+    @Override
     public InetAddress getLocalAddress() {
         synchronized (this) {
             if( isClosed ) {
@@ -640,6 +642,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * @return The local port or -1 if the SSLSocket is closed.
      */
+    @Override
     public int getLocalPort() {
         synchronized (this) {
             if( isClosed ) {
@@ -652,11 +655,13 @@ public class SSLSocket extends java.net.Socket {
     /**
      * @return The remote port.
      */
+    @Override
     public native int getPort();
 
     /**
      * Returns the input stream for reading from this socket.
      */
+    @Override
     public InputStream getInputStream() throws IOException {
         return new SSLInputStream(this);
     }
@@ -664,6 +669,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * Returns the output stream for writing to this socket.
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         return new SSLOutputStream(this);
     }
@@ -672,26 +678,31 @@ public class SSLSocket extends java.net.Socket {
      * Enables or disables the TCP_NO_DELAY socket option. Enabling this
      * option will <i>disable</i> the Nagle algorithm.
      */
+    @Override
     public native void setTcpNoDelay(boolean on) throws SocketException;
 
     /**
      * Returns the current setting of the TCP_NO_DELAY socket option.
      */
+    @Override
     public native boolean getTcpNoDelay() throws SocketException;
 
     /**
      * Enables or disables the SO_KEEPALIVE socket option.
      */
+    @Override
     public native void setKeepAlive(boolean on) throws SocketException;
 
     /**
      * Returns the current setting of the SO_KEEPALIVE socket option.
      */
+    @Override
     public native boolean getKeepAlive() throws SocketException;
 
     /**
      * Shuts down the input side of the socket.
      */
+    @Override
     public void shutdownInput() throws IOException {
         shutdownNative(SocketBase.PR_SHUTDOWN_RCV);
     }
@@ -699,6 +710,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * Shuts down the output side of the socket.
      */
+    @Override
     public void shutdownOutput() throws IOException {
         shutdownNative(SocketBase.PR_SHUTDOWN_SEND);
     }
@@ -709,18 +721,21 @@ public class SSLSocket extends java.net.Socket {
      * Sets the SO_LINGER socket option.
      * param linger The time (in seconds) to linger for.
      */
+    @Override
     public native void setSoLinger(boolean on, int linger)
         throws SocketException;
 
     /**
      * Returns the current value of the SO_LINGER socket option.
      */
+    @Override
     public native int getSoLinger() throws SocketException;
 
     /**
      * Sets the SO_TIMEOUT socket option.
      * @param timeout The timeout time in milliseconds.
      */
+    @Override
     public void setSoTimeout(int timeout) throws SocketException {
         base.setTimeout(timeout);
     }
@@ -729,6 +744,7 @@ public class SSLSocket extends java.net.Socket {
      * Returns the current value of the SO_TIMEOUT socket option.
      * @return The timeout time in milliseconds.
      */
+    @Override
     public int getSoTimeout() throws SocketException {
         return base.getTimeout();
     }
@@ -736,26 +752,31 @@ public class SSLSocket extends java.net.Socket {
     /**
      * Sets the size (in bytes) of the send buffer.
      */
+    @Override
     public native void setSendBufferSize(int size) throws SocketException;
 
     /**
      * Returns the size (in bytes) of the send buffer.
      */
+    @Override
     public native int getSendBufferSize() throws SocketException;
 
     /**
      * Sets the size (in bytes) of the receive buffer.
      */
+    @Override
     public native void setReceiveBufferSize(int size) throws SocketException;
 
     /**
      * Returnst he size (in bytes) of the receive buffer.
      */
+    @Override
     public native int getReceiveBufferSize() throws SocketException;
 
     /**
      * Closes this socket.
      */
+    @Override
     public void close() throws IOException {
         synchronized (this) {
             if( isClosed ) {
@@ -1579,6 +1600,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * @deprecated finalize() in Object has been deprecated
      */
+    @Override
     @Deprecated
     protected void finalize() throws Throwable {
         close(); /* in case user did not call close */
@@ -1599,6 +1621,7 @@ public class SSLSocket extends java.net.Socket {
      * Returns the addresses and ports of this socket
      * or an error message if the socket is not in a valid state.
      */
+    @Override
     public String toString() {
 
         try {

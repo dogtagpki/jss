@@ -12,18 +12,22 @@ class SSLOutputStream extends java.io.OutputStream {
         this.sock = sock;
     }
 
+    @Override
     public void write(int b) throws IOException {
         write( new byte[] {(byte)b}, 0, 1 );
     }
 
+    @Override
     public void write(byte[] b) throws IOException {
         write( b, 0, b.length);
     }
 
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         sock.write(b, off, len);
     }       
 
+    @Override
     public void close() throws IOException {
         sock.close();
     }

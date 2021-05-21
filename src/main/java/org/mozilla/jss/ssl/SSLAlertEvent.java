@@ -125,6 +125,7 @@ public class SSLAlertEvent extends EventObject {
         throw this.toException();
     }
 
+    @Override
     public String toString() {
         return this.levelEnum + ": " + this.descriptionEnum;
     }

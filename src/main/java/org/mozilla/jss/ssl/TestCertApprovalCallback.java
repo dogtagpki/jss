@@ -16,7 +16,8 @@ import org.mozilla.jss.crypto.InternalCertificate;
 public class TestCertApprovalCallback
    implements SSLCertificateApprovalCallback {
 
-	public boolean approve(
+	@Override
+    public boolean approve(
 					org.mozilla.jss.crypto.X509Certificate servercert,
 					SSLCertificateApprovalCallback.ValidityStatus status) {
 

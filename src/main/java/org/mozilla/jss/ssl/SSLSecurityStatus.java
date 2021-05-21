@@ -130,6 +130,7 @@ public class SSLSecurityStatus {
      * Get a pretty string to show to a user, summarizing the contents
      * of this object
      */
+    @Override
     public String toString() {
 	String statusString;
 	switch(status) {
