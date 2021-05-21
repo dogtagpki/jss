@@ -106,6 +106,7 @@ public class KerberosName {
         return bos.toByteArray();
     }
 
+    @Override
     public String toString() {
         String strings = null;
         for (int i = 0; i < m_name_strings.size(); i++) {
