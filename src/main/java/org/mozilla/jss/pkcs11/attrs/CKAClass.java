@@ -34,7 +34,9 @@ public class CKAClass extends CKAttribute {
         return value;
     }
 
+    @Override
     protected native void acquireNativeResources();
+    @Override
     protected native void releaseNativeResources();
 
     /**

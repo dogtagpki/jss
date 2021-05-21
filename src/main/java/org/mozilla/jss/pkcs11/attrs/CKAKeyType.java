@@ -35,7 +35,9 @@ public class CKAKeyType extends CKAttribute {
         return value;
     }
 
+    @Override
     protected native void acquireNativeResources();
+    @Override
     protected native void releaseNativeResources();
 
     /**
