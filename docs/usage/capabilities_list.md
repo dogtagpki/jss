@@ -13,18 +13,20 @@ and see what else we'd need to add in, to reach compatibility. Since we're
 attempting to be a default crypto provider, it would be nice to ensure we're 
 mostly close to what the JDK provides. Hopefully other packages written to the
 JDK provider can have similar algorithms available under JSS and behave well. 
-Large gaps in coverage are likely an issue (such as #341 and #242).
+Large gaps in coverage are likely an issue such as [#341](https://github.com/dogtagpki/jss/issues/341)
+and [#242] (https://github.com/dogtagpki/jss/issues/242).
 
 Usage
 ========================================
-First build jss according to the instructions in jss/README.md
+First build jss according to the instructions
+here [README](https://github.com/dogtagpki/jss/blob/master/README.md)
 You should see in the build directory tests_jss4.jar which is what
 contains the application along with the regular tests.
-From the jss/build directory execute
+From the `jss/build` directory execute
 
-    ./run_test.sh org.mozilla.jss.tests.CapabilitiesList
+    `./run_test.sh org.mozilla.jss.tests.CapabilitiesList`
 
-and you should see a listings directory
+and you should see a `listings` directory
 
 Running `tree listings` should produce something like
 
@@ -47,6 +49,7 @@ Running `tree listings` should produce something like
         └── Capabilities4SUN.txt
 
 Here is a brief clip of Capabilities4Mozilla-JSS.txt
+
 	 AlgorithmParameters : IvAlgorithmParameters
 	 AlgorithmParameters : RC2AlgorithmParameters
 	 AlgorithmParameters : RSAPSSAlgorithmParameters
@@ -71,5 +74,5 @@ Here is a brief clip of Capabilities4Mozilla-JSS.txt
 		 Alias: KeyGenerator.SP800-108-Counter
 		... ommitted ...
 
-Notice that the Alias: lines have extra indentation which makes it
+Notice that the `Alias: lines` have extra indentation which makes it
 easier to compare against the other providers.

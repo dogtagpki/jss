@@ -40,7 +40,31 @@ import org.slf4j.LoggerFactory;
  */
 public class CapabilitiesList {
 
-    // start Capabilities inner class
+    /* Inner class to use existing system nss database
+     */
+    public static class UseSystemDB {
+       /* Same location in the Linux distros we have tested
+        */
+        public static String NSS_DB_LOCATION = "/etc/pki/nssdb";
+        private UseSystemDB() {}
+        /* Only a static method */
+
+        /* Method adapted from one used in the candlepin projects
+         * https://github.com/candlepin/candlepin/pull/2370/files#diff-170cc2e1af322c9796d4d8fe20e32bb0R98
+         * an approach that was suggested by Alexander Scheel
+         */
+        public static void addJSSProvider() throws Exception {
+            Capabilities.logger.debug("Starting call to JSSProviderLoader.addProvider()...");
+            InitializationValues ivs = new InitializationValues(NSS_DB_LOCATION);
+            ivs.noCertDB = true;
+            ivs.installJSSProvider = true;
+            ivs.initializeJavaOnly = false;
+            CryptoManager.initialize(ivs);
+            CryptoManager cm = CryptoManager.getInstance();
+        }
+    }
+
+    // start of the Capabilities inner class
 
     /**
      * List the available capabilities for ciphers, key agreement, macs, message
@@ -59,30 +83,6 @@ public class CapabilitiesList {
         public static String briefFileBase = "listings/brief/Capabilities4";
         public static String verboseFileBase = "listings/verbose/Capabilities4";
 
-        /* Inner class to use existing system nss database
-         */
-        public static class UseSystemDB {
-            /* Same location in the Linux distros we have tested
-             */
-            public static String NSS_DB_LOCATION = "/etc/pki/nssdb";
-            private UseSystemDB() {}
-            /* Only a static method */
-
-           /* Method adapted from one used in the candlepin projects
-            * https://github.com/candlepin/candlepin/pull/2370/files#diff-170cc2e1af322c9796d4d8fe20e32bb0R98
-            * an approach that was suggested by Alexander Scheel
-            */
-            public static void addJSSProvider() throws Exception {
-                logger.debug("Starting call to JSSProviderLoader.addProvider()...");
-                InitializationValues ivs = new InitializationValues(NSS_DB_LOCATION);
-                ivs.noCertDB = true;
-                ivs.installJSSProvider = true;
-                ivs.initializeJavaOnly = false;
-                CryptoManager.initialize(ivs);
-                CryptoManager cm = CryptoManager.getInstance();
-            }
-        }
-
         public Capabilities() {
         }
 
@@ -94,7 +94,6 @@ public class CapabilitiesList {
             assert(keySet != null);
             Iterator it = keySet.iterator();
             assert(it != null);
-            it = p.keySet().iterator();
 
             // In the verbose listing, we want to create a mapping from
             // an implementation onto all of its aliases. To do this in one
