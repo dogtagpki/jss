@@ -5,6 +5,7 @@ import org.mozilla.jss.pkcs11.PKCS11Constants;
 public class KBKDFCounterParams extends KBKDFParameterSpec {
     public KBKDFCounterParams() {}
 
+    @Override
     protected void validateParameters() throws IllegalArgumentException {
         if (prfKey == null) {
             String msg = "Required parameter KDF key was never set.";
@@ -67,6 +68,8 @@ public class KBKDFCounterParams extends KBKDFParameterSpec {
         }
     }
 
+    @Override
     protected native void acquireNativeResourcesInternal() throws Exception;
+    @Override
     protected native void releaseNativeResourcesInternal() throws Exception;
 }

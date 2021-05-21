@@ -58,6 +58,7 @@ public class Algorithm {
     /**
      * Returns a String representation of the algorithm.
      */
+    @Override
     public String toString() {
         return name;
     }

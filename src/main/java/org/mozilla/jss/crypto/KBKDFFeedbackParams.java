@@ -35,6 +35,7 @@ public class KBKDFFeedbackParams extends KBKDFParameterSpec {
         }
     }
 
+    @Override
     protected void validateParameters() throws IllegalArgumentException {
         if (prfKey == null) {
             String msg = "Required parameter KDF key was never set.";
@@ -103,6 +104,8 @@ public class KBKDFFeedbackParams extends KBKDFParameterSpec {
         }
     }
 
+    @Override
     protected native void acquireNativeResourcesInternal() throws Exception;
+    @Override
     protected native void releaseNativeResourcesInternal() throws Exception;
 }

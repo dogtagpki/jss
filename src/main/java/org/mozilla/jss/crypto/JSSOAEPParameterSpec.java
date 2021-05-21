@@ -187,7 +187,9 @@ public class JSSOAEPParameterSpec extends NativeEnclosure implements AlgorithmPa
         sourceData = data;
     }
 
+    @Override
     protected native void acquireNativeResources() throws Exception;
 
+    @Override
     protected native void releaseNativeResources() throws Exception;
 }

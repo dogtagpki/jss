@@ -79,6 +79,7 @@ public interface PrivateKey extends java.security.PrivateKey
          * Returns a string representation of the algorithm, such as
          * "RSA", "DSA", or "EC".
          */
+        @Override
         public String toString() {
             return name;
         }

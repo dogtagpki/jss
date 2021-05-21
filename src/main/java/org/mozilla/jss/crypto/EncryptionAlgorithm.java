@@ -40,6 +40,7 @@ public class EncryptionAlgorithm extends Algorithm {
             return m;
         }
 
+        @Override
         public String toString() {
             return name;
         }
@@ -71,6 +72,7 @@ public class EncryptionAlgorithm extends Algorithm {
             return a;
         }
 
+        @Override
         public String toString() {
             return name;
         }
@@ -93,6 +95,7 @@ public class EncryptionAlgorithm extends Algorithm {
             nameHash.put(name.toLowerCase(), this);
         }
 
+        @Override
         public String toString() {
             return name;
         }

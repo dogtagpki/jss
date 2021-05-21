@@ -183,7 +183,8 @@ public class Signature {
 	/**
 	 * Cloning is not supported yet
 	 */
-	protected Object clone() throws CloneNotSupportedException {
+	@Override
+    protected Object clone() throws CloneNotSupportedException {
 		// no cloning for now
 		throw new CloneNotSupportedException();
 	}

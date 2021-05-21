@@ -301,6 +301,7 @@ public interface CryptoToken {
      * Deep comparison operation. Use this, rather than ==, to determine
      * whether two CryptoTokens are the same.
      */
+    @Override
     public boolean equals(Object object);
 
     /**
