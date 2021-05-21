@@ -70,14 +70,17 @@ public class JSSSession implements SSLSession, AutoCloseable {
         return null;
     }
 
+    @Override
     public int getApplicationBufferSize() {
         return applicationBufferSize;
     }
 
+    @Override
     public int getPacketBufferSize() {
         return packetBufferSize;
     }
 
+    @Override
     public byte[] getId() {
         return sessionID;
     }
@@ -86,10 +89,12 @@ public class JSSSession implements SSLSession, AutoCloseable {
         sessionID = id;
     }
 
+    @Override
     public SSLSessionContext getSessionContext() {
         return null;
     }
 
+    @Override
     public long getCreationTime() {
         if (creationTime == 0) {
             refreshData();
@@ -102,6 +107,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         creationTime = time;
     }
 
+    @Override
     public long getLastAccessedTime() {
         refreshData();
         return lastAccessTime;
@@ -135,21 +141,25 @@ public class JSSSession implements SSLSession, AutoCloseable {
         expirationTime = when;
     }
 
+    @Override
     public boolean isValid() {
         return !closed && System.currentTimeMillis() < getExpirationTime();
     }
 
+    @Override
     public void invalidate() {
         if (parent.getSSLFDProxy() != null) {
              SSL.InvalidateSession(parent.getSSLFDProxy());
         }
     }
 
+    @Override
     public void close() {
         closed = true;
         setPeerCertificates(null);
     }
 
+    @Override
     public void putValue(String name, Object value) {
         if (appDataMap.containsKey(name)) {
             removeValue(name);
@@ -162,10 +172,12 @@ public class JSSSession implements SSLSession, AutoCloseable {
         }
     }
 
+    @Override
     public Object getValue(String name) {
         return appDataMap.get(name);
     }
 
+    @Override
     public void removeValue(String name) {
         Object value = appDataMap.remove(name);
 
@@ -175,10 +187,12 @@ public class JSSSession implements SSLSession, AutoCloseable {
         }
     }
 
+    @Override
     public String[] getValueNames() {
         return appDataMap.keySet().toArray(new String[0]);
     }
 
+    @Override
     public Certificate[] getLocalCertificates() {
         return localCertificates;
     }
@@ -187,6 +201,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         localCertificates = certs;
     }
 
+    @Override
     public Certificate[] getPeerCertificates() {
         return peerCertificates;
     }
@@ -208,6 +223,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         peerCertificates = new_certs;
     }
 
+    @Override
     public X509Certificate[] getPeerCertificateChain() throws SSLPeerUnverifiedException {
         if (peerChain == null) {
             String msg = "Peer reported no certificate chain or handshake has not yet completed.";
@@ -221,6 +237,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         peerChain = chain;
     }
 
+    @Override
     public Principal getPeerPrincipal() {
         return peerPrincipal;
     }
@@ -229,6 +246,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         peerPrincipal = principal;
     }
 
+    @Override
     public Principal getLocalPrincipal() {
         return localPrincipal;
     }
@@ -237,6 +255,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         localPrincipal = principal;
     }
 
+    @Override
     public String getCipherSuite() {
         if (cipherSuite == null) {
             refreshData();
@@ -257,6 +276,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         cipherSuite = suite;
     }
 
+    @Override
     public String getProtocol() {
         if (protocolVersion == null) {
             refreshData();
@@ -277,6 +297,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         protocolVersion = protocol;
     }
 
+    @Override
     public String getPeerHost() {
         return peerHost;
     }
@@ -285,6 +306,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         peerHost = host;
     }
 
+    @Override
     public int getPeerPort() {
         return peerPort;
     }

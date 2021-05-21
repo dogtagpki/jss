@@ -35,6 +35,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         configureBlocking(false);
     }
 
+    @Override
     public JSSSocketChannel accept() throws IOException {
         if (parent == null) {
             String msg = "Unable to accept() on a JSSServerSocketChannel ";
@@ -52,6 +53,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return sslAcceptedSocket.getChannel();
     }
 
+    @Override
     public JSSServerSocketChannel bind(SocketAddress local, int backlog) throws IOException {
         if (parent == null) {
             parentSocket.bind(local, backlog);
@@ -62,6 +64,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return this;
     }
 
+    @Override
     public <T> T getOption(SocketOption<T> name) throws IOException {
         if (parent == null) {
             return null;
@@ -70,6 +73,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return parent.getOption(name);
     }
 
+    @Override
     public Set<SocketOption<?>> supportedOptions() {
         if (parent == null) {
             return null;
@@ -78,6 +82,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return parent.supportedOptions();
     }
 
+    @Override
     public <T> JSSServerSocketChannel setOption(SocketOption<T> name, T value) throws IOException {
         if (parent != null) {
             parent.setOption(name, value);
@@ -86,10 +91,12 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return this;
     }
 
+    @Override
     public JSSServerSocket socket() {
         return sslSocket;
     }
 
+    @Override
     public SocketAddress getLocalAddress() throws IOException {
         if (parent == null) {
             return parentSocket.getLocalSocketAddress();
@@ -98,6 +105,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return parent.getLocalAddress();
     }
 
+    @Override
     public void implCloseSelectableChannel() throws IOException {
         engine.cleanup();
         engine = null;
@@ -110,6 +118,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         parent.close();
     }
 
+    @Override
     public void implConfigureBlocking(boolean block) throws IOException {
         if (parent == null) {
             return;

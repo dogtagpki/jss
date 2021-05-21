@@ -179,6 +179,7 @@ public class JSSServerSocket extends SSLServerSocket {
      *
      * @see java.net.ServerSocket#getChannel()
      */
+    @Override
     public JSSServerSocketChannel getChannel() {
         if (parent.getChannel() == null) {
             return null;
@@ -567,15 +568,18 @@ public class JSSServerSocket extends SSLServerSocket {
 
     /* == stubs for Java 9 Socket == */
 
+    @Override
     public <T> ServerSocket setOption(SocketOption<T> name, T value) throws IOException {
         getInternalChannel().setOption(name, value);
         return this;
     }
 
+    @Override
     public <T> T getOption(SocketOption<T> name) throws IOException {
         return getInternalChannel().getOption(name);
     }
 
+    @Override
     public Set<SocketOption<?>> supportedOptions() {
         return getInternalChannel().supportedOptions();
     }
