@@ -61,6 +61,7 @@ public final class JSSProvider extends java.security.Provider {
      *
      * If the JSSProvider is already loaded, this is a no-op.
      */
+    @Override
     public Provider configure(String arg) {
         try {
             cm = JSSLoader.init(arg);
@@ -426,6 +427,7 @@ public final class JSSProvider extends java.security.Provider {
         }
     }
 
+    @Override
     public String toString() {
         String mozillaProviderVersion = JSS_MAJOR_VERSION + "." +
                                         JSS_MINOR_VERSION;
