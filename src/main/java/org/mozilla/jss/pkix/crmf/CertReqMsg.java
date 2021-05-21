@@ -37,6 +37,7 @@ import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 public class CertReqMsg implements ASN1Value {
 
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -164,6 +165,7 @@ public class CertReqMsg implements ASN1Value {
      * Encodes this <i>CertReqMsg</i> to the given OutputStream using
      * DER encoding.
      */
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         //Assert.notYetImplemented("CertReqMsg encoding");
         encode(getTag(),ostream);
@@ -173,6 +175,7 @@ public class CertReqMsg implements ASN1Value {
      * Encodes this <i>CertReqMsg</i> to the given OutputStream using
      * DER encoding, with the given implicit tag.
      */
+    @Override
     public void encode(Tag implicit, OutputStream ostream) throws IOException {
         //Assert.notYetImplemented("CertReqMsg encoding");
         SEQUENCE sequence = new SEQUENCE();
@@ -196,6 +199,7 @@ public class CertReqMsg implements ASN1Value {
      */
     public static class Template implements ASN1Template {
 
+        @Override
         public boolean tagMatch(Tag t) {
             return TAG.equals(t);
         }
@@ -208,6 +212,7 @@ public class CertReqMsg implements ASN1Value {
          * @throws InvalidBERException If the data on the input stream is not
          *      a valid BER encoding of a <i>CertReqMsg</i>.
          */
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
@@ -226,6 +231,7 @@ public class CertReqMsg implements ASN1Value {
          * @throws InvalidBERException If the data on the input stream is not
          *      a valid BER encoding of a <i>CertReqMsg</i>.
          */
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {

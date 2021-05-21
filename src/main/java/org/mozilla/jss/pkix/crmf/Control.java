@@ -79,12 +79,14 @@ public class Control extends AVA implements ASN1Value {
             seqTemplate.addElement( new ANY.Template()               );
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {

@@ -96,6 +96,7 @@ public class CertRequest implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
@@ -103,6 +104,7 @@ public class CertRequest implements ASN1Value {
     /**
      * This method is not yet supported.
      */
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         //Assert.notYetImplemented("CertRequest encoding");
         encode(getTag(),ostream);
@@ -111,6 +113,7 @@ public class CertRequest implements ASN1Value {
     /**
      * This method is not yet supported.
      */
+    @Override
     public void encode(Tag implicit, OutputStream ostream) throws IOException {
         //Assert.notYetImplemented("CertRequest encoding");
         SEQUENCE sequence = new SEQUENCE();
@@ -138,16 +141,19 @@ public class CertRequest implements ASN1Value {
                 SEQUENCE.OF_Template( new AVA.Template() ));
         }
 
+        @Override
         public boolean tagMatch( Tag tag ) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
             return decode(TAG, istream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
             throws IOException, InvalidBERException
         {

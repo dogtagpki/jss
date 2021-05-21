@@ -142,6 +142,7 @@ public class ProofOfPossession implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
 
+    @Override
     public Tag getTag() {
         if( type == RA_VERIFIED ) {
             return Tag.get(0);
@@ -155,6 +156,7 @@ public class ProofOfPossession implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
 
         if( type == RA_VERIFIED ) {
@@ -173,6 +175,7 @@ public class ProofOfPossession implements ASN1Value {
         }
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
         assert(implicitTag.equals(getTag()));
@@ -199,10 +202,12 @@ public class ProofOfPossession implements ASN1Value {
             choicet.addElement( et );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return choicet.tagMatch(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
@@ -221,6 +226,7 @@ public class ProofOfPossession implements ASN1Value {
             }
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
             throw new RuntimeException("A CHOICE cannot be implicitly tagged");

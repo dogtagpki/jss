@@ -105,6 +105,7 @@ public class PKIArchiveOptions implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private Tag tag; // set by the constructor depending on the type
+    @Override
     public Tag getTag() {
         return tag;
     }
@@ -112,6 +113,7 @@ public class PKIArchiveOptions implements ASN1Value {
     /**
      * DER-encodes a PKIArchiveOptions.
      */
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode( getTag(), ostream );
     }
@@ -121,6 +123,7 @@ public class PKIArchiveOptions implements ASN1Value {
      * @param implicitTag <b>This parameter is ignored.</b> A CHOICE cannot
      *      have an implicit tag.
      */
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -167,6 +170,7 @@ public class PKIArchiveOptions implements ASN1Value {
         /**
          * Returns true if the given tag can satisfy this CHOICE.
          */
+        @Override
         public boolean tagMatch(Tag tag) {
             return template.tagMatch(tag);
         }
@@ -175,6 +179,7 @@ public class PKIArchiveOptions implements ASN1Value {
          * Decodes a PKIArchiveOptions.
          * @return A PKIArchiveOptions object.
          */
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
         {
@@ -201,6 +206,7 @@ public class PKIArchiveOptions implements ASN1Value {
          *  PKIArchiveOptions is a CHOICE, it cannot have an implicit tag.
          * @return A PKIArchiveOptions object.
          */
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
         {
