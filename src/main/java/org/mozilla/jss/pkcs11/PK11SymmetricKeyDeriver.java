@@ -67,6 +67,7 @@ public class PK11SymmetricKeyDeriver implements SymmetricKeyDeriver {
 
 
    */
+    @Override
     public void initDerive(SymmetricKey baseKey, long deriveMech, byte[] param, byte[] iv, 
                               long targetMech, long operation, long keySize) throws InvalidKeyException
     {
@@ -111,6 +112,7 @@ public class PK11SymmetricKeyDeriver implements SymmetricKeyDeriver {
 
     */ 
 
+    @Override
     public void initDerive(SymmetricKey baseKey, SymmetricKey secondaryKey, long deriveMech, 
         byte[] param, byte[] iv, long targetMech, long operation, long keySize) throws InvalidKeyException
     {
@@ -126,6 +128,7 @@ public class PK11SymmetricKeyDeriver implements SymmetricKeyDeriver {
     }
 
 
+    @Override
     public SymmetricKey derive()
          throws TokenException
     {

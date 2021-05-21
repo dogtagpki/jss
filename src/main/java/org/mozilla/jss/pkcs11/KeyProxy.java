@@ -9,6 +9,7 @@ abstract class KeyProxy extends org.mozilla.jss.util.NativeProxy {
         super(pointer);
     }
 
+    @Override
     protected void finalize() throws Throwable {
         super.finalize();
     }

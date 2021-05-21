@@ -71,6 +71,7 @@ public final class KeyType {
         return (KeyType) obj;
     }
 
+    @Override
     public String toString() {
         return name;
     }

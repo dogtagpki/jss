@@ -27,6 +27,7 @@ public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
 
     public native KeyType getKeyType();
 
+    @Override
     public String getAlgorithm() {
         return getKeyType().toString();
     }
@@ -84,6 +85,7 @@ public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
     /**
      * Returns a DER-encoded SubjectPublicKeyInfo representing this key.
      */
+    @Override
     public native byte[] getEncoded();
 
     /**
@@ -91,6 +93,7 @@ public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
      *  encoding format is X.509 <i>SubjectPublicKeyInfo</i>, and the name
      *  is "X.509".
      */
+    @Override
     public String getFormat() {
         return "X.509";
     }
@@ -104,5 +107,6 @@ class PublicKeyProxy extends KeyProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 }

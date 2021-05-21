@@ -14,6 +14,7 @@ public class PK11RSAPublicKey extends PK11PubKey implements RSAPublicKey {
         super(pointer);
     }
 
+    @Override
     public BigInteger getModulus() {
       try {
         return new BigInteger(1, getModulusByteArray());
@@ -23,6 +24,7 @@ public class PK11RSAPublicKey extends PK11PubKey implements RSAPublicKey {
     }
     private native byte[] getModulusByteArray();
 
+    @Override
     public BigInteger getPublicExponent() {
       try {
         return new BigInteger(1, getPublicExponentByteArray());
