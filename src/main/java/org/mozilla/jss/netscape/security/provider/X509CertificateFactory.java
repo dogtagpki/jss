@@ -31,16 +31,19 @@ import org.mozilla.jss.netscape.security.x509.X509ExtensionException;
 
 public class X509CertificateFactory extends CertificateFactorySpi {
 
+    @Override
     public Certificate engineGenerateCertificate(InputStream inStream)
             throws CertificateException {
         return new X509CertImpl(inStream);
     }
 
+    @Override
     public Collection<Certificate> engineGenerateCertificates(InputStream inStream)
             throws CertificateException {
         return null;
     }
 
+    @Override
     public CRL engineGenerateCRL(InputStream inStream)
             throws CRLException {
         X509CRLImpl crl = null;
@@ -53,6 +56,7 @@ public class X509CertificateFactory extends CertificateFactorySpi {
         return crl;
     }
 
+    @Override
     public Collection<CRL> engineGenerateCRLs(InputStream inStream)
             throws CRLException {
         return null;

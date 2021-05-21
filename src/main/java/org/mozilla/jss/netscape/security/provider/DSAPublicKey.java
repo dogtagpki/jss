@@ -88,6 +88,7 @@ public final class DSAPublicKey extends X509Key
      * Returns the DSA parameters associated with this key, or null if the
      * parameters could not be parsed.
      */
+    @Override
     public DSAParams getParams() {
         try {
             if (algid instanceof DSAParams) {
@@ -111,15 +112,18 @@ public final class DSAPublicKey extends X509Key
      * Get the raw public value, y, without the parameters.
      *
      */
+    @Override
     public BigInteger getY() {
         return y;
     }
 
+    @Override
     public String toString() {
         return "Sun DSA Public Key\n    Parameters:" + algid
                 + "\n  y:\n" + (new BigInt(y)).toString() + "\n";
     }
 
+    @Override
     protected void parseKeyBits() throws InvalidKeyException {
         try {
             DerInputStream in = new DerInputStream(key);

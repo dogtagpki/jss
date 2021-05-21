@@ -53,6 +53,7 @@ public class DSAKeyFactory extends KeyFactorySpi {
      * @exception InvalidKeySpecException if the given key specification
      *                is inappropriate for this key factory to produce a public key.
      */
+    @Override
     protected PublicKey engineGeneratePublic(KeySpec keySpec)
             throws InvalidKeySpecException {
         try {
@@ -85,6 +86,7 @@ public class DSAKeyFactory extends KeyFactorySpi {
      * @exception InvalidKeySpecException if the given key specification
      *                is inappropriate for this key factory to produce a private key.
      */
+    @Override
     protected PrivateKey engineGeneratePrivate(KeySpec keySpec)
             throws InvalidKeySpecException {
         try {
@@ -122,6 +124,7 @@ public class DSAKeyFactory extends KeyFactorySpi {
      *                inappropriate for the given key, or the given key cannot be processed
      *                (e.g., the given key has an unrecognized algorithm or format).
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec)
             throws InvalidKeySpecException {
@@ -196,6 +199,7 @@ public class DSAKeyFactory extends KeyFactorySpi {
      * @exception InvalidKeyException if the given key cannot be processed by
      *                this key factory.
      */
+    @Override
     protected Key engineTranslateKey(Key key) throws InvalidKeyException {
 
         try {

@@ -117,6 +117,7 @@ public final class RSAPublicKey extends X509Key implements Serializable {
         return this.modulus;
     }
 
+    @Override
     public String toString() {
         return "RSA Public Key\n  Algorithm: " + algid
                 + "\n  modulus:\n" + this.modulus.toString() + "\n"
@@ -124,6 +125,7 @@ public final class RSAPublicKey extends X509Key implements Serializable {
                 + "\n";
     }
 
+    @Override
     protected void parseKeyBits() throws InvalidKeyException {
         if (!this.algid.getOID().equals(ALGORITHM_OID) &&
                 !this.algid.getOID().equals(AlgorithmId.RSA_oid)) {

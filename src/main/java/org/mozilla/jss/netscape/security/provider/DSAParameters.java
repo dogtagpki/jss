@@ -51,6 +51,7 @@ public class DSAParameters extends AlgorithmParametersSpi {
     // the base (g)
     protected BigInteger g;
 
+    @Override
     protected void engineInit(AlgorithmParameterSpec paramSpec)
             throws InvalidParameterSpecException {
         if (!(paramSpec instanceof DSAParameterSpec)) {
@@ -61,6 +62,7 @@ public class DSAParameters extends AlgorithmParametersSpi {
         this.g = ((DSAParameterSpec) paramSpec).getG();
     }
 
+    @Override
     protected void engineInit(byte[] params) throws IOException {
         DerValue encodedParams = new DerValue(params);
 
@@ -81,11 +83,13 @@ public class DSAParameters extends AlgorithmParametersSpi {
         }
     }
 
+    @Override
     protected void engineInit(byte[] params, String decodingMethod)
             throws IOException {
         engineInit(params);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     protected <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> paramSpec)
             throws InvalidParameterSpecException {
@@ -102,6 +106,7 @@ public class DSAParameters extends AlgorithmParametersSpi {
         }
     }
 
+    @Override
     protected byte[] engineGetEncoded() throws IOException {
         try (DerOutputStream out = new DerOutputStream()) {
             DerOutputStream bytes = new DerOutputStream();
@@ -114,6 +119,7 @@ public class DSAParameters extends AlgorithmParametersSpi {
         }
     }
 
+    @Override
     protected byte[] engineGetEncoded(String encodingMethod)
             throws IOException {
         return engineGetEncoded();
@@ -122,6 +128,7 @@ public class DSAParameters extends AlgorithmParametersSpi {
     /*
      * Returns a formatted string describing the parameters.
      */
+    @Override
     protected String engineToString() {
         return "\n\tp: " + new BigInt(p).toString()
                 + "\n\tq: " + new BigInt(q).toString()
