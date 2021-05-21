@@ -24,6 +24,7 @@ public class JSSContextSpi extends SSLContextSpi {
 
     SSLVersion protocol_version;
 
+    @Override
     public void engineInit(KeyManager[] kms, TrustManager[] tms, SecureRandom sr) throws KeyManagementException {
         logger.debug("JSSContextSpi.engineInit(" + kms + ", " + tms + ", " + sr + ")");
 
@@ -48,6 +49,7 @@ public class JSSContextSpi extends SSLContextSpi {
         }
     }
 
+    @Override
     public SSLEngine engineCreateSSLEngine() {
         logger.debug("JSSContextSpi.engineCreateSSLEngine()");
 
@@ -57,6 +59,7 @@ public class JSSContextSpi extends SSLContextSpi {
         return ret;
     }
 
+    @Override
     public SSLEngine engineCreateSSLEngine(String host, int port) {
         logger.debug("JSSContextSpi.engineCreateSSLEngine(" + host + ", " + port + ")");
 
@@ -75,16 +78,19 @@ public class JSSContextSpi extends SSLContextSpi {
         }
     }
 
+    @Override
     public SSLSessionContext engineGetClientSessionContext() {
         logger.debug("JSSContextSpi.engineGetClientSessionContext() - not implemented");
         return null;
     }
 
+    @Override
     public SSLSessionContext engineGetServerSessionContext() {
         logger.debug("JSSContextSpi.engineGetServerSessionContext() - not implemented");
         return null;
     }
 
+    @Override
     public SSLServerSocketFactory engineGetServerSocketFactory() {
         String protocol = "TLS";
         if (protocol_version != null) {
@@ -95,6 +101,7 @@ public class JSSContextSpi extends SSLContextSpi {
         return new JSSServerSocketFactory(protocol, key_manager, trust_managers);
     }
 
+    @Override
     public SSLSocketFactory engineGetSocketFactory() {
         String protocol = "TLS";
         if (protocol_version != null) {
@@ -105,6 +112,7 @@ public class JSSContextSpi extends SSLContextSpi {
         return new JSSSocketFactory(protocol, key_manager, trust_managers);
     }
 
+    @Override
     public SSLParameters engineGetSupportedSSLParameters() {
         JSSParameters params = new JSSParameters();
         params.setCipherSuites(JSSEngine.queryEnabledCipherSuites());
