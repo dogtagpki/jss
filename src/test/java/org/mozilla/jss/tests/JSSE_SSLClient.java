@@ -316,13 +316,16 @@ public class JSSE_SSLClient {
             // trust manager that trusts all certificates
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
+                    @Override
                     public java.security.cert.X509Certificate[]
                             getAcceptedIssuers() {
                         return null;
                     }
+                    @Override
                     public void checkClientTrusted(
                             java.security.cert.X509Certificate[] chain,
                             String authType) {}
+                    @Override
                     public void checkServerTrusted(
                             java.security.cert.X509Certificate[] chain,
                             String authType) {}
@@ -393,6 +396,7 @@ public class JSSE_SSLClient {
         try {
             socket.addHandshakeCompletedListener(
                     new HandshakeCompletedListener() {
+                @Override
                 public void handshakeCompleted(
                         HandshakeCompletedEvent event) {
                     h_ciphers.add(event.getCipherSuite());

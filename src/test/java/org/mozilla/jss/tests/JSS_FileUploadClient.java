@@ -172,6 +172,7 @@ public class JSS_FileUploadClient {
             socketCntr = cntr;
         }
 
+        @Override
         public void run() {
 
             try {
@@ -276,6 +277,7 @@ public class JSS_FileUploadClient {
             this.who = who;
             this.boss = boss;
         }
+        @Override
         public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
             try {
                 String mesg = who + " got a completed handshake ";

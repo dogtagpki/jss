@@ -359,6 +359,7 @@ public class SSLClientAuth implements Runnable {
             this.who = who;
             this.boss = boss;
         }
+        @Override
         public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
             try {
                 String mesg = who + " got a completed handshake ";
@@ -394,6 +395,7 @@ public class SSLClientAuth implements Runnable {
     /**
      * Server run method.
      */
+    @Override
     public void run() {
         try {
             

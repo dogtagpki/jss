@@ -264,6 +264,7 @@ public class JSS_SelfServServer  {
             this.socketCntr = cntr;
         }
 
+        @Override
         public void run() {
 
             try {
@@ -345,6 +346,7 @@ public class JSS_SelfServServer  {
             this.who = who;
             this.boss = boss;
         }
+        @Override
         public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
             try {
                 String mesg = who + " got a completed handshake ";
