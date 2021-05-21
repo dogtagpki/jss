@@ -89,7 +89,6 @@ public class CapabilitiesList {
         /* List capabilites of the specified provider */
         public void listCapabilities(FileWriter fw, Provider p) throws Exception {
 
-            String pName = p.getName();
             Set<Object> keySet = p.keySet();
             assert(keySet != null);
             Iterator it = keySet.iterator();
