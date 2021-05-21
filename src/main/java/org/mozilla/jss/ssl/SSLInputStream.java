@@ -26,10 +26,10 @@ class SSLInputStream extends java.io.InputStream {
     public int read() throws IOException {
         byte[] b = new byte[1];
         int nread = read(b, 0, 1);
-        if( nread == -1 ) {
+        if (nread == -1) {
             return nread;
         } else {
-            return ((int) b[0]) & (0xff);
+            return (b[0]) & (0xff);
         }
     }
 
@@ -49,10 +49,10 @@ class SSLInputStream extends java.io.InputStream {
 
         int size = (int) (n < 2048 ? n : 2048);
         byte[] trash = new byte[size];
-        while( n > 0) {
+        while (n > 0) {
             size = (int) (n < 2048 ? n : 2048);
             int nread = read(trash, 0, size);
-            if( nread <= 0 ) {
+            if (nread <= 0) {
                 break;
             }
             numSkipped += nread;
