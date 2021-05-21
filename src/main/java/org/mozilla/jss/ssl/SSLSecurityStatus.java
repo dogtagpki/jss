@@ -20,71 +20,71 @@ public class SSLSecurityStatus {
     String serialNumber;
     X509Certificate certificate; // Certificate may be null if client does not present certificate
 
-    final public int STATUS_NOOPT    = -1;
-    final public int STATUS_OFF      = 0;
-    final public int STATUS_ON_HIGH  = 1;
-    final public int STATUS_ON_LOW   = 2;
+    final public int STATUS_NOOPT = -1;
+    final public int STATUS_OFF = 0;
+    final public int STATUS_ON_HIGH = 1;
+    final public int STATUS_ON_LOW = 2;
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
-     * STATUS_FORTEZZA is a placeholder for backward compatibility.
+     *             STATUS_FORTEZZA is a placeholder for backward compatibility.
      */
     @Deprecated
     final public int STATUS_FORTEZZA = 3;
 
-	/**
-	 * This constructor is called from the native SSL code
-	 * It's not necessary for you to call this.
- 	 */
+    /**
+     * This constructor is called from the native SSL code
+     * It's not necessary for you to call this.
+     */
     public SSLSecurityStatus(int status, String cipher,
-			     int sessionKeySize, int sessionSecretSize,
-			     String issuer, String subject,
-			     String serialNumber, X509Certificate certificate) {
-	String noCert = "no certificate";
-	this.status = status;
-	this.cipher = cipher;
-	this.sessionKeySize = sessionKeySize;
-	this.sessionSecretSize = sessionSecretSize;
+            int sessionKeySize, int sessionSecretSize,
+            String issuer, String subject,
+            String serialNumber, X509Certificate certificate) {
+        String noCert = "no certificate";
+        this.status = status;
+        this.cipher = cipher;
+        this.sessionKeySize = sessionKeySize;
+        this.sessionSecretSize = sessionSecretSize;
         this.certificate = certificate;
-	
-	if(noCert.equals(issuer))
-	    this.issuer = null;
-	else
-	    this.issuer = issuer;
-	    
-	if(noCert.equals(subject))
-	   this.subject = null;
-	else
-	   this.subject = subject;
-	   
-	this.serialNumber = serialNumber;
+
+        if (noCert.equals(issuer))
+            this.issuer = null;
+        else
+            this.issuer = issuer;
+
+        if (noCert.equals(subject))
+            this.subject = null;
+        else
+            this.subject = subject;
+
+        this.serialNumber = serialNumber;
     }
 
     /**
      * Query if security is enabled on this socket.
      */
     public boolean isSecurityOn() {
-	return status > 0;
+        return status > 0;
     }
 
     /**
      * Get exact security status of socket.
      */
     public int getSecurityStatus() {
-	return status;
+        return status;
     }
 
     /**
      * Query which cipher is being used in this session.
      */
     public String getCipher() {
-	return cipher;
+        return cipher;
     }
 
     /**
-     * Query how many bits long the session key is.  More bits are better.
+     * Query how many bits long the session key is. More bits are better.
      */
     public int getSessionKeySize() {
-	return sessionKeySize;
+        return sessionKeySize;
     }
 
     /**
@@ -93,35 +93,38 @@ public class SSLSecurityStatus {
      * actually secret.
      */
     public int getSessionSecretSize() {
-	return sessionSecretSize;
+        return sessionSecretSize;
     }
 
     /**
      * Get the distinguished name of the remote certificate's issuer
      */
     public String getRemoteIssuer() {
-	return issuer;
+        return issuer;
     }
 
     /**
      * Get the distinguished name of the subject of the remote certificate
      */
     public String getRemoteSubject() {
-	return subject;
+        return subject;
     }
 
     /**
      * Get the serial number of the remote certificate
      */
     public String getSerialNumber() {
-	return serialNumber;
+        return serialNumber;
     }
 
     /**
-      * Retrieve certificate presented by the other other end
-      * of the socket <p>Not Supported in NSS 2.0 Beta release.
-      * <p> Can be null if peer did not present a certificate.
-      */
+     * Retrieve certificate presented by the other other end
+     * of the socket
+     * <p>
+     * Not Supported in NSS 2.0 Beta release.
+     * <p>
+     * Can be null if peer did not present a certificate.
+     */
     public X509Certificate getPeerCertificate() {
         return certificate;
     }
@@ -132,35 +135,35 @@ public class SSLSecurityStatus {
      */
     @Override
     public String toString() {
-	String statusString;
-	switch(status) {
-	case STATUS_NOOPT:
-	    statusString = "NOOPT";
-	    break;
-	case STATUS_OFF:
-	    statusString = "OFF";
-	    break;
-	case STATUS_ON_HIGH:
-	    statusString = "ON HIGH";
-	    break;
-	case STATUS_ON_LOW:
-	    statusString = "ON LOW";
-	    break;
-	case STATUS_FORTEZZA:
-	    statusString = "FORTEZZA";
-	    break;
-	default:
-	    statusString = "unknown";
-	    break;
+        String statusString;
+        switch (status) {
+        case STATUS_NOOPT:
+            statusString = "NOOPT";
+            break;
+        case STATUS_OFF:
+            statusString = "OFF";
+            break;
+        case STATUS_ON_HIGH:
+            statusString = "ON HIGH";
+            break;
+        case STATUS_ON_LOW:
+            statusString = "ON LOW";
+            break;
+        case STATUS_FORTEZZA:
+            statusString = "FORTEZZA";
+            break;
+        default:
+            statusString = "unknown";
+            break;
 
-	}
+        }
 
-	return "Status: " + statusString + "\n" +
-	    "Cipher: " + cipher + "\n" +
-	    "Session key size: " + sessionKeySize + "\n" +
-	    "Session secret size: " + sessionSecretSize + "\n" +
-	    "Issuer: " + issuer + "\n" +
-	    "Subject: " + subject + "\n" +
-	    "Serial number: " + serialNumber + "\n";
+        return "Status: " + statusString + "\n" +
+                "Cipher: " + cipher + "\n" +
+                "Session key size: " + sessionKeySize + "\n" +
+                "Session secret size: " + sessionSecretSize + "\n" +
+                "Issuer: " + issuer + "\n" +
+                "Subject: " + subject + "\n" +
+                "Serial number: " + serialNumber + "\n";
     }
 }

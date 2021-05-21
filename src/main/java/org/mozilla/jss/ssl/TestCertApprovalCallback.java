@@ -14,69 +14,62 @@ import org.mozilla.jss.crypto.InternalCertificate;
  * trusted by the client
  */
 public class TestCertApprovalCallback
-   implements SSLCertificateApprovalCallback {
+        implements SSLCertificateApprovalCallback {
 
-	@Override
+    @Override
     public boolean approve(
-					org.mozilla.jss.crypto.X509Certificate servercert,
-					SSLCertificateApprovalCallback.ValidityStatus status) {
+            org.mozilla.jss.crypto.X509Certificate servercert,
+            SSLCertificateApprovalCallback.ValidityStatus status) {
 
-		SSLCertificateApprovalCallback.ValidityItem item;
+        SSLCertificateApprovalCallback.ValidityItem item;
 
-		System.out.println("in TestCertApprovalCallback.approve()");
+        System.out.println("in TestCertApprovalCallback.approve()");
 
-		/* dump out server cert details */
+        /* dump out server cert details */
 
-		System.out.println("Peer cert details: "+
-				"\n     subject: "+servercert.getSubjectDN().toString()+
-				"\n     issuer:  "+servercert.getIssuerDN().toString()+
-				"\n     serial:  "+servercert.getSerialNumber().toString()
-				);
+        System.out.println("Peer cert details: " +
+                "\n     subject: " + servercert.getSubjectDN().toString() +
+                "\n     issuer:  " + servercert.getIssuerDN().toString() +
+                "\n     serial:  " + servercert.getSerialNumber().toString());
 
-		/* iterate through all the problems */
+        /* iterate through all the problems */
 
-		boolean trust_the_server_cert=false;
+        boolean trust_the_server_cert = false;
 
-		Enumeration<ValidityItem> errors = status.getReasons();
-		int i=0;
-		while (errors.hasMoreElements()) {
-			i++;
-			item = errors.nextElement();
-			System.out.println("item "+i+
-					" reason="+item.getReason()+
-					" depth="+item.getDepth());
-			org.mozilla.jss.crypto.X509Certificate cert = item.getCert();
-			if (item.getReason() ==
-				SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
-				trust_the_server_cert = true;
-			}
+        Enumeration<ValidityItem> errors = status.getReasons();
+        int i = 0;
+        while (errors.hasMoreElements()) {
+            i++;
+            item = errors.nextElement();
+            System.out.println("item " + i +
+                    " reason=" + item.getReason() +
+                    " depth=" + item.getDepth());
+            org.mozilla.jss.crypto.X509Certificate cert = item.getCert();
+            if (item.getReason() == SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
+                trust_the_server_cert = true;
+            }
 
-			System.out.println(" cert details: "+
-				"\n     subject: "+cert.getSubjectDN().toString()+
-				"\n     issuer:  "+cert.getIssuerDN().toString()+
-				"\n     serial:  "+cert.getSerialNumber().toString()
-				);
-		}
+            System.out.println(" cert details: " +
+                    "\n     subject: " + cert.getSubjectDN().toString() +
+                    "\n     issuer:  " + cert.getIssuerDN().toString() +
+                    "\n     serial:  " + cert.getSerialNumber().toString());
+        }
 
+        if (trust_the_server_cert) {
+            System.out.println("importing certificate.");
+            try {
+                InternalCertificate newcert = org.mozilla.jss.CryptoManager.getInstance().importCertToPerm(servercert,
+                        "testnick");
+                newcert.setSSLTrust(InternalCertificate.TRUSTED_PEER |
+                        InternalCertificate.VALID_PEER);
+            } catch (Exception e) {
+                System.out.println("thrown exception: " + e);
+            }
+        }
 
-		if (trust_the_server_cert) {
-			System.out.println("importing certificate.");
-			try {
-				InternalCertificate newcert =
-						org.mozilla.jss.CryptoManager.getInstance().
-							importCertToPerm(servercert,"testnick");
-				newcert.setSSLTrust(InternalCertificate.TRUSTED_PEER |
-									InternalCertificate.VALID_PEER);
-			} catch (Exception e) {
-				System.out.println("thrown exception: "+e);
-			}
-		}
-
-
-		/* allow the connection to continue.
-			returning false here would abort the connection */
-		return true;
-	}
+        /* allow the connection to continue.
+        	returning false here would abort the connection */
+        return true;
+    }
 
 }
-

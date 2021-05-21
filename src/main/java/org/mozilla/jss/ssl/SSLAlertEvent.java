@@ -57,11 +57,11 @@ public class SSLAlertEvent extends EventObject {
     }
 
     public SSLSocket getSocket() {
-        return (SSLSocket)getSource();
+        return (SSLSocket) getSource();
     }
 
     public SSLFDProxy getFileDesc() {
-        return (SSLFDProxy)getSource();
+        return (SSLFDProxy) getSource();
     }
 
     public int getLevel() {
