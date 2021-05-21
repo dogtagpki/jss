@@ -388,20 +388,16 @@ public class JSSSocketChannel extends SocketChannel {
             engine.cleanup();
             engine = null;
 
-            if (parent == null) {
-                if (autoClose) {
+            if (autoClose) {
+                if (parent == null) {
                     parentSocket.shutdownInput();
                     parentSocket.shutdownOutput();
                     parentSocket.close();
+                } else {
+                    parent.shutdownInput();
+                    parent.shutdownOutput();
+                    parent.close();
                 }
-
-                return;
-            }
-
-            if (autoClose) {
-                parent.shutdownInput();
-                parent.shutdownOutput();
-                parent.close();
             }
         }
     }
