@@ -171,16 +171,19 @@ public class ContentInfo implements ASN1Value {
         return content;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(),ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
         sequence.encode(implicitTag,ostream);
     }
 
+    @Override
     public Tag getTag() {
         return ContentInfo.TAG;
     }
@@ -198,6 +201,7 @@ public class ContentInfo implements ASN1Value {
      *
      */
     public static class Template implements ASN1Template {
+        @Override
         public boolean tagMatch(Tag tag) {
             return (tag.equals(ContentInfo.TAG));
         }
@@ -213,6 +217,7 @@ public class ContentInfo implements ASN1Value {
                         ));
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
@@ -220,6 +225,7 @@ public class ContentInfo implements ASN1Value {
             }
 
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream )
             throws IOException, InvalidBERException
             {

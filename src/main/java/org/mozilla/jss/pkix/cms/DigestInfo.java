@@ -44,10 +44,12 @@ public class DigestInfo implements ASN1Value {
     }
 
     private static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if( obj==null || !(obj instanceof DigestInfo)) {
             return false;
@@ -78,10 +80,12 @@ public class DigestInfo implements ASN1Value {
         return true;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         sequence.encode(ostream);
     }
 
+    @Override
     public void encode(Tag implicitTag, OutputStream ostream)
         throws IOException
     {
@@ -106,16 +110,19 @@ public class DigestInfo implements ASN1Value {
             seqt.addElement( OCTET_STRING.getTemplate() );
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream ostream)
             throws InvalidBERException, IOException
         {
             return decode(TAG, ostream);
         }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream ostream)
             throws InvalidBERException, IOException
         {

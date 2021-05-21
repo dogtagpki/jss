@@ -302,14 +302,17 @@ public class SignedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     static final Tag TAG = SEQUENCE.TAG;
+    @Override
     public Tag getTag() {
         return TAG;
     }
 
+    @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(getTag(),ostream);
     }
 
+    @Override
     public void encode(Tag tag, OutputStream ostream) throws IOException {
         SEQUENCE sequence = new SEQUENCE();
 
@@ -367,16 +370,19 @@ public class SignedData implements ASN1Value {
             seqt.addElement(new SET.OF_Template(SignerInfo.getTemplate()));
         }
 
+        @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
+        @Override
         public ASN1Value decode(InputStream istream)
             throws IOException, InvalidBERException
             {
                 return decode(TAG, istream);
             }
 
+        @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
             {
