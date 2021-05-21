@@ -511,12 +511,12 @@ public class JSSServerSocket extends SSLServerSocket {
     }
 
     @Override
-    public int getSoTimeout() throws IOException {
+    public synchronized int getSoTimeout() throws IOException {
         return parent.getSoTimeout();
     }
 
     @Override
-    public void setSoTimeout(int timeout) throws SocketException {
+    public synchronized void setSoTimeout(int timeout) throws SocketException {
         parent.setSoTimeout(timeout);
     }
 
@@ -531,12 +531,12 @@ public class JSSServerSocket extends SSLServerSocket {
     }
 
     @Override
-    public int getReceiveBufferSize() throws SocketException {
+    public synchronized int getReceiveBufferSize() throws SocketException {
         return parent.getReceiveBufferSize();
     }
 
     @Override
-    public void setReceiveBufferSize(int size) throws SocketException {
+    public synchronized void setReceiveBufferSize(int size) throws SocketException {
         parent.setReceiveBufferSize(size);
     }
 

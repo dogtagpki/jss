@@ -703,7 +703,7 @@ public class JSSSocket extends SSLSocket {
     }
 
     @Override
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
         getInternalChannel().close();
         engine.cleanup();
         engine = null;
@@ -772,12 +772,12 @@ public class JSSSocket extends SSLSocket {
     }
 
     @Override
-    public int getSoTimeout() throws SocketException {
+    public synchronized int getSoTimeout() throws SocketException {
         return parent.getSoTimeout();
     }
 
     @Override
-    public void setSoTimeout(int timeout) throws SocketException {
+    public synchronized void setSoTimeout(int timeout) throws SocketException {
         parent.setSoTimeout(timeout);
     }
 
@@ -797,22 +797,22 @@ public class JSSSocket extends SSLSocket {
     }
 
     @Override
-    public int getSendBufferSize() throws SocketException {
+    public synchronized int getSendBufferSize() throws SocketException {
         return parent.getSendBufferSize();
     }
 
     @Override
-    public void setSendBufferSize(int size) throws SocketException {
+    public synchronized void setSendBufferSize(int size) throws SocketException {
         parent.setSendBufferSize(size);
     }
 
     @Override
-    public int getReceiveBufferSize() throws SocketException {
+    public synchronized int getReceiveBufferSize() throws SocketException {
         return parent.getReceiveBufferSize();
     }
 
     @Override
-    public void setReceiveBufferSize(int size) throws SocketException {
+    public synchronized void setReceiveBufferSize(int size) throws SocketException {
         parent.setReceiveBufferSize(size);
     }
 
