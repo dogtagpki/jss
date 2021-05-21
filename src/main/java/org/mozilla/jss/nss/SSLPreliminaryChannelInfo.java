@@ -386,6 +386,7 @@ public class SSLPreliminaryChannelInfo {
     /**
      * Returns a string representation of the data in this data structure.
      */
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder("SSLPreliminaryChannelInfo:");
 

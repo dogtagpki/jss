@@ -11,10 +11,12 @@ public class BufferProxy extends org.mozilla.jss.util.NativeProxy {
      *
      * But this does it for you.
      */
+    @Override
     protected void releaseNativeResources() {
         Buffer.Free(this);
     }
 
+    @Override
     protected void finalize() throws Throwable {
         super.finalize();
     }

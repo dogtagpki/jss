@@ -39,6 +39,7 @@ public class SecurityStatusResult {
         this.subject = _subject;
     }
 
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder("SecurityStatusResult:");
         result.append("\n- on: " + on);
