@@ -57,6 +57,7 @@ public final class PK11Cipher
         this.algorithm = algorithm;
     }
 
+    @Override
     public void initEncrypt(SymmetricKey key)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
         TokenException
@@ -64,6 +65,7 @@ public final class PK11Cipher
         initEncrypt(key, null);
     }
 
+    @Override
     public void initDecrypt(SymmetricKey key)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
         TokenException
@@ -87,6 +89,7 @@ public final class PK11Cipher
     /**
      * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
      */
+    @Override
     @Deprecated
     public void initEncrypt(SymmetricKey key, AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
@@ -116,6 +119,7 @@ public final class PK11Cipher
     /**
      * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
      */
+    @Override
     @Deprecated
     public void initDecrypt(SymmetricKey key, AlgorithmParameterSpec parameters)
         throws InvalidKeyException, InvalidAlgorithmParameterException,
@@ -142,6 +146,7 @@ public final class PK11Cipher
         }
     }
 
+    @Override
     public byte[] update(byte[] bytes)
         throws IllegalStateException, TokenException
     {
@@ -152,6 +157,7 @@ public final class PK11Cipher
         return updateContext( contextProxy, bytes, algorithm.getBlockSize());
     }
 
+    @Override
     public byte[] update(byte[] bytes, int offset, int length)
         throws IllegalStateException, TokenException
     {
@@ -165,6 +171,7 @@ public final class PK11Cipher
     /**
      * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
      */
+    @Override
     @Deprecated
     public byte[] doFinal(byte[] bytes)
         throws IllegalStateException, IllegalBlockSizeException,
@@ -185,6 +192,7 @@ public final class PK11Cipher
         return combined;
     }
 
+    @Override
     public byte[] doFinal(byte[] bytes, int offset, int length)
         throws IllegalStateException, IllegalBlockSizeException,
         BadPaddingException, TokenException
@@ -199,6 +207,7 @@ public final class PK11Cipher
     /**
      * @deprecated isPadded() in EncryptionAlgorithm has been deprecated
      */
+    @Override
     @Deprecated
     public byte[] doFinal()
         throws IllegalStateException, IllegalBlockSizeException,

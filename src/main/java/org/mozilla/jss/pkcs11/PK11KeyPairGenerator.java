@@ -342,6 +342,7 @@ public final class PK11KeyPairGenerator
      * @exception InvalidParameterException If the key strength is not
      *      supported by the algorithm or this implementation.
      */
+    @Override
     public void initialize(int strength, SecureRandom random)
         throws InvalidParameterException
     {
@@ -385,6 +386,7 @@ public final class PK11KeyPairGenerator
      *      are inappropriate for the key type or are not supported by
      *      this implementation.
      */
+    @Override
     public void initialize(AlgorithmParameterSpec params, SecureRandom random)
         throws InvalidAlgorithmParameterException
     {
@@ -438,6 +440,7 @@ public final class PK11KeyPairGenerator
      * @throws TokenException
      */
 
+    @Override
     public KeyPair generateKeyPair()
         throws TokenException
     {
@@ -528,6 +531,7 @@ public final class PK11KeyPairGenerator
      * @return true if the keypair generation will be done on the
      *      internal token and then moved to this token.
      */
+    @Override
     public boolean
     keygenOnInternalToken() {
         return mKeygenOnInternalToken;
@@ -703,14 +707,17 @@ public final class PK11KeyPairGenerator
         }
     }
 
+    @Override
     public void temporaryPairs(boolean temp) {
         temporaryPairMode = temp;
     }
 
+    @Override
     public void sensitivePairs(boolean sensitive) {
         sensitivePairMode = sensitive ? 1 : 0;
     }
 
+    @Override
     public void extractablePairs(boolean extractable) {
         extractablePairMode = extractable ? 1 : 0;
     }
@@ -724,6 +731,7 @@ public final class PK11KeyPairGenerator
      * if a usages is desired, make sure it is in the mask as well.
      */
 
+    @Override
     public void setKeyPairUsages(org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages,
                                  org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages_mask) {
 
@@ -1042,6 +1050,7 @@ public final class PK11KeyPairGenerator
             ECCurve_Code.c2tnb431r1.ordinal(), CURVE_ANSI_TNB431R1);
     }
 
+    @Override
     public int getCurveCodeByName(String curveName)
         throws InvalidParameterException {
         if (curveName == null)

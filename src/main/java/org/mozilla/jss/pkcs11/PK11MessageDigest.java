@@ -35,6 +35,7 @@ public final class PK11MessageDigest
         reset();
     }
 
+    @Override
     public void initHMAC(SymmetricKey key)
         throws DigestException, InvalidKeyException
     {
@@ -51,6 +52,7 @@ public final class PK11MessageDigest
         this.digestProxy = initHMAC(token, alg, hmacKey);
     }
 
+    @Override
     public void update(byte[] input, int offset, int len)
         throws DigestException
     {
@@ -65,6 +67,7 @@ public final class PK11MessageDigest
         update(digestProxy, input, offset, len);
     }
 
+    @Override
     public int digest(byte[] outbuf, int offset, int len)
         throws DigestException
     {
@@ -83,6 +86,7 @@ public final class PK11MessageDigest
         return retval;
     }
 
+    @Override
     public void reset() throws DigestException {
         if( ! (alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm) ) {
             // This is a regular digest, so we have enough information
@@ -98,6 +102,7 @@ public final class PK11MessageDigest
         }
     }
 
+    @Override
     public DigestAlgorithm getAlgorithm() {
         return alg;
     }

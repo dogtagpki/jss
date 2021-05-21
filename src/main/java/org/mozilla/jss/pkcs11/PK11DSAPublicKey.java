@@ -16,6 +16,7 @@ public final class PK11DSAPublicKey extends PK11PubKey implements DSAPublicKey {
         super(pointer);
     }
 
+    @Override
     public DSAParams getParams() {
       try {
         BigInteger P =  new BigInteger( getPByteArray() );
@@ -28,6 +29,7 @@ public final class PK11DSAPublicKey extends PK11PubKey implements DSAPublicKey {
       }
     }
 
+    @Override
     public BigInteger getY() {
       try {
         return new BigInteger( getYByteArray() );

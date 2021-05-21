@@ -63,7 +63,8 @@ public final class PK11Signature
         }
     }
 
-	public void engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey)
+	@Override
+    public void engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey)
 		throws InvalidKeyException, TokenException
 	{
         PK11PrivKey privKey;
@@ -119,7 +120,8 @@ public final class PK11Signature
     /*************************************************************
     ** This is just here for JCA compliance, we don't take randoms this way.
     */
-	public void
+	@Override
+    public void
     engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey,
                     SecureRandom random)
 		throws InvalidKeyException, TokenException
@@ -137,7 +139,8 @@ public final class PK11Signature
         throws TokenException;
 
 
-	public void engineInitVerify(PublicKey publicKey)
+	@Override
+    public void engineInitVerify(PublicKey publicKey)
 		throws InvalidKeyException, TokenException
 	{
 		PK11PubKey pubKey;
@@ -186,12 +189,14 @@ public final class PK11Signature
 
     protected native void initVfyContext() throws TokenException;
 
-	public void engineUpdate(byte b)
+	@Override
+    public void engineUpdate(byte b)
         throws SignatureException, TokenException
     {
         engineUpdate(new byte[] {b}, 0, 1);
     }
 
+    @Override
     public void engineUpdate(byte[] b, int off, int len)
         throws SignatureException, TokenException
     {
@@ -222,6 +227,7 @@ public final class PK11Signature
         throws TokenException;
 
 
+    @Override
     public byte[] engineSign()
         throws SignatureException, TokenException
     {
@@ -252,6 +258,7 @@ public final class PK11Signature
 		return result;
     }
 
+    @Override
     public int engineSign(byte[] outbuf, int offset, int len)
         throws SignatureException, TokenException
     {
@@ -284,6 +291,7 @@ public final class PK11Signature
     private native byte[] engineSignNative()
         throws SignatureException, TokenException;
 
+    @Override
     public boolean engineVerify(byte[] sigBytes)
         throws SignatureException, TokenException
     {
@@ -332,6 +340,7 @@ public final class PK11Signature
 	native protected boolean engineVerifyNative(byte[] sigBytes)
 		throws SignatureException, TokenException;
 
+    @Override
     public void engineSetParameter(AlgorithmParameterSpec params)
         throws InvalidAlgorithmParameterException, TokenException
     {
@@ -434,5 +443,6 @@ class SigContextProxy extends NativeProxy {
     public SigContextProxy(byte[] pointer) {
         super(pointer);
     }
+    @Override
     protected native void releaseNativeResources();
 }

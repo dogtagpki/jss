@@ -22,6 +22,7 @@ abstract class PK11Key
     /**
      * Subclasses that support encoding can overload this method.
      */
+    @Override
     public byte[] getEncoded() {
         return null;
     }
@@ -29,6 +30,7 @@ abstract class PK11Key
     /**
      * Subclasses that support encoding can overload this method.
      */
+    @Override
     public String getFormat() {
         return null;
     }

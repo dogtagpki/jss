@@ -16,5 +16,6 @@ public final class TokenProxy extends NativeProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 }

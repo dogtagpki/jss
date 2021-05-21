@@ -23,9 +23,11 @@ class PK11SecureRandom implements org.mozilla.jss.crypto.JSSSecureRandom
     //  public routines
     ////////////////////////////////////////////////////
 
+    @Override
     public synchronized native void
     setSeed( byte[] seed );
 
+    @Override
     public void
     setSeed( long seed )
     {
@@ -39,6 +41,7 @@ class PK11SecureRandom implements org.mozilla.jss.crypto.JSSSecureRandom
         setSeed( data );
     }
 
+    @Override
     public synchronized native void
     nextBytes( byte bytes[] );
 }

@@ -32,10 +32,12 @@ public class PK11Cert
 
     //public native byte[] getUniqueID();
 
+    @Override
     public String getNickname() {
         return nickname;
     }
 
+    @Override
     public int hashCode() {
         try {
             return Arrays.hashCode(getEncoded());
@@ -44,6 +46,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other == null || !(other instanceof PK11Cert)) {
             return false;
@@ -65,6 +68,7 @@ public class PK11Cert
             this.str = str;
         }
 
+        @Override
         public boolean
         equals(Object other) {
             if( ! (other instanceof StringPrincipal) ) {
@@ -73,29 +77,35 @@ public class PK11Cert
             return getName().equals( ((StringPrincipal)other).getName() );
         }
 
+        @Override
         public String getName() {
             return str;
         }
+        @Override
         public int hashCode() {
             return str.hashCode();
         }
 
+        @Override
         public String toString() {
             return str;
         }
         protected String str;
     }
 
+    @Override
     public Principal
     getSubjectDN() {
         return new StringPrincipal( getSubjectDNString() );
     }
 
+    @Override
     public Principal
     getIssuerDN() {
         return new StringPrincipal( getIssuerDNString() );
     }
 
+    @Override
     public BigInteger
     getSerialNumber() {
         return new BigInteger( getSerialNumberByteArray() );
@@ -106,11 +116,14 @@ public class PK11Cert
 
     protected native String getIssuerDNString();
 
-	public native java.security.PublicKey getPublicKey();
+	@Override
+    public native java.security.PublicKey getPublicKey();
 
-	public native int getVersion();
+	@Override
+    public native int getVersion();
 
     /* Begin methods necessary for java.security.cert.X509Certificate */
+    @Override
     public int getBasicConstraints() {
         try {
             if (x509 == null) {
@@ -123,6 +136,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public boolean[] getKeyUsage() {
         try {
             if (x509 == null) {
@@ -135,6 +149,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public boolean[] getSubjectUniqueID() {
         try {
             if (x509 == null) {
@@ -147,6 +162,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public boolean[] getIssuerUniqueID() {
         try {
             if (x509 == null) {
@@ -159,6 +175,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public byte[] getSigAlgParams() {
         try {
             if (x509 == null) {
@@ -171,6 +188,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public String getSigAlgName() {
         try {
             if (x509 == null) {
@@ -183,6 +201,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public String getSigAlgOID() {
         try {
             if (x509 == null) {
@@ -195,6 +214,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public byte[] getSignature() {
         try {
             if (x509 == null) {
@@ -207,6 +227,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public byte[] getTBSCertificate() throws CertificateEncodingException {
         try {
             if (x509 == null) {
@@ -221,6 +242,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public Date getNotAfter() {
         try {
             if (x509 == null) {
@@ -233,6 +255,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public Date getNotBefore() {
         try {
             if (x509 == null) {
@@ -245,6 +268,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public void checkValidity()
             throws CertificateExpiredException, CertificateNotYetValidException
     {
@@ -263,6 +287,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public void checkValidity(Date date)
             throws CertificateExpiredException, CertificateNotYetValidException
     {
@@ -281,6 +306,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public String toString() {
         try {
             if (x509 == null) {
@@ -293,6 +319,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public void verify(PublicKey key)
             throws CertificateException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchProviderException, SignatureException
@@ -318,6 +345,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public void verify(PublicKey key, String sigProvider)
             throws CertificateException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchProviderException, SignatureException
@@ -343,6 +371,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public byte[] getExtensionValue(String oid) {
         try {
             if (x509 == null) {
@@ -355,6 +384,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public Set<String> getCriticalExtensionOIDs() {
         try {
             if (x509 == null) {
@@ -367,6 +397,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public Set<String> getNonCriticalExtensionOIDs() {
         try {
             if (x509 == null) {
@@ -379,6 +410,7 @@ public class PK11Cert
         }
     }
 
+    @Override
     public boolean hasUnsupportedCriticalExtension() {
         try {
             if (x509 == null) {
@@ -483,5 +515,6 @@ class CertProxy extends org.mozilla.jss.util.NativeProxy {
         super(pointer);
     }
 
+    @Override
     protected native void releaseNativeResources();
 }
