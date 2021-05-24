@@ -24,7 +24,7 @@ You should see in the build directory tests_jss4.jar which is what
 contains the application along with the regular tests.
 From the `jss/build` directory execute
 
-    `./run_test.sh org.mozilla.jss.tests.CapabilitiesList`
+    ./run_test.sh org.mozilla.jss.tests.CapabilitiesList
 
 and you should see a `listings` directory
 
@@ -74,5 +74,5 @@ Here is a brief clip of Capabilities4Mozilla-JSS.txt
 		 Alias: KeyGenerator.SP800-108-Counter
 		... ommitted ...
 
-Notice that the `Alias: lines` have extra indentation which makes it
+Notice that the `Alias: ` lines have extra indentation which makes it
 easier to compare against the other providers.
