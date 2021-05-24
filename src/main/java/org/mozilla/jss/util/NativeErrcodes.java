@@ -246,19 +246,27 @@ public class NativeErrcodes {
     public static final int SEC_ERROR_DECRYPTION_DISALLOWED = 228;
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
-     * XP_SEC_FORTEZZA_BAD_CARD, XP_SEC_FORTEZZA_NO_CARD, 
+     * XP_SEC_FORTEZZA_BAD_CARD, XP_SEC_FORTEZZA_NO_CARD,
      * XP_SEC_FORTEZZA_NONE_SELECTED, XP_SEC_FORTEZZA_MORE_INFO
      * XP_SEC_FORTEZZA_PERSON_NOT_FOUND, XP_SEC_FORTEZZA_NO_MORE_INFO
-     * XP_SEC_FORTEZZA_BAD_PIN and XP_SEC_FORTEZZA_PERSON_ERROR are 
+     * XP_SEC_FORTEZZA_BAD_PIN and XP_SEC_FORTEZZA_PERSON_ERROR are
      * placeholder for backward compatibility.
      */
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_BAD_CARD = 229;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_NO_CARD = 230;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_NONE_SELECTED = 231;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_MORE_INFO = 232;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_PERSON_NOT_FOUND = 233;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_NO_MORE_INFO = 234;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_BAD_PIN = 235;
+    @Deprecated
     public static final int XP_SEC_FORTEZZA_PERSON_ERROR = 236;
     public static final int SEC_ERROR_NO_KRL = 237;
     public static final int SEC_ERROR_KRL_EXPIRED = 238;
