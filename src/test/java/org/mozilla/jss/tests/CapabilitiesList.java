@@ -173,32 +173,24 @@ public class CapabilitiesList {
             }
 
             // Validate that CryptoManager registers jss as a provider.
-            assert(jssIsRegistered(Security.getProviders()) == true);
+            if (!jssIsRegistered(Security.getProviders())) {
+                throw new Exception("JSS is not registered");
+            }
         }
 
         public boolean createOutputDirs() throws Exception {
+           /* Create hierarchy of directores for the results */
 
-           try {
-                /* Create hierarchy of directores for the results */
+           File dir4Listings = new File("listings");
+           dir4Listings.mkdir();
 
-                File dir4Listings = new File(System.getProperty("user.dir").concat("/listings"));
-                dir4Listings.mkdir();
+           File dir4verboseListings = new File("listings/verbose");
+           dir4verboseListings.mkdir();
 
-                File dir4verboseListings = 
-                    new File(System.getProperty("user.dir").concat("/listings/verbose"));
-                    dir4verboseListings.mkdir();
+           File dir4briefListings = new File("listings/brief");
+           dir4briefListings.mkdir();
 
-                File dir4briefListings = 
-                    new File(System.getProperty("user.dir").concat("/listings/brief"));
-                dir4briefListings.mkdir();
-
-                return true;
-
-            } catch (Exception e) {
-                logger.info("Exception caught in createOutputDirs: " + e.getMessage(), e);
-                logger.info("Keep going");
-                return false;
-            }
+           return true;
         }
 
         /* List providers capabilities using the brief listing method which adds
@@ -243,16 +235,12 @@ public class CapabilitiesList {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            Capabilities lister = new Capabilities();
-            if (!lister.createOutputDirs()) return;
-            lister.addJssProvider();
-            Provider ps[] = Security.getProviders();
-            lister.listBrief(ps);
-            lister.listVerbose(ps);
-        } catch (Exception e) {
-            Capabilities.logger.info("Exception caught in main: " + e.getMessage(), e);
-        }
+    public static void main(String[] args) throws Exception {
+        Capabilities lister = new Capabilities();
+        if (!lister.createOutputDirs()) return;
+        lister.addJssProvider();
+        Provider ps[] = Security.getProviders();
+        lister.listBrief(ps);
+        lister.listVerbose(ps);
     }
 }
