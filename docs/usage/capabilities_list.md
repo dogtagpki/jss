@@ -74,5 +74,5 @@ Here is a brief clip of Capabilities4Mozilla-JSS.txt
 		 Alias: KeyGenerator.SP800-108-Counter
 		... ommitted ...
 
-Notice that the `Alias: ` lines have extra indentation which makes it
+Notice that the `Alias:` lines have extra indentation which makes it
 easier to compare against the other providers.
