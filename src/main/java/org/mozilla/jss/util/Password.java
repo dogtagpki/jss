@@ -13,16 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Stores a password.  <code>clear</code> should be
+ * Stores a password. <code>clear</code> should be
  * called when the password is no longer needed so that the sensitive
  * information is not left in memory.
- * <p>A <code>Password</code> can be used as a hard-coded
+ * <p>
+ * A <code>Password</code> can be used as a hard-coded
  * <code>PasswordCallback</code>.
+ *
  * @see PasswordCallback
  */
 public class Password implements PasswordCallback, Cloneable,
-        java.io.Serializable
-    {
+        java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     public static Logger logger = LoggerFactory.getLogger(Password.class);
@@ -39,8 +40,9 @@ public class Password implements PasswordCallback, Cloneable,
 
     /**
      * Creates a Password from a char array, then wipes the char array.
-     * @param pw A char[] containing the password.  This array will be
-     *      cleared (set to zeroes) by the constructor.
+     *
+     * @param pw A char[] containing the password. This array will be
+     *            cleared (set to zeroes) by the constructor.
      */
     public Password(char[] pw) {
         int i;
@@ -49,7 +51,7 @@ public class Password implements PasswordCallback, Cloneable,
         cleared = false;
 
         password = new char[length];
-        for(i=0; i < length; i++) {
+        for (i = 0; i < length; i++) {
             password[i] = pw[i];
             pw[i] = 0;
         }
@@ -57,62 +59,59 @@ public class Password implements PasswordCallback, Cloneable,
 
     /**
      * An implementation of
-     * <code>PasswordCallback.getPasswordFirstAttempt</code>.  This allows
+     * <code>PasswordCallback.getPasswordFirstAttempt</code>. This allows
      * a <code>Password</code> object to be treated as a
-     * <code>PasswordCallback</code>.  This method simply returns a clone
+     * <code>PasswordCallback</code>. This method simply returns a clone
      * of the password.
      *
-     * @return A copy of the password.  The caller is responsible for
-     *  clearing this copy.
+     * @return A copy of the password. The caller is responsible for
+     *         clearing this copy.
      */
     @Override
-    public synchronized Password
-	getPasswordFirstAttempt(PasswordCallbackInfo info)
-        throws PasswordCallback.GiveUpException {
-			if(cleared) {
-				throw new PasswordCallback.GiveUpException();
-			}
-            return (Password)this.clone();
+    public synchronized Password getPasswordFirstAttempt(PasswordCallbackInfo info)
+            throws PasswordCallback.GiveUpException {
+        if (cleared) {
+            throw new PasswordCallback.GiveUpException();
+        }
+        return (Password) this.clone();
     }
 
-	/**
-	 * Compares this password to another and returns true if they
-	 * 	are the same.
-	 */
-	@Override
-    public synchronized boolean
-	equals(Object obj) {
-		if(obj == null || !(obj instanceof Password)) {
-			return false;
-		}
-		Password pw = (Password)obj;
-		if( pw.password==null || password==null) {
-			return false;
-		}
-		if( pw.password.length != password.length ) {
-			return false;
-		}
-		for(int i=0; i < password.length; i++) {
-			if(pw.password[i] != password[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
+    /**
+     * Compares this password to another and returns true if they
+     * are the same.
+     */
+    @Override
+    public synchronized boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Password)) {
+            return false;
+        }
+        Password pw = (Password) obj;
+        if (pw.password == null || password == null) {
+            return false;
+        }
+        if (pw.password.length != password.length) {
+            return false;
+        }
+        for (int i = 0; i < password.length; i++) {
+            if (pw.password[i] != password[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * An implementation of <code>PasswordCallback.getPasswordAgain</code>.
      * This allows a <code>Password</code> object to be used as a
-     * <code>PasswordCallback</code>.  This method is only called after
+     * <code>PasswordCallback</code>. This method is only called after
      * a call to <code>getPasswordFirstAttempt</code> returned the wrong
-     * password.  This means the password is incorrect and there's no
+     * password. This means the password is incorrect and there's no
      * sense returning it again, so a <code>GiveUpException</code> is thrown.
      */
     @Override
-    public synchronized Password
-	getPasswordAgain(PasswordCallbackInfo info)
-        throws PasswordCallback.GiveUpException {
-            throw new PasswordCallback.GiveUpException();
+    public synchronized Password getPasswordAgain(PasswordCallbackInfo info)
+            throws PasswordCallback.GiveUpException {
+        throw new PasswordCallback.GiveUpException();
     }
 
     /**
@@ -140,7 +139,7 @@ public class Password implements PasswordCallback, Cloneable,
      * for example using <code>wipeChars</code>.
      */
     synchronized byte[] getByteCopy() {
-        return charToByte( password.clone() );
+        return charToByte(password.clone());
     }
 
     /**
@@ -152,14 +151,14 @@ public class Password implements PasswordCallback, Cloneable,
         int i;
         int len = password.length;
 
-        for(i=0; i < len; i++) {
+        for (i = 0; i < len; i++) {
             password[i] = 0;
         }
         cleared = true;
     }
 
     /**
-     * Clones the password.  The resulting clone will be completely independent
+     * Clones the password. The resulting clone will be completely independent
      * of the parent, which means it will have to be separately cleared.
      */
     @Override
@@ -170,7 +169,6 @@ public class Password implements PasswordCallback, Cloneable,
         dolly.cleared = cleared;
         return dolly;
     }
-
 
     /**
      * The finalizer clears the sensitive information before releasing
@@ -183,7 +181,8 @@ public class Password implements PasswordCallback, Cloneable,
     @Deprecated
     protected void finalize() throws Throwable {
 
-        if (cleared) return;
+        if (cleared)
+            return;
 
         // clear the password first
         clear();
@@ -196,7 +195,8 @@ public class Password implements PasswordCallback, Cloneable,
         for (; i < stackTrace.length; i++) {
             StackTraceElement ste = stackTrace[i];
             String className = ste.getClassName();
-            if (Password.class.getName().equals(className)) continue;
+            if (Password.class.getName().equals(className))
+                continue;
 
             out.println("Uncleared Password object created at " + ste);
             i++;
@@ -214,78 +214,77 @@ public class Password implements PasswordCallback, Cloneable,
         logger.warn(sw.toString());
     }
 
-	/**
-	 * Converts a char array to a null-terminated byte array using a standard
-	 * encoding, which is currently UTF8. The caller is responsible for
-	 * clearing the copy (with <code>wipeBytes</code>, for example).
-	 *
-	 * @param charArray A character array, which should not be null. It will
-	 *		be wiped with zeroes.
-	 * @return A copy of the charArray, converted from Unicode to UTF8. It
-	 * 	is the responsibility of the caller to clear the output byte array;
-	 *	<code>wipeBytes</code> is ideal for this purpose.
-	 * @see Password#wipeBytes
-	 */
-	public static byte[] charToByte(char[] charArray)
-	{
-		byte[] byteArray;
-		assert(charArray != null);
-		try {
-			byteArray = UTF8Converter.UnicodeToUTF8NullTerm(charArray);
-		} catch(CharConversionException e) {
-			throw new RuntimeException("Password could not be converted from"
-				+" Unicode: " + e.getMessage(), e);
-			// byteArray = new byte[] {0};
-		} finally {
-			wipeChars(charArray);
-		}
-		return byteArray;
-	}
+    /**
+     * Converts a char array to a null-terminated byte array using a standard
+     * encoding, which is currently UTF8. The caller is responsible for
+     * clearing the copy (with <code>wipeBytes</code>, for example).
+     *
+     * @param charArray A character array, which should not be null. It will
+     *            be wiped with zeroes.
+     * @return A copy of the charArray, converted from Unicode to UTF8. It
+     *         is the responsibility of the caller to clear the output byte array;
+     *         <code>wipeBytes</code> is ideal for this purpose.
+     * @see Password#wipeBytes
+     */
+    public static byte[] charToByte(char[] charArray) {
+        byte[] byteArray;
+        assert (charArray != null);
+        try {
+            byteArray = UTF8Converter.UnicodeToUTF8NullTerm(charArray);
+        } catch (CharConversionException e) {
+            throw new RuntimeException("Password could not be converted from"
+                    + " Unicode: " + e.getMessage(), e);
+            // byteArray = new byte[] {0};
+        } finally {
+            wipeChars(charArray);
+        }
+        return byteArray;
+    }
 
-	/**
-	 * Wipes a byte array by setting all its elements to zero.
+    /**
+     * Wipes a byte array by setting all its elements to zero.
      * <code>null</code> must not be passed in.
-	 */
-	public static void wipeBytes(byte[] byteArray) {
-		assert(byteArray != null);
-		UTF8Converter.wipeBytes(byteArray);
-	}
+     */
+    public static void wipeBytes(byte[] byteArray) {
+        assert (byteArray != null);
+        UTF8Converter.wipeBytes(byteArray);
+    }
 
-	/**
-	 * Wipes a char array by setting all its elements to zero.
+    /**
+     * Wipes a char array by setting all its elements to zero.
      * <code>null</code> must not be passed in.
-	 */
-	public static void wipeChars(char[] charArray) {
-		int i;
-		assert(charArray != null);
-		for(i=0; i < charArray.length; i++) {
-			charArray[i] = 0;
-		}
-	}
+     */
+    public static void wipeChars(char[] charArray) {
+        int i;
+        assert (charArray != null);
+        for (i = 0; i < charArray.length; i++) {
+            charArray[i] = 0;
+        }
+    }
 
-	/**
-	 * Reads a password from the console with echo disabled. This is a blocking
-	 * call which will return after the user types a newline.
+    /**
+     * Reads a password from the console with echo disabled. This is a blocking
+     * call which will return after the user types a newline.
      * It only works with ASCII password characters.
      * The call is synchronized because it alters terminal settings in
      * a way that is not thread-safe.
-	 *
+     *
      * @exception org.mozilla.jss.util.PasswordCallback.GiveUpException
-     *      If the user enters no password (just hits
-     *      <code>&lt;enter&gt;</code>).
-	 * @return The password the user entered at the command line.
- 	 */
-	public static Password readPasswordFromConsole() throws PasswordCallback.GiveUpException {
+     *                If the user enters no password (just hits
+     *                <code>&lt;enter&gt;</code>).
+     * @return The password the user entered at the command line.
+     */
+    public static Password readPasswordFromConsole() throws PasswordCallback.GiveUpException {
 
-	    Console console = System.console();
-	    char[] password = console.readPassword();
+        Console console = System.console();
+        char[] password = console.readPassword();
 
-	    if (password == null || password.length == 0) {
-	        throw new PasswordCallback.GiveUpException();
-	    }
-
-	    return new Password(password);
+        if (password == null || password.length == 0) {
+            throw new PasswordCallback.GiveUpException();
         }
+
+        return new Password(password);
+    }
 
     // The password, stored as a char[] so we can clear it.  Passwords
     // should never be stored in Strings because Strings can't be cleared.

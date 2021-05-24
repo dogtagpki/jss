@@ -31,7 +31,7 @@ public abstract class NativeEnclosure implements AutoCloseable {
     /**
      * Size of enclosed mPointer.
      */
-    public long        mPointerSize;
+    public long mPointerSize;
 
     /**
      * Allocate and initialize mPointer with its enclosed value.

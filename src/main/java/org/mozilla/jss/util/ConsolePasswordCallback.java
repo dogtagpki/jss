@@ -9,19 +9,19 @@ package org.mozilla.jss.util;
  * Asterisks are echoed at the prompt.
  */
 public class ConsolePasswordCallback implements PasswordCallback {
-    public ConsolePasswordCallback() {}
+    public ConsolePasswordCallback() {
+    }
+
     @Override
     public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
-        throws PasswordCallback.GiveUpException
-    {
-        System.out.println("Enter password for "+info.getName());
+            throws PasswordCallback.GiveUpException {
+        System.out.println("Enter password for " + info.getName());
         return Password.readPasswordFromConsole();
     }
 
     @Override
     public Password getPasswordAgain(PasswordCallbackInfo token)
-        throws PasswordCallback.GiveUpException
-    {
+            throws PasswordCallback.GiveUpException {
         System.out.println("Password incorrect, try again");
         return getPasswordFirstAttempt(token);
     }

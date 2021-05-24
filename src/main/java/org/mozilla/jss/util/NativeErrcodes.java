@@ -2,14 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 package org.mozilla.jss.util;
 
 /**
- An enumeration of all error codes from NSS and NSPR.
- The integer values associated with each error code are subject to change, so
- <b>DO NOT DEPEND ON THEM</b>. Only use the symbolic names.
-*/
+ * An enumeration of all error codes from NSS and NSPR.
+ * The integer values associated with each error code are subject to change, so
+ * <b>DO NOT DEPEND ON THEM</b>. Only use the symbolic names.
+ */
 public class NativeErrcodes {
 
     public static final int PR_OUT_OF_MEMORY_ERROR = 1;
@@ -108,8 +107,8 @@ public class NativeErrcodes {
     public static final int SSL_ERROR_SSL_DISABLED = 96;
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
-     * SSL_ERROR_FORTEZZA_PQG is a placeholder for backward
-     * compatibility.
+     *             SSL_ERROR_FORTEZZA_PQG is a placeholder for backward
+     *             compatibility.
      */
     @Deprecated
     public static final int SSL_ERROR_FORTEZZA_PQG = 97;
@@ -246,11 +245,11 @@ public class NativeErrcodes {
     public static final int SEC_ERROR_DECRYPTION_DISALLOWED = 228;
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
-     * XP_SEC_FORTEZZA_BAD_CARD, XP_SEC_FORTEZZA_NO_CARD,
-     * XP_SEC_FORTEZZA_NONE_SELECTED, XP_SEC_FORTEZZA_MORE_INFO
-     * XP_SEC_FORTEZZA_PERSON_NOT_FOUND, XP_SEC_FORTEZZA_NO_MORE_INFO
-     * XP_SEC_FORTEZZA_BAD_PIN and XP_SEC_FORTEZZA_PERSON_ERROR are
-     * placeholder for backward compatibility.
+     *             XP_SEC_FORTEZZA_BAD_CARD, XP_SEC_FORTEZZA_NO_CARD,
+     *             XP_SEC_FORTEZZA_NONE_SELECTED, XP_SEC_FORTEZZA_MORE_INFO
+     *             XP_SEC_FORTEZZA_PERSON_NOT_FOUND, XP_SEC_FORTEZZA_NO_MORE_INFO
+     *             XP_SEC_FORTEZZA_BAD_PIN and XP_SEC_FORTEZZA_PERSON_ERROR are
+     *             placeholder for backward compatibility.
      */
     @Deprecated
     public static final int XP_SEC_FORTEZZA_BAD_CARD = 229;
@@ -316,8 +315,8 @@ public class NativeErrcodes {
     public static final int SEC_ERROR_BAD_NICKNAME = 282;
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
-     * SEC_ERROR_NOT_FORTEZZA_ISSUER is a placeholder for backward
-     * compatibility.
+     *             SEC_ERROR_NOT_FORTEZZA_ISSUER is a placeholder for backward
+     *             compatibility.
      */
     @Deprecated
     public static final int SEC_ERROR_NOT_FORTEZZA_ISSUER = 283;
