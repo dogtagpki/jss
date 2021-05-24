@@ -4,8 +4,6 @@
 
 package org.mozilla.jss.util;
 
-import java.lang.AutoCloseable;
-import java.lang.Thread;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.netscape.security.util.Utils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author nicolson
  * @version $Revision$ $Date$
  */
-public abstract class NativeProxy implements AutoCloseable
-{
+public abstract class NativeProxy implements AutoCloseable {
     public static Logger logger = LoggerFactory.getLogger(NativeProxy.class);
     private static final boolean saveStacktraces = assertsEnabled() && CryptoManager.JSS_DEBUG;
 
@@ -39,8 +35,8 @@ public abstract class NativeProxy implements AutoCloseable
      * from the constructor of your subclass.
      *
      * @param pointer A byte array, created with JSS_ptrToByteArray, that
-     * contains a pointer pointing to a native data structure.  The
-     * NativeProxy instance acts as a proxy for that native data structure.
+     *            contains a pointer pointing to a native data structure. The
+     *            NativeProxy instance acts as a proxy for that native data structure.
      */
     public NativeProxy(byte[] pointer) {
         this(pointer, true);
@@ -61,7 +57,7 @@ public abstract class NativeProxy implements AutoCloseable
         }
 
         if (track && saveStacktraces) {
-            assert(pointer != null);
+            assert (pointer != null);
             registry.add(this);
 
             mTrace = Arrays.toString(Thread.currentThread().getStackTrace());
@@ -70,9 +66,10 @@ public abstract class NativeProxy implements AutoCloseable
 
     /**
      * Deep comparison operator.
+     *
      * @return true if <code>obj</code> has the same underlying native
-     *      pointer. false if the <code>obj</code> is null or has
-     *      a different underlying native pointer.
+     *         pointer. false if the <code>obj</code> is null or has
+     *         a different underlying native pointer.
      */
     @Override
     public boolean equals(Object obj) {
@@ -109,8 +106,10 @@ public abstract class NativeProxy implements AutoCloseable
      * Subclasses of NativeProxy must define this method to clean up
      * data structures in C code that are referenced by this proxy.
      * releaseNativeResources() will usually be implemented as a native method.
-     * <p>You don't call this method; NativeProxy.finalize() or close() calls
-     * it for you.</p>
+     * <p>
+     * You don't call this method; NativeProxy.finalize() or close() calls
+     * it for you.
+     * </p>
      *
      * If you free these resources explicitly, call clear(); instead.
      */
@@ -122,17 +121,17 @@ public abstract class NativeProxy implements AutoCloseable
      * This finalizer should be called from the finalize() method of all
      * subclasses:
      * class MyProxy extends NativeProxy {
-     *      [...]
-     *      protected void finalize() throws Throwable {
-     *          // do any object-specific finalization other than
-     *          // releasing native resources
-     *          [...]
-     *          super.finalize();
-     *      }
+     * [...]
+     * protected void finalize() throws Throwable {
+     * // do any object-specific finalization other than
+     * // releasing native resources
+     * [...]
+     * super.finalize();
+     * }
      * }
      *
      * @deprecated finalize() in Object has been deprecated. Use close(...)
-     * from the AutoCloseable interface instead.
+     *             from the AutoCloseable interface instead.
      */
     @Override
     @Deprecated
@@ -190,10 +189,12 @@ public abstract class NativeProxy implements AutoCloseable
     private String mTrace;
 
     /**
-     * <p><b>Native Proxy Registry</b>
-     * <p>In debug mode, we keep track of all NativeProxy objects in a
-     * static registry.  Whenever a NativeProxy is constructed, it
-     * registers.  Whenever it finalizes, it unregisters.  At the end of
+     * <p>
+     * <b>Native Proxy Registry</b>
+     * <p>
+     * In debug mode, we keep track of all NativeProxy objects in a
+     * static registry. Whenever a NativeProxy is constructed, it
+     * registers. Whenever it finalizes, it unregisters. At the end of
      * the game, we should be able to garbage collect and then assert that
      * the registry is empty. This could be done, for example, in the
      * jssjava JVM after main() completes.
@@ -227,8 +228,8 @@ public abstract class NativeProxy implements AutoCloseable
     }
 
     /**
-     * Assert that the Registry is empty.  Only works in debug mode; in
-     * ship mode, it is a no-op.  If the Registry is not empty when this
+     * Assert that the Registry is empty. Only works in debug mode; in
+     * ship mode, it is a no-op. If the Registry is not empty when this
      * is called, an assertion (org.mozilla.jss.util.AssertionException)
      * is thrown.
      */

@@ -5,8 +5,8 @@
 package org.mozilla.jss.util;
 
 /**
- * A PasswordCallback that immediately gives up.  This should be used
- * when a user is not available to enter a password.  Any operations
+ * A PasswordCallback that immediately gives up. This should be used
+ * when a user is not available to enter a password. Any operations
  * that require a password will fail if this is used, unless the token
  * has already been logged in manually.
  *
@@ -15,16 +15,14 @@ package org.mozilla.jss.util;
 public class NullPasswordCallback implements PasswordCallback {
 
     @Override
-    public Password getPasswordFirstAttempt(PasswordCallbackInfo info) 
-        throws PasswordCallback.GiveUpException
-    {
+    public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
+            throws PasswordCallback.GiveUpException {
         throw new PasswordCallback.GiveUpException();
     }
 
     @Override
     public Password getPasswordAgain(PasswordCallbackInfo info)
-        throws PasswordCallback.GiveUpException
-    {
+            throws PasswordCallback.GiveUpException {
         throw new PasswordCallback.GiveUpException();
     }
 }
