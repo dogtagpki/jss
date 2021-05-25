@@ -102,17 +102,11 @@ public class SSLClient {
      * the argument strings
      */
     private String cmp(String s1, String s2) {
-        if (s1 == s2)
-            return okay;
-        if (s1 == null)
-            return failed;
-        if (s1.equals(s2))
-            return okay;
-        return failed;
+        return s1.equals(s2) ? okay : failed;
     }
 
     private String cmp(String s1, int s2) {
-        return cmp(s1, Integer.valueOf(s2).toString());
+        return cmp(s1, Integer.toString(s2));
     }
 
     public void run(boolean printHeader, boolean testRegression) {
