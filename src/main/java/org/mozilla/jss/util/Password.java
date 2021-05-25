@@ -82,7 +82,7 @@ public class Password implements PasswordCallback, Cloneable,
      */
     @Override
     public synchronized boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Password)) {
+        if (!(obj instanceof Password)) {
             return false;
         }
         Password pw = (Password) obj;
