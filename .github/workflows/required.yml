@@ -13,7 +13,7 @@ jobs:
           - 'fedora_latest_jdk11'
           - 'symbolcheck'
           - 'debian_jdk11'
-          - 'ubuntu_jdk8'
+          - 'ubuntu_jdk11'
           # Disable tests due to missing dependencies
           # - 'centos_7'
           # - 'centos_8'

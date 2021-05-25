@@ -6,7 +6,7 @@ RUN true \
         && apt-get update \
         && apt-get dist-upgrade -y \
         && apt-get install -y debhelper libnss3-dev libnss3-tools libnss3 \
-                              openjdk-8-jdk pkg-config quilt g++ mercurial \
+                              openjdk-11-jdk pkg-config quilt g++ mercurial \
                               zlib1g-dev libslf4j-java liblog4j2-java \
                               libcommons-lang3-java libjaxb-api-java cmake \
                               zip unzip junit4 \
