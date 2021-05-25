@@ -10,11 +10,10 @@ import java.util.Hashtable;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 /**
- * Private Keys used by JSS.  All the private keys handled by JSS are
+ * Private Keys used by JSS. All the private keys handled by JSS are
  * of this type, which is a subtype of java.security.PrivateKey.
  */
-public interface PrivateKey extends java.security.PrivateKey
-{
+public interface PrivateKey extends java.security.PrivateKey {
 
     public static final Type RSA = Type.RSA;
     public static final Type DSA = Type.DSA;
@@ -27,7 +26,7 @@ public interface PrivateKey extends java.security.PrivateKey
     public Type getType();
 
     /**
-     * Returns the unique ID of this key.  Unique IDs can be used to match
+     * Returns the unique ID of this key. Unique IDs can be used to match
      * certificates to keys.
      *
      * @see org.mozilla.jss.crypto.TokenCertificate#getUniqueID
@@ -52,24 +51,23 @@ public interface PrivateKey extends java.security.PrivateKey
         private String name;
         private int pkcs11Type;
 
-        private Type() { }
+        private Type() {
+        }
 
         private Type(OBJECT_IDENTIFIER oid, String name, int pkcs11Type) {
             this.oid = oid;
             this.name = name;
             Object old = oidMap.put(oid, this);
             this.pkcs11Type = pkcs11Type;
-            assert( old == null );
+            assert (old == null);
         }
 
         private static Hashtable<OBJECT_IDENTIFIER, Type> oidMap = new Hashtable<>();
 
-
         public static Type fromOID(OBJECT_IDENTIFIER oid)
-            throws NoSuchAlgorithmException
-        {
+                throws NoSuchAlgorithmException {
             Object obj = oidMap.get(oid);
-            if( obj == null ) {
+            if (obj == null) {
                 throw new NoSuchAlgorithmException();
             }
             return (Type) obj;
@@ -79,6 +77,7 @@ public interface PrivateKey extends java.security.PrivateKey
          * Returns a string representation of the algorithm, such as
          * "RSA", "DSA", or "EC".
          */
+        @Override
         public String toString() {
             return name;
         }
@@ -92,8 +91,7 @@ public interface PrivateKey extends java.security.PrivateKey
         }
 
         // OID for DiffieHellman, from RFC 2459 7.3.2.
-        public static OBJECT_IDENTIFIER DH_OID =
-            new OBJECT_IDENTIFIER( new long[] {1, 2, 840, 10046, 2, 1} );
+        public static OBJECT_IDENTIFIER DH_OID = new OBJECT_IDENTIFIER(new long[] { 1, 2, 840, 10046, 2, 1 });
 
         // From PKCS #11
         private static int CKK_RSA = 0x0;
@@ -104,13 +102,13 @@ public interface PrivateKey extends java.security.PrivateKey
         private static int CKK_KEA = 0x5;
 
         public static final Type RSA = new Type(
-                OBJECT_IDENTIFIER.PKCS1.subBranch(1), "RSA", CKK_RSA );
+                OBJECT_IDENTIFIER.PKCS1.subBranch(1), "RSA", CKK_RSA);
         public static final Type DSA = new Type(
                 Algorithm.ANSI_X9_ALGORITHM.subBranch(1), "DSA", CKK_DSA);
         public static final Type EC = new Type(
-            Algorithm.ANSI_X962_OID.subBranch(2).subBranch(1), "EC", CKK_EC);
+                Algorithm.ANSI_X962_OID.subBranch(2).subBranch(1), "EC", CKK_EC);
         public static final Type DiffieHellman = new Type(
-                DH_OID, "DiffieHellman", CKK_DH );
+                DH_OID, "DiffieHellman", CKK_DH);
 
     }
 }

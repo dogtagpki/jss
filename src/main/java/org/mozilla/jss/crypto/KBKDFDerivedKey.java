@@ -1,9 +1,9 @@
 package org.mozilla.jss.crypto;
 
-import java.lang.IllegalArgumentException;
 import java.security.InvalidKeyException;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 
@@ -18,7 +18,8 @@ public class KBKDFDerivedKey extends NativeEnclosure {
     private CKAttribute[] attrs;
     private long handle;
 
-    public KBKDFDerivedKey() {}
+    public KBKDFDerivedKey() {
+    }
 
     public KBKDFDerivedKey(CKAttribute[] attrs) throws IllegalArgumentException {
         setAttributes(attrs);
@@ -50,6 +51,7 @@ public class KBKDFDerivedKey extends NativeEnclosure {
         this.attrs = ck_attrs.toArray(new CKAttribute[ck_attrs.size()]);
     }
 
+    @Override
     protected void acquireNativeResources() throws Exception {
         if (attrs == null) {
             String msg = "Expected non-null attributes when trying to ";
@@ -66,6 +68,7 @@ public class KBKDFDerivedKey extends NativeEnclosure {
         acquireNativeResourcesInternal();
     }
 
+    @Override
     protected void releaseNativeResources() throws Exception {
         if (attrs != null) {
             for (CKAttribute attr : attrs) {
@@ -82,9 +85,9 @@ public class KBKDFDerivedKey extends NativeEnclosure {
         SymmetricKey unwrapped = null;
 
         if (translated instanceof SymmetricKey) {
-            unwrapped = (SymmetricKey)translated;
+            unwrapped = (SymmetricKey) translated;
         } else if (translated instanceof SecretKeyFacade) {
-            unwrapped = ((SecretKeyFacade)translated).key;
+            unwrapped = ((SecretKeyFacade) translated).key;
         } else {
             String msg = "Expected key to become an instance of ";
             msg += "org.mozilla.jss.crypto.SymmetricKey or ";
@@ -103,5 +106,6 @@ public class KBKDFDerivedKey extends NativeEnclosure {
     private native SymmetricKey getKeyFromHandle(SymmetricKey parentKey, long mech, boolean temporary) throws Exception;
 
     protected native void acquireNativeResourcesInternal() throws Exception;
+
     protected native void releaseNativeResourcesInternal() throws Exception;
 }

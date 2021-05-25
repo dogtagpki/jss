@@ -3,8 +3,10 @@ package org.mozilla.jss.crypto;
 import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 public class KBKDFPipelineParams extends KBKDFParameterSpec {
-    public KBKDFPipelineParams() {}
+    public KBKDFPipelineParams() {
+    }
 
+    @Override
     protected void validateParameters() throws IllegalArgumentException {
         if (prfKey == null) {
             String msg = "Required parameter KDF key was never set.";
@@ -31,7 +33,7 @@ public class KBKDFPipelineParams extends KBKDFParameterSpec {
         int index = 0;
         for (KBKDFDataParameter param : params) {
             if (param instanceof KBKDFOptionalCounterParam) {
-                KBKDFOptionalCounterParam kocp = (KBKDFOptionalCounterParam)param;
+                KBKDFOptionalCounterParam kocp = (KBKDFOptionalCounterParam) param;
                 if (kocp.widthInBits == -1) {
                     String msg = "Got unexpected data in KBKDF Optional ";
                     msg += "Counter Parameter at index " + index + ": ";
@@ -43,7 +45,7 @@ public class KBKDFPipelineParams extends KBKDFParameterSpec {
             }
 
             if (param instanceof KBKDFIterationVariableParam) {
-                KBKDFIterationVariableParam kivp = (KBKDFIterationVariableParam)param;
+                KBKDFIterationVariableParam kivp = (KBKDFIterationVariableParam) param;
                 if (kivp.widthInBits != -1) {
                     String msg = "Got unexpected data in KBKDF Iteration ";
                     msg += "Variable Parameter at index " + index + ": ";
@@ -56,7 +58,7 @@ public class KBKDFPipelineParams extends KBKDFParameterSpec {
             }
 
             if (param instanceof KBKDFDKMLengthParam) {
-                KBKDFDKMLengthParam kdlp = (KBKDFDKMLengthParam)param;
+                KBKDFDKMLengthParam kdlp = (KBKDFDKMLengthParam) param;
                 if (kdlp.widthInBits == 0) {
                     String msg = "Got unexpected data in KBKDF DKM Length ";
                     msg += "Parameter at index " + index + ": Expected valid ";
@@ -73,6 +75,9 @@ public class KBKDFPipelineParams extends KBKDFParameterSpec {
         }
     }
 
+    @Override
     protected native void acquireNativeResourcesInternal() throws Exception;
+
+    @Override
     protected native void releaseNativeResourcesInternal() throws Exception;
 }

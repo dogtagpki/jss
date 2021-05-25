@@ -23,15 +23,15 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      * Creates PBE parameters.
      *
      * @param pass The password. It will be cloned, so the
-     *      caller is still responsible for clearing it. It must not be null.
+     *            caller is still responsible for clearing it. It must not be null.
      * @param salt The salt for the PBE algorithm. Will <b>not</b> be cloned.
-     *      Must not be null. It is the responsibility of the caller to
-     *      use the right salt length for the algorithm. Most algorithms
-     *      use 8 bytes of salt.
+     *            Must not be null. It is the responsibility of the caller to
+     *            use the right salt length for the algorithm. Most algorithms
+     *            use 8 bytes of salt.
      * @param iterations The iteration count for the PBE algorithm.
      */
     public PBEKeyGenParams(Password pass, byte[] salt, int iterations) {
-        if(pass==null || salt==null) {
+        if (pass == null || salt == null) {
             throw new NullPointerException();
         }
         this.pass = (Password) pass.clone();
@@ -44,18 +44,18 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      * (DES3_EDE3_CBC).
      *
      * @param pass The password. It will be cloned, so the
-     *      caller is still responsible for clearing it. It must not be null.
+     *            caller is still responsible for clearing it. It must not be null.
      * @param salt The salt for the PBE algorithm. Will <b>not</b> be cloned.
-     *      Must not be null. It is the responsibility of the caller to
-     *      use the right salt length for the algorithm. Most algorithms
-     *      use 8 bytes of salt.
+     *            Must not be null. It is the responsibility of the caller to
+     *            use the right salt length for the algorithm. Most algorithms
+     *            use 8 bytes of salt.
      * @param iterations The iteration count for the PBE algorithm.
      */
     public PBEKeyGenParams(char[] pass, byte[] salt, int iterations) {
-        if(pass==null || salt==null) {
+        if (pass == null || salt == null) {
             throw new NullPointerException();
         }
-        this.pass = new Password( pass.clone() );
+        this.pass = new Password(pass.clone());
         this.salt = salt;
         this.iterations = iterations;
     }
@@ -65,14 +65,14 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      * (DES3_EDE3_CBC).
      *
      * @param pass The password. It will be cloned, so the
-     *      caller is still responsible for clearing it. It must not be null.
+     *            caller is still responsible for clearing it. It must not be null.
      * @param salt The salt for the PBE algorithm. Will <b>not</b> be cloned.
-     *      Must not be null. It is the responsibility of the caller to
-     *      use the right salt length for the algorithm. Most algorithms
-     *      use 8 bytes of salt.
+     *            Must not be null. It is the responsibility of the caller to
+     *            use the right salt length for the algorithm. Most algorithms
+     *            use 8 bytes of salt.
      * @param iterations The iteration count for the PBE algorithm.
-     * @param encAlg The encryption algorithm.  This is used with SOME
-     *      PBE algorithms for determining the KDF output length.
+     * @param encAlg The encryption algorithm. This is used with SOME
+     *            PBE algorithms for determining the KDF output length.
      */
     public PBEKeyGenParams(
             char[] pass, byte[] salt, int iterations,
@@ -127,6 +127,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
     /**
      * @deprecated finalize() in Object has been deprecated
      */
+    @Override
     @Deprecated
     protected void finalize() throws Throwable {
         pass.clear();
