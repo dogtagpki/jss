@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -26,329 +25,329 @@ public class SSLSocket extends java.net.Socket {
      *
      */
 
-    public final static int SSL2_RC4_128_WITH_MD5 = 0xFF01;
-    public final static int SSL2_RC4_128_EXPORT40_WITH_MD5 = 0xFF02;
-    public final static int SSL2_RC2_128_CBC_WITH_MD5 = 0xFF03;
-    public final static int SSL2_RC2_128_CBC_EXPORT40_WITH_MD5 = 0xFF04;
-    public final static int SSL2_IDEA_128_CBC_WITH_MD5 = 0xFF05;
-    public final static int SSL2_DES_64_CBC_WITH_MD5 = 0xFF06;
-    public final static int SSL2_DES_192_EDE3_CBC_WITH_MD5 = 0xFF07;
+    public static final int SSL2_RC4_128_WITH_MD5 = 0xFF01;
+    public static final int SSL2_RC4_128_EXPORT40_WITH_MD5 = 0xFF02;
+    public static final int SSL2_RC2_128_CBC_WITH_MD5 = 0xFF03;
+    public static final int SSL2_RC2_128_CBC_EXPORT40_WITH_MD5 = 0xFF04;
+    public static final int SSL2_IDEA_128_CBC_WITH_MD5 = 0xFF05;
+    public static final int SSL2_DES_64_CBC_WITH_MD5 = 0xFF06;
+    public static final int SSL2_DES_192_EDE3_CBC_WITH_MD5 = 0xFF07;
 
-    public final static int TLS_NULL_WITH_NULL_NULL = 0x0000;
+    public static final int TLS_NULL_WITH_NULL_NULL = 0x0000;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_NULL_MD5.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_NULL_MD5 = 0x0001;
-    public final static int TLS_RSA_WITH_NULL_MD5 = 0x0001;
+    public static final int SSL3_RSA_WITH_NULL_MD5 = 0x0001;
+    public static final int TLS_RSA_WITH_NULL_MD5 = 0x0001;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_NULL_SHA.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_NULL_SHA = 0x0002;
-    public final static int TLS_RSA_WITH_NULL_SHA = 0x0002;
+    public static final int SSL3_RSA_WITH_NULL_SHA = 0x0002;
+    public static final int TLS_RSA_WITH_NULL_SHA = 0x0002;
 
-    public final static int SSL3_RSA_EXPORT_WITH_RC4_40_MD5 = 0x0003;
-    public final static int TLS_RSA_EXPORT_WITH_RC4_40_MD5 = 0x0003;
+    public static final int SSL3_RSA_EXPORT_WITH_RC4_40_MD5 = 0x0003;
+    public static final int TLS_RSA_EXPORT_WITH_RC4_40_MD5 = 0x0003;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_RC4_128_MD5.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_RC4_128_MD5 = 0x0004;
-    public final static int TLS_RSA_WITH_RC4_128_MD5 = 0x0004;
+    public static final int SSL3_RSA_WITH_RC4_128_MD5 = 0x0004;
+    public static final int TLS_RSA_WITH_RC4_128_MD5 = 0x0004;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_RC4_128_SHA.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_RC4_128_SHA = 0x0005;
-    public final static int TLS_RSA_WITH_RC4_128_SHA = 0x0005;
+    public static final int SSL3_RSA_WITH_RC4_128_SHA = 0x0005;
+    public static final int TLS_RSA_WITH_RC4_128_SHA = 0x0005;
 
-    public final static int SSL3_RSA_EXPORT_WITH_RC2_CBC_40_MD5 = 0x0006;
-    public final static int TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5 = 0x0006;
+    public static final int SSL3_RSA_EXPORT_WITH_RC2_CBC_40_MD5 = 0x0006;
+    public static final int TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5 = 0x0006;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_IDEA_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_IDEA_CBC_SHA = 0x0007;
-    public final static int TLS_RSA_WITH_IDEA_CBC_SHA = 0x0007;
+    public static final int SSL3_RSA_WITH_IDEA_CBC_SHA = 0x0007;
+    public static final int TLS_RSA_WITH_IDEA_CBC_SHA = 0x0007;
 
-    public final static int SSL3_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0008;
-    public final static int TLS_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0008;
+    public static final int SSL3_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0008;
+    public static final int TLS_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0008;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_DES_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_DES_CBC_SHA = 0x0009;
-    public final static int TLS_RSA_WITH_DES_CBC_SHA = 0x0009;
+    public static final int SSL3_RSA_WITH_DES_CBC_SHA = 0x0009;
+    public static final int TLS_RSA_WITH_DES_CBC_SHA = 0x0009;
 
     /**
      * @deprecated Replaced with TLS_RSA_WITH_3DES_EDE_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_RSA_WITH_3DES_EDE_CBC_SHA = 0x000a;
-    public final static int TLS_RSA_WITH_3DES_EDE_CBC_SHA = 0x000a;
+    public static final int SSL3_RSA_WITH_3DES_EDE_CBC_SHA = 0x000a;
+    public static final int TLS_RSA_WITH_3DES_EDE_CBC_SHA = 0x000a;
 
-    public final static int SSL3_DH_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x000b;
-    public final static int TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x000b;
+    public static final int SSL3_DH_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x000b;
+    public static final int TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x000b;
 
     /**
      * @deprecated Replaced with TLS_DH_DSS_WITH_DES_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DH_DSS_WITH_DES_CBC_SHA = 0x000c;
-    public final static int TLS_DH_DSS_WITH_DES_CBC_SHA = 0x000c;
+    public static final int SSL3_DH_DSS_WITH_DES_CBC_SHA = 0x000c;
+    public static final int TLS_DH_DSS_WITH_DES_CBC_SHA = 0x000c;
 
     /**
      * @deprecated Replaced with TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DH_DSS_WITH_3DES_EDE_CBC_SHA = 0x000d;
-    public final static int TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA = 0x000d;
+    public static final int SSL3_DH_DSS_WITH_3DES_EDE_CBC_SHA = 0x000d;
+    public static final int TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA = 0x000d;
 
-    public final static int SSL3_DH_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x000e;
-    public final static int TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x000e;
+    public static final int SSL3_DH_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x000e;
+    public static final int TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x000e;
 
     /**
      * @deprecated Replaced with TLS_DH_RSA_WITH_DES_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DH_RSA_WITH_DES_CBC_SHA = 0x000f;
-    public final static int TLS_DH_RSA_WITH_DES_CBC_SHA = 0x000f;
+    public static final int SSL3_DH_RSA_WITH_DES_CBC_SHA = 0x000f;
+    public static final int TLS_DH_RSA_WITH_DES_CBC_SHA = 0x000f;
 
     /**
      * @deprecated Replaced with TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DH_RSA_WITH_3DES_EDE_CBC_SHA = 0x0010;
-    public final static int TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA = 0x0010;
+    public static final int SSL3_DH_RSA_WITH_3DES_EDE_CBC_SHA = 0x0010;
+    public static final int TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA = 0x0010;
 
-    public final static int SSL3_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x0011;
-    public final static int TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x0011;
+    public static final int SSL3_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x0011;
+    public static final int TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA = 0x0011;
 
     /**
      * @deprecated Replaced with TLS_DHE_DSS_WITH_DES_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DHE_DSS_WITH_DES_CBC_SHA = 0x0012;
-    public final static int TLS_DHE_DSS_WITH_DES_CBC_SHA = 0x0012;
+    public static final int SSL3_DHE_DSS_WITH_DES_CBC_SHA = 0x0012;
+    public static final int TLS_DHE_DSS_WITH_DES_CBC_SHA = 0x0012;
 
     /**
      * @deprecated Replaced with TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DHE_DSS_WITH_3DES_EDE_CBC_SHA = 0x0013;
-    public final static int TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA = 0x0013;
+    public static final int SSL3_DHE_DSS_WITH_3DES_EDE_CBC_SHA = 0x0013;
+    public static final int TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA = 0x0013;
 
-    public final static int SSL3_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0014;
-    public final static int TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0014;
+    public static final int SSL3_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0014;
+    public static final int TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA = 0x0014;
 
     /**
      * @deprecated Replaced with TLS_DHE_RSA_WITH_DES_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DHE_RSA_WITH_DES_CBC_SHA = 0x0015;
-    public final static int TLS_DHE_RSA_WITH_DES_CBC_SHA = 0x0015;
+    public static final int SSL3_DHE_RSA_WITH_DES_CBC_SHA = 0x0015;
+    public static final int TLS_DHE_RSA_WITH_DES_CBC_SHA = 0x0015;
 
     /**
      * @deprecated Replaced with TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DHE_RSA_WITH_3DES_EDE_CBC_SHA = 0x0016;
-    public final static int TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA = 0x0016;
+    public static final int SSL3_DHE_RSA_WITH_3DES_EDE_CBC_SHA = 0x0016;
+    public static final int TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA = 0x0016;
 
-    public final static int SSL3_DH_ANON_EXPORT_WITH_RC4_40_MD5 = 0x0017;
-    public final static int TLS_DH_anon_EXPORT_WITH_RC4_40_MD5 = 0x0017;
+    public static final int SSL3_DH_ANON_EXPORT_WITH_RC4_40_MD5 = 0x0017;
+    public static final int TLS_DH_anon_EXPORT_WITH_RC4_40_MD5 = 0x0017;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_RC4_128_MD5.
      */
     @Deprecated
-    public final static int SSL3_DH_ANON_WITH_RC4_128_MD5 = 0x0018;
-    public final static int TLS_DH_anon_WITH_RC4_128_MD5 = 0x0018;
+    public static final int SSL3_DH_ANON_WITH_RC4_128_MD5 = 0x0018;
+    public static final int TLS_DH_anon_WITH_RC4_128_MD5 = 0x0018;
 
-    public final static int SSL3_DH_ANON_EXPORT_WITH_DES40_CBC_SHA = 0x0019;
-    public final static int TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA = 0x0019;
+    public static final int SSL3_DH_ANON_EXPORT_WITH_DES40_CBC_SHA = 0x0019;
+    public static final int TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA = 0x0019;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_DES_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DH_ANON_WITH_DES_CBC_SHA = 0x001a;
-    public final static int TLS_DH_anon_WITH_DES_CBC_SHA = 0x001a;
+    public static final int SSL3_DH_ANON_WITH_DES_CBC_SHA = 0x001a;
+    public static final int TLS_DH_anon_WITH_DES_CBC_SHA = 0x001a;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_3DES_EDE_CBC_SHA.
      */
     @Deprecated
-    public final static int SSL3_DH_ANON_WITH_3DES_EDE_CBC_SHA = 0x001b;
-    public final static int TLS_DH_anon_WITH_3DES_EDE_CBC_SHA = 0x001b;
+    public static final int SSL3_DH_ANON_WITH_3DES_EDE_CBC_SHA = 0x001b;
+    public static final int TLS_DH_anon_WITH_3DES_EDE_CBC_SHA = 0x001b;
 
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
      */
     @Deprecated
-    public final static int SSL3_FORTEZZA_DMS_WITH_NULL_SHA = 0x001c;
+    public static final int SSL3_FORTEZZA_DMS_WITH_NULL_SHA = 0x001c;
 
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
      */
     @Deprecated
-    public final static int SSL3_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA = 0x001d;
+    public static final int SSL3_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA = 0x001d;
 
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
      */
     @Deprecated
-    public final static int SSL3_FORTEZZA_DMS_WITH_RC4_128_SHA = 0x001e;
+    public static final int SSL3_FORTEZZA_DMS_WITH_RC4_128_SHA = 0x001e;
 
-    public final static int SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA = 0xfeff;
-    public final static int SSL_RSA_FIPS_WITH_DES_CBC_SHA = 0xfefe;
+    public static final int SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA = 0xfeff;
+    public static final int SSL_RSA_FIPS_WITH_DES_CBC_SHA = 0xfefe;
 
-    public final static int TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA = 0x0062;
-    public final static int TLS_RSA_EXPORT1024_WITH_RC4_56_SHA = 0x0064;
+    public static final int TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA = 0x0062;
+    public static final int TLS_RSA_EXPORT1024_WITH_RC4_56_SHA = 0x0064;
 
-    public final static int TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA = 0x0063;
-    public final static int TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA = 0x0065;
-    public final static int TLS_DHE_DSS_WITH_RC4_128_SHA = 0x0066;
-    public final static int TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 = 0x0067;
-    public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA256 = 0x006A;
-    public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 = 0x006B;
+    public static final int TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA = 0x0063;
+    public static final int TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA = 0x0065;
+    public static final int TLS_DHE_DSS_WITH_RC4_128_SHA = 0x0066;
+    public static final int TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 = 0x0067;
+    public static final int TLS_DHE_DSS_WITH_AES_256_CBC_SHA256 = 0x006A;
+    public static final int TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 = 0x006B;
 
     // New TLS cipher suites in NSS 3.4
-    public final static int TLS_RSA_WITH_AES_128_CBC_SHA = 0x002F;
-    public final static int TLS_DH_DSS_WITH_AES_128_CBC_SHA = 0x0030;
-    public final static int TLS_DH_RSA_WITH_AES_128_CBC_SHA = 0x0031;
-    public final static int TLS_DHE_DSS_WITH_AES_128_CBC_SHA = 0x0032;
-    public final static int TLS_DHE_RSA_WITH_AES_128_CBC_SHA = 0x0033;
+    public static final int TLS_RSA_WITH_AES_128_CBC_SHA = 0x002F;
+    public static final int TLS_DH_DSS_WITH_AES_128_CBC_SHA = 0x0030;
+    public static final int TLS_DH_RSA_WITH_AES_128_CBC_SHA = 0x0031;
+    public static final int TLS_DHE_DSS_WITH_AES_128_CBC_SHA = 0x0032;
+    public static final int TLS_DHE_RSA_WITH_AES_128_CBC_SHA = 0x0033;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_AES_128_CBC_SHA.
      */
     @Deprecated
-    public final static int TLS_DH_ANON_WITH_AES_128_CBC_SHA = 0x0034;
-    public final static int TLS_DH_anon_WITH_AES_128_CBC_SHA = 0x0034;
+    public static final int TLS_DH_ANON_WITH_AES_128_CBC_SHA = 0x0034;
+    public static final int TLS_DH_anon_WITH_AES_128_CBC_SHA = 0x0034;
 
-    public final static int TLS_RSA_WITH_AES_256_CBC_SHA = 0x0035;
-    public final static int TLS_DH_DSS_WITH_AES_256_CBC_SHA = 0x0036;
-    public final static int TLS_DH_RSA_WITH_AES_256_CBC_SHA = 0x0037;
-    public final static int TLS_DHE_DSS_WITH_AES_256_CBC_SHA = 0x0038;
-    public final static int TLS_DHE_RSA_WITH_AES_256_CBC_SHA = 0x0039;
+    public static final int TLS_RSA_WITH_AES_256_CBC_SHA = 0x0035;
+    public static final int TLS_DH_DSS_WITH_AES_256_CBC_SHA = 0x0036;
+    public static final int TLS_DH_RSA_WITH_AES_256_CBC_SHA = 0x0037;
+    public static final int TLS_DHE_DSS_WITH_AES_256_CBC_SHA = 0x0038;
+    public static final int TLS_DHE_RSA_WITH_AES_256_CBC_SHA = 0x0039;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_AES_256_CBC_SHA.
      */
     @Deprecated
-    public final static int TLS_DH_ANON_WITH_AES_256_CBC_SHA = 0x003A;
-    public final static int TLS_DH_anon_WITH_AES_256_CBC_SHA = 0x003A;
+    public static final int TLS_DH_ANON_WITH_AES_256_CBC_SHA = 0x003A;
+    public static final int TLS_DH_anon_WITH_AES_256_CBC_SHA = 0x003A;
 
-    public final static int TLS_RSA_WITH_NULL_SHA256 = 0x003B;
-    public final static int TLS_RSA_WITH_AES_128_CBC_SHA256 = 0x003C;
-    public final static int TLS_RSA_WITH_AES_256_CBC_SHA256 = 0x003D;
+    public static final int TLS_RSA_WITH_NULL_SHA256 = 0x003B;
+    public static final int TLS_RSA_WITH_AES_128_CBC_SHA256 = 0x003C;
+    public static final int TLS_RSA_WITH_AES_256_CBC_SHA256 = 0x003D;
 
-    public final static int TLS_DHE_DSS_WITH_AES_128_CBC_SHA256 = 0x0040;
-    public final static int TLS_RSA_WITH_CAMELLIA_128_CBC_SHA = 0x0041;
-    public final static int TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA = 0x0042;
-    public final static int TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA = 0x0043;
-    public final static int TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA = 0x0044;
-    public final static int TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA = 0x0045;
+    public static final int TLS_DHE_DSS_WITH_AES_128_CBC_SHA256 = 0x0040;
+    public static final int TLS_RSA_WITH_CAMELLIA_128_CBC_SHA = 0x0041;
+    public static final int TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA = 0x0042;
+    public static final int TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA = 0x0043;
+    public static final int TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA = 0x0044;
+    public static final int TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA = 0x0045;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA.
      */
     @Deprecated
-    public final static int TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA = 0x0046;
-    public final static int TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA = 0x0046;
+    public static final int TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA = 0x0046;
+    public static final int TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA = 0x0046;
 
-    public final static int TLS_RSA_WITH_CAMELLIA_256_CBC_SHA = 0x0084;
-    public final static int TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA = 0x0085;
-    public final static int TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA = 0x0086;
-    public final static int TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA = 0x0087;
-    public final static int TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA = 0x0088;
+    public static final int TLS_RSA_WITH_CAMELLIA_256_CBC_SHA = 0x0084;
+    public static final int TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA = 0x0085;
+    public static final int TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA = 0x0086;
+    public static final int TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA = 0x0087;
+    public static final int TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA = 0x0088;
 
     /**
      * @deprecated Replaced with TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA.
      */
     @Deprecated
-    public final static int TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA = 0x0089;
-    public final static int TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA = 0x0089;
+    public static final int TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA = 0x0089;
+    public static final int TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA = 0x0089;
 
-    public final static int TLS_RSA_WITH_SEED_CBC_SHA = 0x0096;
+    public static final int TLS_RSA_WITH_SEED_CBC_SHA = 0x0096;
 
-    public final static int TLS_RSA_WITH_AES_128_GCM_SHA256 = 0x009C;
-    public final static int TLS_RSA_WITH_AES_256_GCM_SHA384 = 0x009D;
-    public final static int TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 = 0x009E;
-    public final static int TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 = 0x009F;
-    public final static int TLS_DHE_DSS_WITH_AES_128_GCM_SHA256 = 0x00A2;
-    public final static int TLS_DHE_DSS_WITH_AES_256_GCM_SHA384 = 0x00A3;
-    public final static int TLS_DHE_PSK_WITH_AES_128_GCM_SHA256 = 0x00AA;
-    public final static int TLS_DHE_PSK_WITH_AES_256_GCM_SHA384 = 0x00AB;
+    public static final int TLS_RSA_WITH_AES_128_GCM_SHA256 = 0x009C;
+    public static final int TLS_RSA_WITH_AES_256_GCM_SHA384 = 0x009D;
+    public static final int TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 = 0x009E;
+    public static final int TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 = 0x009F;
+    public static final int TLS_DHE_DSS_WITH_AES_128_GCM_SHA256 = 0x00A2;
+    public static final int TLS_DHE_DSS_WITH_AES_256_GCM_SHA384 = 0x00A3;
+    public static final int TLS_DHE_PSK_WITH_AES_128_GCM_SHA256 = 0x00AA;
+    public static final int TLS_DHE_PSK_WITH_AES_256_GCM_SHA384 = 0x00AB;
 
-    public final static int TLS_EMPTY_RENEGOTIATION_INFO_SCSV = 0x00FF;
+    public static final int TLS_EMPTY_RENEGOTIATION_INFO_SCSV = 0x00FF;
 
-    public final static int TLS_FALLBACK_SCSV = 0x5600;
+    public static final int TLS_FALLBACK_SCSV = 0x5600;
 
-    public final static int TLS_ECDH_ECDSA_WITH_NULL_SHA = 0xc001;
-    public final static int TLS_ECDH_ECDSA_WITH_RC4_128_SHA = 0xc002;
-    public final static int TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA = 0xc003;
-    public final static int TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA = 0xc004;
-    public final static int TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA = 0xc005;
+    public static final int TLS_ECDH_ECDSA_WITH_NULL_SHA = 0xc001;
+    public static final int TLS_ECDH_ECDSA_WITH_RC4_128_SHA = 0xc002;
+    public static final int TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA = 0xc003;
+    public static final int TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA = 0xc004;
+    public static final int TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA = 0xc005;
 
-    public final static int TLS_ECDHE_ECDSA_WITH_NULL_SHA = 0xc006;
-    public final static int TLS_ECDHE_ECDSA_WITH_RC4_128_SHA = 0xc007;
-    public final static int TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA = 0xc008;
-    public final static int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA = 0xc009;
-    public final static int TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA = 0xc00a;
+    public static final int TLS_ECDHE_ECDSA_WITH_NULL_SHA = 0xc006;
+    public static final int TLS_ECDHE_ECDSA_WITH_RC4_128_SHA = 0xc007;
+    public static final int TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA = 0xc008;
+    public static final int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA = 0xc009;
+    public static final int TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA = 0xc00a;
 
-    public final static int TLS_ECDH_RSA_WITH_NULL_SHA = 0xc00b;
-    public final static int TLS_ECDH_RSA_WITH_RC4_128_SHA = 0xc00c;
-    public final static int TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA = 0xc00d;
-    public final static int TLS_ECDH_RSA_WITH_AES_128_CBC_SHA = 0xc00e;
-    public final static int TLS_ECDH_RSA_WITH_AES_256_CBC_SHA = 0xc00f;
+    public static final int TLS_ECDH_RSA_WITH_NULL_SHA = 0xc00b;
+    public static final int TLS_ECDH_RSA_WITH_RC4_128_SHA = 0xc00c;
+    public static final int TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA = 0xc00d;
+    public static final int TLS_ECDH_RSA_WITH_AES_128_CBC_SHA = 0xc00e;
+    public static final int TLS_ECDH_RSA_WITH_AES_256_CBC_SHA = 0xc00f;
 
-    public final static int TLS_ECDHE_RSA_WITH_NULL_SHA = 0xc010;
-    public final static int TLS_ECDHE_RSA_WITH_RC4_128_SHA = 0xc011;
-    public final static int TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA = 0xc012;
-    public final static int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA = 0xc013;
-    public final static int TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA = 0xc014;
+    public static final int TLS_ECDHE_RSA_WITH_NULL_SHA = 0xc010;
+    public static final int TLS_ECDHE_RSA_WITH_RC4_128_SHA = 0xc011;
+    public static final int TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA = 0xc012;
+    public static final int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA = 0xc013;
+    public static final int TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA = 0xc014;
 
-    public final static int TLS_ECDH_anon_WITH_NULL_SHA = 0xc015;
-    public final static int TLS_ECDH_anon_WITH_RC4_128_SHA = 0xc016;
-    public final static int TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA = 0xc017;
-    public final static int TLS_ECDH_anon_WITH_AES_128_CBC_SHA = 0xc018;
-    public final static int TLS_ECDH_anon_WITH_AES_256_CBC_SHA = 0xc019;
+    public static final int TLS_ECDH_anon_WITH_NULL_SHA = 0xc015;
+    public static final int TLS_ECDH_anon_WITH_RC4_128_SHA = 0xc016;
+    public static final int TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA = 0xc017;
+    public static final int TLS_ECDH_anon_WITH_AES_128_CBC_SHA = 0xc018;
+    public static final int TLS_ECDH_anon_WITH_AES_256_CBC_SHA = 0xc019;
 
-    public final static int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 = 0xc023;
-    public final static int TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 = 0xc024;
-    public final static int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 = 0xc027;
-    public final static int TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 = 0xc028;
+    public static final int TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 = 0xc023;
+    public static final int TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 = 0xc024;
+    public static final int TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 = 0xc027;
+    public static final int TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 = 0xc028;
 
-    public final static int TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 = 0xc02B;
-    public final static int TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 = 0xc02C;
-    public final static int TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256 = 0xc02D;
-    public final static int TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 = 0xc02F;
-    public final static int TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 = 0xc030;
-    public final static int TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256 = 0xc031;
+    public static final int TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 = 0xc02B;
+    public static final int TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 = 0xc02C;
+    public static final int TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256 = 0xc02D;
+    public static final int TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 = 0xc02F;
+    public static final int TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 = 0xc030;
+    public static final int TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256 = 0xc031;
 
     /* draft-ietf-tls-chacha20-poly1305-04 */
-    public final static int TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCA8;
-    public final static int TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCA9;
-    public final static int TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCAA;
-    public final static int TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256 = 0xCCAC;
-    public final static int TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256 = 0xCCAD;
+    public static final int TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCA8;
+    public static final int TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCA9;
+    public static final int TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 = 0xCCAA;
+    public static final int TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256 = 0xCCAC;
+    public static final int TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256 = 0xCCAD;
 
-    public final static int TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256 = 0xD001;
-    public final static int TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384 = 0xD002;
+    public static final int TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256 = 0xD001;
+    public static final int TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384 = 0xD002;
 
     /* Special TLS 1.3 cipher suites that really just specify AEAD */
-    public final static int TLS_AES_128_GCM_SHA256 = 0x1301;
-    public final static int TLS_AES_256_GCM_SHA384 = 0x1302;
-    public final static int TLS_CHACHA20_POLY1305_SHA256 = 0x1303;
+    public static final int TLS_AES_128_GCM_SHA256 = 0x1301;
+    public static final int TLS_AES_256_GCM_SHA384 = 0x1302;
+    public static final int TLS_CHACHA20_POLY1305_SHA256 = 0x1303;
 
     /*
      * Locking strategy of SSLSocket
@@ -374,14 +373,14 @@ public class SSLSocket extends java.net.Socket {
     private boolean open = false;
     private boolean handshakeAsClient = true;
     private SocketBase base = new SocketBase();
-    static final public int SSL_REQUIRE_NEVER = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_NEVER;
-    static final public int SSL_REQUIRE_ALWAYS = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_ALWAYS;
-    static final public int SSL_REQUIRE_FIRST_HANDSHAKE = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_FIRST_HANDSHAKE;
-    static final public int SSL_REQUIRE_NO_ERROR = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_NO_ERROR;
-    static final public int SSL_RENEGOTIATE_NEVER = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_NEVER;
-    static final public int SSL_RENEGOTIATE_REQUIRES_XTN = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_REQUIRES_XTN;
-    static final public int SSL_RENEGOTIATE_UNRESTRICTED = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_UNRESTRICTED;
-    static final public int SSL_RENEGOTIATE_TRANSITIONAL = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_TRANSITIONAL;
+    public static final int SSL_REQUIRE_NEVER = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_NEVER;
+    public static final int SSL_REQUIRE_ALWAYS = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_ALWAYS;
+    public static final int SSL_REQUIRE_FIRST_HANDSHAKE = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_FIRST_HANDSHAKE;
+    public static final int SSL_REQUIRE_NO_ERROR = org.mozilla.jss.ssl.SocketBase.SSL_REQUIRE_NO_ERROR;
+    public static final int SSL_RENEGOTIATE_NEVER = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_NEVER;
+    public static final int SSL_RENEGOTIATE_REQUIRES_XTN = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_REQUIRES_XTN;
+    public static final int SSL_RENEGOTIATE_UNRESTRICTED = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_UNRESTRICTED;
+    public static final int SSL_RENEGOTIATE_TRANSITIONAL = org.mozilla.jss.ssl.SocketBase.SSL_RENEGOTIATE_TRANSITIONAL;
 
     private Collection<SSLSocketListener> socketListeners = new ArrayList<>();
     private Collection<SSLHandshakeCompletedListener> handshakeCompletedListeners = new ArrayList<>();
@@ -389,7 +388,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * For sockets that get created by accept().
      */
-    SSLSocket() throws IOException {
+    SSLSocket() {
     }
 
     /**
@@ -409,7 +408,7 @@ public class SSLSocket extends java.net.Socket {
      * @param port The port to connect to.
      */
     public SSLSocket(String host, int port)
-            throws UnknownHostException, IOException {
+            throws IOException {
         this(InetAddress.getByName(host), port, null, 0);
     }
 
@@ -602,8 +601,8 @@ public class SSLSocket extends java.net.Socket {
         synchronized (this) {
             if (isClosed) {
                 return null;
-            } else
-                return base.getInetAddress();
+            }
+            return base.getInetAddress();
         }
     }
 
@@ -615,8 +614,8 @@ public class SSLSocket extends java.net.Socket {
         synchronized (this) {
             if (isClosed) {
                 return null;
-            } else
-                return base.getLocalAddress();
+            }
+            return base.getLocalAddress();
         }
     }
 
@@ -628,8 +627,8 @@ public class SSLSocket extends java.net.Socket {
         synchronized (this) {
             if (isClosed) {
                 return -1;
-            } else
-                return base.getLocalPort();
+            }
+            return base.getLocalPort();
         }
     }
 
@@ -720,7 +719,7 @@ public class SSLSocket extends java.net.Socket {
      * @param timeout The timeout time in milliseconds.
      */
     @Override
-    public void setSoTimeout(int timeout) throws SocketException {
+    public synchronized void setSoTimeout(int timeout) throws SocketException {
         base.setTimeout(timeout);
     }
 
@@ -730,7 +729,7 @@ public class SSLSocket extends java.net.Socket {
      * @return The timeout time in milliseconds.
      */
     @Override
-    public int getSoTimeout() throws SocketException {
+    public synchronized int getSoTimeout() throws SocketException {
         return base.getTimeout();
     }
 
@@ -738,25 +737,25 @@ public class SSLSocket extends java.net.Socket {
      * Sets the size (in bytes) of the send buffer.
      */
     @Override
-    public native void setSendBufferSize(int size) throws SocketException;
+    public synchronized native void setSendBufferSize(int size) throws SocketException;
 
     /**
      * Returns the size (in bytes) of the send buffer.
      */
     @Override
-    public native int getSendBufferSize() throws SocketException;
+    public synchronized native int getSendBufferSize() throws SocketException;
 
     /**
      * Sets the size (in bytes) of the receive buffer.
      */
     @Override
-    public native void setReceiveBufferSize(int size) throws SocketException;
+    public synchronized native void setReceiveBufferSize(int size) throws SocketException;
 
     /**
-     * Returnst he size (in bytes) of the receive buffer.
+     * Returns the size (in bytes) of the receive buffer.
      */
     @Override
-    public native int getReceiveBufferSize() throws SocketException;
+    public synchronized native int getReceiveBufferSize() throws SocketException;
 
     /**
      * Closes this socket.
