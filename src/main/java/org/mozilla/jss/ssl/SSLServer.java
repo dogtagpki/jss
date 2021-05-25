@@ -255,7 +255,7 @@ public class SSLServer {
             0
     };
 
-    public static void main(String argv[]) throws Exception {
+    public static void main(String[] argv) throws Exception {
         int i;
 
         System.out.println("SSLServer started\n");
