@@ -14,12 +14,12 @@ attempting to be a default crypto provider, it would be nice to ensure we're
 mostly close to what the JDK provides. Hopefully other packages written to the
 JDK provider can have similar algorithms available under JSS and behave well. 
 Large gaps in coverage are likely an issue such as [#341](https://github.com/dogtagpki/jss/issues/341)
-and [#242] (https://github.com/dogtagpki/jss/issues/242).
+and [#242](https://github.com/dogtagpki/jss/issues/242).
 
 Usage
 ========================================
 First build jss according to the instructions
-here [README](https://github.com/dogtagpki/jss/blob/master/README.md)
+here [README](../../README.md)
 You should see in the build directory tests_jss4.jar which is what
 contains the application along with the regular tests.
 From the `jss/build` directory execute
