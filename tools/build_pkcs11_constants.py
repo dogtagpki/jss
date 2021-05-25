@@ -12,6 +12,7 @@ for more information.
 
 from __future__ import print_function
 
+import logging
 import os
 import subprocess
 import sys
@@ -28,6 +29,9 @@ BLACKLIST = [
     'CK_DECLARE_FUNCTION_POINTER',
     'CK_UNAVAILABLE_INFORMATION'
 ]
+
+logger = logging.getLogger(__name__)
+
 
 def parse_c_value(c_value):
     """
@@ -136,9 +140,7 @@ class ConstantDefinition(object):
 
                     # Note that if the target symbol is already resolved, we
                     # can save the steps of resolving its value again by using
-                    # its resolved value here. This has the side effect of
-                    # shortening our resolution history in verbose mode, but
-                    # that history is still all contained in the output file.
+                    # its resolved value here.
                     if obj.resolved:
                         replacement = '(' + obj.resolved_value + ')'
 
@@ -151,7 +153,7 @@ class ConstantDefinition(object):
         try:
             self.resolved_value = parse_c_value(value)
         except Exception as e:
-            print("Failed to parse value for constant: " + self.name, file=sys.stderr)
+            logger.error("Failed to parse value for constant: " + self.name, file=sys.stderr)
             raise e
 
         self.resolved_history = value_history
@@ -164,6 +166,8 @@ class ConstantDefinition(object):
         intended for the value to be. Raises an exception if the value
         differs.
         """
+
+        logger.info("Validating constant %s = %s", self.name, self.resolved_value)
 
         # This made an intentional design choice to run each constant's check
         # separately; we could've grouped several (or all) of the constants
@@ -199,6 +203,8 @@ class ConstantDefinition(object):
         # pkg-config such that we can correctly link this program and
         # have the correct includes for nss.
         cc_call = ["cc", "-o", exec_path, path] + nss_args
+        logger.debug("Command: %s", ' '.join(cc_call))
+
         proc = subprocess.Popen(cc_call, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         proc.wait()
@@ -212,14 +218,10 @@ class ConstantDefinition(object):
             self.stderr = self.stderr.decode('utf8')
 
         if self.stdout:
-            print("When checking symbol '%s' (stdout):" % self.name)
-            print(self.stdout)
-            print("\n")
+            logger.info("%s validation output:\n%s", self.name, self.stdout)
 
         if self.stderr:
-            print("When checking symbol '%s' (stderr):" % self.name)
-            print(self.stderr)
-            print("\n")
+            logger.warning("%s validation error/warning:\n%s", self.name, self.stderr)
 
         # Check whether or not the program compiled correctly; note that
         # this comes after the stdout/stderr writes, so our caller can
@@ -260,16 +262,12 @@ class ConstantDefinition(object):
 
         return False
 
-    def get_source_content(self, verbose):
+    def get_source_content(self):
         """
-        Converts a value to a Java-like value in its source context. This
-        processes the value to convert it to Java and also appends
-        context information when verbose information has been specified.
+        Converts a value to a Java-like value in its source context.
+        """
 
-        Note that if verbose is specified, the prefixed comments can differ
-        based on whether or not system was specified and extended checks
-        were run.
-        """
+        logger.info("Generating constant %s = %s", self.name, self.resolved_value)
 
         # In particular, "source context" means in this case "comments"
         # and the particular java delcaration. Our constants must be of
@@ -288,45 +286,29 @@ class ConstantDefinition(object):
         comment_info += "     *\n"
         comment_info += "     * Source file: %s\n" % self.header_file
 
-        # In verbose mode, output additional debugging information.
-        if verbose:
-            comment_info += "     * Line number: %s\n" % self.line_number
-            comment_info += "     * Line: %s\n" % self.line
-            comment_info += "     * Parsed name: %s\n" % self.name
-            comment_info += "     * Parsed value: %s\n" % self.value
+        # Log debugging information.
+        logger.debug("Input: %s", self.line)
+        logger.debug("Source: %s:%s", self.header_file, self.line_number)
+        logger.debug("Name: %s", self.name)
+        logger.debug("Value: %s", self.value)
 
-        # In verbose mode, save resolution history. This is useful for
+        # Log resolution history. This is useful for
         # detecting errors made during resolution.
-        if self.resolved_history and verbose:
-            comment_info += "     *\n"
-            for step in self.resolved_history:
-                comment_info += ("     * Resolution step: in [%s]\n" +
-                                 "     *   replaced [%s] with [%s]\n") % step
-
-        # In verbose mode, save the output of the system/cc check, if any.
-        if self.checked and verbose:
-            if self.stdout:
-                comment_info += "     *\n"
-                comment_info += "     * check stdout:\n"
-                for line in self.stdout.split("\n"):
-                    comment_line = "     * %s" % line.strip()
-                    comment_info += comment_line.rstrip() + "\n"
-
-            if self.stderr:
-                comment_info += "     *\n"
-                comment_info += "     * check stderr:\n"
-                for line in self.stderr.split("\n"):
-                    comment_line = "     * %s" % line.strip()
-                    comment_info += comment_line.rstrip() + "\n"
+        if self.resolved_history:
+            for (value, name, replacement) in self.resolved_history:
+                logger.debug("Resolution: in [%s]", value)
+                logger.debug("  replaced [%s] with [%s]", name, replacement)
 
         comment_footer = "     */\n"
         comment = comment_header + comment_info + comment_footer
 
         # Actual definition of the constant; needs a "L" so that unsigned
         # values get processed correctly.
-        source_template = "    public static final long %s = %sL;\n"
-        source_line = source_template % (self.name, self.resolved_value)
+        source_template = "public static final long %s = %sL;"
+        output = source_template % (self.name, self.resolved_value)
+        logger.debug("Output: %s", output)
 
+        source_line = "    %s\n" % output
         return comment + source_line
 
 
@@ -461,13 +443,15 @@ def parse_copyright(file_contents):
     return "\n".join(copyright_headers) + "\n\n"
 
 
-def parse_header(header, verbose):
+def parse_header(header):
     """
     Parse the contents of the file path (header) for #define statements and
     the copyright headers. The #define statements are returned as a list of
     items of type ConstantDefinition. The copyright header is returned as a
     string.
     """
+
+    logger.info("Parsing %s", header.name)
 
     file_contents = read_lines(header)
 
@@ -478,10 +462,10 @@ def parse_header(header, verbose):
         if line.startswith('#define'):
             name, value = parse_define(line)
             if name in BLACKLIST:
-                if verbose:
-                    print("Skipping blacklisted constant: " + name)
+                logger.info("Skipping blacklisted constant: %s", name)
                 continue
 
+            logger.info("Found definition %s = %s", name, value)
             new_definition = ConstantDefinition(header.name, line_num, line,
                                                 name, value)
             defines.append(new_definition)
@@ -540,7 +524,7 @@ def filter_objects(objs):
         else:
             # It isn't an error and is merely informational to ignore some
             # symbols at this stage.
-            print("Symbol ignored due to unmatched prefix: %s" % obj.name)
+            logger.info("Symbol ignored due to unmatched prefix: %s", obj.name)
 
     return results
 
@@ -589,7 +573,7 @@ def check_references(objs):
 
     # Print statement because this step takes a while (~30s); might as well
     # tell the user. :)
-    print("Performing extended value checks...")
+    logger.info("Performing extended value checks...")
 
     # Such that we can link against nss and find the includes, use pkg-config.
     # Note that pkg-config is already a soft-dependency (it is utilized in
@@ -610,7 +594,7 @@ def check_references(objs):
         obj.check_output(nss_args)
 
 
-def build_class(objs, headers, verbose):
+def build_class(objs, headers):
     """
     From a dictionary of objects (obj_map), generate a Java class for the
     constants. Returns the text contents (str) of the generated class file.
@@ -657,7 +641,7 @@ def build_class(objs, headers, verbose):
 
     file_body = ""
     for obj in objs:
-        file_body += obj.get_source_content(verbose)
+        file_body += obj.get_source_content()
 
     file_footer = "}\n"
 
@@ -712,6 +696,7 @@ def write_class(file_contents, output):
     Helper method to write the contents of the file to the specified file
     handle (output).
     """
+    logger.info("Generating %s", output.name)
     output.write(file_contents)
     output.close()
 
@@ -746,11 +731,11 @@ def parse_args():
                         required=True,
                         help="Path to write PKCS11Constants.java")
 
-    # Enables verbose or debugging mode, which writes additional information
-    # to the generated output.
     parser.add_argument("-v", "--verbose", action="store_true",
-                        help="Write verbose comments in output")
+                        help="Run in verbose mode.")
 
+    parser.add_argument("--debug", action="store_true",
+                        help="Run in debug mode.")
 
     return parser.parse_args()
 
@@ -759,7 +744,13 @@ def main():
     """
     Main method for utility parser.
     """
+    logging.basicConfig(format='%(levelname)s: %(message)s')
     args = parse_args()
+
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+    elif args.verbose:
+        logging.getLogger().setLevel(logging.INFO)
 
     # The high level flow of the program is as follows:
     #
@@ -788,10 +779,10 @@ def main():
     #   an error.
     # - If the resulting Java program does not compile, this is an error.
 
-    t_objs, t_copyright = parse_header(args.pkcs11t, args.verbose)
+    t_objs, t_copyright = parse_header(args.pkcs11t)
     t_objs_filtered = filter_objects(t_objs)
 
-    n_objs, n_copyright = parse_header(args.pkcs11n, args.verbose)
+    n_objs, n_copyright = parse_header(args.pkcs11n)
     n_objs_filtered = filter_objects(n_objs)
 
     objs = t_objs_filtered[:]
@@ -805,12 +796,12 @@ def main():
         # assume they are the same as what is found by pkg-config.
         check_references(objs)
 
-    output_contents = build_class(objs, headers, args.verbose)
+    output_contents = build_class(objs, headers)
     test_compilation(output_contents)
 
     write_class(output_contents, args.output)
 
-    print("Success generating constant definitions")
+    logger.info("Success generating constant definitions")
 
 
 if __name__ == "__main__":
