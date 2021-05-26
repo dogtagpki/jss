@@ -8,9 +8,9 @@ import java.io.CharConversionException;
 interface CharConverter {
 
     public char[] byteToChar(byte[] bytes, int offset, int len)
-		throws CharConversionException;
+        throws CharConversionException;
 
     public byte[] charToByte(char[] chars, int offset, int len)
-		throws CharConversionException;
+        throws CharConversionException;
 
 }

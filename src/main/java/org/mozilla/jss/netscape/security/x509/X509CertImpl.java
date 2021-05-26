@@ -1136,9 +1136,9 @@ public class X509CertImpl extends X509Certificate
     /*
      * Cert is a SIGNED ASN.1 macro, a three elment sequence:
      *
-     *	- Data to be signed (ToBeSigned) -- the "raw" cert
-     *	- Signature algorithm (SigAlgId)
-     *	- The signature bits
+     *    - Data to be signed (ToBeSigned) -- the "raw" cert
+     *    - Signature algorithm (SigAlgId)
+     *    - The signature bits
      *
      * This routine unmarshals the certificate, saving the signature
      * parts away for later verification.

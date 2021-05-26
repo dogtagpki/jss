@@ -32,7 +32,7 @@ import org.mozilla.jss.asn1.Tag;
  * </pre>
  */
 public class TaggedAttribute implements ASN1Value {
-	public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
+    public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
 
     ///////////////////////////////////////////////////////////////////////
     // Members
@@ -117,47 +117,47 @@ public class TaggedAttribute implements ASN1Value {
     }
     private static Template templateInstance = new Template();
 
-	/**
-	 * A Template for decoding an Attribute.
-	 */
-	public static class Template implements ASN1Template {
+    /**
+     * A Template for decoding an Attribute.
+     */
+    public static class Template implements ASN1Template {
         private SEQUENCE.Template seqt;
 
         public Template() {
             seqt = new SEQUENCE.Template();
             seqt.addElement( INTEGER.getTemplate() );
-			seqt.addElement( new OBJECT_IDENTIFIER.Template()   );
-			seqt.addElement( new SET.OF_Template(new ANY.Template()));
+            seqt.addElement( new OBJECT_IDENTIFIER.Template()   );
+            seqt.addElement( new SET.OF_Template(new ANY.Template()));
         }
 
 
-		@Override
+        @Override
         public boolean tagMatch(Tag tag) {
-			return TAG.equals(tag);
-		}
+            return TAG.equals(tag);
+        }
 
-		@Override
+        @Override
         public ASN1Value decode(InputStream istream)
-			 throws IOException, InvalidBERException
-		{
-			return decode(TAG, istream);
-		}
+             throws IOException, InvalidBERException
+        {
+            return decode(TAG, istream);
+        }
 
-		@Override
+        @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-			 throws IOException, InvalidBERException
-		{
-			SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
+             throws IOException, InvalidBERException
+        {
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
-			// The template should have enforced this
-			assert(seq.size() == 3);
+            // The template should have enforced this
+            assert(seq.size() == 3);
 
-			return new TaggedAttribute(
+            return new TaggedAttribute(
                             (INTEGER)      seq.elementAt(0),
-							(OBJECT_IDENTIFIER) seq.elementAt(1),
+                            (OBJECT_IDENTIFIER) seq.elementAt(1),
                             (SET)               seq.elementAt(2));
-		}
-	}
+        }
+    }
 }
 
 

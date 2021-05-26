@@ -11,30 +11,30 @@ import org.mozilla.jss.util.Password;
 
 public class PK10Gen {
     public static void main(String args[]) {
-		CryptoManager manager;
+        CryptoManager manager;
         Password pass1=null, pass2=null;
-		char[] passchar1 = {'f', 'o', 'o', 'b', 'a', 'r'};
-		char[] passchar2 = {'n', 'e', 't', 's', 'c', 'a', 'p', 'e'};
+        char[] passchar1 = {'f', 'o', 'o', 'b', 'a', 'r'};
+        char[] passchar2 = {'n', 'e', 't', 's', 'c', 'a', 'p', 'e'};
 
         if(args.length != 2) {
             System.err.println("Usage: java org.mozilla.jss.PK10Gen <dbdir> [rsa|dsa]");
             return;
         }
 
-		try {
-			CryptoManager.initialize(args[0]);
-			/*
-			CryptoManager.initialize("secmod.db", "key3.db", "cert7.db");
-			CryptoManager cm = CryptoManager.getInstance();
-			PK11Token token = (PK11Token)cm.getInternalCryptoToken();
-			*/
-			/*
+        try {
+            CryptoManager.initialize(args[0]);
+            /*
+            CryptoManager.initialize("secmod.db", "key3.db", "cert7.db");
+            CryptoManager cm = CryptoManager.getInstance();
+            PK11Token token = (PK11Token)cm.getInternalCryptoToken();
+            */
+            /*
         InitializationValues vals = new
             InitializationValues( args[0]+"/secmodule.db",
                                                 args[0]+"/key3.db",
-				                                args[0]+"/cert7.db");
+                                                args[0]+"/cert7.db");
         CryptoManager.initialize(vals);
-			*/
+            */
         try {
             manager = CryptoManager.getInstance();
         } catch( NotInitializedException e ) {
@@ -42,7 +42,7 @@ public class PK10Gen {
             return;
         }
 
-		CryptoToken token = manager.getInternalKeyStorageToken();
+        CryptoToken token = manager.getInternalKeyStorageToken();
             if(token.isLoggedIn() == false) {
                 System.out.println("Good, isLoggedIn correctly says we're"+
                     " not logged in");
@@ -51,28 +51,28 @@ public class PK10Gen {
                     " logged in");
             }
 
-			pass1 = new Password( passchar1.clone());
-			pass2 = new Password( new char[]{0} );
+            pass1 = new Password( passchar1.clone());
+            pass2 = new Password( new char[]{0} );
             token.initPassword(pass2, pass1);
-			pass1.clear();
-			pass2.clear();
+            pass1.clear();
+            pass2.clear();
             System.out.println("initialized PIN");
             token.login(pass1);
             System.out.println("logged in");
 
-			String blob = token.generateCertRequest("cn=christina Fu",
-												512,
-													args[1],
-													(byte[]) null,
-													(byte[]) null,
-													(byte[]) null);
-			System.out.println("pkcs#10 blob = \n" + blob);
-		} catch(Exception e) {
-			System.out.println("exception caught in PK10Gen: " +
-							   e.getMessage());
-			e.printStackTrace();
-			System.exit(1);
-		}
-		System.exit(0);
-	}
+            String blob = token.generateCertRequest("cn=christina Fu",
+                                                512,
+                                                    args[1],
+                                                    (byte[]) null,
+                                                    (byte[]) null,
+                                                    (byte[]) null);
+            System.out.println("pkcs#10 blob = \n" + blob);
+        } catch(Exception e) {
+            System.out.println("exception caught in PK10Gen: " +
+                               e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.exit(0);
+    }
 }

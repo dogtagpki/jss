@@ -230,7 +230,7 @@ public abstract class TimeBase implements ASN1Value {
                         hourOff = -hourOff;
                         minOff = -minOff;
                     }
-		    i += 5;
+            i += 5;
                     tz = (TimeZone) TimeZone.getTimeZone("GMT").clone();
                     tz.setRawOffset( ((hourOff*60)+minOff)*60*1000 );
                 } else if( chars[i] == 'Z' ) {

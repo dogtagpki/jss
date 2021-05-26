@@ -161,8 +161,8 @@ public class PKCS10 {
         BigInt serial = seq[0].data.getInteger(); // consume serial
 
         /*
-        	if (serial.toInt () != 0)
-        	    throw new IllegalArgumentException ("not PKCS #10 v1");
+            if (serial.toInt () != 0)
+                throw new IllegalArgumentException ("not PKCS #10 v1");
         */
 
         subject = new X500Name(seq[0].data);

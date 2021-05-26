@@ -29,14 +29,14 @@ import org.mozilla.jss.pkcs10.CertificationRequest;
  * </pre>
  */
 public class TaggedCertificationRequest implements ASN1Value {
-	public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
+    public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
 
     ///////////////////////////////////////////////////////////////////////
     // Members
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private INTEGER bodyPartID;
-	private CertificationRequest certificationRequest;
+    private CertificationRequest certificationRequest;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -55,7 +55,7 @@ public class TaggedCertificationRequest implements ASN1Value {
         sequence.addElement(bodyPartID);
         this.certificationRequest = certificationRequest;
         sequence.addElement(certificationRequest);
-	}
+    }
 
     ///////////////////////////////////////////////////////////////////////
     // accessors

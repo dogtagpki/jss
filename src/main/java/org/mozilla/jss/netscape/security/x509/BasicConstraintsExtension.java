@@ -217,9 +217,9 @@ public class BasicConstraintsExtension extends Extension
             /* #57286 - so that profile can set critiality */
             /*
                          if (ca) {
-            	         critical = true;
+                         critical = true;
                          } else {
-            	         critical = false;
+                         critical = false;
                          }
             */
             encodeThis();

@@ -83,20 +83,20 @@ public class MacData implements ASN1Value {
 
     /**
      * Creates a MacData by computing a HMAC on the given bytes. An HMAC
-	 *	is a message authentication code, which is a keyed digest. It proves
-	 *	not only that data has not been tampered with, but also that the
-	 *	entity that created the HMAC possessed the symmetric key.
-	 *
-	 * @param password The password used to generate a key using a
-	 *		PBE mechanism.
-	 * @param macSalt The salt used as input to the PBE key generation
-	 *		mechanism. If null is passed in, new random salt will be created.
+     *    is a message authentication code, which is a keyed digest. It proves
+     *    not only that data has not been tampered with, but also that the
+     *    entity that created the HMAC possessed the symmetric key.
+     *
+     * @param password The password used to generate a key using a
+     *        PBE mechanism.
+     * @param macSalt The salt used as input to the PBE key generation
+     *        mechanism. If null is passed in, new random salt will be created.
      * @param iterations The iteration count for creating the PBE key.
-	 * @param toBeMACed The data on which the HMAC will be computed.
+     * @param toBeMACed The data on which the HMAC will be computed.
      * @exception NotInitializedException If the crypto subsystem
      *      has not been initialized yet.
      * @exception TokenException If an error occurs on a crypto token.
-	 */
+     */
     public MacData( Password password, byte[] macSalt,
                     int iterations, byte[] toBeMACed )
         throws NotInitializedException,

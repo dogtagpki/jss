@@ -104,7 +104,7 @@ public class SignatureAlgorithm extends Algorithm {
      */
     public static final SignatureAlgorithm
     ECSignature = new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST,
-	"EC",
+    "EC",
         null, null, ANSI_X962_OID.subBranch(2).subBranch(1) );
 
     //////////////////////////////////////////////////////////////////////

@@ -59,21 +59,21 @@ public class pkcs12 {
         }
 
         // open input file for reading
-       	FileInputStream infile=null;
-		try {
-        	infile = new FileInputStream(args[1]);
-		}
-		catch (FileNotFoundException f) {
-			System.out.println("Cannot open file "+args[1]+
-					" for reading: "+f.getMessage());
-			return;
-		}
+           FileInputStream infile=null;
+        try {
+            infile = new FileInputStream(args[1]);
+        }
+        catch (FileNotFoundException f) {
+            System.out.println("Cannot open file "+args[1]+
+                    " for reading: "+f.getMessage());
+            return;
+        }
         int certfile = 0;
 
         // initialize CryptoManager. This is necessary because there is
         // crypto involved with decoding a PKCS #12 file
         CryptoManager.initialize( args[0] );
-		CryptoManager manager = CryptoManager.getInstance();
+        CryptoManager manager = CryptoManager.getInstance();
 
         // Decode the P12 file
         PFX.Template pfxt = new PFX.Template();
@@ -162,10 +162,10 @@ public class pkcs12 {
                                 elementAt(0)).decodeWith(
                                 OCTET_STRING.getTemplate());
                             System.out.println("LocalKeyID:");
-							/*
+                            /*
                             AuthenticatedSafes.
                                 print_byte_array(os.toByteArray());
-							*/
+                            */
                         } else {
                             System.out.println("Unknown attribute type: "+
                                 a.getType().toString());
@@ -195,14 +195,14 @@ public class pkcs12 {
                     PrivateKeyInfo pki = epki.decrypt(pass,
                         new org.mozilla.jss.pkcs12.PasswordConverter() );
 
-					// import the key into the key3.db
-					CryptoToken tok = manager.getTokenByName("Internal Key Storage Token");
-					CryptoStore store = tok.getCryptoStore();
+                    // import the key into the key3.db
+                    CryptoToken tok = manager.getTokenByName("Internal Key Storage Token");
+                    CryptoStore store = tok.getCryptoStore();
                     tok.login( new ConsolePasswordCallback());
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					pki.encode(baos);
-					store.importPrivateKey(baos.toByteArray(),
-									PrivateKey.RSA);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    pki.encode(baos);
+                    store.importPrivateKey(baos.toByteArray(),
+                                    PrivateKey.RSA);
 
 
                     // re-encrypt the PrivateKeyInfo with the new password

@@ -57,7 +57,7 @@ public class SignerIdentifier implements ASN1Value {
 
     /**
      * If type == ISSUER_AND_SERIALNUMBER, returns the IssuerAndSerialNumber
-	 * field. Otherwise, returns null.
+     * field. Otherwise, returns null.
      */
     public IssuerAndSerialNumber getIssuerAndSerialNumber() {
         return issuerAndSerialNumber;
@@ -65,7 +65,7 @@ public class SignerIdentifier implements ASN1Value {
 
     /**
      * If type == SUBJECT_KEY_IDENTIFIER, returns the SubjectKeyIdentifier
-	 * field. Otherwise, returns null.
+     * field. Otherwise, returns null.
      */
     public OCTET_STRING getSubjectKeyIdentifier() {
         return subjectKeyIdentifier;
@@ -76,8 +76,8 @@ public class SignerIdentifier implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public SignerIdentifier(Type type, IssuerAndSerialNumber
-							 issuerAndSerialNumber,
-							 OCTET_STRING subjectKeyIdentifier) {
+                             issuerAndSerialNumber,
+                             OCTET_STRING subjectKeyIdentifier) {
         this.type = type;
         this.issuerAndSerialNumber = issuerAndSerialNumber;
         this.subjectKeyIdentifier = subjectKeyIdentifier;
@@ -131,7 +131,7 @@ public class SignerIdentifier implements ASN1Value {
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
-				//Assert.notReached("A CHOICE cannot be implicitly tagged");
+                //Assert.notReached("A CHOICE cannot be implicitly tagged");
         encode(ostream);
     }
 
@@ -152,7 +152,7 @@ public class SignerIdentifier implements ASN1Value {
 
             //EXPLICIT.Template et = new EXPLICIT.Template(
             //    Tag.get(0), OCTET_STRING.getTemplate() );
-		    //choicet.addElement( et );
+            //choicet.addElement( et );
             choicet.addElement( Tag.get(0), OCTET_STRING.getTemplate() );
             choicet.addElement(IssuerAndSerialNumber.getTemplate() );
         }
@@ -172,17 +172,17 @@ public class SignerIdentifier implements ASN1Value {
             } else {
                 assert( c.getTag().equals(Tag.get(0)) );
                 //EXPLICIT e = (EXPLICIT) c.getValue();
-				//ASN1Value dski =  e.getContent();
-				//OCTET_STRING ski = (OCTET_STRING) e.getContent();
-				OCTET_STRING ski = (OCTET_STRING) c.getValue();
-				return createSubjectKeyIdentifier(ski);
+                //ASN1Value dski =  e.getContent();
+                //OCTET_STRING ski = (OCTET_STRING) e.getContent();
+                OCTET_STRING ski = (OCTET_STRING) c.getValue();
+                return createSubjectKeyIdentifier(ski);
             }
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-					//Assert.notReached("A CHOICE cannot be implicitly tagged");
+                    //Assert.notReached("A CHOICE cannot be implicitly tagged");
             return decode(istream);
         }
     }

@@ -31,23 +31,23 @@ public interface PasswordCallback {
      * returns the wrong password, <code>getPasswordAgain</code> will
      * be called on subsequent attempts. 
      *
-	 * @param info Information about the token that is being logged into.
-	 * @return The password.  This password object is owned	by and will
+     * @param info Information about the token that is being logged into.
+     * @return The password.  This password object is owned    by and will
      *      be cleared by the caller.
      * @exception GiveUpException If the callback does not want to supply
      *  a password.
      */
-	public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
-		throws GiveUpException;
+    public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
+        throws GiveUpException;
 
     /**
      * Tries supplying a password again. This callback will be called if
-	 * the first callback returned an invalid password.  It will be called
+     * the first callback returned an invalid password.  It will be called
      * repeatedly until it returns a correct password, or it gives up by
      * throwing a <code>GiveUpException</code>.
      *
-	 * @param info Information about the token that is being logged into.
-	 * @return The password.  This password object is owned by and will
+     * @param info Information about the token that is being logged into.
+     * @return The password.  This password object is owned by and will
      *      be cleared by the caller.
      * @exception GiveUpException If the callback does not want to supply
      *  a password.  This may often be the case if the first attempt failed.

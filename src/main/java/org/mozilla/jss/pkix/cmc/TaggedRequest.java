@@ -164,9 +164,9 @@ public class TaggedRequest implements ASN1Value {
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
-				//Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
-				//tagAt() of SET.java actually returns the underlying type
-			encode(ostream);
+                //Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
+                //tagAt() of SET.java actually returns the underlying type
+            encode(ostream);
     }
 
     private static final Template templateInstance = new Template();
@@ -232,10 +232,10 @@ public class TaggedRequest implements ASN1Value {
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-					//Assert.notReached("A CHOICE cannot be implicitly tagged");
-				return decode(istream);
-		}
-	}
+                    //Assert.notReached("A CHOICE cannot be implicitly tagged");
+                return decode(istream);
+        }
+    }
 }
 
 

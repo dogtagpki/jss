@@ -120,8 +120,8 @@ public class CertRequest implements ASN1Value {
 
         sequence.addElement( certReqId );
         sequence.addElement( certTemplate );
-		if (controls != null)
-			sequence.addElement( controls );
+        if (controls != null)
+            sequence.addElement( controls );
 
         sequence.encode(implicit,ostream);
     }

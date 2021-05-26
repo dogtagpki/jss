@@ -229,7 +229,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
             // input string is of the format provided by OBJECT_IDENTIFIER,toString()
             // convert this first to dotted OID
 
-        	// remove the leading and trailing brackets
+            // remove the leading and trailing brackets
             dottedOID = dottedOID.substring(1, dottedOID.length()-1);
 
             // convert spaces to dots

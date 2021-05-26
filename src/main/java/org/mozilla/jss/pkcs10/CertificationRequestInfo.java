@@ -22,14 +22,14 @@ public class CertificationRequestInfo implements ASN1Value {
     private INTEGER version = new INTEGER(0);
     private Name subject;
     private SubjectPublicKeyInfo subjectPublicKeyInfo;
-	private SET attributes;
+    private SET attributes;
 
     /**
      * Creates a CertificationRequestInfo with the required fields.
      */
     public CertificationRequestInfo(INTEGER version, Name subject,
-									SubjectPublicKeyInfo
-									subjectPublicKeyInfo, SET attributes)
+                                    SubjectPublicKeyInfo
+                                    subjectPublicKeyInfo, SET attributes)
     {
         setVersion(version);
         setSubject(subject);
@@ -166,7 +166,7 @@ public class CertificationRequestInfo implements ASN1Value {
                     (INTEGER) seq.elementAt(0),     // version
                     (Name) seq.elementAt(1),        // subject
                     (SubjectPublicKeyInfo) seq.elementAt(2),
-					(SET) seq.elementAt(3)
+                    (SET) seq.elementAt(3)
                 );
 
             return cinfo;

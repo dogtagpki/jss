@@ -23,7 +23,7 @@ public interface ASN1Value {
 
     /**
      * Write this value's DER encoding to an output stream using
-     *	its own base tag.
+     *    its own base tag.
      *
      * @param ostream Output stream.
      * @throws IOException If an error occurred.

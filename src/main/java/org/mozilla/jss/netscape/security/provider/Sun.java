@@ -66,7 +66,7 @@ public final class Sun extends Provider {
 
         try {
 
-            //	    AccessController.beginPrivileged();
+            //        AccessController.beginPrivileged();
 
             // the following are not according to our formal spec but
             // are still supported
@@ -86,7 +86,7 @@ public final class Sun extends Provider {
             put("KeyFactory.DSA", "org.mozilla.jss.netscape.security.provider.DSAKeyFactory");
 
         } finally {
-            //	    AccessController.endPrivileged();
+            //        AccessController.endPrivileged();
         }
     }
 }

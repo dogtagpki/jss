@@ -34,8 +34,8 @@ public class SubjectKeyIdentifier extends Extension {
     // Members
     ///////////////////////////////////////////////////////////////////////
     private OCTET_STRING keyIdentifier;
-	private static OBJECT_IDENTIFIER OID = new
-	OBJECT_IDENTIFIER("2.5.29.14");
+    private static OBJECT_IDENTIFIER OID = new
+    OBJECT_IDENTIFIER("2.5.29.14");
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -47,11 +47,11 @@ public class SubjectKeyIdentifier extends Extension {
      * @param keyIdentifier must not be null.
      */
     public SubjectKeyIdentifier(OCTET_STRING keyIdentifier) {
-		super(OID,false,keyIdentifier);
+        super(OID,false,keyIdentifier);
     }
 
     public SubjectKeyIdentifier(boolean critical, OCTET_STRING keyIdentifier) {
-		super(OID,critical,keyIdentifier);
+        super(OID,critical,keyIdentifier);
     }
 
     public static class Template implements ASN1Template {

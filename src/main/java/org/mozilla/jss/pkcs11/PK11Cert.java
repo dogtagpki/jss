@@ -116,10 +116,10 @@ public class PK11Cert
 
     protected native String getIssuerDNString();
 
-	@Override
+    @Override
     public native java.security.PublicKey getPublicKey();
 
-	@Override
+    @Override
     public native int getVersion();
 
     /* Begin methods necessary for java.security.cert.X509Certificate */
@@ -481,30 +481,30 @@ public class PK11Cert
      */
     protected native int getTrust(int type);
 
-	/////////////////////////////////////////////////////////////
-	// Construction
-	/////////////////////////////////////////////////////////////
-	//PK11Cert(CertProxy proxy) {
+    /////////////////////////////////////////////////////////////
+    // Construction
+    /////////////////////////////////////////////////////////////
+    //PK11Cert(CertProxy proxy) {
     //    assert(proxy!=null);
-	//	this.certProxy = proxy;
-	//}
+    //    this.certProxy = proxy;
+    //}
 
-	PK11Cert(byte[] certPtr, byte[] slotPtr, String nickname) {
+    PK11Cert(byte[] certPtr, byte[] slotPtr, String nickname) {
         assert(certPtr!=null);
         assert(slotPtr!=null);
-		certProxy = new CertProxy(certPtr);
-		tokenProxy = new TokenProxy(slotPtr);
-		this.nickname = nickname;
-	}
+        certProxy = new CertProxy(certPtr);
+        tokenProxy = new TokenProxy(slotPtr);
+        this.nickname = nickname;
+    }
 
-	/////////////////////////////////////////////////////////////
-	// private data
-	/////////////////////////////////////////////////////////////
-	protected CertProxy certProxy;
+    /////////////////////////////////////////////////////////////
+    // private data
+    /////////////////////////////////////////////////////////////
+    protected CertProxy certProxy;
 
-	protected TokenProxy tokenProxy;
+    protected TokenProxy tokenProxy;
 
-	protected String nickname;
+    protected String nickname;
 }
 
 class CertProxy extends org.mozilla.jss.util.NativeProxy {

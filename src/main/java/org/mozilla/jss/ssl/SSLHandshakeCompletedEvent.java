@@ -25,7 +25,7 @@ public class SSLHandshakeCompletedEvent extends EventObject {
     private static final long serialVersionUID = 1L;
 
     public SSLHandshakeCompletedEvent(SSLSocket socket) {
-	super(socket);
+    super(socket);
     }
     
     /**
@@ -33,13 +33,13 @@ public class SSLHandshakeCompletedEvent extends EventObject {
      * cert data
      */
     public SSLSecurityStatus getStatus() throws SocketException {
-	return getSocket().getStatus();
+    return getSocket().getStatus();
     }
     
     /**
      * get socket on which the event occured
      */
     public SSLSocket getSocket() {
-	return (SSLSocket)getSource();
+    return (SSLSocket)getSource();
     }
 }

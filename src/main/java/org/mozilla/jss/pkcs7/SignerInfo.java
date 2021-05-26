@@ -233,7 +233,7 @@ public class SignerInfo implements ASN1Value {
      *  this SignerInfo.
      * @param signingAlg The algorithm to be used to sign the content.
      *  This should be a composite algorithm, such as
-	 *  RSASignatureWithMD5Digest, instead of a raw algorithm, such as
+     *  RSASignatureWithMD5Digest, instead of a raw algorithm, such as
      *  RSASignature.
      *  Note that the digest portion of this algorithm must be the same
      *  algorithm as was used to digest the message content.
