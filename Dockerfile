@@ -21,7 +21,7 @@ COPY . /tmp/jss/
 WORKDIR /tmp/jss
 
 # Build JSS packages
-RUN dnf install -y rpm-build
+RUN dnf install -y git rpm-build
 RUN dnf builddep -y --spec jss.spec
 RUN ./build.sh $BUILD_OPTS --work-dir=build rpm
 
