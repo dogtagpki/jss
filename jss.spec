@@ -41,8 +41,6 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Build Dependencies
 ################################################################################
 
-# autosetup
-BuildRequires:  git
 BuildRequires:  make
 BuildRequires:  cmake >= 3.14
 BuildRequires:  zip
@@ -100,7 +98,7 @@ This package contains the API documentation for JSS.
 ################################################################################
 %prep
 
-%autosetup -n %{name}-%{version}%{?_phase} -p 1 -S git
+%autosetup -n %{name}-%{version}%{?_phase} -p 1
 
 ################################################################################
 %build
