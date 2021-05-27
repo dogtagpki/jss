@@ -34,7 +34,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-
 package org.mozilla.jss.pkix.cmc;
 
 import java.io.IOException;
@@ -51,13 +50,14 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>BodyPartReference</i>:
+ * 
  * <pre>
  *      BodyPartReference::= CHOICE {
  *          bodyPartID       BodyPartID
  *          bodyPartPath     SEQUENCE SIZE (1..MAX) OF BodyPartID,
  *     }
  *
- * @author Christina Fu (cfu)
+ * &#64;author Christina Fu (cfu)
  * </pre>
  */
 public class BodyPartReference implements ASN1Value {
@@ -67,11 +67,13 @@ public class BodyPartReference implements ASN1Value {
      * The type of BodyPartReference.
      */
     public static class Type {
-        private Type() { }
+        private Type() {
+        }
 
         static Type BodyPartID = new Type();
         static Type BodyPartPath = new Type();
     }
+
     public static Type BodyPartID = Type.BodyPartID;
     public static Type BodyPartPath = Type.BodyPartPath;
 
@@ -103,8 +105,8 @@ public class BodyPartReference implements ASN1Value {
      */
     public void addBodyPartId(int id) {
         INTEGER id1 = new INTEGER(id);
-        assert(id1.compareTo(BODYIDMAX) <= 0);
-        bodyPartPath.addElement( id1 );
+        assert (id1.compareTo(BODYIDMAX) <= 0);
+        bodyPartPath.addElement(id1);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -112,7 +114,8 @@ public class BodyPartReference implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Returns the type of BodyPartReference: <ul>
+     * Returns the type of BodyPartReference:
+     * <ul>
      * <li><code>BodyPartID</code>
      * <li><code>BodyPartPath</code>
      * </ul>
@@ -135,36 +138,35 @@ public class BodyPartReference implements ASN1Value {
     @Override
     public Tag getTag() {
         //return the subType's tag
-        if (type == BodyPartID ) {
+        if (type == BodyPartID) {
             return INTEGER.TAG;
         } else {
-            assert( type == BodyPartPath);
+            assert (type == BodyPartPath);
             return SEQUENCE.TAG;
         }
     }
 
     @Override
     public void encode(OutputStream ostream) throws IOException {
-        if (type == BodyPartID ) {
+        if (type == BodyPartID) {
             bodyPartID.encode(ostream);
         } else {
-            assert( type == BodyPartPath);
+            assert (type == BodyPartPath);
             bodyPartPath.encode(ostream);
         }
     }
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         encode(ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
-
 
     /**
      * A Template for decoding a BodyPartReference.
@@ -175,8 +177,8 @@ public class BodyPartReference implements ASN1Value {
 
         public Template() {
             choicet = new CHOICE.Template();
-            choicet.addElement( INTEGER.getTemplate() );
-            choicet.addElement( new SEQUENCE.OF_Template(INTEGER.getTemplate()) );
+            choicet.addElement(INTEGER.getTemplate());
+            choicet.addElement(new SEQUENCE.OF_Template(INTEGER.getTemplate()));
         }
 
         @Override
@@ -189,10 +191,10 @@ public class BodyPartReference implements ASN1Value {
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
 
-            if( c.getTag().equals(INTEGER.TAG) ) {
-                return new BodyPartReference(BodyPartID, (INTEGER) c.getValue() , null);
+            if (c.getTag().equals(INTEGER.TAG)) {
+                return new BodyPartReference(BodyPartID, (INTEGER) c.getValue(), null);
             } else {
-                assert( c.getTag().equals(SEQUENCE.TAG) );
+                assert (c.getTag().equals(SEQUENCE.TAG));
                 return new BodyPartReference(BodyPartPath, null, (SEQUENCE) c.getValue());
             }
         }

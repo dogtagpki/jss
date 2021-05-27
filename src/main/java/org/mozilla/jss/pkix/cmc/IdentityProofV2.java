@@ -50,7 +50,8 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
 /**
  * CMC <i>IdentityProofV2</i>:
- *   per rfc 5272
+ * per rfc 5272
+ * 
  * <pre>
  *     IdentityProofV2 ::= SEQUENCE {
  *         hashAlgID      AlgorithmIdentifier,
@@ -69,7 +70,7 @@ public class IdentityProofV2 implements ASN1Value {
     private AlgorithmIdentifier hashAlgID;
     private AlgorithmIdentifier macAlgId;
     private OCTET_STRING witness;
-    private SEQUENCE sequence;  // for DER encoding
+    private SEQUENCE sequence; // for DER encoding
 
     public AlgorithmIdentifier getHashAlgID() {
         return hashAlgID;
@@ -90,12 +91,11 @@ public class IdentityProofV2 implements ASN1Value {
     public IdentityProofV2(
             AlgorithmIdentifier hashAlgID,
             AlgorithmIdentifier macAlgId,
-            OCTET_STRING witness)
-    {
-        if(  hashAlgID==null || macAlgId==null ||
-                witness==null ) {
+            OCTET_STRING witness) {
+        if (hashAlgID == null || macAlgId == null ||
+                witness == null) {
             throw new IllegalArgumentException("IdentityProofV2 constructor"
-                +" parameter is null");
+                    + " parameter is null");
         }
 
         this.hashAlgID = hashAlgID;
@@ -131,6 +131,7 @@ public class IdentityProofV2 implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -145,9 +146,9 @@ public class IdentityProofV2 implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -168,9 +169,9 @@ public class IdentityProofV2 implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new IdentityProofV2(
-                            (AlgorithmIdentifier) seq.elementAt(0),
-                            (AlgorithmIdentifier) seq.elementAt(1),
-                            (OCTET_STRING) seq.elementAt(2) );
+                    (AlgorithmIdentifier) seq.elementAt(0),
+                    (AlgorithmIdentifier) seq.elementAt(1),
+                    (OCTET_STRING) seq.elementAt(2));
         }
     }
 }

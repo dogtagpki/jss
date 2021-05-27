@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 package org.mozilla.jss.pkix.cmc;
 
 import java.io.IOException;
@@ -18,6 +17,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>LraPopWitness</i>:
+ * 
  * <pre>
  *      LraPopWitness::= SEQUENCE {
  *          pkiDataBodyid       BodyPartID
@@ -46,7 +46,7 @@ public class LraPopWitness implements ASN1Value {
     public LraPopWitness(INTEGER pkiDataBodyid, SEQUENCE bodyIds) {
         if (pkiDataBodyid == null || bodyIds == null)
             throw new IllegalArgumentException(
-               "parameter to LraPopWitness constructor is null");
+                    "parameter to LraPopWitness constructor is null");
         sequence = new SEQUENCE();
         this.pkiDataBodyid = pkiDataBodyid;
         sequence.addElement(pkiDataBodyid);
@@ -59,8 +59,8 @@ public class LraPopWitness implements ASN1Value {
      */
     public void addBodyPartId(int id) {
         INTEGER id1 = new INTEGER(id);
-        assert(id1.compareTo(BODYIDMAX) <= 0);
-        bodyIds.addElement( id1 );
+        assert (id1.compareTo(BODYIDMAX) <= 0);
+        bodyIds.addElement(id1);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -78,6 +78,7 @@ public class LraPopWitness implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -90,16 +91,15 @@ public class LraPopWitness implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
-
 
     public static class Template implements ASN1Template {
 
@@ -107,8 +107,8 @@ public class LraPopWitness implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( new SEQUENCE.OF_Template(INTEGER.getTemplate()) );
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(new SEQUENCE.OF_Template(INTEGER.getTemplate()));
         }
 
         @Override
@@ -128,8 +128,8 @@ public class LraPopWitness implements ASN1Value {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new LraPopWitness((INTEGER)seq.elementAt(0),
-                                     (SEQUENCE)seq.elementAt(1));
+            return new LraPopWitness((INTEGER) seq.elementAt(0),
+                    (SEQUENCE) seq.elementAt(1));
         }
     }
 }

@@ -51,6 +51,7 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
 /**
  * CMC <i>EncryptedPOP</i>:
+ * 
  * <pre>
  *     EncryptedPOP ::= SEQUENCE {
  *         request       TaggedRequest,
@@ -73,7 +74,7 @@ public class EncryptedPOP implements ASN1Value {
     private AlgorithmIdentifier thePOPAlgID;
     private AlgorithmIdentifier witnessAlgID;
     private OCTET_STRING witness;
-    private SEQUENCE sequence;  // for DER encoding
+    private SEQUENCE sequence; // for DER encoding
 
     public TaggedRequest getRequest() {
         return request;
@@ -104,12 +105,11 @@ public class EncryptedPOP implements ASN1Value {
             ContentInfo cms,
             AlgorithmIdentifier thePOPAlgID,
             AlgorithmIdentifier witnessAlgID,
-            OCTET_STRING witness)
-    {
-        if( request==null || cms==null || thePOPAlgID==null || witnessAlgID==null ||
-                witness==null ) {
+            OCTET_STRING witness) {
+        if (request == null || cms == null || thePOPAlgID == null || witnessAlgID == null ||
+                witness == null) {
             throw new IllegalArgumentException("EncryptedPOP constructor"
-                +" parameter is null");
+                    + " parameter is null");
         }
 
         this.request = request;
@@ -149,6 +149,7 @@ public class EncryptedPOP implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -163,11 +164,11 @@ public class EncryptedPOP implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( TaggedRequest.getTemplate() );
-            seqt.addElement( ContentInfo.getTemplate() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(TaggedRequest.getTemplate());
+            seqt.addElement(ContentInfo.getTemplate());
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -188,11 +189,11 @@ public class EncryptedPOP implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new EncryptedPOP(
-                            (TaggedRequest) seq.elementAt(0),
-                            (ContentInfo) seq.elementAt(1),
-                            (AlgorithmIdentifier) seq.elementAt(2),
-                            (AlgorithmIdentifier) seq.elementAt(3),
-                            (OCTET_STRING) seq.elementAt(4) );
+                    (TaggedRequest) seq.elementAt(0),
+                    (ContentInfo) seq.elementAt(1),
+                    (AlgorithmIdentifier) seq.elementAt(2),
+                    (AlgorithmIdentifier) seq.elementAt(3),
+                    (OCTET_STRING) seq.elementAt(4));
         }
     }
 }

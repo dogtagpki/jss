@@ -54,17 +54,20 @@ public class OtherInfo implements ASN1Value {
             "no key reuse",
             "internal ca error",
             "try later",
-            "authenticated data fail"};
+            "authenticated data fail" };
+
     /**
      * The type of OtherInfo.
      */
     public static class Type {
-        private Type() { }
+        private Type() {
+        }
 
         static Type FAIL = new Type();
         static Type PEND = new Type();
         static Type EXTENDED = new Type();
     }
+
     public static Type FAIL = Type.FAIL;
     public static Type PEND = Type.PEND;
     public static Type EXTENDED = Type.EXTENDED;
@@ -83,7 +86,8 @@ public class OtherInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     // no default constructor
-    public OtherInfo() { }
+    public OtherInfo() {
+    }
 
     /**
      * Constructs a OtherInfo from its components.
@@ -92,24 +96,24 @@ public class OtherInfo implements ASN1Value {
      * @param failInfo the CMCFailInfo code.
      * @param pendInfo the pending information.
      *
-     * Note: kept for backward compatibility for now; new code don't use
+     *            Note: kept for backward compatibility for now; new code don't use
      */
     public OtherInfo(Type type, INTEGER failInfo, PendInfo pendInfo) {
         if (type == null) {
             throw new IllegalArgumentException("OtherInfo constructor"
-                +" parameter is null");
+                    + " parameter is null");
         }
 
-        if ( type == FAIL ) {
+        if (type == FAIL) {
             if (failInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
-                    +" parameter failInfo is null");
+                        + " parameter failInfo is null");
             }
         } else {
-            assert( type == PEND );
+            assert (type == PEND);
             if (pendInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
-                    +" parameter pendInfo is null");
+                        + " parameter pendInfo is null");
             }
         }
         this.type = type;
@@ -117,7 +121,7 @@ public class OtherInfo implements ASN1Value {
         this.pendInfo = pendInfo;
     }
 
-    /** 
+    /**
      * Constructs a OtherInfo from its components.
      *
      * @param type The type of the otherInfo.
@@ -131,24 +135,24 @@ public class OtherInfo implements ASN1Value {
             ExtendedFailInfo extendedFailInfo) {
         if (type == null) {
             throw new IllegalArgumentException("OtherInfo constructor"
-                +" parameter is null");
+                    + " parameter is null");
         }
 
-        if ( type == FAIL ) {
+        if (type == FAIL) {
             if (failInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
-                    +" parameter failInfo is null");
+                        + " parameter failInfo is null");
             }
-        } else if ( type == PEND ) {
+        } else if (type == PEND) {
             if (pendInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
-                    +" parameter pendInfo is null");
+                        + " parameter pendInfo is null");
             }
         } else {
-            assert( type == EXTENDED );
+            assert (type == EXTENDED);
             if (extendedFailInfo == null) {
                 throw new IllegalArgumentException("OtherInfo constructor"
-                    +" parameter extendedFailInfo is null");
+                        + " parameter extendedFailInfo is null");
             }
         }
         this.type = type;
@@ -162,7 +166,8 @@ public class OtherInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Returns the type of OtherInfo: <ul>
+     * Returns the type of OtherInfo:
+     * <ul>
      * <li><code>FAIL</code>
      * <li><code>PEND</code>
      * <li><code>EXTENDED</code>
@@ -203,12 +208,12 @@ public class OtherInfo implements ASN1Value {
     @Override
     public Tag getTag() {
         // return the subType's tag
-        if( type == FAIL ) {
+        if (type == FAIL) {
             return INTEGER.TAG;
-        } else if( type == PEND ){
+        } else if (type == PEND) {
             return PendInfo.TAG;
         } else {
-            assert( type == EXTENDED );
+            assert (type == EXTENDED);
             return ExtendedFailInfo.TAG;
         }
     }
@@ -216,12 +221,12 @@ public class OtherInfo implements ASN1Value {
     @Override
     public void encode(OutputStream ostream) throws IOException {
 
-        if( type == FAIL ) {
+        if (type == FAIL) {
             failInfo.encode(ostream);
-        } else if( type == PEND ){
+        } else if (type == PEND) {
             pendInfo.encode(ostream);
         } else {
-            assert( type == EXTENDED );
+            assert (type == EXTENDED);
             extendedFailInfo.encode(ostream);
         }
     }
@@ -229,11 +234,12 @@ public class OtherInfo implements ASN1Value {
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
-            //Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
-            encode(ostream);
+        //Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
+        encode(ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -247,9 +253,9 @@ public class OtherInfo implements ASN1Value {
 
         public Template() {
             choicet = new CHOICE.Template();
-            choicet.addElement( INTEGER.getTemplate() );
-            choicet.addElement( PendInfo.getTemplate() );
-            choicet.addElement( ExtendedFailInfo.getTemplate() );
+            choicet.addElement(INTEGER.getTemplate());
+            choicet.addElement(PendInfo.getTemplate());
+            choicet.addElement(ExtendedFailInfo.getTemplate());
         }
 
         @Override
@@ -262,12 +268,12 @@ public class OtherInfo implements ASN1Value {
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
 
-            if( c.getTag().equals(INTEGER.TAG) ) {
-                return new OtherInfo(FAIL, (INTEGER) c.getValue() , null, null);
-            } else if( c.getTag().equals(PendInfo.TAG) ) {
+            if (c.getTag().equals(INTEGER.TAG)) {
+                return new OtherInfo(FAIL, (INTEGER) c.getValue(), null, null);
+            } else if (c.getTag().equals(PendInfo.TAG)) {
                 return new OtherInfo(PEND, null, (PendInfo) c.getValue(), null);
             } else {
-                assert( c.getTag().equals(ExtendedFailInfo.TAG) );
+                assert (c.getTag().equals(ExtendedFailInfo.TAG));
                 return new OtherInfo(EXTENDED, null, null, (ExtendedFailInfo) c.getValue());
             }
         }
@@ -275,8 +281,8 @@ public class OtherInfo implements ASN1Value {
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-                //Assert.notReached("A CHOICE cannot be implicitly tagged");
-                return decode(istream);
+            //Assert.notReached("A CHOICE cannot be implicitly tagged");
+            return decode(istream);
         }
     }
 }
