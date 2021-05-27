@@ -4,11 +4,12 @@
 package org.mozilla.jss.asn1;
 
 /**
- * Represents an ASN.1 Tag.  A tag consists of a class and a number.
+ * Represents an ASN.1 Tag. A tag consists of a class and a number.
  */
 public class Tag {
 
     private long num;
+
     /**
      * @return The tag number.
      */
@@ -17,6 +18,7 @@ public class Tag {
     }
 
     private Class tClass;
+
     /**
      * @return The tag class.
      */
@@ -45,7 +47,7 @@ public class Tag {
      * The end-of-contents marker for indefinite length encoding.
      * It is encoded the same as an ASN.1 header whose tag is [UNIVERSAL 0].
      */
-    public static final Tag END_OF_CONTENTS = new Tag( UNIVERSAL, 0 );
+    public static final Tag END_OF_CONTENTS = new Tag(UNIVERSAL, 0);
 
     /**
      * An alias for END_OF_CONTENTS.
@@ -54,6 +56,7 @@ public class Tag {
 
     /**
      * Creates a tag with the given class and number.
+     * 
      * @param clazz The class of the tag.
      * @param num The tag number.
      */
@@ -64,6 +67,7 @@ public class Tag {
 
     /**
      * Creates a CONTEXT-SPECIFIC tag with the given tag number.
+     * 
      * @param num The tag number.
      */
     public Tag(long num) {
@@ -79,21 +83,22 @@ public class Tag {
     private static final int numTagInstances = 10;
     private static Tag tagInstances[] = new Tag[numTagInstances];
     static {
-        for(int i=0; i < numTagInstances; i++) {
+        for (int i = 0; i < numTagInstances; i++) {
             tagInstances[i] = new Tag(i);
         }
     }
 
     /**
      * Returns an instance of a context-specific tag with the given number.
-     * The returned instance may be singleton.  It is usually more efficient to
+     * The returned instance may be singleton. It is usually more efficient to
      * call this method than create your own context-specific tag.
+     * 
      * @param num Number.
      * @return Tag.
      */
     public static Tag get(long num) {
-        if( num >= 0 && num < numTagInstances ) {
-            return tagInstances[(int)num];
+        if (num >= 0 && num < numTagInstances) {
+            return tagInstances[(int) num];
         } else {
             return new Tag(num);
         }
@@ -101,26 +106,27 @@ public class Tag {
 
     @Override
     public int hashCode() {
-        return (tClass.toInt() * 131) + (int)num;
+        return (tClass.toInt() * 131) + (int) num;
     }
 
     /**
-     * Compares two tags for equality.  Tags are equal if they have
+     * Compares two tags for equality. Tags are equal if they have
      * the same class and tag number.
+     * 
      * @param obj Tag.
      * @return True if equal.
      */
     @Override
     public boolean equals(Object obj) {
-        if(obj == null) {
+        if (obj == null) {
             return false;
         }
-        if(! (obj instanceof Tag) ) {
+        if (!(obj instanceof Tag)) {
             return false;
         }
 
         Tag t = (Tag) obj;
-        if( num == t.num && tClass == t.tClass ) {
+        if (num == t.num && tClass == t.tClass) {
             return true;
         } else {
             return false;
@@ -134,7 +140,7 @@ public class Tag {
      */
     @Override
     public String toString() {
-        return tClass+" "+num;
+        return tClass + " " + num;
     }
 
     /**
@@ -142,18 +148,20 @@ public class Tag {
      */
     public static class Class {
 
-        private Class() { }
+        private Class() {
+        }
+
         private Class(int enc, String name) {
             encoding = enc;
             this.name = name;
         }
+
         private int encoding;
         private String name;
 
         public static final Class UNIVERSAL = new Class(0, "UNIVERSAL");
         public static final Class APPLICATION = new Class(1, "APPLICATION");
-        public static final Class CONTEXT_SPECIFIC =
-            new Class(2, "CONTEXT-SPECIFIC");
+        public static final Class CONTEXT_SPECIFIC = new Class(2, "CONTEXT-SPECIFIC");
         public static final Class PRIVATE = new Class(3, "PRIVATE");
 
         public int toInt() {
@@ -169,16 +177,16 @@ public class Tag {
          * @param i Tag encoding.
          * @return Tag class.
          * @exception InvalidBERException If the given int does not correspond
-         *      to any tag class.
+         *                to any tag class.
          */
         public static Class fromInt(int i) throws InvalidBERException {
-            if( i == 0 ) {
+            if (i == 0) {
                 return UNIVERSAL;
-            } else if(i == 1) {
+            } else if (i == 1) {
                 return APPLICATION;
-            } else if(i == 2) {
+            } else if (i == 2) {
                 return CONTEXT_SPECIFIC;
-            } else if(i == 3) {
+            } else if (i == 3) {
                 return PRIVATE;
             } else {
                 throw new InvalidBERException("Invalid tag class: " + i);
