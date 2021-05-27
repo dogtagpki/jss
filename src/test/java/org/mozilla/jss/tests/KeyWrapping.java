@@ -35,13 +35,13 @@ public class KeyWrapping {
 
         // wrap a symmetric with a symmetric
         byte[] plaintextPre = new byte[] {
-            (byte)0x73, (byte)0x24, (byte)0x51, (byte)0x48,
-            (byte)0x32, (byte)0x87, (byte)0x23, (byte)0x33,
-            (byte)0x65, (byte)0x5f, (byte)0x73, (byte)0x9e,
-            (byte)0x8b, (byte)0xb6, (byte)0x69, (byte)0x90
+                (byte) 0x73, (byte) 0x24, (byte) 0x51, (byte) 0x48,
+                (byte) 0x32, (byte) 0x87, (byte) 0x23, (byte) 0x33,
+                (byte) 0x65, (byte) 0x5f, (byte) 0x73, (byte) 0x9e,
+                (byte) 0x8b, (byte) 0xb6, (byte) 0x69, (byte) 0x90
         };
         byte[] plaintext = Cipher.pad(plaintextPre,
-                                    EncryptionAlgorithm.AES_256_ECB.getBlockSize());
+                EncryptionAlgorithm.AES_256_ECB.getBlockSize());
 
         System.out.println("plaintext length is " + plaintext.length);
 
@@ -52,19 +52,19 @@ public class KeyWrapping {
         System.out.println("ciphertext length is " + ciphertext.length);
 
         KeyWrapper keyWrap = token.getKeyWrapper(KeyWrapAlgorithm.AES_ECB);
-        keyWrap.initWrap(wrapper,null);
+        keyWrap.initWrap(wrapper, null);
         byte[] wrappedKey = keyWrap.wrap(wrapped);
 
         keyWrap.initUnwrap(wrapper, null);
         SymmetricKey unwrapped = keyWrap.unwrapSymmetric(wrappedKey,
-            SymmetricKey.AES, SymmetricKey.Usage.DECRYPT, 0);
+                SymmetricKey.AES, SymmetricKey.Usage.DECRYPT, 0);
 
         Cipher decryptor = token.getCipherContext(EncryptionAlgorithm.AES_256_ECB);
         decryptor.initDecrypt(unwrapped);
         byte[] recoveredPre = decryptor.doFinal(ciphertext);
-        System.out.println("Decrypted "+ recoveredPre.length+ " bytes");
+        System.out.println("Decrypted " + recoveredPre.length + " bytes");
         byte[] recovered = Cipher.unPad(recoveredPre,
-                            EncryptionAlgorithm.AES_256_ECB.getBlockSize());
+                EncryptionAlgorithm.AES_256_ECB.getBlockSize());
 
         System.out.println("plaintext:");
         displayByteArray(plaintextPre);
@@ -77,44 +77,44 @@ public class KeyWrapping {
         keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.AES_CBC_PAD);
         IVParameterSpec iv = new IVParameterSpec(recovered);
         keyWrap.initWrap(keyWrapper, iv);
-        KeyPairGenerator kpg =
-            keyToken.getKeyPairGenerator(KeyPairAlgorithm.RSA);
+        KeyPairGenerator kpg = keyToken.getKeyPairGenerator(KeyPairAlgorithm.RSA);
         kpg.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
         kpg.temporaryPairs(true);
         KeyPair kp = kpg.genKeyPair();
         java.security.PublicKey pub = kp.getPublic();
-        PrivateKey privk = (org.mozilla.jss.crypto.PrivateKey)kp.getPrivate();
+        PrivateKey privk = (org.mozilla.jss.crypto.PrivateKey) kp.getPrivate();
 
         wrappedKey = keyWrap.wrap(privk);
         System.out.println("Original key:");
         displayByteArray(privk.getUniqueID());
-        privk = null; kp = null;
+        privk = null;
+        kp = null;
 
         keyWrap.initUnwrap(keyWrapper, iv);
         PrivateKey newPrivk = keyWrap.unwrapTemporaryPrivate(wrappedKey,
-            PrivateKey.RSA, pub );
+                PrivateKey.RSA, pub);
 
         // wrap a private with a symmetric using AES_KEY_WRAP_PAD
         keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.AES_KEY_WRAP_PAD);
         // IVParameterSpec iv = new IVParameterSpec(recovered);
         keyWrap.initWrap(keyWrapper, null /*iv*/);
-        KeyPairGenerator kpg2 =
-            keyToken.getKeyPairGenerator(KeyPairAlgorithm.RSA);
+        KeyPairGenerator kpg2 = keyToken.getKeyPairGenerator(KeyPairAlgorithm.RSA);
         kpg2.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
         kpg2.temporaryPairs(true);
         KeyPair kp2 = kpg2.genKeyPair();
         java.security.PublicKey pub2 = kp2.getPublic();
-        PrivateKey privk2 = (org.mozilla.jss.crypto.PrivateKey)kp2.getPrivate();
+        PrivateKey privk2 = (org.mozilla.jss.crypto.PrivateKey) kp2.getPrivate();
 
         wrappedKey = keyWrap.wrap(privk2);
         System.out.println("Original key:");
         displayByteArray(privk2.getUniqueID());
-        privk2 = null; kp2 = null;
+        privk2 = null;
+        kp2 = null;
         //keyToken.getCryptoStore().deletePrivateKey(privk);
 
         keyWrap.initUnwrap(keyWrapper, null /*iv*/);
         PrivateKey newPrivk2 = keyWrap.unwrapTemporaryPrivate(wrappedKey,
-            PrivateKey.RSA, pub );
+                PrivateKey.RSA, pub);
 
         System.out.println("New key:");
         displayByteArray(newPrivk2.getUniqueID());
@@ -124,13 +124,13 @@ public class KeyWrapping {
 
         // wrap a symmetric with a private
         keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.RSA);
-        keyWrap.initWrap(pub,null);
+        keyWrap.initWrap(pub, null);
         wrappedKey = keyWrap.wrap(keyWrapped);
         System.out.println("Wrapped key:");
         displayByteArray(wrappedKey);
         keyWrap.initUnwrap(newPrivk, null);
         unwrapped = keyWrap.unwrapSymmetric(wrappedKey, SymmetricKey.AES,
-            SymmetricKey.Usage.DECRYPT, 0);
+                SymmetricKey.Usage.DECRYPT, 0);
         unwrapped = kg.clone(unwrapped);
         decryptor = token.getCipherContext(EncryptionAlgorithm.AES_256_ECB);
         decryptor.initDecrypt(unwrapped);
@@ -140,14 +140,15 @@ public class KeyWrapping {
 
         // try a RSA-OAEP operation
         keyWrap = keyToken.getKeyWrapper(KeyWrapAlgorithm.RSA_OAEP);
-        OAEPParameterSpec config = new OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT);
+        OAEPParameterSpec config = new OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256,
+                PSource.PSpecified.DEFAULT);
         keyWrap.initWrap(pub, config);
         wrappedKey = keyWrap.wrap(keyWrapped);
         System.out.println("Wrapped key:");
         displayByteArray(wrappedKey);
         keyWrap.initUnwrap(newPrivk, config);
         unwrapped = keyWrap.unwrapSymmetric(wrappedKey, SymmetricKey.AES,
-            SymmetricKey.Usage.DECRYPT, 0);
+                SymmetricKey.Usage.DECRYPT, 0);
         unwrapped = kg.clone(unwrapped);
         decryptor = token.getCipherContext(EncryptionAlgorithm.AES_256_ECB);
         decryptor.initDecrypt(unwrapped);
@@ -156,12 +157,11 @@ public class KeyWrapping {
         displayByteArray(Cipher.unPad(recovered, EncryptionAlgorithm.AES_256_ECB.getBlockSize()));
     }
 
-    public static void
-    displayByteArray(byte[] ba) {
+    public static void displayByteArray(byte[] ba) {
         System.out.print("[" + ba.length + " bytes] ");
-        for(int i=0; i < ba.length; i++) {
-            System.out.print( Integer.toHexString(ba[i]&0xff) + " " );
-            if( (i % 26) == 25 ) {
+        for (int i = 0; i < ba.length; i++) {
+            System.out.print(Integer.toHexString(ba[i] & 0xff) + " ");
+            if ((i % 26) == 25) {
                 System.out.println("");
             }
         }

@@ -52,7 +52,7 @@ public class TestSSLEngine {
         System.err.println(ctx.getProvider());
 
         SSLEngine raw_eng = ctx.createSSLEngine();
-        assert(raw_eng instanceof JSSEngine);
+        assert (raw_eng instanceof JSSEngine);
 
         System.out.println("Testing basic assumptions...");
         testBasics(ctx);
@@ -69,7 +69,7 @@ public class TestSSLEngine {
         String[] suites = ssle.getSupportedCipherSuites();
         assert suites.length >= 2;
         String secondSuite = suites[1];
-        String[] oneSuites = new String[]{ secondSuite };
+        String[] oneSuites = new String[] { secondSuite };
         ssle.setEnabledCipherSuites(oneSuites);
         suites = ssle.getEnabledCipherSuites();
         assert suites.length == 1;
@@ -82,7 +82,7 @@ public class TestSSLEngine {
         // in FIPS mode, but RHEL returns only 1.
         assert protocols.length >= 1;
         String firstProtocol = protocols[0];
-        String[] oneProtocols = new String[]{ firstProtocol };
+        String[] oneProtocols = new String[] { firstProtocol };
         ssle.setEnabledProtocols(oneProtocols);
         protocols = ssle.getEnabledProtocols();
         assert protocols.length == 1;
@@ -131,7 +131,7 @@ public class TestSSLEngine {
         ByteBuffer bb4K = ByteBuffer.allocate(5096);
         ByteBuffer bb8K = ByteBuffer.allocate(10192);
 
-        ByteBuffer[] bufs = new ByteBuffer[]{ bb1K, bb2K, bb4K, bb8K };
+        ByteBuffer[] bufs = new ByteBuffer[] { bb1K, bb2K, bb4K, bb8K };
 
         try {
             ssle.unwrap(bb1K, bufs, 1, 5);
@@ -212,37 +212,39 @@ public class TestSSLEngine {
         SSLEngine jsse_dummy = jsse_context.createSSLEngine();
 
         int buffer_size = Math.max(
-            jss_dummy.getSession().getApplicationBufferSize(),
-            jsse_dummy.getSession().getApplicationBufferSize()
-        );
+                jss_dummy.getSession().getApplicationBufferSize(),
+                jsse_dummy.getSession().getApplicationBufferSize());
 
         readQueue = new ByteBuffer[bufferCount];
         writeQueue = new ByteBuffer[bufferCount];
 
-        for (int i = 0; i < bufferCount; i ++) {
+        for (int i = 0; i < bufferCount; i++) {
             readQueue[i] = ByteBuffer.allocate(buffer_size);
             writeQueue[i] = ByteBuffer.allocate(buffer_size);
         }
 
         String clientMessage = "Cooking MCs";
-        for (int i = 1; i < 10; i++) { clientMessage += clientMessage; }
+        for (int i = 1; i < 10; i++) {
+            clientMessage += clientMessage;
+        }
         LargeCMCs = ByteBuffer.wrap(clientMessage.getBytes());
 
         String serverMessage = "like a pound of bacon.";
-        for (int i = 1; i < 10; i++) { serverMessage += serverMessage; }
+        for (int i = 1; i < 10; i++) {
+            serverMessage += serverMessage;
+        }
         LargeLAPOB = ByteBuffer.wrap(serverMessage.getBytes());
 
         int large_size = 2 * Math.max(
-            clientMessage.length(),
-            serverMessage.length()
-        );
+                clientMessage.length(),
+                serverMessage.length());
 
         LargeReadBuffer = ByteBuffer.allocate(large_size);
         LargeWriteBuffer = ByteBuffer.allocate(large_size);
     }
 
     public static void resetBuffers() throws Exception {
-        for (int i = 0; i < bufferCount; i ++) {
+        for (int i = 0; i < bufferCount; i++) {
             if (readQueue[i].remaining() != readQueue[i].capacity()) {
                 readQueue[i].clear();
             }
@@ -292,8 +294,10 @@ public class TestSSLEngine {
         for (counter = 0; counter < max_steps; counter++) {
             SSLEngineResult.HandshakeStatus client_state = client_eng.getHandshakeStatus();
             SSLEngineResult.HandshakeStatus server_state = server_eng.getHandshakeStatus();
-            System.err.println("client_done=" + client_done + " | client_eng.getHandshakeStatus()=" + client_state + " | c2s_buffers.size=" + c2s_buffers.size());
-            System.err.println("server_done=" + server_done + " | server_eng.getHandshakeStatus()=" + server_state + " | s2c_buffers.size=" + s2c_buffers.size());
+            System.err.println("client_done=" + client_done + " | client_eng.getHandshakeStatus()=" + client_state
+                    + " | c2s_buffers.size=" + c2s_buffers.size());
+            System.err.println("server_done=" + server_done + " | server_eng.getHandshakeStatus()=" + server_state
+                    + " | s2c_buffers.size=" + s2c_buffers.size());
 
             System.err.println("\n\n=====BEGIN CLIENT=====");
 
@@ -367,7 +371,9 @@ public class TestSSLEngine {
                         }
                     }
                 }
-            } else if ((counter > 1 || allowFirst) && !client_done && (client_state == SSLEngineResult.HandshakeStatus.FINISHED || client_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
+            } else if ((counter > 1 || allowFirst) && !client_done
+                    && (client_state == SSLEngineResult.HandshakeStatus.FINISHED
+                            || client_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
                 System.err.println("Client: " + server_eng.getHandshakeStatus());
                 client_done = true;
             } else if (!client_done && client_state == SSLEngineResult.HandshakeStatus.NEED_TASK) {
@@ -379,7 +385,7 @@ public class TestSSLEngine {
                 }
 
                 client_state = client_eng.getHandshakeStatus();
-                assert(client_state != SSLEngineResult.HandshakeStatus.NEED_TASK);
+                assert (client_state != SSLEngineResult.HandshakeStatus.NEED_TASK);
             } else if (!client_done) {
                 throw new RuntimeException("Unknown status for client_eng: " + client_state);
             } else if (client_done && s2c_buffers.size() > 0) {
@@ -493,7 +499,9 @@ public class TestSSLEngine {
                         }
                     }
                 }
-            } else if ((counter > 1 || allowFirst) && !server_done && (server_state == SSLEngineResult.HandshakeStatus.FINISHED || server_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
+            } else if ((counter > 1 || allowFirst) && !server_done
+                    && (server_state == SSLEngineResult.HandshakeStatus.FINISHED
+                            || server_state == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
                 System.err.println("Server: " + server_eng.getHandshakeStatus());
                 server_done = true;
             } else if (!server_done && server_state == SSLEngineResult.HandshakeStatus.NEED_TASK) {
@@ -505,7 +513,7 @@ public class TestSSLEngine {
                 }
 
                 server_state = client_eng.getHandshakeStatus();
-                assert(server_state != SSLEngineResult.HandshakeStatus.NEED_TASK);
+                assert (server_state != SSLEngineResult.HandshakeStatus.NEED_TASK);
             } else if (!server_done) {
                 throw new RuntimeException("Unknown status for server handshake status: " + server_state);
             } else if (server_done && c2s_buffers.size() > 0) {
@@ -551,28 +559,31 @@ public class TestSSLEngine {
             System.err.println("=====END SERVER=====\n\n");
 
             if (client_done && server_done) {
-                assert(s2c_buffers.size() == 0);
-                assert(c2s_buffers.size() == 0);
+                assert (s2c_buffers.size() == 0);
+                assert (c2s_buffers.size() == 0);
                 break;
             }
         }
 
         if (counter == max_steps) {
-            throw new RuntimeException("Unable to complete a handshake in " + max_steps + " steps; assuming we were stuck in an infinite loop: c2s_buffers.size=" + c2s_buffers.size() + " s2c_buffers.size=" + s2c_buffers.size());
+            throw new RuntimeException("Unable to complete a handshake in " + max_steps
+                    + " steps; assuming we were stuck in an infinite loop: c2s_buffers.size=" + c2s_buffers.size()
+                    + " s2c_buffers.size=" + s2c_buffers.size());
         }
 
         SSLSession c_session = client_eng.getSession();
         SSLSession s_session = server_eng.getSession();
 
-        assert(c_session.getCipherSuite() == s_session.getCipherSuite());
-        assert(c_session.getProtocol() == s_session.getProtocol());
+        assert (c_session.getCipherSuite() == s_session.getCipherSuite());
+        assert (c_session.getProtocol() == s_session.getProtocol());
 
         if (server_eng.getNeedClientAuth()) {
-            assert(s_session.getPeerCertificates() != null);
+            assert (s_session.getPeerCertificates() != null);
         }
     }
 
-    public static void sendTestData(SSLEngine send, SSLEngine recv, ByteBuffer mesg, ByteBuffer inter, ByteBuffer dest) throws Exception {
+    public static void sendTestData(SSLEngine send, SSLEngine recv, ByteBuffer mesg, ByteBuffer inter, ByteBuffer dest)
+            throws Exception {
         int start_pos = mesg.position();
         int mesg_size = mesg.remaining();
         int counter = 0;
@@ -612,8 +623,8 @@ public class TestSSLEngine {
         }
 
         System.err.println("Bytes of ciphertext message: " + inter.remaining());
-        assert(inter.remaining() >= mesg_size);
-        assert(dest.remaining() > inter.remaining());
+        assert (inter.remaining() >= mesg_size);
+        assert (dest.remaining() > inter.remaining());
 
         for (counter = 0; counter < max_counter; counter++) {
             int consumed = inter.position();
@@ -632,10 +643,12 @@ public class TestSSLEngine {
             if (r.getStatus() != SSLEngineResult.Status.OK) {
                 throw new RuntimeException("Unknown result from send.wrap(): " + r.getStatus());
             } else if (!dest.hasRemaining()) {
-                throw new RuntimeException("Reasonably expected to get decrypted data during unwrap. Have: " + dest.remaining());
+                throw new RuntimeException(
+                        "Reasonably expected to get decrypted data during unwrap. Have: " + dest.remaining());
             } else if (dest.remaining() < mesg_size) {
                 // Flip it back so we can append more data again.
-                System.err.println("Expecting to get " + (mesg_size - dest.remaining()) + " more bytes... Calling unwrap again.");
+                System.err.println(
+                        "Expecting to get " + (mesg_size - dest.remaining()) + " more bytes... Calling unwrap again.");
                 dest.flip();
                 continue;
             } else if (dest.remaining() >= mesg_size) {
@@ -644,7 +657,8 @@ public class TestSSLEngine {
         }
 
         if (counter == max_counter) {
-            throw new RuntimeException("Reasonably expected to get all decrypted data during unwrap but only got " + dest.remaining());
+            throw new RuntimeException(
+                    "Reasonably expected to get all decrypted data during unwrap but only got " + dest.remaining());
         }
 
         System.err.println("Bytes of decrypted message: " + dest.remaining());
@@ -662,8 +676,8 @@ public class TestSSLEngine {
     }
 
     public static void testPostHandshakeTransfer(SSLEngine client_eng, SSLEngine server_eng) throws Exception {
-        assert(client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
-        assert(server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
+        assert (client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
+        assert (server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
 
         System.err.println("Testing post-handshake transfer...");
 
@@ -734,34 +748,37 @@ public class TestSSLEngine {
         if (r.getStatus() != SSLEngineResult.Status.OK && r.getStatus() != SSLEngineResult.Status.CLOSED) {
             throw new RuntimeException("Unknown result from recv.unwrap(): " + r.getStatus());
         } else if (read.hasRemaining()) {
-            throw new RuntimeException("Expected not to recieve any data but got " + read.remaining() + " bytes during unwrap.");
+            throw new RuntimeException(
+                    "Expected not to recieve any data but got " + read.remaining() + " bytes during unwrap.");
         }
     }
 
     public static void testClose(SSLEngine client_eng, SSLEngine server_eng) throws Exception {
-        assert(client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING || client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.FINISHED);
-        assert(server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING || server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.FINISHED);
+        assert (client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
+                || client_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.FINISHED);
+        assert (server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
+                || server_eng.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.FINISHED);
         if (client_eng instanceof JSSEngine) {
-            assert(((JSSEngine) client_eng).getStatus().on >= 1);
+            assert (((JSSEngine) client_eng).getStatus().on >= 1);
         }
 
         if (server_eng instanceof JSSEngine) {
-            assert(((JSSEngine) server_eng).getStatus().on >= 1);
+            assert (((JSSEngine) server_eng).getStatus().on >= 1);
         }
 
-        assert(client_eng.isInboundDone() == false);
-        assert(client_eng.isOutboundDone() == false);
-        assert(server_eng.isInboundDone() == false);
-        assert(server_eng.isOutboundDone() == false);
+        assert (client_eng.isInboundDone() == false);
+        assert (client_eng.isOutboundDone() == false);
+        assert (server_eng.isInboundDone() == false);
+        assert (server_eng.isOutboundDone() == false);
 
         System.err.println("Testing client close...");
 
         client_eng.closeOutbound();
         sendCloseData(client_eng, server_eng);
-        assert(client_eng.isOutboundDone() == true);
-        assert(server_eng.isInboundDone() == true);
-        assert(server_eng.isOutboundDone() == false);
-        assert(client_eng.isInboundDone() == false);
+        assert (client_eng.isOutboundDone() == true);
+        assert (server_eng.isInboundDone() == true);
+        assert (server_eng.isOutboundDone() == false);
+        assert (client_eng.isInboundDone() == false);
 
         System.err.println("Testing server close...");
 
@@ -769,13 +786,14 @@ public class TestSSLEngine {
         sendCloseData(server_eng, client_eng);
 
         // Everything should be done now...
-        assert(server_eng.isOutboundDone() == true);
-        assert(client_eng.isInboundDone() == true);
+        assert (server_eng.isOutboundDone() == true);
+        assert (client_eng.isInboundDone() == true);
 
         System.err.println("Passed close test!");
     }
 
-    public static void testBasicHandshake(SSLEngine client_eng, SSLEngine server_eng, boolean allowFirst) throws Exception {
+    public static void testBasicHandshake(SSLEngine client_eng, SSLEngine server_eng, boolean allowFirst)
+            throws Exception {
         testHandshake(client_eng, server_eng, allowFirst);
         testPostHandshakeTransfer(client_eng, server_eng);
         testClose(client_eng, server_eng);
@@ -791,7 +809,8 @@ public class TestSSLEngine {
         eng.setEnabledCipherSuites(new String[] { cipher_suite });
     }
 
-    public static boolean skipProtocolCipherSuite(String protocol, String cipher_suite, String client_alias, String server_alias) {
+    public static boolean skipProtocolCipherSuite(String protocol, String cipher_suite, String client_alias,
+            String server_alias) {
         SSLVersion v = SSLVersion.findByAlias(protocol);
         SSLCipher cs = SSLCipher.valueOf(cipher_suite);
 
@@ -809,9 +828,10 @@ public class TestSSLEngine {
         return (!works_with_version || !supported || !right_cert_type || null_cipher || is_ecdh_rsa);
     }
 
-    public static void testAllHandshakes(SSLContext ctx, String client_alias, String server_alias, boolean client_auth) throws Exception {
+    public static void testAllHandshakes(SSLContext ctx, String client_alias, String server_alias, boolean client_auth)
+            throws Exception {
         SSLEngine dummy = ctx.createSSLEngine();
-        assert(dummy != null);
+        assert (dummy != null);
 
         for (String protocol : dummy.getSupportedProtocols()) {
             for (String cipher_suite : dummy.getSupportedCipherSuites()) {
@@ -920,9 +940,10 @@ public class TestSSLEngine {
         }
     }
 
-    public static void testPostHandshakeAuth(SSLContext ctx, String client_alias, String server_alias) throws Exception {
+    public static void testPostHandshakeAuth(SSLContext ctx, String client_alias, String server_alias)
+            throws Exception {
         SSLEngine dummy = ctx.createSSLEngine();
-        assert(dummy != null);
+        assert (dummy != null);
 
         for (String protocol : dummy.getSupportedProtocols()) {
             if (protocol != "TLSv1.2" && protocol != "TLSv1.3") {
@@ -1017,7 +1038,7 @@ public class TestSSLEngine {
             return;
         }
 
-        assert(SSLVersion.TLS_1_2.matchesAlias("TLSv1.2"));
+        assert (SSLVersion.TLS_1_2.matchesAlias("TLSv1.2"));
 
         System.out.println("Testing provided instance...");
         testProvided();

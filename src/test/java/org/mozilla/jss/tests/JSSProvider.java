@@ -10,13 +10,13 @@ public class JSSProvider {
 
     public static void shouldProvide(Provider p, String algo, String _type) {
         String item = (String) p.get(algo);
-        assert(item != null);
-        assert(item.startsWith(BASE_PACKAGE));
-        assert(item.endsWith("." + _type));
+        assert (item != null);
+        assert (item.startsWith(BASE_PACKAGE));
+        assert (item.endsWith("." + _type));
     }
 
     public static void shouldNotProvide(Provider p, String algo) {
-        assert(p.get(algo) == null);
+        assert (p.get(algo) == null);
     }
 
     public static void listProviders() {
@@ -33,9 +33,9 @@ public class JSSProvider {
         // Validate that the CryptoManager registers us as the
         // default/first provider.
         Provider p = Security.getProvider("Mozilla-JSS");
-        assert(p != null);
-        assert(p.getName().equals("Mozilla-JSS"));
-        assert(p instanceof org.mozilla.jss.JSSProvider);
+        assert (p != null);
+        assert (p.getName().equals("Mozilla-JSS"));
+        assert (p instanceof org.mozilla.jss.JSSProvider);
 
         // Validate assumptions about how provider.get() works:
         //
@@ -53,22 +53,22 @@ public class JSSProvider {
         // algorithm instance without explicitly providing the provider, we
         // end up with an instance from our provider.
         Mac m = Mac.getInstance("HmacSHA512");
-        assert(m.getProvider().getName().equals(p.getName()));
+        assert (m.getProvider().getName().equals(p.getName()));
 
         // Our KeyManagerFactory and TrustMangerFactory should return KeyManagers
         // and TrustManagers from our class namespace.
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509");
-        assert(kmf.getKeyManagers().length > 0);
+        assert (kmf.getKeyManagers().length > 0);
         for (KeyManager km : kmf.getKeyManagers()) {
             System.out.println("got KeyManager: " + km);
-            assert(km instanceof org.mozilla.jss.provider.javax.crypto.JSSKeyManager);
+            assert (km instanceof org.mozilla.jss.provider.javax.crypto.JSSKeyManager);
         }
 
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("NssX509");
-        assert(tmf.getTrustManagers().length > 0);
+        assert (tmf.getTrustManagers().length > 0);
         for (TrustManager tm : tmf.getTrustManagers()) {
             System.out.println("got TrustManager: " + tm);
-            assert(tm instanceof org.mozilla.jss.provider.javax.crypto.JSSTrustManager);
+            assert (tm instanceof org.mozilla.jss.provider.javax.crypto.JSSTrustManager);
         }
 
         // Our KeyStore should return instances or extensions of PK11Cert.
@@ -83,7 +83,7 @@ public class JSSProvider {
                 continue;
             }
 
-            assert(cert instanceof org.mozilla.jss.pkcs11.PK11Cert);
+            assert (cert instanceof org.mozilla.jss.pkcs11.PK11Cert);
         }
     }
 }

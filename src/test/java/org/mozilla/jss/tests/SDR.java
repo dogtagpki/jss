@@ -17,49 +17,48 @@ public class SDR {
 
     public static void main(String[] args) {
 
-      try {
-        String cmd = args[0];
-        String infile = args[1];
-        String outfile = args[2];
+        try {
+            String cmd = args[0];
+            String infile = args[1];
+            String outfile = args[2];
 
-        CryptoManager cm = CryptoManager.getInstance();
-        CryptoToken token = cm.getInternalKeyStorageToken();
-        token.login(new ConsolePasswordCallback());
+            CryptoManager cm = CryptoManager.getInstance();
+            CryptoToken token = cm.getInternalKeyStorageToken();
+            token.login(new ConsolePasswordCallback());
 
-        SecretDecoderRing sdr = new SecretDecoderRing();
+            SecretDecoderRing sdr = new SecretDecoderRing();
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        int numread;
-        byte[] data = new byte[1024];
+            int numread;
+            byte[] data = new byte[1024];
 
-        try (FileInputStream fis = new FileInputStream(infile)) {
-            while ((numread = fis.read(data)) != -1) {
-                bos.write(data, 0, numread);
+            try (FileInputStream fis = new FileInputStream(infile)) {
+                while ((numread = fis.read(data)) != -1) {
+                    bos.write(data, 0, numread);
+                }
             }
-        }
 
-        byte[] inputBytes = bos.toByteArray();
+            byte[] inputBytes = bos.toByteArray();
 
-        byte[] outputBytes;
-        if( cmd.equalsIgnoreCase("encrypt") ) {
-               outputBytes = sdr.encrypt(inputBytes);
-        } else {
+            byte[] outputBytes;
+            if (cmd.equalsIgnoreCase("encrypt")) {
+                outputBytes = sdr.encrypt(inputBytes);
+            } else {
                 outputBytes = sdr.decrypt(inputBytes);
-        }
+            }
 
-        try (FileOutputStream fos = new FileOutputStream(outfile)) {
-            fos.write(outputBytes);
-        }
+            try (FileOutputStream fos = new FileOutputStream(outfile)) {
+                fos.write(outputBytes);
+            }
 
-      } catch(Exception e) {
-        e.printStackTrace();
-        System.exit(1);
-      }
-      System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.exit(0);
     }
 
-    private static char[] hex = new char[]
-        { '0', '1', '2', '3', '4', '5', '6', '7',
-          '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static char[] hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 }

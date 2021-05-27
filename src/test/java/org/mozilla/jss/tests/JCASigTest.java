@@ -15,16 +15,15 @@ import java.security.spec.PSSParameterSpec;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.Policy;
 
-
 public class JCASigTest {
 
     public static void usage() {
         System.out.println(
-        "Usage: java org.mozilla.jss.tests.JCASigTest <dbdir> <passwordFile>");
+                "Usage: java org.mozilla.jss.tests.JCASigTest <dbdir> <passwordFile>");
     }
 
     public static void sigTest(String alg, KeyPair keyPair) throws Exception {
-        byte[] data = new byte[] {1,2,3,4,5,6,7,8,9};
+        byte[] data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         byte[] signature;
         Signature signer;
 
@@ -32,16 +31,16 @@ public class JCASigTest {
 
         if (alg.equals("RSASSA-PSS")) { //Set some params, go for SHA256 version.
             signer.setParameter(new PSSParameterSpec("SHA-256", "MGF1",
-                new MGF1ParameterSpec("SHA-256"), 32, 1));
+                    new MGF1ParameterSpec("SHA-256"), 32, 1));
         }
 
         System.out.println("Created a signing context");
         Provider provider = signer.getProvider();
         System.out.println("The provider used for the signer " +
-            provider.getName() + " and the algorithm was " + alg);
+                provider.getName() + " and the algorithm was " + alg);
         if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
             System.out.println("Mozilla-JSS is supposed to be the " +
-                "default provider for JCASigTest");
+                    "default provider for JCASigTest");
             System.exit(1);
         }
 
@@ -68,7 +67,7 @@ public class JCASigTest {
         KeyPairGenerator kpgen;
         KeyPair keyPair;
 
-        if ( args.length != 2 ) {
+        if (args.length != 2) {
             usage();
             System.exit(1);
         }
@@ -76,26 +75,26 @@ public class JCASigTest {
         String file = args[1];
 
         manager = CryptoManager.getInstance();
-        manager.setPasswordCallback( new FilePasswordCallback(file) );
+        manager.setPasswordCallback(new FilePasswordCallback(file));
 
         Provider[] providers = Security.getProviders();
-        for ( int i=0; i < providers.length; i++ ) {
-            System.out.println("Provider "+i+": "+providers[i].getName());
+        for (int i = 0; i < providers.length; i++) {
+            System.out.println("Provider " + i + ": " + providers[i].getName());
         }
 
         // Generate an RSA keypair
         kpgen = KeyPairGenerator.getInstance("RSA");
         kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
         keyPair = kpgen.generateKeyPair();
-        Provider  provider = kpgen.getProvider();
+        Provider provider = kpgen.getProvider();
 
         System.out.println("The provider used to Generate the Keys was "
-                            + provider.getName() );
-        System.out.println("provider info " + provider.getInfo() );
+                + provider.getName());
+        System.out.println("provider info " + provider.getInfo());
 
         if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
             System.out.println("Mozilla-JSS is supposed to be the " +
-                "default provider for JCASigTest");
+                    "default provider for JCASigTest");
             System.exit(1);
         }
 
@@ -105,7 +104,7 @@ public class JCASigTest {
         sigTest("SHA256withRSA/PSS", keyPair);
         sigTest("SHA384withRSA/PSS", keyPair);
         sigTest("SHA512withRSA/PSS", keyPair);
-        sigTest("RSASSA-PSS",keyPair);
+        sigTest("RSASSA-PSS", keyPair);
 
         kpgen = KeyPairGenerator.getInstance("EC");
         kpgen.initialize(256);
@@ -113,12 +112,12 @@ public class JCASigTest {
         provider = kpgen.getProvider();
 
         System.out.println("The provider used to Generate the Keys was "
-                            + provider.getName() );
-        System.out.println("provider info " + provider.getInfo() );
+                + provider.getName());
+        System.out.println("provider info " + provider.getInfo());
 
         if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
             System.out.println("Mozilla-JSS is supposed to be the " +
-                "default provider for JCASigTest");
+                    "default provider for JCASigTest");
             System.exit(1);
         }
 

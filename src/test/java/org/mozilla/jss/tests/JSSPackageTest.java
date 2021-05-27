@@ -25,7 +25,7 @@ public class JSSPackageTest {
                 System.out.println("Impl version:\t" + pkg.getImplementationVersion());
             }
             System.out.println("\n\tFetching version information " +
-                               "from CryptoManager");
+                    "from CryptoManager");
             System.out.println("\n\t" + org.mozilla.jss.CryptoManager.JAR_JSS_VERSION);
 
             System.out.println("\n\tTo check the JNI version in libjss4.so:");

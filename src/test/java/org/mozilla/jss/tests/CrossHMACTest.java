@@ -17,7 +17,7 @@ import org.mozilla.jss.util.PasswordCallback;
  * HMAC is a hash function based message authentication code.
  * CrossHMACTest compares the HMAC created by Mozilla, IBM and Sun JCE.
  *
- * @author  Sandeep.Konchady@Sun.COM
+ * @author Sandeep.Konchady@Sun.COM
  * @version 1.0
  */
 public class CrossHMACTest {
@@ -30,15 +30,15 @@ public class CrossHMACTest {
     /**
      * List all the HMAC Algorithms that JSS implements.
      */
-    static final String JSS_HMAC_Algs[] = {"HmacSHA1", "HmacSHA256",
-        "HmacSHA384", "HmacSHA512"
+    static final String JSS_HMAC_Algs[] = { "HmacSHA1", "HmacSHA256",
+            "HmacSHA384", "HmacSHA512"
     };
 
     public CrossHMACTest(String[] argv) throws Exception {
         if (argv.length < 1) {
             System.out.println(
                     "Usage: java org.mozilla.jss.tests.CrossHMACTest " +
-                    "<dbdir> [password file only needed in FIPS mode]");
+                            "<dbdir> [password file only needed in FIPS mode]");
             System.exit(1);
         }
         cm = CryptoManager.getInstance();
@@ -121,6 +121,7 @@ public class CrossHMACTest {
 
     /**
      * Main test method.
+     * 
      * @param argv
      */
     public static void main(String[] argv) {
@@ -138,8 +139,8 @@ public class CrossHMACTest {
             SecretKeyFactory keyFac;
             SecretKeyFacade sk;
             byte[] salt = {
-                (byte) 0x0a, (byte) 0x6d, (byte) 0x07, (byte) 0xba,
-                (byte) 0x1e, (byte) 0xbd, (byte) 0x72, (byte) 0xf1
+                    (byte) 0x0a, (byte) 0x6d, (byte) 0x07, (byte) 0xba,
+                    (byte) 0x1e, (byte) 0xbd, (byte) 0x72, (byte) 0xf1
             };
             int iterationCount = 7;
 
@@ -182,4 +183,3 @@ public class CrossHMACTest {
         System.exit(0);
     }
 }
-

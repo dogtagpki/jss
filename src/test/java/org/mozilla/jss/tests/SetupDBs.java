@@ -9,20 +9,20 @@ import org.mozilla.jss.crypto.*;
 import org.mozilla.jss.util.*;
 
 /**
-* Create the NSS databases 
-*
-**/
+ * Create the NSS databases
+ *
+ **/
 
 public class SetupDBs {
 
     public static void main(String args[]) throws Exception {
         if (args.length != 2) {
             System.err.println("Usage: java org.mozilla.jss.tests.SetupDBs " +
-			       "<dbdir> <passwordFile>\n" + 
-                               "Password file should have format:\n " +
-                               "Internal\\ Key\\ Storage\\ Token=m1oZilla\n " +
-                               "NSS\\ FIPS\\ 140-2\\ User\\ Private\\ " +
-                               "Key=m1oZilla\n");
+                    "<dbdir> <passwordFile>\n" +
+                    "Password file should have format:\n " +
+                    "Internal\\ Key\\ Storage\\ Token=m1oZilla\n " +
+                    "NSS\\ FIPS\\ 140-2\\ User\\ Private\\ " +
+                    "Key=m1oZilla\n");
             System.exit(1);
         }
 

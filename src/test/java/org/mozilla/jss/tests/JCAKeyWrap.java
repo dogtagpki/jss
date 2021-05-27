@@ -111,7 +111,7 @@ public class JCAKeyWrap {
             aesKeyToWrap = keyGen.generateKey();
             keyGen = KeyGenerator.getInstance("AES", MOZ_PROVIDER_NAME);
 
-            int AESKeySize[] = {128, 192, 256};
+            int AESKeySize[] = { 128, 192, 256 };
 
             for (int k = 0; k < AESKeySize.length; k++) {
                 //create AES key
@@ -119,8 +119,7 @@ public class JCAKeyWrap {
                 keyGen.init(AESKeySize[k]);
                 aesKey = keyGen.generateKey();
                 keyGen = KeyGenerator.getInstance("AES", MOZ_PROVIDER_NAME);
-                int keyStrength =
-                        (((SecretKeyFacade) aesKey).key.getStrength());
+                int keyStrength = (((SecretKeyFacade) aesKey).key.getStrength());
 
                 //JDK 1.4 and 1.5 only supports 128 keys for AES
                 //therefore only do comparison testing of providers with
@@ -158,14 +157,18 @@ public class JCAKeyWrap {
     public static void usage() {
         System.out.println(
                 "Usage: java org.mozilla.jss.tests.JCAKeyWrap " +
-                "<dbdir> <passwordFile>");
+                        "<dbdir> <passwordFile>");
     }
+
     protected boolean bFipsMode = false;
-    protected byte[] plainText = "Firefox   rules!Firefox   rules!Firefox   rules!Firefox   rules!Firefox   rules!".getBytes();
-    protected byte[] plainTextPad = "Thunderbird rules!Thunderbird rules!Thunderbird rules!Thunderbird rules!Thunderbird rules!".getBytes();
+    protected byte[] plainText = "Firefox   rules!Firefox   rules!Firefox   rules!Firefox   rules!Firefox   rules!"
+            .getBytes();
+    protected byte[] plainTextPad = "Thunderbird rules!Thunderbird rules!Thunderbird rules!Thunderbird rules!Thunderbird rules!"
+            .getBytes();
 
     /**
      * Default constructor to initialize Mozilla-JSS
+     * 
      * @param certDbLoc
      * @param passwdFile
      */
@@ -205,6 +208,7 @@ public class JCAKeyWrap {
 
     /**
      * Randomly selects a cipher transformation "algorithm/mode/padding".
+     * 
      * @param symKeyType
      * @return a cipher transformation "algorithm/mode/padding"
      * @throws Exception
@@ -212,11 +216,11 @@ public class JCAKeyWrap {
     public String testCipher(String symKeyType)
             throws Exception {
         String testCipher;
-        String[] cipherDESede = {"DESede/ECB/NoPadding",
-            "DESede/CBC/PKCS5Padding",
-            "DESede/CBC/NoPadding"};
-        String[] cipherAES = {"AES/ECB/NoPadding", "AES/CBC/NoPadding",
-            "AES/CBC/PKCS5Padding"};
+        String[] cipherDESede = { "DESede/ECB/NoPadding",
+                "DESede/CBC/PKCS5Padding",
+                "DESede/CBC/NoPadding" };
+        String[] cipherAES = { "AES/ECB/NoPadding", "AES/CBC/NoPadding",
+                "AES/CBC/PKCS5Padding" };
 
         SecureRandom r = SecureRandom.getInstance("pkcs11prng",
                 MOZ_PROVIDER_NAME);
@@ -273,8 +277,7 @@ public class JCAKeyWrap {
             // unwrap key
             cipher = Cipher.getInstance("RSA", providerA);
             cipher.init(Cipher.UNWRAP_MODE, keyPair.getPrivate());
-            SecretKey unwrappedKey =
-                    (javax.crypto.SecretKey) cipher.unwrap(wrappedData,
+            SecretKey unwrappedKey = (javax.crypto.SecretKey) cipher.unwrap(wrappedData,
                     symKeyType, Cipher.SECRET_KEY);
 
             testKeys(symKey, unwrappedKey, providerA, providerB);
@@ -347,8 +350,7 @@ public class JCAKeyWrap {
         if (bFipsMode) {
             //bFipsMode providerA and providerB mozilla-JSS
             //Keys are not extractable so just check key length
-            if (((SecretKeyFacade) keyA).key.getStrength() !=
-                    ((SecretKeyFacade) keyB).key.getStrength()) {
+            if (((SecretKeyFacade) keyA).key.getStrength() != ((SecretKeyFacade) keyB).key.getStrength()) {
                 throw new Exception("unwrapped key strength does not " +
                         "match orginal");
             }
@@ -392,8 +394,7 @@ public class JCAKeyWrap {
             cipher.init(Cipher.DECRYPT_MODE, keyB);
         } else {
             //retrieve the algorithmParameters from the encoded array
-            AlgorithmParameters aps =
-                    AlgorithmParameters.getInstance(keyB.getAlgorithm());
+            AlgorithmParameters aps = AlgorithmParameters.getInstance(keyB.getAlgorithm());
             aps.init(encodedAlgParams);
             cipher.init(Cipher.DECRYPT_MODE, keyB, aps);
         }
@@ -422,7 +423,6 @@ public class JCAKeyWrap {
             String providerB) throws Exception {
         try {
 
-
             System.out.print("Wrap " + symKey.getAlgorithm() + " " +
                     ((SecretKeyFacade) symKey).key.getStrength() +
                     " with " + wrapperKey.getAlgorithm() + " " +
@@ -443,15 +443,13 @@ public class JCAKeyWrap {
                 encodedKeyWrapAP = ap.getEncoded();
             }
 
-
             // unwrap key
             cipher = Cipher.getInstance(wrapperAlg, providerA);
             if (encodedKeyWrapAP == null) {
                 cipher.init(Cipher.UNWRAP_MODE, wrapperKey);
             } else {
                 //retrieve the algorithmParameters from the encoded array
-                AlgorithmParameters aps =
-                        AlgorithmParameters.getInstance(
+                AlgorithmParameters aps = AlgorithmParameters.getInstance(
                         wrapperKey.getAlgorithm());
                 aps.init(encodedKeyWrapAP);
                 cipher.init(Cipher.UNWRAP_MODE, wrapperKey, aps);

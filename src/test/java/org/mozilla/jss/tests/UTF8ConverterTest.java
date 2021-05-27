@@ -49,12 +49,12 @@ public class UTF8ConverterTest {
         }
         System.out.println();
 
-        assert(utf8 != null);
+        assert (utf8 != null);
 
-        assert(utf8.length == output.length);
+        assert (utf8.length == output.length);
 
-        for(int i=0; i<output.length; i++) {
-            assert(utf8[i] == output[i]);
+        for (int i = 0; i < output.length; i++) {
+            assert (utf8[i] == output[i]);
         }
     }
 
@@ -70,4 +70,3 @@ public class UTF8ConverterTest {
         }
     }
 }
-
