@@ -22,8 +22,8 @@ public class DigestInfo implements ASN1Value {
     private OCTET_STRING digest;
     private SEQUENCE sequence;
 
-    public DigestInfo(AlgorithmIdentifier digestAlgorithm, OCTET_STRING digest){
-        if( digestAlgorithm==null || digest==null ) {
+    public DigestInfo(AlgorithmIdentifier digestAlgorithm, OCTET_STRING digest) {
+        if (digestAlgorithm == null || digest == null) {
             throw new IllegalArgumentException();
         }
         sequence = new SEQUENCE();
@@ -33,17 +33,16 @@ public class DigestInfo implements ASN1Value {
         sequence.addElement(digest);
     }
 
-    public AlgorithmIdentifier
-    getDigestAlgorithm() {
+    public AlgorithmIdentifier getDigestAlgorithm() {
         return digestAlgorithm;
     }
 
-    public OCTET_STRING
-    getDigest() {
+    public OCTET_STRING getDigest() {
         return digest;
     }
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -51,28 +50,28 @@ public class DigestInfo implements ASN1Value {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj==null || !(obj instanceof DigestInfo)) {
+        if (obj == null || !(obj instanceof DigestInfo)) {
             return false;
         }
-        DigestInfo di = (DigestInfo)obj;
+        DigestInfo di = (DigestInfo) obj;
 
         return byteArraysAreSame(di.digest.toByteArray(), digest.toByteArray());
     }
 
     /**
-     * Compares two non-null byte arrays.  Returns true if they are identical,
+     * Compares two non-null byte arrays. Returns true if they are identical,
      * false otherwise.
      */
     private static boolean byteArraysAreSame(byte[] left, byte[] right) {
 
-        assert(left!=null && right!=null);
+        assert (left != null && right != null);
 
-        if( left.length != right.length ) {
+        if (left.length != right.length) {
             return false;
         }
 
-        for(int i = 0 ; i < left.length ; i++ ) {
-            if( left[i] != right[i] ) {
+        for (int i = 0; i < left.length; i++) {
+            if (left[i] != right[i]) {
                 return false;
             }
         }
@@ -87,12 +86,12 @@ public class DigestInfo implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -106,8 +105,8 @@ public class DigestInfo implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( AlgorithmIdentifier.getTemplate());
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -117,20 +116,18 @@ public class DigestInfo implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream ostream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, ostream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream ostream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, ostream);
 
             return new DigestInfo(
-                    (AlgorithmIdentifier)       seq.elementAt(0),
-                    (OCTET_STRING)              seq.elementAt(1) );
+                    (AlgorithmIdentifier) seq.elementAt(0),
+                    (OCTET_STRING) seq.elementAt(1));
         }
     }
 }
