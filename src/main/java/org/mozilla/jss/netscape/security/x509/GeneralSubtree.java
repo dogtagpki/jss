@@ -138,13 +138,13 @@ public class GeneralSubtree implements Serializable {
             DerOutputStream tmp = new DerOutputStream();
             tmp.putInteger(new BigInt(minimum));
             seq.writeImplicit(DerValue.createTag(DerValue.TAG_CONTEXT,
-                              false, TAG_MIN), tmp);
+                    false, TAG_MIN), tmp);
         }
         if (maximum != -1) {
             DerOutputStream tmp = new DerOutputStream();
             tmp.putInteger(new BigInt(maximum));
             seq.writeImplicit(DerValue.createTag(DerValue.TAG_CONTEXT,
-                              false, TAG_MAX), tmp);
+                    false, TAG_MAX), tmp);
         }
         out.write(DerValue.tag_Sequence, seq);
     }

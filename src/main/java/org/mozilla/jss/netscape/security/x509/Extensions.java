@@ -66,7 +66,7 @@ public class Extensions extends Vector<Extension>
             if (extClass == null) { // Unsupported extension
                 if (ext.isCritical()) {
                     throw new IOException("Unsupported CRITICAL extension: "
-                                          + ext.getExtensionId());
+                            + ext.getExtensionId());
                 } else {
                     map.put(ext.getExtensionId().toString(), ext);
                     addElement(ext);
@@ -84,7 +84,7 @@ public class Extensions extends Vector<Extension>
                 Array.setByte(value, i, extData[i]);
             }
             Object[] passed = new Object[] { Boolean.valueOf(ext.isCritical()),
-                                                        value };
+                    value };
             CertAttrSet certExt = cons.newInstance(passed);
             map.put(certExt.getName(), (Extension) certExt);
             addElement((Extension) certExt);

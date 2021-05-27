@@ -92,7 +92,7 @@ public class IPAddressName implements GeneralNameInterface {
     public IPAddressName(String s, CIDRNetmask mask) {
         address = parseAddress(true, s);
         mask.write(ByteBuffer.wrap(
-                    address, address.length / 2, address.length / 2));
+                address, address.length / 2, address.length / 2));
     }
 
     /**
@@ -140,7 +140,7 @@ public class IPAddressName implements GeneralNameInterface {
 
     @Override
     public boolean validSubtree() {
-        return address.length == 2*IPv4_LEN || address.length == 2*IPv6_LEN;
+        return address.length == 2 * IPv4_LEN || address.length == 2 * IPv6_LEN;
     }
 
     /**
@@ -182,14 +182,16 @@ public class IPAddressName implements GeneralNameInterface {
 
     private static void writeIPv4(StringBuilder r, ByteBuffer buf) {
         for (int i = 0; i < 4; i++) {
-            if (i > 0) r.append(".");
+            if (i > 0)
+                r.append(".");
             r.append(buf.get() & 0xff);
         }
     }
 
     private static void writeIPv6(StringBuilder r, ByteBuffer buf) {
         for (int i = 0; i < 8; i++) {
-            if (i > 0) r.append(":");
+            if (i > 0)
+                r.append(":");
             r.append(Integer.toHexString(read16BitInt(buf)));
         }
     }
@@ -212,7 +214,7 @@ public class IPAddressName implements GeneralNameInterface {
         try {
             int end = start + nt;
             for (int i = start; i < end; i++) {
-             // parse token into Integer then downcast into byte to avoid NumberFormatException
+                // parse token into Integer then downcast into byte to avoid NumberFormatException
                 address[i] = (byte) Integer.parseInt(st.nextToken());
             }
         } catch (NumberFormatException e) {

@@ -191,13 +191,14 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Constructs an algorithm ID with a fully encoded params object
+     * 
      * @param oid the identifier for the algorithm
      * @param params the fully encoded AlgorithmIdentifier Object
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
     public AlgorithmId(ObjectIdentifier oid, AlgorithmParameters params)
-        throws IOException, NoSuchAlgorithmException {
+            throws IOException, NoSuchAlgorithmException {
         algid = oid;
         algParams = params;
 
@@ -210,12 +211,13 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Constructor that takes the oid and name, so the name can be cachedf or laster use.
+     * 
      * @throws NoSuchAlgorithmException
      * @throws IOException
      *
      */
     public AlgorithmId(ObjectIdentifier oid, String algName)
-        throws IOException, NoSuchAlgorithmException {
+            throws IOException, NoSuchAlgorithmException {
         algid = oid;
         cachedAlgName = algName;
 
@@ -227,7 +229,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     }
 
     /**
-     * Constructs an  algorithm ID with possible RSAPSS params.
+     * Constructs an algorithm ID with possible RSAPSS params.
      *
      * @param oid the identifier for the algorithm
      */
@@ -249,7 +251,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
                 }
             } catch (Exception e) {
                 //Preserve original signature...
-                throw new RuntimeException("Unable to create pssPrams in Algorithmid(ObjectIdentifier oid): " + e.getMessage(), e);
+                throw new RuntimeException(
+                        "Unable to create pssPrams in Algorithmid(ObjectIdentifier oid): " + e.getMessage(), e);
             }
         }
     }
@@ -324,6 +327,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * DER encode this object onto an output stream.
      * Implements the <code>DerEncoder</code> interface.
+     * 
      * @param out the output stream on which to write the DER encoding.
      *
      * @exception IOException on encoding error.
@@ -382,15 +386,11 @@ public class AlgorithmId implements Serializable, DerEncoder {
             seq.write(DerValue.tag_Sequence, bytes);
 
             tmp.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                                             true, val), seq);
-
-
+                    true, val), seq);
 
             out.write(tmp.toByteArray());
         }
     }
-
-
 
     // XXXX cleaning required
     /**
@@ -550,7 +550,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
                 } else if (paramStr.contains("HashAlg: SHA-512")) {
                     cachedAlgName = "SHA512withRSA/PSS";
                 } else {
-                    throw new RuntimeException("Unknown or unsupported signature algorithm in PSS parameters: " + paramStr);
+                    throw new RuntimeException(
+                            "Unknown or unsupported signature algorithm in PSS parameters: " + paramStr);
                 }
             }
 
@@ -747,14 +748,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Used to create the PSS algorithm params needed for RSA PSS signatures.
-    */
-    public static AlgorithmParameters createPSSAlgorithmParameters(String algName) throws IllegalArgumentException, NoSuchProviderException, InvalidParameterSpecException, NoSuchAlgorithmException {
+     */
+    public static AlgorithmParameters createPSSAlgorithmParameters(String algName) throws IllegalArgumentException,
+            NoSuchProviderException, InvalidParameterSpecException, NoSuchAlgorithmException {
         if (algName == null) {
             throw new IllegalArgumentException("Invalid Algorithm name input.");
         }
 
         if (!algName.contains("PSS")) {
-           throw new IllegalArgumentException("PSS Algorithm name not supported.");
+            throw new IllegalArgumentException("PSS Algorithm name not supported.");
         }
 
         AlgorithmParameters pssParams = null;
@@ -791,7 +793,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     private static final int SHA256_data[] = { 2, 16, 840, 1, 101, 3, 4, 2, 1 };
     private static final int SHA384_data[] = { 2, 16, 840, 1, 101, 3, 4, 2, 2 };
     private static final int SHA512_data[] = { 2, 16, 840, 1, 101, 3, 4, 2, 3 };
-    private static final int MGF1_data[] = { 1,2,840,113549,1,1,8 };
+    private static final int MGF1_data[] = { 1, 2, 840, 113549, 1, 1, 8 };
     /**
      * Algorithm ID for the MD2 Message Digest Algorthm, from RFC 1319.
      * OID = 1.2.840.113549.2.2
@@ -826,12 +828,9 @@ public class AlgorithmId implements Serializable, DerEncoder {
     private static final int DSA_OIW_data[] = { 1, 3, 14, 3, 2, 12 };
     private static final int DSA_PKIX_data[] = { 1, 2, 840, 10040, 4, 1 };
     private static final int RSA_data[] = { 1, 2, 5, 8, 1, 1 };
-    private static final int RSAEncryption_data[] =
-                                         { 1, 2, 840, 113549, 1, 1, 1 };
-    private static final int ANSI_X962_public_key_data[] =
-                                         { 1, 2, 840, 10045, 2, 1 };
-    private static final int ANSI_X962_sha1_with_ec_data[] =
-                                         { 1, 2, 840, 10045, 4, 1 };
+    private static final int RSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 1 };
+    private static final int ANSI_X962_public_key_data[] = { 1, 2, 840, 10045, 2, 1 };
+    private static final int ANSI_X962_sha1_with_ec_data[] = { 1, 2, 840, 10045, 4, 1 };
 
     public static final ObjectIdentifier ANSIX962_EC_Public_Key_oid = new ObjectIdentifier(ANSI_X962_public_key_data);
     public static final ObjectIdentifier ANSIX962_SHA1_With_EC_oid = new ObjectIdentifier(ANSI_X962_sha1_with_ec_data);
@@ -897,59 +896,35 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /*
      * COMMON SIGNATURE ALGORITHMS
      */
-    private static final int sha1WithEC_data[] =
-                                   { 1, 2, 840, 10045, 4, 1 };
-    private static final int sha224WithEC_data[] =
-                                   { 1, 2, 840, 10045, 4, 3, 1 };
-    private static final int sha256WithEC_data[] =
-                                   { 1, 2, 840, 10045, 4, 3, 2 };
-    private static final int sha384WithEC_data[] =
-                                   { 1, 2, 840, 10045, 4, 3, 3 };
-    private static final int sha512WithEC_data[] =
-                                   { 1, 2, 840, 10045, 4, 3, 4 };
-    private static final int md2WithRSAEncryption_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 2 };
-    private static final int md5WithRSAEncryption_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 4 };
-    private static final int sha1WithRSAEncryption_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 5 };
-    private static final int sha256WithRSAEncryption_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 11 };
-    private static final int sha384WithRSAEncryption_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 12 };
-    private static final int sha512WithRSAEncryption_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 13 };
-    private static final int sha1WithRSAEncryption_OIW_data[] =
-                                   { 1, 3, 14, 3, 2, 29 };
-    private static final int shaWithDSA_OIW_data[] =
-                                   { 1, 3, 14, 3, 2, 13 };
-    private static final int sha1WithDSA_OIW_data[] =
-                                   { 1, 3, 14, 3, 2, 27 };
-    private static final int dsaWithSHA1_PKIX_data[] =
-                                   { 1, 2, 840, 10040, 4, 3 };
+    private static final int sha1WithEC_data[] = { 1, 2, 840, 10045, 4, 1 };
+    private static final int sha224WithEC_data[] = { 1, 2, 840, 10045, 4, 3, 1 };
+    private static final int sha256WithEC_data[] = { 1, 2, 840, 10045, 4, 3, 2 };
+    private static final int sha384WithEC_data[] = { 1, 2, 840, 10045, 4, 3, 3 };
+    private static final int sha512WithEC_data[] = { 1, 2, 840, 10045, 4, 3, 4 };
+    private static final int md2WithRSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 2 };
+    private static final int md5WithRSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 4 };
+    private static final int sha1WithRSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 5 };
+    private static final int sha256WithRSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 11 };
+    private static final int sha384WithRSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 12 };
+    private static final int sha512WithRSAEncryption_data[] = { 1, 2, 840, 113549, 1, 1, 13 };
+    private static final int sha1WithRSAEncryption_OIW_data[] = { 1, 3, 14, 3, 2, 29 };
+    private static final int shaWithDSA_OIW_data[] = { 1, 3, 14, 3, 2, 13 };
+    private static final int sha1WithDSA_OIW_data[] = { 1, 3, 14, 3, 2, 27 };
+    private static final int dsaWithSHA1_PKIX_data[] = { 1, 2, 840, 10040, 4, 3 };
 
-    private static final int rsaPSS_data[] =
-                                   { 1, 2, 840, 113549, 1, 1, 10 };
+    private static final int rsaPSS_data[] = { 1, 2, 840, 113549, 1, 1, 10 };
 
+    public static final ObjectIdentifier sha1WithEC_oid = new ObjectIdentifier(sha1WithEC_data);
 
-    public static final ObjectIdentifier sha1WithEC_oid = new
-            ObjectIdentifier(sha1WithEC_data);
+    public static final ObjectIdentifier sha224WithEC_oid = new ObjectIdentifier(sha224WithEC_data);
 
-    public static final ObjectIdentifier sha224WithEC_oid = new
-            ObjectIdentifier(sha224WithEC_data);
+    public static final ObjectIdentifier sha256WithEC_oid = new ObjectIdentifier(sha256WithEC_data);
 
-    public static final ObjectIdentifier sha256WithEC_oid = new
-            ObjectIdentifier(sha256WithEC_data);
+    public static final ObjectIdentifier sha384WithEC_oid = new ObjectIdentifier(sha384WithEC_data);
 
-    public static final ObjectIdentifier sha384WithEC_oid = new
-            ObjectIdentifier(sha384WithEC_data);
+    public static final ObjectIdentifier sha512WithEC_oid = new ObjectIdentifier(sha512WithEC_data);
 
-    public static final ObjectIdentifier sha512WithEC_oid = new
-            ObjectIdentifier(sha512WithEC_data);
-
-
-    public static final ObjectIdentifier rsaPSS_oid = new
-            ObjectIdentifier(rsaPSS_data);
+    public static final ObjectIdentifier rsaPSS_oid = new ObjectIdentifier(rsaPSS_data);
 
     /**
      * Identifies a signing algorithm where an MD2 digest is encrypted
@@ -957,48 +932,45 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * signing algorithm is discouraged due to MD2 vulnerabilities.
      * OID = 1.2.840.113549.1.1.2
      */
-    public static final ObjectIdentifier md2WithRSAEncryption_oid = new
-            ObjectIdentifier(md2WithRSAEncryption_data);
+    public static final ObjectIdentifier md2WithRSAEncryption_oid = new ObjectIdentifier(md2WithRSAEncryption_data);
 
     /**
      * Identifies a signing algorithm where an MD5 digest is
      * encrypted using an RSA private key; defined in PKCS #1.
      * OID = 1.2.840.113549.1.1.4
      */
-    public static final ObjectIdentifier md5WithRSAEncryption_oid = new
-            ObjectIdentifier(md5WithRSAEncryption_data);
+    public static final ObjectIdentifier md5WithRSAEncryption_oid = new ObjectIdentifier(md5WithRSAEncryption_data);
 
     /**
      * The proper one for sha1/rsa
      */
-    public static final ObjectIdentifier sha1WithRSAEncryption_oid = new
-            ObjectIdentifier(sha1WithRSAEncryption_data);
+    public static final ObjectIdentifier sha1WithRSAEncryption_oid = new ObjectIdentifier(sha1WithRSAEncryption_data);
 
     /**
      * The proper one for sha256/rsa
      */
-    public static final ObjectIdentifier sha256WithRSAEncryption_oid = new
-            ObjectIdentifier(sha256WithRSAEncryption_data);
+    public static final ObjectIdentifier sha256WithRSAEncryption_oid = new ObjectIdentifier(
+            sha256WithRSAEncryption_data);
 
     /**
      * The proper one for sha384/rsa
      */
-    public static final ObjectIdentifier sha384WithRSAEncryption_oid = new
-            ObjectIdentifier(sha384WithRSAEncryption_data);
+    public static final ObjectIdentifier sha384WithRSAEncryption_oid = new ObjectIdentifier(
+            sha384WithRSAEncryption_data);
 
     /**
      * The proper one for sha512/rsa
      */
-    public static final ObjectIdentifier sha512WithRSAEncryption_oid = new
-            ObjectIdentifier(sha512WithRSAEncryption_data);
+    public static final ObjectIdentifier sha512WithRSAEncryption_oid = new ObjectIdentifier(
+            sha512WithRSAEncryption_data);
 
     /**
      * Identifies a signing algorithm where an SHA1 digest is
      * encrypted using an RSA private key; defined in NIST OIW.
      * OID = 1.3.14.3.2.29
      */
-    public static final ObjectIdentifier sha1WithRSAEncryption_OIW_oid = new
-            ObjectIdentifier(sha1WithRSAEncryption_OIW_data);
+    public static final ObjectIdentifier sha1WithRSAEncryption_OIW_oid = new ObjectIdentifier(
+            sha1WithRSAEncryption_OIW_data);
 
     /**
      * Identifies the FIPS 186 "Digital Signature Standard" (DSS), where a
@@ -1025,23 +997,21 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * Supported signing algorithms for a DSA key.
      */
-    public static final String[] DSA_SIGNING_ALGORITHMS = new String[]
-    { "SHA1withDSA" };
+    public static final String[] DSA_SIGNING_ALGORITHMS = new String[] { "SHA1withDSA" };
 
     /**
      * Supported signing algorithms for a RSA key.
      */
-    public static final String[] RSA_SIGNING_ALGORITHMS = new String[]
-    { "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA", "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS" };
+    public static final String[] RSA_SIGNING_ALGORITHMS = new String[] { "SHA256withRSA", "SHA384withRSA",
+            "SHA512withRSA", "SHA1withRSA", "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS" };
 
-    public static final String[] EC_SIGNING_ALGORITHMS = new String[]
-    { "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC" };
+    public static final String[] EC_SIGNING_ALGORITHMS = new String[] { "SHA256withEC", "SHA384withEC", "SHA512withEC",
+            "SHA1withEC" };
 
     /**
      * All supported signing algorithms.
      */
-    public static final String[] ALL_SIGNING_ALGORITHMS = new String[]
-    {
+    public static final String[] ALL_SIGNING_ALGORITHMS = new String[] {
             "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA",
             "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS",
             "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC"

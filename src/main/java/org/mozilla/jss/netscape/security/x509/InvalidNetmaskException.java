@@ -28,7 +28,8 @@ public class InvalidNetmaskException extends RuntimeException {
         super("Invalid netmask (" + netmask + ")", cause);
     }
 
-    public InvalidNetmaskException(String netmask, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InvalidNetmaskException(String netmask, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super("Invalid netmask (" + netmask + ")", cause, enableSuppression, writableStackTrace);
     }
 }

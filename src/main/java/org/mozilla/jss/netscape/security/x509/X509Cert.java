@@ -270,11 +270,11 @@ public class X509Cert implements Certificate, Serializable {
      * Other code must manage and use those cert chains.
      *
      * For now, you must walk the cert chain being used to verify any
-     * given cert.  Start at the root, which is a self-signed certificate;
-     * verify it using the key inside the certificate.  Then use that to
-     * verify the next certificate in the chain, issued by that CA.  In
+     * given cert. Start at the root, which is a self-signed certificate;
+     * verify it using the key inside the certificate. Then use that to
+     * verify the next certificate in the chain, issued by that CA. In
      * this manner, verify each certificate until you reach the particular
-     * certificate you wish to verify.  You should not use a certificate
+     * certificate you wish to verify. You should not use a certificate
      * if any of the verification operations for its certificate chain
      * were unsuccessful.
      * </em>
@@ -347,11 +347,9 @@ public class X509Cert implements Certificate, Serializable {
      *                or when any mandatory data was omitted
      * @exception SignatureException on signing failures
      */
-    public byte[]
-            encodeAndSign(
-                    BigInt serial,
-                    X500Signer issuer
-            ) throws IOException, SignatureException {
+    public byte[] encodeAndSign(
+            BigInt serial,
+            X500Signer issuer) throws IOException, SignatureException {
         rawCert = null;
 
         /*
@@ -384,7 +382,7 @@ public class X509Cert implements Certificate, Serializable {
      * copy of it).
      *
      * <P>
-     * <em><b>NOTE:</b>  If the private key is by itself capable of
+     * <em><b>NOTE:</b> If the private key is by itself capable of
      * creating signatures, this fact may not be recognized at this time.
      * Specifically, the case of DSS/DSA keys which get their algorithm
      * parameters from higher in the certificate chain is not supportable
@@ -404,7 +402,7 @@ public class X509Cert implements Certificate, Serializable {
      *                signature algorithm
      */
     public X500Signer getSigner(AlgorithmId algorithmId,
-                   PrivateKey privateKey)
+            PrivateKey privateKey)
             throws NoSuchAlgorithmException, InvalidKeyException {
         String algorithm;
         Signature sig;
@@ -421,9 +419,9 @@ public class X509Cert implements Certificate, Serializable {
         if (!pubkey.getAlgorithm().equals(algorithm)) {
 
             throw new InvalidKeyException("Private key algorithm " +
-                     algorithm +
-                     " incompatible with certificate " +
-                     pubkey.getAlgorithm());
+                    algorithm +
+                    " incompatible with certificate " +
+                    pubkey.getAlgorithm());
         }
         sig.initSign(privateKey);
         return new X500Signer(sig, subject);
@@ -435,9 +433,9 @@ public class X509Cert implements Certificate, Serializable {
      * contained in this certificate.
      *
      * <P>
-     * <em><b>NOTE:</b>  If the public key in this certificate is not by
+     * <em><b>NOTE:</b> If the public key in this certificate is not by
      * itself capable of verifying signatures, this may not be recognized
-     * at this time.  Specifically, the case of DSS/DSA keys which get
+     * at this time. Specifically, the case of DSS/DSA keys which get
      * their algorithm parameters from higher in the certificate chain
      * is not supportable without using an X509CertChain API, and there
      * is no current support for other sources of algorithm parameters.</em>

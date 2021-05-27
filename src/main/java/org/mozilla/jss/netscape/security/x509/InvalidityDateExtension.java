@@ -65,7 +65,7 @@ public class InvalidityDateExtension extends Extension
     static {
         try {
             OIDMap.addAttribute(InvalidityDateExtension.class.getName(),
-                                OID, NAME);
+                    OID, NAME);
         } catch (CertificateException e) {
         }
     }
@@ -155,7 +155,7 @@ public class InvalidityDateExtension extends Extension
             invalidityDate = (Date) obj;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:InvalidityDate.");
+                    " CertAttrSet:InvalidityDate.");
         }
     }
 
@@ -171,7 +171,7 @@ public class InvalidityDateExtension extends Extension
                 return invalidityDate;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:InvalidityDate.");
+                    " CertAttrSet:InvalidityDate.");
         }
     }
 
@@ -184,7 +184,7 @@ public class InvalidityDateExtension extends Extension
             invalidityDate = null;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:InvalidityDate.");
+                    " CertAttrSet:InvalidityDate.");
         }
     }
 
@@ -194,8 +194,8 @@ public class InvalidityDateExtension extends Extension
     @Override
     public String toString() {
         String s = super.toString() + "Invalidity Date: " +
-                   ((invalidityDate == null) ? "" : invalidityDate.toString())
-                   + "\n";
+                ((invalidityDate == null) ? "" : invalidityDate.toString())
+                + "\n";
         return (s);
     }
 

@@ -61,8 +61,7 @@ public class SubjectAlternativeNameExtension extends Extension
      * Identifier for this attribute, to be used with the
      * get, set, delete methods of Certificate, x509 type.
      */
-    public static final String IDENT =
-                         "x509.info.extensions.SubjectAlternativeName";
+    public static final String IDENT = "x509.info.extensions.SubjectAlternativeName";
     /**
      * Attribute names.
      */
@@ -128,7 +127,7 @@ public class SubjectAlternativeNameExtension extends Extension
 
         if (!(value instanceof byte[]))
             throw new IOException("SubjectAlternativeName: "
-                                  + "Illegal argument type");
+                    + "Illegal argument type");
 
         int len = Array.getLength(value);
         byte[] extValue = new byte[len];
@@ -151,7 +150,7 @@ public class SubjectAlternativeNameExtension extends Extension
         if (names == null)
             return "";
         String s = super.toString() + "SubjectAlternativeName [\n"
-                  + names.toString() + "]\n";
+                + names.toString() + "]\n";
         return (s);
     }
 
@@ -193,7 +192,7 @@ public class SubjectAlternativeNameExtension extends Extension
         if (name.equalsIgnoreCase(SUBJECT_NAME)) {
             if (!(obj instanceof GeneralNames)) {
                 throw new IOException("Attribute value should be of " +
-                                    "type GeneralNames.");
+                        "type GeneralNames.");
             }
             names = (GeneralNames) obj;
         } else {

@@ -140,7 +140,7 @@ public class PolicyMappingsExtension extends Extension
         DerValue val = new DerValue(extValue);
         if (val.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoding for " +
-                                  "PolicyMappingsExtension.");
+                    "PolicyMappingsExtension.");
         }
         maps = new Vector<CertificatePolicyMap>(1, 1);
         while (val.data.available() != 0) {
@@ -158,7 +158,7 @@ public class PolicyMappingsExtension extends Extension
         if (maps == null)
             return "";
         String s = super.toString() + "PolicyMappings [\n"
-                 + maps.toString() + "]\n";
+                + maps.toString() + "]\n";
 
         return (s);
     }
@@ -202,7 +202,7 @@ public class PolicyMappingsExtension extends Extension
         if (name.equalsIgnoreCase(MAP)) {
             if (!(obj instanceof Vector)) {
                 throw new IOException("Attribute value should be of" +
-                                    " type Vector.");
+                        " type Vector.");
             }
             maps = (Vector<CertificatePolicyMap>) obj;
         } else {

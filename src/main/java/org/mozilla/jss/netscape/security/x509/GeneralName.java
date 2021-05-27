@@ -147,7 +147,7 @@ public class GeneralName implements GeneralNameInterface {
 
         default:
             throw new IOException("Unrecognized GeneralName tag, ("
-                                  + tag + ")");
+                    + tag + ")");
         }
     }
 
@@ -192,23 +192,25 @@ public class GeneralName implements GeneralNameInterface {
         if (nameType == GeneralNameInterface.NAME_DIRECTORY) {
             // EXPLICIT tag, because Name is a CHOICE type
             out.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                             constructedForm, (byte) nameType), tmp);
+                    constructedForm, (byte) nameType), tmp);
         } else {
             // IMPLICIT tag, the default
             out.writeImplicit(DerValue.createTag(DerValue.TAG_CONTEXT,
-                             constructedForm, (byte) nameType), tmp);
+                    constructedForm, (byte) nameType), tmp);
         }
     }
 
     @Override
     public boolean validSingle() {
-        if (this == name) return false;  // can't happen, but just in case...
+        if (this == name)
+            return false; // can't happen, but just in case...
         return name.validSingle();
     }
 
     @Override
     public boolean validSubtree() {
-        if (this == name) return false;  // can't happen, but just in case...
+        if (this == name)
+            return false; // can't happen, but just in case...
         return name.validSubtree();
     }
 
@@ -218,7 +220,7 @@ public class GeneralName implements GeneralNameInterface {
      */
     public GeneralNameInterface unwrap() {
         if (this == name)
-            return null;  // can't happen, but just in case...
+            return null; // can't happen, but just in case...
 
         if (name instanceof GeneralName)
             return ((GeneralName) name).unwrap();

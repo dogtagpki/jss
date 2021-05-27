@@ -96,7 +96,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
     }
 
     public CRLReasonExtension(Boolean critical, RevocationReason reason)
-                throws IOException {
+            throws IOException {
         this.extensionId = PKIXExtensions.ReasonCode_Id;
         this.critical = critical.booleanValue();
         mReason = reason;

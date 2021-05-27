@@ -128,7 +128,7 @@ public class CertificateIssuerName implements CertAttrSet {
             this.dnName = (X500Name) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateIssuerName.");
+                    "CertAttrSet:CertificateIssuerName.");
         }
     }
 
@@ -141,7 +141,7 @@ public class CertificateIssuerName implements CertAttrSet {
             return (dnName);
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateIssuerName.");
+                    "CertAttrSet:CertificateIssuerName.");
         }
     }
 
@@ -154,7 +154,7 @@ public class CertificateIssuerName implements CertAttrSet {
             dnName = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateIssuerName.");
+                    "CertAttrSet:CertificateIssuerName.");
         }
     }
 

@@ -54,7 +54,7 @@ public class CRLExtensions extends Vector<Extension> {
             if (extClass == null) { // Unsupported extension
                 if (ext.isCritical()) {
                     throw new IOException("Unsupported CRITICAL extension: "
-                                          + ext.getExtensionId());
+                            + ext.getExtensionId());
                 } else {
                     map.put(ext.getExtensionId().toString(), ext);
                     addElement(ext);
@@ -71,14 +71,14 @@ public class CRLExtensions extends Vector<Extension> {
                 Array.setByte(value, i, extData[i]);
             }
             Object[] passed = new Object[] { Boolean.valueOf(ext.isCritical()),
-                                                        value };
+                    value };
             CertAttrSet crlExt = (CertAttrSet) cons.newInstance(passed);
             map.put(crlExt.getName(), (Extension) crlExt);
             addElement((Extension) crlExt);
 
         } catch (InvocationTargetException invk) {
             throw new X509ExtensionException(
-                                 invk.getTargetException().getMessage());
+                    invk.getTargetException().getMessage());
 
         } catch (Exception e) {
             throw new X509ExtensionException(e.toString());
@@ -170,7 +170,7 @@ public class CRLExtensions extends Vector<Extension> {
 
             if (isExplicit) {
                 tmp.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                                             true, (byte) 0), seq);
+                        true, (byte) 0), seq);
                 out.write(tmp.toByteArray());
             } else {
                 out.write(seq.toByteArray());
@@ -200,7 +200,7 @@ public class CRLExtensions extends Vector<Extension> {
         Extension ext = map.get(name);
         if (ext == null)
             throw new X509ExtensionException("No extension found with name: "
-                                             + alias);
+                    + alias);
         return ext;
     }
 

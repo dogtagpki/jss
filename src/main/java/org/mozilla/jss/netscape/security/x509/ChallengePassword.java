@@ -117,7 +117,7 @@ public class ChallengePassword implements CertAttrSet {
             return cpw;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet: ChallengePassword");
+                    "CertAttrSet: ChallengePassword");
         }
     }
 

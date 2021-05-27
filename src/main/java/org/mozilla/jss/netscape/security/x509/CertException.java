@@ -162,6 +162,7 @@ public class CertException extends SecurityException {
     public String getMessage() {
         return getVerfDescription()
                 + ((moreData != null)
-                        ? ("\n  (" + moreData + ")") : "");
+                        ? ("\n  (" + moreData + ")")
+                        : "");
     }
 }

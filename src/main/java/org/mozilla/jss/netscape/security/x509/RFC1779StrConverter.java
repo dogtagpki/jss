@@ -53,7 +53,7 @@ public class RFC1779StrConverter extends LdapV3DNStrConverter {
      *            not in the map).
      */
     public RFC1779StrConverter(X500NameAttrMap attributeMap,
-                  boolean doAcceptUnknownOids) {
+            boolean doAcceptUnknownOids) {
         super(attributeMap, doAcceptUnknownOids);
     }
 

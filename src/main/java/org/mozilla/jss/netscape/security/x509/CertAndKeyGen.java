@@ -127,7 +127,7 @@ public final class CertAndKeyGen {
 
         } else {
             throw new InvalidKeyException("public key " + publicKey +
-                      " not an X509Key.");
+                    " not an X509Key.");
         }
         privateKey = pair.getPrivate();
     }
@@ -214,23 +214,22 @@ public final class CertAndKeyGen {
             lastDate = new Date();
             lastDate.setTime(lastDate.getTime() + validity * 1000);
 
-            CertificateValidity interval =
-                                   new CertificateValidity(firstDate, lastDate);
+            CertificateValidity interval = new CertificateValidity(firstDate, lastDate);
 
             X509CertInfo info = new X509CertInfo();
             // Add all mandatory attributes
             info.set(X509CertInfo.VERSION,
-                     new CertificateVersion(CertificateVersion.V1));
+                    new CertificateVersion(CertificateVersion.V1));
             info.set(X509CertInfo.SERIAL_NUMBER,
                     new CertificateSerialNumber((int) (firstDate.getTime() / 1000)));
             AlgorithmId algID = issuer.getAlgorithmId();
             info.set(X509CertInfo.ALGORITHM_ID,
-                     new CertificateAlgorithmId(algID));
+                    new CertificateAlgorithmId(algID));
             info.set(X509CertInfo.SUBJECT, new CertificateSubjectName(myname));
             info.set(X509CertInfo.KEY, new CertificateX509Key(publicKey));
             info.set(X509CertInfo.VALIDITY, interval);
             info.set(X509CertInfo.ISSUER,
-                     new CertificateIssuerName(issuer.getSigner()));
+                    new CertificateIssuerName(issuer.getSigner()));
 
             cert = new X509CertImpl(info);
             cert.sign(privateKey, algID.getName());
@@ -239,7 +238,7 @@ public final class CertAndKeyGen {
 
         } catch (IOException e) {
             throw new CertificateEncodingException("getSelfCert: " +
-                                                    e.getMessage());
+                    e.getMessage());
         }
     }
 

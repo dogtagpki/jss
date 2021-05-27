@@ -213,11 +213,11 @@ public class X509Key implements PublicKey {
         } catch (InstantiationException e) {
         } catch (IllegalAccessException e) {
             throw new IOException("IllegalAccessException : " +
-                      e.getMessage(), e);
+                    e.getMessage(), e);
         } catch (NoSuchMethodException e) {
         } catch (InvocationTargetException e) {
             throw new IOException("InvocationTargetException : " +
-                      e.getMessage(), e);
+                    e.getMessage(), e);
         }
 
         X509Key result = new X509Key();
@@ -294,7 +294,7 @@ public class X509Key implements PublicKey {
 
             } catch (IOException e) {
                 throw new InvalidKeyException("IOException : " +
-                           e.getMessage());
+                        e.getMessage());
             }
         }
         return copyEncodedKey(encodedKey);
@@ -305,8 +305,8 @@ public class X509Key implements PublicKey {
      */
     @Override
     public String toString() {
-        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
-                new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
+        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp = new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(
+                " ", 20);
         String keybits = pp.toHexString(key);
 
         return "algorithm = " + algid.toString()
@@ -352,7 +352,7 @@ public class X509Key implements PublicKey {
         } catch (IOException e) {
             // e.printStackTrace ();
             throw new InvalidKeyException("IOException : " +
-                      e.getMessage());
+                    e.getMessage());
         }
     }
 

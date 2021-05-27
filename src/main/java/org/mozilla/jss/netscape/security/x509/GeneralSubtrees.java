@@ -72,7 +72,7 @@ public class GeneralSubtrees implements Serializable {
     @Override
     public String toString() {
         String s = "   GeneralSubtrees:\n" + trees.toString()
-                   + "\n";
+                + "\n";
 
         return (s);
     }

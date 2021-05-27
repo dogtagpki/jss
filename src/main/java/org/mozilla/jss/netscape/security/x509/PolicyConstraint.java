@@ -92,13 +92,12 @@ public class PolicyConstraint {
      */
     @Override
     public String toString() {
-        String s = ((set != null) ?
-                "PolicyConstraint: [\n"
-                        + "  PolicySet:[" + set.toString() + "]\n"
-                        + "  Require:" + require + "\n"
-                        + "  Inhibit:" + inhibit + "\n"
-                        + "]\n" :
-                "PolicyConstraint: [\n"
+        String s = ((set != null) ? "PolicyConstraint: [\n"
+                + "  PolicySet:[" + set.toString() + "]\n"
+                + "  Require:" + require + "\n"
+                + "  Inhibit:" + inhibit + "\n"
+                + "]\n"
+                : "PolicyConstraint: [\n"
                         + "  PolicySet:[null]\n"
                         + "  Require:" + require + "\n"
                         + "  Inhibit:" + inhibit + "\n"
@@ -118,19 +117,19 @@ public class PolicyConstraint {
             DerOutputStream tmp = new DerOutputStream();
             set.encode(tmp);
             tagged.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                                            true, TAG_SET), tmp);
+                    true, TAG_SET), tmp);
         }
         if (require != -1) {
             DerOutputStream tmp = new DerOutputStream();
             tmp.putInteger(new BigInt(require));
             tagged.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                                            true, TAG_REQUIRE), tmp);
+                    true, TAG_REQUIRE), tmp);
         }
         if (inhibit != -1) {
             DerOutputStream tmp = new DerOutputStream();
             tmp.putInteger(new BigInt(inhibit));
             tagged.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                                            true, TAG_INHIBIT), tmp);
+                    true, TAG_INHIBIT), tmp);
         }
         out.write(DerValue.tag_Sequence, tagged);
     }

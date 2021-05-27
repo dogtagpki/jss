@@ -106,7 +106,7 @@ public class SubjectDirAttributesExtension extends Extension
 
         if (derVal.data.available() == 0) {
             throw new IOException(NAME + " No data available in "
-                                   + "passed DER encoded value.");
+                    + "passed DER encoded value.");
         }
 
         // Decode all the Attributes
@@ -141,7 +141,7 @@ public class SubjectDirAttributesExtension extends Extension
 
         if ((list == null) || (list.length == 0)) {
             throw new IOException("No data available in "
-                                   + "passed Attribute List.");
+                    + "passed Attribute List.");
         }
 
         // add the Attributes
@@ -183,7 +183,7 @@ public class SubjectDirAttributesExtension extends Extension
 
         if ((list == null) || (list.length == 0)) {
             throw new IOException("No data available in "
-                                   + "passed Attribute List.");
+                    + "passed Attribute List.");
         }
 
         // add the Attributes

@@ -59,34 +59,29 @@ public class HoldInstructionExtension extends Extension
      */
     public static final String OID = "2.5.29.23";
 
-    public static final String NONE_HOLD_INSTR_OID_STR =
-            "1.2.840.10040.2.1";
-    public static final ObjectIdentifier NONE_HOLD_INSTR_OID =
-            new ObjectIdentifier(NONE_HOLD_INSTR_OID_STR);
+    public static final String NONE_HOLD_INSTR_OID_STR = "1.2.840.10040.2.1";
+    public static final ObjectIdentifier NONE_HOLD_INSTR_OID = new ObjectIdentifier(NONE_HOLD_INSTR_OID_STR);
 
-    public static final String CALL_ISSUER_HOLD_INSTR_OID_STR =
-            "1.2.840.10040.2.2";
-    public static final ObjectIdentifier CALL_ISSUER_HOLD_INSTR_OID =
-            new ObjectIdentifier(CALL_ISSUER_HOLD_INSTR_OID_STR);
+    public static final String CALL_ISSUER_HOLD_INSTR_OID_STR = "1.2.840.10040.2.2";
+    public static final ObjectIdentifier CALL_ISSUER_HOLD_INSTR_OID = new ObjectIdentifier(
+            CALL_ISSUER_HOLD_INSTR_OID_STR);
 
-    public static final String REJECT_HOLD_INSTR_OID_STR =
-            "1.2.840.10040.2.3";
-    public static final ObjectIdentifier REJECT_HOLD_INSTR_OID =
-            new ObjectIdentifier(REJECT_HOLD_INSTR_OID_STR);
+    public static final String REJECT_HOLD_INSTR_OID_STR = "1.2.840.10040.2.3";
+    public static final ObjectIdentifier REJECT_HOLD_INSTR_OID = new ObjectIdentifier(REJECT_HOLD_INSTR_OID_STR);
 
     private ObjectIdentifier holdInstructionCodeOIDs[] = { NONE_HOLD_INSTR_OID,
-                                                          CALL_ISSUER_HOLD_INSTR_OID,
-                                                          REJECT_HOLD_INSTR_OID };
+            CALL_ISSUER_HOLD_INSTR_OID,
+            REJECT_HOLD_INSTR_OID };
     private ObjectIdentifier holdInstructionCodeOID = null;
 
     private String holdInstructionDescription[] = { "None",
-                                                   "Call Issuer",
-                                                   "Reject" };
+            "Call Issuer",
+            "Reject" };
 
     static {
         try {
             OIDMap.addAttribute(HoldInstructionExtension.class.getName(),
-                                OID, NAME);
+                    OID, NAME);
         } catch (CertificateException e) {
         }
     }
@@ -273,7 +268,7 @@ public class HoldInstructionExtension extends Extension
             holdInstructionCodeOID = (ObjectIdentifier) obj;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:HoldInstructionCode.");
+                    " CertAttrSet:HoldInstructionCode.");
         }
     }
 
@@ -286,7 +281,7 @@ public class HoldInstructionExtension extends Extension
             return holdInstructionCodeOID;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:HoldInstructionCode.");
+                    " CertAttrSet:HoldInstructionCode.");
         }
     }
 
@@ -299,7 +294,7 @@ public class HoldInstructionExtension extends Extension
             holdInstructionCodeOID = null;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:HoldInstructionCode.");
+                    " CertAttrSet:HoldInstructionCode.");
         }
     }
 
@@ -309,7 +304,7 @@ public class HoldInstructionExtension extends Extension
     @Override
     public String toString() {
         String s = super.toString() + "Hold Instruction Code: " +
-                   getHoldInstructionDescription(holdInstructionCodeOID) + "\n";
+                getHoldInstructionDescription(holdInstructionCodeOID) + "\n";
         return (s);
     }
 

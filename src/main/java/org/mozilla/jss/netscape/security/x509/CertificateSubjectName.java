@@ -157,7 +157,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
             this.dnName = (X500Name) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateSubjectName.");
+                    "CertAttrSet:CertificateSubjectName.");
         }
     }
 
@@ -170,7 +170,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
             return (dnName);
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateSubjectName.");
+                    "CertAttrSet:CertificateSubjectName.");
         }
     }
 
@@ -193,7 +193,7 @@ public class CertificateSubjectName implements CertAttrSet, Serializable {
             dnName = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateSubjectName.");
+                    "CertAttrSet:CertificateSubjectName.");
         }
     }
 
