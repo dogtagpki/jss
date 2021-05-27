@@ -11,7 +11,7 @@ package org.mozilla.jss.util;
  */
 public class Assert {
     /**
-     * Assert that a condition is true.  If it is not true, abort by
+     * Assert that a condition is true. If it is not true, abort by
      * throwing an AssertionException.
      *
      * @param cond The condition that is being tested.
@@ -19,9 +19,9 @@ public class Assert {
      */
     @Deprecated
     public static void _assert(boolean cond) {
-        if(!cond) {
+        if (!cond) {
             throw new org.mozilla.jss.util.AssertionException(
-                "assertion failure!");
+                    "assertion failure!");
         }
     }
 
@@ -34,11 +34,11 @@ public class Assert {
      * @deprecated The assert keyword should be used instead.
      */
     @Deprecated
-	public static void _assert(boolean cond, String msg) {
-		if(!cond) {
-			throw new org.mozilla.jss.util.AssertionException(msg);
-		}
-	}
+    public static void _assert(boolean cond, String msg) {
+        if (!cond) {
+            throw new org.mozilla.jss.util.AssertionException(msg);
+        }
+    }
 
     /**
      * Throw an AssertionException if this statement is reached.

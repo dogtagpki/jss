@@ -6,7 +6,6 @@
 
 /* Library identity and versioning */
 
-
 #if defined(DEBUG)
 #define _DEBUG_STRING " (debug)"
 #else
@@ -20,6 +19,6 @@
  * must not end in a '$' to prevent rcs keyword substitution.
  */
 const char __jss_base_rcsid[] = "$Header: JSS " JSS_VERSION _DEBUG_STRING
-        "  " __DATE__ " " __TIME__ " $";
+"  " __DATE__ " " __TIME__ " $";
 const char __jss_base_sccsid[] = "@(#)JSS " JSS_VERSION _DEBUG_STRING
-        "  " __DATE__ " " __TIME__;
+"  " __DATE__ " " __TIME__;

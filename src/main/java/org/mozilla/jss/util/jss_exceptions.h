@@ -3,12 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* These are class names suitable for passing to JSS_nativeThrow or
-** JSS_nativeThrowMsg. They are the fully qualified class name of the 
-** exception, separated by slashes instead of periods.
-*/
+ ** JSS_nativeThrowMsg. They are the fully qualified class name of the
+ ** exception, separated by slashes instead of periods.
+ */
 #ifndef JSS_EXCEPTIONS_H
 #define JSS_EXCEPTIONS_H
-
 
 PR_BEGIN_EXTERN_C
 

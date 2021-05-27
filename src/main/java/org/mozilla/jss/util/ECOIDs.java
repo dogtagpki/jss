@@ -4,9 +4,11 @@ import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 
 public class ECOIDs {
     // OID Base Arcs
-    public static final OBJECT_IDENTIFIER ANSI_X962_PRIME_CURVE = new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045, 3, 1 } );
-    public static final OBJECT_IDENTIFIER ANSI_X962_BINARY_CURVE = new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045, 3, 0 } );
-    public static final OBJECT_IDENTIFIER SECG_EC_CURVE = new OBJECT_IDENTIFIER( new long[] { 1, 3, 132, 0 } );
+    public static final OBJECT_IDENTIFIER ANSI_X962_PRIME_CURVE = new OBJECT_IDENTIFIER(
+            new long[] { 1, 2, 840, 10045, 3, 1 });
+    public static final OBJECT_IDENTIFIER ANSI_X962_BINARY_CURVE = new OBJECT_IDENTIFIER(
+            new long[] { 1, 2, 840, 10045, 3, 0 });
+    public static final OBJECT_IDENTIFIER SECG_EC_CURVE = new OBJECT_IDENTIFIER(new long[] { 1, 3, 132, 0 });
 
     // ANSI Prime curves
     public static final OBJECT_IDENTIFIER CURVE_ANSI_P192V1 = ANSI_X962_PRIME_CURVE.subBranch(1);

@@ -9,8 +9,7 @@ package org.mozilla.jss.util;
  */
 public class Tunnel {
 
-    protected static byte[]
-    GetPasswordByteCopy(Password pw) {
+    protected static byte[] GetPasswordByteCopy(Password pw) {
         return pw.getByteCopy();
     }
 }

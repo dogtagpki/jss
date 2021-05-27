@@ -7,12 +7,12 @@
 PR_BEGIN_EXTERN_C
 
 /*
-** JNI uses strings to identify Java classes, fields, and methods. Rather
-** than put lots of string constants in our JNI code, we define them once
-** here.  This has two benefits: it reduces the probability of typos
-** (we only have to type the names once), and it allows us to more
-** easily change these identifiers.
-*/
+ ** JNI uses strings to identify Java classes, fields, and methods. Rather
+ ** than put lots of string constants in our JNI code, we define them once
+ ** here.  This has two benefits: it reduces the probability of typos
+ ** (we only have to type the names once), and it allows us to more
+ ** easily change these identifiers.
+ */
 
 #define PLAIN_CONSTRUCTOR "<init>"
 #define PLAIN_CONSTRUCTOR_SIG "()V"
@@ -280,7 +280,7 @@ PR_BEGIN_EXTERN_C
 /*
  * CryptoManager
  *
-*/
+ */
 
 #define CRYPTO_MANAGER_NAME "org/mozilla/jss/CryptoManager"
 #define GET_OCSP_POLICY_NAME "getOCSPPolicy"
@@ -340,7 +340,6 @@ PR_BEGIN_EXTERN_C
 #define SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_SIG \
     "(ILorg/mozilla/jss/pkcs11/PK11Cert;I)V"
 
-
 /*
  * SymKeyProxy
  */
@@ -361,7 +360,6 @@ PR_BEGIN_EXTERN_C
 #define TOKEN_CBINFO_CONSTRUCTOR_NAME "<init>"
 #define TOKEN_CBINFO_CONSTRUCTOR_SIG "(Ljava/lang/String;)V"
 
-
 /*
  * Vector
  */
@@ -372,7 +370,6 @@ PR_BEGIN_EXTERN_C
  * X509Certificate
  */
 #define X509_CERT_CLASS "org/mozilla/jss/crypto/X509Certificate"
-
 
 /*
  * SSLVersionRange
@@ -419,7 +416,6 @@ PR_BEGIN_EXTERN_C
  */
 #define STATIC_VOID_POINTER_CLASS_NAME "org/mozilla/jss/util/StaticVoidPointer"
 #define STATIC_VOID_POINTER_CONSTRUCTOR_SIG "([B)V"
-
 
 /*
  * PKCS#11 CKAttribute
