@@ -38,7 +38,8 @@ public class PKCS9Attributes {
     /**
      * Attributes in this set indexed by OID.
      */
-    private final Hashtable<ObjectIdentifier, PKCS9Attribute> attributes = new Hashtable<ObjectIdentifier, PKCS9Attribute>(3);
+    private final Hashtable<ObjectIdentifier, PKCS9Attribute> attributes = new Hashtable<ObjectIdentifier, PKCS9Attribute>(
+            3);
 
     /**
      * The keys of this hashtable are the OIDs of permitted attributes.
@@ -70,14 +71,13 @@ public class PKCS9Attributes {
      * @see PKCS9Attribute
      */
     public PKCS9Attributes(ObjectIdentifier[] permittedAttributes,
-               DerInputStream in) throws IOException {
+            DerInputStream in) throws IOException {
         if (permittedAttributes != null) {
-            this.permittedAttributes =
-                    new Hashtable<ObjectIdentifier, ObjectIdentifier>(permittedAttributes.length);
+            this.permittedAttributes = new Hashtable<ObjectIdentifier, ObjectIdentifier>(permittedAttributes.length);
 
             for (int i = 0; i < permittedAttributes.length; i++)
                 this.permittedAttributes.put(permittedAttributes[i],
-                         permittedAttributes[i]);
+                        permittedAttributes[i]);
         } else {
             this.permittedAttributes = null;
         }

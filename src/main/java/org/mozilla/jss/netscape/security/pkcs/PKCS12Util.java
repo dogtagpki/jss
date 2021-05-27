@@ -184,7 +184,8 @@ public class PKCS12Util {
         InternalCertificate icert = (InternalCertificate) cert;
 
         String[] flags = trustFlags.split(",", -1); // don't remove empty string
-        if (flags.length < 3) throw new Exception("Invalid trust flags: " + trustFlags);
+        if (flags.length < 3)
+            throw new Exception("Invalid trust flags: " + trustFlags);
 
         icert.setSSLTrust(PKCS12.decodeFlags(flags[0]));
         icert.setEmailTrust(PKCS12.decodeFlags(flags[1]));
@@ -198,14 +199,14 @@ public class PKCS12Util {
      * different scenarios:
      *
      * - The private key could be in encrypted byte[] form (e.g.
-     *   when we have merely loaded a PKCS #12 file for inspection
-     *   or e.g. to delete a certificate and its associated key).
-     *   In this case we simply re-use this encrypted private key
-     *   info byte[].
+     * when we have merely loaded a PKCS #12 file for inspection
+     * or e.g. to delete a certificate and its associated key).
+     * In this case we simply re-use this encrypted private key
+     * info byte[].
      *
-     * - The private key could be a be an NSS PrivateKey handle.  In
-     *   this case we must export the PrivateKey from the token to
-     *   obtain the EncryptedPrivateKeyInfo.
+     * - The private key could be a be an NSS PrivateKey handle. In
+     * this case we must export the PrivateKey from the token to
+     * obtain the EncryptedPrivateKeyInfo.
      *
      * The common final step is to add the encrypted private key
      * data to a "Shrouded Key Bag" to the PKCS #12 object.
@@ -633,7 +634,7 @@ public class PKCS12Util {
 
     /**
      * Loads key bags (for IMPORT and other operations on existing
-     * PKCS #12 files).  Does not decrypt EncryptedPrivateKeyInfo
+     * PKCS #12 files). Does not decrypt EncryptedPrivateKeyInfo
      * values, but stores them in PKCS12KeyInfo objects for possible
      * later use.
      */
@@ -783,7 +784,8 @@ public class PKCS12Util {
                 SafeBag bag = (SafeBag) contents.elementAt(j);
                 OBJECT_IDENTIFIER oid = bag.getBagType();
 
-                if (!oid.equals(SafeBag.PKCS8_SHROUDED_KEY_BAG)) continue;
+                if (!oid.equals(SafeBag.PKCS8_SHROUDED_KEY_BAG))
+                    continue;
 
                 logger.debug(" - Private key:");
                 PKCS12KeyInfo keyInfo = getKeyInfo(bag, password);
@@ -807,7 +809,8 @@ public class PKCS12Util {
                 SafeBag bag = (SafeBag) contents.elementAt(j);
                 OBJECT_IDENTIFIER oid = bag.getBagType();
 
-                if (!oid.equals(SafeBag.CERT_BAG)) continue;
+                if (!oid.equals(SafeBag.CERT_BAG))
+                    continue;
 
                 logger.debug(" - Certificate:");
                 PKCS12CertInfo certInfo = getCertInfo(bag);
@@ -863,9 +866,10 @@ public class PKCS12Util {
             Principal certSubjectDN = certInfo.getCert().getSubjectDN();
 
             try {
-                LdapName certSubjdn  = new LdapName(certSubjectDN.toString());
+                LdapName certSubjdn = new LdapName(certSubjectDN.toString());
                 LdapName subjDn = new LdapName(subjectDN);
-                if(certSubjdn.equals(subjDn)) return certInfo;
+                if (certSubjdn.equals(subjDn))
+                    return certInfo;
             } catch (InvalidNameException e) {
                 return null;
             }
@@ -889,7 +893,7 @@ public class PKCS12Util {
 
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken token = cm.getInternalKeyStorageToken();
-        PK11Store store = (PK11Store)token.getCryptoStore();
+        PK11Store store = (PK11Store) token.getCryptoStore();
 
         X509CertImpl certImpl = certInfo.getCert();
         X509Certificate cert = cm.importCACertPackage(certImpl.getEncoded());
@@ -900,20 +904,20 @@ public class PKCS12Util {
         byte[] epkiBytes = keyInfo.getEncryptedPrivateKeyInfoBytes();
         if (epkiBytes == null) {
             logger.debug(
-                "No EncryptedPrivateKeyInfo for key '"
-                + keyInfo.getFriendlyName() + "'; skipping key");
+                    "No EncryptedPrivateKeyInfo for key '"
+                            + keyInfo.getFriendlyName() + "'; skipping key");
         }
         try {
             // first true without BMPString-encoding the passphrase.
             store.importEncryptedPrivateKeyInfo(
-                null, password, nickname, publicKey, epkiBytes);
+                    null, password, nickname, publicKey, epkiBytes);
         } catch (Exception e) {
             // if that failed, try again with BMPString-encoded
             // passphrase.  This is required for PKCS #12 PBE
             // schemes and for PKCS #12 files using PBES2 generated
             // by NSS < 3.31
             store.importEncryptedPrivateKeyInfo(
-                new PasswordConverter(), password, nickname, publicKey, epkiBytes);
+                    new PasswordConverter(), password, nickname, publicKey, epkiBytes);
         }
 
         // delete the cert again (it will be imported again later
@@ -931,8 +935,7 @@ public class PKCS12Util {
     public void storeCertIntoNSS(
             PKCS12 pkcs12, Password password,
             PKCS12CertInfo certInfo, boolean overwrite)
-        throws Exception
-    {
+            throws Exception {
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken ct = cm.getInternalKeyStorageToken();
         CryptoStore store = ct.getCryptoStore();
@@ -971,7 +974,8 @@ public class PKCS12Util {
         }
     }
 
-    public void storeCertIntoNSS(PKCS12 pkcs12, Password password, String nickname, boolean overwrite) throws Exception {
+    public void storeCertIntoNSS(PKCS12 pkcs12, Password password, String nickname, boolean overwrite)
+            throws Exception {
         Collection<PKCS12CertInfo> certInfos = pkcs12.getCertInfosByFriendlyName(nickname);
         for (PKCS12CertInfo certInfo : certInfos) {
             storeCertIntoNSS(pkcs12, password, certInfo, overwrite);
@@ -980,8 +984,7 @@ public class PKCS12Util {
 
     public void storeIntoNSS(
             PKCS12 pkcs12, Password password, boolean overwrite)
-        throws Exception
-    {
+            throws Exception {
         logger.info("Storing data into NSS database");
 
         for (PKCS12CertInfo certInfo : pkcs12.getCertInfos()) {

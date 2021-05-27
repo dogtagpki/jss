@@ -180,8 +180,7 @@ public class PKCS7 {
                         " not supported.");
             }
         } catch (IOException e) {
-            ParsingException pe =
-                    new ParsingException("IOException: " + e.getMessage());
+            ParsingException pe = new ParsingException("IOException: " + e.getMessage());
             pe.fillInStackTrace();
             throw pe;
         }
@@ -235,9 +234,8 @@ public class PKCS7 {
             }
 
         } catch (IOException e) {
-            ParsingException pe =
-                    new ParsingException("Error parsing digest AlgorithmId IDs: " +
-                            e.getMessage());
+            ParsingException pe = new ParsingException("Error parsing digest AlgorithmId IDs: " +
+                    e.getMessage());
             pe.fillInStackTrace();
             throw pe;
         }
@@ -256,13 +254,11 @@ public class PKCS7 {
 
             for (int i = 0; i < len; i++) {
                 try {
-                    X509Certificate cert = new
-                                           X509CertImpl(certificateVals[i]);
+                    X509Certificate cert = new X509CertImpl(certificateVals[i]);
                     certificates[i] = cert;
                 } catch (CertificateException e) {
-                    ParsingException pe =
-                            new ParsingException("CertificateException: " +
-                                    e.getMessage());
+                    ParsingException pe = new ParsingException("CertificateException: " +
+                            e.getMessage());
                     pe.fillInStackTrace();
                     throw pe;
                 }
@@ -346,7 +342,8 @@ public class PKCS7 {
         } catch (ClassCastException e) {
             throw new IOException(
                     "Certificates in PKCS7 must be of class " +
-                    "org.mozilla.jss.netscape.security.X509CertImpl: " + e.getMessage(), e);
+                            "org.mozilla.jss.netscape.security.X509CertImpl: " + e.getMessage(),
+                    e);
         }
 
         // Add the certificate set (tagged with [0] IMPLICIT)
@@ -364,11 +361,11 @@ public class PKCS7 {
 
         // making it a signed data block
         DerValue signedDataSeq = new DerValue(DerValue.tag_Sequence,
-                          signedData.toByteArray());
+                signedData.toByteArray());
 
         // making it a content info sequence
         ContentInfo block = new ContentInfo(ContentInfo.SIGNED_DATA_OID,
-                        signedDataSeq);
+                signedDataSeq);
 
         // writing out the contentInfo sequence
         block.encode(out);

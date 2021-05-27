@@ -24,10 +24,10 @@ import org.mozilla.jss.crypto.PrivateKey;
  *
  * It does not handle raw key material (but it used to).
  *
- * FIXME: A clear refactoring opportunity exists.  The 'privateKey'
+ * FIXME: A clear refactoring opportunity exists. The 'privateKey'
  * field (and associated constructor) is only used during export,
  * and the 'epkiBytes' field (and associated constructor) is only
- * used during import.  Therefore this should be two different
+ * used during import. Therefore this should be two different
  * types.
  */
 public class PKCS12KeyInfo {
@@ -41,14 +41,15 @@ public class PKCS12KeyInfo {
     }
 
     /**
-     * Construct with a PrivateKey.  This constructor is used
+     * Construct with a PrivateKey. This constructor is used
      * for moving the PrivateKey handle around during export.
      */
     public PKCS12KeyInfo(PrivateKey k) {
         this.privateKey = k;
     }
 
-    /** Construct with a (serialised) EncrypedPrivateKeyInfo.  This
+    /**
+     * Construct with a (serialised) EncrypedPrivateKeyInfo. This
      * constructor is used for moving the EPKI data around during
      * import.
      */
