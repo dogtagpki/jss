@@ -26,7 +26,7 @@ public class DigestedData implements ASN1Value {
     private AlgorithmIdentifier digestAlgorithm;
     private ContentInfo contentInfo;
     private OCTET_STRING digest;
-    private SEQUENCE sequence;  // for DER encoding
+    private SEQUENCE sequence; // for DER encoding
 
     public INTEGER getVersion() {
         return version;
@@ -49,12 +49,11 @@ public class DigestedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public DigestedData(INTEGER version, AlgorithmIdentifier digestAlgorithm,
-                ContentInfo contentInfo, OCTET_STRING digest)
-    {
-        if( version==null || digestAlgorithm==null || contentInfo==null ||
-                digest==null ) {
+            ContentInfo contentInfo, OCTET_STRING digest) {
+        if (version == null || digestAlgorithm == null || contentInfo == null ||
+                digest == null) {
             throw new IllegalArgumentException("DigestedData constructor"
-                +" parameter is null");
+                    + " parameter is null");
         }
 
         this.version = version;
@@ -101,10 +100,10 @@ public class DigestedData implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( ContentInfo.getTemplate() );
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(ContentInfo.getTemplate());
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -125,10 +124,10 @@ public class DigestedData implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new DigestedData(
-                            (INTEGER) seq.elementAt(0),
-                            (AlgorithmIdentifier) seq.elementAt(1),
-                            (ContentInfo) seq.elementAt(2),
-                            (OCTET_STRING) seq.elementAt(3) );
+                    (INTEGER) seq.elementAt(0),
+                    (AlgorithmIdentifier) seq.elementAt(1),
+                    (ContentInfo) seq.elementAt(2),
+                    (OCTET_STRING) seq.elementAt(3));
         }
     }
 }
