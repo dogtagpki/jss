@@ -127,9 +127,9 @@ public class DerOutputStream
     /*
      * PRIMITIVES -- these are "universal" ASN.1 simple types.
      *
-     * 	BOOLEAN, INTEGER, BIT STRING, OCTET STRING, NULL
-     *	OBJECT IDENTIFIER, SEQUENCE(OF), SET(OF)
-     *	PrintableString, T61String, IA5String, UTCTime
+     *     BOOLEAN, INTEGER, BIT STRING, OCTET STRING, NULL
+     *    OBJECT IDENTIFIER, SEQUENCE(OF), SET(OF)
+     *    PrintableString, T61String, IA5String, UTCTime
      */
 
     /**
@@ -512,9 +512,9 @@ public class DerOutputStream
     //     */
     //    void putT61String(String s) throws IOException
     //    {
-    //	// XXX IMPLEMENT ME
+    //    // XXX IMPLEMENT ME
     //
-    //	throw new IOException("DerOutputStream.putT61String() NYI");
+    //    throw new IOException("DerOutputStream.putT61String() NYI");
     //    }
 
     //    /*
@@ -522,9 +522,9 @@ public class DerOutputStream
     //     */
     //    void putUniversalString(String s) throws IOException
     //    {
-    //	// XXX IMPLEMENT ME
+    //    // XXX IMPLEMENT ME
     //
-    //	throw new IOException("DerOutputStream.putUniversalString() NYI");
+    //    throw new IOException("DerOutputStream.putUniversalString() NYI");
     //    }
 
     /**

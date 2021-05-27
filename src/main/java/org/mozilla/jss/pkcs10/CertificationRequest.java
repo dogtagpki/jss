@@ -49,7 +49,7 @@ public class CertificationRequest implements ASN1Value {
     SEQUENCE sequence;
 
     CertificationRequest(CertificationRequestInfo info,
-						 //byte[] infoEncoding,
+                         //byte[] infoEncoding,
             AlgorithmIdentifier algId, byte[] signature) throws IOException
     {
         this.info = info;
@@ -235,7 +235,7 @@ public class CertificationRequest implements ASN1Value {
             //byte[] infoEncoding = infoAny.getEncoded();
             /*CertificationRequestInfo info = (CertificationRequestInfo) infoAny.decodeWith(
                                         CertificationRequestInfo.getTemplate() );
-										*/
+                                        */
             CertificationRequestInfo info = (CertificationRequestInfo) seq.elementAt(0);
             // although signature is a bit string, all algorithms we use
             // will produce an octet string.
@@ -247,7 +247,7 @@ public class CertificationRequest implements ASN1Value {
             byte[] signature = bs.getBits();
 
             return new CertificationRequest( info,
-											//infoEncoding,
+                                            //infoEncoding,
                                     (AlgorithmIdentifier) seq.elementAt(1),
                                     signature
                         );

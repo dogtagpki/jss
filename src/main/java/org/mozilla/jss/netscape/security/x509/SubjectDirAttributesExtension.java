@@ -39,14 +39,14 @@ import org.mozilla.jss.netscape.security.util.DerValue;
  *
  *    SubjectDirectoryAttributes ::= SEQUENCE (1..MAX) OF Attribute
  *
- *    Attribute	::= SEQUENCE {
- * type		AttributeType,
- * 	value		SET OF AttributeValue
- *              	-- at least one value is required --}
+ *    Attribute    ::= SEQUENCE {
+ * type        AttributeType,
+ *     value        SET OF AttributeValue
+ *                  -- at least one value is required --}
  *
- *    AttributeType	::= OBJECT IDENTIFIER
+ *    AttributeType    ::= OBJECT IDENTIFIER
  *
- *    AttributeValue	::= ANY
+ *    AttributeValue    ::= ANY
  *
  * </pre>
  *

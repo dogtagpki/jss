@@ -91,9 +91,9 @@ public class CertReqMsg implements ASN1Value {
      * @param regInfo May be NULL.
      */
     public CertReqMsg( CertRequest certReq, ProofOfPossession pop,
-					   SEQUENCE regInfo ) {
+                       SEQUENCE regInfo ) {
         this.certReq = certReq;
-		this.pop = pop;
+        this.pop = pop;
         this.regInfo = regInfo;
     }
 
@@ -103,7 +103,7 @@ public class CertReqMsg implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
 
-	public void verify() throws SignatureException,
+    public void verify() throws SignatureException,
         InvalidKeyFormatException, NoSuchAlgorithmException,
         org.mozilla.jss.NotInitializedException,
         TokenException, java.security.InvalidKeyException, IOException{
@@ -114,52 +114,52 @@ public class CertReqMsg implements ASN1Value {
     }
 
     public void verify(CryptoToken token) throws SignatureException,
-		InvalidKeyFormatException, NoSuchAlgorithmException,
-		org.mozilla.jss.NotInitializedException,
-		TokenException, java.security.InvalidKeyException, IOException{
-		ProofOfPossession.Type type = pop.getType();
-		if (type == ProofOfPossession.SIGNATURE) {
-			POPOSigningKey sigkey = pop.getSignature();
-			AlgorithmIdentifier alg = sigkey.getAlgorithmIdentifier();
-			BIT_STRING sig_from = sigkey.getSignature();
-			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			certReq.encode(bo);
-			byte[] toBeVerified = bo.toByteArray();
+        InvalidKeyFormatException, NoSuchAlgorithmException,
+        org.mozilla.jss.NotInitializedException,
+        TokenException, java.security.InvalidKeyException, IOException{
+        ProofOfPossession.Type type = pop.getType();
+        if (type == ProofOfPossession.SIGNATURE) {
+            POPOSigningKey sigkey = pop.getSignature();
+            AlgorithmIdentifier alg = sigkey.getAlgorithmIdentifier();
+            BIT_STRING sig_from = sigkey.getSignature();
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            certReq.encode(bo);
+            byte[] toBeVerified = bo.toByteArray();
 
-			PublicKey pubkey = null;
-			CertTemplate ct = certReq.getCertTemplate();
-			if (ct.hasPublicKey()) {
-				SubjectPublicKeyInfo spi = ct.getPublicKey();
-				pubkey = spi.toPublicKey();
-			}
+            PublicKey pubkey = null;
+            CertTemplate ct = certReq.getCertTemplate();
+            if (ct.hasPublicKey()) {
+                SubjectPublicKeyInfo spi = ct.getPublicKey();
+                pubkey = spi.toPublicKey();
+            }
 
-			SignatureAlgorithm sigAlg =
-				SignatureAlgorithm.fromOID(alg.getOID());
-			Signature sig = token.getSignatureContext(sigAlg);
-			sig.initVerify(pubkey);
-			sig.update(toBeVerified);
-			if( sig.verify(sig_from.getBits()) ) {
-				//System.out.println("worked!!");
-				return; // success
-			} else {
-				throw new SignatureException(
-					"Signed request information does not "+
-					"match signature in POP");
-			}
+            SignatureAlgorithm sigAlg =
+                SignatureAlgorithm.fromOID(alg.getOID());
+            Signature sig = token.getSignatureContext(sigAlg);
+            sig.initVerify(pubkey);
+            sig.update(toBeVerified);
+            if( sig.verify(sig_from.getBits()) ) {
+                //System.out.println("worked!!");
+                return; // success
+            } else {
+                throw new SignatureException(
+                    "Signed request information does not "+
+                    "match signature in POP");
+            }
 
-		} else if (type == ProofOfPossession.KEY_ENCIPHERMENT) {
-			POPOPrivKey keyEnc = pop.getKeyEncipherment();
-			POPOPrivKey.Type ptype = keyEnc.getType();
-			if (ptype == POPOPrivKey.THIS_MESSAGE) {
-				//BIT_STRING thisMessage = keyEnc.getThisMessage();
-				//This should be the same as from the archive control
-				//It's verified by DRM.
+        } else if (type == ProofOfPossession.KEY_ENCIPHERMENT) {
+            POPOPrivKey keyEnc = pop.getKeyEncipherment();
+            POPOPrivKey.Type ptype = keyEnc.getType();
+            if (ptype == POPOPrivKey.THIS_MESSAGE) {
+                //BIT_STRING thisMessage = keyEnc.getThisMessage();
+                //This should be the same as from the archive control
+                //It's verified by DRM.
 
-			} else if (ptype == POPOPrivKey.SUBSEQUENT_MESSAGE) {
-				new ChallengeResponseException("requested");
-			}
-		}
-	}
+            } else if (ptype == POPOPrivKey.SUBSEQUENT_MESSAGE) {
+                new ChallengeResponseException("requested");
+            }
+        }
+    }
 
     /**
      * Encodes this <i>CertReqMsg</i> to the given OutputStream using
@@ -181,10 +181,10 @@ public class CertReqMsg implements ASN1Value {
         SEQUENCE sequence = new SEQUENCE();
 
         sequence.addElement( certReq );
-		if (pop != null)
-			sequence.addElement( pop );
-		if (regInfo != null)
-			sequence.addElement( regInfo );
+        if (pop != null)
+            sequence.addElement( pop );
+        if (regInfo != null)
+            sequence.addElement( regInfo );
 
         sequence.encode(implicit,ostream);
     }
@@ -238,7 +238,7 @@ public class CertReqMsg implements ASN1Value {
             SEQUENCE.Template seqt = new SEQUENCE.Template();
 
             seqt.addElement( new CertRequest.Template() );
-			seqt.addOptionalElement( new ProofOfPossession.Template());
+            seqt.addOptionalElement( new ProofOfPossession.Template());
             seqt.addOptionalElement(
                     new SEQUENCE.OF_Template( new AVA.Template() ) );
 
@@ -246,7 +246,7 @@ public class CertReqMsg implements ASN1Value {
 
             return new CertReqMsg(
                 (CertRequest) seq.elementAt(0),
-				(ProofOfPossession) seq.elementAt(1),
+                (ProofOfPossession) seq.elementAt(1),
                 (SEQUENCE) seq.elementAt(2)
             );
         }

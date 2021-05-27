@@ -202,8 +202,8 @@ public final class PK11Store implements CryptoStore {
      * @exception NoSuchItemOnTokenException If the certificate not found
      * @exception TokenException General token error
      */
-	// Currently have to use PK11_DeleteTokenObject + PK11_FindObjectForCert
-	// or maybe SEC_DeletePermCertificate.
+    // Currently have to use PK11_DeleteTokenObject + PK11_FindObjectForCert
+    // or maybe SEC_DeletePermCertificate.
     @Override
     public native void deleteCert(X509Certificate cert)
         throws NoSuchItemOnTokenException, TokenException;
@@ -219,19 +219,19 @@ public final class PK11Store implements CryptoStore {
     public native void deleteCertOnly(X509Certificate cert)
         throws NoSuchItemOnTokenException, TokenException;
 
-	////////////////////////////////////////////////////////////
-	// Construction
-	////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    // Construction
+    ////////////////////////////////////////////////////////////
     protected boolean updated;
-	public PK11Store(TokenProxy proxy) {
+    public PK11Store(TokenProxy proxy) {
         assert(proxy!=null);
-		this.storeProxy = proxy;
-	}
+        this.storeProxy = proxy;
+    }
 
-	protected PK11Store() { }
+    protected PK11Store() { }
 
-	////////////////////////////////////////////////////////////
-	// Private data
-	////////////////////////////////////////////////////////////
-	protected TokenProxy storeProxy;
+    ////////////////////////////////////////////////////////////
+    // Private data
+    ////////////////////////////////////////////////////////////
+    protected TokenProxy storeProxy;
 }

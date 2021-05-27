@@ -49,7 +49,7 @@ public class RecipientInfo implements ASN1Value {
     private static final Template templateInstance = new Template();
 
     public static Template getTemplate() {
-	return templateInstance;
+    return templateInstance;
     }
 
     /**
@@ -57,13 +57,13 @@ public class RecipientInfo implements ASN1Value {
      */
 
     public RecipientInfo(  INTEGER version,
-			   IssuerAndSerialNumber issuerAndSerialNumber,
-			   AlgorithmIdentifier keyEncryptionAlgorithmID,
-			   OCTET_STRING encryptedKey) {
+               IssuerAndSerialNumber issuerAndSerialNumber,
+               AlgorithmIdentifier keyEncryptionAlgorithmID,
+               OCTET_STRING encryptedKey) {
 
-	assert(issuerAndSerialNumber != null);
-	assert(keyEncryptionAlgorithmID != null);
-	assert(encryptedKey != null);
+    assert(issuerAndSerialNumber != null);
+    assert(keyEncryptionAlgorithmID != null);
+    assert(encryptedKey != null);
 
 
         this.version = version;

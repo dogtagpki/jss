@@ -143,7 +143,7 @@ public class DirStrConverter implements AVAValueConverter {
         if (value.tag != DerValue.tag_PrintableString &&
             value.tag != DerValue.tag_T61String &&
             value.tag != DerValue.tag_UniversalString)
-        	throw new IOException("Invalid Directory String AVA Value");
+            throw new IOException("Invalid Directory String AVA Value");
         */
 
         return value;
@@ -167,7 +167,7 @@ public class DirStrConverter implements AVAValueConverter {
             avaValue.tag != DerValue.tag_UniversalString &&
                 avaValue.tag != DerValue.tag_T61String)
             throw new IllegalArgumentException(
-        	"Invalid Directory String value");
+            "Invalid Directory String value");
         // NOTE will return null if a decoder is not available.
         */
         return avaValue.getASN1CharString();

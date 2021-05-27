@@ -83,19 +83,19 @@ public class EncryptedContentInfo implements ASN1Value {
                 AlgorithmIdentifier contentEncryptionAlgorithm,
                 OCTET_STRING encryptedContent)
         {
-			this(contentType,
-								 contentEncryptionAlgorithm,
-								 encryptedContent,
-								 false);
+            this(contentType,
+                                 contentEncryptionAlgorithm,
+                                 encryptedContent,
+                                 false);
 
     }
 
     public EncryptedContentInfo(
-				 OBJECT_IDENTIFIER contentType,
-				 AlgorithmIdentifier contentEncryptionAlgorithm,
-				 OCTET_STRING encryptedContent,
+                 OBJECT_IDENTIFIER contentType,
+                 AlgorithmIdentifier contentEncryptionAlgorithm,
+                 OCTET_STRING encryptedContent,
                  boolean createHackedCRSCompatibleECI)
-	{
+    {
         this.contentType = contentType;
         this.contentEncryptionAlgorithm = contentEncryptionAlgorithm;
         this.encryptedContent = encryptedContent;
@@ -103,24 +103,24 @@ public class EncryptedContentInfo implements ASN1Value {
         sequence.addElement(contentType);
         sequence.addElement(contentEncryptionAlgorithm);
         if(encryptedContent != null) {
-			if (createHackedCRSCompatibleECI) {
-				sequence.addElement(new EXPLICIT(new Tag(0), encryptedContent));
-			}
-			else {
-				sequence.addElement(new Tag(0), encryptedContent);
-			}
+            if (createHackedCRSCompatibleECI) {
+                sequence.addElement(new EXPLICIT(new Tag(0), encryptedContent));
+            }
+            else {
+                sequence.addElement(new Tag(0), encryptedContent);
+            }
         }
-	}
+    }
 
-	public static EncryptedContentInfo createCRSCompatibleEncryptedContentInfo(OBJECT_IDENTIFIER contentType,
-				 AlgorithmIdentifier contentEncryptionAlgorithm,
-				 OCTET_STRING encryptedContent)
-	{
-		return new EncryptedContentInfo(contentType,
-										contentEncryptionAlgorithm,
-										encryptedContent,
-										true);
-	}
+    public static EncryptedContentInfo createCRSCompatibleEncryptedContentInfo(OBJECT_IDENTIFIER contentType,
+                 AlgorithmIdentifier contentEncryptionAlgorithm,
+                 OCTET_STRING encryptedContent)
+    {
+        return new EncryptedContentInfo(contentType,
+                                        contentEncryptionAlgorithm,
+                                        encryptedContent,
+                                        true);
+    }
 
 
     ///////////////////////////////////////////////////////////////////////

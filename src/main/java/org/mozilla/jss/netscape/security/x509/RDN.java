@@ -124,7 +124,7 @@ public class RDN {
         if (set.data.available () != 0)
             // throw new CertParseError ("X500 RDN 2");
             System.out.println ("  ... RDN parse, ignored bytes = "
-        	    + set.data.available ());
+                + set.data.available ());
         */
     }
 

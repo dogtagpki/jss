@@ -106,13 +106,13 @@ private static class PrintableConverter implements CharConverter {
         int b; // byte index
         for(c=0, b=offset; c < len; b++, c++) {
             if( (bytes[b] & 0x80) != 0 || !isPrintable[bytes[b]] ) {
-				/* fix for bug 359010 - don't throw, just skip
-				 * throw new CharConversionException(bytes[b]+ " is not "+
-				 * "a valid character for a PrintableString");
-				 */
+                /* fix for bug 359010 - don't throw, just skip
+                 * throw new CharConversionException(bytes[b]+ " is not "+
+                 * "a valid character for a PrintableString");
+                 */
             } else {
-				chars[c] = (char) bytes[b];
-			}
+                chars[c] = (char) bytes[b];
+            }
         }
         return chars;
     }

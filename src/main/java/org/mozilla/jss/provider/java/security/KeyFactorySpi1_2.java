@@ -77,9 +77,9 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
                 algID, new BIT_STRING(encodedPublicValue, 0) );
 
             return PK11PubKey.fromSPKI( ASN1Util.encode(spki) );
-  	//
-	// requires JAVA 1.5
-	//
+      //
+    // requires JAVA 1.5
+    //
         //} else if( keySpec instanceof ECPublicKeySpec ) {
         //   // We need to import both the public value and the curve.
         //   // The only way to get all that information in DER is to send
@@ -87,7 +87,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
         //   // into an SPKI.
         //
         //  ECPublicKeySpec spec = (ECPublicKeySpec) keySpec;
-	//    AlgorithmParameters algParams = getInstance("ECParameters");
+    //    AlgorithmParameters algParams = getInstance("ECParameters");
         //
         //    algParameters.init(spec.getECParameters());
         //    OBJECT_IDENTIFIER oid = null;

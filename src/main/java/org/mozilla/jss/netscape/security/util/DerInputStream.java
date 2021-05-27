@@ -121,9 +121,9 @@ public class DerInputStream {
     /*
      * PRIMITIVES -- these are "universal" ASN.1 simple types.
      *
-     * 	INTEGER, BIT STRING, OCTET STRING, NULL
-     *	OBJECT IDENTIFIER, SEQUENCE (OF), SET (OF)
-     *	PrintableString, T61String, IA5String, UTCTime
+     *     INTEGER, BIT STRING, OCTET STRING, NULL
+     *    OBJECT IDENTIFIER, SEQUENCE (OF), SET (OF)
+     *    PrintableString, T61String, IA5String, UTCTime
      */
 
     /**

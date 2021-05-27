@@ -19,22 +19,22 @@ class PrintOutputStreamWriter
 
     public PrintOutputStreamWriter(OutputStream out)
     {
-    	super(out);
+        super(out);
     }
 
     public void print(String x) 
-	throws  java.io.IOException
+    throws  java.io.IOException
     {
-    	write(x, 0, x.length());
+        write(x, 0, x.length());
     }
 
     public void println(String x)
-	throws  java.io.IOException
+    throws  java.io.IOException
     {
-//	String line = new String(x + "\n");
-	String line = x + "\n";
-	write(line, 0, line.length());
-	flush();
+//    String line = new String(x + "\n");
+    String line = x + "\n";
+    write(line, 0, line.length());
+    flush();
     }
 
 }

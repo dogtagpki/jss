@@ -34,11 +34,11 @@ public class Assert {
      * @deprecated The assert keyword should be used instead.
      */
     @Deprecated
-	public static void _assert(boolean cond, String msg) {
-		if(!cond) {
-			throw new org.mozilla.jss.util.AssertionException(msg);
-		}
-	}
+    public static void _assert(boolean cond, String msg) {
+        if(!cond) {
+            throw new org.mozilla.jss.util.AssertionException(msg);
+        }
+    }
 
     /**
      * Throw an AssertionException if this statement is reached.

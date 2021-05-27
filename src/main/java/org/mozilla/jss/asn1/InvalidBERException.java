@@ -70,10 +70,10 @@ public class InvalidBERException extends java.lang.Exception {
     public static class InvalidChar extends InvalidBERException {
         private static final long serialVersionUID = 1L;
         public InvalidChar(byte b, int offset) {
-			super("Invalid character ("+b+") encountered at offset "+offset);
-		}
-		public InvalidChar(char c, int offset) {
-			super("Invalid character ("+c+") encountered at offset"+offset);
-		}
-	}
+            super("Invalid character ("+b+") encountered at offset "+offset);
+        }
+        public InvalidChar(char c, int offset) {
+            super("Invalid character ("+c+") encountered at offset"+offset);
+        }
+    }
 }

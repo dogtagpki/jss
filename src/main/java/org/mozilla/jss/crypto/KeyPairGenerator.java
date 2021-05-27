@@ -31,11 +31,11 @@ public class KeyPairGenerator {
      * @param engine The engine object that provides the implementation for
      *      the class.
      */
-	public KeyPairGenerator(KeyPairAlgorithm algorithm,
-							KeyPairGeneratorSpi engine) {
-		this.algorithm = algorithm;
-		this.engine = engine;
-	}
+    public KeyPairGenerator(KeyPairAlgorithm algorithm,
+                            KeyPairGeneratorSpi engine) {
+        this.algorithm = algorithm;
+        this.engine = engine;
+    }
 
     /**
      * Generates a new key pair.
@@ -45,16 +45,16 @@ public class KeyPairGenerator {
      * @exception TokenException If an error occurs on the CryptoToken
      *      in the process of generating the key pair.
      */
-	public java.security.KeyPair
-	genKeyPair() throws TokenException {
-		return engine.generateKeyPair();
-	}
+    public java.security.KeyPair
+    genKeyPair() throws TokenException {
+        return engine.generateKeyPair();
+    }
     /**
      * @return The type of key that this generator generates.
      */
-	public KeyPairAlgorithm getAlgorithm() {
-		return algorithm;
-	}
+    public KeyPairAlgorithm getAlgorithm() {
+        return algorithm;
+    }
 
     /**
      * Initializes the generator with algorithm-specific parameters.
@@ -69,11 +69,11 @@ public class KeyPairGenerator {
      * @see org.mozilla.jss.crypto.RSAParameterSpec
      * @see java.security.spec.DSAParameterSpec
      */
-	public void initialize(AlgorithmParameterSpec params, SecureRandom random)
+    public void initialize(AlgorithmParameterSpec params, SecureRandom random)
             throws InvalidAlgorithmParameterException
     {
-		engine.initialize(params, random);
-	}
+        engine.initialize(params, random);
+    }
 
     /**
      * Initializes the generator with algorithm-specific parameters.
@@ -85,11 +85,11 @@ public class KeyPairGenerator {
      * @see org.mozilla.jss.crypto.RSAParameterSpec
      * @see java.security.spec.DSAParameterSpec
      */
-	public void initialize(AlgorithmParameterSpec params)
-		throws InvalidAlgorithmParameterException
-	{
-		engine.initialize(params, null);
-	}
+    public void initialize(AlgorithmParameterSpec params)
+        throws InvalidAlgorithmParameterException
+    {
+        engine.initialize(params, null);
+    }
 
     /**
      * Initializes the generator with the strength of the keys.
@@ -100,9 +100,9 @@ public class KeyPairGenerator {
      * @param random <b>This parameter is ignored.</b> NSS does not accept
      *      an external source of random numbers.
      */
-	public void initialize(int strength, SecureRandom random) {
-		engine.initialize(strength, random);
-	}
+    public void initialize(int strength, SecureRandom random) {
+        engine.initialize(strength, random);
+    }
 
     /**
      * Initializes the generator with the strength of the keys.
@@ -110,9 +110,9 @@ public class KeyPairGenerator {
      * @param strength The strength of the keys that will be generated.
      *      Usually this is the length of the key in bits.
      */
-	public void initialize(int strength) {
-		engine.initialize(strength, null);
-	}
+    public void initialize(int strength) {
+        engine.initialize(strength, null);
+    }
 
     /**
      * @return true if the keypair generation will take place on the
@@ -172,6 +172,6 @@ public class KeyPairGenerator {
         return engine.getCurveCodeByName(curveName);
     }
 
-	protected KeyPairAlgorithm algorithm;
-	protected KeyPairGeneratorSpi engine;
+    protected KeyPairAlgorithm algorithm;
+    protected KeyPairGeneratorSpi engine;
 }

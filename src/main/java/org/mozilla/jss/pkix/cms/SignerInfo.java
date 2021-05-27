@@ -162,7 +162,7 @@ public class SignerInfo implements ASN1Value {
      *  this SignerInfo.
      * @param signingAlg The algorithm to be used to sign the content.
      *  This should be a composite algorithm, such as
-	 *  RSASignatureWithMD5Digest, instead of a raw algorithm, such as
+     *  RSASignatureWithMD5Digest, instead of a raw algorithm, such as
      *  RSASignature.
      *  Note that the digest portion of this algorithm must be the same
      *  algorithm as was used to digest the message content.
@@ -337,19 +337,19 @@ public class SignerInfo implements ASN1Value {
         ObjectNotFoundException
     {
         CryptoManager cm = CryptoManager.getInstance();
-		if
-			(signerIdentifier.getType().equals(SignerIdentifier.ISSUER_AND_SERIALNUMBER)) {
-			IssuerAndSerialNumber issuerAndSerialNumber = signerIdentifier.getIssuerAndSerialNumber();
-			X509Certificate cert = cm.findCertByIssuerAndSerialNumber(
-				ASN1Util.encode(issuerAndSerialNumber.getIssuer()),
-				issuerAndSerialNumber.getSerialNumber()  );
-			verify(messageDigest, contentType, cert.getPublicKey());
-		} else {
+        if
+            (signerIdentifier.getType().equals(SignerIdentifier.ISSUER_AND_SERIALNUMBER)) {
+            IssuerAndSerialNumber issuerAndSerialNumber = signerIdentifier.getIssuerAndSerialNumber();
+            X509Certificate cert = cm.findCertByIssuerAndSerialNumber(
+                ASN1Util.encode(issuerAndSerialNumber.getIssuer()),
+                issuerAndSerialNumber.getSerialNumber()  );
+            verify(messageDigest, contentType, cert.getPublicKey());
+        } else {
             assert(
-						  signerIdentifier.getType().equals(SignerIdentifier.SUBJECT_KEY_IDENTIFIER) );
+                          signerIdentifier.getType().equals(SignerIdentifier.SUBJECT_KEY_IDENTIFIER) );
 
-			// XXX Do we have method to get key using keyIdentifier
-		}
+            // XXX Do we have method to get key using keyIdentifier
+        }
     }
     
 

@@ -30,8 +30,8 @@ public class ResponseBody implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private SEQUENCE controlSequence;
-	private SEQUENCE cmsSequence;
-	private SEQUENCE otherMsgSequence;
+    private SEQUENCE cmsSequence;
+    private SEQUENCE otherMsgSequence;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -45,7 +45,7 @@ public class ResponseBody implements ASN1Value {
      * @param otherMsgSequence Sequence of OtherMsg.
      */
     public ResponseBody(SEQUENCE controlSequence, SEQUENCE
-			cmsSequence, SEQUENCE otherMsgSequence) {
+            cmsSequence, SEQUENCE otherMsgSequence) {
         sequence = new SEQUENCE();
         this.controlSequence = controlSequence;
         sequence.addElement(controlSequence);

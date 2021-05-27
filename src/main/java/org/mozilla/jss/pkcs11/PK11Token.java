@@ -194,16 +194,16 @@ public final class PK11Token implements CryptoToken {
     @Override
     public void login(PasswordCallback callback)
         throws NotInitializedException, IncorrectPasswordException,
-			TokenException
-	{
+            TokenException
+    {
         if(callback == null) {
             callback = new NullPasswordCallback();
         }
         nativeLogin(callback);
-	}
+    }
 
-	protected native void nativeLogin(PasswordCallback callback)
-        throws NotInitializedException,	IncorrectPasswordException,
+    protected native void nativeLogin(PasswordCallback callback)
+        throws NotInitializedException,    IncorrectPasswordException,
         TokenException;
 
     /**
@@ -266,15 +266,15 @@ public final class PK11Token implements CryptoToken {
      */
     @Override
     public void initPassword(PasswordCallback ssopwcb,
-		PasswordCallback userpwcb)
+        PasswordCallback userpwcb)
         throws IncorrectPasswordException, AlreadyInitializedException,
-		TokenException
-	{
-		byte[] ssopwArray = null;
-		byte[] userpwArray = null;
+        TokenException
+    {
+        byte[] ssopwArray = null;
+        byte[] userpwArray = null;
         Password ssopw=null;
         Password userpw=null;
-		PasswordCallbackInfo pwcb = makePWCBInfo();
+        PasswordCallbackInfo pwcb = makePWCBInfo();
 
         if(ssopwcb==null) {
             ssopwcb = new NullPasswordCallback();
@@ -283,71 +283,71 @@ public final class PK11Token implements CryptoToken {
             userpwcb = new NullPasswordCallback();
         }
 
-		try {
+        try {
 
-			// Make sure the password hasn't already been set, doing special
-			// checks for the internal module
-			if(!PWInitable()) {
-				throw new AlreadyInitializedException();
-			}
+            // Make sure the password hasn't already been set, doing special
+            // checks for the internal module
+            if(!PWInitable()) {
+                throw new AlreadyInitializedException();
+            }
 
-			// Verify the SSO Password, except on internal module
+            // Verify the SSO Password, except on internal module
             if( isInternalKeyStorageToken() ) {
                 ssopwArray = new byte[] {0};
             } else {
-			    ssopw = ssopwcb.getPasswordFirstAttempt(pwcb);
-			    ssopwArray = Tunnel.getPasswordByteCopy(ssopw);
-			    while( ! SSOPasswordIsCorrect(ssopwArray) ) {
-				    Password.wipeBytes(ssopwArray);
+                ssopw = ssopwcb.getPasswordFirstAttempt(pwcb);
+                ssopwArray = Tunnel.getPasswordByteCopy(ssopw);
+                while( ! SSOPasswordIsCorrect(ssopwArray) ) {
+                    Password.wipeBytes(ssopwArray);
                     ssopw.clear();
-				    ssopw = ssopwcb.getPasswordAgain(pwcb);
-				    ssopwArray = Tunnel.getPasswordByteCopy(ssopw);
-			    }
+                    ssopw = ssopwcb.getPasswordAgain(pwcb);
+                    ssopwArray = Tunnel.getPasswordByteCopy(ssopw);
+                }
             }
 
-			// Now change the PIN
-			userpw = userpwcb.getPasswordFirstAttempt(pwcb);
-			userpwArray = Tunnel.getPasswordByteCopy(userpw);
-			initPassword(ssopwArray, userpwArray);
+            // Now change the PIN
+            userpw = userpwcb.getPasswordFirstAttempt(pwcb);
+            userpwArray = Tunnel.getPasswordByteCopy(userpw);
+            initPassword(ssopwArray, userpwArray);
 
-		} catch (PasswordCallback.GiveUpException e) {
-			throw new IncorrectPasswordException(e.toString());
-		} finally {
-			// zero-out the arrays
-			if(ssopwArray != null) {
-				Password.wipeBytes(ssopwArray);
-			}
+        } catch (PasswordCallback.GiveUpException e) {
+            throw new IncorrectPasswordException(e.toString());
+        } finally {
+            // zero-out the arrays
+            if(ssopwArray != null) {
+                Password.wipeBytes(ssopwArray);
+            }
             if(ssopw != null) {
                 ssopw.clear();
             }
-			if(userpwArray != null) {
-				Password.wipeBytes(userpwArray);
-			}
+            if(userpwArray != null) {
+                Password.wipeBytes(userpwArray);
+            }
             if(userpw != null) {
                 userpw.clear();
             }
-		}
-	}
+        }
+    }
 
-	/**
-	 * Make sure the PIN can be initialized.  This is mainly to check the
-	 * internal module.
-	 */
-	protected native boolean PWInitable() throws TokenException;
+    /**
+     * Make sure the PIN can be initialized.  This is mainly to check the
+     * internal module.
+     */
+    protected native boolean PWInitable() throws TokenException;
 
-	protected native boolean SSOPasswordIsCorrect(byte[] ssopw)
-		throws TokenException, AlreadyInitializedException;
+    protected native boolean SSOPasswordIsCorrect(byte[] ssopw)
+        throws TokenException, AlreadyInitializedException;
 
-	protected native void initPassword(byte[] ssopw, byte[] userpw)
-		throws IncorrectPasswordException, AlreadyInitializedException,
-		TokenException;
+    protected native void initPassword(byte[] ssopw, byte[] userpw)
+        throws IncorrectPasswordException, AlreadyInitializedException,
+        TokenException;
 
-	/**
-	 * Determine whether the token has been initialized yet.
-	 */
-	@Override
+    /**
+     * Determine whether the token has been initialized yet.
+     */
+    @Override
     public native boolean
-	passwordIsInitialized() throws TokenException;
+    passwordIsInitialized() throws TokenException;
 
     /**
      * Change password.  This changes the user's PIN after it has already
@@ -361,14 +361,14 @@ public final class PK11Token implements CryptoToken {
      */
     @Override
     public void changePassword(PasswordCallback oldPINcb,
-			PasswordCallback newPINcb)
+            PasswordCallback newPINcb)
         throws IncorrectPasswordException, TokenException
-	{
-		byte[] oldPW = null;
-		byte[] newPW = null;
+    {
+        byte[] oldPW = null;
+        byte[] newPW = null;
         Password oldPIN=null;
         Password newPIN=null;
-		PasswordCallbackInfo pwcb = makePWCBInfo();
+        PasswordCallbackInfo pwcb = makePWCBInfo();
 
         if(oldPINcb==null) {
             oldPINcb = new NullPasswordCallback();
@@ -377,80 +377,80 @@ public final class PK11Token implements CryptoToken {
             newPINcb = new NullPasswordCallback();
         }
 
-		try {
+        try {
 
-			// Verify the old password
-			oldPIN = oldPINcb.getPasswordFirstAttempt(pwcb);
-			oldPW = Tunnel.getPasswordByteCopy(oldPIN);
-			if( ! userPasswordIsCorrect(oldPW) ) {
-				do {
-					Password.wipeBytes(oldPW);
+            // Verify the old password
+            oldPIN = oldPINcb.getPasswordFirstAttempt(pwcb);
+            oldPW = Tunnel.getPasswordByteCopy(oldPIN);
+            if( ! userPasswordIsCorrect(oldPW) ) {
+                do {
+                    Password.wipeBytes(oldPW);
                     oldPIN.clear();
-					oldPIN = oldPINcb.getPasswordAgain(pwcb);
-					oldPW = Tunnel.getPasswordByteCopy(oldPIN);
-				} while( ! userPasswordIsCorrect(oldPW) );
-			}
+                    oldPIN = oldPINcb.getPasswordAgain(pwcb);
+                    oldPW = Tunnel.getPasswordByteCopy(oldPIN);
+                } while( ! userPasswordIsCorrect(oldPW) );
+            }
 
-			// Now change the PIN
-			newPIN = newPINcb.getPasswordFirstAttempt(pwcb);
-			newPW = Tunnel.getPasswordByteCopy(newPIN);
-			changePassword(oldPW, newPW);
+            // Now change the PIN
+            newPIN = newPINcb.getPasswordFirstAttempt(pwcb);
+            newPW = Tunnel.getPasswordByteCopy(newPIN);
+            changePassword(oldPW, newPW);
 
-		} catch (PasswordCallback.GiveUpException e) {
-			throw new IncorrectPasswordException(e.toString());
-		} finally {
-			if(oldPW != null) {
-				Password.wipeBytes(oldPW);
-			}
+        } catch (PasswordCallback.GiveUpException e) {
+            throw new IncorrectPasswordException(e.toString());
+        } finally {
+            if(oldPW != null) {
+                Password.wipeBytes(oldPW);
+            }
             if(oldPIN != null) {
                 oldPIN.clear();
             }
-			if(newPW != null) {
-				Password.wipeBytes(newPW);
-			}
+            if(newPW != null) {
+                Password.wipeBytes(newPW);
+            }
             if(newPIN != null) {
                 newPIN.clear();
             }
-		}
-	}
+        }
+    }
 
-	protected PasswordCallbackInfo makePWCBInfo() {
-		return new TokenCallbackInfo(getName());
-	}
+    protected PasswordCallbackInfo makePWCBInfo() {
+        return new TokenCallbackInfo(getName());
+    }
 
-	/**
-	 * Check the given password, return true if it's right, false if it's
-	 * wrong.
-	 */
-	protected native boolean userPasswordIsCorrect(byte[] pw)
-		throws TokenException;
+    /**
+     * Check the given password, return true if it's right, false if it's
+     * wrong.
+     */
+    protected native boolean userPasswordIsCorrect(byte[] pw)
+        throws TokenException;
 
-	/**
-	 * Change the password on the token from the old one to the new one.
-	 */
+    /**
+     * Change the password on the token from the old one to the new one.
+     */
     protected native void changePassword(byte[] oldPIN, byte[] newPIN)
         throws IncorrectPasswordException, TokenException;
 
     @Override
     public native String getName();
 
-	public java.security.Provider
-	getProvider() {
-	    throw new RuntimeException("PK11Token.getProvider() is not yet implemented");
-	}
+    public java.security.Provider
+    getProvider() {
+        throw new RuntimeException("PK11Token.getProvider() is not yet implemented");
+    }
 
-	@Override
+    @Override
     public CryptoStore
-	getCryptoStore() {
-		return cryptoStore;
-	}
+    getCryptoStore() {
+        return cryptoStore;
+    }
 
-	/**
-	 * Determines whether this token is capable of performing the given
-	 * PKCS #11 mechanism.
-	 */
+    /**
+     * Determines whether this token is capable of performing the given
+     * PKCS #11 mechanism.
+     */
 /*
-	public boolean doesMechanism(Mechanism mech) {
+    public boolean doesMechanism(Mechanism mech) {
         return doesMechanismNative(mech.getValue());
     }
 */
@@ -475,86 +475,86 @@ public final class PK11Token implements CryptoToken {
 
     //protected native boolean doesMechanismNative(int mech);
 
-	/**
-	 * Determines whether this token is capable of performing the given
-	 * algorithm.
-	 */
+    /**
+     * Determines whether this token is capable of performing the given
+     * algorithm.
+     */
     @Override
     public native boolean doesAlgorithm(Algorithm alg);
 
-	/**
-	 * Generates a PKCS#10 certificate request including Begin/End brackets
-	 * @param subject subject dn of the certificate
-	 * @param keysize size of the key
-	 * @param keyType "rsa" or "dsa"
-	 * @param P The DSA prime parameter
-	 * @param Q The DSA sub-prime parameter
-	 * @param G The DSA base parameter
-	 * @return String that represents a PKCS#10 b64 encoded blob with
-	 * begin/end brackets
-	 */
-	@Override
+    /**
+     * Generates a PKCS#10 certificate request including Begin/End brackets
+     * @param subject subject dn of the certificate
+     * @param keysize size of the key
+     * @param keyType "rsa" or "dsa"
+     * @param P The DSA prime parameter
+     * @param Q The DSA sub-prime parameter
+     * @param G The DSA base parameter
+     * @return String that represents a PKCS#10 b64 encoded blob with
+     * begin/end brackets
+     */
+    @Override
     public String generateCertRequest(String subject, int keysize,
-											 String keyType,
-											 byte[] P, byte[] Q,
-											 byte[] G)
-		throws TokenException, InvalidParameterException, PQGParamGenException
-	{
+                                             String keyType,
+                                             byte[] P, byte[] Q,
+                                             byte[] G)
+        throws TokenException, InvalidParameterException, PQGParamGenException
+    {
 
-			if (keyType.equalsIgnoreCase("dsa")) {
-				if ((P == null) && (Q == null) && (G == null)) {
-					PQGParams pqg;
-					try {
-						 pqg = PQGParams.generate(keysize);
-					} catch (PQGParamGenException e) {
-						throw e;
-					}
-					byte[] p = PQGParams.BigIntegerToUnsignedByteArray(pqg.getP());
-					byte[] q = PQGParams.BigIntegerToUnsignedByteArray(pqg.getQ());
-					byte[] g = PQGParams.BigIntegerToUnsignedByteArray(pqg.getG());
-					P = p;
-					Q = q;
-					G = g;
-					String pk10String;
-					try {
-						pk10String =
-							generatePK10(subject, keysize, keyType, p,
-									 q, g);
-					} catch (TokenException e) {
-						throw e;
-					} catch (InvalidParameterException e) {
-						throw e;
-					}
+            if (keyType.equalsIgnoreCase("dsa")) {
+                if ((P == null) && (Q == null) && (G == null)) {
+                    PQGParams pqg;
+                    try {
+                         pqg = PQGParams.generate(keysize);
+                    } catch (PQGParamGenException e) {
+                        throw e;
+                    }
+                    byte[] p = PQGParams.BigIntegerToUnsignedByteArray(pqg.getP());
+                    byte[] q = PQGParams.BigIntegerToUnsignedByteArray(pqg.getQ());
+                    byte[] g = PQGParams.BigIntegerToUnsignedByteArray(pqg.getG());
+                    P = p;
+                    Q = q;
+                    G = g;
+                    String pk10String;
+                    try {
+                        pk10String =
+                            generatePK10(subject, keysize, keyType, p,
+                                     q, g);
+                    } catch (TokenException e) {
+                        throw e;
+                    } catch (InvalidParameterException e) {
+                        throw e;
+                    }
 
-					return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
-							pk10String +
-							"\n-----END NEW CERTIFICATE REQUEST-----");
-				} else if ((P == null) || (Q == null) || (G == null)) {
-					throw new InvalidParameterException("need all P, Q, and G");
-				}
+                    return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
+                            pk10String +
+                            "\n-----END NEW CERTIFICATE REQUEST-----");
+                } else if ((P == null) || (Q == null) || (G == null)) {
+                    throw new InvalidParameterException("need all P, Q, and G");
+                }
 
-			}
-			String pk10String;
-			try {
-				pk10String =
-					generatePK10(subject, keysize, keyType, P,
-								 Q, G);
-			} catch (TokenException e) {
-				throw e;
-			} catch (InvalidParameterException e) {
-				throw e;
-			}
+            }
+            String pk10String;
+            try {
+                pk10String =
+                    generatePK10(subject, keysize, keyType, P,
+                                 Q, G);
+            } catch (TokenException e) {
+                throw e;
+            } catch (InvalidParameterException e) {
+                throw e;
+            }
 
-			return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
-					pk10String +
-					"\n-----END NEW CERTIFICATE REQUEST-----");
-	}
+            return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
+                    pk10String +
+                    "\n-----END NEW CERTIFICATE REQUEST-----");
+    }
 
-	protected native String generatePK10(String subject, int keysize,
-											 String keyType,
-											 byte[] P, byte[] Q,
-											 byte[] G)
-		throws TokenException, InvalidParameterException;
+    protected native String generatePK10(String subject, int keysize,
+                                             String keyType,
+                                             byte[] P, byte[] Q,
+                                             byte[] G)
+        throws TokenException, InvalidParameterException;
 
     ////////////////////////////////////////////////////
     // construction and finalization
@@ -581,10 +581,10 @@ public final class PK11Token implements CryptoToken {
     }
 
 /*
-	protected PK11Token(TokenProxy proxy) {
+    protected PK11Token(TokenProxy proxy) {
         assert(proxy!=null);
-		this.tokenProxy = proxy;
-	}
+        this.tokenProxy = proxy;
+    }
 */
 
     public TokenProxy getProxy() {
@@ -617,7 +617,7 @@ public final class PK11Token implements CryptoToken {
  * with Java constants in native code.
  */
 class TokenCallbackInfo extends PasswordCallbackInfo {
-	public TokenCallbackInfo(String name) {
-		super(name, TOKEN);
-	}
+    public TokenCallbackInfo(String name) {
+        super(name, TOKEN);
+    }
 }

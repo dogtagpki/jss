@@ -32,7 +32,7 @@ public class PendInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private OCTET_STRING pendToken;
-	private GeneralizedTime pendTime;
+    private GeneralizedTime pendTime;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -50,7 +50,7 @@ public class PendInfo implements ASN1Value {
         sequence.addElement(pendToken);
         this.pendTime = pendTime;
         sequence.addElement(pendTime);
-	}
+    }
 
     /**
      * Constructs a PendInfo from requestId and date.
@@ -64,7 +64,7 @@ public class PendInfo implements ASN1Value {
         sequence.addElement(new OCTET_STRING(reqId.getBytes()));
         this.pendTime = new GeneralizedTime(date);
         sequence.addElement(new GeneralizedTime(date));
-	}
+    }
     ///////////////////////////////////////////////////////////////////////
     // accessors
     ///////////////////////////////////////////////////////////////////////

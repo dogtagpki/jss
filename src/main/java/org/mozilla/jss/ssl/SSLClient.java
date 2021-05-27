@@ -382,7 +382,7 @@ public class SSLClient {
             InitializationValues vals = new InitializationValues(".");
             CryptoManager.initialize(vals);
 
-            //	NSSInit.initialize("secmod.db", "key3.db", "cert7.db");
+            //    NSSInit.initialize("secmod.db", "key3.db", "cert7.db");
         } catch (KeyDatabaseException kdbe) {
             System.out.println("Couldn't open the key database");
             return;
@@ -399,7 +399,7 @@ public class SSLClient {
 
         /* enable all the SSL2 cipher suites */
         for (i = SSLSocket.SSL2_RC4_128_WITH_MD5; i <= SSLSocket.SSL2_DES_192_EDE3_CBC_WITH_MD5; ++i) {
-            //	SSLSocket.setPermittedByPolicy(i, SSLSocket.SSL_ALLOWED);
+            //    SSLSocket.setPermittedByPolicy(i, SSLSocket.SSL_ALLOWED);
             if (i != 0xFF05) {
                 SSLSocket.setCipherPreferenceDefault(i, true);
             }
@@ -407,7 +407,7 @@ public class SSLClient {
 
         /* enable all the SSL3 cipher suites */
         for (i = 0; cipherSuites[i] != 0; ++i) {
-            //	SSLSocket.setPermittedByPolicy(cipherSuites[i], SSLSocket.SSL_ALLOWED);
+            //    SSLSocket.setPermittedByPolicy(cipherSuites[i], SSLSocket.SSL_ALLOWED);
             SSLSocket.setCipherPreferenceDefault(cipherSuites[i], true);
         }
 

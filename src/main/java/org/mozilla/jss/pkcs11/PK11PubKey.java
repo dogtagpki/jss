@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
-	implements java.security.PublicKey {
+    implements java.security.PublicKey {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,11 +19,11 @@ public class PK11PubKey extends org.mozilla.jss.pkcs11.PK11Key
         keyProxy = new PublicKeyProxy(pointer);
     }
 
-	/**
-	 * Make sure this key lives on the given token.
-	 */
-	public native void verifyKeyIsOnToken(PK11Token token)
-		throws org.mozilla.jss.crypto.NoSuchItemOnTokenException;
+    /**
+     * Make sure this key lives on the given token.
+     */
+    public native void verifyKeyIsOnToken(PK11Token token)
+        throws org.mozilla.jss.crypto.NoSuchItemOnTokenException;
 
     public native KeyType getKeyType();
 

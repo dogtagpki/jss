@@ -280,13 +280,13 @@ public class SSLServer {
 
         /* enable all the SSL2 cipher suites */
         for (i = SSLSocket.SSL2_RC4_128_WITH_MD5; i <= SSLSocket.SSL2_DES_192_EDE3_CBC_WITH_MD5; ++i) {
-            //	    SSLSocket.setPermittedByPolicy(i, SSLSocket.SSL_ALLOWED);
+            //        SSLSocket.setPermittedByPolicy(i, SSLSocket.SSL_ALLOWED);
             SSLSocket.setCipherPreferenceDefault(i, true);
         }
 
         /* enable all the SSL3 cipher suites */
         for (i = 0; cipherSuites[i] != 0; ++i) {
-            //	    SSLSocket.setPermittedByPolicy(cipherSuites[i], SSLSocket.SSL_ALLOWED);
+            //        SSLSocket.setPermittedByPolicy(cipherSuites[i], SSLSocket.SSL_ALLOWED);
             SSLSocket.setCipherPreferenceDefault(cipherSuites[i], true);
         }
 

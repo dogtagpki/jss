@@ -47,12 +47,12 @@ public class IA5StringConverter implements AVAValueConverter {
     /*
      * Converts a string with ASN.1 IA5String characters to a DerValue.
      *
-     * @param valueString 	a string with IA5String characters.
+     * @param valueString     a string with IA5String characters.
      *
-     * @return			a DerValue.
+     * @return            a DerValue.
      *
-     * @exception IOException	if a IA5String encoder is not
-     *				available for the conversion.
+     * @exception IOException    if a IA5String encoder is not
+     *                available for the conversion.
      */
     @Override
     public DerValue getValue(String valueString)
@@ -84,12 +84,12 @@ public class IA5StringConverter implements AVAValueConverter {
      * NOTE only DER encoding is currently supported on for the BER
      * encoded value.
      *
-     * @param berStream 	a byte array of the BER encoded value.
+     * @param berStream     a byte array of the BER encoded value.
      *
-     * @return 			a DerValue.
+     * @return             a DerValue.
      *
      * @exception IOException   if the BER value cannot be converted
-     *				to a IA5String DER value.
+     *                to a IA5String DER value.
      */
     @Override
     public DerValue getValue(byte[] berStream)
@@ -106,13 +106,13 @@ public class IA5StringConverter implements AVAValueConverter {
      * Converts a DerValue of IA5String to a java string with IA5String
      * characters.
      *
-     * @param avaValue 	a DerValue.
+     * @param avaValue     a DerValue.
      *
-     * @return 		a string with IA5String characters.
+     * @return         a string with IA5String characters.
      *
-     * @exception IOException 	if the DerValue is not a IA5String i.e.
-     *				The DerValue cannot be converted to a string
-     *				with IA5String characters.
+     * @exception IOException     if the DerValue is not a IA5String i.e.
+     *                The DerValue cannot be converted to a string
+     *                with IA5String characters.
      */
     @Override
     public String getAsString(DerValue avaValue)

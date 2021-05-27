@@ -72,13 +72,13 @@ public class KeyFactoryTest {
 
     public static void main(String argv[]) throws Throwable {
         if( argv.length < 2 ) {
-	    System.out.println(
-		"Usage: java org.mozilla.jss.tests.KeyFactoryTest " +
-		 "<dbdir> <passwordFile>");
+        System.out.println(
+        "Usage: java org.mozilla.jss.tests.KeyFactoryTest " +
+         "<dbdir> <passwordFile>");
             System.exit(1);
         }
         CryptoToken tok = CryptoManager.getInstance().getInternalKeyStorageToken();
-	PasswordCallback cb = new FilePasswordCallback(argv[1]);
+    PasswordCallback cb = new FilePasswordCallback(argv[1]);
         tok.login(cb);
 
 /* This is just a huge amount of needless info for the tinderbox and nightly QA

@@ -18,7 +18,7 @@ public interface X509Certificate
      * @throws CertificateEncodingException If an error occurred.
      */
     public byte[] getEncoded()
-		throws CertificateEncodingException;
+        throws CertificateEncodingException;
 
     /**
      * @return The nickname of this certificate (could be null).

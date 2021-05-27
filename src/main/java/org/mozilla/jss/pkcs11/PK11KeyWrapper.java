@@ -153,7 +153,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         try {
             type = KeyType.getKeyTypeFromAlgorithm(algorithm);
             if( (type == KeyType.RSA && !(key instanceof RSAPublicKey)) ||
-		// requires JAVA 1.5
+        // requires JAVA 1.5
                 // (type == KeyType.EC && !(key instanceof ECPublicKey)) ||
                 (type == KeyType.DSA && !(key instanceof DSAPublicKey)) ) {
                 throw new InvalidKeyException("Key is not the right type for "+
@@ -646,7 +646,7 @@ public final class PK11KeyWrapper implements KeyWrapper {
         } else {
             assert( type == PrivateKey.EC);
             return KeyPairAlgorithm.ECFamily;
-	}
+    }
     }
 
     private static Algorithm
