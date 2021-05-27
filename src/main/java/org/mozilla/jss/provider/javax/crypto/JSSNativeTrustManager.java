@@ -19,9 +19,9 @@ import javax.net.ssl.X509TrustManager;
  */
 public class JSSNativeTrustManager implements X509TrustManager {
     private String error_msg = getClass().getName() + " should not be used "
-                             + "directly! Please use it with JSSEngine. Note "
-                             + "that this TrustManager must be the only one "
-                             + "passed to JSSEngine.";
+            + "directly! Please use it with JSSEngine. Note "
+            + "that this TrustManager must be the only one "
+            + "passed to JSSEngine.";
 
     @Override
     public void checkClientTrusted(X509Certificate[] certChain, String authType) throws CertificateException {
