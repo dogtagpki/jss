@@ -23,31 +23,33 @@ public interface ASN1Template {
 
     /**
      * Decodes an ASN1Value from the InputStream without an implicit tag.
+     * 
      * @param istream Must support marking (markSupported() == true).
-     *      For example, ByteArrayInputStream and BufferedInputStream
-     *      support marking, but FileInputStream does not. If your source
-     *      does not support marking, you can wrap it in a
-     *      BufferedInputStream.
+     *            For example, ByteArrayInputStream and BufferedInputStream
+     *            support marking, but FileInputStream does not. If your source
+     *            does not support marking, you can wrap it in a
+     *            BufferedInputStream.
      * @return ASN.1 value.
      * @throws InvalidBERException If there is an invalid BER encoding.
      * @throws IOException If other error occurred.
      */
     public ASN1Value decode(InputStream istream)
-        throws IOException, InvalidBERException;
+            throws IOException, InvalidBERException;
 
     /**
      * Decodes an ASN1Value from the InputStream with the given implicit
-     *      tag.
+     * tag.
+     * 
      * @param implicitTag Implicit tag.
      * @param istream Must support marking (markSupported() == true).
-     *      For example, ByteArrayInputStream and BufferedInputStream
-     *      support marking, but FileInputStream does not. If your source
-     *      does not support marking, you can wrap it in a
-     *      BufferedInputStream.
+     *            For example, ByteArrayInputStream and BufferedInputStream
+     *            support marking, but FileInputStream does not. If your source
+     *            does not support marking, you can wrap it in a
+     *            BufferedInputStream.
      * @return ASN.1 value.
      * @throws InvalidBERException If there is an invalid BER encoding.
      * @throws IOException If other error occurred.
      */
     public ASN1Value decode(Tag implicitTag, InputStream istream)
-        throws IOException, InvalidBERException;
+            throws IOException, InvalidBERException;
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 public class UTCTime extends TimeBase implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 23);
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -22,15 +23,14 @@ public class UTCTime extends TimeBase implements ASN1Value {
         return true;
     }
 
-    private static final UTCTime.Template templateInstance =
-                                                new UTCTime.Template();
+    private static final UTCTime.Template templateInstance = new UTCTime.Template();
+
     public static UTCTime.Template getTemplate() {
         return templateInstance;
     }
 
     public static class Template extends TimeBase.Template
-        implements ASN1Template
-    {
+            implements ASN1Template {
         @Override
         protected Tag getTag() {
             return TAG;
