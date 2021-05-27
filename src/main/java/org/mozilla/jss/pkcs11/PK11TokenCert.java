@@ -9,8 +9,7 @@ import org.mozilla.jss.crypto.*;
 /**
  * A user certificate that lives on a PKCS #11 token.
  */
-public final class PK11TokenCert extends PK11Cert implements TokenCertificate
-{
+public final class PK11TokenCert extends PK11Cert implements TokenCertificate {
     @Override
     public byte[] getUniqueID() {
         return super.getUniqueID();

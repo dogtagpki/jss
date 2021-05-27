@@ -30,7 +30,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
     // The strength of the key to be generated in bits.  A value of 0 means
     // that the strength has not been set.  This is OK for most algorithms.
-    private int strength=0;
+    private int strength = 0;
 
     // The parameters for this algorithm. May be null for some algorithms.
     private AlgorithmParameterSpec parameters;
@@ -51,11 +51,12 @@ public final class PK11KeyGenerator implements KeyGenerator {
     // Used to convert Java Password into a byte[].
     private KeyGenerator.CharToByteConverter charToByte;
 
-    private PK11KeyGenerator() { }
+    private PK11KeyGenerator() {
+    }
 
     // package private constructor
     PK11KeyGenerator(PK11Token token, KeyGenAlgorithm algorithm) {
-        if( token==null || algorithm==null ) {
+        if (token == null || algorithm == null) {
             throw new NullPointerException();
         }
         this.token = token;
@@ -68,16 +69,14 @@ public final class PK11KeyGenerator implements KeyGenerator {
         };
     }
 
-
     /**
      * Sets the character to byte converter for passwords. The default
      * conversion is UTF8 with no null termination.
      */
     @Override
     public void setCharToByteConverter(
-                    KeyGenerator.CharToByteConverter charToByte)
-    {
-        if( charToByte==null ) {
+            KeyGenerator.CharToByteConverter charToByte) {
+        if (charToByte == null) {
             throw new IllegalArgumentException("CharToByteConverter is null");
         }
         this.charToByte = charToByte;
@@ -88,27 +87,25 @@ public final class PK11KeyGenerator implements KeyGenerator {
      */
     @Override
     public void initialize(int strength)
-        throws InvalidAlgorithmParameterException
-    {
+            throws InvalidAlgorithmParameterException {
         // if this algorithm only accepts PBE key gen params, it can't
         // use a strength
         Class<?>[] paramClasses = algorithm.getParameterClasses();
-        if( paramClasses.length == 1 &&
-                paramClasses[0].equals(PBEKeyGenParams.class) )
-        {
-            throw new InvalidAlgorithmParameterException("PBE keygen "+
-                "algorithms require PBEKeyGenParams ");
+        if (paramClasses.length == 1 &&
+                paramClasses[0].equals(PBEKeyGenParams.class)) {
+            throw new InvalidAlgorithmParameterException("PBE keygen " +
+                    "algorithms require PBEKeyGenParams ");
         }
 
         // validate the strength for our algorithm
-        if( ! algorithm.isValidStrength(strength) ) {
-            throw new InvalidAlgorithmParameterException(strength+
-                " is not a valid strength for "+algorithm);
+        if (!algorithm.isValidStrength(strength)) {
+            throw new InvalidAlgorithmParameterException(strength +
+                    " is not a valid strength for " + algorithm);
         }
 
-        if( strength % 8 != 0 ) {
+        if (strength % 8 != 0) {
             throw new InvalidAlgorithmParameterException(
-                "Key strength must be divisible by 8");
+                    "Key strength must be divisible by 8");
         }
 
         this.strength = strength;
@@ -116,25 +113,23 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
     @Override
     public void initialize(AlgorithmParameterSpec parameters)
-        throws InvalidAlgorithmParameterException
-    {
-        if( ! algorithm.isValidParameterObject(parameters) ) {
+            throws InvalidAlgorithmParameterException {
+        if (!algorithm.isValidParameterObject(parameters)) {
             String name = "null";
-            if( parameters != null ) {
+            if (parameters != null) {
                 name = parameters.getClass().getName();
             }
             throw new InvalidAlgorithmParameterException(
-                algorithm + " cannot use a " + name + " parameter");
+                    algorithm + " cannot use a " + name + " parameter");
         }
         this.parameters = parameters;
     }
 
     @Override
-    public void setKeyUsages(SymmetricKey.Usage[] usages)
-    {
+    public void setKeyUsages(SymmetricKey.Usage[] usages) {
         this.opFlags = 0;
-        for( int i = 0; i < usages.length; i++ ) {
-            if( usages[i] != null ) {
+        for (int i = 0; i < usages.length; i++) {
+            if (usages[i] != null) {
                 this.opFlags |= usages[i].value();
             }
         }
@@ -145,14 +140,12 @@ public final class PK11KeyGenerator implements KeyGenerator {
     }
 
     @Override
-    public void temporaryKeys(boolean temp)
-    {
+    public void temporaryKeys(boolean temp) {
         this.temporaryKeyMode = temp;
     }
 
     @Override
-    public void sensitiveKeys(boolean sensitive)
-    {
+    public void sensitiveKeys(boolean sensitive) {
         this.sensitiveKeyMode = sensitive ? 1 : 0;
     }
 
@@ -162,27 +155,26 @@ public final class PK11KeyGenerator implements KeyGenerator {
      */
     @Override
     public SymmetricKey generate()
-        throws IllegalStateException, TokenException, CharConversionException
-    {
+            throws IllegalStateException, TokenException, CharConversionException {
         Class<?>[] paramClasses = algorithm.getParameterClasses();
         boolean is_pbe = paramClasses.length == 1 && paramClasses[0].equals(PBEKeyGenParams.class);
         boolean is_kbkdf = paramClasses.length == 1 && parameters instanceof KBKDFParameterSpec;
 
         if (is_pbe) {
-            if(parameters==null || !(parameters instanceof PBEKeyGenParams)) {
+            if (parameters == null || !(parameters instanceof PBEKeyGenParams)) {
                 throw new IllegalStateException(
-                    "PBE keygen algorithms require PBEKeyGenParams");
+                        "PBE keygen algorithms require PBEKeyGenParams");
             }
-            PBEKeyGenParams kgp = (PBEKeyGenParams)parameters;
+            PBEKeyGenParams kgp = (PBEKeyGenParams) parameters;
 
-            byte[] pwbytes=null;
+            byte[] pwbytes = null;
             try {
-                pwbytes = charToByte.convert( kgp.getPassword().getChars() );
+                pwbytes = charToByte.convert(kgp.getPassword().getChars());
                 return generatePBE(
-                    token, algorithm, kgp.getEncryptionAlgorithm(),
-                    pwbytes, kgp.getSalt(), kgp.getIterations());
+                        token, algorithm, kgp.getEncryptionAlgorithm(),
+                        pwbytes, kgp.getSalt(), kgp.getIterations());
             } finally {
-                if( pwbytes!=null ) {
+                if (pwbytes != null) {
                     Password.wipeBytes(pwbytes);
                 }
             }
@@ -196,11 +188,11 @@ public final class PK11KeyGenerator implements KeyGenerator {
 
                     long pkcs11_alg = algorithm.getEnum().getValue();
                     result = generateKBKDF(token, kps.prfKey, pkcs11_alg,
-                                           kps.mPointer, kps.mPointerSize,
-                                           kps.derivedKeyAlgorithm,
-                                           kps.keySize,
-                                           (int) opFlags,
-                                           temporaryKeyMode, sensitiveKeyMode);
+                            kps.mPointer, kps.mPointerSize,
+                            kps.derivedKeyAlgorithm,
+                            kps.keySize,
+                            (int) opFlags,
+                            temporaryKeyMode, sensitiveKeyMode);
                 } finally {
                     kps.close();
                 }
@@ -227,35 +219,34 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * of <code>PBEKeyGenParams</code>.
      *
      * @return The initialization vector derived from the password and salt
-     *      using the PBE algorithm.
+     *         using the PBE algorithm.
      */
     @Override
     public byte[] generatePBE_IV()
-        throws TokenException, CharConversionException
-    {
+            throws TokenException, CharConversionException {
         Class<?>[] paramClasses = algorithm.getParameterClasses();
         boolean is_pbe = paramClasses.length == 1 && paramClasses[0].equals(PBEKeyGenParams.class);
 
         if (is_pbe) {
-            if(parameters==null || !(parameters instanceof PBEKeyGenParams)) {
+            if (parameters == null || !(parameters instanceof PBEKeyGenParams)) {
                 throw new IllegalStateException(
-                    "PBE keygen algorithms require PBEKeyGenParams");
+                        "PBE keygen algorithms require PBEKeyGenParams");
             }
-            PBEKeyGenParams kgp = (PBEKeyGenParams)parameters;
+            PBEKeyGenParams kgp = (PBEKeyGenParams) parameters;
 
-            byte[] pwbytes=null;
+            byte[] pwbytes = null;
             try {
                 pwbytes = charToByte.convert(kgp.getPassword().getChars());
                 return generatePBE_IV(algorithm, pwbytes, kgp.getSalt(),
-                                    kgp.getIterations() );
+                        kgp.getIterations());
             } finally {
-                if(pwbytes!=null) {
+                if (pwbytes != null) {
                     Password.wipeBytes(pwbytes);
                 }
             }
         } else {
             throw new IllegalStateException(
-                "IV generation can only be performed by PBE algorithms");
+                    "IV generation can only be performed by PBE algorithms");
         }
     }
 
@@ -263,23 +254,21 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * A native method to generate an IV using a PBE algorithm.
      * None of the parameters should be NULL.
      */
-    private static native byte[]
-    generatePBE_IV(KeyGenAlgorithm alg, byte[] password, byte[] salt,
-                    int iterations) throws TokenException;
+    private static native byte[] generatePBE_IV(KeyGenAlgorithm alg, byte[] password, byte[] salt,
+            int iterations) throws TokenException;
 
     /**
      * Allows a SymmetricKey to be cloned on a different token.
      *
      * @exception SymmetricKey.NotExtractableException If the key material
-     *      cannot be extracted from the current token.
+     *                cannot be extracted from the current token.
      * @exception InvalidKeyException If the owning token cannot process
-     *      the key to be cloned.
+     *                the key to be cloned.
      */
     @Override
     public SymmetricKey clone(SymmetricKey key)
-        throws SymmetricKey.NotExtractableException,
-            InvalidKeyException, TokenException
-    {
+            throws SymmetricKey.NotExtractableException,
+            InvalidKeyException, TokenException {
         return clone(key, token);
     }
 
@@ -289,57 +278,52 @@ public final class PK11KeyGenerator implements KeyGenerator {
      * @param key The key to clone.
      * @param token The token on which to clone the key.
      * @exception SymmetricKey.NotExtractableException If the key material
-     *      cannot be extracted from the current token.
+     *                cannot be extracted from the current token.
      * @exception InvalidKeyException If the owning token cannot process
-     *      the key to be cloned.
+     *                the key to be cloned.
      */
     public static SymmetricKey clone(SymmetricKey key, PK11Token token)
-        throws SymmetricKey.NotExtractableException, InvalidKeyException,
-            TokenException
-    {
-        if( ! (key instanceof PK11SymKey) ) {
+            throws SymmetricKey.NotExtractableException, InvalidKeyException,
+            TokenException {
+        if (!(key instanceof PK11SymKey)) {
             throw new InvalidKeyException("Key is not a PKCS #11 key");
         }
         return nativeClone(token, key);
     }
 
-    private static native SymmetricKey
-    nativeClone(PK11Token token, SymmetricKey toBeCloned)
-        throws SymmetricKey.NotExtractableException, TokenException;
-
+    private static native SymmetricKey nativeClone(PK11Token token, SymmetricKey toBeCloned)
+            throws SymmetricKey.NotExtractableException, TokenException;
 
     /**
      * A native method to generate a non-PBE key.
+     * 
      * @param token The token where the key generation happens
      * @param algorithm The algorithm to use
      * @param strength The key size in bits, should be 0 for fixed-length
-     *      key algorithms.
+     *            key algorithms.
      * @param opFlags The crypto operations the key will support
      * @param temporary Whether the key will be temporary or permanent
      */
-    private static native SymmetricKey
-    generateNormal(PK11Token token, KeyGenAlgorithm algorithm, int strength,
-        int opFlags, boolean temporary, int sensitive)
-        throws TokenException;
+    private static native SymmetricKey generateNormal(PK11Token token, KeyGenAlgorithm algorithm, int strength,
+            int opFlags, boolean temporary, int sensitive)
+            throws TokenException;
 
     /**
      * A native method to generate a PBE key. None of the parameters should
-     *  be null.
+     * be null.
      */
-    private static native SymmetricKey
-    generatePBE(
-        PK11Token token, KeyGenAlgorithm algorithm, EncryptionAlgorithm encAlg,
-        byte[] pass, byte[] salt, int iterationCount)
-        throws TokenException;
+    private static native SymmetricKey generatePBE(
+            PK11Token token, KeyGenAlgorithm algorithm, EncryptionAlgorithm encAlg,
+            byte[] pass, byte[] salt, int iterationCount)
+            throws TokenException;
 
     /**
      * A native method to generate a key using KBKDF. None of the parameters
      * should be null.
      */
-    private static native SymmetricKey
-    generateKBKDF(PK11Token token, PK11SymKey baseKeyObj, long algorithm,
-        NativeProxy pointer, long pointer_size, long derivedKeyAlgorithm,
-        int strength, int opFlags, boolean temporary, int sensitive)
-        throws TokenException;
+    private static native SymmetricKey generateKBKDF(PK11Token token, PK11SymKey baseKeyObj, long algorithm,
+            NativeProxy pointer, long pointer_size, long derivedKeyAlgorithm,
+            int strength, int opFlags, boolean temporary, int sensitive)
+            throws TokenException;
 
 }

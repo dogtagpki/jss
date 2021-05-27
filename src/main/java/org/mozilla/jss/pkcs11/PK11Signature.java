@@ -19,21 +19,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class PK11Signature
-    extends org.mozilla.jss.crypto.SignatureSpi
-    implements java.lang.AutoCloseable
-{
+        extends org.mozilla.jss.crypto.SignatureSpi
+        implements java.lang.AutoCloseable {
 
     public PK11Signature(PK11Token token, SignatureAlgorithm algorithm)
-        throws NoSuchAlgorithmException, TokenException
-    {
-        assert(token!=null && algorithm!=null);
+            throws NoSuchAlgorithmException, TokenException {
+        assert (token != null && algorithm != null);
 
         // Make sure this token supports this algorithm.  It's OK if
         // it only supports the signing part; the hashing can be done
         // on the internal module.
-        if( ! token.doesAlgorithm(algorithm)  &&
-            ! token.doesAlgorithm(algorithm.getSigningAlg()) )
-        {
+        if (!token.doesAlgorithm(algorithm) &&
+                !token.doesAlgorithm(algorithm.getSigningAlg())) {
             throw new NoSuchAlgorithmException();
         }
 
@@ -63,13 +60,12 @@ public final class PK11Signature
         }
     }
 
-	@Override
+    @Override
     public void engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey)
-		throws InvalidKeyException, TokenException
-	{
+            throws InvalidKeyException, TokenException {
         PK11PrivKey privKey;
 
-        assert(privateKey!=null);
+        assert (privateKey != null);
 
         //
         // Scrutinize the key. Make sure it:
@@ -77,75 +73,69 @@ public final class PK11Signature
         //  -lives on this token
         //  -is the right type for the algorithm
         //
-		if( privateKey == null ) {
-			throw new InvalidKeyException("private key is null");
-		}
-		if( ! (privateKey instanceof PK11PrivKey) ) {
-			throw new InvalidKeyException("privateKey is not a PKCS #11 "+
-				"private key");
-		}
+        if (privateKey == null) {
+            throw new InvalidKeyException("private key is null");
+        }
+        if (!(privateKey instanceof PK11PrivKey)) {
+            throw new InvalidKeyException("privateKey is not a PKCS #11 " +
+                    "private key");
+        }
 
         privKey = (PK11PrivKey) privateKey;
 
         try {
-    		privKey.verifyKeyIsOnToken(token);
-        } catch(NoSuchItemOnTokenException e) {
+            privKey.verifyKeyIsOnToken(token);
+        } catch (NoSuchItemOnTokenException e) {
             throw new InvalidKeyException(e.toString());
         }
 
         try {
-            if( KeyType.getKeyTypeFromAlgorithm(algorithm)
-                             != privKey.getKeyType())
-            {
+            if (KeyType.getKeyTypeFromAlgorithm(algorithm) != privKey.getKeyType()) {
                 throw new InvalidKeyException(
-                    "Key type is inconsistent with algorithm");
+                        "Key type is inconsistent with algorithm");
             }
-        } catch( NoSuchAlgorithmException e ) {
+        } catch (NoSuchAlgorithmException e) {
             throw new InvalidKeyException("Unknown algorithm: " + algorithm, e);
         }
 
         // Finally, the key is OK
-		key = privKey;
+        key = privKey;
 
         // Now initialize the signature context
-        if( ! raw ) {
+        if (!raw) {
             sigContext = null;
             initSigContext();
         }
 
         // Don't set state until we know everything worked
-		state = SIGN;
-	}
+        state = SIGN;
+    }
 
     /*************************************************************
-    ** This is just here for JCA compliance, we don't take randoms this way.
-    */
-	@Override
-    public void
-    engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey,
-                    SecureRandom random)
-		throws InvalidKeyException, TokenException
-	{
-		throw new RuntimeException("PK11Signature.engineInitSign() is not supported");
+     ** This is just here for JCA compliance, we don't take randoms this way.
+     */
+    @Override
+    public void engineInitSign(org.mozilla.jss.crypto.PrivateKey privateKey,
+            SecureRandom random)
+            throws InvalidKeyException, TokenException {
+        throw new RuntimeException("PK11Signature.engineInitSign() is not supported");
 
-		// engineInitSign(privateKey);
-	}
+        // engineInitSign(privateKey);
+    }
 
     /*************************************************************
-    ** Creates a signing context, initializes it,
-    ** and sets the sigContext field.
-    */
+     ** Creates a signing context, initializes it,
+     ** and sets the sigContext field.
+     */
     protected native void initSigContext()
-        throws TokenException;
+            throws TokenException;
 
-
-	@Override
+    @Override
     public void engineInitVerify(PublicKey publicKey)
-		throws InvalidKeyException, TokenException
-	{
-		PK11PubKey pubKey;
+            throws InvalidKeyException, TokenException {
+        PK11PubKey pubKey;
 
-        assert(publicKey!=null);
+        assert (publicKey != null);
 
         //
         // Scrutinize the key. Make sure it:
@@ -153,180 +143,171 @@ public final class PK11Signature
         //  -lives on this token
         //  -is the right type for the algorithm
         //
-		if( ! (publicKey instanceof PK11PubKey) ) {
-			throw new InvalidKeyException("publicKey is not a PKCS #11 "+
-				"public key");
-		}
-		pubKey = (PK11PubKey) publicKey;
+        if (!(publicKey instanceof PK11PubKey)) {
+            throw new InvalidKeyException("publicKey is not a PKCS #11 " +
+                    "public key");
+        }
+        pubKey = (PK11PubKey) publicKey;
 
-		//try {
-		//	pubKey.verifyKeyIsOnToken(token);
-		//} catch( NoSuchItemOnTokenException e) {
-		//	throw new InvalidKeyException(e.toString());
-		//}
+        //try {
+        //	pubKey.verifyKeyIsOnToken(token);
+        //} catch( NoSuchItemOnTokenException e) {
+        //	throw new InvalidKeyException(e.toString());
+        //}
 
         try {
-            if( KeyType.getKeyTypeFromAlgorithm(algorithm)
-                             != pubKey.getKeyType())
-            {
+            if (KeyType.getKeyTypeFromAlgorithm(algorithm) != pubKey.getKeyType()) {
                 throw new InvalidKeyException(
-                    "Key type is inconsistent with algorithm");
+                        "Key type is inconsistent with algorithm");
             }
-        } catch( NoSuchAlgorithmException e ) {
+        } catch (NoSuchAlgorithmException e) {
             throw new InvalidKeyException("Unknown algorithm: " + algorithm, e);
         }
 
-		key = pubKey;
+        key = pubKey;
 
-        if( ! raw ) {
+        if (!raw) {
             sigContext = null;
             initVfyContext();
         }
 
         // Don't set state until we know everything worked.
-		state = VERIFY;
-	}
+        state = VERIFY;
+    }
 
     protected native void initVfyContext() throws TokenException;
 
-	@Override
+    @Override
     public void engineUpdate(byte b)
-        throws SignatureException, TokenException
-    {
-        engineUpdate(new byte[] {b}, 0, 1);
+            throws SignatureException, TokenException {
+        engineUpdate(new byte[] { b }, 0, 1);
     }
 
     @Override
     public void engineUpdate(byte[] b, int off, int len)
-        throws SignatureException, TokenException
-    {
-        assert(b != null);
-        if( (state==SIGN || state==VERIFY) ) {
-            if(!raw && sigContext==null) {
+            throws SignatureException, TokenException {
+        assert (b != null);
+        if ((state == SIGN || state == VERIFY)) {
+            if (!raw && sigContext == null) {
                 throw new SignatureException("Signature has no context");
-            } else if( raw && rawInput==null) {
+            } else if (raw && rawInput == null) {
                 throw new SignatureException("Raw signature has no input stream");
             }
         } else {
-            assert(state == UNINITIALIZED);
+            assert (state == UNINITIALIZED);
             throw new SignatureException("Signature is not initialized");
         }
-        assert(token!=null);
-        assert(tokenProxy!=null);
-        assert(algorithm!=null);
-        assert(key!=null);
+        assert (token != null);
+        assert (tokenProxy != null);
+        assert (algorithm != null);
+        assert (key != null);
 
-        if( raw ) {
+        if (raw) {
             rawInput.write(b, off, len);
         } else {
-            engineUpdateNative( b, off, len);
+            engineUpdateNative(b, off, len);
         }
     }
 
     protected native void engineUpdateNative(byte[] b, int off, int len)
-        throws TokenException;
-
+            throws TokenException;
 
     @Override
     public byte[] engineSign()
-        throws SignatureException, TokenException
-    {
-        if(state != SIGN) {
+            throws SignatureException, TokenException {
+        if (state != SIGN) {
             throw new SignatureException("Signature is not initialized");
         }
-        if(!raw && sigContext==null) {
+        if (!raw && sigContext == null) {
             throw new SignatureException("Signature has no context");
-        } else if(raw && rawInput==null) {
+        } else if (raw && rawInput == null) {
             throw new SignatureException("Signature has no input");
         }
-        assert(token!=null);
-        assert(tokenProxy!=null);
-        assert(algorithm!=null);
-        assert(key!=null);
+        assert (token != null);
+        assert (tokenProxy != null);
+        assert (algorithm != null);
+        assert (key != null);
 
         byte[] result;
-        if( raw ) {
-            result = engineRawSignNative(token, (PK11PrivKey)key,
-                rawInput.toByteArray());
+        if (raw) {
+            result = engineRawSignNative(token, (PK11PrivKey) key,
+                    rawInput.toByteArray());
             rawInput.reset();
         } else {
             result = engineSignNative();
         }
-		state = UNINITIALIZED;
-		sigContext = null;
+        state = UNINITIALIZED;
+        sigContext = null;
 
-		return result;
+        return result;
     }
 
     @Override
     public int engineSign(byte[] outbuf, int offset, int len)
-        throws SignatureException, TokenException
-    {
-        assert(outbuf!=null);
+            throws SignatureException, TokenException {
+        assert (outbuf != null);
         byte[] sig;
-        if( raw ) {
-            sig = engineRawSignNative(token, (PK11PrivKey)key,
-                rawInput.toByteArray());
+        if (raw) {
+            sig = engineRawSignNative(token, (PK11PrivKey) key,
+                    rawInput.toByteArray());
             rawInput.reset();
         } else {
-		    sig = engineSign();
+            sig = engineSign();
         }
-		if(	(outbuf==null) || (outbuf.length <= offset) ||
-			(len < sig.length) || (offset+len > outbuf.length))
-		{
-			throw new SignatureException(
-					"outbuf is not sufficient to hold signature");
-		}
-		System.arraycopy( sig, 0, outbuf, offset, sig.length);
-		return sig.length;
+        if ((outbuf == null) || (outbuf.length <= offset) ||
+                (len < sig.length) || (offset + len > outbuf.length)) {
+            throw new SignatureException(
+                    "outbuf is not sufficient to hold signature");
+        }
+        System.arraycopy(sig, 0, outbuf, offset, sig.length);
+        return sig.length;
     }
 
     /**
      * Performs raw signing of the given hash with the given private key.
      */
     private static native byte[] engineRawSignNative(PK11Token token,
-        PrivateKey key, byte[] hash)
-        throws SignatureException, TokenException;
+            PrivateKey key, byte[] hash)
+            throws SignatureException, TokenException;
 
     private native byte[] engineSignNative()
-        throws SignatureException, TokenException;
+            throws SignatureException, TokenException;
 
     @Override
     public boolean engineVerify(byte[] sigBytes)
-        throws SignatureException, TokenException
-    {
-        assert(sigBytes!=null);
-		if(state != VERIFY) {
-			throw new SignatureException(
-						"Signature is not initialized properly");
-		}
-		if(!raw && sigContext==null) {
-			throw new SignatureException("Signature has no context");
-		}
-        if(raw && rawInput==null) {
+            throws SignatureException, TokenException {
+        assert (sigBytes != null);
+        if (state != VERIFY) {
+            throw new SignatureException(
+                    "Signature is not initialized properly");
+        }
+        if (!raw && sigContext == null) {
+            throw new SignatureException("Signature has no context");
+        }
+        if (raw && rawInput == null) {
             throw new SignatureException("Signature has no input");
         }
-		assert(token!=null);
-		assert(tokenProxy!=null);
-		assert(algorithm!=null);
-		assert(key!=null);
+        assert (token != null);
+        assert (tokenProxy != null);
+        assert (algorithm != null);
+        assert (key != null);
 
-		if(sigBytes==null) {
-			return false;
-		}
+        if (sigBytes == null) {
+            return false;
+        }
 
         boolean result;
-        if( raw ) {
-            result = engineRawVerifyNative(token, (PK11PubKey)key,
-                rawInput.toByteArray(), sigBytes);
+        if (raw) {
+            result = engineRawVerifyNative(token, (PK11PubKey) key,
+                    rawInput.toByteArray(), sigBytes);
             rawInput.reset();
         } else {
             result = engineVerifyNative(sigBytes);
         }
-		state = UNINITIALIZED;
-		sigContext = null;
+        state = UNINITIALIZED;
+        sigContext = null;
 
-		return result;
+        return result;
     }
 
     /**
@@ -334,23 +315,22 @@ public final class PK11Signature
      * given public key, on the given token.
      */
     protected static native boolean engineRawVerifyNative(PK11Token token,
-        PublicKey key, byte[] hash, byte[] signature)
-        throws SignatureException, TokenException;
+            PublicKey key, byte[] hash, byte[] signature)
+            throws SignatureException, TokenException;
 
-	native protected boolean engineVerifyNative(byte[] sigBytes)
-		throws SignatureException, TokenException;
+    native protected boolean engineVerifyNative(byte[] sigBytes)
+            throws SignatureException, TokenException;
 
     @Override
     public void engineSetParameter(AlgorithmParameterSpec params)
-        throws InvalidAlgorithmParameterException, TokenException
-    {
+            throws InvalidAlgorithmParameterException, TokenException {
         // For now we only care about RSA PSS parameter specs
         if (!isRSAPSSAlgorithm((SignatureAlgorithm) algorithm)) {
             String msg = "Passing algorithm parameters for this algorithm (";
             msg += algorithm + ") is not supported: " + params.toString();
             throw new InvalidAlgorithmParameterException(msg);
         }
-        
+
         if (!(params instanceof PSSParameterSpec)) {
             String msg = "Unsupported algorithm parameter spec class for ";
             msg += "RSA/PSS: " + params.getClass().getName() + " -- ";
@@ -367,8 +347,7 @@ public final class PK11Signature
     }
 
     private Algorithm getRSAPSSDigestAlgFromSpec(PSSParameterSpec params)
-        throws InvalidAlgorithmParameterException
-    {
+            throws InvalidAlgorithmParameterException {
         String hashAlgName = params.getDigestAlgorithm();
         Algorithm hashAlg = null;
 
@@ -394,9 +373,9 @@ public final class PK11Signature
         }
 
         if (algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest
-            || algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest 
-            || algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest
-            || algorithm == SignatureAlgorithm.RSAPSSSignature) {
+                || algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest
+                || algorithm == SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest
+                || algorithm == SignatureAlgorithm.RSAPSSSignature) {
 
             return true;
         }
@@ -427,7 +406,7 @@ public final class PK11Signature
     protected PK11Key key;
     protected int state;
     protected SigContextProxy sigContext;
-    protected boolean raw=false; // raw signing only, no hashing
+    protected boolean raw = false; // raw signing only, no hashing
     protected ByteArrayOutputStream rawInput;
 
     // states
@@ -443,6 +422,7 @@ class SigContextProxy extends NativeProxy {
     public SigContextProxy(byte[] pointer) {
         super(pointer);
     }
+
     @Override
     protected native void releaseNativeResources();
 }

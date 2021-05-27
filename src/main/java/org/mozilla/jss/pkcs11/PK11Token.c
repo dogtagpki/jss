@@ -32,11 +32,11 @@
 #define KEYTYPE_RSA_STRING "rsa"
 #define KEYTYPE_EC_STRING "ec"
 
-static CERTCertificateRequest* make_cert_request(JNIEnv *env, 
-			 const char *subject, SECKEYPublicKey *pubk);
+static CERTCertificateRequest* make_cert_request(JNIEnv *env,
+		const char *subject, SECKEYPublicKey *pubk);
 static void GenerateCertRequest(JNIEnv *env, SECOidTag ktype,
-			 const char *subject, PK11SlotInfo *slot,
-			 unsigned char **b64request, void *params);
+		const char *subject, PK11SlotInfo *slot, unsigned char **b64request,
+		void *params);
 
 /* these values are taken from PK11KeyPairGenerator.java */
 #define DEFAULT_RSA_KEY_SIZE 2048
@@ -53,63 +53,54 @@ static void GenerateCertRequest(JNIEnv *env, SECOidTag ktype,
  *
  * Returns a new PK11Token object, or NULL if an exception was thrown.
  */
-jobject
-JSS_PK11_wrapPK11Token(JNIEnv *env, PK11SlotInfo **slot)
-{
-    jclass tokenClass;
-    jmethodID constructor;
-    jbyteArray byteArray;
-    jobject Token=NULL;
-    jboolean internal;
-    jboolean keyStorage;
-    PK11SlotInfo *internalSlot = NULL;
+jobject JSS_PK11_wrapPK11Token(JNIEnv *env, PK11SlotInfo **slot) {
+	jclass tokenClass;
+	jmethodID constructor;
+	jbyteArray byteArray;
+	jobject Token = NULL;
+	jboolean internal;
+	jboolean keyStorage;
+	PK11SlotInfo *internalSlot = NULL;
 
-    PR_ASSERT(env!=NULL && slot!=NULL && *slot!=NULL);
+	PR_ASSERT(env != NULL && slot != NULL && *slot != NULL);
 
-    internalSlot = PK11_GetInternalSlot();
-    internal = (*slot == internalSlot);
-    keyStorage = PK11_IsInternalKeySlot(*slot);
+	internalSlot = PK11_GetInternalSlot();
+	internal = (*slot == internalSlot);
+	keyStorage = PK11_IsInternalKeySlot(*slot);
 
-    byteArray = JSS_ptrToByteArray(env, (void*)*slot);
+	byteArray = JSS_ptrToByteArray(env, (void*) *slot);
 
-    /*
-     * Lookup the class and constructor
-     */
-    tokenClass = (*env)->FindClass(env, PK11TOKEN_CLASS_NAME);
-    if(tokenClass == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/*
+	 * Lookup the class and constructor
+	 */
+	tokenClass = (*env)->FindClass(env, PK11TOKEN_CLASS_NAME);
+	if (tokenClass == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    constructor = (*env)->GetMethodID(
-						env,
-						tokenClass,
-						PK11TOKEN_CONSTRUCTOR_NAME,
-						PK11TOKEN_CONSTRUCTOR_SIG);
-    if(constructor == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	constructor = (*env)->GetMethodID(env, tokenClass,
+	PK11TOKEN_CONSTRUCTOR_NAME,
+	PK11TOKEN_CONSTRUCTOR_SIG);
+	if (constructor == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /* Call the constructor */
-    Token = (*env)->NewObject(env,
-                              tokenClass,
-                              constructor,
-                              byteArray,
-                              internal,
-                              keyStorage);
+	/* Call the constructor */
+	Token = (*env)->NewObject(env, tokenClass, constructor, byteArray, internal,
+			keyStorage);
 
-finish:
-    if (Token == NULL) {
-        PK11_FreeSlot(*slot);
-    }
+	finish: if (Token == NULL) {
+		PK11_FreeSlot(*slot);
+	}
 
-    if (internalSlot != NULL) {
-        PK11_FreeSlot(internalSlot);
-    }
+	if (internalSlot != NULL) {
+		PK11_FreeSlot(internalSlot);
+	}
 
-    *slot = NULL;
-    return Token;
+	*slot = NULL;
+	return Token;
 }
 
 /************************************************************************
@@ -118,30 +109,28 @@ finish:
  *
  * returns true if this token needs to be logged into before it can be used.
  */
-JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_needsLogin
-  (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
-    jboolean retval;
+JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_needsLogin(
+		JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot;
+	jboolean retval;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        retval = JNI_FALSE;
-        goto finish;
-    }
-    PR_ASSERT(slot != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		retval = JNI_FALSE;
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    if(PK11_NeedLogin(slot) == PR_TRUE) {
-        retval = JNI_TRUE;
-    } else {
-        retval = JNI_FALSE;
-    }
+	if (PK11_NeedLogin(slot) == PR_TRUE) {
+		retval = JNI_TRUE;
+	} else {
+		retval = JNI_FALSE;
+	}
 
-finish:
-    return retval;
+	finish: return retval;
 }
 
 /************************************************************************
@@ -150,30 +139,28 @@ finish:
  *
  * Returns true if this token is logged in.
  */
-JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_isLoggedIn
-  (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
-    jboolean retval;
+JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_isLoggedIn(
+		JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot;
+	jboolean retval;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        retval =  JNI_FALSE;
-        goto finish;
-    }
-    PR_ASSERT(slot != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		retval = JNI_FALSE;
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    if(PK11_IsLoggedIn(slot, NULL) == PR_TRUE) {
-        retval = JNI_TRUE;
-    } else {
-        retval = JNI_FALSE;
-    }
+	if (PK11_IsLoggedIn(slot, NULL) == PR_TRUE) {
+		retval = JNI_TRUE;
+	} else {
+		retval = JNI_FALSE;
+	}
 
-finish:
-    return retval;
+	finish: return retval;
 }
 
 /************************************************************************
@@ -185,38 +172,38 @@ finish:
  * Throws IncorrectPINException if the supplied PIN is incorrect.
  */
 JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_nativeLogin
-  (JNIEnv *env, jobject this, jobject callback)
+(JNIEnv *env, jobject this, jobject callback)
 {
-    PK11SlotInfo *slot;
+	PK11SlotInfo *slot;
 
-    PR_ASSERT(env!=NULL && this!=NULL && callback!=NULL);
+	PR_ASSERT(env!=NULL && this!=NULL && callback!=NULL);
 
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        goto finish;
-    }
-    PR_ASSERT(slot != NULL);
+	if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    /* Is the token initialized? */
-    if(PK11_NeedUserInit(slot)) {
-        JSS_nativeThrow(
-            env,
-			TOKEN_NOT_INITIALIZED_EXCEPTION
-        );
-        goto finish;
-    }
+	/* Is the token initialized? */
+	if(PK11_NeedUserInit(slot)) {
+		JSS_nativeThrow(
+				env,
+				TOKEN_NOT_INITIALIZED_EXCEPTION
+		);
+		goto finish;
+	}
 
-    if(PK11_Authenticate(slot, PR_TRUE /*loadCerts*/, (void*)callback)
-                            != SECSuccess)
-    {
-        JSS_nativeThrow(env, INCORRECT_PASSWORD_EXCEPTION);
-        goto finish;
-    }
+	if(PK11_Authenticate(slot, PR_TRUE /*loadCerts*/, (void*)callback)
+			!= SECSuccess)
+	{
+		JSS_nativeThrow(env, INCORRECT_PASSWORD_EXCEPTION);
+		goto finish;
+	}
 
-    /* Success! */
-finish:
-    return;
+	/* Success! */
+	finish:
+	return;
 }
 
 /************************************************************************
@@ -224,30 +211,29 @@ finish:
  * P K 1 1 T o k e n . l o g o u t
  */
 JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_logout
-  (JNIEnv *env, jobject this)
+(JNIEnv *env, jobject this)
 {
-    PK11SlotInfo *slot;
+	PK11SlotInfo *slot;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env!=NULL && this!=NULL);
 
+	if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+		/* an exception occurred */
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception occurred */
-        goto finish;
-    }
-    PR_ASSERT(slot != NULL);
+	if( PK11_Logout(slot) != SECSuccess) {
+		JSS_nativeThrowMsg( env,
+				TOKEN_EXCEPTION,
+				"Unable to logout token"
+		);
+		goto finish;
+	}
 
-    if( PK11_Logout(slot) != SECSuccess) {
-        JSS_nativeThrowMsg( env,
-			TOKEN_EXCEPTION,
-            "Unable to logout token"
-        );
-        goto finish;
-    }
-
-finish:
-    return;
+	finish:
+	return;
 }
 
 /************************************************************************
@@ -267,37 +253,34 @@ finish:
  *
  */
 JNIEXPORT jint JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_getLoginMode
-  (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
-    jint mode=ONE_TIME;
-    int askpw;
-    int timeout;
+Java_org_mozilla_jss_pkcs11_PK11Token_getLoginMode(JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot;
+	jint mode = ONE_TIME;
+	int askpw;
+	int timeout;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        goto finish;
-    }
-    PR_ASSERT(slot!=NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    PK11_GetSlotPWValues(slot, &askpw, &timeout);
+	PK11_GetSlotPWValues(slot, &askpw, &timeout);
 
-    if(askpw == -1) {
-        mode = EVERY_TIME;
-    } else if(askpw == 0) {
-        mode = ONE_TIME;
-    } else if(askpw == 1) {
-        mode = TIMEOUT;
-    } else {
-        JSS_throw(env, TOKEN_EXCEPTION);
-        goto finish;
-    }
+	if (askpw == -1) {
+		mode = EVERY_TIME;
+	} else if (askpw == 0) {
+		mode = ONE_TIME;
+	} else if (askpw == 1) {
+		mode = TIMEOUT;
+	} else {
+		JSS_throw(env, TOKEN_EXCEPTION);
+		goto finish;
+	}
 
-finish:
-    return mode;
+	finish: return mode;
 }
 
 /************************************************************************
@@ -305,27 +288,24 @@ finish:
  * P K 1 1 T o k e n . g e t L o g i n T i m e o u t M i n u t e s
  */
 JNIEXPORT jint JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_getLoginTimeoutMinutes
-  (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
-    int askpw;
-    int timeout=0;
+Java_org_mozilla_jss_pkcs11_PK11Token_getLoginTimeoutMinutes(JNIEnv *env,
+		jobject this) {
+	PK11SlotInfo *slot;
+	int askpw;
+	int timeout = 0;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        goto finish;
-    }
-    PR_ASSERT(slot!=NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    PK11_GetSlotPWValues(slot, &askpw, &timeout);
+	PK11_GetSlotPWValues(slot, &askpw, &timeout);
 
-finish:
-    return timeout;
+	finish: return timeout;
 }
-
 
 /************************************************************************
  *
@@ -333,37 +313,35 @@ finish:
  *
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_setLoginMode
-  (JNIEnv *env, jobject this, jint mode)
-{
-    PK11SlotInfo *slot;
-    int askpw, timeout;
+Java_org_mozilla_jss_pkcs11_PK11Token_setLoginMode(JNIEnv *env, jobject this,
+		jint mode) {
+	PK11SlotInfo *slot;
+	int askpw, timeout;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        goto finish;
-    }
-    PR_ASSERT(slot!=NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    PK11_GetSlotPWValues(slot, &askpw, &timeout);
+	PK11_GetSlotPWValues(slot, &askpw, &timeout);
 
-    if(mode == EVERY_TIME) {
-        askpw = -1;
-    } else if(mode == ONE_TIME) {
-        askpw = 0;
-    } else if(mode == TIMEOUT) {
-        askpw = 1;
-    } else {
-        JSS_throw(env, TOKEN_EXCEPTION);
-        goto finish;
-    }
+	if (mode == EVERY_TIME) {
+		askpw = -1;
+	} else if (mode == ONE_TIME) {
+		askpw = 0;
+	} else if (mode == TIMEOUT) {
+		askpw = 1;
+	} else {
+		JSS_throw(env, TOKEN_EXCEPTION);
+		goto finish;
+	}
 
-    PK11_SetSlotPWValues(slot, askpw, timeout);
+	PK11_SetSlotPWValues(slot, askpw, timeout);
 
-finish:
-    ;
+	finish: ;
 }
 
 /************************************************************************
@@ -372,22 +350,21 @@ finish:
  *
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_setLoginTimeoutMinutes
-  (JNIEnv *env, jobject this, jint newTimeout)
-{
-    PK11SlotInfo *slot;
-    int askpw, timeout;
+Java_org_mozilla_jss_pkcs11_PK11Token_setLoginTimeoutMinutes(JNIEnv *env,
+		jobject this, jint newTimeout) {
+	PK11SlotInfo *slot;
+	int askpw, timeout;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        return;
-    }
-    PR_ASSERT(slot!=NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		return;
+	}
+	PR_ASSERT(slot != NULL);
 
-    PK11_GetSlotPWValues(slot, &askpw, &timeout);
-    PK11_SetSlotPWValues(slot, askpw, newTimeout);
+	PK11_GetSlotPWValues(slot, &askpw, &timeout);
+	PK11_SetSlotPWValues(slot, askpw, newTimeout);
 
 }
 
@@ -397,30 +374,28 @@ Java_org_mozilla_jss_pkcs11_PK11Token_setLoginTimeoutMinutes
  *
  * Returns true if this token is present in the slot
  */
-JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_isPresent
-  (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
-    jboolean retval;
+JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_isPresent(
+		JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot;
+	jboolean retval;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        retval = JNI_FALSE;
-        goto finish;
-    }
-    PR_ASSERT(slot != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		retval = JNI_FALSE;
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    if(PK11_IsPresent(slot) == PR_TRUE) {
-        retval = JNI_TRUE;
-    } else {
-        retval = JNI_FALSE;
-    }
+	if (PK11_IsPresent(slot) == PR_TRUE) {
+		retval = JNI_TRUE;
+	} else {
+		retval = JNI_FALSE;
+	}
 
-finish:
-    return retval;
+	finish: return retval;
 }
 
 /************************************************************************
@@ -432,29 +407,28 @@ finish:
  * Presumably most tokens can have their PINs initialized arbitrarily
  * many times.
  */
-JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_PWInitable
-	(JNIEnv *env, jobject this)
-{
-	PK11SlotInfo *slot=NULL;
-	jboolean initable=JNI_FALSE;
+JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_PWInitable(
+		JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot = NULL;
+	jboolean initable = JNI_FALSE;
 
-	PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    /*
+	/*
 	 * Convert Java objects to native objects
 	 */
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        goto finish;
-    }
-	PR_ASSERT(slot!=NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
 	if (!PK11_IsInternalKeySlot(slot)) {
 		/* We don't know about other tokens */
 		initable = JNI_TRUE;
 	} else {
-		if(PK11_NeedUserInit(slot)) {
+		if (PK11_NeedUserInit(slot)) {
 			initable = JNI_TRUE;
 		} else {
 			/* Internal module only allows one init, after this you
@@ -463,8 +437,7 @@ JNIEXPORT jboolean JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_PWInitable
 		}
 	}
 
-finish:
-	return initable;
+	finish: return initable;
 }
 
 /************************************************************************
@@ -473,27 +446,27 @@ finish:
  * 
  */
 JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_initPassword
-  (JNIEnv *env, jobject this, jbyteArray ssopw, jbyteArray userpw)
+(JNIEnv *env, jobject this, jbyteArray ssopw, jbyteArray userpw)
 {
-    PK11SlotInfo *slot=NULL;
-    char *szSsopw=NULL, *szUserpw=NULL;
+	PK11SlotInfo *slot=NULL;
+	char *szSsopw=NULL, *szUserpw=NULL;
 	jboolean ssoIsCopy, userIsCopy;
-    SECStatus initResult;
-    PRErrorCode error;
+	SECStatus initResult;
+	PRErrorCode error;
 
-    PR_ASSERT(env!=NULL && this!=NULL && ssopw!=NULL && userpw!=NULL);
+	PR_ASSERT(env!=NULL && this!=NULL && ssopw!=NULL && userpw!=NULL);
 
-    /*
+	/*
 	 * Convert Java objects to native objects
 	 */
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        goto finish;
-    }
-    szSsopw = (char*) (*env)->GetByteArrayElements(env, ssopw, &ssoIsCopy);
-    szUserpw = (char*) (*env)->GetByteArrayElements(env, userpw, &userIsCopy);
-    PR_ASSERT(slot!=NULL && szSsopw!=NULL && szUserpw!=NULL);
+	if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		goto finish;
+	}
+	szSsopw = (char*) (*env)->GetByteArrayElements(env, ssopw, &ssoIsCopy);
+	szUserpw = (char*) (*env)->GetByteArrayElements(env, userpw, &userIsCopy);
+	PR_ASSERT(slot!=NULL && szSsopw!=NULL && szUserpw!=NULL);
 
 	/*
 	 * If we're on the internal module, make sure we can still be 
@@ -501,52 +474,52 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_initPassword
 	 */
 	if (PK11_IsInternalKeySlot(slot) && !PK11_NeedUserInit(slot)) {
 		JSS_nativeThrowMsg(env, ALREADY_INITIALIZED_EXCEPTION,
-			"Netscape Internal Key Token is already initialized");
+				"Netscape Internal Key Token is already initialized");
 		goto finish;
 	}
 
-    /*
+	/*
 	 * Initialize the PIN
 	 */
-    initResult = PK11_InitPin(slot, szSsopw, szUserpw);
-    if(initResult != SECSuccess) {
-        error = PR_GetError();
-    }
+	initResult = PK11_InitPin(slot, szSsopw, szUserpw);
+	if(initResult != SECSuccess) {
+		error = PR_GetError();
+	}
 
-    /*
+	/*
 	 * Throw exception if an error occurred
 	 */
-    if(initResult != SECSuccess) {
-        if(error == SEC_ERROR_BAD_PASSWORD) {
-            JSS_nativeThrowMsg(
-                env,
-				INCORRECT_PASSWORD_EXCEPTION,
-                "Incorrect security officer PIN"
-            );
-        } else {
-            JSS_nativeThrowMsg(
-                env,
-				TOKEN_EXCEPTION,
-                "Unable to initialize PIN"
-            );
-        }
-    }
+	if(initResult != SECSuccess) {
+		if(error == SEC_ERROR_BAD_PASSWORD) {
+			JSS_nativeThrowMsg(
+					env,
+					INCORRECT_PASSWORD_EXCEPTION,
+					"Incorrect security officer PIN"
+			);
+		} else {
+			JSS_nativeThrowMsg(
+					env,
+					TOKEN_EXCEPTION,
+					"Unable to initialize PIN"
+			);
+		}
+	}
 
-finish:
-    /*
+	finish:
+	/*
 	 * Free native objects
 	 */
-    if (szSsopw && ssoIsCopy) {
-        JSS_wipeCharArray(szSsopw);
-    }
-    JSS_DerefByteArray(env, ssopw, szSsopw, JNI_ABORT);
+	if (szSsopw && ssoIsCopy) {
+		JSS_wipeCharArray(szSsopw);
+	}
+	JSS_DerefByteArray(env, ssopw, szSsopw, JNI_ABORT);
 
-    if (szUserpw && userIsCopy) {
-        JSS_wipeCharArray(szUserpw);
-    }
-    JSS_DerefByteArray(env, userpw, szUserpw, JNI_ABORT);
+	if (szUserpw && userIsCopy) {
+		JSS_wipeCharArray(szUserpw);
+	}
+	JSS_DerefByteArray(env, userpw, szUserpw, JNI_ABORT);
 
-    return;
+	return;
 }
 
 /************************************************************************
@@ -555,34 +528,31 @@ finish:
  *
  */
 JNIEXPORT jboolean JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_passwordIsInitialized
-  (JNIEnv *env, jobject this)
-{
-	PK11SlotInfo *slot=NULL;
+Java_org_mozilla_jss_pkcs11_PK11Token_passwordIsInitialized(JNIEnv *env,
+		jobject this) {
+	PK11SlotInfo *slot = NULL;
 	jboolean isInitialized = JNI_FALSE;
 
-	PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
 	/*
 	 * Convert Java arguments to C
 	 */
-	if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 	PR_ASSERT(slot != NULL);
 
 	if (PK11_IsInternalKeySlot(slot)) {
 		/* special case for our Key slot */
-		isInitialized = ! PK11_NeedPWInit();
+		isInitialized = !PK11_NeedPWInit();
 	} else {
-		isInitialized = ! PK11_NeedUserInit(slot);
+		isInitialized = !PK11_NeedUserInit(slot);
 	}
 
-finish:
-	return isInitialized;
+	finish: return isInitialized;
 }
-
 
 /************************************************************************
  *
@@ -590,71 +560,73 @@ finish:
  *
  */
 JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_changePassword
-  (JNIEnv *env, jobject this, jbyteArray oldPIN, jbyteArray newPIN)
+(JNIEnv *env, jobject this, jbyteArray oldPIN, jbyteArray newPIN)
 {
-    PK11SlotInfo *slot=NULL;
-    char *szOldPIN=NULL, *szNewPIN=NULL;
+	PK11SlotInfo *slot=NULL;
+	char *szOldPIN=NULL, *szNewPIN=NULL;
 	jboolean oldIsCopy, newIsCopy;
-    SECStatus changeResult;
-    PRErrorCode error;
+	SECStatus changeResult;
+	PRErrorCode error;
 
-    PR_ASSERT(env!=NULL && this!=NULL && oldPIN!=NULL && newPIN!=NULL);
+	PR_ASSERT(env!=NULL && this!=NULL && oldPIN!=NULL && newPIN!=NULL);
 
-    /*
+	/*
 	 * Convert Java objects to native objects
 	 */
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        goto finish;
-    }
-    szOldPIN= (char*) (*env)->GetByteArrayElements(env, oldPIN, &oldIsCopy);
-    szNewPIN= (char*) (*env)->GetByteArrayElements(env, newPIN, &newIsCopy);
-    PR_ASSERT(slot!=NULL && szOldPIN!=NULL && szNewPIN!=NULL);
+	if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		goto finish;
+	}
+	szOldPIN= (char*) (*env)->GetByteArrayElements(env, oldPIN, &oldIsCopy);
+	szNewPIN= (char*) (*env)->GetByteArrayElements(env, newPIN, &newIsCopy);
+	PR_ASSERT(slot!=NULL && szOldPIN!=NULL && szNewPIN!=NULL);
 
-    /*
+	/*
 	 * Change the PIN
 	 */
-    changeResult = PK11_ChangePW(slot, szOldPIN, szNewPIN);
-    if(changeResult != SECSuccess) {
-        error = PR_GetError();
-    }
+	changeResult = PK11_ChangePW(slot, szOldPIN, szNewPIN);
+	if(changeResult != SECSuccess) {
+		error = PR_GetError();
+	}
 
-    /*
+	/*
 	 * Throw exception if an error occurred
 	 */
-    if(changeResult != SECSuccess) {
-        if(error == SEC_ERROR_BAD_PASSWORD) {
-            JSS_nativeThrowMsg(
-                env,
-				INCORRECT_PASSWORD_EXCEPTION,
-                "Incorrect PIN"
-            );
-        } else {
-            JSS_nativeThrowMsg(
-                env,
-				TOKEN_EXCEPTION,
-                "Unable to change PIN"
-            );
-        }
-    }
+	if(changeResult != SECSuccess) {
+		if(error == SEC_ERROR_BAD_PASSWORD) {
+			JSS_nativeThrowMsg(
+					env,
+					INCORRECT_PASSWORD_EXCEPTION,
+					"Incorrect PIN"
+			);
+		} else {
+			JSS_nativeThrowMsg(
+					env,
+					TOKEN_EXCEPTION,
+					"Unable to change PIN"
+			);
+		}
+	}
 
-finish:
-    /* Free native objects */
-    if(szOldPIN && oldIsCopy) {
-        JSS_wipeCharArray(szOldPIN);
-    }
-    JSS_DerefByteArray(env, oldPIN, szOldPIN, JNI_ABORT);
+	finish:
+	/* Free native objects */
+	if(szOldPIN && oldIsCopy) {
+		JSS_wipeCharArray(szOldPIN);
+	}
+	JSS_DerefByteArray(env, oldPIN, szOldPIN, JNI_ABORT);
 
-    if(szNewPIN && newIsCopy) {
-        JSS_wipeCharArray(szNewPIN);
-    }
-    JSS_DerefByteArray(env, newPIN, szNewPIN, JNI_ABORT);
+	if(szNewPIN && newIsCopy) {
+		JSS_wipeCharArray(szNewPIN);
+	}
+	JSS_DerefByteArray(env, newPIN, szNewPIN, JNI_ABORT);
 
-    return;
+	return;
 }
 
-typedef enum { SSOPW, USERPW } pwType;
+typedef enum {
+	SSOPW, USERPW
+} pwType;
 
 /************************************************************************
  *
@@ -664,53 +636,51 @@ typedef enum { SSOPW, USERPW } pwType;
  * Returns JNI_TRUE if the password is correct, JNI_FALSE if it isn't,
  * and may throw an exception if something goes wrong on the token.
  */
-static jboolean
-passwordIsCorrect
-  (JNIEnv *env, jobject this, jbyteArray password, pwType type)
-{
+static jboolean passwordIsCorrect(JNIEnv *env, jobject this,
+		jbyteArray password, pwType type) {
 	PK11SlotInfo *slot = NULL;
-	char *pwBytes=NULL;
+	char *pwBytes = NULL;
 	jboolean isCopy;
 	jboolean pwIsCorrect = JNI_FALSE;
 	SECStatus status;
 	int error;
 
-	PR_ASSERT(env!=NULL && this!=NULL && password!=NULL);
+	PR_ASSERT(env != NULL && this != NULL && password != NULL);
 
 	/*
 	 * Convert Java args to C
 	 */
-	if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 	pwBytes = (char*) (*env)->GetByteArrayElements(env, password, &isCopy);
-	PR_ASSERT(slot!=NULL && pwBytes != NULL);
+	PR_ASSERT(slot != NULL && pwBytes != NULL);
 
 	/*
 	 * Do the check
 	 */
-	if(type == SSOPW) {
+	if (type == SSOPW) {
 		status = PK11_CheckSSOPassword(slot, pwBytes);
 	} else {
 		status = PK11_CheckUserPassword(slot, pwBytes);
 	}
-	if(status == SECSuccess) {
+	if (status == SECSuccess) {
 		pwIsCorrect = JNI_TRUE;
 	} else {
 		error = PR_GetError();
-		if(error == SEC_ERROR_BAD_PASSWORD) {
+		if (error == SEC_ERROR_BAD_PASSWORD) {
 			/* just wrong password */
 			pwIsCorrect = JNI_FALSE;
 		} else {
 			/* some token problem */
 			JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
-				"Unable to check password");
+					"Unable to check password");
 			goto finish;
 		}
 	}
 
-finish:
+	finish:
 	/* Free native objects */
 	if (pwBytes && isCopy) {
 		JSS_wipeCharArray(pwBytes);
@@ -727,9 +697,8 @@ finish:
  *
  */
 JNIEXPORT jboolean JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_userPasswordIsCorrect
-  (JNIEnv *env, jobject this, jbyteArray password)
-{
+Java_org_mozilla_jss_pkcs11_PK11Token_userPasswordIsCorrect(JNIEnv *env,
+		jobject this, jbyteArray password) {
 	return passwordIsCorrect(env, this, password, USERPW);
 }
 
@@ -739,10 +708,9 @@ Java_org_mozilla_jss_pkcs11_PK11Token_userPasswordIsCorrect
  *
  */
 JNIEXPORT jboolean JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_SSOPasswordIsCorrect
-  (JNIEnv *env, jobject this, jbyteArray password)
-{
-	return  passwordIsCorrect(env, this, password, SSOPW);
+Java_org_mozilla_jss_pkcs11_PK11Token_SSOPasswordIsCorrect(JNIEnv *env,
+		jobject this, jbyteArray password) {
+	return passwordIsCorrect(env, this, password, SSOPW);
 }
 
 /************************************************************************
@@ -751,34 +719,33 @@ Java_org_mozilla_jss_pkcs11_PK11Token_SSOPasswordIsCorrect
  *
  * Returns the name of this token.
  */
-JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_getName
-  (JNIEnv *env, jobject this)
-{
-    char *szName;
-    PK11SlotInfo *slot;
-    jstring name;
-    jstring retval;
+JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_getName(
+		JNIEnv *env, jobject this) {
+	char *szName;
+	PK11SlotInfo *slot;
+	jstring name;
+	jstring retval;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if(JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL );
-        /* an exception was thrown */
-        retval = NULL;
-        goto finish;
-    }
-    PR_ASSERT(slot != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		retval = NULL;
+		goto finish;
+	}
+	PR_ASSERT(slot != NULL);
 
-    szName = PK11_GetTokenName(slot);
-    /* NULL C string converts to empty Java string */
-    if(szName == NULL) {
-        szName = "";
-    }
+	szName = PK11_GetTokenName(slot);
+	/* NULL C string converts to empty Java string */
+	if (szName == NULL) {
+		szName = "";
+	}
 
-    name = (*env)->NewStringUTF(env, szName);
+	name = (*env)->NewStringUTF(env, szName);
 
-    /* name could be NULL, if an OutOfMemoryError occurred. In that case,
-     * we just return NULL and let the exception be thrown in Java */
+	/* name could be NULL, if an OutOfMemoryError occurred. In that case,
+	 * we just return NULL and let the exception be thrown in Java */
 #ifdef DEBUG
     if(name == NULL) {
         /* Make sure there is an exception before we return NULL */
@@ -786,10 +753,9 @@ JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_getName
     }
 #endif
 
-    retval = name;
+	retval = name;
 
-finish:
-    return retval;
+	finish: return retval;
 }
 
 /************************************************************************
@@ -799,31 +765,29 @@ finish:
  * Free the PK11SlotInfo structure that underlies my token.
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_TokenProxy_releaseNativeResources
-  (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot = NULL;
+Java_org_mozilla_jss_pkcs11_TokenProxy_releaseNativeResources(JNIEnv *env,
+		jobject this) {
+	PK11SlotInfo *slot = NULL;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if(JSS_getPtrFromProxy(env, this, (void**)&slot) != PR_SUCCESS) {
-        PR_ASSERT( PR_FALSE );
-        goto finish;
-    }
+	if (JSS_getPtrFromProxy(env, this, (void**) &slot) != PR_SUCCESS) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
 
-    /*
-     * PK11Token never stores a null pointer in its TokenProxy member,
-     * but PK11Cert may store a null pointer in its TokenProxy member.
-     * (A temporary certificate has a null slot pointer.)
-     */
-    if(slot != NULL) {
-        /* this actually only frees the data structure if we were the last
-         * reference to it */
-        PK11_FreeSlot(slot);
-    }
+	/*
+	 * PK11Token never stores a null pointer in its TokenProxy member,
+	 * but PK11Cert may store a null pointer in its TokenProxy member.
+	 * (A temporary certificate has a null slot pointer.)
+	 */
+	if (slot != NULL) {
+		/* this actually only frees the data structure if we were the last
+		 * reference to it */
+		PK11_FreeSlot(slot);
+	}
 
-finish:
-    return;
+	finish: return;
 }
 
 /************************************************************************
@@ -838,17 +802,16 @@ finish:
  * returns: PR_SUCCESS if the operation was successful, PR_FAILURE if an
  *      exception was thrown. 
  */
-PRStatus
-JSS_PK11_getTokenSlotPtr(JNIEnv *env, jobject tokenObject, PK11SlotInfo **ptr)
-{
-    PR_ASSERT(env != NULL && tokenObject != NULL && ptr != NULL);
+PRStatus JSS_PK11_getTokenSlotPtr(JNIEnv *env, jobject tokenObject,
+		PK11SlotInfo **ptr) {
+	PR_ASSERT(env != NULL && tokenObject != NULL && ptr != NULL);
 
-    /*
-     * Get the pointer from the PK11Token, which has a Token Proxy member
-     */
-    PR_ASSERT(sizeof(PK11SlotInfo*) == sizeof(void*));
-    return JSS_getPtrFromProxyOwner(env, tokenObject, PK11TOKEN_PROXY_FIELD,
-		PK11TOKEN_PROXY_SIG, (void**)ptr);
+	/*
+	 * Get the pointer from the PK11Token, which has a Token Proxy member
+	 */
+	PR_ASSERT(sizeof(PK11SlotInfo*) == sizeof(void*));
+	return JSS_getPtrFromProxyOwner(env, tokenObject, PK11TOKEN_PROXY_FIELD,
+	PK11TOKEN_PROXY_SIG, (void**) ptr);
 }
 
 /**********************************************************************
@@ -857,37 +820,35 @@ JSS_PK11_getTokenSlotPtr(JNIEnv *env, jobject tokenObject, PK11SlotInfo **ptr)
  *
  */
 JNIEXPORT jboolean JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_doesAlgorithm
-  (JNIEnv *env, jobject this, jobject alg)
-{
+Java_org_mozilla_jss_pkcs11_PK11Token_doesAlgorithm(JNIEnv *env, jobject this,
+		jobject alg) {
 	PK11SlotInfo *slot;
-    CK_MECHANISM_TYPE mech;
+	CK_MECHANISM_TYPE mech;
 	jboolean doesMech = JNI_FALSE;
 
-	if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 	PR_ASSERT(slot != NULL);
 
-    mech = JSS_getPK11MechFromAlg(env, alg);
+	mech = JSS_getPK11MechFromAlg(env, alg);
 
-    /* not an assertion, some algorithms don't have Mechanism yet */
-    /*PR_ASSERT( mech != CKM_INVALID_MECHANISM ); */
+	/* not an assertion, some algorithms don't have Mechanism yet */
+	/*PR_ASSERT( mech != CKM_INVALID_MECHANISM ); */
 
-	if( PK11_DoesMechanism(slot, mech) == PR_TRUE) {
+	if (PK11_DoesMechanism(slot, mech) == PR_TRUE) {
 		doesMech = JNI_TRUE;
 	}
 
-    /* HACK...exceptions */
-    if( PK11_IsInternal(slot) && mech == CKM_PBA_SHA1_WITH_SHA1_HMAC ) {
-        /* Although the internal slot doesn't actually do this mechanism,
-         * we do it by hand in PK11KeyGenerator.c */
-        doesMech = JNI_TRUE;
-    }
+	/* HACK...exceptions */
+	if (PK11_IsInternal(slot) && mech == CKM_PBA_SHA1_WITH_SHA1_HMAC) {
+		/* Although the internal slot doesn't actually do this mechanism,
+		 * we do it by hand in PK11KeyGenerator.c */
+		doesMech = JNI_TRUE;
+	}
 
-finish:
-	return doesMech;
+	finish: return doesMech;
 }
 
 /***********************************************************************
@@ -896,17 +857,15 @@ finish:
  *
  */
 JNIEXPORT jboolean JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_isWritable
-    (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
+Java_org_mozilla_jss_pkcs11_PK11Token_isWritable(JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot;
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        return JNI_FALSE; /* an exception was thrown, so it doesn't matter */
-    }
-    PR_ASSERT(slot != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		return JNI_FALSE; /* an exception was thrown, so it doesn't matter */
+	}
+	PR_ASSERT(slot != NULL);
 
-    return ! PK11_IsReadOnly(slot);
+	return !PK11_IsReadOnly(slot);
 }
 
 #define ZERO_SECITEM(item) {(item).len=0; (item).data=NULL;}
@@ -916,116 +875,109 @@ int PK11_NumberObjectsFor(PK11SlotInfo*, CK_ATTRIBUTE*, int);
  *
  * P K 1 1 T o k e n . getCertRequest
  */
-JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_generatePK10
-  (JNIEnv *env, jobject this, jstring subject, jint keysize,
-   jstring keyType, jbyteArray P, jbyteArray Q, jbyteArray G)
-{
-    PK11SlotInfo *slot;
-    const char* c_subject=NULL;
-    unsigned char *b64request=NULL;
-    SECItem p, q, g;
-    PQGParams *dsaParams=NULL;
-    const char* c_keyType;
-    SECOidTag signType = SEC_OID_UNKNOWN;
-    PK11RSAGenParams rsaParams;
-    void *params = NULL;
+JNIEXPORT jstring JNICALL Java_org_mozilla_jss_pkcs11_PK11Token_generatePK10(
+		JNIEnv *env, jobject this, jstring subject, jint keysize,
+		jstring keyType, jbyteArray P, jbyteArray Q, jbyteArray G) {
+	PK11SlotInfo *slot;
+	const char *c_subject = NULL;
+	unsigned char *b64request = NULL;
+	SECItem p, q, g;
+	PQGParams *dsaParams = NULL;
+	const char *c_keyType;
+	SECOidTag signType = SEC_OID_UNKNOWN;
+	PK11RSAGenParams rsaParams;
+	void *params = NULL;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
-    /* get keytype */
-    c_keyType = JSS_RefJString(env, keyType);
+	PR_ASSERT(env != NULL && this != NULL);
+	/* get keytype */
+	c_keyType = JSS_RefJString(env, keyType);
 
-    if (0 == PL_strcasecmp(c_keyType, KEYTYPE_RSA_STRING)) {
-      signType = SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION;
-      if( keysize == -1 ) {
-	rsaParams.keySizeInBits = DEFAULT_RSA_KEY_SIZE;
-      } else {
-	rsaParams.keySizeInBits = keysize;
-      }
-      rsaParams.pe = DEFAULT_RSA_PUBLIC_EXPONENT;
-      params = (void *)&rsaParams;
-    } else if (0 == PL_strcasecmp(c_keyType, KEYTYPE_DSA_STRING)) {
-      signType = SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST;
-      if (P==NULL || Q==NULL || G ==NULL) {
-	/* shouldn't happen */
-	JSS_throw(env, INVALID_PARAMETER_EXCEPTION);
-      } else {
-	/* caller supplies PQG */
-	/* zero these so we can free them indiscriminately later */
-	ZERO_SECITEM(p);
-	ZERO_SECITEM(q);
-	ZERO_SECITEM(g);
+	if (0 == PL_strcasecmp(c_keyType, KEYTYPE_RSA_STRING)) {
+		signType = SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION;
+		if (keysize == -1) {
+			rsaParams.keySizeInBits = DEFAULT_RSA_KEY_SIZE;
+		} else {
+			rsaParams.keySizeInBits = keysize;
+		}
+		rsaParams.pe = DEFAULT_RSA_PUBLIC_EXPONENT;
+		params = (void*) &rsaParams;
+	} else if (0 == PL_strcasecmp(c_keyType, KEYTYPE_DSA_STRING)) {
+		signType = SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST;
+		if (P == NULL || Q == NULL || G == NULL) {
+			/* shouldn't happen */
+			JSS_throw(env, INVALID_PARAMETER_EXCEPTION);
+		} else {
+			/* caller supplies PQG */
+			/* zero these so we can free them indiscriminately later */
+			ZERO_SECITEM(p);
+			ZERO_SECITEM(q);
+			ZERO_SECITEM(g);
 
-	if( JSS_ByteArrayToOctetString(env, P, &p) ||
-	    JSS_ByteArrayToOctetString(env, Q, &q) ||
-	    JSS_ByteArrayToOctetString(env, G, &g) )
-	{
-	  PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-	  goto finish;
+			if (JSS_ByteArrayToOctetString(env, P, &p)
+					|| JSS_ByteArrayToOctetString(env, Q, &q)
+					|| JSS_ByteArrayToOctetString(env, G, &g)) {
+				PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+				goto finish;
+			}
+			dsaParams = PK11_PQG_NewParams(&p, &q, &g);
+			if (dsaParams == NULL) {
+				JSS_throw(env, OUT_OF_MEMORY_ERROR);
+				goto finish;
+			}
+		}
+		params = (void*) dsaParams;
+	} else if (0 == PL_strcasecmp(c_keyType, KEYTYPE_EC_STRING)) {
+		signType = SEC_OID_ANSIX962_ECDSA_SIGNATURE_WITH_SHA1_DIGEST;
+		/* get ec param */
+	} else {
+		JSS_throw(env, INVALID_PARAMETER_EXCEPTION);
 	}
-	dsaParams = PK11_PQG_NewParams(&p, &q, &g);
-	if(dsaParams == NULL) {
-	  JSS_throw(env, OUT_OF_MEMORY_ERROR);
-	  goto finish;
+
+	if (JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception occurred */
+		goto finish;
 	}
-      }
-      params = (void *)dsaParams;
-    } else if (0 == PL_strcasecmp(c_keyType, KEYTYPE_EC_STRING)) {
-      signType = SEC_OID_ANSIX962_ECDSA_SIGNATURE_WITH_SHA1_DIGEST;
-      /* get ec param */
-    } else {
-      JSS_throw(env, INVALID_PARAMETER_EXCEPTION);
-    }
 
-    if( JSS_PK11_getTokenSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        /* an exception occurred */
-        goto finish;
-    }
+	PR_ASSERT(slot != NULL);
+	if (PK11_IsLoggedIn(slot, NULL) != PR_TRUE) {
+		JSS_nativeThrowMsg(env, TOKEN_EXCEPTION, "token not logged in");
+	}
 
-    PR_ASSERT(slot != NULL); 
-    if(PK11_IsLoggedIn(slot, NULL) != PR_TRUE) {
-      JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
-			 "token not logged in");
-    }
+	/* get subject */
+	c_subject = JSS_RefJString(env, subject);
 
-    /* get subject */
-    c_subject = JSS_RefJString(env, subject);
+	/* call GenerateCertRequest() */
+	GenerateCertRequest(env, signType, c_subject, slot, &b64request, params);
 
-    /* call GenerateCertRequest() */
-    GenerateCertRequest(env, signType, c_subject, slot, &b64request, params);
+	finish:
+	/* release memory */
+	JSS_DerefJString(env, subject, c_subject);
 
-finish:
-    /* release memory */
-    JSS_DerefJString(env, subject, c_subject);
+	/* release memory */
+	JSS_DerefJString(env, keyType, c_keyType);
 
-    /* release memory */
-    JSS_DerefJString(env, keyType, c_keyType);
+	if (signType == SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST) {
+		SECITEM_FreeItem(&p, PR_FALSE);
+		SECITEM_FreeItem(&q, PR_FALSE);
+		SECITEM_FreeItem(&g, PR_FALSE);
+		PK11_PQG_DestroyParams(dsaParams);
+	}
 
-    if (signType == SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST) {
-      SECITEM_FreeItem(&p, PR_FALSE);
-      SECITEM_FreeItem(&q, PR_FALSE);
-      SECITEM_FreeItem(&g, PR_FALSE);
-      PK11_PQG_DestroyParams(dsaParams);
-    }
-
-    if (b64request == NULL) {
-      return NULL;
-    } else {
-      /* convert to String */
-      return (*env)->NewStringUTF(env, (const char *)b64request);
-    }
+	if (b64request == NULL) {
+		return NULL;
+	} else {
+		/* convert to String */
+		return (*env)->NewStringUTF(env, (const char*) b64request);
+	}
 }
 
 /*
  *  generate keypairs and further the request
  *  the real thing will need keytype and pqg numbers (for DSA)
  */
-void
-GenerateCertRequest(JNIEnv *env, 
-		    SECOidTag signType, const char *subject,
-		    PK11SlotInfo *slot,
-		    unsigned char **b64request,
-		    void *params) {
+void GenerateCertRequest(JNIEnv *env, SECOidTag signType, const char *subject,
+		PK11SlotInfo *slot, unsigned char **b64request, void *params) {
 
 	CERTCertificateRequest *req;
 
@@ -1034,7 +986,7 @@ GenerateCertRequest(JNIEnv *env,
 	SECStatus rv;
 	PRArenaPool *arena;
 	SECItem result_der, result;
-	SECItem * VARIABLE_MAY_NOT_BE_USED blob;
+	SECItem *VARIABLE_MAY_NOT_BE_USED blob;
 	CK_MECHANISM_TYPE signMech;
 	CK_MECHANISM_TYPE keygenMech;
 
@@ -1055,8 +1007,8 @@ GenerateCertRequest(JNIEnv *env,
 	}
 	keygenMech = PK11_GetKeyGen(signMech);
 
-	if( JSS_PK11_generateKeyPair(env, keygenMech, slot, &pubk, &privk, 
-		params, PR_FALSE, -1, -1) != SECSuccess) {
+	if (JSS_PK11_generateKeyPair(env, keygenMech, slot, &pubk, &privk, params,
+			PR_FALSE, -1, -1) != SECSuccess) {
 #ifdef DEBUG      
 		printf("Error generating keypair.");
 #endif
@@ -1065,13 +1017,13 @@ GenerateCertRequest(JNIEnv *env,
 	printf("before make_cert_request");
 #endif
 
-	req = make_cert_request (env, subject, pubk);
+	req = make_cert_request(env, subject, pubk);
 
 #ifdef DEBUG      
 	printf("after make_cert_request");
 #endif
 	if (req == NULL) {
-	  return;
+		return;
 	}
 
 	result_der.len = 0;
@@ -1082,26 +1034,25 @@ GenerateCertRequest(JNIEnv *env,
 
 	/* der encode the request */
 	blob = SEC_ASN1EncodeItem(req->arena, &result_der, req,
-				  SEC_ASN1_GET(CERT_CertificateRequestTemplate));
+			SEC_ASN1_GET(CERT_CertificateRequestTemplate));
 
 	/* sign the request */
 	arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
-	if ( !arena ) {
-	  JSS_throw(env, OUT_OF_MEMORY_ERROR);
-	  return;
+	if (!arena) {
+		JSS_throw(env, OUT_OF_MEMORY_ERROR);
+		return;
 	}
 
-	rv = SEC_DerSignData(arena, &result, result_der.data, result_der.len,
-			     privk, signType);
+	rv = SEC_DerSignData(arena, &result, result_der.data, result_der.len, privk,
+			signType);
 	if (rv) {
-	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
-			     "signing of data failed");
-          PORT_FreeArena(arena, PR_FALSE);
-	  return;
+		JSS_nativeThrowMsg(env, TOKEN_EXCEPTION, "signing of data failed");
+		PORT_FreeArena(arena, PR_FALSE);
+		return;
 	}
 
 	*b64request = (unsigned char*) BTOA_DataToAscii(result.data, result.len);
-        PORT_FreeArena(arena, PR_FALSE);
+	PORT_FreeArena(arena, PR_FALSE);
 #ifdef DEBUG      
 	printf("data = %s\n", *b64request);
 #endif
@@ -1112,8 +1063,7 @@ GenerateCertRequest(JNIEnv *env,
  * m a k e _ c e r t _ r e q u e s t
  */
 static CERTCertificateRequest*
-make_cert_request(JNIEnv *env, const char *subject, SECKEYPublicKey *pubk)
-{
+make_cert_request(JNIEnv *env, const char *subject, SECKEYPublicKey *pubk) {
 	CERTName *subj = NULL;
 	CERTSubjectPublicKeyInfo *spki = NULL;
 
@@ -1122,68 +1072,65 @@ make_cert_request(JNIEnv *env, const char *subject, SECKEYPublicKey *pubk)
 	/* Create info about public key */
 	spki = SECKEY_CreateSubjectPublicKeyInfo(pubk);
 	if (!spki) {
-	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
-			     "unable to create subject public key");
-	  goto finish;
+		JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
+				"unable to create subject public key");
+		goto finish;
 	}
 
-	subj = CERT_AsciiToName ((char *)subject);    
-	if(subj == NULL) {
-	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
-		"Invalid data in certificate description");
-	  goto finish;
+	subj = CERT_AsciiToName((char*) subject);
+	if (subj == NULL) {
+		JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
+				"Invalid data in certificate description");
+		goto finish;
 	}
 
 	/* Generate certificate request */
 	req = CERT_CreateCertificateRequest(subj, spki, 0);
 	if (!req) {
-	  JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
-			     "unable to make certificate request");
-	  goto finish;
-	}  
+		JSS_nativeThrowMsg(env, TOKEN_EXCEPTION,
+				"unable to make certificate request");
+		goto finish;
+	}
 
 #ifdef DEBUG      
 	printf("certificate request generated\n");
 #endif
 
-finish:
-	if (subj) {
-	  CERT_DestroyName(subj);
+	finish: if (subj) {
+		CERT_DestroyName(subj);
 	}
 	if (spki) {
-	  SECKEY_DestroySubjectPublicKeyInfo(spki);
+		SECKEY_DestroySubjectPublicKeyInfo(spki);
 	}
 	return req;
 }
 
-
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Token_importPublicKey(
-    JNIEnv *env, jobject tokenObj, jobject pubKeyObj, jboolean permanent)
-{
-    PK11SlotInfo *slot;
-    SECKEYPublicKey *pubKey = NULL;
+Java_org_mozilla_jss_pkcs11_PK11Token_importPublicKey(JNIEnv *env,
+		jobject tokenObj, jobject pubKeyObj, jboolean permanent) {
+	PK11SlotInfo *slot;
+	SECKEYPublicKey *pubKey = NULL;
 
-    PR_ASSERT(env != NULL && tokenObj != NULL && pubKeyObj != NULL);
+	PR_ASSERT(env != NULL && tokenObj != NULL && pubKeyObj != NULL);
 
-    if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
-        PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
-        /* an exception was thrown */
-        return;
-    }
-    PR_ASSERT(slot != NULL);
+	if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		/* an exception was thrown */
+		return;
+	}
+	PR_ASSERT(slot != NULL);
 
-    if (PK11_IsLoggedIn(slot, NULL) != PR_TRUE) {
-      JSS_nativeThrowMsg(env, TOKEN_EXCEPTION, "token not logged in");
-      return;
-    }
+	if (PK11_IsLoggedIn(slot, NULL) != PR_TRUE) {
+		JSS_nativeThrowMsg(env, TOKEN_EXCEPTION, "token not logged in");
+		return;
+	}
 
-    if (PR_SUCCESS != JSS_PK11_getPubKeyPtr(env, pubKeyObj, &pubKey)) {
-        return;  // exception was thrown!
-    }
+	if (PR_SUCCESS != JSS_PK11_getPubKeyPtr(env, pubKeyObj, &pubKey)) {
+		return;  // exception was thrown!
+	}
 
-    if (PK11_ImportPublicKey(slot, pubKey, permanent) == CK_INVALID_HANDLE) {
-      JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "failed to import public key");
-      return;
-    }
+	if (PK11_ImportPublicKey(slot, pubKey, permanent) == CK_INVALID_HANDLE) {
+		JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "failed to import public key");
+		return;
+	}
 }

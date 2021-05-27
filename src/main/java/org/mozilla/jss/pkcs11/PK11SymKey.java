@@ -12,16 +12,16 @@ import org.mozilla.jss.crypto.SymmetricKey;
 public final class PK11SymKey implements SymmetricKey {
 
     protected PK11SymKey(byte[] pointer) {
-        assert(pointer!=null);
-        keyProxy  = new SymKeyProxy(pointer);
+        assert (pointer != null);
+        keyProxy = new SymKeyProxy(pointer);
         nickName = null;
     }
 
-    protected PK11SymKey(byte[] pointer,String nickName) {
-        assert(pointer!=null);
-        keyProxy  = new SymKeyProxy(pointer);
+    protected PK11SymKey(byte[] pointer, String nickName) {
+        assert (pointer != null);
+        keyProxy = new SymKeyProxy(pointer);
         this.nickName = nickName;
-     }
+    }
 
     private SymKeyProxy keyProxy;
     private String nickName;
@@ -44,15 +44,14 @@ public final class PK11SymKey implements SymmetricKey {
     /**
      * Returns key strength, measured as the number of bits of secret material.
      * <b>NOTE:</b> Due to a bug in the security library (333440), this
-     *  may return a wrong answer for PBE keys that have embedded parity
-     *  (like DES).  A DES key is 56 bits of information plus
-     *  8 bits of parity, so it takes up 64 bits.  For a normal DES key,
+     * may return a wrong answer for PBE keys that have embedded parity
+     * (like DES). A DES key is 56 bits of information plus
+     * 8 bits of parity, so it takes up 64 bits. For a normal DES key,
      * this method will correctly return 56, but for a PBE-generated DES key,
      * the security library bug causes it to return 64.
      */
     @Override
     public native int getStrength();
-
 
     /**
      * Returns the length of the key in bytes, as returned by
@@ -63,7 +62,7 @@ public final class PK11SymKey implements SymmetricKey {
 
     @Override
     public native byte[] getKeyData()
-        throws SymmetricKey.NotExtractableException;
+            throws SymmetricKey.NotExtractableException;
 
     public native KeyType getKeyType();
 
@@ -76,7 +75,7 @@ public final class PK11SymKey implements SymmetricKey {
     public byte[] getEncoded() {
         try {
             return getKeyData();
-        } catch(SymmetricKey.NotExtractableException nee) {
+        } catch (SymmetricKey.NotExtractableException nee) {
             return null;
         }
     }
@@ -95,7 +94,7 @@ public final class PK11SymKey implements SymmetricKey {
     public void setNickName(String nickName) {
         this.nickName = nickName;
 
-        if( nickName != null) {
+        if (nickName != null) {
             setNickNameNative(nickName);
         }
     }

@@ -16,6 +16,6 @@ final class CipherContextProxy extends NativeProxy {
 
     @Override
     protected void finalize() throws Throwable {
-      super.finalize();
+        super.finalize();
     }
 }

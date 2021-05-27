@@ -10,25 +10,23 @@ import org.mozilla.jss.crypto.*;
  * A certificate that lives in the internal cert database.
  */
 public class PK11InternalCert extends PK11Cert
-        implements InternalCertificate
-{
+        implements InternalCertificate {
     ///////////////////////////////////////////////////////////////////////
     // Trust Management.  This is all package stuff because it can only
     // be called from PK11InternalCert.
     ///////////////////////////////////////////////////////////////////////
     public static final int SSL = 0;
     public static final int EMAIL = 1;
-    public static final int OBJECT_SIGNING=2;
+    public static final int OBJECT_SIGNING = 2;
 
     /**
      * Set the SSL trust flags for this certificate.
      *
      * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
-     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     *            TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
     @Override
-    public void setSSLTrust(int trust)
-    {
+    public void setSSLTrust(int trust) {
         super.setTrust(SSL, trust);
     }
 
@@ -36,11 +34,10 @@ public class PK11InternalCert extends PK11Cert
      * Set the email (S/MIME) trust flags for this certificate.
      *
      * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
-     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     *            TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
     @Override
-    public void setEmailTrust(int trust)
-    {
+    public void setEmailTrust(int trust) {
         super.setTrust(EMAIL, trust);
     }
 
@@ -48,11 +45,10 @@ public class PK11InternalCert extends PK11Cert
      * Set the object signing trust flags for this certificate.
      *
      * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
-     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     *            TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
     @Override
-    public void setObjectSigningTrust(int trust)
-    {
+    public void setObjectSigningTrust(int trust) {
         super.setTrust(OBJECT_SIGNING, trust);
     }
 
@@ -60,11 +56,10 @@ public class PK11InternalCert extends PK11Cert
      * Get the SSL trust flags for this certificate.
      *
      * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
-     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     *         TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
     @Override
-    public int getSSLTrust()
-    {
+    public int getSSLTrust() {
         return super.getTrust(SSL);
     }
 
@@ -72,11 +67,10 @@ public class PK11InternalCert extends PK11Cert
      * Get the email (S/MIME) trust flags for this certificate.
      *
      * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
-     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     *         TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
     @Override
-    public int getEmailTrust()
-    {
+    public int getEmailTrust() {
         return super.getTrust(EMAIL);
     }
 
@@ -84,17 +78,16 @@ public class PK11InternalCert extends PK11Cert
      * Get the object signing trust flags for this certificate.
      *
      * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
-     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     *         TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
      */
     @Override
-    public int getObjectSigningTrust()
-    {
+    public int getObjectSigningTrust() {
         return super.getTrust(OBJECT_SIGNING);
     }
 
-	/////////////////////////////////////////////////////////////
-	// Construction
-	/////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
+    // Construction
+    /////////////////////////////////////////////////////////////
     PK11InternalCert(byte[] certPtr, byte[] slotPtr, String nickname) {
         super(certPtr, slotPtr, nickname);
     }

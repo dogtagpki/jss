@@ -7,12 +7,11 @@ package org.mozilla.jss.pkcs11;
 import org.mozilla.jss.crypto.*;
 
 /**
- * A certificate that lives on the internal token.  It has database information
+ * A certificate that lives on the internal token. It has database information
  * (like trust flags) but also PKCS #11 information (like unique ID).
  */
 public final class PK11InternalTokenCert extends PK11InternalCert
-    implements TokenCertificate
-{
+        implements TokenCertificate {
     @Override
     public byte[] getUniqueID() {
         return super.getUniqueID();

@@ -29,56 +29,54 @@
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateNormal
-    (JNIEnv *env, jclass clazz, jobject token, jobject alg, jint strength,
-    jint opFlags, jboolean temporary, jint sensitive)
-{
-    PK11SlotInfo *slot=NULL;
-    PK11SymKey *skey=NULL;
-    CK_MECHANISM_TYPE mech;
-    PK11AttrFlags attrFlags=0;
-    jobject keyObj=NULL;
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateNormal(JNIEnv *env,
+		jclass clazz, jobject token, jobject alg, jint strength, jint opFlags,
+		jboolean temporary, jint sensitive) {
+	PK11SlotInfo *slot = NULL;
+	PK11SymKey *skey = NULL;
+	CK_MECHANISM_TYPE mech;
+	PK11AttrFlags attrFlags = 0;
+	jobject keyObj = NULL;
 
-    PR_ASSERT( env!=NULL && clazz!=NULL && token!=NULL && alg!=NULL );
+	PR_ASSERT(env != NULL && clazz != NULL && token != NULL && alg != NULL);
 
-    /* Get the slot */
-    if( JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS ) {
-        goto finish;
-    }
+	/* Get the slot */
+	if (JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
+		goto finish;
+	}
 
-    /* Get the algorithm info */
-    mech = JSS_getPK11MechFromAlg(env, alg);
-    PR_ASSERT(mech != CKM_INVALID_MECHANISM);
+	/* Get the algorithm info */
+	mech = JSS_getPK11MechFromAlg(env, alg);
+	PR_ASSERT(mech != CKM_INVALID_MECHANISM);
 
-    if(!temporary) {
-        attrFlags |= (PK11_ATTR_TOKEN | PK11_ATTR_PRIVATE);
-    }
+	if (!temporary) {
+		attrFlags |= (PK11_ATTR_TOKEN | PK11_ATTR_PRIVATE);
+	}
 
-    if(sensitive==1) {
-        attrFlags |= PK11_ATTR_SENSITIVE;
-    } else if(sensitive==0) {
-        attrFlags |= PK11_ATTR_INSENSITIVE;
-    }
+	if (sensitive == 1) {
+		attrFlags |= PK11_ATTR_SENSITIVE;
+	} else if (sensitive == 0) {
+		attrFlags |= PK11_ATTR_INSENSITIVE;
+	}
 
-    /* generate the key */
-    skey = PK11_TokenKeyGenWithFlags(slot, mech, NULL /*param*/,
-                    strength/8 /*in bytes*/, NULL /*keyid*/,
-                    opFlags, attrFlags, NULL /*wincx*/ );
+	/* generate the key */
+	skey = PK11_TokenKeyGenWithFlags(slot, mech, NULL /*param*/,
+			strength / 8 /*in bytes*/, NULL /*keyid*/, opFlags, attrFlags,
+			NULL /*wincx*/);
 
-    if(skey==NULL) {
-        JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "KeyGen failed on token");
-        goto finish;
-    }
+	if (skey == NULL) {
+		JSS_throwMsgPrErr(env, TOKEN_EXCEPTION, "KeyGen failed on token");
+		goto finish;
+	}
 
-    /* wrap the key. This sets skey to NULL. */
-    keyObj = JSS_PK11_wrapSymKey(env, &skey);
+	/* wrap the key. This sets skey to NULL. */
+	keyObj = JSS_PK11_wrapSymKey(env, &skey);
 
-finish:
-    if(skey!=NULL) {
-        /* will only be non-NULL if keygen succeeded but wrapSymKey failed */
-        PK11_FreeSymKey(skey);
-    }
-    return keyObj;
+	finish: if (skey != NULL) {
+		/* will only be non-NULL if keygen succeeded but wrapSymKey failed */
+		PK11_FreeSymKey(skey);
+	}
+	return keyObj;
 }
 
 /* We do the translation in Java now, but I'll leave this here just in case */
@@ -167,20 +165,20 @@ finish:
 
 static void FUNCTION_MAY_NOT_BE_USED
 print_secitem(SECItem *item) {
-    unsigned int i;
-    unsigned int online;
+	unsigned int i;
+	unsigned int online;
 
-    if(item==NULL) {
-        return;
-    }
+	if (item == NULL) {
+		return;
+	}
 
-    for(i=0, online=0; i < item->len; i++, online++) {
-        if(online > 25) {
-            printf("\n");
-            online = 0;
-        }
-        printf("%.2x ", item->data[i]);
-    }
+	for (i = 0, online = 0; i < item->len; i++, online++) {
+		if (online > 25) {
+			printf("\n");
+			online = 0;
+		}
+		printf("%.2x ", item->data[i]);
+	}
 }
 
 /***********************************************************************
@@ -197,48 +195,44 @@ print_secitem(SECItem *item) {
  *      TokenException if an error occurs.
  */
 static PK11SymKey*
-constructSHA1PBAKey(JNIEnv *env, PK11SlotInfo *slot, SECItem *pwitem, SECItem *salt,
-        int iterationCount)
-{
-    PK11SymKey *key=NULL;
+constructSHA1PBAKey(JNIEnv *env, PK11SlotInfo *slot, SECItem *pwitem,
+		SECItem *salt, int iterationCount) {
+	PK11SymKey *key = NULL;
 
-    unsigned char ivData[8];
-    SECItem mechItem;
-    CK_PBE_PARAMS pbe_params;
+	unsigned char ivData[8];
+	SECItem mechItem;
+	CK_PBE_PARAMS pbe_params;
 
-    if( pwitem == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
-            "constructSHA1PAKey:"
-            " pwitem NULL");
-        goto finish;
-    }
-    if( salt == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
-            "constructSHA1PAKey:"
-            " salt NULL");
-        goto finish;
-    }
+	if (pwitem == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION, "constructSHA1PAKey:"
+				" pwitem NULL");
+		goto finish;
+	}
+	if (salt == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION, "constructSHA1PAKey:"
+				" salt NULL");
+		goto finish;
+	}
 
-    pbe_params.pInitVector = ivData;
-    pbe_params.pPassword = pwitem->data;
-    pbe_params.ulPasswordLen = pwitem->len;
-    pbe_params.pSalt = salt->data;
-    pbe_params.ulSaltLen = salt->len;
-    pbe_params.ulIteration = iterationCount;
-    mechItem.data = (unsigned char *) &pbe_params;
-    mechItem.len = sizeof(pbe_params);
+	pbe_params.pInitVector = ivData;
+	pbe_params.pPassword = pwitem->data;
+	pbe_params.ulPasswordLen = pwitem->len;
+	pbe_params.pSalt = salt->data;
+	pbe_params.ulSaltLen = salt->len;
+	pbe_params.ulIteration = iterationCount;
+	mechItem.data = (unsigned char*) &pbe_params;
+	mechItem.len = sizeof(pbe_params);
 
-    key = PK11_RawPBEKeyGen(slot, CKM_PBA_SHA1_WITH_SHA1_HMAC, &mechItem, pwitem, PR_FALSE, NULL);
+	key = PK11_RawPBEKeyGen(slot, CKM_PBA_SHA1_WITH_SHA1_HMAC, &mechItem,
+			pwitem, PR_FALSE, NULL);
 
-    if( key == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
-            "PK11_RawPBEKeyGen:"
-            " failed to generate key");
-        goto finish;
-    }
+	if (key == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION, "PK11_RawPBEKeyGen:"
+				" failed to generate key");
+		goto finish;
+	}
 
-finish:
-    return key;
+	finish: return key;
 }
 
 /***********************************************************************
@@ -247,106 +241,99 @@ finish:
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(
-    JNIEnv *env, jclass clazz, jobject token, jobject alg, jobject encAlg,
-    jbyteArray passBA, jbyteArray saltBA, jint iterationCount)
-{
-    PK11SlotInfo *slot=NULL;
-    PK11SymKey *skey=NULL;
-    SECOidTag oidTag;
-    SECAlgorithmID *algid=NULL;
-    SECItem *salt=NULL;
-    SECItem *pwitem=NULL;
-    jobject keyObj=NULL;
-    CK_MECHANISM_TYPE mech=CKM_INVALID_MECHANISM;
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(JNIEnv *env,
+		jclass clazz, jobject token, jobject alg, jobject encAlg,
+		jbyteArray passBA, jbyteArray saltBA, jint iterationCount) {
+	PK11SlotInfo *slot = NULL;
+	PK11SymKey *skey = NULL;
+	SECOidTag oidTag;
+	SECAlgorithmID *algid = NULL;
+	SECItem *salt = NULL;
+	SECItem *pwitem = NULL;
+	jobject keyObj = NULL;
+	CK_MECHANISM_TYPE mech = CKM_INVALID_MECHANISM;
 
-    PR_ASSERT(env!=NULL && clazz!=NULL && token!=NULL && alg!=NULL
-        && passBA!=NULL && saltBA!=NULL);
+	PR_ASSERT(
+			env != NULL && clazz != NULL && token != NULL && alg != NULL
+					&& passBA != NULL && saltBA != NULL);
 
-    /* get the slot */
-    if( JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
-        goto finish;
-    }
+	/* get the slot */
+	if (JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
+		goto finish;
+	}
 
-    /* convert salt to SECItem */
-    salt = JSS_ByteArrayToSECItem(env, saltBA);
-    if(salt == NULL) {
-        goto finish;
-    }
+	/* convert salt to SECItem */
+	salt = JSS_ByteArrayToSECItem(env, saltBA);
+	if (salt == NULL) {
+		goto finish;
+	}
 
-    /* convert password to SECItem */
-    pwitem = JSS_ByteArrayToSECItem(env, passBA);
-    if(pwitem==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    /* print_secitem(pwitem); */
+	/* convert password to SECItem */
+	pwitem = JSS_ByteArrayToSECItem(env, passBA);
+	if (pwitem == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	/* print_secitem(pwitem); */
 
-    mech = JSS_getPK11MechFromAlg(env, alg);
+	mech = JSS_getPK11MechFromAlg(env, alg);
 
-    if( mech == CKM_PBA_SHA1_WITH_SHA1_HMAC ) {
+	if (mech == CKM_PBA_SHA1_WITH_SHA1_HMAC) {
 
-        /* special case, construct key by hand. Bug #336587 */
+		/* special case, construct key by hand. Bug #336587 */
 
-        skey = constructSHA1PBAKey(env, slot, pwitem, salt, iterationCount);
-        if( skey==NULL ) {
-            /* exception was thrown */
-            goto finish;
-        }
+		skey = constructSHA1PBAKey(env, slot, pwitem, salt, iterationCount);
+		if (skey == NULL) {
+			/* exception was thrown */
+			goto finish;
+		}
 
-    } else {
+	} else {
 
-        /* get the algorithm info */
-        oidTag = JSS_getOidTagFromAlg(env, alg);
-        PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
+		/* get the algorithm info */
+		oidTag = JSS_getOidTagFromAlg(env, alg);
+		PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
 
-        SECOidTag encAlgOidTag = JSS_getOidTagFromAlg(env, encAlg);
-        PR_ASSERT(encAlgOidTag != SEC_OID_UNKNOWN);
+		SECOidTag encAlgOidTag = JSS_getOidTagFromAlg(env, encAlg);
+		PR_ASSERT(encAlgOidTag != SEC_OID_UNKNOWN);
 
-        /* create algid */
-        algid = PK11_CreatePBEV2AlgorithmID(
-            oidTag,
-            encAlgOidTag,
-            SEC_OID_HMAC_SHA1,
-            0,
-            iterationCount,
-            salt);
+		/* create algid */
+		algid = PK11_CreatePBEV2AlgorithmID(oidTag, encAlgOidTag,
+				SEC_OID_HMAC_SHA1, 0, iterationCount, salt);
 
-        if( algid == NULL ) {
-            JSS_throwMsg(env, TOKEN_EXCEPTION,
-                    "Unable to process PBE parameters");
-            goto finish;
-        }
+		if (algid == NULL) {
+			JSS_throwMsg(env, TOKEN_EXCEPTION,
+					"Unable to process PBE parameters");
+			goto finish;
+		}
 
-        /* generate the key */
-        skey = PK11_PBEKeyGen(slot, algid, pwitem, PR_FALSE /*faulty3DES*/,
-                        NULL /*wincx*/);
-        if( skey == NULL ) {
-            JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to generate PBE key");
-            goto finish;
-        }
-    }
+		/* generate the key */
+		skey = PK11_PBEKeyGen(slot, algid, pwitem, PR_FALSE /*faulty3DES*/,
+				NULL /*wincx*/);
+		if (skey == NULL) {
+			JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to generate PBE key");
+			goto finish;
+		}
+	}
 
-    /* wrap the key. This sets skey to NULL. */
-    keyObj = JSS_PK11_wrapSymKey(env, &skey);
+	/* wrap the key. This sets skey to NULL. */
+	keyObj = JSS_PK11_wrapSymKey(env, &skey);
 
-finish:
-    if(algid) {
-        SECOID_DestroyAlgorithmID(algid, PR_TRUE /*freeit*/);
-    }
-    if(salt) {
-        SECITEM_FreeItem(salt, PR_TRUE /*freeit*/);
-    }
-    if(pwitem) {
-        SECITEM_ZfreeItem(pwitem, PR_TRUE /*freeit*/);
-    }
-    if(skey) {
-        /* skey will be NULL if everything worked */
-        PK11_FreeSymKey(skey);
-    }
-    return keyObj;
+	finish: if (algid) {
+		SECOID_DestroyAlgorithmID(algid, PR_TRUE /*freeit*/);
+	}
+	if (salt) {
+		SECITEM_FreeItem(salt, PR_TRUE /*freeit*/);
+	}
+	if (pwitem) {
+		SECITEM_ZfreeItem(pwitem, PR_TRUE /*freeit*/);
+	}
+	if (skey) {
+		/* skey will be NULL if everything worked */
+		PK11_FreeSymKey(skey);
+	}
+	return keyObj;
 }
-
 
 /***********************************************************************
  *
@@ -354,127 +341,120 @@ finish:
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE_1IV
-    (JNIEnv *env, jclass clazz, jobject alg, jbyteArray passBA,
-    jbyteArray saltBA, jint iterationCount)
-{
-    SECOidTag oidTag;
-    SECAlgorithmID *algid=NULL;
-    SECItem *salt=NULL;
-    SECItem *pwitem=NULL;
-    SECItem *ivItem=NULL;
-    jbyteArray ivBA=NULL;
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE_1IV(JNIEnv *env,
+		jclass clazz, jobject alg, jbyteArray passBA, jbyteArray saltBA,
+		jint iterationCount) {
+	SECOidTag oidTag;
+	SECAlgorithmID *algid = NULL;
+	SECItem *salt = NULL;
+	SECItem *pwitem = NULL;
+	SECItem *ivItem = NULL;
+	jbyteArray ivBA = NULL;
 
-    PR_ASSERT(env!=NULL && clazz!=NULL && alg!=NULL
-        && passBA!=NULL && saltBA!=NULL);
+	PR_ASSERT(
+			env != NULL && clazz != NULL && alg != NULL && passBA != NULL
+					&& saltBA != NULL);
 
-    /* get the algorithm info */
-    oidTag = JSS_getOidTagFromAlg(env, alg);
-    PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
+	/* get the algorithm info */
+	oidTag = JSS_getOidTagFromAlg(env, alg);
+	PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
 
-    /* convert salt to SECItem */
-    salt = JSS_ByteArrayToSECItem(env, saltBA);
-    if(salt == NULL) {
-        goto finish;
-    }
+	/* convert salt to SECItem */
+	salt = JSS_ByteArrayToSECItem(env, saltBA);
+	if (salt == NULL) {
+		goto finish;
+	}
 
-    /* create algid */
-    algid = PK11_CreatePBEAlgorithmID(oidTag, iterationCount, salt);
-    if( algid == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to process PBE parameters");
-        goto finish;
-    }
+	/* create algid */
+	algid = PK11_CreatePBEAlgorithmID(oidTag, iterationCount, salt);
+	if (algid == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to process PBE parameters");
+		goto finish;
+	}
 
-    /* convert password to SECItem */
-    pwitem = JSS_ByteArrayToSECItem(env, passBA);
-    if(pwitem==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/* convert password to SECItem */
+	pwitem = JSS_ByteArrayToSECItem(env, passBA);
+	if (pwitem == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /* generate the IV */
-    ivItem = SEC_PKCS5GetIV(algid, pwitem, PR_FALSE /*faulty3DES*/);
-    if(ivItem==NULL) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to generate PBE "
-            "initialization vector");
-        goto finish;
-    }
+	/* generate the IV */
+	ivItem = SEC_PKCS5GetIV(algid, pwitem, PR_FALSE /*faulty3DES*/);
+	if (ivItem == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to generate PBE "
+				"initialization vector");
+		goto finish;
+	}
 
-    /* convert IV to byte array */
-    ivBA = JSS_SECItemToByteArray(env, ivItem);
+	/* convert IV to byte array */
+	ivBA = JSS_SECItemToByteArray(env, ivItem);
 
-finish:
-    if(algid) {
-        SECOID_DestroyAlgorithmID(algid, PR_TRUE /*freeit*/);
-    }
-    if(salt) {
-        SECITEM_FreeItem(salt, PR_TRUE /*freeit*/);
-    }
-    if(pwitem) {
-        SECITEM_ZfreeItem(pwitem, PR_TRUE /*freeit*/);
-    }
-    if(ivItem) {
-        SECITEM_FreeItem(ivItem, PR_TRUE /*freeit*/);
-    }
-    return ivBA;
+	finish: if (algid) {
+		SECOID_DestroyAlgorithmID(algid, PR_TRUE /*freeit*/);
+	}
+	if (salt) {
+		SECITEM_FreeItem(salt, PR_TRUE /*freeit*/);
+	}
+	if (pwitem) {
+		SECITEM_ZfreeItem(pwitem, PR_TRUE /*freeit*/);
+	}
+	if (ivItem) {
+		SECITEM_FreeItem(ivItem, PR_TRUE /*freeit*/);
+	}
+	return ivBA;
 }
 
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_nativeClone
-    (JNIEnv *env, jclass clazz, jobject tokenObj, jobject toBeClonedObj)
-{
-    PK11SlotInfo *slot=NULL;
-    PK11SymKey *toBeCloned=NULL;
-    PK11SymKey *clone=NULL;
-    SECStatus rv;
-    jobject cloneObj=NULL;
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_nativeClone(JNIEnv *env,
+		jclass clazz, jobject tokenObj, jobject toBeClonedObj) {
+	PK11SlotInfo *slot = NULL;
+	PK11SymKey *toBeCloned = NULL;
+	PK11SymKey *clone = NULL;
+	SECStatus rv;
+	jobject cloneObj = NULL;
 
-    PR_ASSERT(env!=NULL && tokenObj!=NULL && toBeClonedObj!=NULL);
+	PR_ASSERT(env != NULL && tokenObj != NULL && toBeClonedObj != NULL);
 
-    /* get slot */
-    if( JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
+	/* get slot */
+	if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
+		/* exception was thrown */
+		goto finish;
+	}
 
-    /* get toBeCloned */
-    if( JSS_PK11_getSymKeyPtr(env, toBeClonedObj, &toBeCloned) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
+	/* get toBeCloned */
+	if (JSS_PK11_getSymKeyPtr(env, toBeClonedObj, &toBeCloned) != PR_SUCCESS) {
+		/* exception was thrown */
+		goto finish;
+	}
 
-    /* extract the key value */
-    rv = PK11_ExtractKeyValue(toBeCloned);
-    if( rv != SECSuccess ) {
-        JSS_throw(env, NOT_EXTRACTABLE_EXCEPTION);
-        goto finish;
-    }
+	/* extract the key value */
+	rv = PK11_ExtractKeyValue(toBeCloned);
+	if (rv != SECSuccess) {
+		JSS_throw(env, NOT_EXTRACTABLE_EXCEPTION);
+		goto finish;
+	}
 
-    clone = PK11_ImportSymKey(
-        slot,
-        PK11_GetMechanism(toBeCloned),
-        PK11_OriginGenerated, /* we don't know this, but it doesn't matter */
-        CKA_ENCRYPT, /* !!! Actually we want to enable all operations */
-        PK11_GetKeyData(toBeCloned),
-        NULL /* wincx */
-    );
-        
+	clone = PK11_ImportSymKey(slot, PK11_GetMechanism(toBeCloned),
+			PK11_OriginGenerated, /* we don't know this, but it doesn't matter */
+			CKA_ENCRYPT, /* !!! Actually we want to enable all operations */
+			PK11_GetKeyData(toBeCloned), NULL /* wincx */
+			);
 
-    if( clone == NULL ) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to create new symmetric"
-            " key object");
-        goto finish;
-    }
+	if (clone == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to create new symmetric"
+				" key object");
+		goto finish;
+	}
 
-    /* wrap the new key in a Java object */
-    cloneObj = JSS_PK11_wrapSymKey(env, &clone);   
+	/* wrap the new key in a Java object */
+	cloneObj = JSS_PK11_wrapSymKey(env, &clone);
 
-finish:
-    if( clone!=NULL ) {
-        /* clone would be NULL if we completed successfully */
-        PK11_FreeSymKey(clone);
-    }
-    return cloneObj;
+	finish: if (clone != NULL) {
+		/* clone would be NULL if we completed successfully */
+		PK11_FreeSymKey(clone);
+	}
+	return cloneObj;
 }
 
 /***********************************************************************
@@ -483,56 +463,56 @@ finish:
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateKBKDF(JNIEnv *env, jclass clazz, jobject tokenObj, jobject baseKeyObj, jlong alg, jobject paramsObj, jlong params_size, jlong derivedKeyAlgorithm, jint strength, jint opFlags, jboolean temporary, jint sensitive)
-{
-    PK11SlotInfo *slot = NULL;
-    PK11SymKey *baseKey = NULL;
-    PK11SymKey *result = NULL;
-    jobject resultObj = NULL;
+Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generateKBKDF(JNIEnv *env,
+		jclass clazz, jobject tokenObj, jobject baseKeyObj, jlong alg,
+		jobject paramsObj, jlong params_size, jlong derivedKeyAlgorithm,
+		jint strength, jint opFlags, jboolean temporary, jint sensitive) {
+	PK11SlotInfo *slot = NULL;
+	PK11SymKey *baseKey = NULL;
+	PK11SymKey *result = NULL;
+	jobject resultObj = NULL;
 
-    SECItem param_item = { 0 };
-    void *param_ptr = NULL;
+	SECItem param_item = { 0 };
+	void *param_ptr = NULL;
 
-    PRBool isPerm = PR_FALSE;
+	PRBool isPerm = PR_FALSE;
 
-    PR_ASSERT(env != NULL && tokenObj != NULL);
+	PR_ASSERT(env != NULL && tokenObj != NULL);
 
-    /* get slot */
-    if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
+	/* get slot */
+	if (JSS_PK11_getTokenSlotPtr(env, tokenObj, &slot) != PR_SUCCESS) {
+		/* exception was thrown */
+		goto finish;
+	}
 
-    /* get base key */
-    if (JSS_PK11_getSymKeyPtr(env, baseKeyObj, &baseKey) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
+	/* get base key */
+	if (JSS_PK11_getSymKeyPtr(env, baseKeyObj, &baseKey) != PR_SUCCESS) {
+		/* exception was thrown */
+		goto finish;
+	}
 
-    /* get params */
-    if (JSS_PR_getStaticVoidRef(env, paramsObj, &param_ptr) != PR_SUCCESS) {
-        /* exception was thrown */
-        goto finish;
-    }
+	/* get params */
+	if (JSS_PR_getStaticVoidRef(env, paramsObj, &param_ptr) != PR_SUCCESS) {
+		/* exception was thrown */
+		goto finish;
+	}
 
-    param_item.type = siBuffer;
-    param_item.data = (unsigned char *)(param_ptr);
-    param_item.len = (unsigned int) params_size;
+	param_item.type = siBuffer;
+	param_item.data = (unsigned char*) (param_ptr);
+	param_item.len = (unsigned int) params_size;
 
-    isPerm = (temporary == JNI_FALSE) ? PR_TRUE : PR_FALSE;
+	isPerm = (temporary == JNI_FALSE) ? PR_TRUE : PR_FALSE;
 
-    result = PK11_DeriveWithFlagsPerm(baseKey, alg, &param_item,
-                                      derivedKeyAlgorithm, CKA_ENCRYPT,
-                                      strength, opFlags, isPerm);
-    if (result == NULL) {
-        JSS_throwMsg(env, TOKEN_EXCEPTION,
-                     "Failed to create derived symmetric key object");
-        goto finish;
-    }
+	result = PK11_DeriveWithFlagsPerm(baseKey, alg, &param_item,
+			derivedKeyAlgorithm, CKA_ENCRYPT, strength, opFlags, isPerm);
+	if (result == NULL) {
+		JSS_throwMsg(env, TOKEN_EXCEPTION,
+				"Failed to create derived symmetric key object");
+		goto finish;
+	}
 
-    resultObj = JSS_PK11_wrapSymKey(env, &result);
+	resultObj = JSS_PK11_wrapSymKey(env, &result);
 
-finish:
-    PK11_FreeSymKey(result);
-    return resultObj;
+	finish: PK11_FreeSymKey(result);
+	return resultObj;
 }

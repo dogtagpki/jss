@@ -33,255 +33,204 @@ import org.slf4j.LoggerFactory;
  * @see org.mozilla.jss.crypto.PQGParams
  */
 public final class PK11KeyPairGenerator
-    extends org.mozilla.jss.crypto.KeyPairGeneratorSpi
-{
+        extends org.mozilla.jss.crypto.KeyPairGeneratorSpi {
     public static Logger logger = LoggerFactory.getLogger(PK11KeyPairGenerator.class);
 
     // curve code for getting the actual EC curve
     private enum ECCurve_Code {
-      // NIST, SEC2 Prime curves
-        secp521r1 , // == nistp521
-        nistp521 ,
-        secp384r1 , // == nistp384
-        nistp384 ,
-        secp256r1 , // == nistp256
-        nistp256 ,
-        secp256k1 ,
-        secp224r1 , // == nistp224
-        nistp224 ,
-        secp224k1 ,
-        secp192r1 , // == nistp192
-        nistp192 ,
-        secp192k1 ,
-        secp160r2 ,
-        secp160r1 ,
-        secp160k1 ,
-        secp128r2 ,
-        secp128r1 ,
-        secp112r2 ,
-        secp112r1 ,
-      // NIST, SEC2 Binary curves
-        sect571r1 , // == nistb571
-        nistb571 ,
-        sect571k1 , // == nistk571
-        nistk571 ,
-        sect409r1 , // == nistb409
-        nistb409 ,
-        sect409k1 , // == nistk409
-        nistk409 ,
-        sect283r1 , // == nistb283
-        nistb283 ,
-        sect283k1 , // == nistk283
-        nistk283 ,
-        sect239k1 ,
-        sect233r1 , // == nistb233
-        nistb233 ,
-        sect233k1 , // == nistk233
-        nistk233 ,
-        sect193r2 ,
-        sect193r1 ,
-        nistb163 ,
-        sect163r2 , // == nistb163
-        sect163r1 ,
-        sect163k1 , // == nistk163
-        nistk163 ,
-        sect131r2 ,
-        sect131r1 ,
-        sect113r2 ,
-        sect113r1 ,
-      // ANSI X9.62 Prime curves
-        prime239v3 ,
-        prime239v2 ,
-        prime239v1 ,
-        prime192v3 ,
-        prime192v2 ,
-        prime192v1 , // == nistp192
+        // NIST, SEC2 Prime curves
+        secp521r1, // == nistp521
+        nistp521, secp384r1, // == nistp384
+        nistp384, secp256r1, // == nistp256
+        nistp256, secp256k1, secp224r1, // == nistp224
+        nistp224, secp224k1, secp192r1, // == nistp192
+        nistp192, secp192k1, secp160r2, secp160r1, secp160k1, secp128r2, secp128r1, secp112r2, secp112r1,
+        // NIST, SEC2 Binary curves
+        sect571r1, // == nistb571
+        nistb571, sect571k1, // == nistk571
+        nistk571, sect409r1, // == nistb409
+        nistb409, sect409k1, // == nistk409
+        nistk409, sect283r1, // == nistb283
+        nistb283, sect283k1, // == nistk283
+        nistk283, sect239k1, sect233r1, // == nistb233
+        nistb233, sect233k1, // == nistk233
+        nistk233, sect193r2, sect193r1, nistb163, sect163r2, // == nistb163
+        sect163r1, sect163k1, // == nistk163
+        nistk163, sect131r2, sect131r1, sect113r2, sect113r1,
+        // ANSI X9.62 Prime curves
+        prime239v3, prime239v2, prime239v1, prime192v3, prime192v2, prime192v1, // == nistp192
         // prime256v1 == nistp256
-      // ANSI X9.62 Binary curves
-        c2pnb163v1 ,
-        c2pnb163v2 ,
-        c2pnb163v3 ,
-        c2pnb176v1 ,
-        c2tnb191v1 ,
-        c2tnb191v2 ,
-        c2tnb191v3 ,
+        // ANSI X9.62 Binary curves
+        c2pnb163v1, c2pnb163v2, c2pnb163v3, c2pnb176v1, c2tnb191v1, c2tnb191v2, c2tnb191v3,
         //c2onb191v4 ,
         //c2onb191v5 ,
-        c2pnb208w1 ,
-        c2tnb239v1 ,
-        c2tnb239v2 ,
-        c2tnb239v3 ,
+        c2pnb208w1, c2tnb239v1, c2tnb239v2, c2tnb239v3,
         //c2onb239v4 ,
         //c2onb239v5 ,
-        c2pnb272w1 ,
-        c2pnb304w1 ,
-        c2tnb359v1 ,
-        c2pnb368w1 ,
-        c2tnb431r1
+        c2pnb272w1, c2pnb304w1, c2tnb359v1, c2pnb368w1, c2tnb431r1
         // no WTLS curves fo now
     };
 
     private static Hashtable<String, PK11KeyPairGenerator.ECCurve_Code> ECCurve_NameToCode = new Hashtable<>();
     static {
-      // NIST, SEC2 Prime curves
+        // NIST, SEC2 Prime curves
         ECCurve_NameToCode.put(
-            "secp521r1", ECCurve_Code.secp521r1);
+                "secp521r1", ECCurve_Code.secp521r1);
         ECCurve_NameToCode.put(
-            "nistp521", ECCurve_Code.nistp521);
+                "nistp521", ECCurve_Code.nistp521);
         ECCurve_NameToCode.put(
-            "secp384r1", ECCurve_Code.secp384r1);
+                "secp384r1", ECCurve_Code.secp384r1);
         ECCurve_NameToCode.put(
-            "nistp384", ECCurve_Code.nistp384);
+                "nistp384", ECCurve_Code.nistp384);
         ECCurve_NameToCode.put(
-            "secp256r1", ECCurve_Code.secp256r1);
+                "secp256r1", ECCurve_Code.secp256r1);
         ECCurve_NameToCode.put(
-            "nistp256", ECCurve_Code.nistp256);
+                "nistp256", ECCurve_Code.nistp256);
         ECCurve_NameToCode.put(
-            "secp256k1", ECCurve_Code.secp256k1);
+                "secp256k1", ECCurve_Code.secp256k1);
         ECCurve_NameToCode.put(
-            "secp224r1", ECCurve_Code.secp224r1);
+                "secp224r1", ECCurve_Code.secp224r1);
         ECCurve_NameToCode.put(
-            "nistp224", ECCurve_Code.nistp224);
+                "nistp224", ECCurve_Code.nistp224);
         ECCurve_NameToCode.put(
-            "secp224k1", ECCurve_Code.secp224k1);
+                "secp224k1", ECCurve_Code.secp224k1);
         ECCurve_NameToCode.put(
-            "secp192r1", ECCurve_Code.secp192r1);
+                "secp192r1", ECCurve_Code.secp192r1);
         ECCurve_NameToCode.put(
-            "nistp192", ECCurve_Code.nistp192);
+                "nistp192", ECCurve_Code.nistp192);
         ECCurve_NameToCode.put(
-            "secp192k1", ECCurve_Code.secp192k1);
+                "secp192k1", ECCurve_Code.secp192k1);
         ECCurve_NameToCode.put(
-            "secp160r2", ECCurve_Code.secp160r2);
+                "secp160r2", ECCurve_Code.secp160r2);
         ECCurve_NameToCode.put(
-            "secp160r1", ECCurve_Code.secp160r1);
+                "secp160r1", ECCurve_Code.secp160r1);
         ECCurve_NameToCode.put(
-            "secp160k1", ECCurve_Code.secp160k1);
+                "secp160k1", ECCurve_Code.secp160k1);
         ECCurve_NameToCode.put(
-            "secp128r2", ECCurve_Code.secp128r2);
+                "secp128r2", ECCurve_Code.secp128r2);
         ECCurve_NameToCode.put(
-            "secp128r1", ECCurve_Code.secp128r1);
+                "secp128r1", ECCurve_Code.secp128r1);
         ECCurve_NameToCode.put(
-            "secp112r2", ECCurve_Code.secp112r2);
+                "secp112r2", ECCurve_Code.secp112r2);
         ECCurve_NameToCode.put(
-            "secp112r1", ECCurve_Code.secp112r1);
-      // NIST, SEC2 Binary curves
+                "secp112r1", ECCurve_Code.secp112r1);
+        // NIST, SEC2 Binary curves
         ECCurve_NameToCode.put(
-            "sect571r1", ECCurve_Code.sect571r1);
+                "sect571r1", ECCurve_Code.sect571r1);
         ECCurve_NameToCode.put(
-            "nistb571", ECCurve_Code.nistb571);
+                "nistb571", ECCurve_Code.nistb571);
         ECCurve_NameToCode.put(
-            "sect571k1", ECCurve_Code.sect571k1);
+                "sect571k1", ECCurve_Code.sect571k1);
         ECCurve_NameToCode.put(
-            "nistk571", ECCurve_Code.nistk571);
+                "nistk571", ECCurve_Code.nistk571);
         ECCurve_NameToCode.put(
-            "sect409r1", ECCurve_Code.sect409r1);
+                "sect409r1", ECCurve_Code.sect409r1);
         ECCurve_NameToCode.put(
-            "nistb409", ECCurve_Code.nistb409);
+                "nistb409", ECCurve_Code.nistb409);
         ECCurve_NameToCode.put(
-            "sect409k1", ECCurve_Code.sect409k1);
+                "sect409k1", ECCurve_Code.sect409k1);
         ECCurve_NameToCode.put(
-            "nistk409", ECCurve_Code.nistk409);
+                "nistk409", ECCurve_Code.nistk409);
         ECCurve_NameToCode.put(
-            "sect283r1", ECCurve_Code.sect283r1);
+                "sect283r1", ECCurve_Code.sect283r1);
         ECCurve_NameToCode.put(
-            "nistb283", ECCurve_Code.nistb283);
+                "nistb283", ECCurve_Code.nistb283);
         ECCurve_NameToCode.put(
-            "sect283k1", ECCurve_Code.sect283k1);
+                "sect283k1", ECCurve_Code.sect283k1);
         ECCurve_NameToCode.put(
-            "nistk283", ECCurve_Code.nistk283);
+                "nistk283", ECCurve_Code.nistk283);
         ECCurve_NameToCode.put(
-            "sect239k1", ECCurve_Code.sect239k1);
+                "sect239k1", ECCurve_Code.sect239k1);
         ECCurve_NameToCode.put(
-            "sect233r1", ECCurve_Code.sect233r1);
+                "sect233r1", ECCurve_Code.sect233r1);
         ECCurve_NameToCode.put(
-            "nistb233", ECCurve_Code.nistb233);
+                "nistb233", ECCurve_Code.nistb233);
         ECCurve_NameToCode.put(
-            "sect233k1", ECCurve_Code.sect233k1);
+                "sect233k1", ECCurve_Code.sect233k1);
         ECCurve_NameToCode.put(
-            "nistk233", ECCurve_Code.nistk233);
+                "nistk233", ECCurve_Code.nistk233);
         ECCurve_NameToCode.put(
-            "sect193r2", ECCurve_Code.sect193r2);
+                "sect193r2", ECCurve_Code.sect193r2);
         ECCurve_NameToCode.put(
-            "sect193r1", ECCurve_Code.sect193r1);
+                "sect193r1", ECCurve_Code.sect193r1);
         ECCurve_NameToCode.put(
-            "nistb163", ECCurve_Code.nistb163);
+                "nistb163", ECCurve_Code.nistb163);
         ECCurve_NameToCode.put(
-            "sect163r2", ECCurve_Code.sect163r2);
+                "sect163r2", ECCurve_Code.sect163r2);
         ECCurve_NameToCode.put(
-            "sect163r1", ECCurve_Code.sect163r1);
+                "sect163r1", ECCurve_Code.sect163r1);
         ECCurve_NameToCode.put(
-            "sect163k1", ECCurve_Code.sect163k1);
+                "sect163k1", ECCurve_Code.sect163k1);
         ECCurve_NameToCode.put(
-            "nistk163", ECCurve_Code.nistk163);
+                "nistk163", ECCurve_Code.nistk163);
         ECCurve_NameToCode.put(
-            "sect131r2", ECCurve_Code.sect131r2);
+                "sect131r2", ECCurve_Code.sect131r2);
         ECCurve_NameToCode.put(
-            "sect131r1", ECCurve_Code.sect131r1);
+                "sect131r1", ECCurve_Code.sect131r1);
         ECCurve_NameToCode.put(
-            "sect113r2", ECCurve_Code.sect113r2);
+                "sect113r2", ECCurve_Code.sect113r2);
         ECCurve_NameToCode.put(
-            "sect113r1", ECCurve_Code.sect113r1);
-      // ANSI Prime curves
+                "sect113r1", ECCurve_Code.sect113r1);
+        // ANSI Prime curves
         ECCurve_NameToCode.put(
-            "prime239v3", ECCurve_Code.prime239v3);
+                "prime239v3", ECCurve_Code.prime239v3);
         ECCurve_NameToCode.put(
-            "prime239v2", ECCurve_Code.prime239v2);
+                "prime239v2", ECCurve_Code.prime239v2);
         ECCurve_NameToCode.put(
-            "prime239v1", ECCurve_Code.prime239v1);
+                "prime239v1", ECCurve_Code.prime239v1);
         ECCurve_NameToCode.put(
-            "prime192v3", ECCurve_Code.prime192v3);
+                "prime192v3", ECCurve_Code.prime192v3);
         ECCurve_NameToCode.put(
-            "prime192v2", ECCurve_Code.prime192v2);
+                "prime192v2", ECCurve_Code.prime192v2);
         ECCurve_NameToCode.put(
-            "prime192v1", ECCurve_Code.prime192v1);
-      // ANSI Binary curves
+                "prime192v1", ECCurve_Code.prime192v1);
+        // ANSI Binary curves
         ECCurve_NameToCode.put(
-            "c2pnb163v1", ECCurve_Code.c2pnb163v1);
+                "c2pnb163v1", ECCurve_Code.c2pnb163v1);
         ECCurve_NameToCode.put(
-            "c2pnb163v2", ECCurve_Code.c2pnb163v2);
+                "c2pnb163v2", ECCurve_Code.c2pnb163v2);
         ECCurve_NameToCode.put(
-            "c2pnb163v3", ECCurve_Code.c2pnb163v3);
+                "c2pnb163v3", ECCurve_Code.c2pnb163v3);
         ECCurve_NameToCode.put(
-            "c2pnb176v1", ECCurve_Code.c2pnb176v1);
+                "c2pnb176v1", ECCurve_Code.c2pnb176v1);
         ECCurve_NameToCode.put(
-            "c2tnb191v1", ECCurve_Code.c2tnb191v1);
+                "c2tnb191v1", ECCurve_Code.c2tnb191v1);
         ECCurve_NameToCode.put(
-            "c2tnb191v2", ECCurve_Code.c2tnb191v2);
+                "c2tnb191v2", ECCurve_Code.c2tnb191v2);
         ECCurve_NameToCode.put(
-            "c2tnb191v3", ECCurve_Code.c2tnb191v3);
+                "c2tnb191v3", ECCurve_Code.c2tnb191v3);
         //ECCurve_NameToCode.put(
         //    "c2onb191v4", ECCurve_Code.c2onb191v4);
         //ECCurve_NameToCode.put(
         //    "c2onb191v5", ECCurve_Code.c2onb191v5);
         ECCurve_NameToCode.put(
-            "c2pnb208w1", ECCurve_Code.c2pnb208w1);
+                "c2pnb208w1", ECCurve_Code.c2pnb208w1);
         ECCurve_NameToCode.put(
-            "c2tnb239v1", ECCurve_Code.c2tnb239v1);
+                "c2tnb239v1", ECCurve_Code.c2tnb239v1);
         ECCurve_NameToCode.put(
-            "c2tnb239v2", ECCurve_Code.c2tnb239v2);
+                "c2tnb239v2", ECCurve_Code.c2tnb239v2);
         ECCurve_NameToCode.put(
-            "c2tnb239v3", ECCurve_Code.c2tnb239v3);
+                "c2tnb239v3", ECCurve_Code.c2tnb239v3);
         //ECCurve_NameToCode.put(
         //    "c2onb239v4", ECCurve_Code.c2onb239v4);
         //ECCurve_NameToCode.put(
         //    "c2onb239v5", ECCurve_Code.c2onb239v5);
         ECCurve_NameToCode.put(
-            "c2pnb272w1", ECCurve_Code.c2pnb272w1);
+                "c2pnb272w1", ECCurve_Code.c2pnb272w1);
         ECCurve_NameToCode.put(
-            "c2pnb304w1", ECCurve_Code.c2pnb304w1);
+                "c2pnb304w1", ECCurve_Code.c2pnb304w1);
         ECCurve_NameToCode.put(
-            "c2tnb359v1", ECCurve_Code.c2tnb359v1);
+                "c2tnb359v1", ECCurve_Code.c2tnb359v1);
         ECCurve_NameToCode.put(
-            "c2pnb368w1", ECCurve_Code.c2pnb368w1);
+                "c2pnb368w1", ECCurve_Code.c2pnb368w1);
         ECCurve_NameToCode.put(
-            "c2tnb431r1", ECCurve_Code.c2tnb431r1);
+                "c2tnb431r1", ECCurve_Code.c2tnb431r1);
     }
 
     // The crypto operations the key will support.  It is the logical OR
     // of the opFlag constants, each specifying a supported operation.
     private long opFlags = 0;
     private long opFlagsMask = 0;
-
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -291,26 +240,25 @@ public final class PK11KeyPairGenerator
 
     /**
      * Constructor for PK11KeyPairGenerator.
+     * 
      * @param token The PKCS #11 token that the keypair will be generated on.
-     * @param algorithm The type of key that will be generated.  Currently,
-     *      <code>KeyPairAlgorithm.RSA</code> ,
-     *      <code>KeyPairAlgorithm.DSA</code> and
-     *      <code>KeyPairAlgorithm.EC</code> are supported.
+     * @param algorithm The type of key that will be generated. Currently,
+     *            <code>KeyPairAlgorithm.RSA</code> ,
+     *            <code>KeyPairAlgorithm.DSA</code> and
+     *            <code>KeyPairAlgorithm.EC</code> are supported.
      * @throws NoSuchAlgorithmException
      * @throws TokenException
      */
     public PK11KeyPairGenerator(PK11Token token, KeyPairAlgorithm algorithm)
-        throws NoSuchAlgorithmException, TokenException
-    {
-        assert(token!=null && algorithm!=null);
+            throws NoSuchAlgorithmException, TokenException {
+        assert (token != null && algorithm != null);
 
         mKeygenOnInternalToken = false;
 
         // Make sure we can do this kind of keygen
-        if( ! token.doesAlgorithm(algorithm) ) {
-            if( token.doesAlgorithm( algorithm.getAlgFamily() ) &&
-                token.isWritable() )
-            {
+        if (!token.doesAlgorithm(algorithm)) {
+            if (token.doesAlgorithm(algorithm.getAlgFamily()) &&
+                    token.isWritable()) {
                 // NSS will do the keygen on the internal module
                 // and move the key to the token. We'll say this is
                 // OK for now.
@@ -333,36 +281,35 @@ public final class PK11KeyPairGenerator
     /**
      * Initializes this KeyPairGenerator with the given key strength.
      *
-     * <p>For DSA key generation, pre-cooked PQG values will be used
+     * <p>
+     * For DSA key generation, pre-cooked PQG values will be used
      * be used if the key size is 512, 768, or 1024. Otherwise, an
      * InvalidParameterException will be thrown.
      *
      * @param strength The strength (size) of the keys that will be generated.
      * @param random <b>Ignored</b>
      * @exception InvalidParameterException If the key strength is not
-     *      supported by the algorithm or this implementation.
+     *                supported by the algorithm or this implementation.
      */
     @Override
     public void initialize(int strength, SecureRandom random)
-        throws InvalidParameterException
-    {
-        if(algorithm == KeyPairAlgorithm.RSA) {
-            params =
-                new RSAParameterSpec(strength, DEFAULT_RSA_PUBLIC_EXPONENT);
-        } else if(algorithm == KeyPairAlgorithm.DSA) {
-            if(strength==512) {
+            throws InvalidParameterException {
+        if (algorithm == KeyPairAlgorithm.RSA) {
+            params = new RSAParameterSpec(strength, DEFAULT_RSA_PUBLIC_EXPONENT);
+        } else if (algorithm == KeyPairAlgorithm.DSA) {
+            if (strength == 512) {
                 params = PQG512;
-            } else if(strength==768) {
+            } else if (strength == 768) {
                 params = PQG768;
-            } else if(strength==1024) {
+            } else if (strength == 1024) {
                 params = PQG1024;
             } else {
                 throw new InvalidParameterException(
-                    "In order to use pre-cooked PQG values, key strength must"+
-                    "be 512, 768, or 1024.");
+                        "In order to use pre-cooked PQG values, key strength must" +
+                                "be 512, 768, or 1024.");
             }
         } else {
-            assert( algorithm == KeyPairAlgorithm.EC );
+            assert (algorithm == KeyPairAlgorithm.EC);
             if (strength < 112) {
                 // for EC, "strength" is actually a code for curves defined in
                 //   ECCurve_Code
@@ -380,53 +327,54 @@ public final class PK11KeyPairGenerator
      * parameters.
      *
      * @param params The algorithm-specific parameters that will govern
-     *      key pair generation.
+     *            key pair generation.
      * @param random <b>Ignored</b>
      * @throws InvalidAlgorithmParameterException If the parameters
-     *      are inappropriate for the key type or are not supported by
-     *      this implementation.
+     *             are inappropriate for the key type or are not supported by
+     *             this implementation.
      */
     @Override
     public void initialize(AlgorithmParameterSpec params, SecureRandom random)
-        throws InvalidAlgorithmParameterException
-    {
-        if(params == null) {
+            throws InvalidAlgorithmParameterException {
+        if (params == null) {
             throw new InvalidAlgorithmParameterException("Null parameters");
         }
 
-        if(algorithm == KeyPairAlgorithm.RSA) {
+        if (algorithm == KeyPairAlgorithm.RSA) {
             if (!(params instanceof RSAKeyGenParameterSpec)) {
                 throw new InvalidAlgorithmParameterException();
             }
 
             // Security library stores public exponent in an unsigned long
-            if (((RSAKeyGenParameterSpec)params).getPublicExponent().bitLength() > 31) {
+            if (((RSAKeyGenParameterSpec) params).getPublicExponent().bitLength() > 31) {
                 throw new InvalidAlgorithmParameterException(
                         "RSA Public Exponent must fit in 31 or fewer bits.");
             }
-        } else if ( algorithm == KeyPairAlgorithm.DSA ){
-            if(! (params instanceof DSAParameterSpec) ) {
+        } else if (algorithm == KeyPairAlgorithm.DSA) {
+            if (!(params instanceof DSAParameterSpec)) {
                 throw new InvalidAlgorithmParameterException();
             }
         } else {
-            assert(algorithm == KeyPairAlgorithm.EC);
+            assert (algorithm == KeyPairAlgorithm.EC);
             if (params instanceof ECGenParameterSpec) {
-                ECGenParameterSpec standard_params = (ECGenParameterSpec)params;
+                ECGenParameterSpec standard_params = (ECGenParameterSpec) params;
                 String curve_name = standard_params.getName();
                 ECCurve curve = ECCurve.fromName(curve_name);
                 if (curve == null) {
-                    throw new InvalidAlgorithmParameterException("Unable to find curve with the given name: " + curve_name);
+                    throw new InvalidAlgorithmParameterException(
+                            "Unable to find curve with the given name: " + curve_name);
                 }
 
                 OBJECT_IDENTIFIER[] oid = curve.getOIDs();
-                assert(oid.length >= 1);
+                assert (oid.length >= 1);
 
                 byte[] encoded_oid = ASN1Util.encode(oid[0]);
                 params = new PK11ParameterSpec(encoded_oid);
             }
 
             if (!(params instanceof PK11ParameterSpec)) {
-                throw new InvalidAlgorithmParameterException("Expected params to either be an instance of ECGenParameterSpec or PK11ParameterSpec!");
+                throw new InvalidAlgorithmParameterException(
+                        "Expected params to either be an instance of ECGenParameterSpec or PK11ParameterSpec!");
             }
         } // future add support for X509EncodedSpec
 
@@ -436,17 +384,17 @@ public final class PK11KeyPairGenerator
     /**
      * Generates a key pair on a token. Uses parameters if they were passed
      * in through a call to <code>initialize</code>, otherwise uses defaults.
+     * 
      * @return
      * @throws TokenException
      */
 
     @Override
     public KeyPair generateKeyPair()
-        throws TokenException
-    {
-        if(algorithm == KeyPairAlgorithm.RSA) {
-            if(params != null) {
-                RSAKeyGenParameterSpec rsaparams = (RSAKeyGenParameterSpec)params;
+            throws TokenException {
+        if (algorithm == KeyPairAlgorithm.RSA) {
+            if (params != null) {
+                RSAKeyGenParameterSpec rsaparams = (RSAKeyGenParameterSpec) params;
 
                 if (rsaparams.getKeysize() < Policy.RSA_MINIMUM_KEY_SIZE) {
                     String msg = "unsafe RSA key size of ";
@@ -473,67 +421,66 @@ public final class PK11KeyPairGenerator
                 }
 
                 return generateRSAKeyPairWithOpFlags(
-                                    token,
-                                    rsaparams.getKeysize(),
-                                    rsaparams.getPublicExponent().longValue(),
-                                    temporaryPairMode,
-                                    sensitivePairMode,
-                                    extractablePairMode,
-                                    (int) opFlags,
-                                    (int) opFlagsMask);
+                        token,
+                        rsaparams.getKeysize(),
+                        rsaparams.getPublicExponent().longValue(),
+                        temporaryPairMode,
+                        sensitivePairMode,
+                        extractablePairMode,
+                        (int) opFlags,
+                        (int) opFlagsMask);
             } else {
                 return generateRSAKeyPairWithOpFlags(
-                                    token,
-                                    DEFAULT_RSA_KEY_SIZE,
-                                    DEFAULT_RSA_PUBLIC_EXPONENT.longValue(),
-                                    temporaryPairMode,
-                                    sensitivePairMode,
-                                    extractablePairMode,
-                                    (int) opFlags,
-                                    (int) opFlagsMask);
+                        token,
+                        DEFAULT_RSA_KEY_SIZE,
+                        DEFAULT_RSA_PUBLIC_EXPONENT.longValue(),
+                        temporaryPairMode,
+                        sensitivePairMode,
+                        extractablePairMode,
+                        (int) opFlags,
+                        (int) opFlagsMask);
             }
-        } else if(algorithm == KeyPairAlgorithm.DSA ) {
-            if(params==null) {
+        } else if (algorithm == KeyPairAlgorithm.DSA) {
+            if (params == null) {
                 params = PQG1024;
             }
-            DSAParameterSpec dsaParams = (DSAParameterSpec)params;
+            DSAParameterSpec dsaParams = (DSAParameterSpec) params;
             return generateDSAKeyPairWithOpFlags(
-                token,
-                PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getP()),
-                PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getQ()),
-                PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getG()),
-                temporaryPairMode,
-                sensitivePairMode,
-                extractablePairMode,
-                (int) opFlags,
-                (int) opFlagsMask);
+                    token,
+                    PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getP()),
+                    PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getQ()),
+                    PQGParams.BigIntegerToUnsignedByteArray(dsaParams.getG()),
+                    temporaryPairMode,
+                    sensitivePairMode,
+                    extractablePairMode,
+                    (int) opFlags,
+                    (int) opFlagsMask);
         } else {
-            assert( algorithm == KeyPairAlgorithm.EC );
+            assert (algorithm == KeyPairAlgorithm.EC);
             // requires JAVA 1.5 for ECParameters.
             //
             //AlgorithmParameters ecParams =
-	        //			AlgorithmParameters.getInstance("ECParameters");
-	        // ecParams.init(params);
+            //			AlgorithmParameters.getInstance("ECParameters");
+            // ecParams.init(params);
             PK11ParameterSpec ecParams = (PK11ParameterSpec) params;
 
             return generateECKeyPairWithOpFlags(
-                token,
-		        ecParams.getEncoded(), /* curve */
-                temporaryPairMode,
-                sensitivePairMode,
-                extractablePairMode,
-                (int) opFlags,
-                (int) opFlagsMask);
+                    token,
+                    ecParams.getEncoded(), /* curve */
+                    temporaryPairMode,
+                    sensitivePairMode,
+                    extractablePairMode,
+                    (int) opFlags,
+                    (int) opFlagsMask);
         }
     }
 
     /**
      * @return true if the keypair generation will be done on the
-     *      internal token and then moved to this token.
+     *         internal token and then moved to this token.
      */
     @Override
-    public boolean
-    keygenOnInternalToken() {
+    public boolean keygenOnInternalToken() {
         return mKeygenOnInternalToken;
     }
 
@@ -546,30 +493,27 @@ public final class PK11KeyPairGenerator
     /**
      * Generates an RSA key pair with the given size and public exponent.
      */
-    private native KeyPair
-    generateRSAKeyPair(PK11Token token, int keySize, long publicExponent,
+    private native KeyPair generateRSAKeyPair(PK11Token token, int keySize, long publicExponent,
             boolean temporary, int sensitive, int extractable)
-        throws TokenException;
+            throws TokenException;
 
     /**
      * Generates an RSA key pair with the given size and public exponent.
      * Adds the ability to specify a set of flags and masks
      * to control how NSS generates the key pair.
      */
-    private native KeyPair
-    generateRSAKeyPairWithOpFlags(PK11Token token, int keySize, long publicExponent,
+    private native KeyPair generateRSAKeyPairWithOpFlags(PK11Token token, int keySize, long publicExponent,
             boolean temporary, int sensitive, int extractable,
             int op_flags, int op_flags_mask)
-        throws TokenException;
+            throws TokenException;
 
     /**
      * Generates a DSA key pair with the given P, Q, and G values.
      * P, Q, and G are stored as big-endian twos-complement octet strings.
      */
-    private native KeyPair
-    generateDSAKeyPair(PK11Token token, byte[] P, byte[] Q, byte[] G,
+    private native KeyPair generateDSAKeyPair(PK11Token token, byte[] P, byte[] Q, byte[] G,
             boolean temporary, int sensitive, int extractable)
-        throws TokenException;
+            throws TokenException;
 
     /**
      * Generates a DSA key pair with the given P, Q, and G values.
@@ -577,21 +521,19 @@ public final class PK11KeyPairGenerator
      * Adds the ability to specify a set of flags and masks
      * to control how NSS generates the key pair.
      */
-    private native KeyPair
-    generateDSAKeyPairWithOpFlags(PK11Token token, byte[] P, byte[] Q, byte[] G,
+    private native KeyPair generateDSAKeyPairWithOpFlags(PK11Token token, byte[] P, byte[] Q, byte[] G,
             boolean temporary, int sensitive, int extractable,
             int op_flags, int op_flags_mask)
-        throws TokenException;
-
+            throws TokenException;
 
     /**
      * Generates a EC key pair with the given a curve.
      * Curves are stored as DER Encoded Parameters.
      */
-    private native KeyPair
-    generateECKeyPair(PK11Token token, byte[] Curve,
+    private native KeyPair generateECKeyPair(PK11Token token, byte[] Curve,
             boolean temporary, int sensitive, int extractable)
-        throws TokenException;
+            throws TokenException;
+
     /**
      * Generates a EC key pair with the given a curve.
      * Curves are stored as DER Encoded Parameters.
@@ -599,48 +541,43 @@ public final class PK11KeyPairGenerator
      * to control how NSS generates the key pair.
      */
 
-    private native KeyPair
-    generateECKeyPairWithOpFlags(PK11Token token, byte[] Curve,
+    private native KeyPair generateECKeyPairWithOpFlags(PK11Token token, byte[] Curve,
             boolean temporary, int sensitive, int extractable,
             int op_flags, int op_flags_mask)
-        throws TokenException;
+            throws TokenException;
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     // Defaults
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
-    private static final int
-    DEFAULT_RSA_KEY_SIZE = 2048;
+    private static final int DEFAULT_RSA_KEY_SIZE = 2048;
 
-    private static final BigInteger
-    DEFAULT_RSA_PUBLIC_EXPONENT = BigInteger.valueOf(65537);
+    private static final BigInteger DEFAULT_RSA_PUBLIC_EXPONENT = BigInteger.valueOf(65537);
 
     //////////////////////////////////////////////////////////////////////
     // 1024-bit PQG parameters
     // These were generated and verified using the
     // org.mozilla.jss.crypto.PQGParams class.
     //////////////////////////////////////////////////////////////////////
-    private static final String p1024= "135839652435190934085800139191680301864221874900900696919010316554114342871389066526982023513828891845682496590926522957486592076092819515303251959435284578074745022943475516750500021440278782993316814165831392449756706958779266394680687474113495272524355075654433600922751920548192539119568200162784715902571";
-    private static final String q1024= "1289225024022202541601051225376429063716419728261";
-    private static final String g1024= "9365079229044517973775853147905914670746128595481021901304748201231245287028018351117994470223961367498481071639148009750748608477086914440940765659773400233006204556380834403997210445996745757996115285802608489502160956380238739417382954486304730446079375880915926936667959108637040861595671319957190194969";
-    private static final String h1024= "52442921523337940900621893014039829709890959980326720828933601226740749524581606283131306291278616835323956710592993182613544059214633911716533418368425327413628234095671352084418677611348898811691107611640282098605730539089258655659910952545940615065321018163879856499128636989240131903260975031351698627473";
-    private static final String seed1024= "99294487279227522120410987308721952265545668206337642687581596155167227884587528576179879564731162765515189527566190299324927751299864501359105446993895763527646668003992063667962831489586752303126546478655915858883436326503676798267446073013163508014466163441488290854738816489359449082537210762470653355837";
+    private static final String p1024 = "135839652435190934085800139191680301864221874900900696919010316554114342871389066526982023513828891845682496590926522957486592076092819515303251959435284578074745022943475516750500021440278782993316814165831392449756706958779266394680687474113495272524355075654433600922751920548192539119568200162784715902571";
+    private static final String q1024 = "1289225024022202541601051225376429063716419728261";
+    private static final String g1024 = "9365079229044517973775853147905914670746128595481021901304748201231245287028018351117994470223961367498481071639148009750748608477086914440940765659773400233006204556380834403997210445996745757996115285802608489502160956380238739417382954486304730446079375880915926936667959108637040861595671319957190194969";
+    private static final String h1024 = "52442921523337940900621893014039829709890959980326720828933601226740749524581606283131306291278616835323956710592993182613544059214633911716533418368425327413628234095671352084418677611348898811691107611640282098605730539089258655659910952545940615065321018163879856499128636989240131903260975031351698627473";
+    private static final String seed1024 = "99294487279227522120410987308721952265545668206337642687581596155167227884587528576179879564731162765515189527566190299324927751299864501359105446993895763527646668003992063667962831489586752303126546478655915858883436326503676798267446073013163508014466163441488290854738816489359449082537210762470653355837";
     private static final int counter1024 = 159;
 
     /**
      * Pre-cooked PQG values for 1024-bit keypairs, along with the seed,
      * counter, and H values needed to verify them.
      */
-    public static final
-    PQGParams PQG1024 = new PQGParams(
-                                    new BigInteger(p1024),
-                                    new BigInteger(q1024),
-                                    new BigInteger(g1024),
-                                    new BigInteger(seed1024),
-                                    counter1024,
-                                    new BigInteger(h1024));
-
+    public static final PQGParams PQG1024 = new PQGParams(
+            new BigInteger(p1024),
+            new BigInteger(q1024),
+            new BigInteger(g1024),
+            new BigInteger(seed1024),
+            counter1024,
+            new BigInteger(h1024));
 
     //////////////////////////////////////////////////////////////////////
     // 768-bit PQG parameters
@@ -658,15 +595,13 @@ public final class PK11KeyPairGenerator
      * Pre-cooked PQG values for 768-bit keypairs, along with the seed,
      * counter, and H values needed to verify them.
      */
-    public static final
-    PQGParams PQG768 = new PQGParams(
-                                    new BigInteger(p768),
-                                    new BigInteger(q768),
-                                    new BigInteger(g768),
-                                    new BigInteger(seed768),
-                                    counter768,
-                                    new BigInteger(h768));
-
+    public static final PQGParams PQG768 = new PQGParams(
+            new BigInteger(p768),
+            new BigInteger(q768),
+            new BigInteger(g768),
+            new BigInteger(seed768),
+            counter768,
+            new BigInteger(h768));
 
     //////////////////////////////////////////////////////////////////////
     // 512-bit PQG parameters
@@ -684,25 +619,24 @@ public final class PK11KeyPairGenerator
      * Pre-cooked PQG values for 512-bit keypairs, along with the seed,
      * counter, and H values needed to verify them.
      */
-    public static final
-    PQGParams PQG512 = new PQGParams(
-                                    new BigInteger(p512),
-                                    new BigInteger(q512),
-                                    new BigInteger(g512),
-                                    new BigInteger(seed512),
-                                    counter512,
-                                    new BigInteger(h512));
+    public static final PQGParams PQG512 = new PQGParams(
+            new BigInteger(p512),
+            new BigInteger(q512),
+            new BigInteger(g512),
+            new BigInteger(seed512),
+            counter512,
+            new BigInteger(h512));
 
     ///////////////////////////////////////////////////////////////////////
     // Test the PQG parameters
     ///////////////////////////////////////////////////////////////////////
     private static boolean defaultsTested = false;
-    private static synchronized void
-    testDefaults() {
-        if(!defaultsTested) {
-            assert(PQG1024.paramsAreValid());
-            assert(PQG768.paramsAreValid());
-            assert(PQG512.paramsAreValid());
+
+    private static synchronized void testDefaults() {
+        if (!defaultsTested) {
+            assert (PQG1024.paramsAreValid());
+            assert (PQG768.paramsAreValid());
+            assert (PQG512.paramsAreValid());
             defaultsTested = true;
         }
     }
@@ -726,29 +660,30 @@ public final class PK11KeyPairGenerator
      * Sets the requested key usages desired for the
      * generated key pair.
      * This allows the caller to suggest how NSS generates the key pair.
+     * 
      * @param usages List of desired key usages.
      * @param usages_mask Corresponding mask for the key usages.
-     * if a usages is desired, make sure it is in the mask as well.
+     *            if a usages is desired, make sure it is in the mask as well.
      */
 
     @Override
     public void setKeyPairUsages(org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages,
-                                 org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages_mask) {
+            org.mozilla.jss.crypto.KeyPairGeneratorSpi.Usage[] usages_mask) {
 
         this.opFlags = 0;
         this.opFlagsMask = 0;
 
-        if(usages != null) {
-            for( int i = 0; i < usages.length; i++ ) {
-                if( usages[i] != null ) {
+        if (usages != null) {
+            for (int i = 0; i < usages.length; i++) {
+                if (usages[i] != null) {
                     this.opFlags |= usages[i].value();
                 }
             }
         }
 
-        if(usages_mask != null) {
-            for( int i = 0; i < usages_mask.length; i++ ) {
-                if( usages_mask[i] != null ) {
+        if (usages_mask != null) {
+            for (int i = 0; i < usages_mask.length; i++) {
+                if (usages_mask[i] != null) {
                     this.opFlagsMask |= usages_mask[i].value();
                 }
             }
@@ -761,298 +696,238 @@ public final class PK11KeyPairGenerator
     //private AlgorithmParameterSpec getCurve(int strength) {
     //}
 
-
-    private static final OBJECT_IDENTIFIER ANSI_X962_PRIME_CURVE =
-	new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045, 3, 1 } );
-    private static final OBJECT_IDENTIFIER ANSI_X962_BINARY_CURVE =
-	new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045, 3, 0 } );
-    private static final OBJECT_IDENTIFIER SECG_EC_CURVE =
-	new OBJECT_IDENTIFIER( new long[] { 1, 3, 132, 0 } );
+    private static final OBJECT_IDENTIFIER ANSI_X962_PRIME_CURVE = new OBJECT_IDENTIFIER(
+            new long[] { 1, 2, 840, 10045, 3, 1 });
+    private static final OBJECT_IDENTIFIER ANSI_X962_BINARY_CURVE = new OBJECT_IDENTIFIER(
+            new long[] { 1, 2, 840, 10045, 3, 0 });
+    private static final OBJECT_IDENTIFIER SECG_EC_CURVE = new OBJECT_IDENTIFIER(new long[] { 1, 3, 132, 0 });
 
     // ANSI Prime curves
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V1
-	= ANSI_X962_PRIME_CURVE.subBranch(1);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V2
-	= ANSI_X962_PRIME_CURVE.subBranch(2);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V3
-	= ANSI_X962_PRIME_CURVE.subBranch(3);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V1
-	= ANSI_X962_PRIME_CURVE.subBranch(4);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V2
-	= ANSI_X962_PRIME_CURVE.subBranch(5);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V3
-	= ANSI_X962_PRIME_CURVE.subBranch(6);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P256V1
-	= ANSI_X962_PRIME_CURVE.subBranch(7);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V1 = ANSI_X962_PRIME_CURVE.subBranch(1);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V2 = ANSI_X962_PRIME_CURVE.subBranch(2);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V3 = ANSI_X962_PRIME_CURVE.subBranch(3);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V1 = ANSI_X962_PRIME_CURVE.subBranch(4);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V2 = ANSI_X962_PRIME_CURVE.subBranch(5);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V3 = ANSI_X962_PRIME_CURVE.subBranch(6);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_P256V1 = ANSI_X962_PRIME_CURVE.subBranch(7);
 
     // ANSI Binary curves
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V1
-	=ANSI_X962_BINARY_CURVE.subBranch(1);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V2
-	=ANSI_X962_BINARY_CURVE.subBranch(2);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V3
-	=ANSI_X962_BINARY_CURVE.subBranch(3);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB176V1
-	=ANSI_X962_BINARY_CURVE.subBranch(4);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V1
-	=ANSI_X962_BINARY_CURVE.subBranch(5);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V2
-	=ANSI_X962_BINARY_CURVE.subBranch(6);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V3
-	=ANSI_X962_BINARY_CURVE.subBranch(7);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB191V4
-	=ANSI_X962_BINARY_CURVE.subBranch(8);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB191V5
-	=ANSI_X962_BINARY_CURVE.subBranch(9);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB208W1
-	=ANSI_X962_BINARY_CURVE.subBranch(10);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V1
-	=ANSI_X962_BINARY_CURVE.subBranch(11);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V2
-	=ANSI_X962_BINARY_CURVE.subBranch(12);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V3
-	=ANSI_X962_BINARY_CURVE.subBranch(13);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB239V4
-	=ANSI_X962_BINARY_CURVE.subBranch(14);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB239V5
-	=ANSI_X962_BINARY_CURVE.subBranch(15);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB272W1
-	=ANSI_X962_BINARY_CURVE.subBranch(16);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB304W1
-	=ANSI_X962_BINARY_CURVE.subBranch(17);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB359V1
-	=ANSI_X962_BINARY_CURVE.subBranch(18);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB368W1
-	=ANSI_X962_BINARY_CURVE.subBranch(19);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB431R1
-	=ANSI_X962_BINARY_CURVE.subBranch(20);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V1 = ANSI_X962_BINARY_CURVE.subBranch(1);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V2 = ANSI_X962_BINARY_CURVE.subBranch(2);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V3 = ANSI_X962_BINARY_CURVE.subBranch(3);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB176V1 = ANSI_X962_BINARY_CURVE.subBranch(4);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V1 = ANSI_X962_BINARY_CURVE.subBranch(5);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V2 = ANSI_X962_BINARY_CURVE.subBranch(6);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V3 = ANSI_X962_BINARY_CURVE.subBranch(7);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB191V4 = ANSI_X962_BINARY_CURVE.subBranch(8);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB191V5 = ANSI_X962_BINARY_CURVE.subBranch(9);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB208W1 = ANSI_X962_BINARY_CURVE.subBranch(10);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V1 = ANSI_X962_BINARY_CURVE.subBranch(11);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V2 = ANSI_X962_BINARY_CURVE.subBranch(12);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V3 = ANSI_X962_BINARY_CURVE.subBranch(13);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB239V4 = ANSI_X962_BINARY_CURVE.subBranch(14);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB239V5 = ANSI_X962_BINARY_CURVE.subBranch(15);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB272W1 = ANSI_X962_BINARY_CURVE.subBranch(16);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB304W1 = ANSI_X962_BINARY_CURVE.subBranch(17);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB359V1 = ANSI_X962_BINARY_CURVE.subBranch(18);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB368W1 = ANSI_X962_BINARY_CURVE.subBranch(19);
+    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB431R1 = ANSI_X962_BINARY_CURVE.subBranch(20);
 
     // SEG Prime curves
-    static final OBJECT_IDENTIFIER CURVE_SECG_P112R1
-	= SECG_EC_CURVE.subBranch(6);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P112R2
-	= SECG_EC_CURVE.subBranch(7);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P128R1
-	= SECG_EC_CURVE.subBranch(28);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P128R2
-	= SECG_EC_CURVE.subBranch(29);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P160K1
-	= SECG_EC_CURVE.subBranch(9);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P160R1
-	= SECG_EC_CURVE.subBranch(8);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P160R2
-	= SECG_EC_CURVE.subBranch(30);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P192K1
-	= SECG_EC_CURVE.subBranch(31);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P224K1
-	= SECG_EC_CURVE.subBranch(32);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P224R1
-	= SECG_EC_CURVE.subBranch(33);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P256K1
-	= SECG_EC_CURVE.subBranch(10);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P384R1
-	= SECG_EC_CURVE.subBranch(34);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P521R1
-	= SECG_EC_CURVE.subBranch(35);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P112R1 = SECG_EC_CURVE.subBranch(6);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P112R2 = SECG_EC_CURVE.subBranch(7);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P128R1 = SECG_EC_CURVE.subBranch(28);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P128R2 = SECG_EC_CURVE.subBranch(29);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P160K1 = SECG_EC_CURVE.subBranch(9);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P160R1 = SECG_EC_CURVE.subBranch(8);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P160R2 = SECG_EC_CURVE.subBranch(30);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P192K1 = SECG_EC_CURVE.subBranch(31);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P224K1 = SECG_EC_CURVE.subBranch(32);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P224R1 = SECG_EC_CURVE.subBranch(33);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P256K1 = SECG_EC_CURVE.subBranch(10);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P384R1 = SECG_EC_CURVE.subBranch(34);
+    static final OBJECT_IDENTIFIER CURVE_SECG_P521R1 = SECG_EC_CURVE.subBranch(35);
 
     // SEG Binary curves
-    static final OBJECT_IDENTIFIER CURVE_SECG_T113R1
-	= SECG_EC_CURVE.subBranch(4);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T113R2
-	= SECG_EC_CURVE.subBranch(5);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T131R1
-	= SECG_EC_CURVE.subBranch(22);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T131R2
-	= SECG_EC_CURVE.subBranch(23);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T163K1
-	= SECG_EC_CURVE.subBranch(1);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T163R1
-	= SECG_EC_CURVE.subBranch(2);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T163R2
-	= SECG_EC_CURVE.subBranch(15);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T193R1
-	= SECG_EC_CURVE.subBranch(24);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T193R2
-	= SECG_EC_CURVE.subBranch(25);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T233K1
-	= SECG_EC_CURVE.subBranch(26);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T233R1
-	= SECG_EC_CURVE.subBranch(27);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T239K1
-	= SECG_EC_CURVE.subBranch(3);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T283K1
-	= SECG_EC_CURVE.subBranch(16);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T283R1
-	= SECG_EC_CURVE.subBranch(17);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T409K1
-	= SECG_EC_CURVE.subBranch(36);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T409R1
-	= SECG_EC_CURVE.subBranch(37);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T571K1
-	= SECG_EC_CURVE.subBranch(38);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T571R1
-	= SECG_EC_CURVE.subBranch(39);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T113R1 = SECG_EC_CURVE.subBranch(4);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T113R2 = SECG_EC_CURVE.subBranch(5);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T131R1 = SECG_EC_CURVE.subBranch(22);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T131R2 = SECG_EC_CURVE.subBranch(23);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T163K1 = SECG_EC_CURVE.subBranch(1);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T163R1 = SECG_EC_CURVE.subBranch(2);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T163R2 = SECG_EC_CURVE.subBranch(15);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T193R1 = SECG_EC_CURVE.subBranch(24);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T193R2 = SECG_EC_CURVE.subBranch(25);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T233K1 = SECG_EC_CURVE.subBranch(26);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T233R1 = SECG_EC_CURVE.subBranch(27);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T239K1 = SECG_EC_CURVE.subBranch(3);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T283K1 = SECG_EC_CURVE.subBranch(16);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T283R1 = SECG_EC_CURVE.subBranch(17);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T409K1 = SECG_EC_CURVE.subBranch(36);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T409R1 = SECG_EC_CURVE.subBranch(37);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T571K1 = SECG_EC_CURVE.subBranch(38);
+    static final OBJECT_IDENTIFIER CURVE_SECG_T571R1 = SECG_EC_CURVE.subBranch(39);
 
     // the EC curvecode to oid hash table
     private static Hashtable<Integer, OBJECT_IDENTIFIER> mECCurve_CodeToCurve = new Hashtable<>();
     static {
-      // SEG Prime curves
+        // SEG Prime curves
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp521r1.ordinal(), CURVE_SECG_P521R1);
+                ECCurve_Code.secp521r1.ordinal(), CURVE_SECG_P521R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp521.ordinal(), CURVE_SECG_P521R1);
+                ECCurve_Code.nistp521.ordinal(), CURVE_SECG_P521R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp384r1.ordinal(), CURVE_SECG_P384R1);
+                ECCurve_Code.secp384r1.ordinal(), CURVE_SECG_P384R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp384.ordinal(), CURVE_SECG_P384R1);
+                ECCurve_Code.nistp384.ordinal(), CURVE_SECG_P384R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp256r1.ordinal(), CURVE_ANSI_P256V1);
+                ECCurve_Code.secp256r1.ordinal(), CURVE_ANSI_P256V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp256.ordinal(), CURVE_ANSI_P256V1);
+                ECCurve_Code.nistp256.ordinal(), CURVE_ANSI_P256V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp256k1.ordinal(), CURVE_SECG_P256K1);
+                ECCurve_Code.secp256k1.ordinal(), CURVE_SECG_P256K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp224r1.ordinal(), CURVE_SECG_P224R1);
+                ECCurve_Code.secp224r1.ordinal(), CURVE_SECG_P224R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp224.ordinal(), CURVE_SECG_P224R1);
+                ECCurve_Code.nistp224.ordinal(), CURVE_SECG_P224R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp224k1.ordinal(), CURVE_SECG_P224K1);
+                ECCurve_Code.secp224k1.ordinal(), CURVE_SECG_P224K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp192r1.ordinal(), CURVE_ANSI_P192V1);
+                ECCurve_Code.secp192r1.ordinal(), CURVE_ANSI_P192V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp192.ordinal(), CURVE_ANSI_P192V1);
+                ECCurve_Code.nistp192.ordinal(), CURVE_ANSI_P192V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp192k1.ordinal(), CURVE_SECG_P192K1);
+                ECCurve_Code.secp192k1.ordinal(), CURVE_SECG_P192K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp160r2.ordinal(), CURVE_SECG_P160R2);
+                ECCurve_Code.secp160r2.ordinal(), CURVE_SECG_P160R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp160r1.ordinal(), CURVE_SECG_P160R1);
+                ECCurve_Code.secp160r1.ordinal(), CURVE_SECG_P160R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp160k1.ordinal(), CURVE_SECG_P160K1);
+                ECCurve_Code.secp160k1.ordinal(), CURVE_SECG_P160K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp128r2.ordinal(), CURVE_SECG_P128R2);
+                ECCurve_Code.secp128r2.ordinal(), CURVE_SECG_P128R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp128r1.ordinal(), CURVE_SECG_P128R1);
+                ECCurve_Code.secp128r1.ordinal(), CURVE_SECG_P128R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp112r2.ordinal(), CURVE_SECG_P112R2);
+                ECCurve_Code.secp112r2.ordinal(), CURVE_SECG_P112R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp112r1.ordinal(), CURVE_SECG_P112R1);
-      // SEG Binary curves
+                ECCurve_Code.secp112r1.ordinal(), CURVE_SECG_P112R1);
+        // SEG Binary curves
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect571r1.ordinal(), CURVE_SECG_T571R1);
+                ECCurve_Code.sect571r1.ordinal(), CURVE_SECG_T571R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb571.ordinal(), CURVE_SECG_T571R1);
+                ECCurve_Code.nistb571.ordinal(), CURVE_SECG_T571R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect571k1.ordinal(), CURVE_SECG_T571K1);
+                ECCurve_Code.sect571k1.ordinal(), CURVE_SECG_T571K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk571.ordinal(), CURVE_SECG_T571K1);
+                ECCurve_Code.nistk571.ordinal(), CURVE_SECG_T571K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect409r1.ordinal(), CURVE_SECG_T409R1);
+                ECCurve_Code.sect409r1.ordinal(), CURVE_SECG_T409R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb409.ordinal(), CURVE_SECG_T409R1);
+                ECCurve_Code.nistb409.ordinal(), CURVE_SECG_T409R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect409k1.ordinal(), CURVE_SECG_T409K1);
+                ECCurve_Code.sect409k1.ordinal(), CURVE_SECG_T409K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk409.ordinal(), CURVE_SECG_T409K1);
+                ECCurve_Code.nistk409.ordinal(), CURVE_SECG_T409K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect283r1.ordinal(), CURVE_SECG_T283R1);
+                ECCurve_Code.sect283r1.ordinal(), CURVE_SECG_T283R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb283.ordinal(), CURVE_SECG_T283R1);
+                ECCurve_Code.nistb283.ordinal(), CURVE_SECG_T283R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect283k1.ordinal(), CURVE_SECG_T283K1);
+                ECCurve_Code.sect283k1.ordinal(), CURVE_SECG_T283K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk283.ordinal(), CURVE_SECG_T283K1);
+                ECCurve_Code.nistk283.ordinal(), CURVE_SECG_T283K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect239k1.ordinal(), CURVE_SECG_T239K1);
+                ECCurve_Code.sect239k1.ordinal(), CURVE_SECG_T239K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect233r1.ordinal(), CURVE_SECG_T233R1);
+                ECCurve_Code.sect233r1.ordinal(), CURVE_SECG_T233R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb233.ordinal(), CURVE_SECG_T233R1);
+                ECCurve_Code.nistb233.ordinal(), CURVE_SECG_T233R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect233k1.ordinal(), CURVE_SECG_T233K1);
+                ECCurve_Code.sect233k1.ordinal(), CURVE_SECG_T233K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk233.ordinal(), CURVE_SECG_T233K1);
+                ECCurve_Code.nistk233.ordinal(), CURVE_SECG_T233K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect193r2.ordinal(), CURVE_SECG_T193R2);
+                ECCurve_Code.sect193r2.ordinal(), CURVE_SECG_T193R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect193r1.ordinal(), CURVE_SECG_T193R1);
+                ECCurve_Code.sect193r1.ordinal(), CURVE_SECG_T193R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb163.ordinal(), CURVE_SECG_T163K1);
+                ECCurve_Code.nistb163.ordinal(), CURVE_SECG_T163K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect163r2.ordinal(), CURVE_SECG_T163R2);
+                ECCurve_Code.sect163r2.ordinal(), CURVE_SECG_T163R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect163r1.ordinal(), CURVE_SECG_T163R1);
+                ECCurve_Code.sect163r1.ordinal(), CURVE_SECG_T163R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect163k1.ordinal(), CURVE_SECG_T163K1);
+                ECCurve_Code.sect163k1.ordinal(), CURVE_SECG_T163K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk163.ordinal(), CURVE_SECG_T163K1);
+                ECCurve_Code.nistk163.ordinal(), CURVE_SECG_T163K1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect131r2.ordinal(), CURVE_SECG_T131R2);
+                ECCurve_Code.sect131r2.ordinal(), CURVE_SECG_T131R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect131r1.ordinal(), CURVE_SECG_T131R1);
+                ECCurve_Code.sect131r1.ordinal(), CURVE_SECG_T131R1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect113r2.ordinal(), CURVE_SECG_T113R2);
+                ECCurve_Code.sect113r2.ordinal(), CURVE_SECG_T113R2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect113r1.ordinal(), CURVE_SECG_T113R1);
-      // ANSI Prime curves
+                ECCurve_Code.sect113r1.ordinal(), CURVE_SECG_T113R1);
+        // ANSI Prime curves
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime239v3.ordinal(), CURVE_ANSI_P239V3);
+                ECCurve_Code.prime239v3.ordinal(), CURVE_ANSI_P239V3);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime239v2.ordinal(), CURVE_ANSI_P239V2);
+                ECCurve_Code.prime239v2.ordinal(), CURVE_ANSI_P239V2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime239v1.ordinal(), CURVE_ANSI_P239V1);
+                ECCurve_Code.prime239v1.ordinal(), CURVE_ANSI_P239V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime192v3.ordinal(), CURVE_ANSI_P192V3);
+                ECCurve_Code.prime192v3.ordinal(), CURVE_ANSI_P192V3);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime192v2.ordinal(), CURVE_ANSI_P192V2);
+                ECCurve_Code.prime192v2.ordinal(), CURVE_ANSI_P192V2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime192v1.ordinal(), CURVE_ANSI_P192V1);
-      // ANSI Binary curves
+                ECCurve_Code.prime192v1.ordinal(), CURVE_ANSI_P192V1);
+        // ANSI Binary curves
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb163v1.ordinal(), CURVE_ANSI_PNB163V1);
+                ECCurve_Code.c2pnb163v1.ordinal(), CURVE_ANSI_PNB163V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb163v2.ordinal(), CURVE_ANSI_PNB163V2);
+                ECCurve_Code.c2pnb163v2.ordinal(), CURVE_ANSI_PNB163V2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb163v3.ordinal(), CURVE_ANSI_PNB163V3);
+                ECCurve_Code.c2pnb163v3.ordinal(), CURVE_ANSI_PNB163V3);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb176v1.ordinal(), CURVE_ANSI_PNB176V1);
+                ECCurve_Code.c2pnb176v1.ordinal(), CURVE_ANSI_PNB176V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb191v1.ordinal(), CURVE_ANSI_TNB191V1);
+                ECCurve_Code.c2tnb191v1.ordinal(), CURVE_ANSI_TNB191V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb191v2.ordinal(), CURVE_ANSI_TNB191V2);
+                ECCurve_Code.c2tnb191v2.ordinal(), CURVE_ANSI_TNB191V2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb191v3.ordinal(), CURVE_ANSI_TNB191V3);
+                ECCurve_Code.c2tnb191v3.ordinal(), CURVE_ANSI_TNB191V3);
         //mECCurve_CodeToCurve.put(
         //    ECCurve_Code.c2onb191v4.ordinal(), (Object) CURVE_ANSI_ONB191V4);
         //mECCurve_CodeToCurve.put(
         //    ECCurve_Code.c2onb191v5.ordinal(), (Object) CURVE_ANSI_ONB191V5);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb208w1.ordinal(), CURVE_ANSI_PNB208W1);
+                ECCurve_Code.c2pnb208w1.ordinal(), CURVE_ANSI_PNB208W1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb239v1.ordinal(), CURVE_ANSI_TNB239V1);
+                ECCurve_Code.c2tnb239v1.ordinal(), CURVE_ANSI_TNB239V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb239v2.ordinal(), CURVE_ANSI_TNB239V2);
+                ECCurve_Code.c2tnb239v2.ordinal(), CURVE_ANSI_TNB239V2);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb239v3.ordinal(), CURVE_ANSI_TNB239V3);
+                ECCurve_Code.c2tnb239v3.ordinal(), CURVE_ANSI_TNB239V3);
         //mECCurve_CodeToCurve.put(
         //    ECCurve_Code.c2onb239v4.ordinal(), (Object) CURVE_ANSI_ONB239V4);
         //mECCurve_CodeToCurve.put(
         //    ECCurve_Code.c2onb239v5.ordinal(), (Object) CURVE_ANSI_ONB239V5);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb272w1.ordinal(), CURVE_ANSI_PNB272W1);
+                ECCurve_Code.c2pnb272w1.ordinal(), CURVE_ANSI_PNB272W1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb304w1.ordinal(), CURVE_ANSI_PNB304W1);
+                ECCurve_Code.c2pnb304w1.ordinal(), CURVE_ANSI_PNB304W1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb359v1.ordinal(), CURVE_ANSI_TNB359V1);
+                ECCurve_Code.c2tnb359v1.ordinal(), CURVE_ANSI_TNB359V1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb368w1.ordinal(), CURVE_ANSI_PNB368W1);
+                ECCurve_Code.c2pnb368w1.ordinal(), CURVE_ANSI_PNB368W1);
         mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb431r1.ordinal(), CURVE_ANSI_TNB431R1);
+                ECCurve_Code.c2tnb431r1.ordinal(), CURVE_ANSI_TNB431R1);
     }
 
     @Override
     public int getCurveCodeByName(String curveName)
-        throws InvalidParameterException {
+            throws InvalidParameterException {
         if (curveName == null)
             throw new InvalidParameterException();
         ECCurve_Code c = ECCurve_NameToCode.get(curveName);
@@ -1067,138 +942,135 @@ public final class PK11KeyPairGenerator
      *     returns the PK11ParameterSpec
      */
     private AlgorithmParameterSpec getECCurve(int curvecode)
-        throws InvalidParameterException
-    {
+            throws InvalidParameterException {
         OBJECT_IDENTIFIER oid;
 
         oid = mECCurve_CodeToCurve.get(curvecode);
         if (oid == null)
-            throw new IllegalArgumentException("curvecode ="+curvecode);
+            throw new IllegalArgumentException("curvecode =" + curvecode);
         return new PK11ParameterSpec(ASN1Util.encode(oid));
     }
 
     private AlgorithmParameterSpec getCurve(int strength)
-        throws InvalidParameterException
-    {
-	OBJECT_IDENTIFIER oid;
-	switch (strength) {
-	case 112:
-	    oid = CURVE_SECG_P112R1; // == WTLS-6
-        // Can't get to curve SECG P-112R2
-        // Can't get to curve WTLS-8 (No oid for WTLS-8)
-	    break;
+            throws InvalidParameterException {
+        OBJECT_IDENTIFIER oid;
+        switch (strength) {
+        case 112:
+            oid = CURVE_SECG_P112R1; // == WTLS-6
+            // Can't get to curve SECG P-112R2
+            // Can't get to curve WTLS-8 (No oid for WTLS-8)
+            break;
         case 113:
-	    oid = CURVE_SECG_T113R1; // == WTLS-4
-        // Can't get to curve SECG T-113R2
-        // Can't get to curve WTLS-1 (No oid for WTLS-1)
-	    break;
-	case 128:
-	    oid = CURVE_SECG_P128R1;
-        // Can't get to curve SECG P-128R2
-	    break;
-	case 131:
-	    oid = CURVE_SECG_T131R1;
-        // Can't get to curve SECG T-131R2
-	    break;
-	case 160:
-	    oid = CURVE_SECG_P160R1; // == WTLS-7 (TLS-16)
-        // Can't get to curve SECG P-160K1 (TLS-15)
-        // Can't get to curve SECG P-160R2 (TLS-17)
-        // Can't get to curve WTLS-9 (No oid for WTLS-9)
-	    break;
-	case 163:
-	    oid = CURVE_SECG_T163K1; // == NIST K-163 == WTLS-3 (TLS-1)
-        // Can't get to curve ANSI C2-PNB163V1 == WTLS-5
-        // Can't get to curve ANSI C2-PNB163V2
-        // Can't get to curve ANSI C2-PNB163V3
-        // Can't get to curve SECG T-163R1 (TLS-2)
-	// Can't get to curve SECG T-163R2 == NIST B-163 (TLS-3)
-	    break;
-	case 176:
-	    oid = CURVE_ANSI_PNB176V1;
-	    break;
-	case 191:
-	    oid = CURVE_ANSI_TNB191V1;
-	// Can't get to curve ANSI C2-TNB191V2
-	// Can't get to curve ANSI C2-TNB191V3
-	// Can't get to curve ANSI C2-ONB191V4
-	// Can't get to curve ANSI C2-ONB191V5
-	    break;
-	case 192:
-	    oid = CURVE_ANSI_P192V1; // == NIST P-192 == SECG P-192R1 (TLS-19)
-	// Can't get to curve ANSI P-192V2
-	// Can't get to curve ANSI P-192V3
-        // Can't get to curve SECG P-192K1 (TLS-18)
-	    break;
-	case 193:
-	    oid = CURVE_SECG_T193R1;  // (TLS-4)
-        // Can't get to curve SECG T-193R2 // (TLS-5)
-	    break;
-	case 208:
-	    oid = CURVE_ANSI_PNB208W1;
-	    break;
-	case 224:
-	    oid = CURVE_SECG_P224R1; // == NIST P-224 == WTLS-12 (TLS-21)
-        // Can't get to curve SECG P-224K1 (TLS-20)
-	    break;
-	case 233:
-	    oid = CURVE_SECG_T233R1; // == NIST B-233 == WTLS-11 (TLS-7)
-        // Can't get to curve SECG T-233K1 == NIST K-233 == WTLS-10 (TLS-6)
-	    break;
-	case 239:
-	    oid = CURVE_SECG_T239K1; // (TLS8)
-        // Can't get to curve ANSI P-239V1
-        // Can't get to curve ANSI P-239V2
-	// Can't get to curve ANSI P-239V3
-	// Can't get to curve ANSI C2-TNB239V1
-	// Can't get to curve ANSI C2-TNB239V2
-	// Can't get to curve ANSI C2-TNB239V3
-	// Can't get to curve ANSI C2-ONB239V4
-	// Can't get to curve ANSI C2-ONB239V5
-	    break;
-	case 256:
-	    oid = CURVE_ANSI_P256V1; // == NIST P-256 == SECG P-256R1 (TLS-23)
-	// Can't get to curve SECG P-256K1 (TLS-22)
-	    break;
-	case 272:
-	    oid = CURVE_ANSI_PNB272W1;
-	    break;
-	case 283:
-	    oid = CURVE_SECG_T283R1; // == NIST B-283 (TLS-10)
-        // Can't get to curve SECG T-283K1 == NIST K-283 (TLS-9)
-	    break;
-	case 304:
-	    oid = CURVE_ANSI_PNB304W1;
-	    break;
-	case 359:
-	    oid = CURVE_ANSI_TNB359V1;
-	    break;
-	case 368:
-	    oid = CURVE_ANSI_PNB368W1;
-	    break;
-	case 384:
-	    oid = CURVE_SECG_P384R1; // == NIST P-384 (TLS-24)
-	    break;
-	case 409:
-	    oid = CURVE_SECG_T409R1; // == NIST B-409 (TLS-12)
-        // Can't get to curve SECG T-409K1 == NIST K-409 (TLS-11)
-	    break;
-	case 431:
-	    oid = CURVE_ANSI_TNB431R1;
-	    break;
-	case 521:
-	    oid = CURVE_SECG_P521R1; // == NIST P-521 (TLS-25)
-	    break;
-	case 571:
-	    oid = CURVE_SECG_T571R1; // == NIST B-571 (TLS-14)
-        // Can't get to curve SECG T-571K1 == NIST K-571 (TLS-13)
-	    break;
-	default:
-             throw new InvalidParameterException();
+            oid = CURVE_SECG_T113R1; // == WTLS-4
+            // Can't get to curve SECG T-113R2
+            // Can't get to curve WTLS-1 (No oid for WTLS-1)
+            break;
+        case 128:
+            oid = CURVE_SECG_P128R1;
+            // Can't get to curve SECG P-128R2
+            break;
+        case 131:
+            oid = CURVE_SECG_T131R1;
+            // Can't get to curve SECG T-131R2
+            break;
+        case 160:
+            oid = CURVE_SECG_P160R1; // == WTLS-7 (TLS-16)
+            // Can't get to curve SECG P-160K1 (TLS-15)
+            // Can't get to curve SECG P-160R2 (TLS-17)
+            // Can't get to curve WTLS-9 (No oid for WTLS-9)
+            break;
+        case 163:
+            oid = CURVE_SECG_T163K1; // == NIST K-163 == WTLS-3 (TLS-1)
+            // Can't get to curve ANSI C2-PNB163V1 == WTLS-5
+            // Can't get to curve ANSI C2-PNB163V2
+            // Can't get to curve ANSI C2-PNB163V3
+            // Can't get to curve SECG T-163R1 (TLS-2)
+            // Can't get to curve SECG T-163R2 == NIST B-163 (TLS-3)
+            break;
+        case 176:
+            oid = CURVE_ANSI_PNB176V1;
+            break;
+        case 191:
+            oid = CURVE_ANSI_TNB191V1;
+            // Can't get to curve ANSI C2-TNB191V2
+            // Can't get to curve ANSI C2-TNB191V3
+            // Can't get to curve ANSI C2-ONB191V4
+            // Can't get to curve ANSI C2-ONB191V5
+            break;
+        case 192:
+            oid = CURVE_ANSI_P192V1; // == NIST P-192 == SECG P-192R1 (TLS-19)
+            // Can't get to curve ANSI P-192V2
+            // Can't get to curve ANSI P-192V3
+            // Can't get to curve SECG P-192K1 (TLS-18)
+            break;
+        case 193:
+            oid = CURVE_SECG_T193R1; // (TLS-4)
+            // Can't get to curve SECG T-193R2 // (TLS-5)
+            break;
+        case 208:
+            oid = CURVE_ANSI_PNB208W1;
+            break;
+        case 224:
+            oid = CURVE_SECG_P224R1; // == NIST P-224 == WTLS-12 (TLS-21)
+            // Can't get to curve SECG P-224K1 (TLS-20)
+            break;
+        case 233:
+            oid = CURVE_SECG_T233R1; // == NIST B-233 == WTLS-11 (TLS-7)
+            // Can't get to curve SECG T-233K1 == NIST K-233 == WTLS-10 (TLS-6)
+            break;
+        case 239:
+            oid = CURVE_SECG_T239K1; // (TLS8)
+            // Can't get to curve ANSI P-239V1
+            // Can't get to curve ANSI P-239V2
+            // Can't get to curve ANSI P-239V3
+            // Can't get to curve ANSI C2-TNB239V1
+            // Can't get to curve ANSI C2-TNB239V2
+            // Can't get to curve ANSI C2-TNB239V3
+            // Can't get to curve ANSI C2-ONB239V4
+            // Can't get to curve ANSI C2-ONB239V5
+            break;
+        case 256:
+            oid = CURVE_ANSI_P256V1; // == NIST P-256 == SECG P-256R1 (TLS-23)
+            // Can't get to curve SECG P-256K1 (TLS-22)
+            break;
+        case 272:
+            oid = CURVE_ANSI_PNB272W1;
+            break;
+        case 283:
+            oid = CURVE_SECG_T283R1; // == NIST B-283 (TLS-10)
+            // Can't get to curve SECG T-283K1 == NIST K-283 (TLS-9)
+            break;
+        case 304:
+            oid = CURVE_ANSI_PNB304W1;
+            break;
+        case 359:
+            oid = CURVE_ANSI_TNB359V1;
+            break;
+        case 368:
+            oid = CURVE_ANSI_PNB368W1;
+            break;
+        case 384:
+            oid = CURVE_SECG_P384R1; // == NIST P-384 (TLS-24)
+            break;
+        case 409:
+            oid = CURVE_SECG_T409R1; // == NIST B-409 (TLS-12)
+            // Can't get to curve SECG T-409K1 == NIST K-409 (TLS-11)
+            break;
+        case 431:
+            oid = CURVE_ANSI_TNB431R1;
+            break;
+        case 521:
+            oid = CURVE_SECG_P521R1; // == NIST P-521 (TLS-25)
+            break;
+        case 571:
+            oid = CURVE_SECG_T571R1; // == NIST B-571 (TLS-14)
+            // Can't get to curve SECG T-571K1 == NIST K-571 (TLS-13)
+            break;
+        default:
+            throw new InvalidParameterException();
         }
         return new PK11ParameterSpec(ASN1Util.encode(oid));
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////

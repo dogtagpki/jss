@@ -13,9 +13,8 @@ import java.security.InvalidKeyException;
  * Message Digesting with PKCS #11.
  */
 public final class PK11MessageDigest
-    extends JSSMessageDigest
-    implements java.lang.AutoCloseable
-{
+        extends JSSMessageDigest
+        implements java.lang.AutoCloseable {
 
     private PK11Token token;
     private CipherContextProxy digestProxy;
@@ -23,12 +22,11 @@ public final class PK11MessageDigest
     private DigestAlgorithm alg;
 
     PK11MessageDigest(PK11Token token, DigestAlgorithm alg)
-        throws NoSuchAlgorithmException, DigestException
-    {
+            throws NoSuchAlgorithmException, DigestException {
         this.token = token;
         this.alg = alg;
 
-        if( ! token.doesAlgorithm(alg) ) {
+        if (!token.doesAlgorithm(alg)) {
             throw new NoSuchAlgorithmException();
         }
 
@@ -37,14 +35,13 @@ public final class PK11MessageDigest
 
     @Override
     public void initHMAC(SymmetricKey key)
-        throws DigestException, InvalidKeyException
-    {
+            throws DigestException, InvalidKeyException {
 
-        if( ! (alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm) ) {
+        if (!(alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm)) {
             throw new DigestException("Digest is not an HMAC or CMAC digest");
         }
 
-        if( ! (key instanceof PK11SymKey) ) {
+        if (!(key instanceof PK11SymKey)) {
             throw new InvalidKeyException("HMAC key is not a PKCS #11 key");
         }
 
@@ -54,14 +51,13 @@ public final class PK11MessageDigest
 
     @Override
     public void update(byte[] input, int offset, int len)
-        throws DigestException
-    {
-        if( digestProxy == null ) {
+            throws DigestException {
+        if (digestProxy == null) {
             throw new DigestException("Digest not correctly initialized");
         }
-        if( input.length < offset+len ) {
+        if (input.length < offset + len) {
             throw new IllegalArgumentException(
-                "Input buffer is not large enough for offset and length");
+                    "Input buffer is not large enough for offset and length");
         }
 
         update(digestProxy, input, offset, len);
@@ -69,14 +65,13 @@ public final class PK11MessageDigest
 
     @Override
     public int digest(byte[] outbuf, int offset, int len)
-        throws DigestException
-    {
-        if( digestProxy == null ) {
+            throws DigestException {
+        if (digestProxy == null) {
             throw new DigestException("Digest not correctly initialized");
         }
-        if( outbuf.length < offset+len ) {
+        if (outbuf.length < offset + len) {
             throw new IllegalArgumentException(
-                "Output buffer is not large enough for offset and length");
+                    "Output buffer is not large enough for offset and length");
         }
 
         int retval = digest(digestProxy, outbuf, offset, len);
@@ -88,11 +83,11 @@ public final class PK11MessageDigest
 
     @Override
     public void reset() throws DigestException {
-        if( ! (alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm) ) {
+        if (!(alg instanceof HMACAlgorithm || alg instanceof CMACAlgorithm)) {
             // This is a regular digest, so we have enough information
             // to initialize the context
             this.digestProxy = initDigest(alg);
-        } else if( hmacKey != null ) {
+        } else if (hmacKey != null) {
             // This is an HMAC digest, and we have a key
             this.digestProxy = initHMAC(token, alg, hmacKey);
         } else {
@@ -107,19 +102,15 @@ public final class PK11MessageDigest
         return alg;
     }
 
-    private static native CipherContextProxy
-    initDigest(DigestAlgorithm alg)
-        throws DigestException;
+    private static native CipherContextProxy initDigest(DigestAlgorithm alg)
+            throws DigestException;
 
-    private static native CipherContextProxy
-    initHMAC(PK11Token token, DigestAlgorithm alg, PK11SymKey key)
-        throws DigestException;
+    private static native CipherContextProxy initHMAC(PK11Token token, DigestAlgorithm alg, PK11SymKey key)
+            throws DigestException;
 
-    private static native void
-    update(CipherContextProxy proxy, byte[] inbuf, int offset, int len);
+    private static native void update(CipherContextProxy proxy, byte[] inbuf, int offset, int len);
 
-    private static native int
-    digest(CipherContextProxy proxy, byte[] outbuf, int offset, int len);
+    private static native int digest(CipherContextProxy proxy, byte[] outbuf, int offset, int len);
 
     @Override
     public void finalize() throws Throwable {

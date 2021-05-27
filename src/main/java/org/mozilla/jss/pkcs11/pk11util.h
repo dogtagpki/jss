@@ -15,10 +15,9 @@
 
 PR_BEGIN_EXTERN_C
 
-
 /*=====================================================================
-                              K E Y S
-=====================================================================*/
+ K E Y S
+ =====================================================================*/
 
 /***********************************************************************
  *
@@ -38,7 +37,6 @@ JSS_PK11_wrapPrivKey(JNIEnv *env, SECKEYPrivateKey **privk);
 jobject
 JSS_PK11_wrapPubKey(JNIEnv *env, SECKEYPublicKey **pubk);
 
-
 /**************************************************************************
  * Given a PrivateKey object, extracts the SECKEYPrivateKey* and stores it
  * at the given address.
@@ -49,7 +47,7 @@ JSS_PK11_wrapPubKey(JNIEnv *env, SECKEYPublicKey **pubk);
  */
 PRStatus
 JSS_PK11_getPrivKeyPtr(JNIEnv *env, jobject privkObject,
-    SECKEYPrivateKey** ptr);
+		SECKEYPrivateKey **ptr);
 
 /***********************************************************************
  * Given a PublicKey object, extracts the SECKEYPublicKey* and stores it
@@ -60,8 +58,7 @@ JSS_PK11_getPrivKeyPtr(JNIEnv *env, jobject privkObject,
  * Returns: PR_SUCCESS for success, PR_FAILURE if an exception was thrown.
  */
 PRStatus
-JSS_PK11_getPubKeyPtr(JNIEnv *env, jobject pubkObject,
-    SECKEYPublicKey** ptr);
+JSS_PK11_getPubKeyPtr(JNIEnv *env, jobject pubkObject, SECKEYPublicKey **ptr);
 
 /***********************************************************************
  * J S S _ P K 1 1 _ g e t S y m K e y P t r
@@ -122,20 +119,18 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj);
  */
 SECStatus
 JSS_PK11_generateKeyPair(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
-    PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privK,
-    void *params, PRBool temporary, jint senstive, jint extractable);
+		PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privK,
+		void *params, PRBool temporary, jint senstive, jint extractable);
 
 SECStatus
 JSS_PK11_generateKeyPair_withOpFlags(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
-    PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privk,
-    void *params, PRBool temporary, jint sensitive, jint extractable,
-    jint op_flags, jint op_flags_mask);
+		PK11SlotInfo *slot, SECKEYPublicKey **pubk, SECKEYPrivateKey **privk,
+		void *params, PRBool temporary, jint sensitive, jint extractable,
+		jint op_flags, jint op_flags_mask);
 
 /*=====================================================================
-                       C E R T I F I C A T E S
-=====================================================================*/
-
-
+ C E R T I F I C A T E S
+ =====================================================================*/
 
 /******************************************************************
  *
@@ -151,7 +146,6 @@ JSS_PK11_generateKeyPair_withOpFlags(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
 PRStatus
 JSS_PK11_getCertPtr(JNIEnv *env, jobject certObject, CERTCertificate **ptr);
 
-
 /******************************************************************
  *
  * J S S _ P K 1 1 _ g e t C e r t S l o t P t r
@@ -166,7 +160,6 @@ JSS_PK11_getCertPtr(JNIEnv *env, jobject certObject, CERTCertificate **ptr);
 PRStatus
 JSS_PK11_getCertSlotPtr(JNIEnv *env, jobject certObject, PK11SlotInfo **ptr);
 
-
 /*************************************************************************
  *
  * J S S _ P K 1 1 _ f i n d C e r t A n d S l o t F r o m N i c k n a m e
@@ -178,10 +171,9 @@ JSS_PK11_getCertSlotPtr(JNIEnv *env, jobject certObject, PK11SlotInfo **ptr);
  * contains the specified token is returned.  Otherwise the internal
  * key slot (which contains the permanent database token) is returned.
  */
-CERTCertificate *
+CERTCertificate*
 JSS_PK11_findCertAndSlotFromNickname(const char *nickname, void *wincx,
-    PK11SlotInfo **ppSlot);
-
+		PK11SlotInfo **ppSlot);
 
 /***************************************************************************
  *
@@ -194,10 +186,9 @@ JSS_PK11_findCertAndSlotFromNickname(const char *nickname, void *wincx,
  * contains the specified token is returned.  Otherwise the internal
  * key slot (which contains the permanent database token) is returned.
  */
-CERTCertList *
+CERTCertList*
 JSS_PK11_findCertsAndSlotFromNickname(char *nickname, void *wincx,
-    PK11SlotInfo **ppSlot);
-
+		PK11SlotInfo **ppSlot);
 
 /***********************************************************************
  *
@@ -220,8 +211,7 @@ JSS_PK11_findCertsAndSlotFromNickname(char *nickname, void *wincx,
  */
 jobject
 JSS_PK11_wrapCertAndSlotAndNickname(JNIEnv *env, CERTCertificate **ppCert,
-    PK11SlotInfo **ppSlot, const char *nickname);
-
+		PK11SlotInfo **ppSlot, const char *nickname);
 
 /****************************************************************
  *
@@ -242,8 +232,7 @@ JSS_PK11_wrapCertAndSlotAndNickname(JNIEnv *env, CERTCertificate **ppCert,
  */
 jobject
 JSS_PK11_wrapCertAndSlot(JNIEnv *env, CERTCertificate **ppCert,
-    PK11SlotInfo **ppSlot);
-
+		PK11SlotInfo **ppSlot);
 
 /****************************************************************
  *
@@ -264,7 +253,6 @@ JSS_PK11_wrapCertAndSlot(JNIEnv *env, CERTCertificate **ppCert,
 jobject
 JSS_PK11_wrapCert(JNIEnv *env, CERTCertificate **ppCert);
 
-
 /****************************************************************
  *
  * J S S _ P K 1 1 _ w r a p C e r t C h a i n
@@ -280,10 +268,9 @@ JSS_PK11_wrapCert(JNIEnv *env, CERTCertificate **ppCert);
 jobjectArray
 JSS_PK11_wrapCertChain(JNIEnv *env, CERTCertList **ppChain);
 
-
 /*=====================================================================
-                            S T O R E S
-=====================================================================*/
+ S T O R E S
+ =====================================================================*/
 
 /************************************************************************
  *
@@ -304,20 +291,16 @@ JSS_PK11_wrapCertChain(JNIEnv *env, CERTCertList **ppChain);
 PRStatus
 JSS_PK11_getStoreSlotPtr(JNIEnv *env, jobject store, PK11SlotInfo **slot);
 
-
-
 /*=====================================================================
-                            T O K E N S
-=====================================================================*/
-
-
+ T O K E N S
+ =====================================================================*/
 
 /******************************************************************
-**
-** J S S _ P K 1 1 _ m a k e C r y p t o T o k e n F r o m P K 1 1
-**
-** Returns a new CryptoToken object, or NULL if an exception was thrown.
-**/
+ **
+ ** J S S _ P K 1 1 _ m a k e C r y p t o T o k e n F r o m P K 1 1
+ **
+ ** Returns a new CryptoToken object, or NULL if an exception was thrown.
+ **/
 jobject
 JSS_PK11_makeCryptoTokenFromPK11(JNIEnv *env, jobject pk11token);
 
@@ -350,11 +333,9 @@ JSS_PK11_wrapPK11Token(JNIEnv *env, PK11SlotInfo **slot);
 PRStatus
 JSS_PK11_getTokenSlotPtr(JNIEnv *env, jobject tokenObject, PK11SlotInfo **ptr);
 
-
-
 /*=====================================================================
-                             M O D U L E S
-=====================================================================*/
+ M O D U L E S
+ =====================================================================*/
 /***********************************************************************
  *
  * J S S _ P K 1 1 _ w r a p P K 1 1 M o d u l e
@@ -371,7 +352,6 @@ JSS_PK11_getTokenSlotPtr(JNIEnv *env, jobject tokenObject, PK11SlotInfo **ptr);
  */
 jobject
 JSS_PK11_wrapPK11Module(JNIEnv *env, SECMODModule **module);
-
 
 /***********************************************************************
  *
@@ -392,15 +372,13 @@ JSS_PK11_wrapPK11Module(JNIEnv *env, SECMODModule **module);
 PRStatus
 JSS_PK11_getModulePtr(JNIEnv *env, jobject module, SECMODModule **ptr);
 
-
-
-
 /*=====================================================================
-                           C O N T E X T S
-=====================================================================*/
+ C O N T E X T S
+ =====================================================================*/
 
-
-typedef enum { SGN_CONTEXT, VFY_CONTEXT } SigContextType;
+typedef enum {
+	SGN_CONTEXT, VFY_CONTEXT
+} SigContextType;
 typedef struct SigContextProxyStr SigContextProxy;
 
 /***********************************************************************
@@ -415,8 +393,8 @@ typedef struct SigContextProxyStr SigContextProxy;
  * Returns: PR_SUCCESS, unless an exception was thrown.
  */
 PRStatus
-JSS_PK11_getSigContext(JNIEnv *env, jobject proxy, void**pContext,
-        SigContextType* pType);
+JSS_PK11_getSigContext(JNIEnv *env, jobject proxy, void **pContext,
+		SigContextType *pType);
 
 /**********************************************************************
  *
@@ -432,7 +410,7 @@ JSS_PK11_getSigContext(JNIEnv *env, jobject proxy, void**pContext,
  */
 jobject
 JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type,
-        PRArenaPool **arena);
+		PRArenaPool **arena);
 
 /***********************************************************************
  *
@@ -453,7 +431,6 @@ JSS_PK11_wrapSigContextProxy(JNIEnv *env, void **ctxt, SigContextType type,
 PRStatus
 JSS_PK11_getCipherContext(JNIEnv *env, jobject proxy, PK11Context **pContext);
 
-
 /***********************************************************************
  *
  * J S S _ P K 1 1 _ w r a p C i p h e r C o n t e x t P r o x y
@@ -471,10 +448,9 @@ JSS_PK11_getCipherContext(JNIEnv *env, jobject proxy, PK11Context **pContext);
 jobject
 JSS_PK11_wrapCipherContextProxy(JNIEnv *env, PK11Context **context);
 
-
 /*=====================================================================
-                       P K C S # 1 1  H A C K S
-=====================================================================*/
+ P K C S # 1 1  H A C K S
+ =====================================================================*/
 
 /***********************************************************************
  *
@@ -516,7 +492,7 @@ JSS_PK11_getNewSession(PK11SlotInfo *slot, PRBool *owner);
  */
 void
 JSS_PK11_closeSession(PK11SlotInfo *slot, CK_SESSION_HANDLE session,
-        PRBool owner);
+		PRBool owner);
 
 /***********************************************************************
  *
@@ -533,8 +509,8 @@ JSS_PK11_getErrorString(CK_RV crv);
  *
  * Returns a 
  */
-CK_MECHANISM_TYPE getSupportedWrappingMechanism(JNIEnv *env, jobject algObj, PK11SlotInfo *slot);
-
+CK_MECHANISM_TYPE getSupportedWrappingMechanism(JNIEnv *env, jobject algObj,
+		PK11SlotInfo *slot);
 
 PR_END_EXTERN_C
 
