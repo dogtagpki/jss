@@ -7,5 +7,6 @@ package org.mozilla.jss.ssl;
 public interface SSLSocketListener extends SSLHandshakeCompletedListener {
 
     public void alertReceived(SSLAlertEvent event);
+
     public void alertSent(SSLAlertEvent event);
 }

@@ -53,6 +53,7 @@ public class SSLVersionRange {
 
     /**
      * Used by the C code, do not use it directly
+     * 
      * @deprecated Replaced with SSLVersionRange(SSLVersion minVersion, SSLVersion maxVersion).
      * @param min_enum
      * @param max_enum
@@ -74,12 +75,16 @@ public class SSLVersionRange {
     /**
      * @return enumeration value
      */
-    public int getMinEnum() { return minVersion.value(); }
+    public int getMinEnum() {
+        return minVersion.value();
+    }
 
     /**
      * @return enumeration value
      */
-    public int getMaxEnum() { return maxVersion.value(); }
+    public int getMaxEnum() {
+        return maxVersion.value();
+    }
 
     /**
      * Gets all of the SSLVersions in this range, including endpoints.

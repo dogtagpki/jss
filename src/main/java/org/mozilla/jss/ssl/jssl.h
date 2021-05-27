@@ -14,69 +14,60 @@ static const int OCSP_LEAF_AND_CHAIN_POLICY = 2;
 
 #include <ssl.h>
 
-typedef struct
-{
-    enum
-    {
-        PW_NONE = 0,
-        PW_FROMFILE = 1,
-        PW_PLAINTEXT = 2,
-        PW_EXTERNAL = 3
-    } source;
-    char *data;
+typedef struct {
+	enum {
+		PW_NONE = 0, PW_FROMFILE = 1, PW_PLAINTEXT = 2, PW_EXTERNAL = 3
+	} source;
+	char *data;
 } secuPWData;
 
 struct JSSL_SocketData {
-    PRFileDesc *fd;
-    jobject socketObject; /* weak global ref */
-    jobject certApprovalCallback; /* global ref */
-    jobject clientCertSelectionCallback; /* global ref */
-    CERTCertificate *clientCert;
-    PK11SlotInfo *clientCertSlot;
-    PRFilePrivate *jsockPriv;
-    PRLock *lock;  /* protects reader, writer, accepter, and closePending */
-    PRThread *reader;
-    PRThread *writer;
-    PRThread *accepter;
-    PRBool closePending;
+	PRFileDesc *fd;
+	jobject socketObject; /* weak global ref */
+	jobject certApprovalCallback; /* global ref */
+	jobject clientCertSelectionCallback; /* global ref */
+	CERTCertificate *clientCert;
+	PK11SlotInfo *clientCertSlot;
+	PRFilePrivate *jsockPriv;
+	PRLock *lock; /* protects reader, writer, accepter, and closePending */
+	PRThread *reader;
+	PRThread *writer;
+	PRThread *accepter;
+	PRBool closePending;
 };
 typedef struct JSSL_SocketData JSSL_SocketData;
 
 SECStatus
 JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
-             PRBool isServer);
+		PRBool isServer);
 
 void
-JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *client_data, const SSLAlert *alert);
+JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *client_data,
+		const SSLAlert *alert);
 
 void
-JSSL_AlertSentCallback(const PRFileDesc *fd, void *client_data, const SSLAlert *alert);
+JSSL_AlertSentCallback(const PRFileDesc *fd, void *client_data,
+		const SSLAlert *alert);
 
 void
 JSSL_HandshakeCallback(PRFileDesc *fd, void *arg);
 
 SECStatus
 JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
-             PRBool isServer);
+		PRBool isServer);
 
 SECStatus
-JSSL_CallCertSelectionCallback(    void * arg,
-            PRFileDesc *        fd,
-            CERTDistNames *     caNames,
-            CERTCertificate **  pRetCert,
-            SECKEYPrivateKey ** pRetKey);
+JSSL_CallCertSelectionCallback(void *arg, PRFileDesc *fd,
+		CERTDistNames *caNames, CERTCertificate **pRetCert,
+		SECKEYPrivateKey **pRetKey);
 
 SECStatus
 JSSL_ConfirmExpiredPeerCert(void *arg, PRFileDesc *fd, PRBool checkSig,
-             PRBool isServer);
+		PRBool isServer);
 
 SECStatus
-JSSL_GetClientAuthData( void * arg,
-                        PRFileDesc *        fd,
-                        CERTDistNames *     caNames,
-                        CERTCertificate **  pRetCert,
-                        SECKEYPrivateKey ** pRetKey);
-
+JSSL_GetClientAuthData(void *arg, PRFileDesc *fd, CERTDistNames *caNames,
+		CERTCertificate **pRetCert, SECKEYPrivateKey **pRetKey);
 
 #ifdef JDK1_2
 /* JDK 1.2 and higher provide weak references in JNI. */
@@ -100,28 +91,28 @@ JSSL_GetClientAuthData( void * arg,
     JSS_getPtrFromProxyOwner(env, sockObject, SSLSOCKET_PROXY_FIELD, \
         SSLSOCKET_PROXY_SIG, (void**)sdptr)
 
-
 void
 JSSL_DestroySocketData(JNIEnv *env, JSSL_SocketData *sd);
-
 
 extern PRInt32 JSSL_enums[];
 #define JSSL_enums_size 37
 int JSSL_enums_reverse(PRInt32 value);
 
 JSSL_SocketData*
-JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc* newFD,
-        PRFilePrivate *priv);
+JSSL_CreateSocketData(JNIEnv *env, jobject sockObj, PRFileDesc *newFD,
+		PRFilePrivate *priv);
 
 #define SSL_POLICY_DOMESTIC 0
 #define SSL_POLICY_EXPORT 1
 #define SSL_POLICY_FRANCE 2
 
-typedef enum {LOCAL_SOCK, PEER_SOCK} LocalOrPeer;
+typedef enum {
+	LOCAL_SOCK, PEER_SOCK
+} LocalOrPeer;
 
 PRStatus
-JSSL_getSockAddr
-    (JNIEnv *env, jobject self, PRNetAddr *addr, LocalOrPeer localOrPeer);
+JSSL_getSockAddr(JNIEnv *env, jobject self, PRNetAddr *addr,
+		LocalOrPeer localOrPeer);
 
 PRFileDesc*
 JSS_SSL_javasockToPRFD(JNIEnv *env, jobject sockObj);
@@ -137,17 +128,14 @@ JSS_SSL_processExceptions(JNIEnv *env, PRFilePrivate *priv);
         JSS_SSL_processExceptions(env, sock->jsockPriv); \
     }
 
-
 void JSSL_throwSSLSocketException(JNIEnv *env, char *message);
 
 int
 JSSL_getOCSPPolicy();
 
-
-SECStatus 
-JSSL_verifyCertPKIX(CERTCertificate *cert,
-                    SECCertificateUsage certificateUsage,
-                    secuPWData *pwdata, int ocspPolicy,
-                    CERTVerifyLog *log,SECCertificateUsage *usage);
+SECStatus
+JSSL_verifyCertPKIX(CERTCertificate *cert, SECCertificateUsage certificateUsage,
+		secuPWData *pwdata, int ocspPolicy, CERTVerifyLog *log,
+		SECCertificateUsage *usage);
 
 #endif

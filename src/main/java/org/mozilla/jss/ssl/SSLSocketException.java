@@ -4,11 +4,11 @@
 
 package org.mozilla.jss.ssl;
 
-
 /**
  * A subclass of java.net.SocketException that contains an error code
  * from the native (NSS/NSPR) code. These error codes are defined in the
  * class <code>org.mozilla.jss.util.NativeErrcodes</code>.
+ * 
  * @see org.mozilla.jss.util.NativeErrcodes
  */
 public class SSLSocketException extends java.net.SocketException {
@@ -32,6 +32,7 @@ public class SSLSocketException extends java.net.SocketException {
     /**
      * Returns an error code, as defined in class
      * <code>org.mozilla.jss.util.NativeErrcodes</code>.
+     * 
      * @see org.mozilla.jss.util.NativeErrcodes
      */
     public int getErrcode() {

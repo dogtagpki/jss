@@ -7,8 +7,7 @@ package org.mozilla.jss.ssl;
 public enum SSLAlertLevel {
 
     // see lib/ssl/ssl3prot.h in NSS
-    WARNING (1),
-    FATAL   (2);
+    WARNING(1), FATAL(2);
 
     private int id;
 
@@ -22,7 +21,8 @@ public enum SSLAlertLevel {
 
     public static SSLAlertLevel valueOf(int id) {
         for (SSLAlertLevel level : SSLAlertLevel.class.getEnumConstants()) {
-            if (level.id == id) return level;
+            if (level.id == id)
+                return level;
         }
         return null;
     }
