@@ -59,21 +59,21 @@ public class MacData implements ASN1Value {
         return macIterationCount;
     }
 
-    public MacData() { }
+    public MacData() {
+    }
 
     /**
      * Creates a MacData from the given parameters.
      *
      * @param macIterationCount 1 is the default and should be used for
-     *      maximum compatibility. null can also be used, in which case
-     *      the macIterationCount will be omitted from the structure
-     *      (and the default value of 1 will be implied).
+     *            maximum compatibility. null can also be used, in which case
+     *            the macIterationCount will be omitted from the structure
+     *            (and the default value of 1 will be implied).
      */
     public MacData(DigestInfo mac, OCTET_STRING macSalt,
-                INTEGER macIterationCount)
-    {
-        if( mac==null || macSalt==null || macIterationCount==null ) {
-             throw new IllegalArgumentException("null parameter");
+            INTEGER macIterationCount) {
+        if (mac == null || macSalt == null || macIterationCount == null) {
+            throw new IllegalArgumentException("null parameter");
         }
 
         this.mac = mac;
@@ -83,25 +83,24 @@ public class MacData implements ASN1Value {
 
     /**
      * Creates a MacData by computing a HMAC on the given bytes. An HMAC
-	 *	is a message authentication code, which is a keyed digest. It proves
-	 *	not only that data has not been tampered with, but also that the
-	 *	entity that created the HMAC possessed the symmetric key.
-	 *
-	 * @param password The password used to generate a key using a
-	 *		PBE mechanism.
-	 * @param macSalt The salt used as input to the PBE key generation
-	 *		mechanism. If null is passed in, new random salt will be created.
+     * is a message authentication code, which is a keyed digest. It proves
+     * not only that data has not been tampered with, but also that the
+     * entity that created the HMAC possessed the symmetric key.
+     *
+     * @param password The password used to generate a key using a
+     *            PBE mechanism.
+     * @param macSalt The salt used as input to the PBE key generation
+     *            mechanism. If null is passed in, new random salt will be created.
      * @param iterations The iteration count for creating the PBE key.
-	 * @param toBeMACed The data on which the HMAC will be computed.
+     * @param toBeMACed The data on which the HMAC will be computed.
      * @exception NotInitializedException If the crypto subsystem
-     *      has not been initialized yet.
+     *                has not been initialized yet.
      * @exception TokenException If an error occurs on a crypto token.
-	 */
-    public MacData( Password password, byte[] macSalt,
-                    int iterations, byte[] toBeMACed )
-        throws NotInitializedException,
-            DigestException, TokenException, CharConversionException
-    {
+     */
+    public MacData(Password password, byte[] macSalt,
+            int iterations, byte[] toBeMACed)
+            throws NotInitializedException,
+            DigestException, TokenException, CharConversionException {
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken token = cm.getInternalCryptoToken();
 
@@ -157,24 +156,22 @@ public class MacData implements ASN1Value {
     public Tag getTag() {
         return TAG;
     }
-    private static final Tag TAG = SEQUENCE.TAG;
 
+    private static final Tag TAG = SEQUENCE.TAG;
 
     @Override
     public void encode(OutputStream ostream) throws IOException {
         encode(TAG, ostream);
     }
 
-
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
         seq.addElement(mac);
         seq.addElement(macSalt);
-        if( ! macIterationCount.equals(new INTEGER(DEFAULT_ITERATIONS)) ) {
+        if (!macIterationCount.equals(new INTEGER(DEFAULT_ITERATIONS))) {
             // 1 is the default, only include this element if it is not
             // the default
             seq.addElement(macIterationCount);
@@ -184,6 +181,7 @@ public class MacData implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static final Template getTemplate() {
         return templateInstance;
     }
@@ -198,36 +196,31 @@ public class MacData implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( DigestInfo.getTemplate() );
-            seqt.addElement( OCTET_STRING.getTemplate() );
-            seqt.addElement( INTEGER.getTemplate(),
-                                new INTEGER(DEFAULT_ITERATIONS) );
+            seqt.addElement(DigestInfo.getTemplate());
+            seqt.addElement(OCTET_STRING.getTemplate());
+            seqt.addElement(INTEGER.getTemplate(),
+                    new INTEGER(DEFAULT_ITERATIONS));
         }
-
 
         @Override
         public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
-
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
-
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new MacData( (DigestInfo) seq.elementAt(0),
-                                (OCTET_STRING) seq.elementAt(1),
-                                (INTEGER) seq.elementAt(2) );
+            return new MacData((DigestInfo) seq.elementAt(0),
+                    (OCTET_STRING) seq.elementAt(1),
+                    (INTEGER) seq.elementAt(2));
         }
     }
 }
