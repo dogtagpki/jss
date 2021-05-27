@@ -22,8 +22,8 @@ import org.mozilla.jss.ssl.*;
  * focus on two main things: wrap/unwrap and init.
  *
  * There are the following implementations:
- *  - JSSEngineReferenceImpl - A reference implementation with extensive
- *                             logging and debugging.
+ * - JSSEngineReferenceImpl - A reference implementation with extensive
+ * logging and debugging.
  *
  * Usually a JSSEngine isn't constructed directly, but instead accessed via
  * the Provider mechanism, SSLContext. See JSSContextSpi for more information.
@@ -225,8 +225,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * constructor.
      */
     public JSSEngine(String peerHost, int peerPort,
-                     org.mozilla.jss.crypto.X509Certificate localCert,
-                     org.mozilla.jss.crypto.PrivateKey localKey) {
+            org.mozilla.jss.crypto.X509Certificate localCert,
+            org.mozilla.jss.crypto.PrivateKey localKey) {
         super(peerHost, peerPort);
 
         cert = (PK11Cert) localCert;
@@ -263,8 +263,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Safely initializes the session cache if not already initialized.
      */
     public static void initializeSessionCache(int maxCacheEntries,
-        long timeout, String directory) throws SSLException
-    {
+            long timeout, String directory) throws SSLException {
         if (sessionCacheInitialized.compareAndSet(false, true)) {
             if (SSL.ConfigServerSessionIDCache(maxCacheEntries, timeout, timeout, directory) == SSL.SECFailure) {
                 String msg = "Unable to configure server session cache: ";
@@ -292,12 +291,12 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * JSSParameters object.
      *
      * This populates the following values, when set:
-     *  - cipher suites
-     *  - protocols
-     *  - need/want client auth
-     *  - certificate alias
-     *  - peer's hostname
-     *  - ALPN protocols
+     * - cipher suites
+     * - protocols
+     * - need/want client auth
+     * - certificate alias
+     * - peer's hostname
+     * - ALPN protocols
      */
     @Override
     public JSSParameters getSSLParameters() {
@@ -322,9 +321,9 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * JSSEngine.
      *
      * Aligning with the parent implementation, this calls:
-     *  - setEnabledCipherSuites when getCipherSuites is non-null,
-     *  - setEnabledProtocols when getProtocols is non-null, and
-     *  - setWantClientAuth and setNeedClientAuth.
+     * - setEnabledCipherSuites when getCipherSuites is non-null,
+     * - setEnabledProtocols when getProtocols is non-null, and
+     * - setWantClientAuth and setNeedClientAuth.
      *
      * This doesn't yet understand from the parent implementation, the
      * following calls:
@@ -332,7 +331,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * - getSNIMatchers for configuring SNI selection criteria
      *
      * Unlike the parent, this also understands:
-     *  - setCertFromAlias when getAlias is non-null,
+     * - setCertFromAlias when getAlias is non-null,
      * - setHostname when getHostname is non-null.
      *
      * Note: this implementation overrides the one in SSLEngine so that we
@@ -376,7 +375,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         // them from the alias specified... We assume that when the SSLEngine
         // has a certificate already, we want to use them, even if parsed has
         // a null certificate.
-        if (parsed.getAlias() != null && key_managers != null && key_managers.length > 0 && cert == null && key == null) {
+        if (parsed.getAlias() != null && key_managers != null && key_managers.length > 0 && cert == null
+                && key == null) {
             setCertFromAlias(parsed.getAlias());
         }
 
@@ -515,7 +515,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         if (supportedCiphers.size() == 0) {
             enabled_ciphers = null;
-            logger.warn("JSSEngine.setEnabledCipherSuites(...) given a list of cipher suites where none were supported or approved.");
+            logger.warn(
+                    "JSSEngine.setEnabledCipherSuites(...) given a list of cipher suites where none were supported or approved.");
             return;
         }
 
@@ -541,7 +542,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
                 // synced with NSS. However, we'll just log this exception as
                 // a warning. At worst we fail to report that a cipher suite is
                 // enabled.
-                logger.warn("Unable to get the value of cipher: " + cipher.name() + " (" + cipher.getID() + "): " + e.getMessage());
+                logger.warn("Unable to get the value of cipher: " + cipher.name() + " (" + cipher.getID() + "): "
+                        + e.getMessage());
             }
         }
 
@@ -624,7 +626,9 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public void setEnabledProtocols(SSLVersion min, SSLVersion max) throws IllegalArgumentException {
         logger.debug("JSSEngine: setEnabledProtocols()");
         if ((min_protocol == null && max_protocol != null) || (min_protocol != null && max_protocol == null)) {
-            throw new IllegalArgumentException("Expected min and max to either both be null or both be not-null; not mixed: (" + min + ", " + max + ")");
+            throw new IllegalArgumentException(
+                    "Expected min and max to either both be null or both be not-null; not mixed: (" + min + ", " + max
+                            + ")");
         }
 
         if (max == null && min == null) {
@@ -733,7 +737,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         logger.debug("JSSEngine: setKeyMaterials()");
 
         if ((our_cert == null && our_key != null) || (our_cert != null && our_key == null)) {
-            throw new IllegalArgumentException("JSSEngine.setKeyMaterials(): Either both cert and key must be null or both must be not-null");
+            throw new IllegalArgumentException(
+                    "JSSEngine.setKeyMaterials(): Either both cert and key must be null or both must be not-null");
         }
 
         cert = our_cert;
@@ -773,7 +778,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         logger.debug("JSSEngine: setKeyManagers(");
         for (X509KeyManager km : xkms) {
-           logger.debug(" - " + km.getClass().getName());
+            logger.debug(" - " + km.getClass().getName());
         }
         logger.debug(")");
 
@@ -805,7 +810,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         logger.debug("JSSEngine: setTrustManagers(");
         for (X509TrustManager tm : xtms) {
-           logger.debug(" - " + tm.getClass().getName());
+            logger.debug(" - " + tm.getClass().getName());
         }
         logger.debug(")");
 

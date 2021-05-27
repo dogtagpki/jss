@@ -85,7 +85,8 @@ public class JSSServerSocket extends SSLServerSocket {
      * We specifically avoid creating any other constructors as we wish to
      * consume an existing socket rather than creating a new one.
      */
-    public JSSServerSocket() throws IOException {}
+    public JSSServerSocket() throws IOException {
+    }
 
     /**
      * Consume a parent socket, utilizing it for all accept operations.
@@ -111,7 +112,8 @@ public class JSSServerSocket extends SSLServerSocket {
             try {
                 jssContext = SSLContext.getInstance(engineProviderProtocol, engineProvider);
             } catch (Exception e) {
-                throw new IOException("Unable to create JSSSocket prior to Mozilla-JSS initialization! " + e.getMessage(), e);
+                throw new IOException(
+                        "Unable to create JSSSocket prior to Mozilla-JSS initialization! " + e.getMessage(), e);
             }
         }
 

@@ -177,8 +177,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     public JSSEngineReferenceImpl(String peerHost, int peerPort,
-                     org.mozilla.jss.crypto.X509Certificate localCert,
-                     org.mozilla.jss.crypto.PrivateKey localKey) {
+            org.mozilla.jss.crypto.X509Certificate localCert,
+            org.mozilla.jss.crypto.PrivateKey localKey) {
         super(peerHost, peerPort, localCert, localKey);
 
         // Signal host and port for session resumption. Only do it when we've
@@ -383,7 +383,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine.initServer(): " + cert);
         debug("JSSEngine.initServer(): " + key);
 
-        session.setLocalCertificates(new PK11Cert[]{ cert } );
+        session.setLocalCertificates(new PK11Cert[] { cert });
 
         // Create a small server session cache.
         //
@@ -400,11 +400,13 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // want from the remote peer in NSS. In the server case, this is
         // client auth, but if we were to set these on the client, it would
         // affect server auth.
-        if (SSL.OptionSet(ssl_fd, SSL.REQUEST_CERTIFICATE, want_client_auth || need_client_auth ? 1 : 0) == SSL.SECFailure) {
+        if (SSL.OptionSet(ssl_fd, SSL.REQUEST_CERTIFICATE,
+                want_client_auth || need_client_auth ? 1 : 0) == SSL.SECFailure) {
             throw new SSLException("Unable to configure SSL_REQUEST_CERTIFICATE option: " + errorText(PR.GetError()));
         }
 
-        if (SSL.OptionSet(ssl_fd, SSL.REQUIRE_CERTIFICATE, need_client_auth ? SSL.REQUIRE_ALWAYS : 0) == SSL.SECFailure) {
+        if (SSL.OptionSet(ssl_fd, SSL.REQUIRE_CERTIFICATE,
+                need_client_auth ? SSL.REQUIRE_ALWAYS : 0) == SSL.SECFailure) {
             throw new SSLException("Unable to configure SSL_REQUIRE_CERTIFICATE option: " + errorText(PR.GetError()));
         }
     }
@@ -531,7 +533,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // validation logic that SSLSocket had.
             debug("JSSEngine: applyTrustManagers() - adding Native TrustManager");
             if (SSL.ConfigJSSDefaultCertAuthCallback(ssl_fd) == SSL.SECFailure) {
-                throw new SSLException("Unable to configure JSSNativeTrustManager on this JSSengine: " + errorText(PR.GetError()));
+                throw new SSLException(
+                        "Unable to configure JSSNativeTrustManager on this JSSengine: " + errorText(PR.GetError()));
             }
             return;
         }
@@ -545,7 +548,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             ssl_fd.certAuthHandler = new CertValidationTask(ssl_fd);
 
             if (SSL.ConfigSyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
-                throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
+                throw new SSLException(
+                        "Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
             }
         } else {
             // Otherwise, we need a hook from NSS into the SSLFDProxy.
@@ -553,7 +557,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // This hook executes all TrustManagers and if any exception
             // occurs, we'll turn it into the proper response within NSS.
             if (SSL.ConfigAsyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
-                throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
+                throw new SSLException(
+                        "Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
             }
         }
     }
@@ -593,13 +598,15 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             int available = s_istream.available();
             byte[] data = new byte[available];
             s_istream.read(data);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         try {
             int available = c_istream.available();
             byte[] data = new byte[available];
             c_istream.read(data);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -622,7 +629,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // Initialize and create ssl_fd. Throws various RuntimeExceptions
             // when creation and configuration fails.
             init();
-            assert(ssl_fd != null);
+            assert (ssl_fd != null);
 
             // Reset the handshake status, using the new socket and
             // configuration which was just created. This ensures that
@@ -649,14 +656,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 boolean send_certificate_request = as_server && need_client_auth;
                 if (send_certificate_request) {
                     if (SSL.SendCertificateRequest(ssl_fd) == SSL.SECFailure) {
-                        throw new RuntimeException("Unable to issue certificate request on TLSv1.3: " + errorText(PR.GetError()));
+                        throw new RuntimeException(
+                                "Unable to issue certificate request on TLSv1.3: " + errorText(PR.GetError()));
                     }
                 } else {
                     // Our best guess at what the user wants is to update
                     // their keys. They don't need client authentication but
                     // they explicitly called beginHandshake() again.
                     if (SSL.KeyUpdate(ssl_fd, false) == SSL.SECFailure) {
-                        throw new RuntimeException("Unable to request a new key on TLSv1.3: " + errorText(PR.GetError()));
+                        throw new RuntimeException(
+                                "Unable to request a new key on TLSv1.3: " + errorText(PR.GetError()));
                     }
                 }
             } else {
@@ -864,7 +873,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         for (int rel_index = 0; rel_index < length; rel_index++) {
             int index = offset + rel_index;
             if (index >= buffers.length) {
-                throw new IllegalArgumentException("offset (" + offset + ") or length (" + length + ") exceeds contract based on number of buffers (" + buffers.length + ")");
+                throw new IllegalArgumentException("offset (" + offset + ") or length (" + length
+                        + ") exceeds contract based on number of buffers (" + buffers.length + ")");
             }
 
             if (rel_index == 0 && buffers[index] == null) {
@@ -933,14 +943,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     private SSLException checkSSLAlerts() {
-        debug("JSSEngine: Checking inbound and outbound SSL Alerts. Have " + ssl_fd.inboundAlerts.size() + " inbound and " + ssl_fd.outboundAlerts.size() + " outbound alerts.");
+        debug("JSSEngine: Checking inbound and outbound SSL Alerts. Have " + ssl_fd.inboundAlerts.size()
+                + " inbound and " + ssl_fd.outboundAlerts.size() + " outbound alerts.");
 
         // Prefer inbound alerts to outbound alerts.
         while (ssl_fd.inboundOffset < ssl_fd.inboundAlerts.size()) {
             SSLAlertEvent event = ssl_fd.inboundAlerts.get(ssl_fd.inboundOffset);
             ssl_fd.inboundOffset += 1;
 
-            if (event.getLevelEnum() == SSLAlertLevel.WARNING && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
+            if (event.getLevelEnum() == SSLAlertLevel.WARNING
+                    && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
                 debug("Got inbound CLOSE_NOTIFY alert");
                 closeInbound();
             }
@@ -960,7 +972,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             SSLAlertEvent event = ssl_fd.outboundAlerts.get(ssl_fd.outboundOffset);
             ssl_fd.outboundOffset += 1;
 
-            if (event.getLevelEnum() == SSLAlertLevel.WARNING && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
+            if (event.getLevelEnum() == SSLAlertLevel.WARNING
+                    && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
                 debug("Sent outbound CLOSE_NOTIFY alert.");
                 closeOutbound();
             }
@@ -1029,7 +1042,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             if (error_value != PRErrors.WOULD_BLOCK_ERROR) {
                 debug("JSSEngine.updateHandshakeState() - FATAL " + getStatus());
 
-                ssl_exception = new SSLHandshakeException("Error duing SSL.ForceHandshake() :: " + errorText(error_value));
+                ssl_exception = new SSLHandshakeException(
+                        "Error duing SSL.ForceHandshake() :: " + errorText(error_value));
                 seen_exception = true;
 
                 handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
@@ -1038,13 +1052,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         // Check if we've just finished handshaking.
-        debug("JSSEngine.updateHandshakeState() - read_buf.read=" + Buffer.ReadCapacity(read_buf) + " read_buf.write=" + Buffer.WriteCapacity(read_buf) + " write_buf.read=" + Buffer.ReadCapacity(write_buf) + " write_buf.write=" + Buffer.WriteCapacity(write_buf));
+        debug("JSSEngine.updateHandshakeState() - read_buf.read=" + Buffer.ReadCapacity(read_buf) + " read_buf.write="
+                + Buffer.WriteCapacity(read_buf) + " write_buf.read=" + Buffer.ReadCapacity(write_buf)
+                + " write_buf.write=" + Buffer.WriteCapacity(write_buf));
 
         // Set NEED_WRAP when we have data to send to the client.
         if (Buffer.ReadCapacity(write_buf) > 0 && handshake_state != SSLEngineResult.HandshakeStatus.NEED_WRAP) {
             // Can't write; to read, we need to call wrap to provide more
             // data to write.
-            debug("JSSEngine.updateHandshakeState() - can write " + Buffer.ReadCapacity(write_buf) + " bytes, NEED_WRAP to process");
+            debug("JSSEngine.updateHandshakeState() - can write " + Buffer.ReadCapacity(write_buf)
+                    + " bytes, NEED_WRAP to process");
             handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
             unknown_state_count = 0;
             return;
@@ -1058,7 +1075,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // but we haven't yet gotten around to doing so if we're in a WRAP()
         // call.
         if (ssl_fd.handshakeComplete && Buffer.ReadCapacity(write_buf) == 0) {
-            debug("JSSEngine.updateHandshakeState() - handshakeComplete is " + ssl_fd.handshakeComplete + ", so we've just finished handshaking");
+            debug("JSSEngine.updateHandshakeState() - handshakeComplete is " + ssl_fd.handshakeComplete
+                    + ", so we've just finished handshaking");
             step_handshake = false;
             handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
             unknown_state_count = 0;
@@ -1084,7 +1102,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         if (Buffer.ReadCapacity(read_buf) == 0 && handshake_state != SSLEngineResult.HandshakeStatus.NEED_UNWRAP) {
             // Set NEED_UNWRAP when we have no data to read from the client.
-            debug("JSSEngine.updateHandshakeState() - can read " + Buffer.ReadCapacity(read_buf) + " bytes, NEED_UNWRAP to give us more");
+            debug("JSSEngine.updateHandshakeState() - can read " + Buffer.ReadCapacity(read_buf)
+                    + " bytes, NEED_UNWRAP to give us more");
             handshake_state = SSLEngineResult.HandshakeStatus.NEED_UNWRAP;
             unknown_state_count = 0;
             return;
@@ -1131,7 +1150,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     @Override
-    public SSLEngineResult unwrap(ByteBuffer src, ByteBuffer[] dsts, int offset, int length) throws IllegalArgumentException, SSLException {
+    public SSLEngineResult unwrap(ByteBuffer src, ByteBuffer[] dsts, int offset, int length)
+            throws IllegalArgumentException, SSLException {
         debug("JSSEngine: unwrap(ssl_fd=" + ssl_fd + ")");
 
         // In this method, we're taking the network wire contents of src and
@@ -1247,7 +1267,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         SSLEngineResult.Status handshake_status = SSLEngineResult.Status.OK;
 
-
         if (is_inbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
@@ -1315,7 +1334,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // than BUFFER_SIZE bytes either; so cap at the minimum of the
             // two sizes.
             int expected_write = Math.min(srcs[index].remaining(), BUFFER_SIZE);
-            debug("JSSEngine.writeData(): expected_write=" + expected_write + " write_cap=" + Buffer.WriteCapacity(write_buf) + " read_cap=" + Buffer.ReadCapacity(read_buf));
+            debug("JSSEngine.writeData(): expected_write=" + expected_write + " write_cap="
+                    + Buffer.WriteCapacity(write_buf) + " read_cap=" + Buffer.ReadCapacity(read_buf));
 
             // Get data from our current srcs[index] buffer.
             byte[] app_data = new byte[expected_write];
@@ -1406,7 +1426,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     @Override
-    public SSLEngineResult wrap(ByteBuffer[] srcs, int offset, int length, ByteBuffer dst) throws IllegalArgumentException, SSLException {
+    public SSLEngineResult wrap(ByteBuffer[] srcs, int offset, int length, ByteBuffer dst)
+            throws IllegalArgumentException, SSLException {
         debug("JSSEngine: wrap(ssl_fd=" + ssl_fd + ")");
         // In this method, we're taking the application data from the various
         // srcs and writing it to the remote peer (via ssl_fd). If there's any
@@ -1517,7 +1538,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
                     debug("JSSEngine.wrap() - Wrote " + wire_buffer.length + " bytes to dst.");
                 } else {
-                    debug("JSSEngine.wrap(): not writing from write_buf into dst: this_dst_write=0 write_buf.read_capacity=" + Buffer.ReadCapacity(write_buf) + " dst.remaining=" + dst.remaining());
+                    debug("JSSEngine.wrap(): not writing from write_buf into dst: this_dst_write=0 write_buf.read_capacity="
+                            + Buffer.ReadCapacity(write_buf) + " dst.remaining=" + dst.remaining());
                 }
             } else {
                 debug("JSSEngine.wrap(): not writing from write_buf into NULL dst");
@@ -1622,15 +1644,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (debug_port > 0) {
             try {
                 s_socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
             try {
                 c_socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
             try {
                 ss_socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 

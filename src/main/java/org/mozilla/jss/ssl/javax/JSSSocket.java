@@ -109,7 +109,8 @@ public class JSSSocket extends SSLSocket {
      * We specifically avoid creating any other constructors as we wish to
      * consume an existing socket rather than creating a new one.
      */
-    public JSSSocket() {}
+    public JSSSocket() {
+    }
 
     /**
      * Consume a parent socket, utilizing it for all read/write operations.
@@ -310,7 +311,8 @@ public class JSSSocket extends SSLSocket {
 
                 try {
                     Thread.sleep(connectAttempts * 100);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
                 connectAttempts += 1;
                 if (connectAttempts > 25) {

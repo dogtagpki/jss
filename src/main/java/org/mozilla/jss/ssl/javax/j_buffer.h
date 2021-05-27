@@ -10,25 +10,25 @@
  * A j_buffer is a circular ring buffer creating a FIFO queue of bytes.
  */
 typedef struct {
-    /* Contents of the buffer. */
-    uint8_t *contents;
+	/* Contents of the buffer. */
+	uint8_t *contents;
 
-    /* Capacity is used as a sentinel value; when write_pos == capacity, can't
-     * write. */
-    size_t capacity;
+	/* Capacity is used as a sentinel value; when write_pos == capacity, can't
+	 * write. */
+	size_t capacity;
 
-    /* Next position to write to, else capacity if unable to write. */
-    size_t write_pos;
+	/* Next position to write to, else capacity if unable to write. */
+	size_t write_pos;
 
-    /* Next position to read from, else capacity if unable to read. */
-    size_t read_pos;
+	/* Next position to read from, else capacity if unable to read. */
+	size_t read_pos;
 } j_buffer;
 
 /*
  * Create a new buffer; must be freed with jb_free. The length parameter is
  * the number of uint8_t elements the new buffer can store.
  */
-j_buffer *jb_alloc(size_t length);
+j_buffer* jb_alloc(size_t length);
 
 /* Get the original capacity (i.e., when empty) of the specified buffer. */
 size_t jb_capacity(j_buffer *buf);

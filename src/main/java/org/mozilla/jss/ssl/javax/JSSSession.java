@@ -149,7 +149,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
     @Override
     public void invalidate() {
         if (parent.getSSLFDProxy() != null) {
-             SSL.InvalidateSession(parent.getSSLFDProxy());
+            SSL.InvalidateSession(parent.getSSLFDProxy());
         }
     }
 

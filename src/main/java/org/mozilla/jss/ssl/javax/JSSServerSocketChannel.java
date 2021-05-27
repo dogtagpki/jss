@@ -11,7 +11,8 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
     private ServerSocket parentSocket;
     private JSSEngine engine;
 
-    public JSSServerSocketChannel(JSSServerSocket sslSocket, ServerSocketChannel parent, JSSEngine engine) throws IOException {
+    public JSSServerSocketChannel(JSSServerSocket sslSocket, ServerSocketChannel parent, JSSEngine engine)
+            throws IOException {
         super(null);
 
         this.sslSocket = sslSocket;
@@ -23,7 +24,8 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         configureBlocking(parent.isBlocking());
     }
 
-    public JSSServerSocketChannel(JSSServerSocket sslSocket, ServerSocket parentSocket, JSSEngine engine) throws IOException {
+    public JSSServerSocketChannel(JSSServerSocket sslSocket, ServerSocket parentSocket, JSSEngine engine)
+            throws IOException {
         super(null);
 
         this.sslSocket = sslSocket;
