@@ -54,7 +54,7 @@ public final class CertificateUsage {
     private CertificateUsage(int usage, int value, String name) {
         this.usage = usage;
         this.value = value;
-        this.name =  name;
+        this.name = name;
         list.add(this);
 
     }
@@ -77,18 +77,29 @@ public final class CertificateUsage {
         return value;
     }
 
-    public static final CertificateUsage CheckAllUsages = new CertificateUsage(certificateUsageCheckAllUsages, -1, "CheckAllUsages");
-    public static final CertificateUsage SSLClient = new CertificateUsage(certificateUsageSSLClient, certUsageSSLClient, "SSLClient");
-    public static final CertificateUsage SSLServer = new CertificateUsage(certificateUsageSSLServer, certUsageSSLServer, "SSLServer");
-    public static final CertificateUsage SSLServerWithStepUp = new CertificateUsage(certificateUsageSSLServerWithStepUp, certUsageSSLServerWithStepUp, "SSLServerWithStepUp");
+    public static final CertificateUsage CheckAllUsages = new CertificateUsage(certificateUsageCheckAllUsages, -1,
+            "CheckAllUsages");
+    public static final CertificateUsage SSLClient = new CertificateUsage(certificateUsageSSLClient, certUsageSSLClient,
+            "SSLClient");
+    public static final CertificateUsage SSLServer = new CertificateUsage(certificateUsageSSLServer, certUsageSSLServer,
+            "SSLServer");
+    public static final CertificateUsage SSLServerWithStepUp = new CertificateUsage(certificateUsageSSLServerWithStepUp,
+            certUsageSSLServerWithStepUp, "SSLServerWithStepUp");
     public static final CertificateUsage SSLCA = new CertificateUsage(certificateUsageSSLCA, certUsageSSLCA, "SSLCA");
-    public static final CertificateUsage EmailSigner = new CertificateUsage(certificateUsageEmailSigner, certUsageEmailSigner, "EmailSigner");
-    public static final CertificateUsage EmailRecipient = new CertificateUsage(certificateUsageEmailRecipient, certUsageEmailRecipient, "EmailRecipient");
-    public static final CertificateUsage ObjectSigner = new CertificateUsage(certificateUsageObjectSigner, certUsageObjectSigner, "ObjectSigner");
-    public static final CertificateUsage UserCertImport = new CertificateUsage(certificateUsageUserCertImport, certUsageUserCertImport, "UserCertImport");
-    public static final CertificateUsage VerifyCA = new CertificateUsage(certificateUsageVerifyCA, certUsageVerifyCA, "VerifyCA");
-    public static final CertificateUsage ProtectedObjectSigner = new CertificateUsage(certificateUsageProtectedObjectSigner, certUsageProtectedObjectSigner, "ProtectedObjectSigner");
-    public static final CertificateUsage StatusResponder = new CertificateUsage(certificateUsageStatusResponder, certUsageStatusResponder, "StatusResponder");
+    public static final CertificateUsage EmailSigner = new CertificateUsage(certificateUsageEmailSigner,
+            certUsageEmailSigner, "EmailSigner");
+    public static final CertificateUsage EmailRecipient = new CertificateUsage(certificateUsageEmailRecipient,
+            certUsageEmailRecipient, "EmailRecipient");
+    public static final CertificateUsage ObjectSigner = new CertificateUsage(certificateUsageObjectSigner,
+            certUsageObjectSigner, "ObjectSigner");
+    public static final CertificateUsage UserCertImport = new CertificateUsage(certificateUsageUserCertImport,
+            certUsageUserCertImport, "UserCertImport");
+    public static final CertificateUsage VerifyCA = new CertificateUsage(certificateUsageVerifyCA, certUsageVerifyCA,
+            "VerifyCA");
+    public static final CertificateUsage ProtectedObjectSigner = new CertificateUsage(
+            certificateUsageProtectedObjectSigner, certUsageProtectedObjectSigner, "ProtectedObjectSigner");
+    public static final CertificateUsage StatusResponder = new CertificateUsage(certificateUsageStatusResponder,
+            certUsageStatusResponder, "StatusResponder");
     public static final CertificateUsage AnyCA = new CertificateUsage(certificateUsageAnyCA, certUsageAnyCA, "AnyCA");
     public static final CertificateUsage IPsec = new CertificateUsage(certificateUsageIPsec, certUsageIPsec, "IPsec");
 
@@ -101,7 +112,7 @@ public final class CertificateUsage {
     */
     public static final int basicCertificateUsages = /*0x0b80;*/
             certificateUsageUserCertImport |
-            certificateUsageVerifyCA |
-            certificateUsageProtectedObjectSigner |
-            certificateUsageAnyCA ;
+                    certificateUsageVerifyCA |
+                    certificateUsageProtectedObjectSigner |
+                    certificateUsageAnyCA;
 }
