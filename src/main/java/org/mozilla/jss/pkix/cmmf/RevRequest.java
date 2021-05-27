@@ -22,6 +22,7 @@ import org.mozilla.jss.asn1.UTF8String;
 
 /**
  * CMMF <i>RevRequest</i>.
+ * 
  * <pre>
  * RevRequest ::= SEQUENCE {
  *      issuerName      Name,
@@ -31,6 +32,7 @@ import org.mozilla.jss.asn1.UTF8String;
  *      sharedSecret    OCTET STRING OPTIONAL,
  *      comment         UTF8String OPTIONAL }
  * </pre>
+ * 
  * For maintenance and conformance reasons, this code has been brought
  * over and renamed to cmc/RevokeRequest during the CMC update to rfc 5272.
  * All new code should use cmc/RevokeRequest instead
@@ -43,55 +45,54 @@ public class RevRequest implements ASN1Value {
 
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED unspecified = new ENUMERATED(0);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED keyCompromise = new ENUMERATED(1);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED cACompromise = new ENUMERATED(2);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED affiliationChanged = new ENUMERATED(3);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED superseded = new ENUMERATED(4);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED cessationOfOperation = new ENUMERATED(5);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED certificateHold = new ENUMERATED(6);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED removeFromCRL = new ENUMERATED(8);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED privilegeWithdrawn = new ENUMERATED(9);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED aACompromise = new ENUMERATED(10);
-
 
     ///////////////////////////////////////////////////////////////////////
     // Members and member access
@@ -120,7 +121,8 @@ public class RevRequest implements ASN1Value {
 
     /**
      * Returns the <code>reason</code> field, which should indicate the
-     *  reason for the revocation.  The currently supported reasons are:
+     * reason for the revocation. The currently supported reasons are:
+     * 
      * <pre>
      * CRLReason ::= ENUMERATED {
      *      unspecified             (0),
@@ -134,6 +136,7 @@ public class RevRequest implements ASN1Value {
      *      privilegeWithdrawn      (9),
      *      aACompromise            (10) }
      * </pre>
+     * 
      * These are all defined as constants in this class.
      */
     public ENUMERATED getReason() {
@@ -149,10 +152,11 @@ public class RevRequest implements ASN1Value {
     }
 
     /**
-     * Returns the <code>passphrase</code> field.  Returns
-     *  <code>null</code> if the field is not present.
+     * Returns the <code>passphrase</code> field. Returns
+     * <code>null</code> if the field is not present.
+     * 
      * @deprecated The <code>passphrase</code> field has been renamed
-     *  <code>sharedSecret</code>. Call <code>getSharedSecret</code> instead.
+     *             <code>sharedSecret</code>. Call <code>getSharedSecret</code> instead.
      */
     @Deprecated
     public OCTET_STRING getPassphrase() {
@@ -160,15 +164,15 @@ public class RevRequest implements ASN1Value {
     }
 
     /**
-     * Returns the <code>sharedSecret</code> field.  Returns
-     *  <code>null</code> if the field is not present.
+     * Returns the <code>sharedSecret</code> field. Returns
+     * <code>null</code> if the field is not present.
      */
     public OCTET_STRING getSharedSecret() {
         return sharedSecret;
     }
 
     /**
-     * Returns the <code>comment</code> field.  Returns <code>null</code>
+     * Returns the <code>comment</code> field. Returns <code>null</code>
      * if the field is not present.
      */
     public UTF8String getComment() {
@@ -181,25 +185,24 @@ public class RevRequest implements ASN1Value {
 
     /**
      * Constructs a new <code>RevRequest</code> from its components,
-     *  omitting the <code>invalidityDate</code> field.
+     * omitting the <code>invalidityDate</code> field.
      *
      * @deprecated This constructor is obsolete now that
-     *      <code>invalidityDate</code> has been added to the class.
+     *             <code>invalidityDate</code> has been added to the class.
      *
      * @param issuerName The <code>issuerName</code> field.
      * @param serialNumber The <code>serialNumber</code> field.
-     * @param reason The <code>reason</code> field.  The constants defined
-     *      in this class may be used.
-     * @param sharedSecret The <code>sharedSecret</code> field.  This field is
-     *      optional, so <code>null</code> may be used.
-     * @param comment The <code>comment</code> field.  This field is optional,
-     *      so <code>null</code> may be used.
+     * @param reason The <code>reason</code> field. The constants defined
+     *            in this class may be used.
+     * @param sharedSecret The <code>sharedSecret</code> field. This field is
+     *            optional, so <code>null</code> may be used.
+     * @param comment The <code>comment</code> field. This field is optional,
+     *            so <code>null</code> may be used.
      */
     @Deprecated
     public RevRequest(ANY issuerName, INTEGER serialNumber,
-                    ENUMERATED reason, OCTET_STRING sharedSecret,
-                    UTF8String comment)
-    {
+            ENUMERATED reason, OCTET_STRING sharedSecret,
+            UTF8String comment) {
         this(issuerName, serialNumber, reason, null, sharedSecret, comment);
     }
 
@@ -208,23 +211,22 @@ public class RevRequest implements ASN1Value {
      *
      * @param issuerName The <code>issuerName</code> field.
      * @param serialNumber The <code>serialNumber</code> field.
-     * @param reason The <code>reason</code> field.  The constants defined
-     *      in this class may be used.
+     * @param reason The <code>reason</code> field. The constants defined
+     *            in this class may be used.
      * @param invalidityDate The suggested value for the Invalidity Date
-     *      CRL extension. This field is optional, so <code>null</code> may be
-     *      used.
-     * @param sharedSecret The <code>sharedSecret</code> field.  This field is
-     *      optional, so <code>null</code> may be used.
-     * @param comment The <code>comment</code> field.  This field is optional,
-     *      so <code>null</code> may be used.
+     *            CRL extension. This field is optional, so <code>null</code> may be
+     *            used.
+     * @param sharedSecret The <code>sharedSecret</code> field. This field is
+     *            optional, so <code>null</code> may be used.
+     * @param comment The <code>comment</code> field. This field is optional,
+     *            so <code>null</code> may be used.
      */
     public RevRequest(ANY issuerName, INTEGER serialNumber,
-                    ENUMERATED reason, GeneralizedTime invalidityDate,
-                    OCTET_STRING sharedSecret, UTF8String comment)
-    {
-        if( issuerName==null || serialNumber==null || reason==null ) {
+            ENUMERATED reason, GeneralizedTime invalidityDate,
+            OCTET_STRING sharedSecret, UTF8String comment) {
+        if (issuerName == null || serialNumber == null || reason == null) {
             throw new IllegalArgumentException(
-                "parameter to RevRequest constructor is null");
+                    "parameter to RevRequest constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -247,12 +249,12 @@ public class RevRequest implements ASN1Value {
         sequence.addElement(comment);
     }
 
-
     ///////////////////////////////////////////////////////////////////////
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -268,8 +270,6 @@ public class RevRequest implements ASN1Value {
             throws IOException {
         sequence.encode(implicitTag, ostream);
     }
-
-
 
     /**
      * A Template class for decoding a <code>RevRequest</code>.
@@ -305,12 +305,12 @@ public class RevRequest implements ASN1Value {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new RevRequest(  (ANY) seq.elementAt(0),
-                                    (INTEGER) seq.elementAt(1),
-                                    (ENUMERATED) seq.elementAt(2),
-                                    (GeneralizedTime) seq.elementAt(3),
-                                    (OCTET_STRING) seq.elementAt(4),
-                                    (UTF8String) seq.elementAt(5) );
+            return new RevRequest((ANY) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1),
+                    (ENUMERATED) seq.elementAt(2),
+                    (GeneralizedTime) seq.elementAt(3),
+                    (OCTET_STRING) seq.elementAt(4),
+                    (UTF8String) seq.elementAt(5));
 
         }
     }

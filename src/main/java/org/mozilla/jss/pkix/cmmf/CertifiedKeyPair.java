@@ -17,6 +17,7 @@ public class CertifiedKeyPair implements ASN1Value {
     }
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -29,10 +30,9 @@ public class CertifiedKeyPair implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
-        seq.addElement( certOrEncCert );
+        seq.addElement(certOrEncCert);
         seq.encode(implicitTag, ostream);
     }
 }

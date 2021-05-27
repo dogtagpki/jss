@@ -24,8 +24,7 @@ public class CertResponse implements ASN1Value {
     }
 
     public CertResponse(INTEGER certReqId, PKIStatusInfo status,
-            CertifiedKeyPair certifiedKeyPair)
-    {
+            CertifiedKeyPair certifiedKeyPair) {
         this(certReqId, status);
         this.certifiedKeyPair = certifiedKeyPair;
     }
@@ -50,11 +49,12 @@ public class CertResponse implements ASN1Value {
      * the certifiedKeyPair field is present.
      */
     public CertifiedKeyPair getCertifiedKeyPair() {
-        assert(certifiedKeyPair!=null);
+        assert (certifiedKeyPair != null);
         return certifiedKeyPair;
     }
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -67,13 +67,12 @@ public class CertResponse implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
-        seq.addElement( certReqId );
-        seq.addElement( status );
-        if( certifiedKeyPair != null ) {
-            seq.addElement( certifiedKeyPair );
+        seq.addElement(certReqId);
+        seq.addElement(status);
+        if (certifiedKeyPair != null) {
+            seq.addElement(certifiedKeyPair);
         }
 
         seq.encode(implicitTag, ostream);
