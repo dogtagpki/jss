@@ -49,7 +49,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The JSS implementation of the JCA KeyStore SPI.
  *
- * <p>Implementation notes
+ * <p>
+ * Implementation notes
  * <ol>
  * <li>deleteEntry will delete all entries with that label. If the entry is a
  * cert with a matching private key, it will also delete the private key.
@@ -93,9 +94,8 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
         logger.debug("JSSKeyStoreSpi: <init>()");
 
-        CryptoToken token =
-            TokenSupplierManager.getTokenSupplier().getThreadToken();
-        PK11Token pk11tok = (PK11Token)token;
+        CryptoToken token = TokenSupplierManager.getTokenSupplier().getThreadToken();
+        PK11Token pk11tok = (PK11Token) token;
         proxy = pk11tok.getProxy();
     }
 
@@ -345,16 +345,16 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
         logger.debug("JSSKeyStoreSpi: engineGetCertificateAlias()");
 
-      try {
-        if (cert instanceof PK11Cert) {
-            PK11Cert _c = (PK11Cert) cert;
-            return _c.getNickname();
-        }
+        try {
+            if (cert instanceof PK11Cert) {
+                PK11Cert _c = (PK11Cert) cert;
+                return _c.getNickname();
+            }
 
-        return getCertNickname( cert.getEncoded() );
-      } catch(CertificateEncodingException e) {
-        return null;
-      }
+            return getCertNickname(cert.getEncoded());
+        } catch (CertificateEncodingException e) {
+            return null;
+        }
     }
 
     private native String getCertNickname(byte[] derCert);
@@ -538,15 +538,13 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
     @Override
     public void engineLoad(InputStream stream, char[] password)
-        throws IOException
-    {
+            throws IOException {
         logger.debug("JSSKeyStoreSpi: engineLoad(stream, password)");
     }
 
     @Override
     public void engineLoad(KeyStore.LoadStoreParameter param)
-        throws IOException
-    {
+            throws IOException {
         logger.debug("JSSKeyStoreSpi: engineLoad(param)");
 
         if (!(param instanceof JSSLoadStoreParameter)) {
@@ -565,42 +563,38 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
     /**
      * NSS doesn't have a way of storing a certificate on a specific token
-     * unless it has an associated private key.  That rules out
+     * unless it has an associated private key. That rules out
      * trusted certificate entries, so we can't supply this method currently.
      */
     @Override
     public void engineSetCertificateEntry(String alias, Certificate cert)
-            throws KeyStoreException
-    {
+            throws KeyStoreException {
 
         logger.debug("JSSKeyStoreSpi: engineSetCertificateEntry(" + alias + ")");
 
         throw new KeyStoreException(
-            "Storing trusted certificate entries to a JSS KeyStore is not" +
-            " supported.");
+                "Storing trusted certificate entries to a JSS KeyStore is not" +
+                        " supported.");
     }
-
 
     @Override
     public void engineSetKeyEntry(String alias, byte[] key, Certificate[] chain)
-        throws KeyStoreException
-    {
+            throws KeyStoreException {
 
         logger.debug("JSSKeyStoreSpi: engineSetKeyEntry(" + alias + ", key, chain)");
 
-        throw new KeyStoreException("Storing plaintext keys is not supported."+
-            "Store the key as a handle instead.");
+        throw new KeyStoreException("Storing plaintext keys is not supported." +
+                "Store the key as a handle instead.");
     }
 
     @Override
     public void engineSetKeyEntry(String alias, Key key, char[] password,
-        Certificate[] chain) throws KeyStoreException
-    {
+            Certificate[] chain) throws KeyStoreException {
 
         logger.debug("JSSKeyStoreSpi: engineSetKeyEntry(" + alias + ", key, password, chain)");
 
-        if( key instanceof SecretKeyFacade ) {
-            SecretKeyFacade skf = (SecretKeyFacade)key;
+        if (key instanceof SecretKeyFacade) {
+            SecretKeyFacade skf = (SecretKeyFacade) key;
             engineSetKeyEntryNative(alias, skf.key, password, chain);
         } else {
             engineSetKeyEntryNative(alias, key, password, chain);
@@ -608,7 +602,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
     }
 
     private native void engineSetKeyEntryNative(String alias, Object key,
-        char[] password, Certificate[] chain) throws KeyStoreException;
+            char[] password, Certificate[] chain) throws KeyStoreException;
 
     @Override
     public int engineSize() {
@@ -620,8 +614,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
 
     @Override
     public void engineStore(OutputStream stream, char[] password)
-            throws IOException
-    {
+            throws IOException {
         logger.debug("JSSKeyStoreSpi: engineStore()");
     }
 }

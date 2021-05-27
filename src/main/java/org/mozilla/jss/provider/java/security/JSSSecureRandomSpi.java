@@ -18,22 +18,19 @@ public class JSSSecureRandomSpi extends java.security.SecureRandomSpi {
     }
 
     @Override
-    protected byte[]
-    engineGenerateSeed(int numBytes) {
+    protected byte[] engineGenerateSeed(int numBytes) {
         byte[] bytes = new byte[numBytes];
         engine.nextBytes(bytes);
         return bytes;
     }
 
     @Override
-    protected void
-    engineNextBytes(byte[] bytes) {
+    protected void engineNextBytes(byte[] bytes) {
         engine.nextBytes(bytes);
     }
 
     @Override
-    protected void
-    engineSetSeed(byte[] seed) {
+    protected void engineSetSeed(byte[] seed) {
         engine.setSeed(seed);
     }
 }

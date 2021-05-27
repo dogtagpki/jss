@@ -23,33 +23,33 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  * PSSAlgorithmSpec instance and the DER-encoded form.
  *
  * RSASSA-PSS-params ::= SEQUENCE {
- *  hashAlgorithm      [0] OAEP-PSSDigestAlgorithms  DEFAULT sha1,
- * maskGenAlgorithm   [1] PKCS1MGFAlgorithms  DEFAULT mgf1SHA1,
- * saltLength         [2] INTEGER  DEFAULT 20,
- *  trailerField       [3] INTEGER  DEFAULT 1
+ * hashAlgorithm [0] OAEP-PSSDigestAlgorithms DEFAULT sha1,
+ * maskGenAlgorithm [1] PKCS1MGFAlgorithms DEFAULT mgf1SHA1,
+ * saltLength [2] INTEGER DEFAULT 20,
+ * trailerField [3] INTEGER DEFAULT 1
  * }
  *
  * where
  *
- *  OAEP-PSSDigestAlgorithms    ALGORITHM-IDENTIFIER ::= {
- *    { OID id-sha1 PARAMETERS NULL   }|
- *    { OID id-sha224 PARAMETERS NULL   }|
- *    { OID id-sha256 PARAMETERS NULL }|
- *    { OID id-sha384 PARAMETERS NULL }|
- *    { OID id-sha512 PARAMETERS NULL },
- *    ...  -- Allows for future expansion --
- *  }
+ * OAEP-PSSDigestAlgorithms ALGORITHM-IDENTIFIER ::= {
+ * { OID id-sha1 PARAMETERS NULL }|
+ * { OID id-sha224 PARAMETERS NULL }|
+ * { OID id-sha256 PARAMETERS NULL }|
+ * { OID id-sha384 PARAMETERS NULL }|
+ * { OID id-sha512 PARAMETERS NULL },
+ * ... -- Allows for future expansion --
+ * }
  *
- *  PKCS1MGFAlgorithms    ALGORITHM-IDENTIFIER ::= {
- *    { OID id-mgf1 PARAMETERS OAEP-PSSDigestAlgorithms },
- *    ...  -- Allows for future expansion --
- *  }
+ * PKCS1MGFAlgorithms ALGORITHM-IDENTIFIER ::= {
+ * { OID id-mgf1 PARAMETERS OAEP-PSSDigestAlgorithms },
+ * ... -- Allows for future expansion --
+ * }
  */
 public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
     public final static AlgorithmId defaultHashAlg = new AlgorithmId(AlgorithmId.SHA_oid);
-    public final static AlgorithmId defaultMaskGenFunc  = new AlgorithmId(AlgorithmId.MGF1_oid);
-    public final static BigInt          defaultSaltLen = new BigInt(20);
-    public final static BigInt          defaultTrailerField = new BigInt(1);
+    public final static AlgorithmId defaultMaskGenFunc = new AlgorithmId(AlgorithmId.MGF1_oid);
+    public final static BigInt defaultSaltLen = new BigInt(20);
+    public final static BigInt defaultTrailerField = new BigInt(1);
 
     private PSSParameterSpec spec = PSSParameterSpec.DEFAULT;
     private AlgorithmId hashAlg = defaultHashAlg;
@@ -57,7 +57,8 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
     private BigInt saltLen = defaultSaltLen;
     private BigInt trailerField = defaultTrailerField;
 
-    public RSAPSSAlgorithmParameters() {}
+    public RSAPSSAlgorithmParameters() {
+    }
 
     @Override
     protected void engineInit(AlgorithmParameterSpec paramSpec)
@@ -68,12 +69,13 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
 
     @Override
     protected <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> paramSpec)
-            throws InvalidParameterSpecException  {
+            throws InvalidParameterSpecException {
         if (paramSpec.isAssignableFrom(PSSParameterSpec.class)) {
             return paramSpec.cast(spec);
         }
 
-        throw new InvalidParameterSpecException("Unknown parameter spec passed to PSS parameters object: " + paramSpec.getName());
+        throw new InvalidParameterSpecException(
+                "Unknown parameter spec passed to PSS parameters object: " + paramSpec.getName());
     }
 
     @Override
@@ -105,11 +107,12 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
 
     @Override
     protected String engineToString() {
-        String str = new String("Mozilla-JSS PSSAlgorithmParameters " +  getClass().getName() + " HashAlg: " + spec.getDigestAlgorithm() + " MaskGenAlg: " + spec.getMGFAlgorithm() );
+        String str = new String("Mozilla-JSS PSSAlgorithmParameters " + getClass().getName() + " HashAlg: "
+                + spec.getDigestAlgorithm() + " MaskGenAlg: " + spec.getMGFAlgorithm());
         return str;
     }
 
-    private void decode(DerInputStream in , byte[] encoded) throws IOException {
+    private void decode(DerInputStream in, byte[] encoded) throws IOException {
         if (in == null) {
             throw new IOException("Invalid input: got null DerInputStream");
         }
@@ -120,10 +123,10 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
             throw new IOException("Invalid data! Expected a sequence with either 3 or 4 members; got " + seq.length);
         }
 
-        if (seq[0].isContextSpecific((byte)0)) {
+        if (seq[0].isContextSpecific((byte) 0)) {
             seq[0] = seq[0].data.getDerValue();
         } else {
-             throw new IOException("Invalid encoded data! Expecting OAEP-PSSDigestAlgorithms (hashAlgorithm).");
+            throw new IOException("Invalid encoded data! Expecting OAEP-PSSDigestAlgorithms (hashAlgorithm).");
         }
 
         AlgorithmId algid = AlgorithmId.parse(seq[0]);
@@ -134,7 +137,7 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
         // Now the MFG1 parameter hash fun is the same as the main hash func.
         MGF1ParameterSpec specMFG1ParamSpec = new MGF1ParameterSpec(specAlgName);
 
-        if (seq[1].isContextSpecific((byte)1)) {
+        if (seq[1].isContextSpecific((byte) 1)) {
             seq[1] = seq[1].data.getDerValue();
         } else {
             throw new IOException("Invalid encoded data! Expecting OAEP-PSSDigestAlgorithms (maskGenAlgorithm).");
@@ -146,13 +149,13 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
         ObjectIdentifier mgf1OID = seqMgf1[0].getOID();
 
         if (!mgf1OID.equals(AlgorithmId.MGF1_oid)) {
-           throw new IOException("Invalid encoded data: expected MGF1 OID but got: " + mgf1OID.toString());
+            throw new IOException("Invalid encoded data: expected MGF1 OID but got: " + mgf1OID.toString());
         } else {
-           specMGF1Name = "MGF1";
+            specMGF1Name = "MGF1";
         }
 
-        if (seq[2].isContextSpecific((byte)2)) {
-            seq[2]  = seq[2].data.getDerValue();
+        if (seq[2].isContextSpecific((byte) 2)) {
+            seq[2] = seq[2].data.getDerValue();
         } else {
             throw new IOException("Invalid encoded data! Expected INTEGER (saltLength).");
         }
@@ -160,29 +163,28 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
         BigInt sLength = seq[2].getInteger();
 
         this.spec = new PSSParameterSpec(specAlgName, specMGF1Name, specMFG1ParamSpec,
-                                         sLength.toInt(), 1 /* always default trailer */);
+                sLength.toInt(), 1 /* always default trailer */);
 
         populateFromSpec();
     }
 
     private void encode(DerOutputStream out) throws IOException {
         try (
-            DerOutputStream tmp = new DerOutputStream();
-            DerOutputStream mgf = new DerOutputStream();
-            DerOutputStream seq1 = new DerOutputStream();
-            DerOutputStream intStream = new DerOutputStream();
-        ) {
+                DerOutputStream tmp = new DerOutputStream();
+                DerOutputStream mgf = new DerOutputStream();
+                DerOutputStream seq1 = new DerOutputStream();
+                DerOutputStream intStream = new DerOutputStream();) {
             // Hash algorithm
-            hashAlg.derEncodeWithContext(tmp,0);
+            hashAlg.derEncodeWithContext(tmp, 0);
 
             // Mask Gen Function Sequence
             mgf.putOID(maskGenFunc.getOID());
 
             // MGF hash alg is the same as the hash Alg at this point.
             hashAlg.encode(mgf);
-            seq1.write(DerValue.tag_Sequence,mgf);
+            seq1.write(DerValue.tag_Sequence, mgf);
             tmp.write(DerValue.createTag(DerValue.TAG_CONTEXT,
-                                             true, (byte) 1), seq1);
+                    true, (byte) 1), seq1);
 
             // Salt Length
             intStream.putInteger(saltLen);
@@ -212,9 +214,9 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
         // Create the hash alg and mask gen func objects
         if (hashAlgName.equals("SHA-256")) {
             hashAlg = new AlgorithmId(AlgorithmId.SHA256_oid);
-        }  else if(hashAlgName.equals("SHA-512")) {
+        } else if (hashAlgName.equals("SHA-512")) {
             hashAlg = new AlgorithmId(AlgorithmId.SHA512_oid);
-        }  else if(hashAlgName.equals("SHA-384")) {
+        } else if (hashAlgName.equals("SHA-384")) {
             hashAlg = new AlgorithmId(AlgorithmId.SHA384_oid);
         } else {
             // Default to SHA-1 per above ASN.1 encoding.
@@ -225,9 +227,9 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
     private String getSpecAlgName(String algName) {
         if ("SHA256".equals(algName)) {
             return "SHA-256";
-        } else if("SHA384".equals(algName)) {
+        } else if ("SHA384".equals(algName)) {
             return "SHA-384";
-        } else if("SHA512".equals(algName)) {
+        } else if ("SHA512".equals(algName)) {
             return "SHA-512";
         } else {
             // Default to SHA-1 per above ASN.1 encoding.
