@@ -6,9 +6,9 @@ import org.mozilla.jss.util.NativeEnclosure;
  * A CKAttribute is an instance of PKCS#11 CK_ATTRIBUTE.
  *
  * Each CK_ATTRIBUTE contains three parts:
- *  1. A type (type),
- *  2. A pointer to a value (pValue),
- *  3. The size of said value (ulValueLen).
+ * 1. A type (type),
+ * 2. A pointer to a value (pValue),
+ * 3. The size of said value (ulValueLen).
  *
  * In the Java layer, CKAttribute has a member "type" to contain the type
  * of the CK_ATTRIBUTE. It takes on values from PKCS11Constants (pkcs11t.h
