@@ -20,7 +20,7 @@ public class IA5String extends CharacterString implements ASN1Value {
         return new IA5Converter();
     }
 
-    public static final Tag TAG = new Tag( Tag.Class.UNIVERSAL, 22 );
+    public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 22);
 
     @Override
     public Tag getTag() {
@@ -30,78 +30,76 @@ public class IA5String extends CharacterString implements ASN1Value {
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static final Template templateInstance = new Template();
 
-// nested class
-public static class Template
-    extends CharacterString.Template implements ASN1Template
-{
-    @Override
-    public Tag getTag() {
-        return IA5String.TAG;
-    }
-    @Override
-    public boolean tagMatch(Tag tag) {
-        return( tag.equals( IA5String.TAG ));
-    }
-
-    @Override
-    protected CharConverter getCharConverter() {
-        return new IA5Converter();
-    }
-
-    @Override
-    protected CharacterString generateInstance(char[] chars)
-        throws CharConversionException
-    {
-        return new IA5String(chars);
-    }
-
-    @Override
-    protected String typeName() {
-        return "IA5String";
-    }
-}
-
-// nested class
-private static class IA5Converter implements CharConverter {
-
-    @Override
-    public char[] byteToChar(byte[] bytes, int offset, int len)
-        throws CharConversionException
-    {
-        char[] chars = new char[len];
-
-        int c; // char index
-        int b; // byte index
-        for(b = offset, c=0; c < len; b++, c++) {
-            if( (bytes[b] & 0x80) != 0 ) {
-                throw new CharConversionException("Invalid character: "+
-                    bytes[b]);
-            }
-            chars[c] = (char) (bytes[b] & 0x7f);
-        }
-        return chars;
-    }
-
-    @Override
-    public byte[] charToByte(char[] chars, int offset, int len)
-        throws CharConversionException
-    {
-        byte[] bytes = new byte[len];
-
-        int c; // char index
-        int b; // byte index
-        for(c = offset, b = 0; b < len; c++, b++) {
-            if( (chars[c] & 0x7f) != chars[c] ) {
-                throw new CharConversionException("Invalid character: "+
-                    chars[c]);
-            }
-            bytes[b] = (byte) (chars[c] & 0x7f);
+    // nested class
+    public static class Template
+            extends CharacterString.Template implements ASN1Template {
+        @Override
+        public Tag getTag() {
+            return IA5String.TAG;
         }
 
-        return bytes;
+        @Override
+        public boolean tagMatch(Tag tag) {
+            return (tag.equals(IA5String.TAG));
+        }
+
+        @Override
+        protected CharConverter getCharConverter() {
+            return new IA5Converter();
+        }
+
+        @Override
+        protected CharacterString generateInstance(char[] chars)
+                throws CharConversionException {
+            return new IA5String(chars);
+        }
+
+        @Override
+        protected String typeName() {
+            return "IA5String";
+        }
     }
-}
+
+    // nested class
+    private static class IA5Converter implements CharConverter {
+
+        @Override
+        public char[] byteToChar(byte[] bytes, int offset, int len)
+                throws CharConversionException {
+            char[] chars = new char[len];
+
+            int c; // char index
+            int b; // byte index
+            for (b = offset, c = 0; c < len; b++, c++) {
+                if ((bytes[b] & 0x80) != 0) {
+                    throw new CharConversionException("Invalid character: " +
+                            bytes[b]);
+                }
+                chars[c] = (char) (bytes[b] & 0x7f);
+            }
+            return chars;
+        }
+
+        @Override
+        public byte[] charToByte(char[] chars, int offset, int len)
+                throws CharConversionException {
+            byte[] bytes = new byte[len];
+
+            int c; // char index
+            int b; // byte index
+            for (c = offset, b = 0; b < len; c++, b++) {
+                if ((chars[c] & 0x7f) != chars[c]) {
+                    throw new CharConversionException("Invalid character: " +
+                            chars[c]);
+                }
+                bytes[b] = (byte) (chars[c] & 0x7f);
+            }
+
+            return bytes;
+        }
+    }
 
 }

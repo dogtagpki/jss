@@ -7,8 +7,7 @@ package org.mozilla.jss.asn1;
 /**
  * An exception thrown when an optional field is not present.
  */
-public class FieldNotPresentException extends java.lang.Exception
-{
+public class FieldNotPresentException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
 
     public FieldNotPresentException() {
@@ -23,7 +22,8 @@ public class FieldNotPresentException extends java.lang.Exception
         super(mesg, cause);
     }
 
-    public FieldNotPresentException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public FieldNotPresentException(String mesg, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

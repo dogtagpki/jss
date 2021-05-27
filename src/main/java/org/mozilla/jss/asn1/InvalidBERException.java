@@ -11,7 +11,7 @@ import java.util.Vector;
 public class InvalidBERException extends java.lang.Exception {
 
     private static final long serialVersionUID = 1L;
-    private InvalidBERException child=null;
+    private InvalidBERException child = null;
     private Vector<String> mesgList = new Vector<>();
 
     public InvalidBERException(String mesg) {
@@ -33,7 +33,7 @@ public class InvalidBERException extends java.lang.Exception {
      */
     private void appendMessages(StringBuffer sb) {
         int numMessages = mesgList.size();
-        for( int i=numMessages-1; i >= 0; --i ) {
+        for (int i = numMessages - 1; i >= 0; --i) {
             sb.append(mesgList.elementAt(i));
             sb.append(" >> ");
         }
@@ -43,7 +43,7 @@ public class InvalidBERException extends java.lang.Exception {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append( this.getClass().getName() );
+        sb.append(this.getClass().getName());
         sb.append(": ");
         appendMessages(sb);
         return sb.toString();
@@ -52,9 +52,9 @@ public class InvalidBERException extends java.lang.Exception {
     public String toStringNested() {
         StringBuffer sb = new StringBuffer();
         appendMessages(sb);
-        if( child != null ) {
+        if (child != null) {
             sb.append(" >> ");
-            sb.append( child.toStringNested() );
+            sb.append(child.toStringNested());
         }
         return sb.toString();
     }
@@ -69,11 +69,13 @@ public class InvalidBERException extends java.lang.Exception {
 
     public static class InvalidChar extends InvalidBERException {
         private static final long serialVersionUID = 1L;
+
         public InvalidChar(byte b, int offset) {
-			super("Invalid character ("+b+") encountered at offset "+offset);
-		}
-		public InvalidChar(char c, int offset) {
-			super("Invalid character ("+c+") encountered at offset"+offset);
-		}
-	}
+            super("Invalid character (" + b + ") encountered at offset " + offset);
+        }
+
+        public InvalidChar(char c, int offset) {
+            super("Invalid character (" + c + ") encountered at offset" + offset);
+        }
+    }
 }

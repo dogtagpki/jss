@@ -11,6 +11,7 @@ import java.util.Date;
 public class GeneralizedTime extends TimeBase implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 24);
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -18,6 +19,7 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
 
     /**
      * Creates a <code>GeneralizedTime</code> from a Date.
+     * 
      * @param date Input date.
      */
     public GeneralizedTime(Date date) {
@@ -29,8 +31,8 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
         return false;
     }
 
-    private static final GeneralizedTime.Template templateInstance =
-                                new GeneralizedTime.Template();
+    private static final GeneralizedTime.Template templateInstance = new GeneralizedTime.Template();
+
     public static GeneralizedTime.Template getTemplate() {
         return templateInstance;
     }
@@ -39,8 +41,7 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
      * A class for decoding <code>GeneralizedTime</code>s.
      */
     public static class Template extends TimeBase.Template
-        implements ASN1Template
-    {
+            implements ASN1Template {
         @Override
         protected Tag getTag() {
             return TAG;

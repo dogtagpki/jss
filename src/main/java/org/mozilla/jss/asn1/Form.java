@@ -10,7 +10,8 @@ package org.mozilla.jss.asn1;
 public class Form {
     private String name;
 
-    private Form() { }
+    private Form() {
+    }
 
     private Form(String name) {
         this.name = name;
