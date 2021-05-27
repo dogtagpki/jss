@@ -14,17 +14,18 @@ public abstract class JSSMessageDigest {
 
     /**
      * Initializes an HMAC digest with the given symmetric key. This also
-     *  has the effect of resetting the digest.
+     * has the effect of resetting the digest.
      *
      * @param key Symmetric key.
      * @exception DigestException If this algorithm is not an HMAC algorithm.
      * @exception InvalidKeyException If the given key is not valid.
      */
     public abstract void initHMAC(SymmetricKey key)
-        throws DigestException, InvalidKeyException;
+            throws DigestException, InvalidKeyException;
 
     /**
      * Updates the digest with a single byte of input.
+     * 
      * @param input Input byte.
      * @throws DigestException If an error occurred.
      */
@@ -42,7 +43,7 @@ public abstract class JSSMessageDigest {
      * @exception DigestException If an error occurs while digesting.
      */
     public abstract void update(byte[] input, int offset, int len)
-        throws DigestException;
+            throws DigestException;
 
     /**
      * Updates the digest with an array.
@@ -72,13 +73,13 @@ public abstract class JSSMessageDigest {
      * @param buf The buffer in which to place the digest output.
      * @param offset The offset in the buffer at which to store the output.
      * @param len The amount of space available in the buffer for the
-     *      digest output.
+     *            digest output.
      * @return The number of bytes actually stored into buf.
      * @exception DigestException If the provided space is too small for
-     *      the digest, or an error occurs with the digest.
+     *                the digest, or an error occurs with the digest.
      */
     public abstract int digest(byte[] buf, int offset, int len)
-        throws DigestException;
+            throws DigestException;
 
     /**
      * Provides final data to the digest, then completes it and returns the
@@ -94,9 +95,10 @@ public abstract class JSSMessageDigest {
     }
 
     /**
-     * Resets this digest for further use.  This clears all input and
+     * Resets this digest for further use. This clears all input and
      * output streams. If this is an HMAC digest, the HMAC key is not
      * cleared.
+     * 
      * @throws DigestException If an error occurred.
      */
     public abstract void reset() throws DigestException;

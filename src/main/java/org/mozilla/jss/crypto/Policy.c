@@ -50,5 +50,5 @@ Java_org_mozilla_jss_crypto_Policy_getDSAMinimumKeySize(JNIEnv *env, jclass claz
         PR_ASSERT(PR_FALSE);
     }
 
-    return nearest_power_of_two(value);
+	return nearest_power_of_two(value);
 }

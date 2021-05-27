@@ -12,31 +12,31 @@ import java.security.spec.AlgorithmParameterSpec;
  */
 public abstract class SignatureSpi {
 
-	public abstract void engineInitVerify(PublicKey publicKey)
-		throws InvalidKeyException, TokenException;
+    public abstract void engineInitVerify(PublicKey publicKey)
+            throws InvalidKeyException, TokenException;
 
-	public abstract void engineInitSign(PrivateKey privateKey)
-		throws InvalidKeyException, TokenException;
+    public abstract void engineInitSign(PrivateKey privateKey)
+            throws InvalidKeyException, TokenException;
 
-	public abstract void engineInitSign(PrivateKey privateKey,
-										SecureRandom random)
-		throws InvalidKeyException, TokenException;
+    public abstract void engineInitSign(PrivateKey privateKey,
+            SecureRandom random)
+            throws InvalidKeyException, TokenException;
 
-	public abstract void engineUpdate(byte b)
-        throws SignatureException, TokenException;
+    public abstract void engineUpdate(byte b)
+            throws SignatureException, TokenException;
 
-	public abstract void engineUpdate(byte[] b, int off, int len)
-		throws SignatureException, TokenException;
+    public abstract void engineUpdate(byte[] b, int off, int len)
+            throws SignatureException, TokenException;
 
-	public abstract byte[] engineSign()
-        throws SignatureException, TokenException;
- 
-	public abstract int engineSign(byte[] outbuf, int offset, int len)
-		throws SignatureException, TokenException;
+    public abstract byte[] engineSign()
+            throws SignatureException, TokenException;
 
-	public abstract boolean engineVerify(byte[] sigBytes)
-		throws SignatureException, TokenException;
+    public abstract int engineSign(byte[] outbuf, int offset, int len)
+            throws SignatureException, TokenException;
 
-	public abstract void engineSetParameter(AlgorithmParameterSpec params)
-		throws InvalidAlgorithmParameterException, TokenException;
+    public abstract boolean engineVerify(byte[] sigBytes)
+            throws SignatureException, TokenException;
+
+    public abstract void engineSetParameter(AlgorithmParameterSpec params)
+            throws InvalidAlgorithmParameterException, TokenException;
 }

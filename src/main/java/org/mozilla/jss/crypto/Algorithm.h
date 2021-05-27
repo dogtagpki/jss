@@ -21,7 +21,7 @@ typedef enum JSS_AlgType {
 
 typedef struct JSS_AlgInfoStr {
     unsigned long val; /* either a CK_MECHANISM_TYPE or a SECOidTag */
-    JSS_AlgType type;
+	JSS_AlgType type;
 } JSS_AlgInfo;
 
 #define NUM_ALGS 81

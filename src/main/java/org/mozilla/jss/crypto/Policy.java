@@ -55,7 +55,7 @@ public class Policy {
 
     private static SSLVersionRange getTLSVersionRange() {
         SSLVersionRange range = new SSLVersionRange(SSLVersion.minSupported(),
-                                                    SSLVersion.maxSupported());
+                SSLVersion.maxSupported());
         try {
             return SSLSocket.boundSSLVersionRange(SSLProtocolVariant.STREAM, range);
         } catch (Exception e) {
@@ -64,6 +64,8 @@ public class Policy {
     }
 
     private static native int getRSAMinimumKeySize();
+
     private static native int getDHMinimumKeySize();
+
     private static native int getDSAMinimumKeySize();
 }

@@ -53,45 +53,44 @@
  *        (together 2 bytes)
  */
 JNIEXPORT jstring JNICALL
-Java_org_mozilla_jss_asn1_ASN1Util_getTagDescriptionByOid(JNIEnv *env, jobject this, jbyteArray oidBA)
-{
-    SECItem *oid = NULL;
-    SECOidTag oidTag = SEC_OID_UNKNOWN;
-    const char *oidDesc = NULL;
-    jstring description = (jstring)"";
+Java_org_mozilla_jss_asn1_ASN1Util_getTagDescriptionByOid(JNIEnv *env,
+		jobject this, jbyteArray oidBA) {
+	SECItem *oid = NULL;
+	SECOidTag oidTag = SEC_OID_UNKNOWN;
+	const char *oidDesc = NULL;
+	jstring description = (jstring) "";
 
-    if (oidBA == NULL) {
-        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
-            "JSS getTagDescriptionByOid: oidBA null");
-        goto finish;
-    } else {
-        /**************************************************
-         * Setup the parameters
-         *************************************************/
-        oid = JSS_ByteArrayToSECItem(env, oidBA);
-        if (oid == NULL) {
-            JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
-                "JSS getTagDescriptionByOid: JSS_ByteArrayToSECItem failed");
-            goto finish;
-        }
+	if (oidBA == NULL) {
+		JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+				"JSS getTagDescriptionByOid: oidBA null");
+		goto finish;
+	} else {
+		/**************************************************
+		 * Setup the parameters
+		 *************************************************/
+		oid = JSS_ByteArrayToSECItem(env, oidBA);
+		if (oid == NULL) {
+			JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+					"JSS getTagDescriptionByOid: JSS_ByteArrayToSECItem failed");
+			goto finish;
+		}
 
-        /*
-         * SECOID_FindOIDTag() returns SEC_OID_UNKNOWN if no match
-         */
-        oidTag = SECOID_FindOIDTag(oid);
-        if (oidTag == SEC_OID_UNKNOWN) {
-            JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
-                "JSS getTagDescriptionByOid: OID UNKNOWN");
-            goto finish;
-        }
+		/*
+		 * SECOID_FindOIDTag() returns SEC_OID_UNKNOWN if no match
+		 */
+		oidTag = SECOID_FindOIDTag(oid);
+		if (oidTag == SEC_OID_UNKNOWN) {
+			JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+					"JSS getTagDescriptionByOid: OID UNKNOWN");
+			goto finish;
+		}
 
-        oidDesc = SECOID_FindOIDTagDescription(oidTag);
-        if (oidDesc == NULL) {
-            oidDesc = "";
-        }
-        description = (*env)->NewStringUTF(env, oidDesc);
-    }
+		oidDesc = SECOID_FindOIDTagDescription(oidTag);
+		if (oidDesc == NULL) {
+			oidDesc = "";
+		}
+		description = (*env)->NewStringUTF(env, oidDesc);
+	}
 
-finish:
-    return description;
+	finish: return description;
 }

@@ -15,7 +15,7 @@ import java.io.InputStream;
  */
 class CountingStream extends InputStream {
 
-    private int count=0;
+    private int count = 0;
     private int markpos;
     private InputStream source;
 
@@ -34,8 +34,8 @@ class CountingStream extends InputStream {
     public void mark(int readlimit) {
         source.mark(readlimit);
         markpos = count;
-        if(DEBUG) {
-            System.out.println("Marked at position "+markpos);
+        if (DEBUG) {
+            System.out.println("Marked at position " + markpos);
         }
     }
 
@@ -47,10 +47,10 @@ class CountingStream extends InputStream {
     @Override
     public int read() throws IOException {
         int n = source.read();
-        if( n != -1 ) {
+        if (n != -1) {
             count++;
-            if(DEBUG) {
-                System.out.println("read() 1 byte, count="+count);
+            if (DEBUG) {
+                System.out.println("read() 1 byte, count=" + count);
             }
         }
         return n;
@@ -59,11 +59,11 @@ class CountingStream extends InputStream {
     @Override
     public int read(byte[] buffer) throws IOException {
         int n = source.read(buffer);
-        if( n != -1 ) {
+        if (n != -1) {
             count += n;
         }
-        if(DEBUG) {
-            System.out.println("read([]) "+n+" bytes, count="+count);
+        if (DEBUG) {
+            System.out.println("read([]) " + n + " bytes, count=" + count);
         }
         return n;
     }
@@ -71,11 +71,11 @@ class CountingStream extends InputStream {
     @Override
     public int read(byte[] buffer, int offset, int count) throws IOException {
         int n = source.read(buffer, offset, count);
-        if( n != -1 ) {
+        if (n != -1) {
             this.count += n;
         }
-        if(DEBUG) {
-            System.out.println("read(...) "+n+" bytes, count="+this.count);
+        if (DEBUG) {
+            System.out.println("read(...) " + n + " bytes, count=" + this.count);
         }
         return n;
     }
@@ -83,8 +83,8 @@ class CountingStream extends InputStream {
     @Override
     public void reset() throws IOException {
         source.reset();
-        if(DEBUG) {
-            System.out.println("reset from "+count+" to "+markpos);
+        if (DEBUG) {
+            System.out.println("reset from " + count + " to " + markpos);
         }
         count = markpos;
     }
@@ -92,8 +92,8 @@ class CountingStream extends InputStream {
     @Override
     public long skip(long count) throws IOException {
         this.count += count;
-        if(DEBUG) {
-            System.out.println("skipped "+count+", now at "+this.count);
+        if (DEBUG) {
+            System.out.println("skipped " + count + ", now at " + this.count);
         }
         return source.skip(count);
     }
@@ -105,7 +105,7 @@ class CountingStream extends InputStream {
     public void resetNumRead() {
         count = 0;
         markpos = 0;
-        if(DEBUG) {
+        if (DEBUG) {
             System.out.println("resetting count to 0");
         }
     }

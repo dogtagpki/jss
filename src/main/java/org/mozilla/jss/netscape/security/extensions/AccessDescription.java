@@ -50,7 +50,7 @@ public class AccessDescription implements Serializable {
     private void writeObject(java.io.ObjectOutputStream out)
             throws IOException {
         try (DerOutputStream seq = new DerOutputStream();
-             DerOutputStream tmp = new DerOutputStream()) {
+                DerOutputStream tmp = new DerOutputStream()) {
 
             tmp.putOID(mOID);
             mLocation.encode(tmp);

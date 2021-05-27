@@ -13,9 +13,10 @@ public class RSAParameterSpec extends RSAKeyGenParameterSpec {
 
     /**
      * Creates a new RSAParameterSpec with the specified parameter values.
+     * 
      * @param keySize The size of the modulus in bits.
-     * @param publicExponent The public exponent <i>e</i>.  Common values
-     *      are 3, 17, and 65537.  65537 is recommended.
+     * @param publicExponent The public exponent <i>e</i>. Common values
+     *            are 3, 17, and 65537. 65537 is recommended.
      */
     public RSAParameterSpec(int keySize, BigInteger publicExponent) {
         super(keySize, publicExponent);
@@ -24,5 +25,7 @@ public class RSAParameterSpec extends RSAKeyGenParameterSpec {
     /**
      * Returns the size of the modulus in bits.
      */
-    public int getKeySize() { return getKeysize(); }
+    public int getKeySize() {
+        return getKeysize();
+    }
 }

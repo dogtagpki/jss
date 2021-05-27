@@ -154,7 +154,7 @@ public class CertificateScopeOfUseExtension extends Extension
 
     private void encodeThis() throws IOException {
         try (DerOutputStream seq = new DerOutputStream();
-             DerOutputStream tmp = new DerOutputStream()) {
+                DerOutputStream tmp = new DerOutputStream()) {
 
             if (mEntries == null)
                 throw new IOException("Invalid Scope Entries");

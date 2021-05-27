@@ -16,7 +16,7 @@ import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 public class CMACAlgorithm extends DigestAlgorithm {
 
     protected CMACAlgorithm(int oidIndex, String name, OBJECT_IDENTIFIER oid,
-                            int outputSize) {
+            int outputSize) {
         super(oidIndex, name, oid, outputSize);
 
         if (oid != null && oidMap.get(oid) == null) {
@@ -35,11 +35,10 @@ public class CMACAlgorithm extends DigestAlgorithm {
      * @param oid OID.
      * @return CMAC algorithm.
      * @exception NoSuchAlgorithmException If no registered CMAC algorithm
-     *  has the given OID.
+     *                has the given OID.
      */
     public static CMACAlgorithm fromOID(OBJECT_IDENTIFIER oid)
-        throws NoSuchAlgorithmException
-    {
+            throws NoSuchAlgorithmException {
         CMACAlgorithm alg = oidMap.get(oid);
         if (alg == null) {
             throw new NoSuchAlgorithmException("No such algorithm for OID: " + oid);
@@ -49,7 +48,7 @@ public class CMACAlgorithm extends DigestAlgorithm {
     }
 
     /**
-     * CMAC AES-X.  This is a Message Authentication Code that uses a
+     * CMAC AES-X. This is a Message Authentication Code that uses a
      * symmetric key together with the AES cipher to create a form of
      * signature.
      *
