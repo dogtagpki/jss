@@ -12,14 +12,16 @@ import org.mozilla.jss.asn1.*;
  * Represent the Subject Key Identifier Extension.
  *
  * This extension, if present, provides a means of identifying the particular
- * public key used in an application.  This extension by default is marked
+ * public key used in an application. This extension by default is marked
  * non-critical.
  *
- * <p>Extensions are additional attributes which can be inserted in a X509
+ * <p>
+ * Extensions are additional attributes which can be inserted in a X509
  * v3 certificate. For example a "Driving License Certificate" could have
  * the driving license number as a extension.
  *
- * <p>Extensions are represented as a sequence of the extension identifier
+ * <p>
+ * Extensions are represented as a sequence of the extension identifier
  * (Object Identifier), a boolean flag stating whether the extension is to
  * be treated as being critical and the extension value itself (this is again
  * a DER encoding of the extension value).
@@ -34,24 +36,23 @@ public class SubjectKeyIdentifier extends Extension {
     // Members
     ///////////////////////////////////////////////////////////////////////
     private OCTET_STRING keyIdentifier;
-	private static OBJECT_IDENTIFIER OID = new
-	OBJECT_IDENTIFIER("2.5.29.14");
+    private static OBJECT_IDENTIFIER OID = new OBJECT_IDENTIFIER("2.5.29.14");
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
     ///////////////////////////////////////////////////////////////////////
 
-    /** 
+    /**
      * Constructs an SubjectKeyIdentifier from its components.
      *
      * @param keyIdentifier must not be null.
      */
     public SubjectKeyIdentifier(OCTET_STRING keyIdentifier) {
-		super(OID,false,keyIdentifier);
+        super(OID, false, keyIdentifier);
     }
 
     public SubjectKeyIdentifier(boolean critical, OCTET_STRING keyIdentifier) {
-		super(OID,critical,keyIdentifier);
+        super(OID, critical, keyIdentifier);
     }
 
     public static class Template implements ASN1Template {
@@ -60,9 +61,9 @@ public class SubjectKeyIdentifier extends Extension {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( OBJECT_IDENTIFIER.getTemplate() );
-            seqt.addElement( BOOLEAN.getTemplate(), new BOOLEAN(false) );
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(OBJECT_IDENTIFIER.getTemplate());
+            seqt.addElement(BOOLEAN.getTemplate(), new BOOLEAN(false));
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -72,22 +73,19 @@ public class SubjectKeyIdentifier extends Extension {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
-            assert( ((OBJECT_IDENTIFIER) seq.elementAt(0)).equals(OID) );
+            assert (((OBJECT_IDENTIFIER) seq.elementAt(0)).equals(OID));
 
             return new SubjectKeyIdentifier(
-                ((BOOLEAN) seq.elementAt(1)).toBoolean(),
-                (OCTET_STRING) seq.elementAt(2)
-            );
+                    ((BOOLEAN) seq.elementAt(1)).toBoolean(),
+                    (OCTET_STRING) seq.elementAt(2));
         }
     }
 }
