@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.primitive;
 
-
 public class TooFewElementsException extends Exception {
 
     private static final long serialVersionUID = 1L;

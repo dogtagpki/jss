@@ -52,8 +52,8 @@ public class PBEParameter implements ASN1Value {
         this.salt = salt;
         this.iterations = iterations;
         sequence = new SEQUENCE();
-        sequence.addElement( new OCTET_STRING(salt) );
-        sequence.addElement( new INTEGER(iterations) );
+        sequence.addElement(new OCTET_STRING(salt));
+        sequence.addElement(new INTEGER(iterations));
     }
 
     /**
@@ -61,7 +61,7 @@ public class PBEParameter implements ASN1Value {
      * may be null.
      */
     public PBEParameter(OCTET_STRING salt, INTEGER iterations) {
-        this( salt.toByteArray(), iterations.intValue() );
+        this(salt.toByteArray(), iterations.intValue());
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -69,6 +69,7 @@ public class PBEParameter implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -81,13 +82,12 @@ public class PBEParameter implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
-
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -101,8 +101,8 @@ public class PBEParameter implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( OCTET_STRING.getTemplate() );
-            seqt.addElement( INTEGER.getTemplate() );
+            seqt.addElement(OCTET_STRING.getTemplate());
+            seqt.addElement(INTEGER.getTemplate());
         }
 
         @Override
@@ -112,19 +112,17 @@ public class PBEParameter implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new PBEParameter( (OCTET_STRING) seq.elementAt(0),
-                                     (INTEGER)      seq.elementAt(1) );
+            return new PBEParameter((OCTET_STRING) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1));
         }
     }
 }
