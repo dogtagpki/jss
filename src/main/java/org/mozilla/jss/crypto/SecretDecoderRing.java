@@ -13,12 +13,15 @@ import java.io.UnsupportedEncodingException;
  * to encrypt stuff your application wants to keep around for its own use:
  * for example, the list of web passwords stored in the web browser.
  *
- * <p>A dedicated key is used to encrypt all SecretDecoderRing data.
+ * <p>
+ * A dedicated key is used to encrypt all SecretDecoderRing data.
  * The same key is used for all SDR data, and not for any other data.
  * This key will be generated the first time it is needed.
  *
- * <p>The cipher used is DES3-EDE (Triple-DES) in CBC mode. The ciphertext
+ * <p>
+ * The cipher used is DES3-EDE (Triple-DES) in CBC mode. The ciphertext
  * is DER-encoded in the following ASN.1 data structure:
+ * 
  * <pre>
  *    SEQUENCE {
  *      keyid       OCTET STRING,
@@ -26,8 +29,9 @@ import java.io.UnsupportedEncodingException;
  *      ciphertext  OCTET STRING }
  * </pre>
  *
- * <p>You must set the password on the Internal Key Storage Token
- *   (aka software token, key3.db) before you use the SecretDecoderRing.
+ * <p>
+ * You must set the password on the Internal Key Storage Token
+ * (aka software token, key3.db) before you use the SecretDecoderRing.
  */
 public class SecretDecoderRing {
 
@@ -38,20 +42,20 @@ public class SecretDecoderRing {
      * in the NSS key database.
      */
     public native byte[] encrypt(byte[] plaintext)
-        throws TokenException;
+            throws TokenException;
 
     /**
      * Encrypts the given plaintext string with the Secret Decoder Ring key
      * stored in the NSS key database.
      */
     public byte[] encrypt(String plaintext) throws TokenException {
-      try {
-        return encrypt(plaintext.getBytes(encodingFormat));
-      } catch(UnsupportedEncodingException e) {
-        // this shouldn't happen, because we use a universally-supported
-        // charset
-        throw new RuntimeException(e.getMessage());
-      }
+        try {
+            return encrypt(plaintext.getBytes(encodingFormat));
+        } catch (UnsupportedEncodingException e) {
+            // this shouldn't happen, because we use a universally-supported
+            // charset
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -59,7 +63,7 @@ public class SecretDecoderRing {
      * in the NSS key database.
      */
     public native byte[] decrypt(byte[] ciphertext)
-        throws TokenException;
+            throws TokenException;
 
     /**
      * Decrypts the given ciphertext with the Secret Decoder Ring key stored
@@ -67,12 +71,12 @@ public class SecretDecoderRing {
      */
     public String decryptToString(byte[] ciphertext)
             throws TokenException {
-      try {
-        return new String(decrypt(ciphertext), encodingFormat);
-      } catch(UnsupportedEncodingException e) {
-        // this shouldn't happen, because we use a universally-supported
-        // charset
-        throw new RuntimeException(e.getMessage());
-      }
+        try {
+            return new String(decrypt(ciphertext), encodingFormat);
+        } catch (UnsupportedEncodingException e) {
+            // this shouldn't happen, because we use a universally-supported
+            // charset
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

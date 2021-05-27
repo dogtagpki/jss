@@ -11,6 +11,7 @@ import java.io.CharConversionException;
 public class TeletexString extends CharacterString implements ASN1Value {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 20);
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -31,57 +32,56 @@ public class TeletexString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
+     * 
      * @return Template.
      */
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static final Template templateInstance = new Template();
 
-// nested class
-public static class Template
-    extends CharacterString.Template implements ASN1Template
-{
+    // nested class
+    public static class Template
+            extends CharacterString.Template implements ASN1Template {
 
-    @Override
-    protected Tag getTag() {
-        return TAG;
-    }
+        @Override
+        protected Tag getTag() {
+            return TAG;
+        }
 
-    @Override
-    public boolean tagMatch(Tag tag) {
-        return TAG.equals(tag);
-    }
+        @Override
+        public boolean tagMatch(Tag tag) {
+            return TAG.equals(tag);
+        }
 
-    @Override
-    protected CharConverter getCharConverter() {
-        return new TeletexConverter();
-    }
+        @Override
+        protected CharConverter getCharConverter() {
+            return new TeletexConverter();
+        }
 
-    @Override
-    protected CharacterString generateInstance(char[] bytes)
-        throws CharConversionException
-    {
-        return new TeletexString( bytes );
-    }
+        @Override
+        protected CharacterString generateInstance(char[] bytes)
+                throws CharConversionException {
+            return new TeletexString(bytes);
+        }
 
-    @Override
-    protected String typeName() {
-        return "TeletexString";
-    }
-} // end of Template
+        @Override
+        protected String typeName() {
+            return "TeletexString";
+        }
+    } // end of Template
 
     private static class TeletexConverter implements CharConverter {
 
         @Override
         public char[] byteToChar(byte[] bytes, int offset, int len)
-            throws CharConversionException
-        {
+                throws CharConversionException {
             char[] chars = new char[len];
 
             int b;
             int c;
-            for(b=offset, c=0; c < len; b++, c++) {
+            for (b = offset, c = 0; c < len; b++, c++) {
                 chars[c] = (char) (bytes[b] & 0xff);
             }
             return chars;
@@ -89,16 +89,15 @@ public static class Template
 
         @Override
         public byte[] charToByte(char[] chars, int offset, int len)
-            throws CharConversionException
-        {
+                throws CharConversionException {
             byte[] bytes = new byte[len];
 
             int b;
             int c;
-            for(b=0, c=offset; b < len; b++, c++) {
-                if( (chars[c]&0xff00) != 0 ) {
-                    throw new CharConversionException("Invalid character for"+
-                        " TeletexString");
+            for (b = 0, c = offset; b < len; b++, c++) {
+                if ((chars[c] & 0xff00) != 0) {
+                    throw new CharConversionException("Invalid character for" +
+                            " TeletexString");
                 }
                 bytes[b] = (byte) (chars[c] & 0xff);
             }

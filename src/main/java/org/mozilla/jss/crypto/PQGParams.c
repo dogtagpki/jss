@@ -25,10 +25,9 @@ generate(JNIEnv *env, jclass PQGParamsClass, jint keySize, jint seedBytes);
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_crypto_PQGParams_generateNative__I
-  (JNIEnv *env, jclass PQGParamsClass, jint keySize)
-{
-    return generate(env, PQGParamsClass, keySize, 0);
+Java_org_mozilla_jss_crypto_PQGParams_generateNative__I(JNIEnv *env,
+		jclass PQGParamsClass, jint keySize) {
+	return generate(env, PQGParamsClass, keySize, 0);
 }
 
 /**********************************************************************
@@ -36,15 +35,14 @@ Java_org_mozilla_jss_crypto_PQGParams_generateNative__I
  *
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_crypto_PQGParams_generateNative__II
-  (JNIEnv *env, jclass PQGParamsClass, jint keySize, jint seedBytes)
-{
-    if(seedBytes < 20 || seedBytes > 255) {
-        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
-            "Number of bytes in seed must be in range [20,255]");
-        return NULL;
-    }
-    return generate(env, PQGParamsClass, keySize, seedBytes);
+Java_org_mozilla_jss_crypto_PQGParams_generateNative__II(JNIEnv *env,
+		jclass PQGParamsClass, jint keySize, jint seedBytes) {
+	if (seedBytes < 20 || seedBytes > 255) {
+		JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+				"Number of bytes in seed must be in range [20,255]");
+		return NULL;
+	}
+	return generate(env, PQGParamsClass, keySize, seedBytes);
 }
 
 #define ZERO_SECITEM(item)  (item).data=NULL; (item).len=0;
@@ -66,219 +64,205 @@ Java_org_mozilla_jss_crypto_PQGParams_generateNative__II
  * RETURNS
  *      A new PQGParams object.
  */
-static jobject
-generate(JNIEnv *env, jclass PQGParamsClass, jint keySize, jint seedBytes)
-{
-    int keySizeIndex;
-    jobject newObject = NULL;
-    SECStatus status;
-    PQGParams *pParams=NULL;
-    PQGVerify *pVfy=NULL;
-    jbyteArray bytes;
-    jclass BigIntegerClass;
-    jmethodID BigIntegerConstructor;
-    jmethodID PQGParamsConstructor;
+static jobject generate(JNIEnv *env, jclass PQGParamsClass, jint keySize,
+		jint seedBytes) {
+	int keySizeIndex;
+	jobject newObject = NULL;
+	SECStatus status;
+	PQGParams *pParams = NULL;
+	PQGVerify *pVfy = NULL;
+	jbyteArray bytes;
+	jclass BigIntegerClass;
+	jmethodID BigIntegerConstructor;
+	jmethodID PQGParamsConstructor;
 
-    /*----PQG parameters and friends----*/
-    SECItem P;      /* prime */
-    SECItem Q;      /* subPrime */
-    SECItem G;      /* base */
-    SECItem H;
-    SECItem seed;
-    unsigned int counter;
+	/*----PQG parameters and friends----*/
+	SECItem P; /* prime */
+	SECItem Q; /* subPrime */
+	SECItem G; /* base */
+	SECItem H;
+	SECItem seed;
+	unsigned int counter;
 
-    /*----Java versions of the PQG parameters----*/
-    jobject jP;
-    jobject jQ;
-    jobject jG;
-    jobject jH;
-    jint jcounter;
-    jobject jSeed;
+	/*----Java versions of the PQG parameters----*/
+	jobject jP;
+	jobject jQ;
+	jobject jG;
+	jobject jH;
+	jint jcounter;
+	jobject jSeed;
 
-    /* basic argument validation */
-    PR_ASSERT(env!=NULL && PQGParamsClass!=NULL);
+	/* basic argument validation */
+	PR_ASSERT(env != NULL && PQGParamsClass != NULL);
 
-    /* clear the SECItems so we can free them indiscriminately at the end */
-    ZERO_SECITEM(P);
-    ZERO_SECITEM(Q);
-    ZERO_SECITEM(G);
-    ZERO_SECITEM(H);
-    ZERO_SECITEM(seed);
+	/* clear the SECItems so we can free them indiscriminately at the end */
+	ZERO_SECITEM(P);
+	ZERO_SECITEM(Q);
+	ZERO_SECITEM(G);
+	ZERO_SECITEM(H);
+	ZERO_SECITEM(seed);
 
+	/***********************************************************************
+	 * PK11_PQG_ParamGen doesn't take a key size, it takes an index that
+	 * points to a valid key size.
+	 */
+	keySizeIndex = PQG_PBITS_TO_INDEX(keySize);
+	if (keySizeIndex == -1 || keySize < 512 || keySize > 1024) {
+		JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+				"DSA key size must be a multiple of 64 between 512 "
+						"and 1024, inclusive");
+		goto finish;
+	}
 
-    /***********************************************************************
-     * PK11_PQG_ParamGen doesn't take a key size, it takes an index that
-     * points to a valid key size.
-     */
-    keySizeIndex = PQG_PBITS_TO_INDEX(keySize);
-    if(keySizeIndex == -1 || keySize<512 || keySize>1024) {
-        JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
-            "DSA key size must be a multiple of 64 between 512 "
-            "and 1024, inclusive");
-        goto finish;
-    }
-
-    /***********************************************************************
-     * Do the actual parameter generation.
-     */
-    if(seedBytes == 0) {
-        status = PK11_PQG_ParamGen(keySizeIndex, &pParams, &pVfy);
-    } else {
-        status = PK11_PQG_ParamGenSeedLen(keySizeIndex, seedBytes, &pParams, &pVfy);
-    }
-    if(status != SECSuccess) {
-        JSS_throw(env, PQG_PARAM_GEN_EXCEPTION);
-        goto finish;
-    }
+	/***********************************************************************
+	 * Do the actual parameter generation.
+	 */
+	if (seedBytes == 0) {
+		status = PK11_PQG_ParamGen(keySizeIndex, &pParams, &pVfy);
+	} else {
+		status = PK11_PQG_ParamGenSeedLen(keySizeIndex, seedBytes, &pParams,
+				&pVfy);
+	}
+	if (status != SECSuccess) {
+		JSS_throw(env, PQG_PARAM_GEN_EXCEPTION);
+		goto finish;
+	}
 
 	/**********************************************************************
 	 * NOTE: the new PQG parameters will be verified at the Java level.
 	 */
 
-    /**********************************************************************
-     * Get ready for the BigIntegers
-     */
-    BigIntegerClass = (*env)->FindClass(env, BIG_INTEGER_CLASS_NAME);
-    if(BigIntegerClass == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    BigIntegerConstructor = (*env)->GetMethodID(env,
-                                                BigIntegerClass,
-                                                BIG_INTEGER_CONSTRUCTOR_NAME,
-                                                BIG_INTEGER_CONSTRUCTOR_SIG);
-    if(BigIntegerConstructor == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/**********************************************************************
+	 * Get ready for the BigIntegers
+	 */
+	BigIntegerClass = (*env)->FindClass(env, BIG_INTEGER_CLASS_NAME);
+	if (BigIntegerClass == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	BigIntegerConstructor = (*env)->GetMethodID(env, BigIntegerClass,
+	BIG_INTEGER_CONSTRUCTOR_NAME,
+	BIG_INTEGER_CONSTRUCTOR_SIG);
+	if (BigIntegerConstructor == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /***********************************************************************
-     * Convert the parameters to Java types.
-     */
-    if( PK11_PQG_GetPrimeFromParams( pParams, &P) ||
-        PK11_PQG_GetSubPrimeFromParams( pParams, &Q) ||
-        PK11_PQG_GetBaseFromParams( pParams, &G) ||
-        PK11_PQG_GetHFromVerify( pVfy, &H) ||
-        PK11_PQG_GetSeedFromVerify( pVfy, &seed) )
-    {
-        JSS_throw(env, PQG_PARAM_GEN_EXCEPTION);
-        goto finish;
-    }
-    counter = PK11_PQG_GetCounterFromVerify(pVfy);
+	/***********************************************************************
+	 * Convert the parameters to Java types.
+	 */
+	if (PK11_PQG_GetPrimeFromParams(pParams, &P)
+			|| PK11_PQG_GetSubPrimeFromParams(pParams, &Q)
+			|| PK11_PQG_GetBaseFromParams(pParams, &G)
+			|| PK11_PQG_GetHFromVerify(pVfy, &H)
+			|| PK11_PQG_GetSeedFromVerify(pVfy, &seed)) {
+		JSS_throw(env, PQG_PARAM_GEN_EXCEPTION);
+		goto finish;
+	}
+	counter = PK11_PQG_GetCounterFromVerify(pVfy);
 
-    /*
-     * construct P
-     */
-    bytes = JSS_OctetStringToByteArray(env, &P);
-    if(bytes==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    jP = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
-    if(jP==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/*
+	 * construct P
+	 */
+	bytes = JSS_OctetStringToByteArray(env, &P);
+	if (bytes == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	jP = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
+	if (jP == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /*
-     * construct Q
-     */
-    bytes = JSS_OctetStringToByteArray(env, &Q);
-    if(bytes==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    jQ = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
-    if(jQ==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/*
+	 * construct Q
+	 */
+	bytes = JSS_OctetStringToByteArray(env, &Q);
+	if (bytes == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	jQ = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
+	if (jQ == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /*
-     * construct G
-     */
-    bytes = JSS_OctetStringToByteArray(env, &G);
-    if(bytes==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    jG = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
-    if(jG==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/*
+	 * construct G
+	 */
+	bytes = JSS_OctetStringToByteArray(env, &G);
+	if (bytes == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	jG = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
+	if (jG == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /*
-     * construct seed
-     */
-    bytes = JSS_OctetStringToByteArray(env, &seed);
-    if(bytes==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    jSeed = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor,
-                                bytes);
-    if(jSeed==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/*
+	 * construct seed
+	 */
+	bytes = JSS_OctetStringToByteArray(env, &seed);
+	if (bytes == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	jSeed = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor,
+			bytes);
+	if (jSeed == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /*
-     * construct H
-     */
-    bytes = JSS_OctetStringToByteArray(env, &H);
-    if(bytes==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    jH = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
-    if(jH==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/*
+	 * construct H
+	 */
+	bytes = JSS_OctetStringToByteArray(env, &H);
+	if (bytes == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	jH = (*env)->NewObject(env, BigIntegerClass, BigIntegerConstructor, bytes);
+	if (jH == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    /*
-     * construct counter
-     */
-    jcounter = counter;
+	/*
+	 * construct counter
+	 */
+	jcounter = counter;
 
-    /**********************************************************************
-     * Construct the PQGParams object
-     */
-    PQGParamsConstructor = (*env)->GetMethodID(
-                                        env,
-                                        PQGParamsClass,
-                                        PQG_PARAMS_CONSTRUCTOR_NAME,
-                                        PQG_PARAMS_CONSTRUCTOR_SIG);
-    if(PQGParamsConstructor==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    newObject = (*env)->NewObject(  env,
-                                    PQGParamsClass,
-                                    PQGParamsConstructor,
-                                    jP,
-                                    jQ,
-                                    jG,
-                                    jSeed,
-                                    jcounter,
-                                    jH);
-    
+	/**********************************************************************
+	 * Construct the PQGParams object
+	 */
+	PQGParamsConstructor = (*env)->GetMethodID(env, PQGParamsClass,
+	PQG_PARAMS_CONSTRUCTOR_NAME,
+	PQG_PARAMS_CONSTRUCTOR_SIG);
+	if (PQGParamsConstructor == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	newObject = (*env)->NewObject(env, PQGParamsClass, PQGParamsConstructor, jP,
+			jQ, jG, jSeed, jcounter, jH);
 
-finish:
-    if(pParams!=NULL) {
-        PK11_PQG_DestroyParams(pParams);
-    }
-    if(pVfy!=NULL) {
-        PK11_PQG_DestroyVerify(pVfy);
-    }
-    SECITEM_FreeItem(&P, PR_FALSE /*don't free P itself*/);
-    SECITEM_FreeItem(&Q, PR_FALSE);
-    SECITEM_FreeItem(&G, PR_FALSE);
-    SECITEM_FreeItem(&H, PR_FALSE);
-    SECITEM_FreeItem(&seed, PR_FALSE);
+	finish: if (pParams != NULL) {
+		PK11_PQG_DestroyParams(pParams);
+	}
+	if (pVfy != NULL) {
+		PK11_PQG_DestroyVerify(pVfy);
+	}
+	SECITEM_FreeItem(&P, PR_FALSE /*don't free P itself*/);
+	SECITEM_FreeItem(&Q, PR_FALSE);
+	SECITEM_FreeItem(&G, PR_FALSE);
+	SECITEM_FreeItem(&H, PR_FALSE);
+	SECITEM_FreeItem(&seed, PR_FALSE);
 
-    return newObject;
+	return newObject;
 }
 
 /**********************************************************************
@@ -287,74 +271,71 @@ finish:
  *
  */
 JNIEXPORT jboolean JNICALL
-Java_org_mozilla_jss_crypto_PQGParams_paramsAreValidNative
-  (JNIEnv *env, jobject this, jbyteArray jP, jbyteArray jQ, jbyteArray jG,
-    jbyteArray jSeed, jint jCounter, jbyteArray jH)
-{
-    jboolean valid=JNI_FALSE;
-    PQGParams *pParams=NULL;
-    PQGVerify *pVfy=NULL;
-    SECStatus verifyResult;
+Java_org_mozilla_jss_crypto_PQGParams_paramsAreValidNative(JNIEnv *env,
+		jobject this, jbyteArray jP, jbyteArray jQ, jbyteArray jG,
+		jbyteArray jSeed, jint jCounter, jbyteArray jH) {
+	jboolean valid = JNI_FALSE;
+	PQGParams *pParams = NULL;
+	PQGVerify *pVfy = NULL;
+	SECStatus verifyResult;
 
-    /*---PQG and verification params in C---*/
-    SECItem P;
-    SECItem Q;
-    SECItem G;
-    SECItem seed;
-    SECItem H;
-    unsigned int counter;
+	/*---PQG and verification params in C---*/
+	SECItem P;
+	SECItem Q;
+	SECItem G;
+	SECItem seed;
+	SECItem H;
+	unsigned int counter;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    /* clear the SECItems so we can free them indiscriminately later */
-    ZERO_SECITEM(P);
-    ZERO_SECITEM(Q);
-    ZERO_SECITEM(G);
-    ZERO_SECITEM(seed);
-    ZERO_SECITEM(H);
+	/* clear the SECItems so we can free them indiscriminately later */
+	ZERO_SECITEM(P);
+	ZERO_SECITEM(Q);
+	ZERO_SECITEM(G);
+	ZERO_SECITEM(seed);
+	ZERO_SECITEM(H);
 
-    /**********************************************************************
-     * Extract the Java parameters
-     */
-    if( JSS_ByteArrayToOctetString(env, jP, &P) ||
-        JSS_ByteArrayToOctetString(env, jQ, &Q) ||
-        JSS_ByteArrayToOctetString(env, jG, &G) ||
-        JSS_ByteArrayToOctetString(env, jSeed, &seed) ||
-        JSS_ByteArrayToOctetString(env, jH, &H) )
-    {
-        goto finish;
-    }
-    counter = jCounter;
+	/**********************************************************************
+	 * Extract the Java parameters
+	 */
+	if (JSS_ByteArrayToOctetString(env, jP, &P)
+			|| JSS_ByteArrayToOctetString(env, jQ, &Q)
+			|| JSS_ByteArrayToOctetString(env, jG, &G)
+			|| JSS_ByteArrayToOctetString(env, jSeed, &seed)
+			|| JSS_ByteArrayToOctetString(env, jH, &H)) {
+		goto finish;
+	}
+	counter = jCounter;
 
-    /***********************************************************************
-     * Construct PQGParams and PQGVerify structures.
-     */
-    pParams = PK11_PQG_NewParams(&P, &Q, &G);
-    pVfy = PK11_PQG_NewVerify(counter, &seed, &H);
-    if(pParams==NULL || pVfy==NULL) {
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
-        goto finish;
-    }
+	/***********************************************************************
+	 * Construct PQGParams and PQGVerify structures.
+	 */
+	pParams = PK11_PQG_NewParams(&P, &Q, &G);
+	pVfy = PK11_PQG_NewVerify(counter, &seed, &H);
+	if (pParams == NULL || pVfy == NULL) {
+		JSS_throw(env, OUT_OF_MEMORY_ERROR);
+		goto finish;
+	}
 
-    /***********************************************************************
-     * Perform the verification.
-     */
-    if( PK11_PQG_VerifyParams(pParams, pVfy, &verifyResult) != SECSuccess) {
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
-        goto finish;
-    }
-    if(verifyResult == SECSuccess) {
-        valid = JNI_TRUE;
-    }
+	/***********************************************************************
+	 * Perform the verification.
+	 */
+	if (PK11_PQG_VerifyParams(pParams, pVfy, &verifyResult) != SECSuccess) {
+		JSS_throw(env, OUT_OF_MEMORY_ERROR);
+		goto finish;
+	}
+	if (verifyResult == SECSuccess) {
+		valid = JNI_TRUE;
+	}
 
-finish:
-    SECITEM_FreeItem(&P, PR_FALSE /*don't free P itself*/);
-    SECITEM_FreeItem(&Q, PR_FALSE);
-    SECITEM_FreeItem(&G, PR_FALSE);
-    SECITEM_FreeItem(&seed, PR_FALSE);
-    SECITEM_FreeItem(&H, PR_FALSE);
-    PK11_PQG_DestroyParams(pParams);
-    PK11_PQG_DestroyVerify(pVfy);
+	finish: SECITEM_FreeItem(&P, PR_FALSE /*don't free P itself*/);
+	SECITEM_FreeItem(&Q, PR_FALSE);
+	SECITEM_FreeItem(&G, PR_FALSE);
+	SECITEM_FreeItem(&seed, PR_FALSE);
+	SECITEM_FreeItem(&H, PR_FALSE);
+	PK11_PQG_DestroyParams(pParams);
+	PK11_PQG_DestroyVerify(pVfy);
 
-    return valid;
+	return valid;
 }

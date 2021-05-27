@@ -19,26 +19,27 @@ public interface KeyGenerator {
      * @throws InvalidAlgorithmParameterException If parameter is invalid.
      */
     public void initialize(int strength)
-        throws InvalidAlgorithmParameterException;
+            throws InvalidAlgorithmParameterException;
 
     public void initialize(AlgorithmParameterSpec parameters)
-        throws InvalidAlgorithmParameterException;
+            throws InvalidAlgorithmParameterException;
 
     /**
      * @param usages The operations the key will be used for after it is
-     *   generated. You have to specify these so that the key can be properly
-     *   marked with the operations it supports. Some PKCS #11 tokens require
-     *   that a key be marked for an operation before it can perform that
-     *   operation.  The default is SymmetricKey.Usage.SIGN and
-     *   SymmetricKey.Usage.ENCRYPT.
+     *            generated. You have to specify these so that the key can be properly
+     *            marked with the operations it supports. Some PKCS #11 tokens require
+     *            that a key be marked for an operation before it can perform that
+     *            operation. The default is SymmetricKey.Usage.SIGN and
+     *            SymmetricKey.Usage.ENCRYPT.
      */
     public void setKeyUsages(SymmetricKey.Usage[] usages);
 
     /**
      * Tells the generator to generate temporary or permanent keys.
-     * Temporary keys are not written permanently to the token.  They
-     * are destroyed by the garbage collector.  If this method is not
+     * Temporary keys are not written permanently to the token. They
+     * are destroyed by the garbage collector. If this method is not
      * called, the default is temporary keys.
+     * 
      * @param temp True to generate temporary key.
      */
     public void temporaryKeys(boolean temp);
@@ -46,21 +47,23 @@ public interface KeyGenerator {
     /**
      * Tells the generator to generate sensitive or insensitive keys.
      * Certain attributes of a sensitive key cannot be revealed in
-     * plaintext outside the token.  If this method is not called, the
+     * plaintext outside the token. If this method is not called, the
      * default is token dependent.
+     * 
      * @param sensitive True to generate sensitive.
      */
     public void sensitiveKeys(boolean sensitive);
 
     /**
      * Generates a symmetric key.
+     * 
      * @return Symmetric key.
      * @throws IllegalStateException If key generation failed.
      * @throws TokenException If an error occurred in the token.
      * @throws CharConversionException If an encoding error occurred.
      */
     public SymmetricKey generate()
-        throws IllegalStateException, TokenException, CharConversionException;
+            throws IllegalStateException, TokenException, CharConversionException;
 
     /**
      * Generates an Initialization Vector using a PBE algorithm.
@@ -69,16 +72,16 @@ public interface KeyGenerator {
      * of <code>PBEKeyGenParams</code>.
      *
      * @return The initialization vector derived from the password and salt
-     *      using the PBE algorithm.
+     *         using the PBE algorithm.
      * @exception IllegalStateException If the algorithm is not a PBE
-     *      algorithm, or the KeyGenerator has not been initialized with
-     *      an instance of <code>PBEKeyGenParams</code>.
+     *                algorithm, or the KeyGenerator has not been initialized with
+     *                an instance of <code>PBEKeyGenParams</code>.
      * @exception TokenException If an error occurs on the CryptoToken while
-     *      generating the IV.
+     *                generating the IV.
      * @exception CharConversionException If an encoding error occurred.
      */
     public byte[] generatePBE_IV()
-        throws IllegalStateException, TokenException, CharConversionException;
+            throws IllegalStateException, TokenException, CharConversionException;
 
     /**
      * Allows a SymmetricKey to be cloned on a different token.
@@ -86,19 +89,19 @@ public interface KeyGenerator {
      * @param key Symmetric key.
      * @return Cloned symmetric key.
      * @exception SymmetricKey.NotExtractableException If the key material
-     *      cannot be extracted from the current token.
+     *                cannot be extracted from the current token.
      * @exception InvalidKeyException If the owning token cannot process
-     *      the key to be cloned.
+     *                the key to be cloned.
      * @exception TokenException If an error occurred in the token.
      */
     public SymmetricKey clone(SymmetricKey key)
-        throws SymmetricKey.NotExtractableException,
+            throws SymmetricKey.NotExtractableException,
             InvalidKeyException, TokenException;
 
     /**
      * An interface for converting a password of Java characters into an array
      * of bytes. This conversion must be performed to provide a byte array
-     * to the low-level crypto engine.  The default conversion is UTF8.
+     * to the low-level crypto engine. The default conversion is UTF8.
      * Null-termination is not necessary, and indeed is usually incorrect,
      * since the password is passed to the crypto engine as a byte array, not
      * a C string.
@@ -107,8 +110,9 @@ public interface KeyGenerator {
 
         /**
          * Converts a password of Java characters into a password of
-         * bytes, using some encoding scheme.  The input char array must
+         * bytes, using some encoding scheme. The input char array must
          * not be modified.
+         * 
          * @param chars Password characters.
          * @return Password as byte array.
          * @throws CharConversionException If an error occurred.
@@ -119,6 +123,7 @@ public interface KeyGenerator {
     /**
      * Sets the character to byte converter for passwords. The default
      * conversion is UTF8 with no null termination.
+     * 
      * @param charToByte Character-to-byte converter.
      */
     public void setCharToByteConverter(CharToByteConverter charToByte);

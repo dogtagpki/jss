@@ -21,7 +21,7 @@ public class BOOLEAN implements ASN1Value {
     }
 
     private ASN1Header getHeader(Tag implicitTag) {
-        return new ASN1Header(implicitTag, FORM, 1 );
+        return new ASN1Header(implicitTag, FORM, 1);
     }
 
     @Override
@@ -31,19 +31,20 @@ public class BOOLEAN implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         getHeader(implicitTag).encode(ostream);
-        if( val ) {
-            ostream.write( 0xff );
+        if (val) {
+            ostream.write(0xff);
         } else {
-            ostream.write( 0x00 );
+            ostream.write(0x00);
         }
     }
 
     private boolean val;
+
     /**
      * Creates a <code>BOOLEAN</code> with the given value.
+     * 
      * @param val Boolean value.
      */
     public BOOLEAN(boolean val) {
@@ -62,7 +63,7 @@ public class BOOLEAN implements ASN1Value {
      */
     @Override
     public String toString() {
-        if(val) {
+        if (val) {
             return "true";
         } else {
             return "false";
@@ -70,6 +71,7 @@ public class BOOLEAN implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -81,40 +83,38 @@ public class BOOLEAN implements ASN1Value {
     public static class Template implements ASN1Template {
         @Override
         public boolean tagMatch(Tag tag) {
-            return( tag.equals( BOOLEAN.TAG ) );
+            return (tag.equals(BOOLEAN.TAG));
         }
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag tag, InputStream istream)
-            throws IOException, InvalidBERException
-        {
-          try {
-            ASN1Header head = new ASN1Header(istream);
+                throws IOException, InvalidBERException {
+            try {
+                ASN1Header head = new ASN1Header(istream);
 
-            head.validate(tag, FORM);
+                head.validate(tag, FORM);
 
-            int b = istream.read();
-            if( b == -1 ) {
-                throw new InvalidBERException("End-of-file reached while "+
-                    "decoding BOOLEAN");
+                int b = istream.read();
+                if (b == -1) {
+                    throw new InvalidBERException("End-of-file reached while " +
+                            "decoding BOOLEAN");
+                }
+
+                if (b == 0x00) {
+                    return new BOOLEAN(false);
+                } else {
+                    return new BOOLEAN(true);
+                }
+
+            } catch (InvalidBERException e) {
+                throw new InvalidBERException(e, "BOOLEAN");
             }
-
-            if( b == 0x00 ) {
-                return new BOOLEAN(false);
-            } else {
-                return new BOOLEAN(true);
-            }
-
-          } catch(InvalidBERException e) {
-            throw new InvalidBERException(e, "BOOLEAN");
-          }
         }
     }
 }
