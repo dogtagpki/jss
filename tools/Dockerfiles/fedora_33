@@ -3,7 +3,7 @@ FROM registry.fedoraproject.org/fedora:33
 # Install generic dependencies to build jss
 RUN true \
         && dnf update -y --refresh \
-        && dnf install -y dnf-plugins-core gcc make rpm-build \
+        && dnf install -y dnf-plugins-core git gcc make rpm-build \
                           java-devel python2 python3 diffutils \
         && dnf copr -y enable ${JSS_4_6_REPO:-@pki/master} \
         && dnf build-dep -y jss \
