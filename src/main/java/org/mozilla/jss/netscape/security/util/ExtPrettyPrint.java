@@ -1090,8 +1090,7 @@ public class ExtPrettyPrint {
         //
         // Now the CRLDP-specific stuff
         //
-        CRLDistributionPointsExtension ext =
-                (CRLDistributionPointsExtension) mExt;
+        CRLDistributionPointsExtension ext = (CRLDistributionPointsExtension) mExt;
 
         int numPoints = ext.getNumPoints();
 
@@ -1376,17 +1375,19 @@ public class ExtPrettyPrint {
         sb.append(
                 pp.indent(mIndentSize + 4) +
                         mResource.getString(
-                                PrettyPrintResources.TOKEN_REQUIRE_EXPLICIT_POLICY) +
-                        ((require == -1) ?
-                                mResource.getString(PrettyPrintResources.TOKEN_NOT_SET) :
-                                String.valueOf(require)) + "\n");
+                                PrettyPrintResources.TOKEN_REQUIRE_EXPLICIT_POLICY)
+                        +
+                        ((require == -1) ? mResource.getString(PrettyPrintResources.TOKEN_NOT_SET)
+                                : String.valueOf(require))
+                        + "\n");
         sb.append(
                 pp.indent(mIndentSize + 4) +
                         mResource.getString(
-                                PrettyPrintResources.TOKEN_INHIBIT_POLICY_MAPPING) +
-                        ((inhibit == -1) ?
-                                mResource.getString(PrettyPrintResources.TOKEN_NOT_SET) :
-                                String.valueOf(inhibit)) + "\n");
+                                PrettyPrintResources.TOKEN_INHIBIT_POLICY_MAPPING)
+                        +
+                        ((inhibit == -1) ? mResource.getString(PrettyPrintResources.TOKEN_NOT_SET)
+                                : String.valueOf(inhibit))
+                        + "\n");
         return sb.toString();
     }
 
@@ -1421,17 +1422,19 @@ public class ExtPrettyPrint {
             for (int i = 0; maps.hasMoreElements(); i++) {
                 sb.append(pp.indent(mIndentSize + 8) +
                         mResource.getString(
-                                PrettyPrintResources.TOKEN_MAP) + i + ":" + "\n");
-                CertificatePolicyMap m =
-                        maps.nextElement();
+                                PrettyPrintResources.TOKEN_MAP)
+                        + i + ":" + "\n");
+                CertificatePolicyMap m = maps.nextElement();
 
                 sb.append(pp.indent(mIndentSize + 12) +
                         mResource.getString(
-                                PrettyPrintResources.TOKEN_ISSUER_DOMAIN_POLICY) +
+                                PrettyPrintResources.TOKEN_ISSUER_DOMAIN_POLICY)
+                        +
                         m.getIssuerIdentifier().getIdentifier().toString() + "\n");
                 sb.append(pp.indent(mIndentSize + 12) +
                         mResource.getString(
-                                PrettyPrintResources.TOKEN_SUBJECT_DOMAIN_POLICY) +
+                                PrettyPrintResources.TOKEN_SUBJECT_DOMAIN_POLICY)
+                        +
                         m.getSubjectIdentifier().getIdentifier().toString() + "\n");
             }
         }
@@ -1457,8 +1460,7 @@ public class ExtPrettyPrint {
                 sb.append(mResource.getString(PrettyPrintResources.TOKEN_NO) + "\n");
             }
 
-            SubjectDirAttributesExtension ext =
-                    (SubjectDirAttributesExtension) mExt;
+            SubjectDirAttributesExtension ext = (SubjectDirAttributesExtension) mExt;
 
             sb.append(pp.indent(mIndentSize + 4) +
                     mResource.getString(PrettyPrintResources.TOKEN_ATTRIBUTES));
@@ -1474,10 +1476,12 @@ public class ExtPrettyPrint {
 
                     sb.append(pp.indent(mIndentSize + 8) +
                             mResource.getString(
-                                    PrettyPrintResources.TOKEN_ATTRIBUTE) + j + ":" + "\n");
+                                    PrettyPrintResources.TOKEN_ATTRIBUTE)
+                            + j + ":" + "\n");
                     sb.append(pp.indent(mIndentSize + 12) +
                             mResource.getString(
-                                    PrettyPrintResources.TOKEN_IDENTIFIER) +
+                                    PrettyPrintResources.TOKEN_IDENTIFIER)
+                            +
                             attr.getOid().toString() + "\n");
                     sb.append(pp.indent(mIndentSize + 12) +
                             mResource.getString(

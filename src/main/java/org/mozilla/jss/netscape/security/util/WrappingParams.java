@@ -54,9 +54,11 @@ public class WrappingParams {
         return EncryptionAlgorithm.lookup(alg, mode, padding, strength);
     }
 
-    public WrappingParams() {}
+    public WrappingParams() {
+    }
 
-    public WrappingParams(String encryptOID, String wrapName, String priKeyAlgo, IVParameterSpec encryptIV, IVParameterSpec wrapIV)
+    public WrappingParams(String encryptOID, String wrapName, String priKeyAlgo, IVParameterSpec encryptIV,
+            IVParameterSpec wrapIV)
             throws NumberFormatException, NoSuchAlgorithmException {
         EncryptionAlgorithm encrypt = null;
         OBJECT_IDENTIFIER eccOID = new OBJECT_IDENTIFIER("1.2.840.10045.2.1");
@@ -89,19 +91,22 @@ public class WrappingParams {
 
             skType = SymmetricKey.AES;
             skKeyGenAlgorithm = KeyGenAlgorithm.AES;
-            if (wrap == null) payloadWrapAlgorithm = KeyWrapAlgorithm.AES_KEY_WRAP_PAD;
+            if (wrap == null)
+                payloadWrapAlgorithm = KeyWrapAlgorithm.AES_KEY_WRAP_PAD;
             break;
         case "DESede":
             skType = SymmetricKey.DES3;
             skKeyGenAlgorithm = KeyGenAlgorithm.DES3;
             skWrapAlgorithm = KeyWrapAlgorithm.DES3_CBC_PAD;
-            if (wrap == null) payloadWrapAlgorithm = KeyWrapAlgorithm.DES3_CBC_PAD;
+            if (wrap == null)
+                payloadWrapAlgorithm = KeyWrapAlgorithm.DES3_CBC_PAD;
             break;
         case "DES":
             skType = SymmetricKey.DES;
             skKeyGenAlgorithm = KeyGenAlgorithm.DES;
             skWrapAlgorithm = KeyWrapAlgorithm.DES3_CBC_PAD;
-            if (wrap == null) payloadWrapAlgorithm = KeyWrapAlgorithm.DES_CBC_PAD;
+            if (wrap == null)
+                payloadWrapAlgorithm = KeyWrapAlgorithm.DES_CBC_PAD;
             break;
         default:
             throw new NoSuchAlgorithmException("Invalid algorithm");
@@ -179,7 +184,8 @@ public class WrappingParams {
         }
     }
 
-    public static WrappingParams getWrappingParamsFromArchiveOptions(String wrapOID, String priKeyAlgo, IVParameterSpec wrapIV)
+    public static WrappingParams getWrappingParamsFromArchiveOptions(String wrapOID, String priKeyAlgo,
+            IVParameterSpec wrapIV)
             throws NumberFormatException, NoSuchAlgorithmException {
         return new WrappingParams(wrapOID, priKeyAlgo, wrapIV);
     }

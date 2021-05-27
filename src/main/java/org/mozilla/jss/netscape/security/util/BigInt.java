@@ -29,7 +29,7 @@ import java.util.Arrays;
  * the number as a wrapped array of bytes.
  *
  * <P>
- * <em><b>NOTE:</b>  This class may eventually disappear, to
+ * <em><b>NOTE:</b> This class may eventually disappear, to
  * be supplanted by big-endian byte arrays which hold both signed
  * and unsigned arbitrary-precision integers.</em>
  *

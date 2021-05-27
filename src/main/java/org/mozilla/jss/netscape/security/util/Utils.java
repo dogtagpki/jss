@@ -150,8 +150,6 @@ public class Utils {
         return output;
     }
 
-
-
     public static String SpecialURLDecode(String s) {
         if (s == null)
             return null;
@@ -380,7 +378,6 @@ public class Utils {
         // the end of the encoded data. This results in malformed CSRs.
         return Base64.getMimeEncoder().encodeToString(bytes) + "\r\n";
     }
-
 
     /**
      * Converts a byte array into a single-line Base-64 encoded string.

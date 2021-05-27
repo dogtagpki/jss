@@ -73,7 +73,7 @@ public class Cert {
             return SignatureAlgorithm.ECSignatureWithSHA384Digest;
         else if (algname.equals("SHA512withEC"))
             return SignatureAlgorithm.ECSignatureWithSHA512Digest;
-       else if (algname.equals("SHA256withRSA/PSS"))
+        else if (algname.equals("SHA256withRSA/PSS"))
             return SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest;
         else if (algname.equals("SHA384withRSA/PSS"))
             return SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest;
@@ -238,7 +238,8 @@ public class Cert {
      * @param certs input array of certificates
      * @return new array containing sorted certificates
      */
-    public static java.security.cert.X509Certificate[] sortCertificateChain(java.security.cert.X509Certificate[] certs) throws Exception {
+    public static java.security.cert.X509Certificate[] sortCertificateChain(java.security.cert.X509Certificate[] certs)
+            throws Exception {
 
         if (certs == null) {
             return null;
@@ -270,7 +271,8 @@ public class Cert {
             certMap.put(subjectDN, cert);
 
             // ignore self-signed certificate
-            if (subjectDN.equals(issuerDN)) continue;
+            if (subjectDN.equals(issuerDN))
+                continue;
 
             if (childMap.containsKey(issuerDN)) {
                 throw new Exception("Branched chain: " + issuerDN);
@@ -286,10 +288,12 @@ public class Cert {
                 logger.debug(" - " + subjectDN);
 
                 String parent = parentMap.get(subjectDN);
-                if (parent != null) logger.debug("   parent: " + parent);
+                if (parent != null)
+                    logger.debug("   parent: " + parent);
 
                 String child = childMap.get(subjectDN);
-                if (child != null) logger.debug("   child: " + child);
+                if (child != null)
+                    logger.debug("   child: " + child);
             }
         }
 
@@ -305,7 +309,8 @@ public class Cert {
         if (leafCerts.size() > 1) {
             StringBuilder sb = new StringBuilder();
             for (String subjectDN : leafCerts) {
-                if (sb.length() > 0) sb.append(", ");
+                if (sb.length() > 0)
+                    sb.append(", ");
                 sb.append("[" + subjectDN + "]");
             }
             throw new Exception("Multiple leaf certificates: " + sb);

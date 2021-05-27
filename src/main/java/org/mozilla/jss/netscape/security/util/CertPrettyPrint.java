@@ -30,7 +30,6 @@ import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.SignedData;
 
-
 import org.mozilla.jss.netscape.security.x509.CertificateExtensions;
 import org.mozilla.jss.netscape.security.x509.CertificateX509Key;
 import org.mozilla.jss.netscape.security.x509.Extension;
@@ -97,7 +96,7 @@ public class CertPrettyPrint {
     }
 
     public String pkcs7toString(Locale clientLocale) {
-        StringBuffer content=new StringBuffer();
+        StringBuffer content = new StringBuffer();
 
         try {
             mX509Cert = new X509CertImpl(mCert_b);
@@ -107,8 +106,7 @@ public class CertPrettyPrint {
 
         ContentInfo ci = null;
         try {
-            ci = (ContentInfo)
-                    ASN1Util.decode(ContentInfo.getTemplate(), mCert_b);
+            ci = (ContentInfo) ASN1Util.decode(ContentInfo.getTemplate(), mCert_b);
         } catch (Exception e) {
             return "";
         }
@@ -125,8 +123,8 @@ public class CertPrettyPrint {
                 SET certs = sd.getCertificates();
 
                 for (int i = 0; i < certs.size(); i++) {
-                    org.mozilla.jss.pkix.cert.Certificate cert =
-                            (org.mozilla.jss.pkix.cert.Certificate) certs.elementAt(i);
+                    org.mozilla.jss.pkix.cert.Certificate cert = (org.mozilla.jss.pkix.cert.Certificate) certs
+                            .elementAt(i);
                     X509CertImpl certImpl = null;
                     try {
                         certImpl = new X509CertImpl(
@@ -240,10 +238,10 @@ public class CertPrettyPrint {
             //get timezone and timezone ID
             if (TimeZone.getDefault() != null) {
                 tz = TimeZone.getDefault().getDisplayName(
-                            TimeZone.getDefault().inDaylightTime(
-                                    mX509Cert.getNotBefore()),
-                            TimeZone.SHORT,
-                            clientLocale);
+                        TimeZone.getDefault().inDaylightTime(
+                                mX509Cert.getNotBefore()),
+                        TimeZone.SHORT,
+                        clientLocale);
                 tzid = TimeZone.getDefault().getID();
             }
             // Specify notBefore
@@ -265,10 +263,10 @@ public class CertPrettyPrint {
             // re-get timezone (just in case it is different . . .)
             if (TimeZone.getDefault() != null) {
                 tz = TimeZone.getDefault().getDisplayName(
-                            TimeZone.getDefault().inDaylightTime(
-                                    mX509Cert.getNotAfter()),
-                            TimeZone.SHORT,
-                            clientLocale);
+                        TimeZone.getDefault().inDaylightTime(
+                                mX509Cert.getNotAfter()),
+                        TimeZone.SHORT,
+                        clientLocale);
             }
             // Specify notAfter
             if (tz.equals(tzid) || tzid.equals(CUSTOM_LOCALE)) {
@@ -298,8 +296,7 @@ public class CertPrettyPrint {
             sb.append(pkpp.toString(clientLocale, 16, 16));
 
             //take care of extensions
-            CertificateExtensions extensions = (CertificateExtensions)
-                    info.get(X509CertInfo.EXTENSIONS);
+            CertificateExtensions extensions = (CertificateExtensions) info.get(X509CertInfo.EXTENSIONS);
 
             sb.append(pp.indent(12) + resource.getString(
                     PrettyPrintResources.TOKEN_EXTENSIONS) + "\n");

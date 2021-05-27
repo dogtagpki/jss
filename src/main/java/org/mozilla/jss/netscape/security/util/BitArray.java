@@ -69,7 +69,7 @@ public class BitArray {
         }
         if (a.length * BITS_PER_UNIT < length) {
             throw new IllegalArgumentException("Byte array too short to represent " +
-                           "bit array of given length");
+                    "bit array of given length");
         }
 
         this.length = length;

@@ -107,10 +107,10 @@ public class CrlPrettyPrint {
             // get timezone and timezone ID
             if (TimeZone.getDefault() != null) {
                 tz = TimeZone.getDefault().getDisplayName(
-                            TimeZone.getDefault().inDaylightTime(
-                                    mCRL.getThisUpdate()),
-                            TimeZone.SHORT,
-                            clientLocale);
+                        TimeZone.getDefault().inDaylightTime(
+                                mCRL.getThisUpdate()),
+                        TimeZone.SHORT,
+                        clientLocale);
                 tzid = TimeZone.getDefault().getID();
             }
             // Specify ThisUpdate
@@ -137,10 +137,10 @@ public class CrlPrettyPrint {
                 // re-get timezone (just in case it is different . . .)
                 if (TimeZone.getDefault() != null) {
                     tz = TimeZone.getDefault().getDisplayName(
-                                TimeZone.getDefault().inDaylightTime(
-                                        mCRL.getNextUpdate()),
-                                TimeZone.SHORT,
-                                clientLocale);
+                            TimeZone.getDefault().inDaylightTime(
+                                    mCRL.getNextUpdate()),
+                            TimeZone.SHORT,
+                            clientLocale);
                 }
                 // Specify NextUpdate
                 if (tz.equals(tzid) || tzid.equals(CUSTOM_LOCALE)) {
@@ -187,17 +187,16 @@ public class CrlPrettyPrint {
                             sb.append(pp.indent(16) + resource.getString(
                                     PrettyPrintResources.TOKEN_SERIAL) + "0x" +
                                     revokedCert.getSerialNumber().toString(16).toUpperCase() + "\n");
-                            String revocationDate =
-                                    dateFormater.format(revokedCert.getRevocationDate());
+                            String revocationDate = dateFormater.format(revokedCert.getRevocationDate());
 
                             // re-get timezone
                             // (just in case it is different . . .)
                             if (TimeZone.getDefault() != null) {
                                 tz = TimeZone.getDefault().getDisplayName(
-                                            TimeZone.getDefault().inDaylightTime(
-                                                    revokedCert.getRevocationDate()),
-                                            TimeZone.SHORT,
-                                            clientLocale);
+                                        TimeZone.getDefault().inDaylightTime(
+                                                revokedCert.getRevocationDate()),
+                                        TimeZone.SHORT,
+                                        clientLocale);
                             }
                             // Specify revocationDate
                             if (tz.equals(tzid) ||
