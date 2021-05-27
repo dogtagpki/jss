@@ -8,29 +8,29 @@ import java.io.IOException;
 
 class SSLOutputStream extends java.io.OutputStream {
 
-    SSLOutputStream(SSLSocket sock) {
-        this.sock = sock;
-    }
+SSLOutputStream(SSLSocket sock) {
+	this.sock = sock;
+}
 
-    @Override
-    public void write(int b) throws IOException {
-        write(new byte[] { (byte) b }, 0, 1);
-    }
+@Override
+public void write(int b) throws IOException {
+	write(new byte[] { (byte) b }, 0, 1);
+}
 
-    @Override
-    public void write(byte[] b) throws IOException {
-        write(b, 0, b.length);
-    }
+@Override
+public void write(byte[] b) throws IOException {
+	write(b, 0, b.length);
+}
 
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        sock.write(b, off, len);
-    }
+@Override
+public void write(byte[] b, int off, int len) throws IOException {
+	sock.write(b, off, len);
+}
 
-    @Override
-    public void close() throws IOException {
-        sock.close();
-    }
+@Override
+public void close() throws IOException {
+	sock.close();
+}
 
-    private SSLSocket sock;
+private SSLSocket sock;
 }

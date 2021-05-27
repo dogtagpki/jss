@@ -6,15 +6,19 @@ package org.mozilla.jss.ssl;
 
 public class SSLProtocolVariant {
 
-    public static final SSLProtocolVariant STREAM =
-        new SSLProtocolVariant(SocketBase.SSL_Variant_Stream);
+public static final SSLProtocolVariant STREAM =
+	new SSLProtocolVariant(SocketBase.SSL_Variant_Stream);
 
-    public static final SSLProtocolVariant DATA_GRAM =
-        new SSLProtocolVariant(SocketBase.SSL_Variant_Datagram);
+public static final SSLProtocolVariant DATA_GRAM =
+	new SSLProtocolVariant(SocketBase.SSL_Variant_Datagram);
 
-    private int _enum;
+private int _enum;
 
-    private SSLProtocolVariant(int val) { _enum = val; }
+private SSLProtocolVariant(int val) {
+	_enum = val;
+}
 
-    public int getEnum() { return _enum; }
+public int getEnum() {
+	return _enum;
+}
 }

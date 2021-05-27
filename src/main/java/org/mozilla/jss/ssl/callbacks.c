@@ -22,103 +22,103 @@
 
 int
 JSSL_getOCSPPolicy() {
-    JNIEnv *env;
-    jint policy = -1;
+	JNIEnv *env;
+	jint policy = -1;
 
-    jmethodID getOCSPPolicyID;
-    jclass cryptoManagerClass;
+	jmethodID getOCSPPolicyID;
+	jclass cryptoManagerClass;
 
-    /* get the JNI environment */
-    if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0){
-        PR_ASSERT(PR_FALSE);
-        goto finish;
-    }
+	/* get the JNI environment */
+	if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
 
-    cryptoManagerClass = (*env)->FindClass(env, CRYPTO_MANAGER_NAME);
-    if( cryptoManagerClass == NULL ) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
-    getOCSPPolicyID = (*env)->GetStaticMethodID(env, cryptoManagerClass,
-        GET_OCSP_POLICY_NAME,GET_OCSP_POLICY_SIG);
+	cryptoManagerClass = (*env)->FindClass(env, CRYPTO_MANAGER_NAME);
+	if( cryptoManagerClass == NULL ) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
+	getOCSPPolicyID = (*env)->GetStaticMethodID(env, cryptoManagerClass,
+	                                            GET_OCSP_POLICY_NAME,GET_OCSP_POLICY_SIG);
 
-    if( getOCSPPolicyID == NULL ) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	if( getOCSPPolicyID == NULL ) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-    policy = (*env)->CallStaticIntMethod(env, cryptoManagerClass,
-         getOCSPPolicyID);
+	policy = (*env)->CallStaticIntMethod(env, cryptoManagerClass,
+	                                     getOCSPPolicyID);
 
 finish:
-    return (int) policy;
+	return (int) policy;
 }
 
 static SECStatus
-secCmpCertChainWCANames(CERTCertificate *cert, CERTDistNames *caNames) 
+secCmpCertChainWCANames(CERTCertificate *cert, CERTDistNames *caNames)
 {
-    SECItem *         caname;
-    CERTCertificate * curcert;
-    CERTCertificate * oldcert;
-    PRUint32           contentlen;
-    int               j;
-    int               headerlen;
-    int               depth;
-    SECStatus         rv;
-    SECItem           issuerName;
-    SECItem           compatIssuerName;
-    
-    depth=0;
-    curcert = CERT_DupCertificate(cert);
-    
-    while( curcert ) {
-    issuerName = curcert->derIssuer;
+	SECItem *         caname;
+	CERTCertificate * curcert;
+	CERTCertificate * oldcert;
+	PRUint32 contentlen;
+	int j;
+	int headerlen;
+	int depth;
+	SECStatus rv;
+	SECItem issuerName;
+	SECItem compatIssuerName;
 
-    /* compute an alternate issuer name for compatibility with 2.0
-     * enterprise server, which send the CA names without
-     * the outer layer of DER header
-     */
-    rv = DER_Lengths(&issuerName, &headerlen, &contentlen);
-    if ( rv == SECSuccess ) {
-        compatIssuerName.data = &issuerName.data[headerlen];
-        compatIssuerName.len = issuerName.len - headerlen;
-    } else {
-        compatIssuerName.data = NULL;
-        compatIssuerName.len = 0;
-    }
-        
-    for (j = 0; j < caNames->nnames; j++) {
-        caname = &caNames->names[j];
-        if (SECITEM_CompareItem(&issuerName, caname) == SECEqual) {
-        rv = SECSuccess;
-        CERT_DestroyCertificate(curcert);
-        goto done;
-        } else if (SECITEM_CompareItem(&compatIssuerName, caname) == SECEqual) {
-        rv = SECSuccess;
-        CERT_DestroyCertificate(curcert);
-        goto done;
-        }
-    }
-    if ( ( depth <= 20 ) &&
-        ( SECITEM_CompareItem(&curcert->derIssuer, &curcert->derSubject)
-         != SECEqual ) ) {
-        oldcert = curcert;
-        curcert = CERT_FindCertByName(curcert->dbhandle,
-                      &curcert->derIssuer);
-        CERT_DestroyCertificate(oldcert);
-        depth++;
-    } else {
-        CERT_DestroyCertificate(curcert);
-        curcert = NULL;
-    }
-    }
-    rv = SECFailure;
+	depth=0;
+	curcert = CERT_DupCertificate(cert);
+
+	while( curcert ) {
+		issuerName = curcert->derIssuer;
+
+		/* compute an alternate issuer name for compatibility with 2.0
+		 * enterprise server, which send the CA names without
+		 * the outer layer of DER header
+		 */
+		rv = DER_Lengths(&issuerName, &headerlen, &contentlen);
+		if ( rv == SECSuccess ) {
+			compatIssuerName.data = &issuerName.data[headerlen];
+			compatIssuerName.len = issuerName.len - headerlen;
+		} else {
+			compatIssuerName.data = NULL;
+			compatIssuerName.len = 0;
+		}
+
+		for (j = 0; j < caNames->nnames; j++) {
+			caname = &caNames->names[j];
+			if (SECITEM_CompareItem(&issuerName, caname) == SECEqual) {
+				rv = SECSuccess;
+				CERT_DestroyCertificate(curcert);
+				goto done;
+			} else if (SECITEM_CompareItem(&compatIssuerName, caname) == SECEqual) {
+				rv = SECSuccess;
+				CERT_DestroyCertificate(curcert);
+				goto done;
+			}
+		}
+		if ( ( depth <= 20 ) &&
+		     ( SECITEM_CompareItem(&curcert->derIssuer, &curcert->derSubject)
+		       != SECEqual ) ) {
+			oldcert = curcert;
+			curcert = CERT_FindCertByName(curcert->dbhandle,
+			                              &curcert->derIssuer);
+			CERT_DestroyCertificate(oldcert);
+			depth++;
+		} else {
+			CERT_DestroyCertificate(curcert);
+			curcert = NULL;
+		}
+	}
+	rv = SECFailure;
 
 done:
-    return rv;
+	return rv;
 }
 
-/* 
+/*
  * This callback is called when the peer has request you to send you
  * client-auth certificate. You get to pick which one you want
  * to send.
@@ -130,316 +130,316 @@ done:
  */
 SECStatus
 JSSL_CallCertSelectionCallback(    void * arg,
-            PRFileDesc *        fd,
-            CERTDistNames *     caNames,
-            CERTCertificate **  pRetCert,
-            SECKEYPrivateKey ** pRetKey)
+                                   PRFileDesc *        fd,
+                                   CERTDistNames *     caNames,
+                                   CERTCertificate **  pRetCert,
+                                   SECKEYPrivateKey ** pRetKey)
 {
-    CERTCertificate *  cert;
-    PK11SlotInfo *  slot;
-    SECKEYPrivateKey * privkey;
-    jobject             nicknamecallback = (jobject)arg;
-    SECStatus          rv         = SECFailure;
-    CERTCertNicknames * names;
-    int                 i;
-    int count           =0;
-    jclass    vectorclass;
-    jmethodID vectorcons;
-    jobject vector;
-    jmethodID vector_add;
-    jstring nickname_string;
-    jstring chosen_nickname;
-    const char *chosen_nickname_for_c;
-    jclass clientcertselectionclass;
-    jmethodID clientcertselectionclass_select;
-    JNIEnv *env;
-    int debug_cc=0;
+	CERTCertificate *  cert;
+	PK11SlotInfo *  slot;
+	SECKEYPrivateKey * privkey;
+	jobject nicknamecallback = (jobject)arg;
+	SECStatus rv         = SECFailure;
+	CERTCertNicknames * names;
+	int i;
+	int count           =0;
+	jclass vectorclass;
+	jmethodID vectorcons;
+	jobject vector;
+	jmethodID vector_add;
+	jstring nickname_string;
+	jstring chosen_nickname;
+	const char *chosen_nickname_for_c;
+	jclass clientcertselectionclass;
+	jmethodID clientcertselectionclass_select;
+	JNIEnv *env;
+	int debug_cc=0;
 
-    if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0){
-        PR_ASSERT(PR_FALSE);
-        return SECFailure;
-    }
-    PR_ASSERT(env != NULL);
-    
+	if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0) {
+		PR_ASSERT(PR_FALSE);
+		return SECFailure;
+	}
+	PR_ASSERT(env != NULL);
 
-    clientcertselectionclass = (*env)->GetObjectClass(env,nicknamecallback);
 
-    clientcertselectionclass_select = (*env)->GetMethodID(
-            env,
-            clientcertselectionclass,
-            "select",
-            "(Ljava/util/Vector;)Ljava/lang/String;" );
+	clientcertselectionclass = (*env)->GetObjectClass(env,nicknamecallback);
 
-    /* get java bits and piece ready to create a new vector */
+	clientcertselectionclass_select = (*env)->GetMethodID(
+		env,
+		clientcertselectionclass,
+		"select",
+		"(Ljava/util/Vector;)Ljava/lang/String;" );
 
-    vectorclass = (*env)->FindClass(
-            env, "java/util/Vector");
+	/* get java bits and piece ready to create a new vector */
 
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectorclass: %lx\n",vectorclass); }
+	vectorclass = (*env)->FindClass(
+		env, "java/util/Vector");
 
-    vectorcons = (*env)->GetMethodID(
-            env,
-            vectorclass,"<init>","()V");
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectorclass: %lx\n",vectorclass); }
 
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectorcons: %lx\n",vectorcons); }
+	vectorcons = (*env)->GetMethodID(
+		env,
+		vectorclass,"<init>","()V");
 
-    vector_add = (*env)->GetMethodID(
-            env,
-            vectorclass,
-            "addElement",
-            "(Ljava/lang/Object;)V");
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectorcons: %lx\n",vectorcons); }
 
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectoradd: %lx\n",vector_add); }
+	vector_add = (*env)->GetMethodID(
+		env,
+		vectorclass,
+		"addElement",
+		"(Ljava/lang/Object;)V");
 
-    /* create new vector */
-    vector = (*env)->NewObject( env, vectorclass, vectorcons); 
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  got vectoradd: %lx\n",vector_add); }
 
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  got new vector: %lx\n",vector); }
+	/* create new vector */
+	vector = (*env)->NewObject( env, vectorclass, vectorcons);
+
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  got new vector: %lx\n",vector); }
 
 /* next, get a list of all the valid nicknames */
-    names = CERT_GetCertNicknames(CERT_GetDefaultCertDB(),
-                      SEC_CERT_NICKNAMES_USER, NULL /*pinarg*/);
-    if (names != NULL) {
-        for (i = 0; i < names->numnicknames; i++) {
-        if (debug_cc) { PR_fprintf(PR_STDOUT,"checking nn: %s\n",names->nicknames[i]); }
-        cert = JSS_PK11_findCertAndSlotFromNickname(
-                names->nicknames[i],
-                NULL /*pinarg*/,
-                &slot);
-        if ( !cert )
-            continue;
+	names = CERT_GetCertNicknames(CERT_GetDefaultCertDB(),
+	                              SEC_CERT_NICKNAMES_USER, NULL /*pinarg*/);
+	if (names != NULL) {
+		for (i = 0; i < names->numnicknames; i++) {
+			if (debug_cc) { PR_fprintf(PR_STDOUT,"checking nn: %s\n",names->nicknames[i]); }
+			cert = JSS_PK11_findCertAndSlotFromNickname(
+				names->nicknames[i],
+				NULL /*pinarg*/,
+				&slot);
+			if ( !cert )
+				continue;
 
-        /* Only check unexpired certs */
-        if ( CERT_CheckCertValidTimes(cert, PR_Now(), PR_TRUE /*allowOverride*/)
-                 != secCertTimeValid ) {
-        if (debug_cc) { PR_fprintf(PR_STDOUT,"  not valid\n"); }
-            CERT_DestroyCertificate(cert);
-            PK11_FreeSlot(slot);
-            continue;
-        }
-        rv = secCmpCertChainWCANames(cert, caNames);
-        if ( rv == SECSuccess ) {
-            if (debug_cc) { PR_fprintf(PR_STDOUT,"  matches ca name\n"); }
+			/* Only check unexpired certs */
+			if ( CERT_CheckCertValidTimes(cert, PR_Now(), PR_TRUE /*allowOverride*/)
+			     != secCertTimeValid ) {
+				if (debug_cc) { PR_fprintf(PR_STDOUT,"  not valid\n"); }
+				CERT_DestroyCertificate(cert);
+				PK11_FreeSlot(slot);
+				continue;
+			}
+			rv = secCmpCertChainWCANames(cert, caNames);
+			if ( rv == SECSuccess ) {
+				if (debug_cc) { PR_fprintf(PR_STDOUT,"  matches ca name\n"); }
 
-            privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
+				privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
 
-            /* just test if we have the private key */
-            if ( privkey )  {
+				/* just test if we have the private key */
+				if ( privkey )  {
 
-            count++;
-            if (debug_cc) { PR_fprintf(PR_STDOUT,"  found privkey\n"); }
-            SECKEY_DestroyPrivateKey(privkey);
+					count++;
+					if (debug_cc) { PR_fprintf(PR_STDOUT,"  found privkey\n"); }
+					SECKEY_DestroyPrivateKey(privkey);
 
-            /* if we have, then this nickname has passed all the
-                 tests necessary to put it in the list */
+					/* if we have, then this nickname has passed all the
+					     tests necessary to put it in the list */
 
-            nickname_string = (*env)->NewStringUTF(env,
-                        names->nicknames[i]);
+					nickname_string = (*env)->NewStringUTF(env,
+					                                       names->nicknames[i]);
 
-            if (debug_cc) { PR_fprintf(PR_STDOUT,"  calling vector_add\n"); }
-            (*env)->CallVoidMethod(env,vector,vector_add,
-                nickname_string
-                );
-                        
-            if (debug_cc) { PR_fprintf(PR_STDOUT,"  back from vector_add\n"); }
-                }
-            
-        }
-        CERT_DestroyCertificate(cert);
-        PK11_FreeSlot(slot);
-        }
-        CERT_FreeNicknames(names);
-    }
+					if (debug_cc) { PR_fprintf(PR_STDOUT,"  calling vector_add\n"); }
+					(*env)->CallVoidMethod(env,vector,vector_add,
+					                       nickname_string
+					                       );
 
-    /* okay - so we made a vector of the certs - now call the java 
-       class to figure out which one to send */
+					if (debug_cc) { PR_fprintf(PR_STDOUT,"  back from vector_add\n"); }
+				}
 
-    chosen_nickname = (*env)->CallObjectMethod(env,nicknamecallback,
-            clientcertselectionclass_select,
-            vector
-    );
+			}
+			CERT_DestroyCertificate(cert);
+			PK11_FreeSlot(slot);
+		}
+		CERT_FreeNicknames(names);
+	}
 
-    chosen_nickname_for_c = JSS_RefJString(env, chosen_nickname);
-    if (chosen_nickname_for_c == NULL) {
-        return SECFailure;
-    }
+	/* okay - so we made a vector of the certs - now call the java
+	   class to figure out which one to send */
 
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  chosen nickname: %s\n",chosen_nickname_for_c); }
-    cert = JSS_PK11_findCertAndSlotFromNickname(chosen_nickname_for_c,
-        NULL /*pinarg*/,
-        &slot);
+	chosen_nickname = (*env)->CallObjectMethod(env,nicknamecallback,
+	                                           clientcertselectionclass_select,
+	                                           vector
+	                                           );
 
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  found certificate\n"); }
+	chosen_nickname_for_c = JSS_RefJString(env, chosen_nickname);
+	if (chosen_nickname_for_c == NULL) {
+		return SECFailure;
+	}
 
-    JSS_DerefJString(env, chosen_nickname, chosen_nickname_for_c);
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  chosen nickname: %s\n",chosen_nickname_for_c); }
+	cert = JSS_PK11_findCertAndSlotFromNickname(chosen_nickname_for_c,
+	                                            NULL /*pinarg*/,
+	                                            &slot);
 
-    if (cert == NULL) {
-        return SECFailure;
-    }
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  found certificate\n"); }
 
-    privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
-    PK11_FreeSlot(slot);
+	JSS_DerefJString(env, chosen_nickname, chosen_nickname_for_c);
 
-    if ( privkey == NULL )  {
-        CERT_DestroyCertificate(cert);
-        return SECFailure;
-    }
-    if (debug_cc) { PR_fprintf(PR_STDOUT,"  found privkey. returning\n"); }
+	if (cert == NULL) {
+		return SECFailure;
+	}
 
-    *pRetCert = cert;
-    *pRetKey  = privkey;
-    rv = SECSuccess;
+	privkey = PK11_FindPrivateKeyFromCert(slot, cert, NULL /*pinarg*/);
+	PK11_FreeSlot(slot);
 
-    return rv;
+	if ( privkey == NULL )  {
+		CERT_DestroyCertificate(cert);
+		return SECFailure;
+	}
+	if (debug_cc) { PR_fprintf(PR_STDOUT,"  found privkey. returning\n"); }
+
+	*pRetCert = cert;
+	*pRetKey  = privkey;
+	rv = SECSuccess;
+
+	return rv;
 }
 
 void
 JSSL_AlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert *alert)
 {
-    JSSL_SocketData *socket = (JSSL_SocketData*) arg;
+	JSSL_SocketData *socket = (JSSL_SocketData*) arg;
 
-    jint rc;
-    JNIEnv *env;
-    jclass socketClass, eventClass;
-    jmethodID eventConstructor;
-    jobject event;
-    jmethodID fireEvent;
+	jint rc;
+	JNIEnv *env;
+	jclass socketClass, eventClass;
+	jmethodID eventConstructor;
+	jobject event;
+	jmethodID fireEvent;
 
-    PR_ASSERT(socket != NULL);
-    PR_ASSERT(socket->socketObject != NULL);
+	PR_ASSERT(socket != NULL);
+	PR_ASSERT(socket->socketObject != NULL);
 
-    rc = (*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL);
-    PR_ASSERT(rc == JNI_OK);
-    PR_ASSERT(env != NULL);
+	rc = (*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL);
+	PR_ASSERT(rc == JNI_OK);
+	PR_ASSERT(env != NULL);
 
-    /* Fast return when assumptions are incorrect. */
-    if (socket == NULL || socket->socketObject == NULL ||
-            rc != JNI_OK || env == NULL) {
-        return;
-    }
+	/* Fast return when assumptions are incorrect. */
+	if (socket == NULL || socket->socketObject == NULL ||
+	    rc != JNI_OK || env == NULL) {
+		return;
+	}
 
-    /* SSLAlertEvent event = new SSLAlertEvent(socket); */
+	/* SSLAlertEvent event = new SSLAlertEvent(socket); */
 
-    socketClass = (*env)->FindClass(env, SSLSOCKET_CLASS);
-    PR_ASSERT(socketClass != NULL);
+	socketClass = (*env)->FindClass(env, SSLSOCKET_CLASS);
+	PR_ASSERT(socketClass != NULL);
 
-    eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
-    PR_ASSERT(eventClass != NULL);
+	eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
+	PR_ASSERT(eventClass != NULL);
 
-    eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>", "(L" SSLSOCKET_CLASS ";II)V");
-    PR_ASSERT(eventConstructor != NULL);
+	eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>", "(L" SSLSOCKET_CLASS ";II)V");
+	PR_ASSERT(eventConstructor != NULL);
 
-    event = (*env)->NewObject(env, eventClass, eventConstructor, socket->socketObject, (int)alert->level, (int)alert->description);
-    PR_ASSERT(event != NULL);
+	event = (*env)->NewObject(env, eventClass, eventConstructor, socket->socketObject, (int)alert->level, (int)alert->description);
+	PR_ASSERT(event != NULL);
 
-    /* socket.fireAlertReceivedEvent(event); */
+	/* socket.fireAlertReceivedEvent(event); */
 
-    fireEvent = (*env)->GetMethodID(env,
-        socketClass,
-        "fireAlertReceivedEvent",
-        "(L" SSL_ALERT_EVENT_CLASS ";)V");
-    PR_ASSERT(fireEvent != NULL);
+	fireEvent = (*env)->GetMethodID(env,
+	                                socketClass,
+	                                "fireAlertReceivedEvent",
+	                                "(L" SSL_ALERT_EVENT_CLASS ";)V");
+	PR_ASSERT(fireEvent != NULL);
 
-    (*env)->CallVoidMethod(env, socket->socketObject, fireEvent, event);
+	(*env)->CallVoidMethod(env, socket->socketObject, fireEvent, event);
 
-    (*JSS_javaVM)->DetachCurrentThread(JSS_javaVM);
+	(*JSS_javaVM)->DetachCurrentThread(JSS_javaVM);
 }
 
 void
 JSSL_AlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *alert)
 {
-    JSSL_SocketData *socket = (JSSL_SocketData*) arg;
+	JSSL_SocketData *socket = (JSSL_SocketData*) arg;
 
-    jint rc;
-    JNIEnv *env;
-    jclass socketClass, eventClass;
-    jmethodID eventConstructor, eventSetLevel, eventSetDescription;
-    jobject event;
-    jmethodID fireEvent;
+	jint rc;
+	JNIEnv *env;
+	jclass socketClass, eventClass;
+	jmethodID eventConstructor, eventSetLevel, eventSetDescription;
+	jobject event;
+	jmethodID fireEvent;
 
-    PR_ASSERT(socket != NULL);
-    PR_ASSERT(socket->socketObject != NULL);
+	PR_ASSERT(socket != NULL);
+	PR_ASSERT(socket->socketObject != NULL);
 
-    rc = (*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL);
-    PR_ASSERT(rc == JNI_OK);
-    PR_ASSERT(env != NULL);
+	rc = (*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL);
+	PR_ASSERT(rc == JNI_OK);
+	PR_ASSERT(env != NULL);
 
-    /* Fast return when assumptions are incorrect. */
-    if (socket == NULL || socket->socketObject == NULL ||
-            rc != JNI_OK || env == NULL) {
-        return;
-    }
+	/* Fast return when assumptions are incorrect. */
+	if (socket == NULL || socket->socketObject == NULL ||
+	    rc != JNI_OK || env == NULL) {
+		return;
+	}
 
-    /* SSLAlertEvent event = new SSLAlertEvent(socket); */
+	/* SSLAlertEvent event = new SSLAlertEvent(socket); */
 
-    socketClass = (*env)->FindClass(env, SSLSOCKET_CLASS);
-    PR_ASSERT(socketClass != NULL);
+	socketClass = (*env)->FindClass(env, SSLSOCKET_CLASS);
+	PR_ASSERT(socketClass != NULL);
 
-    eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
-    PR_ASSERT(eventClass != NULL);
+	eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
+	PR_ASSERT(eventClass != NULL);
 
-    eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>", "(L" SSLSOCKET_CLASS ";)V");
-    PR_ASSERT(eventConstructor != NULL);
+	eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>", "(L" SSLSOCKET_CLASS ";)V");
+	PR_ASSERT(eventConstructor != NULL);
 
-    event = (*env)->NewObject(env, eventClass, eventConstructor, socket->socketObject);
-    PR_ASSERT(event != NULL);
+	event = (*env)->NewObject(env, eventClass, eventConstructor, socket->socketObject);
+	PR_ASSERT(event != NULL);
 
-    /* event.setLevel(level); */
+	/* event.setLevel(level); */
 
-    eventSetLevel = (*env)->GetMethodID(env, eventClass, "setLevel", "(I)V");
-    PR_ASSERT(eventSetLevel != NULL);
+	eventSetLevel = (*env)->GetMethodID(env, eventClass, "setLevel", "(I)V");
+	PR_ASSERT(eventSetLevel != NULL);
 
-    (*env)->CallVoidMethod(env, event, eventSetLevel, (int)alert->level);
+	(*env)->CallVoidMethod(env, event, eventSetLevel, (int)alert->level);
 
-    /* event.setDescription(description); */
+	/* event.setDescription(description); */
 
-    eventSetDescription = (*env)->GetMethodID(env, eventClass, "setDescription", "(I)V");
-    PR_ASSERT(eventSetDescription != NULL);
+	eventSetDescription = (*env)->GetMethodID(env, eventClass, "setDescription", "(I)V");
+	PR_ASSERT(eventSetDescription != NULL);
 
-    (*env)->CallVoidMethod(env, event, eventSetDescription, alert->description);
+	(*env)->CallVoidMethod(env, event, eventSetDescription, alert->description);
 
-    /* socket.fireAlertSentEvent(event); */
+	/* socket.fireAlertSentEvent(event); */
 
-    fireEvent = (*env)->GetMethodID(env,
-        socketClass,
-        "fireAlertSentEvent",
-        "(L" SSL_ALERT_EVENT_CLASS ";)V");
-    PR_ASSERT(fireEvent != NULL);
+	fireEvent = (*env)->GetMethodID(env,
+	                                socketClass,
+	                                "fireAlertSentEvent",
+	                                "(L" SSL_ALERT_EVENT_CLASS ";)V");
+	PR_ASSERT(fireEvent != NULL);
 
-    (*env)->CallVoidMethod(env, socket->socketObject, fireEvent, event);
+	(*env)->CallVoidMethod(env, socket->socketObject, fireEvent, event);
 
-    (*JSS_javaVM)->DetachCurrentThread(JSS_javaVM);
+	(*JSS_javaVM)->DetachCurrentThread(JSS_javaVM);
 }
 
 void
 JSSL_HandshakeCallback(PRFileDesc *fd, void *arg)
 {
-    JSSL_SocketData *sock = (JSSL_SocketData*) arg;
-    jclass sockClass;
-    jmethodID notifierID;
-    JNIEnv *env;
+	JSSL_SocketData *sock = (JSSL_SocketData*) arg;
+	jclass sockClass;
+	jmethodID notifierID;
+	JNIEnv *env;
 
-    PR_ASSERT(sock!=NULL);
+	PR_ASSERT(sock!=NULL);
 
-    /* get the JNI environment */
-    if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0){
-        PR_ASSERT(PR_FALSE);
-        goto finish;
-    }
-    PR_ASSERT(env != NULL);
+	/* get the JNI environment */
+	if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
+	PR_ASSERT(env != NULL);
 
-    /* get the handshake notification method ID */
-    PR_ASSERT(sock->socketObject!=NULL);
-    sockClass = (*env)->GetObjectClass(env, sock->socketObject);
-    notifierID = (*env)->GetMethodID(env, sockClass,
-        SSLSOCKET_HANDSHAKE_NOTIFIER_NAME, SSLSOCKET_HANDSHAKE_NOTIFIER_SIG);
-    if(notifierID == NULL) goto finish;
+	/* get the handshake notification method ID */
+	PR_ASSERT(sock->socketObject!=NULL);
+	sockClass = (*env)->GetObjectClass(env, sock->socketObject);
+	notifierID = (*env)->GetMethodID(env, sockClass,
+	                                 SSLSOCKET_HANDSHAKE_NOTIFIER_NAME, SSLSOCKET_HANDSHAKE_NOTIFIER_SIG);
+	if(notifierID == NULL) goto finish;
 
-    /* call the handshake notification method */
-    (*env)->CallVoidMethod(env, sock->socketObject, notifierID);
+	/* call the handshake notification method */
+	(*env)->CallVoidMethod(env, sock->socketObject, notifierID);
 
 finish:
-    return;
+	return;
 }
 
 /*
@@ -448,308 +448,308 @@ finish:
  */
 SECStatus
 JSSL_DefaultCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
-             PRBool isServer)
+                             PRBool isServer)
 {
-    char *          hostname = NULL;
-    SECStatus         rv    = SECFailure;
-    SECCertUsage      certUsage;
-    CERTCertificate   *peerCert=NULL;
+	char *          hostname = NULL;
+	SECStatus rv    = SECFailure;
+	SECCertUsage certUsage;
+	CERTCertificate   *peerCert=NULL;
 
-    int ocspPolicy = JSSL_getOCSPPolicy();
+	int ocspPolicy = JSSL_getOCSPPolicy();
 
-    certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
+	certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
 
-    /* PKIX call needs a SECCertificate usage, convert */
-    SECCertificateUsage certificateUsage =  (SECCertificateUsage)1 << certUsage;
+	/* PKIX call needs a SECCertificate usage, convert */
+	SECCertificateUsage certificateUsage =  (SECCertificateUsage)1 << certUsage;
 
-    /* SSL_PeerCertificate() returns a shallow copy of the cert, so we
-       must destroy it before we exit this function */
+	/* SSL_PeerCertificate() returns a shallow copy of the cert, so we
+	   must destroy it before we exit this function */
 
-    peerCert   = SSL_PeerCertificate(fd);
+	peerCert   = SSL_PeerCertificate(fd);
 
-    if (peerCert) {
-        if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
-            rv = JSSL_verifyCertPKIX( peerCert, certificateUsage,
-                     NULL /* pin arg */, ocspPolicy, NULL, NULL);
-        } else {
-            rv = CERT_VerifyCertNow(CERT_GetDefaultCertDB(), peerCert,
-                    checkSig, certUsage, NULL /*pinarg*/);
-        }
-    }
+	if (peerCert) {
+		if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+			rv = JSSL_verifyCertPKIX( peerCert, certificateUsage,
+			                          NULL /* pin arg */, ocspPolicy, NULL, NULL);
+		} else {
+			rv = CERT_VerifyCertNow(CERT_GetDefaultCertDB(), peerCert,
+			                        checkSig, certUsage, NULL /*pinarg*/);
+		}
+	}
 
-    /* if we're a server, then we don't need to check the CN of the
-       certificate, so we can just return whatever returncode we
-       have now
-     */
+	/* if we're a server, then we don't need to check the CN of the
+	   certificate, so we can just return whatever returncode we
+	   have now
+	 */
 
-    if ( rv != SECSuccess || isServer )  {
-        if (peerCert) {
-            CERT_DestroyCertificate(peerCert);
-        }
-        return (int)rv;
-    }
+	if ( rv != SECSuccess || isServer )  {
+		if (peerCert) {
+			CERT_DestroyCertificate(peerCert);
+		}
+		return (int)rv;
+	}
 
-    /* cert is OK.  This is the client side of an SSL connection.
-     * Now check the name field in the cert against the desired hostname.
-     * NB: This is our only defense against Man-In-The-Middle (MITM) attacks!
-     */
-    hostname = SSL_RevealURL(fd);    /* really is a hostname, not a URL */
-    if (hostname && hostname[0]) {
-        rv = CERT_VerifyCertName(peerCert, hostname);
-        PORT_Free(hostname); 
-    } else {
-        rv = SECFailure;
-    }
+	/* cert is OK.  This is the client side of an SSL connection.
+	 * Now check the name field in the cert against the desired hostname.
+	 * NB: This is our only defense against Man-In-The-Middle (MITM) attacks!
+	 */
+	hostname = SSL_RevealURL(fd); /* really is a hostname, not a URL */
+	if (hostname && hostname[0]) {
+		rv = CERT_VerifyCertName(peerCert, hostname);
+		PORT_Free(hostname);
+	} else {
+		rv = SECFailure;
+	}
 
-    if (rv == SECFailure) {
-        PR_SetError(SSL_ERROR_BAD_CERT_DOMAIN, 0);
-    }
+	if (rv == SECFailure) {
+		PR_SetError(SSL_ERROR_BAD_CERT_DOMAIN, 0);
+	}
 
-    if (peerCert) CERT_DestroyCertificate(peerCert);
-    return rv;
+	if (peerCert) CERT_DestroyCertificate(peerCert);
+	return rv;
 }
 
 static void
 addToVerifyLog(JNIEnv *env, CERTVerifyLog *log, CERTCertificate *cert,
-    unsigned long error, unsigned int depth)
+               unsigned long error, unsigned int depth)
 {
-    CERTVerifyLogNode *node, *tnode;
+	CERTVerifyLogNode *node, *tnode;
 
-    PR_ASSERT(log != NULL);
+	PR_ASSERT(log != NULL);
 
-    PL_ARENA_ALLOCATE(node, log->arena, sizeof(CERTVerifyLogNode));
-    if ( node == NULL ) {
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
-        return;
-    }
-    node->cert = CERT_DupCertificate(cert);
-    node->error = error;
-    node->depth = depth;
-    node->arg = NULL;
+	PL_ARENA_ALLOCATE(node, log->arena, sizeof(CERTVerifyLogNode));
+	if ( node == NULL ) {
+		JSS_throw(env, OUT_OF_MEMORY_ERROR);
+		return;
+	}
+	node->cert = CERT_DupCertificate(cert);
+	node->error = error;
+	node->depth = depth;
+	node->arg = NULL;
 
-    if ( log->tail == NULL ) {
-        /* empty list */
-        log->head = log->tail = node;
-        node->prev = NULL;
-        node->next = NULL;
-    } else if ( depth >= log->tail->depth ) {
-        /* add to tail */
-        node->prev = log->tail;
-        log->tail->next = node;
-        log->tail = node;
-        node->next = NULL;
-    } else if ( depth < log->head->depth ) {
-        /* add at head */
-        node->prev = NULL;
-        node->next = log->head;
-        log->head->prev = node;
-        log->head = node;
-    } else {
-        /* add in middle */
-        tnode = log->tail;
-        while ( tnode != NULL ) {
-            if ( depth >= tnode->depth ) {
-                /* insert after tnode */
-                node->prev = tnode;
-                node->next = tnode->next;
-                tnode->next->prev = node;
-                tnode->next = node;
-                break;
-            }
+	if ( log->tail == NULL ) {
+		/* empty list */
+		log->head = log->tail = node;
+		node->prev = NULL;
+		node->next = NULL;
+	} else if ( depth >= log->tail->depth ) {
+		/* add to tail */
+		node->prev = log->tail;
+		log->tail->next = node;
+		log->tail = node;
+		node->next = NULL;
+	} else if ( depth < log->head->depth ) {
+		/* add at head */
+		node->prev = NULL;
+		node->next = log->head;
+		log->head->prev = node;
+		log->head = node;
+	} else {
+		/* add in middle */
+		tnode = log->tail;
+		while ( tnode != NULL ) {
+			if ( depth >= tnode->depth ) {
+				/* insert after tnode */
+				node->prev = tnode;
+				node->next = tnode->next;
+				tnode->next->prev = node;
+				tnode->next = node;
+				break;
+			}
 
-            tnode = tnode->prev;
-        }
-    }
-    log->count++;
+			tnode = tnode->prev;
+		}
+	}
+	log->count++;
 }
 
 /*
  * Callback from SSL for checking a (possibly) expired
  * certificate the peer presents.
  *
- * obj - a jobject -> instance of a class implementing 
+ * obj - a jobject -> instance of a class implementing
  *       the SSLCertificateApprovalCallback interface
  */
 SECStatus
 JSSL_JavaCertAuthCallback(void *arg, PRFileDesc *fd, PRBool checkSig,
-             PRBool isServer)
+                          PRBool isServer)
 {
-    CERTCertificate *peerCert=NULL;
-    CERTVerifyLog log;
-    JNIEnv *env;
-    jobject validityStatus;
-    jmethodID addReasonMethod;
-    int certUsage;
-    int checkcn_rv;
-    jmethodID approveMethod;
-    jboolean result;
-    char *hostname=NULL;
-    SECStatus retval = SECFailure;
-    SECStatus verificationResult;
+	CERTCertificate *peerCert=NULL;
+	CERTVerifyLog log;
+	JNIEnv *env;
+	jobject validityStatus;
+	jmethodID addReasonMethod;
+	int certUsage;
+	int checkcn_rv;
+	jmethodID approveMethod;
+	jboolean result;
+	char *hostname=NULL;
+	SECStatus retval = SECFailure;
+	SECStatus verificationResult;
 
-    PR_ASSERT(arg != NULL);
-    PR_ASSERT(fd != NULL);
+	PR_ASSERT(arg != NULL);
+	PR_ASSERT(fd != NULL);
 
-    /* initialize logging structures */
-    log.arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
-    if( log.arena == NULL ) return SECFailure;
-    log.head = NULL;
-    log.tail = NULL;
-    log.count = 0;
+	/* initialize logging structures */
+	log.arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
+	if( log.arena == NULL ) return SECFailure;
+	log.head = NULL;
+	log.tail = NULL;
+	log.count = 0;
 
-    int ocspPolicy = JSSL_getOCSPPolicy();
+	int ocspPolicy = JSSL_getOCSPPolicy();
 
-    /* get the JNI environment */
-    if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0){
-        PR_ASSERT(PR_FALSE);
-        goto finish;
-    }
+	/* get the JNI environment */
+	if((*JSS_javaVM)->AttachCurrentThread(JSS_javaVM, (void**)&env, NULL) != 0) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
 
-    /* First, get a handle on the cert that the peer presented */
-    peerCert = SSL_PeerCertificate(fd);
-    
-    /* if peer didn't present a cert, why am I called? */
-    if (peerCert == NULL) goto finish;
+	/* First, get a handle on the cert that the peer presented */
+	peerCert = SSL_PeerCertificate(fd);
 
-    certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
-    /* PKIX call needs a SECCertificate usage, convert */
-    SECCertificateUsage certificateUsage =  (SECCertificateUsage)1 << certUsage;
+	/* if peer didn't present a cert, why am I called? */
+	if (peerCert == NULL) goto finish;
+
+	certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
+	/* PKIX call needs a SECCertificate usage, convert */
+	SECCertificateUsage certificateUsage =  (SECCertificateUsage)1 << certUsage;
 
 
-    /* 
-     * verify it against current time - (can't use
-     * CERT_VerifyCertNow() since it doesn't allow passing of
-     * logging parameter)
-     */
+	/*
+	 * verify it against current time - (can't use
+	 * CERT_VerifyCertNow() since it doesn't allow passing of
+	 * logging parameter)
+	 */
 
-    if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
-        verificationResult = JSSL_verifyCertPKIX( peerCert, certificateUsage,
-                                 NULL /* pin arg */, ocspPolicy, &log, NULL);
-     }  else {
-        verificationResult = CERT_VerifyCert(   CERT_GetDefaultCertDB(),
-                                peerCert,
-                                checkSig,
-                                certUsage,
-                                PR_Now(),
-                                NULL /*pinarg*/,
-                                &log);
-     }
+	if( ocspPolicy == OCSP_LEAF_AND_CHAIN_POLICY) {
+		verificationResult = JSSL_verifyCertPKIX( peerCert, certificateUsage,
+		                                          NULL /* pin arg */, ocspPolicy, &log, NULL);
+	}  else {
+		verificationResult = CERT_VerifyCert(   CERT_GetDefaultCertDB(),
+		                                        peerCert,
+		                                        checkSig,
+		                                        certUsage,
+		                                        PR_Now(),
+		                                        NULL /*pinarg*/,
+		                                        &log);
+	}
 
-    if (verificationResult == SECSuccess && log.count > 0) {
-        verificationResult = SECFailure;
-    }
+	if (verificationResult == SECSuccess && log.count > 0) {
+		verificationResult = SECFailure;
+	}
 
-    /*
-     * Verify the domain name of the cert.
-     */
-    hostname = SSL_RevealURL(fd);    /* really is a hostname, not a URL */
-    if (hostname && hostname[0]) {
-        checkcn_rv = CERT_VerifyCertName(peerCert, hostname);
-        PORT_Free(hostname);
-    } else {
-        checkcn_rv = SECFailure;
-    }
-    if (checkcn_rv != SECSuccess) {
-        addToVerifyLog(env, &log,peerCert,SSL_ERROR_BAD_CERT_DOMAIN,0);
-        if((*env)->ExceptionOccurred(env) != NULL) goto finish;
-        verificationResult = SECFailure;
-    }
+	/*
+	 * Verify the domain name of the cert.
+	 */
+	hostname = SSL_RevealURL(fd); /* really is a hostname, not a URL */
+	if (hostname && hostname[0]) {
+		checkcn_rv = CERT_VerifyCertName(peerCert, hostname);
+		PORT_Free(hostname);
+	} else {
+		checkcn_rv = SECFailure;
+	}
+	if (checkcn_rv != SECSuccess) {
+		addToVerifyLog(env, &log,peerCert,SSL_ERROR_BAD_CERT_DOMAIN,0);
+		if((*env)->ExceptionOccurred(env) != NULL) goto finish;
+		verificationResult = SECFailure;
+	}
 
-    /*
-     * create a new ValidityStatus object
-     */
-    {
-        jclass clazz;
-        jmethodID cons;
+	/*
+	 * create a new ValidityStatus object
+	 */
+	{
+		jclass clazz;
+		jmethodID cons;
 
-        clazz = (*env)->FindClass(env, SSLCERT_APP_CB_VALIDITY_STATUS_CLASS);
-        if( clazz == NULL ) goto finish;
+		clazz = (*env)->FindClass(env, SSLCERT_APP_CB_VALIDITY_STATUS_CLASS);
+		if( clazz == NULL ) goto finish;
 
-        cons = (*env)->GetMethodID(env, clazz,
-                        PLAIN_CONSTRUCTOR, PLAIN_CONSTRUCTOR_SIG);
-        if( cons == NULL ) goto finish;
+		cons = (*env)->GetMethodID(env, clazz,
+		                           PLAIN_CONSTRUCTOR, PLAIN_CONSTRUCTOR_SIG);
+		if( cons == NULL ) goto finish;
 
-        validityStatus = (*env)->NewObject(env, clazz, cons);
-        if( validityStatus == NULL ) {
-            goto finish;
-        }
+		validityStatus = (*env)->NewObject(env, clazz, cons);
+		if( validityStatus == NULL ) {
+			goto finish;
+		}
 
-        /* get the addReason methodID while we're at it */
-        addReasonMethod = (*env)->GetMethodID(env, clazz,
-            SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_NAME,
-            SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_SIG);
-        if( addReasonMethod == NULL ) {
-            goto finish;
-        }
-    }
-    
-    /*
-     * Load up the ValidityStatus object with all the reasons for failure
-     */
-    if (verificationResult == SECFailure)  {
-        CERTVerifyLogNode *node;
-        int error;
-        CERTCertificate *errorcert=NULL;
-        int depth;
-        jobject ninjacert;
+		/* get the addReason methodID while we're at it */
+		addReasonMethod = (*env)->GetMethodID(env, clazz,
+		                                      SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_NAME,
+		                                      SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_SIG);
+		if( addReasonMethod == NULL ) {
+			goto finish;
+		}
+	}
 
-        node = log.head;
-        while (node) {
-            error = node->error;
-            errorcert = node->cert;
-            node->cert = NULL;
-            depth = node->depth;
+	/*
+	 * Load up the ValidityStatus object with all the reasons for failure
+	 */
+	if (verificationResult == SECFailure)  {
+		CERTVerifyLogNode *node;
+		int error;
+		CERTCertificate *errorcert=NULL;
+		int depth;
+		jobject ninjacert;
 
-            ninjacert = JSS_PK11_wrapCert(env,&errorcert);
-            (*env)->CallVoidMethod(env, validityStatus, addReasonMethod,
-                error,
-                ninjacert,
-                depth
-                );
+		node = log.head;
+		while (node) {
+			error = node->error;
+			errorcert = node->cert;
+			node->cert = NULL;
+			depth = node->depth;
 
-            node = node->next;
-        }
-    }
+			ninjacert = JSS_PK11_wrapCert(env,&errorcert);
+			(*env)->CallVoidMethod(env, validityStatus, addReasonMethod,
+			                       error,
+			                       ninjacert,
+			                       depth
+			                       );
 
-    /*
-     * Call the approval callback
-     */
-    {
-        jobject approvalCallbackObj;
-        jclass approvalCallbackClass;
-        jobject peerninjacert;
+			node = node->next;
+		}
+	}
 
-        approvalCallbackObj = (jobject) arg;
+	/*
+	 * Call the approval callback
+	 */
+	{
+		jobject approvalCallbackObj;
+		jclass approvalCallbackClass;
+		jobject peerninjacert;
 
-        approvalCallbackClass = (*env)->GetObjectClass(env,approvalCallbackObj);
-        approveMethod = (*env)->GetMethodID(
-            env,
-            approvalCallbackClass,
-            SSLCERT_APP_CB_APPROVE_NAME,
-            SSLCERT_APP_CB_APPROVE_SIG);
-        if( approveMethod == NULL ) {
-            PR_ASSERT(PR_FALSE);
-            goto finish;
-        }
+		approvalCallbackObj = (jobject) arg;
 
-        peerninjacert = JSS_PK11_wrapCert(env,&peerCert);
-        if( peerninjacert == NULL) {
-            PR_ASSERT(PR_FALSE);
-            goto finish;
-        }
-        result = (*env)->CallBooleanMethod(env, approvalCallbackObj,
-            approveMethod, peerninjacert, validityStatus);
-        if( result == JNI_TRUE ) {
-            retval = SECSuccess;
-        }
-    }
+		approvalCallbackClass = (*env)->GetObjectClass(env,approvalCallbackObj);
+		approveMethod = (*env)->GetMethodID(
+			env,
+			approvalCallbackClass,
+			SSLCERT_APP_CB_APPROVE_NAME,
+			SSLCERT_APP_CB_APPROVE_SIG);
+		if( approveMethod == NULL ) {
+			PR_ASSERT(PR_FALSE);
+			goto finish;
+		}
+
+		peerninjacert = JSS_PK11_wrapCert(env,&peerCert);
+		if( peerninjacert == NULL) {
+			PR_ASSERT(PR_FALSE);
+			goto finish;
+		}
+		result = (*env)->CallBooleanMethod(env, approvalCallbackObj,
+		                                   approveMethod, peerninjacert, validityStatus);
+		if( result == JNI_TRUE ) {
+			retval = SECSuccess;
+		}
+	}
 
 finish:
-    if( peerCert != NULL ) {
-        CERT_DestroyCertificate(peerCert);
-    }
-    PORT_FreeArena(log.arena, PR_FALSE);
-    return retval;
+	if( peerCert != NULL ) {
+		CERT_DestroyCertificate(peerCert);
+	}
+	PORT_FreeArena(log.arena, PR_FALSE);
+	return retval;
 }
 
 SECStatus
@@ -759,24 +759,24 @@ JSSL_GetClientAuthData( void * arg,
                         CERTCertificate **  pRetCert,
                         SECKEYPrivateKey ** pRetKey)
 {
-    SECKEYPrivateKey * privkey;
-    JSSL_SocketData *  sock;
-    SECStatus          rv         = SECFailure;
+	SECKEYPrivateKey * privkey;
+	JSSL_SocketData *  sock;
+	SECStatus rv         = SECFailure;
 
-    PR_ASSERT(arg != NULL);
-    sock = (JSSL_SocketData*) arg;
+	PR_ASSERT(arg != NULL);
+	sock = (JSSL_SocketData*) arg;
 
-    if (sock->clientCert) {
-        privkey = PK11_FindPrivateKeyFromCert(sock->clientCertSlot,
-            sock->clientCert, NULL /*pinarg*/);
-        if ( privkey ) {
-            rv = SECSuccess;
-            *pRetCert = CERT_DupCertificate(sock->clientCert); 
-            *pRetKey  = privkey;
-        }
-    }
-    
-    return rv;
+	if (sock->clientCert) {
+		privkey = PK11_FindPrivateKeyFromCert(sock->clientCertSlot,
+		                                      sock->clientCert, NULL /*pinarg*/);
+		if ( privkey ) {
+			rv = SECSuccess;
+			*pRetCert = CERT_DupCertificate(sock->clientCert);
+			*pRetKey  = privkey;
+		}
+	}
+
+	return rv;
 }
 
 /*
@@ -785,49 +785,49 @@ JSSL_GetClientAuthData( void * arg,
  */
 SECStatus
 JSSL_ConfirmExpiredPeerCert(void *arg, PRFileDesc *fd, PRBool checkSig,
-             PRBool isServer)
+                            PRBool isServer)
 {
-    SECStatus rv=SECFailure;
-    SECCertUsage certUsage;
-    CERTCertificate* peerCert=NULL;
-    int64 notAfter, notBefore;
+	SECStatus rv=SECFailure;
+	SECCertUsage certUsage;
+	CERTCertificate* peerCert=NULL;
+	int64 notAfter, notBefore;
 
-    certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
+	certUsage = isServer ? certUsageSSLClient : certUsageSSLServer;
 
-    peerCert = SSL_PeerCertificate(fd);
+	peerCert = SSL_PeerCertificate(fd);
 
-    if (peerCert) {
-        rv = CERT_GetCertTimes(peerCert, &notBefore, &notAfter);
-        if (rv != SECSuccess) goto finish;
+	if (peerCert) {
+		rv = CERT_GetCertTimes(peerCert, &notBefore, &notAfter);
+		if (rv != SECSuccess) goto finish;
 
-        /*
-         * Verify the certificate based on it's expiry date. This should
-         * always succeed, if the cert is trusted. It doesn't care if
-         * the cert has expired.
-         */
-        rv = CERT_VerifyCert(CERT_GetDefaultCertDB(), peerCert,
-                             checkSig, certUsage, 
-                             notAfter, NULL /*pinarg*/,
-                             NULL /* log */);
-    }
-    if ( rv != SECSuccess ) goto finish;
+		/*
+		 * Verify the certificate based on it's expiry date. This should
+		 * always succeed, if the cert is trusted. It doesn't care if
+		 * the cert has expired.
+		 */
+		rv = CERT_VerifyCert(CERT_GetDefaultCertDB(), peerCert,
+		                     checkSig, certUsage,
+		                     notAfter, NULL /*pinarg*/,
+		                     NULL /* log */);
+	}
+	if ( rv != SECSuccess ) goto finish;
 
-    if( ! isServer )  {
-        /* This is the client side of an SSL connection.
-        * Now check the name field in the cert against the desired hostname.
-        * NB: This is our only defense against Man-In-The-Middle (MITM) attacks!
-        */
-        char* hostname = NULL;
-        hostname = SSL_RevealURL(fd); /* really is a hostname, not a URL */
-        if (hostname && hostname[0]) {
-            rv = CERT_VerifyCertName(peerCert, hostname);
-            PORT_Free(hostname);
-        } else {
-            rv = SECFailure;
-        }
-    }
+	if( !isServer )  {
+		/* This is the client side of an SSL connection.
+		 * Now check the name field in the cert against the desired hostname.
+		 * NB: This is our only defense against Man-In-The-Middle (MITM) attacks!
+		 */
+		char* hostname = NULL;
+		hostname = SSL_RevealURL(fd); /* really is a hostname, not a URL */
+		if (hostname && hostname[0]) {
+			rv = CERT_VerifyCertName(peerCert, hostname);
+			PORT_Free(hostname);
+		} else {
+			rv = SECFailure;
+		}
+	}
 
 finish:
-    if (peerCert!=NULL) CERT_DestroyCertificate(peerCert);
-    return rv;
+	if (peerCert!=NULL) CERT_DestroyCertificate(peerCert);
+	return rv;
 }

@@ -6,15 +6,15 @@ package org.mozilla.jss.ssl;
 
 class SocketProxy extends org.mozilla.jss.util.NativeProxy {
 
-    public SocketProxy(byte[] pointer) {
-        super(pointer);
-    }
+public SocketProxy(byte[] pointer) {
+	super(pointer);
+}
 
-    @Override
-    protected native void releaseNativeResources();
+@Override
+protected native void releaseNativeResources();
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
+@Override
+protected void finalize() throws Throwable {
+	super.finalize();
+}
 }
