@@ -61,7 +61,7 @@ public final class DSAPrivateKey extends PKCS8Key
      * Make a DSA private key out of a private key and three parameters.
      */
     public DSAPrivateKey(BigInteger x, BigInteger p,
-             BigInteger q, BigInteger g)
+            BigInteger q, BigInteger g)
             throws InvalidKeyException {
         this.x = x;
         algid = new AlgIdDSA(p, q, g);
@@ -72,7 +72,7 @@ public final class DSAPrivateKey extends PKCS8Key
             encode();
         } catch (IOException e) {
             throw new InvalidKeyException("could not DER encode x: " +
-                      e.getMessage());
+                    e.getMessage());
         }
     }
 

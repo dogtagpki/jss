@@ -94,8 +94,7 @@ public class DSAParameters extends AlgorithmParametersSpi {
     protected <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> paramSpec)
             throws InvalidParameterSpecException {
         try {
-            Class<?> dsaParamSpec = Class.forName
-                    ("java.security.spec.DSAParameterSpec");
+            Class<?> dsaParamSpec = Class.forName("java.security.spec.DSAParameterSpec");
             if (dsaParamSpec.isAssignableFrom(paramSpec)) {
                 return (T) new DSAParameterSpec(this.p, this.q, this.g);
             } else {

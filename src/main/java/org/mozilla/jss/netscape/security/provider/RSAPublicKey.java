@@ -52,8 +52,7 @@ public final class RSAPublicKey extends X509Key implements Serializable {
      */
     private static final long serialVersionUID = 7764823589128565374L;
 
-    private static final ObjectIdentifier ALGORITHM_OID =
-            AlgorithmId.RSAEncryption_oid;
+    private static final ObjectIdentifier ALGORITHM_OID = AlgorithmId.RSAEncryption_oid;
 
     private BigInt modulus;
     private BigInt publicExponent;
@@ -77,11 +76,11 @@ public final class RSAPublicKey extends X509Key implements Serializable {
             out.putInteger(modulus);
             out.putInteger(publicExponent);
             key = (new DerValue(DerValue.tag_Sequence,
-                            out.toByteArray())).toByteArray();
+                    out.toByteArray())).toByteArray();
             encode();
         } catch (IOException ex) {
             throw new InvalidKeyException("could not DER encode : " +
-                                      ex.getMessage());
+                    ex.getMessage());
         }
     }
 
@@ -136,7 +135,7 @@ public final class RSAPublicKey extends X509Key implements Serializable {
             DerValue val = new DerValue(key);
             if (val.tag != DerValue.tag_Sequence) {
                 throw new InvalidKeyException("Invalid RSA public key format:" +
-                                            " must be a SEQUENCE");
+                        " must be a SEQUENCE");
             }
 
             DerInputStream in = val.data;
@@ -145,7 +144,7 @@ public final class RSAPublicKey extends X509Key implements Serializable {
             this.publicExponent = in.getInteger();
         } catch (IOException e) {
             throw new InvalidKeyException("Invalid RSA public key: " +
-                                        e.getMessage());
+                    e.getMessage());
         }
     }
 
