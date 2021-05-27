@@ -352,11 +352,11 @@ public class SSL {
      * Configure the certificate and private key for a server socket.
      *
      * @deprecated replaced with ConfigServerCert
-     * See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h
+     *             See also: SSL_ConfigSecureServer in /usr/include/nss3/ssl.h
      */
     @Deprecated
     public static native int ConfigSecureServer(SSLFDProxy fd, PK11Cert cert,
-        PK11PrivKey key, int kea);
+            PK11PrivKey key, int kea);
 
     /**
      * Configure the certificate and private key for a server socket. This
@@ -365,7 +365,7 @@ public class SSL {
      * See also: SSL_ConfigServerCert in /usr/include/nss3/ssl.h
      */
     public static native int ConfigServerCert(SSLFDProxy fd, PK11Cert cert,
-        PK11PrivKey key);
+            PK11PrivKey key);
 
     /**
      * Configure the server's session cache.
@@ -373,7 +373,7 @@ public class SSL {
      * See also: SSL_ConfigServerSessionIDCache in /usr/include/nss3/ssl.h
      */
     public synchronized static native int ConfigServerSessionIDCache(int maxCacheEntries,
-        long timeout, long ssl3_timeout, String directory);
+            long timeout, long ssl3_timeout, String directory);
 
     /**
      * Invalidate the SSL session associated with this socket.
@@ -414,7 +414,7 @@ public class SSL {
      * Use client authentication; set client certificate from SSLFDProxy.
      *
      * See also: SSL_GetClientAuthDataHook in /usr/include/nss3/ssl.h,
-     *           org.mozilla.jss.nss.SSLFDProxy.SetClientCert(...)
+     * org.mozilla.jss.nss.SSLFDProxy.SetClientCert(...)
      */
     public static native int AttachClientCertCallback(SSLFDProxy fd);
 
@@ -422,7 +422,7 @@ public class SSL {
      * Enable recording of alerts in the SSLFDProxy object.
      *
      * See also: SSL_AlertReceivedCallback in /usr/include/nss3/ssl.h,
-     *           SSL_AlertSentCallback in /usr/include/nss3/ssl.h
+     * SSL_AlertSentCallback in /usr/include/nss3/ssl.h
      */
     public static int EnableAlertLogging(SSLFDProxy fd) {
         fd.inboundAlerts = new ArrayList<SSLAlertEvent>();
@@ -441,7 +441,7 @@ public class SSL {
      * CryptoManager OCSP status).
      *
      * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
-     *           JSSL_DefaultCertAuthCallback in jss/ssl/callbacks.c
+     * JSSL_DefaultCertAuthCallback in jss/ssl/callbacks.c
      */
     public static native int ConfigJSSDefaultCertAuthCallback(SSLFDProxy fd);
 
@@ -455,7 +455,7 @@ public class SSL {
      * the cert is valid), and resume handshaking.
      *
      * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
-     *           JSSL_SSLFDAsyncCertAuthCallback in jss/nss/SSLFDProxy.c
+     * JSSL_SSLFDAsyncCertAuthCallback in jss/nss/SSLFDProxy.c
      */
     public static native int ConfigAsyncTrustManagerCertAuthCallback(SSLFDProxy fd);
 
@@ -467,7 +467,7 @@ public class SSL {
      * the connection, because it doesn't support the superior async method.
      *
      * See also: SSL_AuthCertificateHook in /usr/include/nss3/ssl.h and
-     *           JSSL_SSLFDSyncCertAuthCallback in jss/nss/SSLFDProxy.c
+     * JSSL_SSLFDSyncCertAuthCallback in jss/nss/SSLFDProxy.c
      */
     public static native int ConfigSyncTrustManagerCertAuthCallback(SSLFDProxy fd);
 
@@ -481,7 +481,7 @@ public class SSL {
      * Note: This does NOT work for server-side connections.
      *
      * See also: SSL_BadCertHook in /usr/include/nss3/ssl.h and
-     *           JSSL_SSLFDAsyncBadCertCallback in jss/nss/SSLFDProxy.c
+     * JSSL_SSLFDAsyncBadCertCallback in jss/nss/SSLFDProxy.c
      */
     public static native int ConfigAsyncBadCertCallback(SSLFDProxy fd);
 
@@ -493,7 +493,7 @@ public class SSL {
      * As a result, NSS has no value for the hostname and validation will fail.
      *
      * See also: SSL_BadCertHook in /usr/include/nss3/ssl.h and
-     *           JSSL_SSLFDSyncBadCertCallback in jss/nss/SSLFDProxy.c
+     * JSSL_SSLFDSyncBadCertCallback in jss/nss/SSLFDProxy.c
      */
     public static native int ConfigSyncBadCertCallback(SSLFDProxy fd);
 
@@ -521,20 +521,36 @@ public class SSL {
 
     /* Internal methods for querying constants. */
     private static native int getSSLRequestCertificate();
+
     private static native int getSSLRequireCertificate();
+
     private static native int getSSLSECSuccess();
+
     private static native int getSSLSECFailure();
+
     private static native int getSSLSECWouldBlock();
+
     private static native int getSSLEnablePostHandshakeAuth();
+
     private static native int getSSLEnableRenegotiation();
+
     private static native int getSSLRequireSafeNegotiation();
+
     private static native int getSSLRenegotiateNever();
+
     private static native int getSSLRenegotiateUnrestricted();
+
     private static native int getSSLRenegotiateRequiresXtn();
+
     private static native int getSSLRenegotiateTransitional();
+
     private static native int getSSLEnableFallbackSCSV();
+
     private static native int getSSLRequireNever();
+
     private static native int getSSLRequireAlways();
+
     private static native int getSSLRequireFirstHandshake();
+
     private static native int getSSLRequireNoError();
 }

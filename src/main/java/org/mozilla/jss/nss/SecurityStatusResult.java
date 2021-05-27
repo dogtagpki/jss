@@ -29,8 +29,7 @@ public class SecurityStatusResult {
     public byte[] subject;
 
     public SecurityStatusResult(int _on, byte[] _cipher, int _keySize,
-        int _secretKeySize, byte[] _issuer, byte[] _subject)
-    {
+            int _secretKeySize, byte[] _issuer, byte[] _subject) {
         this.on = _on;
         this.cipher = _cipher;
         this.keySize = _keySize;
@@ -60,4 +59,3 @@ public class SecurityStatusResult {
         return result.toString();
     }
 }
-
