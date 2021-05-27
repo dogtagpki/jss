@@ -12,25 +12,22 @@ import java.io.OutputStream;
 import java.io.IOException;
 
 /**
- * A TBSCertificationRequest (to-be-signed CertificationRequest), 
+ * A TBSCertificationRequest (to-be-signed CertificationRequest),
  * the actual information in
  * a CertificationRequest apart from the signature.
  */
 public class CertificationRequestInfo implements ASN1Value {
 
-
     private INTEGER version = new INTEGER(0);
     private Name subject;
     private SubjectPublicKeyInfo subjectPublicKeyInfo;
-	private SET attributes;
+    private SET attributes;
 
     /**
      * Creates a CertificationRequestInfo with the required fields.
      */
     public CertificationRequestInfo(INTEGER version, Name subject,
-									SubjectPublicKeyInfo
-									subjectPublicKeyInfo, SET attributes)
-    {
+            SubjectPublicKeyInfo subjectPublicKeyInfo, SET attributes) {
         setVersion(version);
         setSubject(subject);
         setSubjectPublicKeyInfo(subjectPublicKeyInfo);
@@ -41,6 +38,7 @@ public class CertificationRequestInfo implements ASN1Value {
         verifyNotNull(version);
         this.version = version;
     }
+
     public INTEGER getVersion() {
         return version;
     }
@@ -49,29 +47,30 @@ public class CertificationRequestInfo implements ASN1Value {
         verifyNotNull(subject);
         this.subject = subject;
     }
+
     public Name getSubject() {
         return subject;
     }
 
     public void setSubjectPublicKeyInfo(
-                    SubjectPublicKeyInfo subjectPublicKeyInfo)
-    {
+            SubjectPublicKeyInfo subjectPublicKeyInfo) {
         verifyNotNull(subjectPublicKeyInfo);
         this.subjectPublicKeyInfo = subjectPublicKeyInfo;
     }
+
     /**
      * Extracts the SubjectPublicKeyInfo from the given public key and
      * stores it in the CertificationRequestInfo.
      *
      * @exception InvalidBERException If an error occurs decoding the
-     *      the information extracted from the public key.
+     *                the information extracted from the public key.
      */
-    public void setSubjectPublicKeyInfo( PublicKey pubk ) 
-        throws InvalidBERException, IOException
-    {
+    public void setSubjectPublicKeyInfo(PublicKey pubk)
+            throws InvalidBERException, IOException {
         verifyNotNull(pubk);
-        setSubjectPublicKeyInfo( new SubjectPublicKeyInfo(pubk) );
+        setSubjectPublicKeyInfo(new SubjectPublicKeyInfo(pubk));
     }
+
     public SubjectPublicKeyInfo getSubjectPublicKeyInfo() {
         return subjectPublicKeyInfo;
     }
@@ -80,17 +79,19 @@ public class CertificationRequestInfo implements ASN1Value {
         //verifyNotNull(attributes);
         this.attributes = attributes;
     }
+
     public SET getAttributes() {
         return attributes;
     }
 
     private void verifyNotNull(Object obj) {
-        if( obj == null ) {
+        if (obj == null) {
             throw new NullPointerException();
         }
     }
 
     static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -103,11 +104,10 @@ public class CertificationRequestInfo implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
-        seq.addElement(version );
+        seq.addElement(version);
         seq.addElement(subject);
         seq.addElement(subjectPublicKeyInfo);
         seq.addElement(new Tag(0), attributes);
@@ -116,14 +116,15 @@ public class CertificationRequestInfo implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
 
     public void print(PrintStream ps) throws IOException, InvalidBERException {
         ps.println("CertificationRequestInfo:");
-        ps.println("Version: "+version);
-        ps.println("Subject: "+subject.getRFC1485());
+        ps.println("Version: " + version);
+        ps.println("Subject: " + subject.getRFC1485());
     }
 
     /**
@@ -149,31 +150,27 @@ public class CertificationRequestInfo implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
-          try {
-            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
+                throws InvalidBERException, IOException {
+            try {
+                SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            
-            CertificationRequestInfo cinfo = new CertificationRequestInfo(
-                    (INTEGER) seq.elementAt(0),     // version
-                    (Name) seq.elementAt(1),        // subject
-                    (SubjectPublicKeyInfo) seq.elementAt(2),
-					(SET) seq.elementAt(3)
-                );
+                CertificationRequestInfo cinfo = new CertificationRequestInfo(
+                        (INTEGER) seq.elementAt(0), // version
+                        (Name) seq.elementAt(1), // subject
+                        (SubjectPublicKeyInfo) seq.elementAt(2),
+                        (SET) seq.elementAt(3));
 
-            return cinfo;
+                return cinfo;
 
-          } catch( Exception e ) {
+            } catch (Exception e) {
                 throw new InvalidBERException(e.getMessage());
-          }
+            }
         }
     }
 }

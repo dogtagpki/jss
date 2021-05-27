@@ -49,9 +49,8 @@ public class CertificationRequest implements ASN1Value {
     SEQUENCE sequence;
 
     CertificationRequest(CertificationRequestInfo info,
-						 //byte[] infoEncoding,
-            AlgorithmIdentifier algId, byte[] signature) throws IOException
-    {
+            //byte[] infoEncoding,
+            AlgorithmIdentifier algId, byte[] signature) throws IOException {
         this.info = info;
         //this.infoEncoding = infoEncoding;
         this.algId = algId;
@@ -59,52 +58,52 @@ public class CertificationRequest implements ASN1Value {
 
         // bundle everything into a SEQUENCE
         sequence = new SEQUENCE();
-        sequence.addElement( info );
-        sequence.addElement( algId );
-        sequence.addElement( new BIT_STRING( signature, 0 ) );
+        sequence.addElement(info);
+        sequence.addElement(algId);
+        sequence.addElement(new BIT_STRING(signature, 0));
     }
 
     /**
      * Creates and signs an X.509 CertificationRequest.
+     * 
      * @param info A CertificationRequestInfo (TBSCertificationRequest),
-     *      which specifies
-     *      the actual information of the CertificationRequest.
+     *            which specifies
+     *            the actual information of the CertificationRequest.
      * @param privKey The private key with which to sign the certificate.
      * @param signingAlg The algorithm to use to sign the CertificationRequest.
-     *      It must match the algorithm specified in the CertificationRequestInfo.
+     *            It must match the algorithm specified in the CertificationRequestInfo.
      * @exception IOException If an error occurred while encoding the
-     *      CertificationRequest.
+     *                CertificationRequest.
      * @exception NotInitializedException Because this
-     *      operation involves cryptography (signing), CryptoManager must
-     *      be initialized before calling it.
+     *                operation involves cryptography (signing), CryptoManager must
+     *                be initialized before calling it.
      * @exception TokenException If an error occurs on a PKCS #11 token.
      * @exception NoSuchAlgorithmException If the OID for the signing algorithm
-     *      cannot be located.
+     *                cannot be located.
      * @exception CertificateException If the signing algorithm specified
-     *      as a parameter does not match the one in the CertificationRequest info.
+     *                as a parameter does not match the one in the CertificationRequest info.
      * @exception InvalidKeyException If the key does not match the signing
-     *      algorithm.
+     *                algorithm.
      * @exception SignatureException If an error occurs while signing the
-     *      CertificationRequest.
+     *                CertificationRequest.
      */
     public CertificationRequest(CertificationRequestInfo info, java.security.PrivateKey privKey,
-                SignatureAlgorithm signingAlg)
-        throws IOException, NotInitializedException,
+            SignatureAlgorithm signingAlg)
+            throws IOException, NotInitializedException,
             TokenException, NoSuchAlgorithmException, CertificateException,
-            InvalidKeyException, SignatureException
-    {
+            InvalidKeyException, SignatureException {
         // make sure key is a Ninja private key
-        if( !(privKey instanceof PrivateKey) ) {
-            throw new InvalidKeyException("Private Key is does not belong to"+
-                " this provider");
+        if (!(privKey instanceof PrivateKey)) {
+            throw new InvalidKeyException("Private Key is does not belong to" +
+                    " this provider");
         }
-        PrivateKey priv = (PrivateKey)privKey;
+        PrivateKey priv = (PrivateKey) privKey;
 
         // create algId
-        if(signingAlg.getSigningAlg() == SignatureAlgorithm.RSASignature) {
-            algId = new AlgorithmIdentifier( signingAlg.toOID(), null );
+        if (signingAlg.getSigningAlg() == SignatureAlgorithm.RSASignature) {
+            algId = new AlgorithmIdentifier(signingAlg.toOID(), null);
         } else {
-            algId = new AlgorithmIdentifier( signingAlg.toOID() );
+            algId = new AlgorithmIdentifier(signingAlg.toOID());
         }
 
         // encode the cert info
@@ -121,21 +120,20 @@ public class CertificationRequest implements ASN1Value {
 
         // bundle everything into a SEQUENCE
         sequence = new SEQUENCE();
-        sequence.addElement( info );
-        sequence.addElement( algId );
-        sequence.addElement( new BIT_STRING( signature, 0 ) );
+        sequence.addElement(info);
+        sequence.addElement(algId);
+        sequence.addElement(new BIT_STRING(signature, 0));
     }
 
     /**
-     * Verifies the signature on this CertificationRequest.  Does not indicate
+     * Verifies the signature on this CertificationRequest. Does not indicate
      * that the CertificationRequest is valid at any specific time.
      */
     public void verify()
-        throws InvalidKeyException, NotInitializedException,
-        NoSuchAlgorithmException, CertificateException, TokenException,
-        SignatureException, InvalidKeyFormatException
-    {
-        verify( info.getSubjectPublicKeyInfo().toPublicKey() );
+            throws InvalidKeyException, NotInitializedException,
+            NoSuchAlgorithmException, CertificateException, TokenException,
+            SignatureException, InvalidKeyFormatException {
+        verify(info.getSubjectPublicKeyInfo().toPublicKey());
     }
 
     /**
@@ -143,10 +141,9 @@ public class CertificationRequest implements ASN1Value {
      * Does not indicate the CertificationRequest is valid at any specific time.
      */
     public void verify(PublicKey key)
-        throws InvalidKeyException, NotInitializedException,
-        NoSuchAlgorithmException, CertificateException, TokenException,
-        SignatureException
-    {
+            throws InvalidKeyException, NotInitializedException,
+            NoSuchAlgorithmException, CertificateException, TokenException,
+            SignatureException {
         CryptoManager cm = CryptoManager.getInstance();
         verify(key, cm.getInternalCryptoToken());
     }
@@ -157,19 +154,17 @@ public class CertificationRequest implements ASN1Value {
      * any specific time.
      */
     public void verify(PublicKey key, CryptoToken token)
-        throws NoSuchAlgorithmException, CertificateException, TokenException,
-            SignatureException, InvalidKeyException
-    {
+            throws NoSuchAlgorithmException, CertificateException, TokenException,
+            SignatureException, InvalidKeyException {
         Signature sig = token.getSignatureContext(
-            SignatureAlgorithm.fromOID( algId.getOID() ) );
+                SignatureAlgorithm.fromOID(algId.getOID()));
 
         sig.initVerify(key);
         sig.update(infoEncoding);
-        if( ! sig.verify(signature) ) {
+        if (!sig.verify(signature)) {
             throw new CertificateException("Signature is invalid");
         }
     }
-
 
     /**
      * Returns the information (TBSCertificationRequest) contained in this CertificationRequest.
@@ -179,6 +174,7 @@ public class CertificationRequest implements ASN1Value {
     }
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -191,12 +187,12 @@ public class CertificationRequest implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -207,10 +203,10 @@ public class CertificationRequest implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( CertificationRequestInfo.getTemplate() );
+            seqt.addElement(CertificationRequestInfo.getTemplate());
             //seqt.addElement( new ANY.Template() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( BIT_STRING.getTemplate() );
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(BIT_STRING.getTemplate());
         }
 
         @Override
@@ -220,110 +216,107 @@ public class CertificationRequest implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             //ANY infoAny = (ANY)seq.elementAt(0);
             //byte[] infoEncoding = infoAny.getEncoded();
             /*CertificationRequestInfo info = (CertificationRequestInfo) infoAny.decodeWith(
                                         CertificationRequestInfo.getTemplate() );
-										*/
+            								*/
             CertificationRequestInfo info = (CertificationRequestInfo) seq.elementAt(0);
             // although signature is a bit string, all algorithms we use
             // will produce an octet string.
             BIT_STRING bs = (BIT_STRING) seq.elementAt(2);
-            if( bs.getPadCount() != 0 ) {
-                throw new InvalidBERException("signature does not fall into"+
-                    " an integral number of bytes");
+            if (bs.getPadCount() != 0) {
+                throw new InvalidBERException("signature does not fall into" +
+                        " an integral number of bytes");
             }
             byte[] signature = bs.getBits();
 
-            return new CertificationRequest( info,
-											//infoEncoding,
-                                    (AlgorithmIdentifier) seq.elementAt(1),
-                                    signature
-                        );
+            return new CertificationRequest(info,
+                    //infoEncoding,
+                    (AlgorithmIdentifier) seq.elementAt(1),
+                    signature);
         }
     }
 
     public static void main(String argv[]) {
 
-      try {
+        try {
 
-        if(argv.length > 2 || argv.length < 1) {
-            System.out.println("Usage: CertificationRequest <dbdir> [<certfile>]");
-            System.exit(0);
+            if (argv.length > 2 || argv.length < 1) {
+                System.out.println("Usage: CertificationRequest <dbdir> [<certfile>]");
+                System.exit(0);
+            }
+
+            CryptoManager.initialize(argv[0]);
+            CryptoManager cm = CryptoManager.getInstance();
+
+            CertificationRequest cert;
+
+            // read in a cert
+            FileInputStream fis = new FileInputStream(argv[1]);
+            try (BufferedInputStream bis = new BufferedInputStream(fis)) {
+                cert = (CertificationRequest) CertificationRequest.getTemplate().decode(bis);
+            }
+
+            CertificationRequestInfo info = cert.getInfo();
+
+            info.print(System.out);
+
+            //X509CertificationRequest hardcore = cm.findCertByNickname("Hardcore");
+            //PublicKey key = hardcore.getPublicKey();
+
+            cert.verify();
+            System.out.println("verified");
+
+            FileOutputStream fos = new FileOutputStream("certinfo.der");
+            info.encode(fos);
+            fos.close();
+
+            // make a new public key
+            CryptoToken token = cm.getInternalKeyStorageToken();
+            KeyPairGenerator kpg = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
+            kpg.initialize(512);
+            System.out.println("Generating a new key pair...");
+            KeyPair kp = kpg.genKeyPair();
+            System.out.println("Generated key pair");
+
+            // set the CertificationRequest's public key
+            info.setSubjectPublicKeyInfo(kp.getPublic());
+
+            // make new Name
+            Name name = new Name();
+            name.addCommonName("asldkj");
+            name.addCountryName("US");
+            name.addOrganizationName("Some Corp");
+            name.addOrganizationalUnitName("Some Org Unit");
+            name.addLocalityName("Silicon Valley");
+            name.addStateOrProvinceName("California");
+            info.setSubject(name);
+
+            System.out.println("About to create a new cert request...");
+            // create a new cert requestfrom this certReqinfo
+            CertificationRequest genCert = new CertificationRequest(info, kp.getPrivate(),
+                    SignatureAlgorithm.RSASignatureWithMD5Digest);
+            System.out.println("Created new cert request");
+
+            genCert.verify();
+            System.out.println("Cert verifies!");
+
+            fos = new FileOutputStream("gencert.der");
+            genCert.encode(fos);
+            fos.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        CryptoManager.initialize( argv[0] );
-        CryptoManager cm = CryptoManager.getInstance();
-
-        CertificationRequest cert;
-
-        // read in a cert
-        FileInputStream fis = new FileInputStream(argv[1]);
-        try (BufferedInputStream bis = new BufferedInputStream(fis)) {
-            cert = (CertificationRequest) CertificationRequest.getTemplate().decode(bis);
-        }
-
-        CertificationRequestInfo info = cert.getInfo();
-
-        info.print(System.out);
-
-        //X509CertificationRequest hardcore = cm.findCertByNickname("Hardcore");
-        //PublicKey key = hardcore.getPublicKey();
-
-        cert.verify();
-        System.out.println("verified");
-
-        FileOutputStream fos = new FileOutputStream("certinfo.der");
-        info.encode(fos);
-        fos.close();
-
-        // make a new public key
-        CryptoToken token = cm.getInternalKeyStorageToken();
-        KeyPairGenerator kpg = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
-        kpg.initialize(512);
-        System.out.println("Generating a new key pair...");
-        KeyPair kp = kpg.genKeyPair();
-        System.out.println("Generated key pair");
-
-        // set the CertificationRequest's public key
-        info.setSubjectPublicKeyInfo(kp.getPublic());
-
-        // make new Name
-        Name name = new Name();
-        name.addCommonName("asldkj");
-        name.addCountryName("US");
-        name.addOrganizationName("Some Corp");
-        name.addOrganizationalUnitName("Some Org Unit");
-        name.addLocalityName("Silicon Valley");
-        name.addStateOrProvinceName("California");
-        info.setSubject(name);
-
-        System.out.println("About to create a new cert request...");
-        // create a new cert requestfrom this certReqinfo
-        CertificationRequest genCert = new CertificationRequest(info, kp.getPrivate(),
-                SignatureAlgorithm.RSASignatureWithMD5Digest);
-        System.out.println("Created new cert request");
-
-        genCert.verify();
-        System.out.println("Cert verifies!");
-
-        fos = new FileOutputStream("gencert.der");
-        genCert.encode(fos);
-        fos.close();
-
-      } catch( Exception e ) {
-        e.printStackTrace();
-      }
     }
 }
