@@ -12,6 +12,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Install uncrustify
+        run: sudo apt install -y uncrustify
+      - name: Check codestyle with uncrustify
+        run: pwd
+        working-directory: jss
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -31,4 +36,6 @@ jobs:
         run: >
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.c.file.suffixes= -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=-
+
+
 
