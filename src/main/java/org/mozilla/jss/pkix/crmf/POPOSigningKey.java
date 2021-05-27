@@ -20,6 +20,7 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
 /**
  * CRMF <i>POPOSigningKey</i>:
+ * 
  * <pre>
  * POPOSigningKey ::= SEQUENCE {
  *      poposkInput         [0] POPOSigningKeyInput OPTIONAL,
@@ -66,14 +67,15 @@ public class POPOSigningKey implements ASN1Value {
 
     /**
      * Creates a POPOSigningKey.
+     * 
      * @param poposkInput May be null.
      */
     public POPOSigningKey(ANY poposkInput,
-                AlgorithmIdentifier algorithmIdentifier, BIT_STRING signature) {
+            AlgorithmIdentifier algorithmIdentifier, BIT_STRING signature) {
 
-        if(algorithmIdentifier==null || signature==null) {
-            throw new IllegalArgumentException("parameter to POPOSigningKey"+
-                " constructor is null");
+        if (algorithmIdentifier == null || signature == null) {
+            throw new IllegalArgumentException("parameter to POPOSigningKey" +
+                    " constructor is null");
         }
 
         this.poposkInput = poposkInput;
@@ -81,11 +83,10 @@ public class POPOSigningKey implements ASN1Value {
         this.signature = signature;
 
         sequence = new SEQUENCE();
-        sequence.addElement( Tag.get(0), poposkInput );
-        sequence.addElement( algorithmIdentifier );
-        sequence.addElement( signature );
+        sequence.addElement(Tag.get(0), poposkInput);
+        sequence.addElement(algorithmIdentifier);
+        sequence.addElement(signature);
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     // encoding/decoding
@@ -110,6 +111,7 @@ public class POPOSigningKey implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -123,10 +125,10 @@ public class POPOSigningKey implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addOptionalElement( new EXPLICIT.Template(
-                    Tag.get(0), ANY.getTemplate()) );
-            seqt.addElement( AlgorithmIdentifier.getTemplate());
-            seqt.addElement( BIT_STRING.getTemplate() );
+            seqt.addOptionalElement(new EXPLICIT.Template(
+                    Tag.get(0), ANY.getTemplate()));
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(BIT_STRING.getTemplate());
         }
 
         @Override
@@ -146,9 +148,9 @@ public class POPOSigningKey implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new POPOSigningKey(
-                        (ANY) seq.elementAt(0),
-                        (AlgorithmIdentifier) seq.elementAt(1),
-                        (BIT_STRING)          seq.elementAt(2) );
+                    (ANY) seq.elementAt(0),
+                    (AlgorithmIdentifier) seq.elementAt(1),
+                    (BIT_STRING) seq.elementAt(2));
         }
     }
 }

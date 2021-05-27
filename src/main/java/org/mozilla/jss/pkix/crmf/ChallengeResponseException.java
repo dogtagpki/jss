@@ -9,7 +9,7 @@ package org.mozilla.jss.pkix.crmf;
 public class ChallengeResponseException extends java.lang.Exception {
 
     private static final long serialVersionUID = 1L;
-    private ChallengeResponseException child=null;
+    private ChallengeResponseException child = null;
 
     public ChallengeResponseException(String mesg) {
         super(mesg);
@@ -26,8 +26,8 @@ public class ChallengeResponseException extends java.lang.Exception {
      */
     @Override
     public String toString() {
-        if(child != null) {
-            return (super.toString()+ " >> " + child.toStringNested());
+        if (child != null) {
+            return (super.toString() + " >> " + child.toStringNested());
         } else {
             return super.toString();
         }
@@ -38,8 +38,8 @@ public class ChallengeResponseException extends java.lang.Exception {
      * nested exceptions.
      */
     public String toStringNested() {
-        if(child != null) {
-            return ( getMessage() + " >> " + child.toStringNested());
+        if (child != null) {
+            return (getMessage() + " >> " + child.toStringNested());
         } else {
             return getMessage();
         }

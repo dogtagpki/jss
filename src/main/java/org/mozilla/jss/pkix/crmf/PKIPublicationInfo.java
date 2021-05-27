@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CRMF <i>PKIPublicationInfo</i>:
+ * 
  * <pre>
  * PKIPublicationInfo ::= SEQUENCE {
  *      action          INTEGER {
@@ -77,10 +78,10 @@ public class PKIPublicationInfo implements ASN1Value {
     }
 
     /**
-     * Returns the number of SinglePubInfos.  May be zero.
+     * Returns the number of SinglePubInfos. May be zero.
      */
     public int numPubInfos() {
-        if( pubInfos == null ) {
+        if (pubInfos == null) {
             return 0;
         } else {
             return pubInfos.size();
@@ -92,8 +93,7 @@ public class PKIPublicationInfo implements ASN1Value {
      * Should return DONT_CARE, X500, WEB, or LDAP.
      */
     public int getPubMethod(int index) {
-        return ((INTEGER)((SEQUENCE)pubInfos.elementAt(index)).
-                        elementAt(0)).intValue();
+        return ((INTEGER) ((SEQUENCE) pubInfos.elementAt(index)).elementAt(0)).intValue();
     }
 
     /**
@@ -101,7 +101,7 @@ public class PKIPublicationInfo implements ASN1Value {
      * May return null, since pubLocation is an optional field.
      */
     public ANY getPubLocation(int index) {
-        return (ANY) ((SEQUENCE)pubInfos.elementAt(index)).elementAt(1);
+        return (ANY) ((SEQUENCE) pubInfos.elementAt(index)).elementAt(1);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -110,6 +110,7 @@ public class PKIPublicationInfo implements ASN1Value {
 
     /**
      * Creates a new PKIPublicationInfo.
+     * 
      * @param action DONT_PUBLISH or PLEASE_PUBLISH.
      * @param pubInfos A SEQUENCE of SinglePubInfo, may be null.
      */
@@ -139,8 +140,8 @@ public class PKIPublicationInfo implements ASN1Value {
             throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
-        seq.addElement( new INTEGER(action) );
-        seq.addElement( pubInfos );
+        seq.addElement(new INTEGER(action));
+        seq.addElement(pubInfos);
 
         seq.encode(implicitTag, ostream);
     }
@@ -160,13 +161,13 @@ public class PKIPublicationInfo implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
 
             SEQUENCE.Template pubInfot = new SEQUENCE.Template();
             pubInfot.addElement(INTEGER.getTemplate());
             pubInfot.addOptionalElement(ANY.getTemplate());
 
-            seqt.addOptionalElement( new SEQUENCE.OF_Template(pubInfot) );
+            seqt.addOptionalElement(new SEQUENCE.OF_Template(pubInfot));
         }
 
         @Override
@@ -186,8 +187,8 @@ public class PKIPublicationInfo implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new PKIPublicationInfo(
-                            ((INTEGER)seq.elementAt(0)).intValue(),
-                            (SEQUENCE) seq.elementAt(1) );
+                    ((INTEGER) seq.elementAt(0)).intValue(),
+                    (SEQUENCE) seq.elementAt(1));
         }
     }
 }

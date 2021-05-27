@@ -85,13 +85,13 @@ public class EncryptedValue implements ASN1Value {
      * @param valueHint May be null.
      * @param encValue May <b>not</b> be null.
      */
-    public EncryptedValue(  AlgorithmIdentifier intendedAlg,
-                            AlgorithmIdentifier symmAlg,
-                            BIT_STRING encSymmKey,
-                            AlgorithmIdentifier keyAlg,
-                            OCTET_STRING valueHint,
-                            BIT_STRING encValue ) {
-        if( encValue == null ) {
+    public EncryptedValue(AlgorithmIdentifier intendedAlg,
+            AlgorithmIdentifier symmAlg,
+            BIT_STRING encSymmKey,
+            AlgorithmIdentifier keyAlg,
+            OCTET_STRING valueHint,
+            BIT_STRING encValue) {
+        if (encValue == null) {
             throw new IllegalArgumentException("encValue is null");
         }
 
@@ -103,20 +103,20 @@ public class EncryptedValue implements ASN1Value {
         this.encValue = encValue;
 
         sequence = new SEQUENCE();
-        if(intendedAlg!=null) {
-            sequence.addElement( new Tag(0), intendedAlg );
+        if (intendedAlg != null) {
+            sequence.addElement(new Tag(0), intendedAlg);
         }
-        if( symmAlg!=null ) {
-            sequence.addElement( new Tag(1), symmAlg );
+        if (symmAlg != null) {
+            sequence.addElement(new Tag(1), symmAlg);
         }
-        if( encSymmKey!=null ) {
-            sequence.addElement( new Tag(2), encSymmKey );
+        if (encSymmKey != null) {
+            sequence.addElement(new Tag(2), encSymmKey);
         }
-        if( keyAlg!=null ) {
-            sequence.addElement( new Tag(3), keyAlg );
+        if (keyAlg != null) {
+            sequence.addElement(new Tag(3), keyAlg);
         }
-        if( valueHint!=null ) {
-            sequence.addElement( new Tag(4), valueHint );
+        if (valueHint != null) {
+            sequence.addElement(new Tag(4), valueHint);
         }
         sequence.addElement(encValue);
     }
@@ -126,6 +126,7 @@ public class EncryptedValue implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -143,6 +144,7 @@ public class EncryptedValue implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -154,20 +156,20 @@ public class EncryptedValue implements ASN1Value {
 
         private SEQUENCE.Template seqt;
 
-        public Template()  {
+        public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addOptionalElement( new Tag(0),
-                        AlgorithmIdentifier.getTemplate());
-            seqt.addOptionalElement( new Tag(1),
-                        AlgorithmIdentifier.getTemplate());
-            seqt.addOptionalElement( new Tag(2),
-                        BIT_STRING.getTemplate());
-            seqt.addOptionalElement( new Tag(3),
-                        AlgorithmIdentifier.getTemplate());
-            seqt.addOptionalElement( new Tag(4),
-                        OCTET_STRING.getTemplate());
-            seqt.addElement( BIT_STRING.getTemplate() );
+            seqt.addOptionalElement(new Tag(0),
+                    AlgorithmIdentifier.getTemplate());
+            seqt.addOptionalElement(new Tag(1),
+                    AlgorithmIdentifier.getTemplate());
+            seqt.addOptionalElement(new Tag(2),
+                    BIT_STRING.getTemplate());
+            seqt.addOptionalElement(new Tag(3),
+                    AlgorithmIdentifier.getTemplate());
+            seqt.addOptionalElement(new Tag(4),
+                    OCTET_STRING.getTemplate());
+            seqt.addElement(BIT_STRING.getTemplate());
         }
 
         @Override
@@ -184,21 +186,21 @@ public class EncryptedValue implements ASN1Value {
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-          try {
+            try {
 
-            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
+                SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new EncryptedValue(
-                            (AlgorithmIdentifier) seq.elementAt(0),
-                            (AlgorithmIdentifier) seq.elementAt(1),
-                            (BIT_STRING) seq.elementAt(2),
-                            (AlgorithmIdentifier) seq.elementAt(3),
-                            (OCTET_STRING) seq.elementAt(4),
-                            (BIT_STRING) seq.elementAt(5) );
+                return new EncryptedValue(
+                        (AlgorithmIdentifier) seq.elementAt(0),
+                        (AlgorithmIdentifier) seq.elementAt(1),
+                        (BIT_STRING) seq.elementAt(2),
+                        (AlgorithmIdentifier) seq.elementAt(3),
+                        (OCTET_STRING) seq.elementAt(4),
+                        (BIT_STRING) seq.elementAt(5));
 
-          } catch(InvalidBERException e ) {
-            throw new InvalidBERException(e, "EncryptedValue");
-          }
+            } catch (InvalidBERException e) {
+                throw new InvalidBERException(e, "EncryptedValue");
+            }
         }
     }
 }

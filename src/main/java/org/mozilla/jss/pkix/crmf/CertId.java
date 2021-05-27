@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CRMF <i>CertId</i>.
+ * 
  * <pre>
  * CertId ::= SEQUENCE {
  *      issuer          GeneralName,
@@ -53,13 +54,13 @@ public class CertId implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Constructs a new <code>CertId</code> from its components.  Neither
+     * Constructs a new <code>CertId</code> from its components. Neither
      * component may be <code>null</code>.
      */
     public CertId(ANY issuer, INTEGER serialNumber) {
-        if( issuer == null || serialNumber == null ) {
+        if (issuer == null || serialNumber == null) {
             throw new IllegalArgumentException(
-                "parameter to CertId constructor is null");
+                    "parameter to CertId constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -74,6 +75,7 @@ public class CertId implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -91,6 +93,7 @@ public class CertId implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -103,9 +106,9 @@ public class CertId implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( ANY.getTemplate() );
-            seqt.addElement( INTEGER.getTemplate() );
-         }
+            seqt.addElement(ANY.getTemplate());
+            seqt.addElement(INTEGER.getTemplate());
+        }
 
         @Override
         public boolean tagMatch(Tag tag) {
@@ -123,8 +126,8 @@ public class CertId implements ASN1Value {
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new CertId(  (ANY)       seq.elementAt(0),
-                                (INTEGER)   seq.elementAt(1)   );
+            return new CertId((ANY) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1));
         }
     }
 }

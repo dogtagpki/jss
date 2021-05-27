@@ -16,8 +16,8 @@ import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.pkix.primitive.AVA;
 
 /**
- * A PKIX <i>CertRequest</i>.  Currently can only be decoded from its BER
- *  encoding. There are no methods for constructing one.
+ * A PKIX <i>CertRequest</i>. Currently can only be decoded from its BER
+ * encoding. There are no methods for constructing one.
  */
 public class CertRequest implements ASN1Value {
 
@@ -31,13 +31,12 @@ public class CertRequest implements ASN1Value {
      * @param controls May be null.
      */
     public CertRequest(INTEGER certReqId, CertTemplate certTemplate,
-            SEQUENCE controls)
-    {
-        if( certReqId == null ) {
+            SEQUENCE controls) {
+        if (certReqId == null) {
             throw new NullPointerException("certReqId is null");
         }
         this.certReqId = certReqId;
-        if( certTemplate == null ) {
+        if (certTemplate == null) {
             throw new NullPointerException("certTemplate is null");
         }
         this.certTemplate = certTemplate;
@@ -70,7 +69,7 @@ public class CertRequest implements ASN1Value {
      * The number may be zero.
      */
     public int numControls() {
-        if(controls == null) {
+        if (controls == null) {
             return 0;
         } else {
             return controls.size();
@@ -79,11 +78,11 @@ public class CertRequest implements ASN1Value {
     }
 
     /**
-     * Returns the <i>i</i>th Control.  <code>i</code> must be in the
+     * Returns the <i>i</i>th Control. <code>i</code> must be in the
      * range [0..numControls-1].
      */
     public AVA controlAt(int i) {
-        if( controls == null ) {
+        if (controls == null) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return (AVA) controls.elementAt(i);
@@ -96,6 +95,7 @@ public class CertRequest implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -107,7 +107,7 @@ public class CertRequest implements ASN1Value {
     @Override
     public void encode(OutputStream ostream) throws IOException {
         //Assert.notYetImplemented("CertRequest encoding");
-        encode(getTag(),ostream);
+        encode(getTag(), ostream);
     }
 
     /**
@@ -118,12 +118,12 @@ public class CertRequest implements ASN1Value {
         //Assert.notYetImplemented("CertRequest encoding");
         SEQUENCE sequence = new SEQUENCE();
 
-        sequence.addElement( certReqId );
-        sequence.addElement( certTemplate );
-		if (controls != null)
-			sequence.addElement( controls );
+        sequence.addElement(certReqId);
+        sequence.addElement(certTemplate);
+        if (controls != null)
+            sequence.addElement(controls);
 
-        sequence.encode(implicit,ostream);
+        sequence.encode(implicit, ostream);
     }
 
     /**
@@ -135,34 +135,31 @@ public class CertRequest implements ASN1Value {
 
         public Template() {
             seqTemplate = new SEQUENCE.Template();
-            seqTemplate.addElement( new INTEGER.Template() );
-            seqTemplate.addElement( new CertTemplate.Template() );
-            seqTemplate.addOptionalElement( new
-                SEQUENCE.OF_Template( new AVA.Template() ));
+            seqTemplate.addElement(new INTEGER.Template());
+            seqTemplate.addElement(new CertTemplate.Template());
+            seqTemplate.addOptionalElement(new SEQUENCE.OF_Template(new AVA.Template()));
         }
 
         @Override
-        public boolean tagMatch( Tag tag ) {
+        public boolean tagMatch(Tag tag) {
             return TAG.equals(tag);
         }
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
 
             SEQUENCE seq = (SEQUENCE) seqTemplate.decode(implicit, istream);
             return new CertRequest(
                     (INTEGER) seq.elementAt(0),
                     (CertTemplate) seq.elementAt(1),
-                    (SEQUENCE) seq.elementAt(2) );
+                    (SEQUENCE) seq.elementAt(2));
         }
     }
 }

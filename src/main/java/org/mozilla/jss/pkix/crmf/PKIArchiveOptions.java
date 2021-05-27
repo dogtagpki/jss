@@ -23,7 +23,8 @@ public class PKIArchiveOptions implements ASN1Value {
      * A type of PKIArchiveOption.
      */
     public static class Type {
-        private Type() { }
+        private Type() {
+        }
 
         static final Type ENCRYPTED_PRIV_KEY = new Type();
         static final Type KEY_GEN_PARAMETERS = new Type();
@@ -32,8 +33,7 @@ public class PKIArchiveOptions implements ASN1Value {
 
     public static final Type ENCRYPTED_PRIV_KEY = Type.ENCRYPTED_PRIV_KEY;
     public static final Type KEY_GEN_PARAMETERS = Type.KEY_GEN_PARAMETERS;
-    public static final Type ARCHIVE_REM_GEN_PRIV_KEY =
-        Type.ARCHIVE_REM_GEN_PRIV_KEY;
+    public static final Type ARCHIVE_REM_GEN_PRIV_KEY = Type.ARCHIVE_REM_GEN_PRIV_KEY;
 
     ///////////////////////////////////////////////////////////////////////
     // members and member access
@@ -42,7 +42,6 @@ public class PKIArchiveOptions implements ASN1Value {
     private OCTET_STRING keyGenParameters;
     private boolean archiveRemGenPrivKey;
     private Type type;
-
 
     /**
      * Returns the type of PKIArchiveOptions.
@@ -55,27 +54,27 @@ public class PKIArchiveOptions implements ASN1Value {
      * Returns the encrypted key. Should only be called if the type
      * is <code>ENCRYPTED_PRIV_KEY</code>.
      */
-    public EncryptedKey getEncryptedKey( ) {
-        assert(type == ENCRYPTED_PRIV_KEY);
+    public EncryptedKey getEncryptedKey() {
+        assert (type == ENCRYPTED_PRIV_KEY);
         return encryptedPrivKey;
     }
 
     /**
      * Returns the key gen parameters. Should only be called if the type
      * is <code>KEY_GEN_PARAMETERS</code>.
-    public byte[] getKeyGenParameters( ) {
-        assert(type == KEY_GEN_PARAMETERS);
-        return keyGenParameters;
-    }
-
-    /**
+     * public byte[] getKeyGenParameters( ) {
+     * assert(type == KEY_GEN_PARAMETERS);
+     * return keyGenParameters;
+     * }
+     * 
+     * /**
      * Returns the archiveRemGenPrivKey field, which indicates that
      * the sender wishes the receiver to generate and archive a key pair.
      * Should only be called if the type is
      * <code>ARCHIVE_REM_GEN_PRIV_KEY</code>.
      */
-    public boolean getArchiveRemGenPrivKey( ) {
-        assert( type == ARCHIVE_REM_GEN_PRIV_KEY );
+    public boolean getArchiveRemGenPrivKey() {
+        assert (type == ARCHIVE_REM_GEN_PRIV_KEY);
         return archiveRemGenPrivKey;
     }
 
@@ -83,19 +82,19 @@ public class PKIArchiveOptions implements ASN1Value {
     // constructors
     ///////////////////////////////////////////////////////////////////////
 
-    public PKIArchiveOptions( EncryptedKey eKey ) {
+    public PKIArchiveOptions(EncryptedKey eKey) {
         encryptedPrivKey = eKey;
         type = ENCRYPTED_PRIV_KEY;
         tag = new Tag(0);
     }
 
-    public PKIArchiveOptions( byte[] keyGenParameters ) {
+    public PKIArchiveOptions(byte[] keyGenParameters) {
         this.keyGenParameters = new OCTET_STRING(keyGenParameters);
         type = KEY_GEN_PARAMETERS;
         tag = new Tag(1);
     }
 
-    public PKIArchiveOptions( boolean archiveRemGenPrivKey ) {
+    public PKIArchiveOptions(boolean archiveRemGenPrivKey) {
         this.archiveRemGenPrivKey = archiveRemGenPrivKey;
         type = ARCHIVE_REM_GEN_PRIV_KEY;
         tag = new Tag(2);
@@ -105,6 +104,7 @@ public class PKIArchiveOptions implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private Tag tag; // set by the constructor depending on the type
+
     @Override
     public Tag getTag() {
         return tag;
@@ -115,29 +115,29 @@ public class PKIArchiveOptions implements ASN1Value {
      */
     @Override
     public void encode(OutputStream ostream) throws IOException {
-        encode( getTag(), ostream );
+        encode(getTag(), ostream);
     }
 
     /**
      * DER-encodes a PKIArchiveOptions.
+     * 
      * @param implicitTag <b>This parameter is ignored.</b> A CHOICE cannot
-     *      have an implicit tag.
+     *            have an implicit tag.
      */
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         // no implicit tags on a CHOICE
-        assert( implicitTag.equals(tag) );
+        assert (implicitTag.equals(tag));
 
-        if( type == ENCRYPTED_PRIV_KEY ) {
+        if (type == ENCRYPTED_PRIV_KEY) {
             // CHOICEs are always EXPLICITly tagged
-            EXPLICIT explicit = new EXPLICIT( new Tag(0), encryptedPrivKey );
+            EXPLICIT explicit = new EXPLICIT(new Tag(0), encryptedPrivKey);
             explicit.encode(tag, ostream);
-        } else if( type == KEY_GEN_PARAMETERS ) {
+        } else if (type == KEY_GEN_PARAMETERS) {
             keyGenParameters.encode(tag, ostream);
         } else {
-            assert( type == ARCHIVE_REM_GEN_PRIV_KEY );
+            assert (type == ARCHIVE_REM_GEN_PRIV_KEY);
             (new BOOLEAN(archiveRemGenPrivKey)).encode(tag, ostream);
         }
     }
@@ -159,12 +159,12 @@ public class PKIArchiveOptions implements ASN1Value {
             template = new CHOICE.Template();
 
             // CHOICEs are always EXPLICIT
-            template.addElement( new EXPLICIT.Template(
-                                        new Tag(0),
-                                        new EncryptedKey.Template() ));
+            template.addElement(new EXPLICIT.Template(
+                    new Tag(0),
+                    new EncryptedKey.Template()));
 
-            template.addElement( new Tag(1), new OCTET_STRING.Template() );
-            template.addElement( new Tag(2), new BOOLEAN.Template()      );
+            template.addElement(new Tag(1), new OCTET_STRING.Template());
+            template.addElement(new Tag(2), new BOOLEAN.Template());
         }
 
         /**
@@ -177,21 +177,21 @@ public class PKIArchiveOptions implements ASN1Value {
 
         /**
          * Decodes a PKIArchiveOptions.
+         * 
          * @return A PKIArchiveOptions object.
          */
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             CHOICE choice = (CHOICE) template.decode(istream);
 
-            if( choice.getTag().getNum() == 0 ) {
-                EncryptedKey ekey = (EncryptedKey) ((EXPLICIT)choice.getValue()).getContent();
+            if (choice.getTag().getNum() == 0) {
+                EncryptedKey ekey = (EncryptedKey) ((EXPLICIT) choice.getValue()).getContent();
                 return new PKIArchiveOptions(ekey);
-            } else if( choice.getTag().getNum() == 1 ) {
+            } else if (choice.getTag().getNum() == 1) {
                 OCTET_STRING kgp = (OCTET_STRING) choice.getValue();
                 return new PKIArchiveOptions(kgp.toByteArray());
-            } else if( choice.getTag().getNum() == 2 ) {
+            } else if (choice.getTag().getNum() == 2) {
                 BOOLEAN arckey = (BOOLEAN) choice.getValue();
                 return new PKIArchiveOptions(arckey.toBoolean());
             } else {
@@ -202,14 +202,14 @@ public class PKIArchiveOptions implements ASN1Value {
 
         /**
          * Decodes a PKIArchiveOptions.
+         * 
          * @param implicitTag <b>This parameter is ignored.</b> Since
-         *  PKIArchiveOptions is a CHOICE, it cannot have an implicit tag.
+         *            PKIArchiveOptions is a CHOICE, it cannot have an implicit tag.
          * @return A PKIArchiveOptions object.
          */
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(istream);
         }
     }

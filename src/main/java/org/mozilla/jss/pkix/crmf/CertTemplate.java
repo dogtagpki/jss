@@ -36,13 +36,14 @@ public class CertTemplate implements ASN1Value {
      * Creates an empty CertTemplate. Use the accessor methods to fill it
      * up with stuff.
      */
-    public CertTemplate() { }
+    public CertTemplate() {
+    }
 
     /**
      * Returns true if the version field is present.
      */
     public boolean hasVersion() {
-        return (version!=null);
+        return (version != null);
     }
 
     /**
@@ -63,7 +64,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the serialNumber field is present.
      */
     public boolean hasSerialNumber() {
-        return (serialNumber!=null);
+        return (serialNumber != null);
     }
 
     /**
@@ -84,7 +85,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the signingAlg field is present.
      */
     public boolean hasSigningAlg() {
-        return (signingAlg!=null);
+        return (signingAlg != null);
     }
 
     /**
@@ -105,7 +106,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the issuer field is present.
      */
     public boolean hasIssuer() {
-        return (issuer!=null);
+        return (issuer != null);
     }
 
     /**
@@ -126,7 +127,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the notBefore field is present.
      */
     public boolean hasNotBefore() {
-        return (notBefore!=null);
+        return (notBefore != null);
     }
 
     /**
@@ -147,7 +148,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the notAfter field is present.
      */
     public boolean hasNotAfter() {
-        return (notAfter!=null);
+        return (notAfter != null);
     }
 
     /**
@@ -168,7 +169,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the subject field is present.
      */
     public boolean hasSubject() {
-        return (subject!=null);
+        return (subject != null);
     }
 
     /**
@@ -189,7 +190,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the publicKey field is present.
      */
     public boolean hasPublicKey() {
-        return (publicKey!=null);
+        return (publicKey != null);
     }
 
     /**
@@ -210,7 +211,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the issuerUID field is present.
      */
     public boolean hasIssuerUID() {
-        return (issuerUID!=null);
+        return (issuerUID != null);
     }
 
     /**
@@ -231,7 +232,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the subjectUID field is present.
      */
     public boolean hasSubjectUID() {
-        return (subjectUID!=null);
+        return (subjectUID != null);
     }
 
     /**
@@ -252,7 +253,7 @@ public class CertTemplate implements ASN1Value {
      * Returns true if the extensions field is present.
      */
     public boolean hasExtensions() {
-        return (extensions!=null);
+        return (extensions != null);
     }
 
     /**
@@ -263,10 +264,10 @@ public class CertTemplate implements ASN1Value {
     }
 
     /**
-     * Returns the number of extensions present in the template.  May be zero.
+     * Returns the number of extensions present in the template. May be zero.
      */
     public int numExtensions() {
-        if(extensions == null) {
+        if (extensions == null) {
             return 0;
         } else {
             return extensions.size();
@@ -275,11 +276,12 @@ public class CertTemplate implements ASN1Value {
 
     /**
      * Returns the <i>i</i>th extension.
-     * @param idx The index of the extension to retrieve.  Must be in the
-     *      range [ 0, numExtensions()-1 ].
+     * 
+     * @param idx The index of the extension to retrieve. Must be in the
+     *            range [ 0, numExtensions()-1 ].
      */
     public Extension extensionAt(int idx) {
-        if(extensions == null) {
+        if (extensions == null) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return (Extension) extensions.elementAt(idx);
@@ -288,48 +290,49 @@ public class CertTemplate implements ASN1Value {
     public void print(PrintStream ps, int indentSpaces)
             throws InvalidBERException, IOException {
         StringBuffer indentBuf = new StringBuffer();
-        for(int i=0; i < indentSpaces; i++) {
+        for (int i = 0; i < indentSpaces; i++) {
             indentBuf.append(" ");
         }
         String indent = indentBuf.toString();
 
-        if(version!=null) {
-            ps.println("Version: "+version.toString());
+        if (version != null) {
+            ps.println("Version: " + version.toString());
         }
-        if(serialNumber!=null) {
-            ps.println("Serial Number: "+serialNumber.toString());
+        if (serialNumber != null) {
+            ps.println("Serial Number: " + serialNumber.toString());
         }
-        if(signingAlg!=null) {
-            ps.println("Signing Algorithm: "+signingAlg.getOID().toString());
+        if (signingAlg != null) {
+            ps.println("Signing Algorithm: " + signingAlg.getOID().toString());
         }
-        if(issuer!=null) {
-            ps.println("Issuer: "+issuer.getRFC1485());
+        if (issuer != null) {
+            ps.println("Issuer: " + issuer.getRFC1485());
         }
-        if(notBefore!=null) {
+        if (notBefore != null) {
             ps.println("Not Before: " + notBefore);
         }
-        if(notAfter!=null) {
+        if (notAfter != null) {
             ps.println("Not After: " + notAfter);
         }
-        if(subject!=null) {
+        if (subject != null) {
             ps.println("Subject: " + subject.getRFC1485());
         }
-        if(publicKey!=null) {
+        if (publicKey != null) {
             ps.println("publicKey is present");
         }
-        if(issuerUID != null ) {
+        if (issuerUID != null) {
             ps.println("issuerUID is present");
         }
-        if(subjectUID != null ) {
+        if (subjectUID != null) {
             ps.println("subjectUID is present");
         }
-        if(extensions != null ) {
-            ps.println("Extensions is present, with "+extensions.size()+
-                " elements");
+        if (extensions != null) {
+            ps.println("Extensions is present, with " + extensions.size() +
+                    " elements");
         }
     }
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -348,12 +351,12 @@ public class CertTemplate implements ASN1Value {
      * whether it falls before or after the cutoff date.
      */
     private static TimeBase dateToASN1(Date d) {
-        if(d==null) {
+        if (d == null) {
             return null;
         }
-        Calendar cal = Calendar.getInstance( TimeZone.getTimeZone("GMT") );
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.setTime(d);
-        if( cal.get(Calendar.YEAR) <= UTCTIME_CUTOFF_YEAR) {
+        if (cal.get(Calendar.YEAR) <= UTCTIME_CUTOFF_YEAR) {
             return new UTCTime(d);
         } else {
             return new GeneralizedTime(d);
@@ -367,24 +370,24 @@ public class CertTemplate implements ASN1Value {
         seq.addElement(Tag.get(0), version);
         seq.addElement(Tag.get(1), serialNumber);
         seq.addElement(Tag.get(2), signingAlg);
-        if( issuer!=null ) {
+        if (issuer != null) {
             // issuer is a CHOICE, so it must be EXPLICITly tagged
-            seq.addElement(new EXPLICIT(Tag.get(3), issuer ));
+            seq.addElement(new EXPLICIT(Tag.get(3), issuer));
         }
-        if( notBefore!=null || notAfter!=null ) {
+        if (notBefore != null || notAfter != null) {
             SEQUENCE optionalVal = new SEQUENCE();
             // notBefore & notAfter are CHOICES, so must be EXPLICITly tagged
-            if( notBefore!=null ) {
-                optionalVal.addElement( new EXPLICIT(
-                    Tag.get(0), dateToASN1(notBefore) ) );
+            if (notBefore != null) {
+                optionalVal.addElement(new EXPLICIT(
+                        Tag.get(0), dateToASN1(notBefore)));
             }
-            if( notAfter!=null ) {
-                optionalVal.addElement( new EXPLICIT(
-                    Tag.get(1), dateToASN1(notAfter) ) );
+            if (notAfter != null) {
+                optionalVal.addElement(new EXPLICIT(
+                        Tag.get(1), dateToASN1(notAfter)));
             }
             seq.addElement(Tag.get(4), optionalVal);
         }
-        if( subject!=null ) {
+        if (subject != null) {
             // subject is a CHOICE, so it must be EXPLICITly tagged
             seq.addElement(new EXPLICIT(Tag.get(5), subject));
         }
@@ -397,6 +400,7 @@ public class CertTemplate implements ASN1Value {
     }
 
     private static Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -412,92 +416,89 @@ public class CertTemplate implements ASN1Value {
         }
 
         /**
-         * Decodes a <i>CertTemplate</i> from its BER encoding.  The return
+         * Decodes a <i>CertTemplate</i> from its BER encoding. The return
          * value of this method
          */
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             CHOICE.Template timeChoice = new CHOICE.Template();
-            timeChoice.addElement( new GeneralizedTime.Template() );
-            timeChoice.addElement( new UTCTime.Template() );
+            timeChoice.addElement(new GeneralizedTime.Template());
+            timeChoice.addElement(new UTCTime.Template());
 
             // optional validity. The times are CHOICEs, so they are
             // EXPLICITly tagged
             SEQUENCE.Template validity = new SEQUENCE.Template();
-            validity.addOptionalElement( new EXPLICIT.Template(
-                            Tag.get(0), timeChoice));
-            validity.addOptionalElement( new EXPLICIT.Template(
-                            Tag.get(1), timeChoice));
+            validity.addOptionalElement(new EXPLICIT.Template(
+                    Tag.get(0), timeChoice));
+            validity.addOptionalElement(new EXPLICIT.Template(
+                    Tag.get(1), timeChoice));
 
             SEQUENCE.Template seqt = new SEQUENCE.Template();
 
-            seqt.addOptionalElement( Tag.get(0), new INTEGER.Template() );
-            seqt.addOptionalElement( Tag.get(1), new INTEGER.Template() );
-            seqt.addOptionalElement( Tag.get(2),
-                                     new AlgorithmIdentifier.Template() );
-            seqt.addOptionalElement( new EXPLICIT.Template(Tag.get(3),
-                                            new Name.Template() ));
-            seqt.addOptionalElement( Tag.get(4), validity );
-            seqt.addOptionalElement( new EXPLICIT.Template(Tag.get(5),
-                                            new Name.Template() ));
-            seqt.addOptionalElement( Tag.get(6),
-                                new SubjectPublicKeyInfo.Template() );
-            seqt.addOptionalElement( Tag.get(7), new BIT_STRING.Template() );
-            seqt.addOptionalElement( Tag.get(8), new BIT_STRING.Template() );
-            seqt.addOptionalElement( Tag.get(9),
-                    new SEQUENCE.OF_Template( new Extension.Template() ) );
+            seqt.addOptionalElement(Tag.get(0), new INTEGER.Template());
+            seqt.addOptionalElement(Tag.get(1), new INTEGER.Template());
+            seqt.addOptionalElement(Tag.get(2),
+                    new AlgorithmIdentifier.Template());
+            seqt.addOptionalElement(new EXPLICIT.Template(Tag.get(3),
+                    new Name.Template()));
+            seqt.addOptionalElement(Tag.get(4), validity);
+            seqt.addOptionalElement(new EXPLICIT.Template(Tag.get(5),
+                    new Name.Template()));
+            seqt.addOptionalElement(Tag.get(6),
+                    new SubjectPublicKeyInfo.Template());
+            seqt.addOptionalElement(Tag.get(7), new BIT_STRING.Template());
+            seqt.addOptionalElement(Tag.get(8), new BIT_STRING.Template());
+            seqt.addOptionalElement(Tag.get(9),
+                    new SEQUENCE.OF_Template(new Extension.Template()));
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
             CertTemplate ct = new CertTemplate();
 
-            ct.setVersion( (INTEGER) seq.elementAt(0) );
-            ct.setSerialNumber( (INTEGER) seq.elementAt(1) );
-            ct.setSigningAlg( (AlgorithmIdentifier)
-                                    seq.elementAt(2) );
-            if( seq.elementAt(3) != null ) {
-                ct.setIssuer((Name)((EXPLICIT)seq.elementAt(3)).getContent() );
+            ct.setVersion((INTEGER) seq.elementAt(0));
+            ct.setSerialNumber((INTEGER) seq.elementAt(1));
+            ct.setSigningAlg((AlgorithmIdentifier) seq.elementAt(2));
+            if (seq.elementAt(3) != null) {
+                ct.setIssuer((Name) ((EXPLICIT) seq.elementAt(3)).getContent());
             }
 
             // validity
             EXPLICIT explicit;
             CHOICE choice;
             ASN1Value val;
-            if( seq.elementAt(4) != null ) {
-                explicit = (EXPLICIT) ((SEQUENCE)seq.elementAt(4)).elementAt(0);
-                if( explicit != null ) {
+            if (seq.elementAt(4) != null) {
+                explicit = (EXPLICIT) ((SEQUENCE) seq.elementAt(4)).elementAt(0);
+                if (explicit != null) {
                     choice = (CHOICE) explicit.getContent();
                     val = choice.getValue();
-                    if( val instanceof TimeBase ) {
-                        ct.setNotBefore( ((TimeBase)val).toDate() );
+                    if (val instanceof TimeBase) {
+                        ct.setNotBefore(((TimeBase) val).toDate());
                     }
                 }
-                explicit = (EXPLICIT) ((SEQUENCE)seq.elementAt(4)).elementAt(1);
-                if( explicit != null ) {
+                explicit = (EXPLICIT) ((SEQUENCE) seq.elementAt(4)).elementAt(1);
+                if (explicit != null) {
                     choice = (CHOICE) explicit.getContent();
                     val = choice.getValue();
-                    if( val instanceof TimeBase ) {
-                        ct.setNotAfter( ((TimeBase)val).toDate() );
+                    if (val instanceof TimeBase) {
+                        ct.setNotAfter(((TimeBase) val).toDate());
                     }
                 }
             }
 
-            if( seq.elementAt(5) != null ) {
-                ct.setSubject((Name)((EXPLICIT)seq.elementAt(5)).getContent() );
+            if (seq.elementAt(5) != null) {
+                ct.setSubject((Name) ((EXPLICIT) seq.elementAt(5)).getContent());
             }
-            ct.setPublicKey( (SubjectPublicKeyInfo) seq.elementAt(6) );
-            ct.setIssuerUID( (BIT_STRING) seq.elementAt(7) );
-            ct.setSubjectUID( (BIT_STRING) seq.elementAt(8) );
-            ct.setExtensions( (SEQUENCE) seq.elementAt(9) );
+            ct.setPublicKey((SubjectPublicKeyInfo) seq.elementAt(6));
+            ct.setIssuerUID((BIT_STRING) seq.elementAt(7));
+            ct.setSubjectUID((BIT_STRING) seq.elementAt(8));
+            ct.setExtensions((SEQUENCE) seq.elementAt(9));
 
             return ct;
         }
@@ -505,42 +506,42 @@ public class CertTemplate implements ASN1Value {
 
     public static void main(String args[]) {
 
-      try {
+        try {
 
-        CertTemplate ct = new CertTemplate();
-        Name name;
+            CertTemplate ct = new CertTemplate();
+            Name name;
 
-        ct.setVersion(new INTEGER(5));
-        ct.setSerialNumber(new INTEGER(13112));
-        
-        name = new Name();
-        name.addCommonName("You");
-        name.addStateOrProvinceName("California");
-        ct.setIssuer(name);
-        ct.setNotBefore(new Date());
-        name = new Name();
-        name.addCommonName("Me");
-        name.addCountryName("US");
-        ct.setSubject(name);
-        ct.setIssuerUID( new BIT_STRING( new byte[] {0x00, 0x01}, 0 ) );
+            ct.setVersion(new INTEGER(5));
+            ct.setSerialNumber(new INTEGER(13112));
 
-        System.out.println("Constructed CertTemplate:");
+            name = new Name();
+            name.addCommonName("You");
+            name.addStateOrProvinceName("California");
+            ct.setIssuer(name);
+            ct.setNotBefore(new Date());
+            name = new Name();
+            name.addCommonName("Me");
+            name.addCountryName("US");
+            ct.setSubject(name);
+            ct.setIssuerUID(new BIT_STRING(new byte[] { 0x00, 0x01 }, 0));
 
-        byte[] encoded = ASN1Util.encode(ct);
-        java.io.FileOutputStream fos = new java.io.FileOutputStream("certTemplate");
-        fos.write(encoded);
-        fos.close();
+            System.out.println("Constructed CertTemplate:");
 
-        ct.print(System.out, 0);
+            byte[] encoded = ASN1Util.encode(ct);
+            java.io.FileOutputStream fos = new java.io.FileOutputStream("certTemplate");
+            fos.write(encoded);
+            fos.close();
 
-        CertTemplate newCt = (CertTemplate) ASN1Util.decode(
-                CertTemplate.getTemplate(), encoded );
+            ct.print(System.out, 0);
 
-        System.out.println("\nDecoded CertTemplate:");
-        newCt.print(System.out, 0);
+            CertTemplate newCt = (CertTemplate) ASN1Util.decode(
+                    CertTemplate.getTemplate(), encoded);
 
-      } catch( Exception e ) {
+            System.out.println("\nDecoded CertTemplate:");
+            newCt.print(System.out, 0);
+
+        } catch (Exception e) {
             e.printStackTrace();
-      }
+        }
     }
 }

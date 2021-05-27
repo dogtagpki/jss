@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CRMF <i>POPOPrivKey</i>:
+ * 
  * <pre>
  * POPOPrivKey ::= CHOICE {
  *      thisMessage         [0] BIT STRING,
@@ -35,12 +36,14 @@ public class POPOPrivKey implements ASN1Value {
      * The type of POPOPrivKey.
      */
     public static class Type {
-        private Type() { }
+        private Type() {
+        }
 
         static final Type THIS_MESSAGE = new Type();
         static final Type SUBSEQUENT_MESSAGE = new Type();
         static final Type DHMAC = new Type();
     }
+
     public static final Type THIS_MESSAGE = Type.THIS_MESSAGE;
     public static final Type SUBSEQUENT_MESSAGE = Type.SUBSEQUENT_MESSAGE;
     public static final Type DHMAC = Type.DHMAC;
@@ -55,7 +58,6 @@ public class POPOPrivKey implements ASN1Value {
      */
     public static final int CHALLENGE_RESP = 1;
 
-
     ///////////////////////////////////////////////////////////////////////
     // Members and member access
     ///////////////////////////////////////////////////////////////////////
@@ -66,7 +68,7 @@ public class POPOPrivKey implements ASN1Value {
 
     /**
      * Returns the type of POPOPrivKey: THIS_MESSAGE, SUBSEQUENT_MESSAGE,
-     *  or DHMAC.
+     * or DHMAC.
      */
     public Type getType() {
         return type;
@@ -74,7 +76,7 @@ public class POPOPrivKey implements ASN1Value {
 
     /**
      * If type==THIS_MESSAGE, returns the thisMessage field. Otherwise,
-     *      returns null.
+     * returns null.
      */
     public BIT_STRING getThisMessage() {
         return thisMessage;
@@ -82,8 +84,8 @@ public class POPOPrivKey implements ASN1Value {
 
     /**
      * If type==SUBSEQUENT_MESSAGE, returns the subsequentMessage field.
-     *  Otherwise, returns null.  The return value can be converted to an
-     *  integer and compared with ENCR_CERT and CHALLENGE_RESP.
+     * Otherwise, returns null. The return value can be converted to an
+     * integer and compared with ENCR_CERT and CHALLENGE_RESP.
      */
     public INTEGER getSubsequentMessage() {
         return subsequentMessage;
@@ -99,10 +101,11 @@ public class POPOPrivKey implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////
-    private POPOPrivKey() { }
+    private POPOPrivKey() {
+    }
 
     private POPOPrivKey(Type type, BIT_STRING thisMessage,
-                INTEGER subsequentMessage, BIT_STRING dhMAC) {
+            INTEGER subsequentMessage, BIT_STRING dhMAC) {
         this.type = type;
         this.thisMessage = thisMessage;
         this.subsequentMessage = subsequentMessage;
@@ -120,13 +123,13 @@ public class POPOPrivKey implements ASN1Value {
      * Creates a new POPOPrivKey with the given subsequentMessage field.
      */
     public static POPOPrivKey createSubsequentMessage(int subsequentMessage) {
-        if(subsequentMessage!=ENCR_CERT && subsequentMessage!=CHALLENGE_RESP) {
+        if (subsequentMessage != ENCR_CERT && subsequentMessage != CHALLENGE_RESP) {
             throw new IllegalArgumentException(
-                "Illegal subsequentMessage value: " + subsequentMessage );
+                    "Illegal subsequentMessage value: " + subsequentMessage);
         }
 
         return new POPOPrivKey(SUBSEQUENT_MESSAGE, null,
-                        new INTEGER(subsequentMessage), null);
+                new INTEGER(subsequentMessage), null);
     }
 
     /**
@@ -142,24 +145,24 @@ public class POPOPrivKey implements ASN1Value {
 
     @Override
     public Tag getTag() {
-        if(type == THIS_MESSAGE) {
+        if (type == THIS_MESSAGE) {
             return Tag.get(0);
-        } else if(type == SUBSEQUENT_MESSAGE) {
+        } else if (type == SUBSEQUENT_MESSAGE) {
             return Tag.get(1);
         } else {
-            assert(type == DHMAC);
+            assert (type == DHMAC);
             return Tag.get(2);
         }
     }
 
     @Override
     public void encode(OutputStream ostream) throws IOException {
-        if(type == THIS_MESSAGE) {
+        if (type == THIS_MESSAGE) {
             thisMessage.encode(Tag.get(0), ostream);
-        } else if(type == SUBSEQUENT_MESSAGE) {
+        } else if (type == SUBSEQUENT_MESSAGE) {
             subsequentMessage.encode(Tag.get(1), ostream);
         } else {
-            assert(type == DHMAC);
+            assert (type == DHMAC);
             dhMAC.encode(Tag.get(2), ostream);
         }
     }
@@ -176,6 +179,7 @@ public class POPOPrivKey implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -190,9 +194,9 @@ public class POPOPrivKey implements ASN1Value {
         public Template() {
             choicet = new CHOICE.Template();
 
-            choicet.addElement( Tag.get(0), BIT_STRING.getTemplate() );
-            choicet.addElement( Tag.get(1), INTEGER.getTemplate() );
-            choicet.addElement( Tag.get(2), BIT_STRING.getTemplate() );
+            choicet.addElement(Tag.get(0), BIT_STRING.getTemplate());
+            choicet.addElement(Tag.get(1), INTEGER.getTemplate());
+            choicet.addElement(Tag.get(2), BIT_STRING.getTemplate());
         }
 
         @Override
@@ -219,19 +223,19 @@ public class POPOPrivKey implements ASN1Value {
 
             Tag chosen = choice.getTag();
 
-            if( chosen.equals(Tag.get(0)) ) {
-                return createThisMessage( (BIT_STRING) choice.getValue() );
-            } else if( chosen.equals(Tag.get(1)) ) {
+            if (chosen.equals(Tag.get(0))) {
+                return createThisMessage((BIT_STRING) choice.getValue());
+            } else if (chosen.equals(Tag.get(1))) {
                 INTEGER I = (INTEGER) choice.getValue();
                 int i = I.intValue();
-                if( i != ENCR_CERT && i != CHALLENGE_RESP ) {
+                if (i != ENCR_CERT && i != CHALLENGE_RESP) {
                     throw new InvalidBERException(
-                        "SubsequentMessage has invalid value: "+i);
+                            "SubsequentMessage has invalid value: " + i);
                 }
-                return createSubsequentMessage( i );
+                return createSubsequentMessage(i);
             } else {
-                assert( chosen.equals(Tag.get(2)) );
-                return createDhMAC( (BIT_STRING) choice.getValue() );
+                assert (chosen.equals(Tag.get(2)));
+                return createDhMAC((BIT_STRING) choice.getValue());
             }
         }
     }
