@@ -29,6 +29,20 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Patch: jss-VERSION-RELEASE.patch
 
 ################################################################################
+# Java
+################################################################################
+
+%if 0%{?fedora} && 0%{?fedora} <= 32 || 0%{?rhel} && 0%{?rhel} <= 8
+%define java_devel java-1.8.0-openjdk-devel
+%define java_headless java-1.8.0-openjdk-headless
+%define java_home /usr/lib/jvm/jre-1.8.0-openjdk
+%else
+%define java_devel java-11-openjdk-devel
+%define java_headless java-11-openjdk-headless
+%define java_home /usr/lib/jvm/jre-11-openjdk
+%endif
+
+################################################################################
 # Build Options
 ################################################################################
 
@@ -50,7 +64,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  nspr-devel >= 4.13.1
 BuildRequires:  nss-devel >= 3.44
 BuildRequires:  nss-tools >= 3.44
-BuildRequires:  java-devel
+BuildRequires:  %{java_devel}
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
 BuildRequires:  glassfish-jaxb-api
@@ -64,7 +78,7 @@ BuildRequires:  apache-commons-lang3
 BuildRequires:  junit
 
 Requires:       nss >= 3.44
-Requires:       java-headless
+Requires:       %{java_headless}
 Requires:       jpackage-utils
 Requires:       slf4j
 Requires:       glassfish-jaxb-api
@@ -104,8 +118,6 @@ This package contains the API documentation for JSS.
 %build
 
 %set_build_flags
-
-[ -z "$JAVA_HOME" ] && export JAVA_HOME=%{_jvmdir}/java
 
 # Enable compiler optimizations
 export BUILD_OPT=1
