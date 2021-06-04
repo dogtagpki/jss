@@ -6,18 +6,21 @@ package org.mozilla.jss.ssl;
 
 public class CipherPolicy {
 
-    public static final CipherPolicy DOMESTIC =
-        new CipherPolicy(SocketBase.SSL_POLICY_DOMESTIC);
+public static final CipherPolicy DOMESTIC =
+	new CipherPolicy(SocketBase.SSL_POLICY_DOMESTIC);
 
-    public static final CipherPolicy EXPORT =
-        new CipherPolicy(SocketBase.SSL_POLICY_EXPORT);
+public static final CipherPolicy EXPORT =
+	new CipherPolicy(SocketBase.SSL_POLICY_EXPORT);
 
-    public static final CipherPolicy FRANCE =
-        new CipherPolicy(SocketBase.SSL_POLICY_FRANCE);
+public static final CipherPolicy FRANCE =
+	new CipherPolicy(SocketBase.SSL_POLICY_FRANCE);
 
-    private int _enum;
+private int _enum;
 
-    private CipherPolicy(int _enum) { }
+private CipherPolicy(int _enum) {
+}
 
-    int getEnum() { return _enum; }
+int getEnum() {
+	return _enum;
+}
 }
