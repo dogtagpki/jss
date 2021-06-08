@@ -55,10 +55,6 @@ and reaching out to the developers if you need any assistance.
 
 ## Contacting Us
 
-If you wish to discuss contributing to JSS or an issue, there are a few
-forums of discussion:
-
- - The [pki-devel mailing list](https://www.redhat.com/mailman/listinfo/pki-devel).
- - The `#dogtag-pki` IRC channel on [Freenode](https://freenode.net/).
+See [Contact Us](https://github.com/dogtagpki/pki/wiki/Contact-Us).
 
 Thanks!
