@@ -77,12 +77,7 @@ JSS is also shipped in Debian-based distributions under the package
 name `libjss-java`; to install, issue `sudo apt-get install libjss-java`.
 
 
-Contributing
-------------
+Contact Us
+----------
 
-We welcome all contributions to JSS! If you're looking for help getting
-started, check out our [documentation](docs/contributing.md), or if you
-want to contact us, check out the following forums:
-
- - The [pki-devel mailing list](https://www.redhat.com/mailman/listinfo/pki-devel).
- - The `#dogtag-pki` IRC channel on [Freenode](https://freenode.net/).
+See [Contact Us](https://github.com/dogtagpki/pki/wiki/Contact-Us).
