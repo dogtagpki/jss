@@ -12,9 +12,18 @@ SCRIPT_NAME="$(basename "$SCRIPT_PATH")"
 
 SRC_DIR="$(dirname "$SCRIPT_PATH")"
 WORK_DIR="$HOME/build/$NAME"
+JAVA_LIB_DIR="/usr/lib/java"
+
+if [ "$HOSTTYPE" = "x86_64" ]; then
+   JSS_LIB_DIR="/usr/lib64/jss"
+else
+   JSS_LIB_DIR="/usr/lib/jss"
+fi
 
 SOURCE_TAG=
 SPEC_TEMPLATE=
+VERSION=
+RELEASE=
 
 WITH_TIMESTAMP=
 WITH_COMMIT_ID=
@@ -30,8 +39,12 @@ usage() {
     echo
     echo "Options:"
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
+    echo "    --java-lib-dir=<path>  Java library directory (default: $JAVA_LIB_DIR)."
+    echo "    --jss-lib-dir=<path>   JSS library directory (default: $JSS_LIB_DIR)."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec."
+    echo "    --version=<version>    Use the specified version."
+    echo "    --release=<elease>     Use the specified release."
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
@@ -41,6 +54,7 @@ usage() {
     echo "    --help                 Show help message."
     echo
     echo "Target:"
+    echo "    dist   Build JSS binaries."
     echo "    src    Generate RPM sources."
     echo "    spec   Generate RPM spec."
     echo "    srpm   Build SRPM package."
@@ -149,11 +163,23 @@ while getopts v-: arg ; do
         work-dir=?*)
             WORK_DIR="$(readlink -f "$LONG_OPTARG")"
             ;;
+        java-lib-dir=?*)
+            JAVA_LIB_DIR="$(readlink -f "$LONG_OPTARG")"
+            ;;
+        jss-lib-dir=?*)
+            JSS_LIB_DIR="$(readlink -f "$LONG_OPTARG")"
+            ;;
         source-tag=?*)
             SOURCE_TAG="$LONG_OPTARG"
             ;;
         spec=?*)
             SPEC_TEMPLATE="$LONG_OPTARG"
+            ;;
+        version=?*)
+            VERSION="$LONG_OPTARG"
+            ;;
+        release=?*)
+            RELEASE="$LONG_OPTARG"
             ;;
         with-timestamp)
             WITH_TIMESTAMP=true
@@ -181,7 +207,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | source-tag* | spec* | dist*)
+        work-dir* | java-lib-dir* | jss-lib-dir* | source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -201,17 +227,20 @@ done
 shift $((OPTIND-1))
 
 if [ "$#" -lt 1 ] ; then
-    BUILD_TARGET=rpm
+    BUILD_TARGET=dist
 else
     BUILD_TARGET=$1
 fi
 
 if [ "$DEBUG" = true ] ; then
     echo "WORK_DIR: $WORK_DIR"
+    echo "JAVA_LIB_DIR: $JAVA_LIB_DIR"
+    echo "JSS_LIB_DIR: $JSS_LIB_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi
 
-if [ "$BUILD_TARGET" != "src" ] &&
+if [ "$BUILD_TARGET" != "dist" ] &&
+        [ "$BUILD_TARGET" != "src" ] &&
         [ "$BUILD_TARGET" != "spec" ] &&
         [ "$BUILD_TARGET" != "srpm" ] &&
         [ "$BUILD_TARGET" != "rpm" ] ; then
@@ -223,13 +252,19 @@ if [ "$SPEC_TEMPLATE" = "" ] ; then
     SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
 fi
 
-VERSION="$(rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}')"
+if [ "$VERSION" = "" ] ; then
+    # if version not specified, get from spec template
+    VERSION="$(rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}')"
+fi
 
 if [ "$DEBUG" = true ] ; then
     echo "VERSION: $VERSION"
 fi
 
-RELEASE="$(rpmspec -P "$SPEC_TEMPLATE" --undefine dist | grep "^Release:" | awk '{print $2;}')"
+if [ "$RELEASE" = "" ] ; then
+    # if release not specified, get from spec template
+    RELEASE="$(rpmspec -P "$SPEC_TEMPLATE" --undefine dist | grep "^Release:" | awk '{print $2;}')"
+fi
 
 if [ "$DEBUG" = true ] ; then
     echo "RELEASE: $RELEASE"
@@ -275,6 +310,47 @@ fi
 
 mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
+
+if [ "$BUILD_TARGET" = "dist" ] ; then
+
+    OPTIONS=()
+    OPTIONS+=(-DVERSION=$VERSION)
+
+    if [ "$JAVA_HOME" != "" ] ; then
+        OPTIONS+=(-DJAVA_HOME=$JAVA_HOME)
+    fi
+
+    OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
+    OPTIONS+=(-DJAVA_LIB_INSTALL_DIR=$JAVA_LIB_DIR )
+    OPTIONS+=(-DJSS_LIB_INSTALL_DIR=$JSS_LIB_DIR)
+
+    OPTIONS+=(-S $SRC_DIR)
+    OPTIONS+=(-B .)
+
+    cmake "${OPTIONS[@]}"
+
+    OPTIONS=()
+
+    if [ "$VERBOSE" = true ] ; then
+        OPTIONS+=(VERBOSE=1)
+    fi
+
+    OPTIONS+=(CMAKE_NO_VERBOSE=1)
+    OPTIONS+=(--no-print-directory)
+
+    make "${OPTIONS[@]}" all
+    make "${OPTIONS[@]}" javadoc
+
+    if [ "$WITHOUT_TEST" != true ] ; then
+        ctest --output-on-failure
+    fi
+
+    exit
+fi
+
+################################################################################
+# Prepare RPM build directories
+################################################################################
 
 rm -rf BUILD
 rm -rf RPMS

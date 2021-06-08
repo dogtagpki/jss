@@ -92,7 +92,7 @@ To build a RPM release, please ensure all dependencies are installed:
 
 Then, issue a build using the `build.sh` interface:
 
-    ./build.sh
+    ./build.sh rpm
 
 This will build RPMS and place them in `$HOME/build/jss` by default. For more
 information about this build script, refer to its help text:

@@ -61,7 +61,7 @@ Alternatively, to build a RPM distribution of JSS:
 
     git clone https://github.com/dogtagpki/jss
     cd jss
-    ./build.sh
+    ./build.sh rpm
 
 To view more detailed instructions for building JSS, please refer to
 the build documentation: [`docs/building.md`](docs/building.md).

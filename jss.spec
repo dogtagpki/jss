@@ -105,6 +105,8 @@ This package contains the API documentation for JSS.
 
 %set_build_flags
 
+export JAVA_HOME=%{java_home}
+
 # Enable compiler optimizations
 export BUILD_OPT=1
 
@@ -115,31 +117,14 @@ export CFLAGS
 # Check if we're in FIPS mode
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
-# The Makefile is not thread-safe
-%cmake \
-    -DVERSION=%{version} \
-    -DJAVA_HOME=%{java_home} \
-    -DJAVA_LIB_INSTALL_DIR=%{_jnidir} \
-    -DJSS_LIB_INSTALL_DIR=%{_libdir}/jss \
-    -B %{_vpath_builddir}
-
-cd %{_vpath_builddir}
-
-%{__make} \
-    VERBOSE=%{?_verbose} \
-    CMAKE_NO_VERBOSE=1 \
-    --no-print-directory \
-    all
-
-%{__make} \
-    VERBOSE=%{?_verbose} \
-    CMAKE_NO_VERBOSE=1 \
-    --no-print-directory \
-    javadoc
-
-%if %{with test}
-ctest --output-on-failure
-%endif
+./build.sh \
+    %{?_verbose:-v} \
+    --work-dir=%{_vpath_builddir} \
+    --java-lib-dir=%{_jnidir} \
+    --jss-lib-dir=%{_libdir}/jss \
+    --version=%{version} \
+    %{!?with_test:--without-test} \
+    dist
 
 ################################################################################
 %install
