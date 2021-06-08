@@ -131,13 +131,25 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 
 # The Makefile is not thread-safe
 %cmake \
+    -DVERSION=%{version} \
     -DJAVA_HOME=%{java_home} \
     -DJAVA_LIB_INSTALL_DIR=%{_jnidir} \
+    -DJSS_LIB_INSTALL_DIR=%{_libdir}/jss \
     -B %{_vpath_builddir}
 
 cd %{_vpath_builddir}
-%{__make} all
-%{__make} javadoc
+
+%{__make} \
+    VERBOSE=%{?_verbose} \
+    CMAKE_NO_VERBOSE=1 \
+    --no-print-directory \
+    all
+
+%{__make} \
+    VERBOSE=%{?_verbose} \
+    CMAKE_NO_VERBOSE=1 \
+    --no-print-directory \
+    javadoc
 
 %if %{with_test}
 ctest --output-on-failure
@@ -146,27 +158,16 @@ ctest --output-on-failure
 ################################################################################
 %install
 
-# There is no install target so we'll do it by hand
+cd %{_vpath_builddir}
 
-# jars
-install -d -m 0755 $RPM_BUILD_ROOT%{_jnidir}
-install -m 644 %{_vpath_builddir}/jss4.jar ${RPM_BUILD_ROOT}%{_jnidir}/jss4.jar
+%{__make} \
+    VERBOSE=%{?_verbose} \
+    CMAKE_NO_VERBOSE=1 \
+    DESTDIR=%{buildroot} \
+    INSTALL="install -p" \
+    --no-print-directory \
+    install
 
-# We have to use the name libjss4.so because this is dynamically
-# loaded by the jar file.
-install -d -m 0755 $RPM_BUILD_ROOT%{_libdir}/jss
-install -m 0755 %{_vpath_builddir}/libjss4.so ${RPM_BUILD_ROOT}%{_libdir}/jss/
-pushd  ${RPM_BUILD_ROOT}%{_libdir}/jss
-    ln -fs %{_jnidir}/jss4.jar jss4.jar
-popd
-
-# javadoc
-install -d -m 0755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -rp %{_vpath_builddir}/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -p jss.html $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-
-# No ldconfig is required since this library is loaded by Java itself.
 ################################################################################
 %files
 
