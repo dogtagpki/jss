@@ -184,6 +184,6 @@ cp -p *.txt $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 
 ################################################################################
 %changelog
-* Tue May 29 2018 Dogtag PKI Team <pki-devel@redhat.com> 4.5.0-0
+* Tue May 29 2018 Dogtag PKI Team <devel@lists.dogtagpki.org> 4.5.0-0
 - To list changes in <branch> since <tag>:
   $ git log --pretty=oneline --abbrev-commit --no-decorate <tag>..<branch>
