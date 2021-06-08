@@ -78,3 +78,41 @@ include(JSSTests)
 jss_config()
 jss_build()
 jss_tests()
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/jss4.jar
+    DESTINATION
+        ${JAVA_LIB_INSTALL_DIR}
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/libjss4.so
+    DESTINATION
+        ${JSS_LIB_INSTALL_DIR}
+    PERMISSIONS
+        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE
+)
+
+install(
+    CODE "execute_process(
+        COMMAND ln -sf ${JAVA_LIB_INSTALL_DIR}/jss4.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss4.jar
+    )"
+)
+
+install(
+    DIRECTORY
+        ${CMAKE_CURRENT_BINARY_DIR}/docs/
+    DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
+)
+
+install(
+    FILES
+        jss.html MPL-1.1.txt gpl.txt lgpl.txt
+    DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
+)
