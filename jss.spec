@@ -151,7 +151,7 @@ cd %{_vpath_builddir}
     --no-print-directory \
     javadoc
 
-%if %{with_test}
+%if %{with test}
 ctest --output-on-failure
 %endif
 
