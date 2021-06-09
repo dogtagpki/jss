@@ -129,14 +129,10 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 ################################################################################
 %install
 
-cd %{_vpath_builddir}
-
-%{__make} \
-    VERBOSE=%{?_verbose} \
-    CMAKE_NO_VERBOSE=1 \
-    DESTDIR=%{buildroot} \
-    INSTALL="install -p" \
-    --no-print-directory \
+./build.sh \
+    %{?_verbose:-v} \
+    --work-dir=%{_vpath_builddir} \
+    --install-dir=%{buildroot} \
     install
 
 ################################################################################

@@ -20,6 +20,8 @@ else
    JSS_LIB_DIR="/usr/lib/jss"
 fi
 
+INSTALL_DIR=
+
 SOURCE_TAG=
 SPEC_TEMPLATE=
 VERSION=
@@ -41,6 +43,7 @@ usage() {
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
     echo "    --java-lib-dir=<path>  Java library directory (default: $JAVA_LIB_DIR)."
     echo "    --jss-lib-dir=<path>   JSS library directory (default: $JSS_LIB_DIR)."
+    echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec."
     echo "    --version=<version>    Use the specified version."
@@ -54,11 +57,12 @@ usage() {
     echo "    --help                 Show help message."
     echo
     echo "Target:"
-    echo "    dist   Build JSS binaries."
-    echo "    src    Generate RPM sources."
-    echo "    spec   Generate RPM spec."
-    echo "    srpm   Build SRPM package."
-    echo "    rpm    Build RPM packages (default)."
+    echo "    dist     Build JSS binaries."
+    echo "    install  Install JSS binaries."
+    echo "    src      Generate RPM sources."
+    echo "    spec     Generate RPM spec."
+    echo "    srpm     Build SRPM package."
+    echo "    rpm      Build RPM packages (default)."
 }
 
 generate_rpm_sources() {
@@ -169,6 +173,9 @@ while getopts v-: arg ; do
         jss-lib-dir=?*)
             JSS_LIB_DIR="$(readlink -f "$LONG_OPTARG")"
             ;;
+        install-dir=?*)
+            INSTALL_DIR="$(readlink -f "$LONG_OPTARG")"
+            ;;
         source-tag=?*)
             SOURCE_TAG="$LONG_OPTARG"
             ;;
@@ -207,7 +214,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | java-lib-dir* | jss-lib-dir* | source-tag* | spec* | version* | release* | dist*)
+        work-dir* | java-lib-dir* | jss-lib-dir* | install-dir* | source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -236,10 +243,12 @@ if [ "$DEBUG" = true ] ; then
     echo "WORK_DIR: $WORK_DIR"
     echo "JAVA_LIB_DIR: $JAVA_LIB_DIR"
     echo "JSS_LIB_DIR: $JSS_LIB_DIR"
+    echo "INSTALL_DIR: $INSTALL_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi
 
 if [ "$BUILD_TARGET" != "dist" ] &&
+        [ "$BUILD_TARGET" != "install" ] &&
         [ "$BUILD_TARGET" != "src" ] &&
         [ "$BUILD_TARGET" != "spec" ] &&
         [ "$BUILD_TARGET" != "srpm" ] &&
@@ -344,6 +353,24 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     if [ "$WITHOUT_TEST" != true ] ; then
         ctest --output-on-failure
     fi
+
+    exit
+fi
+
+if [ "$BUILD_TARGET" = "install" ] ; then
+
+    OPTIONS=()
+
+    if [ "$VERBOSE" = true ] ; then
+        OPTIONS+=(VERBOSE=1)
+    fi
+
+    OPTIONS+=(CMAKE_NO_VERBOSE=1)
+    OPTIONS+=(DESTDIR=$INSTALL_DIR)
+    OPTIONS+=(INSTALL="install -p")
+    OPTIONS+=(--no-print-directory)
+
+    make "${OPTIONS[@]}" install
 
     exit
 fi
