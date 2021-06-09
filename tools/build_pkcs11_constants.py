@@ -232,7 +232,7 @@ class ConstantDefinition(object):
         # see what the error was.
         ret = proc.returncode
         if proc.returncode != 0:
-            raise Exception(("Unknown error with symbol '%s': cc ret: %d " +
+            raise Exception(("Unknown error with symbol '%s': cc ret: %d " + 
                              "@ %s; command: %s") % (self.name, ret, temp_dir,
                                                      ' '.join(cc_call)))
 
@@ -240,7 +240,7 @@ class ConstantDefinition(object):
         # is correct.
         ret = subprocess.call(exec_path)
         if ret != 0:
-            raise Exception(("Value for symbol '%s' different from expected:" +
+            raise Exception(("Value for symbol '%s' different from expected:" + 
                              " wasn't '%s' @ %s") % (self.name, self.resolved_value, temp_dir))
 
         # With no errors, clean up the temporary data.
@@ -379,7 +379,7 @@ def parse_define(line):
     """
 
     if not line.startswith('#define'):
-        raise Exception("Cannot parse line: doesn't begin with #define!\n" +
+        raise Exception("Cannot parse line: doesn't begin with #define!\n" + 
                         line)
 
     name, name_end = parse_token(line, len('#define'), parenthesis=False)
@@ -461,8 +461,8 @@ def parse_header(header):
 
     # Capture all definitions first, and create ConstantDefinition from them.
     defines = []
-    for line_num in range(1, len(file_contents)+1):
-        line = file_contents[line_num-1].lstrip()
+    for line_num in range(1, len(file_contents) + 1):
+        line = file_contents[line_num - 1].lstrip()
         if line.startswith('#define'):
             name, value = parse_define(line)
             if name in BLACKLIST:
