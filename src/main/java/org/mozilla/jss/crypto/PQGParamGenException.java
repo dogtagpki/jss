@@ -6,9 +6,17 @@ package org.mozilla.jss.crypto;
 
 public class PQGParamGenException extends Exception {
     private static final long serialVersionUID = 1L;
-    public PQGParamGenException() {}
-    public PQGParamGenException(String mesg) { super(mesg); }
-    public PQGParamGenException(String mesg, Throwable cause) { super(mesg, cause); }
+
+    public PQGParamGenException() {
+    }
+
+    public PQGParamGenException(String mesg) {
+        super(mesg);
+    }
+
+    public PQGParamGenException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
 
     public PQGParamGenException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(mesg, cause, enableSuppression, writableStackTrace);

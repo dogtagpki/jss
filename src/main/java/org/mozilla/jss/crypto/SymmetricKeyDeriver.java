@@ -40,37 +40,36 @@ import java.security.InvalidKeyException;
 
 public interface SymmetricKeyDeriver {
 
-   /* Use with the encrypt type mechanisms
+    /* Use with the encrypt type mechanisms
       Example: initDerive(
                     symKey,  (PKCS11Constants.CKM_DES3_ECB_ENCRYPT_DATA) 4354L, derivationData, null,
                     PKCS11Constants.CKM_DES3_ECB, PKCS11Constants.CKA_DERIVE, 16);
-   */
+    */
 
-    public abstract void initDerive(SymmetricKey baseKey, 
-        long deriveMech, byte[] param, byte[] iv, long targetMech, long operation, long keySize)
-        throws InvalidKeyException;
-
-
+    public abstract void initDerive(SymmetricKey baseKey,
+            long deriveMech, byte[] param, byte[] iv, long targetMech, long operation, long keySize)
+            throws InvalidKeyException;
 
     /* Use with key extraction and key concatanation mechanisms
-  
+    
     Example:
        param: byte array that has the bit position of where to extract
      initDerive(
                 derivedKey, PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY,param,null,
                 PKCS11Constants.CKA_ENCRYPT, PKCS11Constants.CKA_DERIVE,8);
- 
- 
+    
+    
     initDerive(
                baseSymKey,secondarySymKey, PKCS11Constants.CKM_CONCATENATE_BASE_AND_KEY,null,null,
                PKCS11Constants.CKM_DES3_ECB, PKCS11Constants.CKA_DERIVE,0);
- 
-    */ 
+    
+    */
 
-    public abstract void initDerive(SymmetricKey baseKey, 
-        SymmetricKey secondaryKey, long deriveMech, byte[] param, byte[] iv, long targetMech, long operation, long keySize)
-        throws InvalidKeyException; 
+    public abstract void initDerive(SymmetricKey baseKey,
+            SymmetricKey secondaryKey, long deriveMech, byte[] param, byte[] iv, long targetMech, long operation,
+            long keySize)
+            throws InvalidKeyException;
 
-   public abstract SymmetricKey  derive()
-       throws TokenException;
+    public abstract SymmetricKey derive()
+            throws TokenException;
 }

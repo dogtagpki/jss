@@ -10,7 +10,10 @@ package org.mozilla.jss.crypto;
  */
 public class KeyAlreadyImportedException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
-    public KeyAlreadyImportedException() {}
+
+    public KeyAlreadyImportedException() {
+    }
+
     public KeyAlreadyImportedException(String mesg) {
         super(mesg);
     }
@@ -19,7 +22,8 @@ public class KeyAlreadyImportedException extends java.lang.Exception {
         super(mesg, cause);
     }
 
-    public KeyAlreadyImportedException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public KeyAlreadyImportedException(String mesg, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

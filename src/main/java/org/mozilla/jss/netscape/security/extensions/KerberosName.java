@@ -48,8 +48,7 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 public class KerberosName {
 
     public static final int OID[] = { 1, 3, 6, 1, 5, 2, 2 };
-    public static final ObjectIdentifier KRB5_PRINCIPAL_NAME = new
-            ObjectIdentifier(OID);
+    public static final ObjectIdentifier KRB5_PRINCIPAL_NAME = new ObjectIdentifier(OID);
 
     private String m_realm = null;
     private int m_name_type = 0;

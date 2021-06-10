@@ -50,24 +50,15 @@ public class GenericASN1Extension extends Extension
 
     protected static final int MAX_ATTR = 10;
 
-    protected static final String PROP_CRITICAL =
-              "critical";
-    protected static final String PROP_NAME =
-              "name";
-    protected static final String PROP_OID =
-              "oid";
-    protected static final String PROP_PATTERN =
-              "pattern";
-    protected static final String PROP_ATTRIBUTE =
-              "attribute";
-    protected static final String PROP_TYPE =
-              "type";
-    protected static final String PROP_SOURCE =
-              "source";
-    protected static final String PROP_VALUE =
-              "value";
-    protected static final String PROP_PREDICATE =
-              "predicate";
+    protected static final String PROP_CRITICAL = "critical";
+    protected static final String PROP_NAME = "name";
+    protected static final String PROP_OID = "oid";
+    protected static final String PROP_PATTERN = "pattern";
+    protected static final String PROP_ATTRIBUTE = "attribute";
+    protected static final String PROP_TYPE = "type";
+    protected static final String PROP_SOURCE = "source";
+    protected static final String PROP_VALUE = "value";
+    protected static final String PROP_PREDICATE = "predicate";
     /**
      * Identifier for this attribute, to be used with the
      * get, set, delete methods of Certificate, x509 type.

@@ -42,7 +42,7 @@ import org.mozilla.jss.netscape.security.x509.OIDMap;
  * SkipCerts ::= INTEGER (0..MAX)
  */
 public class InhibitAnyPolicyExtension
-          extends Extension implements CertAttrSet {
+        extends Extension implements CertAttrSet {
 
     /**
      *

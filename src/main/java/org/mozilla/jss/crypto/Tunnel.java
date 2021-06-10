@@ -6,13 +6,11 @@ package org.mozilla.jss.crypto;
 /**
  * This is a private JSS class that allows the pkcs11 package access
  * to some of the
- * package methods in the crypto package.  A friend declaration would
+ * package methods in the crypto package. A friend declaration would
  * have been ideal.
  */
 public class Tunnel {
-    protected static Signature
-    ConstructSignature( SignatureAlgorithm alg, SignatureSpi engine) {
+    protected static Signature ConstructSignature(SignatureAlgorithm alg, SignatureSpi engine) {
         return new Signature(alg, engine);
     }
 }
-

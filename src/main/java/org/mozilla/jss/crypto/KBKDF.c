@@ -31,29 +31,45 @@ name(JNIEnv *env, jobject this) \
     "KBKDF Operations aren't supported by the version of NSS that JSS was compiled against."); \
 }
 
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFByteArrayParam_acquireNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFByteArrayParam_releaseNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFCounterParams_acquireNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFCounterParams_releaseNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDerivedKey_acquireNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDerivedKey_releaseNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDKMLengthParam_acquireNativeResources);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFDKMLengthParam_releaseNativeResources);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_acquireNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_releaseNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFIterationVariableParam_acquireNativeResources);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFIterationVariableParam_releaseNativeResources);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_acquireNativeResources);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_releaseNativeResources);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFPipelineParams_acquireNativeResourcesInternal);
-__NOT_IMPLEMENTED__(Java_org_mozilla_jss_crypto_KBKDFPipelineParams_releaseNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFByteArrayParam_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFByteArrayParam_releaseNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFCounterParams_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFCounterParams_releaseNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFDerivedKey_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFDerivedKey_releaseNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFDKMLengthParam_acquireNativeResources);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFDKMLengthParam_releaseNativeResources);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFFeedbackParams_releaseNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFIterationVariableParam_acquireNativeResources);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFIterationVariableParam_releaseNativeResources);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_acquireNativeResources);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFOptionalCounterParam_releaseNativeResources);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFPipelineParams_acquireNativeResourcesInternal);
+__NOT_IMPLEMENTED__(
+		Java_org_mozilla_jss_crypto_KBKDFPipelineParams_releaseNativeResourcesInternal);
 
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_crypto_KBKDFDerivedKey_getKeyFromHandle(JNIEnv *env, jobject this, jobject parentKey, jlong mech, jboolean temporary)
-{
-    JSS_throwMsg(env, UNSUPPORTED_OPERATION_EXCEPTION,
-    "KBKDF Operations aren't supported by the version of NSS that JSS was compiled against.");
-    return NULL;
+Java_org_mozilla_jss_crypto_KBKDFDerivedKey_getKeyFromHandle(JNIEnv *env,
+		jobject this, jobject parentKey, jlong mech, jboolean temporary) {
+	JSS_throwMsg(env, UNSUPPORTED_OPERATION_EXCEPTION,
+			"KBKDF Operations aren't supported by the version of NSS that JSS was compiled against.");
+	return NULL;
 }
 
 #else

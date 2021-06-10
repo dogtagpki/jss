@@ -52,20 +52,14 @@ public class CertInfo extends X509CertInfo {
     static {
         try {
             // force version 3
-            FORCE_VERSION_3 =
-                    new CertificateVersion(CertificateVersion.V3);
-            SERIALIZE_SUBJECT =
-                    new CertificateSubjectName(
-                            new X500Name("cn=uninitialized"));
-            SERIALIZE_ISSUER =
-                    new CertificateIssuerName(
-                            new X500Name("cn=uninitialized"));
-            SERIALIZE_VALIDITY =
-                    new CertificateValidity(new Date(0), new Date(0));
-            SERIALIZE_SERIALNO =
-                    new CertificateSerialNumber(new BigInteger("0"));
-            SERIALIZE_ALGOR =
-                    new CertificateAlgorithmId(AlgorithmId.get("MD5withRSA"));
+            FORCE_VERSION_3 = new CertificateVersion(CertificateVersion.V3);
+            SERIALIZE_SUBJECT = new CertificateSubjectName(
+                    new X500Name("cn=uninitialized"));
+            SERIALIZE_ISSUER = new CertificateIssuerName(
+                    new X500Name("cn=uninitialized"));
+            SERIALIZE_VALIDITY = new CertificateValidity(new Date(0), new Date(0));
+            SERIALIZE_SERIALNO = new CertificateSerialNumber(new BigInteger("0"));
+            SERIALIZE_ALGOR = new CertificateAlgorithmId(AlgorithmId.get("MD5withRSA"));
         } catch (IOException e) {
             // should never happen. If does, system is hosed.
             System.out.println("**** Impossible Error encountered ****");

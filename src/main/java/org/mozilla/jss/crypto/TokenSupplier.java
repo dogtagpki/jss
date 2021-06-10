@@ -7,13 +7,15 @@ package org.mozilla.jss.crypto;
  * An interface that allows providers to access CryptoManager without actually
  * knowing about CryptoManager. This is necessary to prevent cyclic
  * dependencies. CryptoManager knows about the providers, so the providers
- * can't know about CryptoManager.  Instead, CryptoManager implements
+ * can't know about CryptoManager. Instead, CryptoManager implements
  * this interface.
  */
 public interface TokenSupplier {
     public CryptoToken getInternalCryptoToken();
+
     public JSSSecureRandom getSecureRNG();
 
     public CryptoToken getThreadToken();
+
     public void setThreadToken(CryptoToken token);
 }
