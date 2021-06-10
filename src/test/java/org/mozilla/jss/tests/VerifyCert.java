@@ -18,24 +18,23 @@ import org.mozilla.jss.util.Password;
 import org.mozilla.jss.util.PasswordCallback;
 
 /**
-* Verify Certificate test.
-*/
+ * Verify Certificate test.
+ */
 public class VerifyCert {
 
-    public void showCert( String certFile) {
+    public void showCert(String certFile) {
         //Read the cert
         try (FileInputStream fis = new FileInputStream(certFile);
                 BufferedInputStream bis = new BufferedInputStream(fis)) {
 
-            Certificate cert = (Certificate)
-                 Certificate.getTemplate().decode(bis);
+            Certificate cert = (Certificate) Certificate.getTemplate().decode(bis);
 
             //output the cert
             CertificateInfo info = cert.getInfo();
             info.print(System.out);
 
-//verify the signature of the cert only
-//        cert.verify();
+            //verify the signature of the cert only
+            //        cert.verify();
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
@@ -46,21 +45,21 @@ public class VerifyCert {
 
         System.out.println("Usage: java org.mozilla.jss.tests.VerifyCert");
         System.out.println("\noptions:\n\n<dbdir> <passwd> " +
-                           "<nicknameOfCertinDB> <OCSPResponderURL> " +
-                           "<OCSPCertNickname>\n");
+                "<nicknameOfCertinDB> <OCSPResponderURL> " +
+                "<OCSPCertNickname>\n");
         System.out.println("<dbdir> <passwd> " +
-                           "<DerEncodeCertFile> <OCSPResponderURL> " +
-                           "<OCSPCertNickname>\n");
+                "<DerEncodeCertFile> <OCSPResponderURL> " +
+                "<OCSPCertNickname>\n");
         System.out.println("Note: <OCSPResponderURL> and " +
-                           "<OCSPCertNickname> are optional.\n But if used, " +
-                           "both Url/nickname must be specified.");
+                "<OCSPCertNickname> are optional.\n But if used, " +
+                "both Url/nickname must be specified.");
     }
 
     public static void main(String args[]) {
 
         try {
             VerifyCert vc = new VerifyCert();
-            if ( args.length < 3 ) {
+            if (args.length < 3) {
                 vc.usage();
                 return;
             }
@@ -70,15 +69,15 @@ public class VerifyCert {
             String ResponderURL = null;
             String ResponderNickname = null;
             //if OCSPResponderURL than must have OCSPCertificateNickname
-            if (args.length == 4 || args.length > 5)   vc.usage();
+            if (args.length == 4 || args.length > 5)
+                vc.usage();
             else if (args.length == 5) {
-                ResponderURL= args[3];
+                ResponderURL = args[3];
                 ResponderNickname = args[4];
             }
 
             //initialize JSS
-            InitializationValues vals = new
-                                InitializationValues(dbdir);
+            InitializationValues vals = new InitializationValues(dbdir);
 
             //enable PKIX verify rather than the old NSS cert library,
             //to verify certificates.
@@ -111,31 +110,28 @@ public class VerifyCert {
                 vc.validateCertInDB(name, cm);
             }
 
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-
-    public void validateDerCert(byte[] pkg, CryptoManager cm){
+    public void validateDerCert(byte[] pkg, CryptoManager cm) {
         ArrayList<String> usageList = new ArrayList<>();
         try {
 
             Iterator<CertUsage> list = CertUsage.getCertUsages();
             CertUsage certUsage;
-            while(list.hasNext()) {
+            while (list.hasNext()) {
                 certUsage = list.next();
-                if (
-       !certUsage.equals(CertUsage.UserCertImport) &&
-       !certUsage.equals(CertUsage.ProtectedObjectSigner) &&
-       !certUsage.equals(CertUsage.AnyCA) )
-                    {
-                        if (cm.isCertValid(pkg, true,
+                if (!certUsage.equals(CertUsage.UserCertImport) &&
+                        !certUsage.equals(CertUsage.ProtectedObjectSigner) &&
+                        !certUsage.equals(CertUsage.AnyCA)) {
+                    if (cm.isCertValid(pkg, true,
                             certUsage) == true) {
-                            usageList.add(certUsage.toString());
-                        }
+                        usageList.add(certUsage.toString());
                     }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,50 +140,47 @@ public class VerifyCert {
         if (usageList.isEmpty()) {
             System.out.println("The certificate is not valid.");
         } else {
-        System.out.println("The certificate is valid for " +
-                           "the following usages:\n");
+            System.out.println("The certificate is valid for " +
+                    "the following usages:\n");
             Iterator<String> iterateUsage = usageList.iterator();
             while (iterateUsage.hasNext()) {
                 System.out.println("                       "
-                + iterateUsage.next());
+                        + iterateUsage.next());
             }
         }
     }
 
-    public void validateCertInDB(String nickname, CryptoManager cm){
+    public void validateCertInDB(String nickname, CryptoManager cm) {
         ArrayList<String> usageList = new ArrayList<>();
 
         try {
 
             Iterator<CertUsage> list = CertUsage.getCertUsages();
             CertUsage certUsage;
-            while(list.hasNext()) {
+            while (list.hasNext()) {
                 certUsage = list.next();
-                if (
-       !certUsage.equals(CertUsage.UserCertImport) &&
-       !certUsage.equals(CertUsage.ProtectedObjectSigner) &&
-       !certUsage.equals(CertUsage.AnyCA) )
-                    {
-                        if (cm.isCertValid(nickname, true,
+                if (!certUsage.equals(CertUsage.UserCertImport) &&
+                        !certUsage.equals(CertUsage.ProtectedObjectSigner) &&
+                        !certUsage.equals(CertUsage.AnyCA)) {
+                    if (cm.isCertValid(nickname, true,
                             certUsage) == true) {
-                            usageList.add(certUsage.toString());
-                        }
+                        usageList.add(certUsage.toString());
                     }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         if (usageList.isEmpty()) {
             System.out.println("The certificate is not valid.");
         } else {
             System.out.println("The certificate is valid for the " +
-                               "following usages:\n");
+                    "following usages:\n");
             Iterator<String> iterateUsage = usageList.iterator();
             while (iterateUsage.hasNext()) {
                 System.out.println("                       " +
-                                          iterateUsage.next());
+                        iterateUsage.next());
             }
         }
     }

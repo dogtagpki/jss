@@ -22,24 +22,24 @@ import org.mozilla.jss.util.PasswordCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JSS_FileUploadServer  {
+public class JSS_FileUploadServer {
 
     public static Logger logger = LoggerFactory.getLogger(JSS_FileUploadServer.class);
 
     private static Vector<String> jssSupportedCiphers = new Vector<>();
     private static SSLServerSocket serverSock = null;
-    private static SSLSocket sock             = null;
+    private static SSLSocket sock = null;
 
-    private String        fServerCertNick     = null;
-    private String        fServerHost         = "localhost";
-    private String        fPasswordFile       = "passwords";
-    private String        fCertDbPath         = ".";
-    private boolean       TestInetAddress     = false;
-    private boolean       success             = true;
-    public  static int    port                = 29755;
-    public  static String usage               = "\nUSAGE:\njava "+
-            "JSS_FileUploadServer "+
-            "[certdb path] [password file]"+
+    private String fServerCertNick = null;
+    private String fServerHost = "localhost";
+    private String fPasswordFile = "passwords";
+    private String fCertDbPath = ".";
+    private boolean TestInetAddress = false;
+    private boolean success = true;
+    public static int port = 29755;
+    public static String usage = "\nUSAGE:\njava " +
+            "JSS_FileUploadServer " +
+            "[certdb path] [password file]" +
             "\n[server_host_name] " +
             "[cert nickname]" +
             "[testInetAddress: true|false]";
@@ -56,7 +56,7 @@ public class JSS_FileUploadServer  {
 
     public void doIt(String[] args) throws Exception {
 
-        if ( args.length < 1 || args[0].toLowerCase().indexOf("-h") != -1) {
+        if (args.length < 1 || args[0].toLowerCase().indexOf("-h") != -1) {
             System.out.println(usage);
             System.exit(1);
         }
@@ -74,10 +74,11 @@ public class JSS_FileUploadServer  {
                 fServerHost = args[2];
             if (args[3].length() > 0)
                 fServerCertNick = args[3];
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
-        CryptoManager    cm = CryptoManager.getInstance();
-        CryptoToken     tok = cm.getInternalKeyStorageToken();
+        CryptoManager cm = CryptoManager.getInstance();
+        CryptoToken tok = cm.getInternalKeyStorageToken();
         PasswordCallback cb = new FilePasswordCallback(fPasswordFile);
         tok.login(cb);
 
@@ -97,13 +98,13 @@ public class JSS_FileUploadServer  {
 
         if (TestInetAddress) {
             logger.debug("the HostName " + fServerHost +
-                        " the Inet Address " +
-                        InetAddress.getByName(fServerHost));
+                    " the Inet Address " +
+                    InetAddress.getByName(fServerHost));
             serverSock = new SSLServerSocket(port, 5,
-                    InetAddress.getByName(fServerHost), null , true);
+                    InetAddress.getByName(fServerHost), null, true);
         } else {
             logger.debug("Inet set to Null");
-            serverSock = new SSLServerSocket(port, 5, null , null , true);
+            serverSock = new SSLServerSocket(port, 5, null, null, true);
         }
 
         logger.debug("Server created socket");
@@ -114,7 +115,7 @@ public class JSS_FileUploadServer  {
         logger.debug("Server specified cert by nickname");
 
         System.out.println("Server ready to accept connections");
-        while ( true ) {
+        while (true) {
             // accept the connection
             sock = (SSLSocket) serverSock.accept();
             //sock.setKeepAlive(true);
@@ -134,10 +135,10 @@ public class JSS_FileUploadServer  {
      */
     private class readWriteThread extends Thread {
         private SSLSocket socket = null;
-        private int socketCntr   = 0;
+        private int socketCntr = 0;
 
         public readWriteThread(SSLSocket sock, int cntr) {
-            this.socket     = sock;
+            this.socket = sock;
             this.socketCntr = cntr;
         }
 
@@ -145,19 +146,19 @@ public class JSS_FileUploadServer  {
         public void run() {
 
             try {
-                String socketData  = null;
-                char[] cbuf        = null;
-                int    readLength  = 0;
-                String readString  = null;
+                String socketData = null;
+                char[] cbuf = null;
+                int readLength = 0;
+                String readString = null;
 
-                InputStream  is    = socket.getInputStream();
-                BufferedReader in  = new BufferedReader(
+                InputStream is = socket.getInputStream();
+                BufferedReader in = new BufferedReader(
                         new InputStreamReader(is));
-                long timeInMs      = new Date().getTime();
+                long timeInMs = new Date().getTime();
                 while ((readString = in.readLine()) != null) {
                     long now = new Date().getTime();
                     System.out.print("Read " + readString.getBytes().length +
-                            "bytes in " + (now-timeInMs) + "\n");
+                            "bytes in " + (now - timeInMs) + "\n");
                     timeInMs = now;
                 }
             } catch (Exception e) {
@@ -172,22 +173,24 @@ public class JSS_FileUploadServer  {
             implements SSLHandshakeCompletedListener {
         private String who;
         private JSS_FileUploadServer boss;
+
         public HandshakeListener(String who, JSS_FileUploadServer boss) {
             this.who = who;
             this.boss = boss;
         }
+
         @Override
         public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
             try {
                 String mesg = who + " got a completed handshake ";
                 SSLSecurityStatus status = event.getStatus();
-                if( status.isSecurityOn() ) {
+                if (status.isSecurityOn()) {
                     mesg += "(security is ON)";
                 } else {
                     mesg += "(security is OFF)";
                 }
                 logger.debug(mesg);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 boss.setFailure();
             }

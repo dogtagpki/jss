@@ -27,12 +27,11 @@ public class FilePasswordCallback implements PasswordCallback {
 
     /**
      */
-	@Override
+    @Override
     public Password getPasswordFirstAttempt(PasswordCallbackInfo info)
-		throws PasswordCallback.GiveUpException
-    {
+            throws PasswordCallback.GiveUpException {
         String pw = passwords.getProperty(info.getName());
-        if( pw == null ) {
+        if (pw == null) {
             throw new PasswordCallback.GiveUpException();
         } else {
             System.out.println("***FilePasswordCallback returns " + pw);
@@ -44,8 +43,7 @@ public class FilePasswordCallback implements PasswordCallback {
      */
     @Override
     public Password getPasswordAgain(PasswordCallbackInfo info)
-        throws PasswordCallback.GiveUpException
-    {
+            throws PasswordCallback.GiveUpException {
         throw new PasswordCallback.GiveUpException();
     }
 }

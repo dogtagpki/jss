@@ -51,22 +51,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/** Class to demonstrate DER encoding failure when using an ASN.1 enumerated type with a value of zero.
+/**
+ * Class to demonstrate DER encoding failure when using an ASN.1 enumerated type with a value of zero.
  *
- *  RFC 5280's section 5.3.1 lists the valid values for certificate revocation codes:
+ * RFC 5280's section 5.3.1 lists the valid values for certificate revocation codes:
  *
- *  CRLReason ::= ENUMERATED {
- *       unspecified             (0),
- *       keyCompromise           (1),
- *       cACompromise            (2),
- *       affiliationChanged      (3),
- *       superseded              (4),
- *       cessationOfOperation    (5),
- *       certificateHold         (6),
- *            -- value 7 is not used
- *       removeFromCRL           (8),
- *       privilegeWithdrawn      (9),
- *       aACompromise           (10) }
+ * CRLReason ::= ENUMERATED {
+ * unspecified (0),
+ * keyCompromise (1),
+ * cACompromise (2),
+ * affiliationChanged (3),
+ * superseded (4),
+ * cessationOfOperation (5),
+ * certificateHold (6),
+ * -- value 7 is not used
+ * removeFromCRL (8),
+ * privilegeWithdrawn (9),
+ * aACompromise (10) }
  *
  */
 public class EnumerationZeroTest {
@@ -92,6 +93,7 @@ public class EnumerationZeroTest {
      * Calculate the KeyIdentifier for an RSAPublicKey and place it in an AuthorityKeyIdentifier extension.
      *
      * Java encodes RSA public keys using the SubjectPublicKeyInfo type described in RFC 5280.
+     * 
      * <pre>
      * SubjectPublicKeyInfo  ::=  SEQUENCE  {
      *   algorithm            AlgorithmIdentifier,
@@ -109,7 +111,7 @@ public class EnumerationZeroTest {
      * @throws IOException if we can't construct a MessageDigest object.
      */
     public static AuthorityKeyIdentifierExtension buildAuthorityKeyIdentifier(RSAPublicKey key)
-        throws IOException {
+            throws IOException {
         try {
             MessageDigest d = MessageDigest.getInstance("SHA-1");
 
@@ -125,8 +127,7 @@ public class EnumerationZeroTest {
 
             KeyIdentifier ki = new KeyIdentifier(digest);
             return new AuthorityKeyIdentifierExtension(ki, null, null);
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new IOException("Could not find SHA1 implementation", e);
         }
     }
@@ -148,6 +149,7 @@ public class EnumerationZeroTest {
 
     /**
      * Build a CRL using JSS
+     * 
      * @param useZero whether or not to try creating a CRLEntry with the reason set to "unspecified"
      * @return an X509CRL object
      * @throws Exception if anything goes wrong
@@ -171,7 +173,7 @@ public class EnumerationZeroTest {
             entryExtensions.add(reasonExt);
 
             revokedCerts.add(
-                new RevokedCertImpl(BigInteger.valueOf((long) i), new Date(), entryExtensions));
+                    new RevokedCertImpl(BigInteger.valueOf((long) i), new Date(), entryExtensions));
         }
 
         CRLExtensions crlExtensions = new CRLExtensions();
@@ -187,12 +189,11 @@ public class EnumerationZeroTest {
         Date until = calendar.getTime();
 
         X509CRLImpl crlImpl = new X509CRLImpl(
-            issuer,
-            now,
-            until,
-            revokedCerts.toArray(new RevokedCertificate[] {}),
-            crlExtensions
-        );
+                issuer,
+                now,
+                until,
+                revokedCerts.toArray(new RevokedCertificate[] {}),
+                crlExtensions);
 
         crlImpl.sign(kp.getPrivate(), "SHA256withRSA");
 
@@ -206,6 +207,6 @@ public class EnumerationZeroTest {
 
         System.out.println(crl.toString());
 
-        buildCrl(true);  // will throw exception
+        buildCrl(true); // will throw exception
     }
 }

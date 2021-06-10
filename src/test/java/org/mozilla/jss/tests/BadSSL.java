@@ -88,53 +88,60 @@ public class BadSSL {
     /* Test cases whose handshakes should fail below. */
 
     public static void testExpired() throws Exception {
-        testHelper("expired.badssl.com", 443, new String[]{ "(-8181)", "has expired" });
+        testHelper("expired.badssl.com", 443, new String[] { "(-8181)", "has expired" });
     }
 
     public static void testWrongHost() throws Exception {
-        testHelper("wrong.host.badssl.com", 443, new String[]{ "(-12276)", "domain name does not match" });
+        testHelper("wrong.host.badssl.com", 443, new String[] { "(-12276)", "domain name does not match" });
     }
 
     public static void testSelfSigned() throws Exception {
-        testHelper("self-signed.badssl.com", 443, new String[]{ "(-8101)", "(-8156)", "type not approved", "issuer certificate is invalid" });
+        testHelper("self-signed.badssl.com", 443,
+                new String[] { "(-8101)", "(-8156)", "type not approved", "issuer certificate is invalid" });
     }
 
     public static void testUntrustedRoot() throws Exception {
-        testHelper("untrusted-root.badssl.com", 443, new String[]{ "(-8172)", "certificate issuer has been marked as not trusted" });
+        testHelper("untrusted-root.badssl.com", 443,
+                new String[] { "(-8172)", "certificate issuer has been marked as not trusted" });
     }
 
     public static void testRevoked() throws Exception {
-        testHelper("revoked.badssl.com", 443, new String[]{ "(-8180)", "has been revoked" });
+        testHelper("revoked.badssl.com", 443, new String[] { "(-8180)", "has been revoked" });
     }
 
     public static void testSHA1() throws Exception {
         try {
             testHelper("sha1-intermediate.badssl.com", 443, new String[] { "(-12286)", "Cannot communicate securely" });
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
 
     public static void testRC4MD5() throws Exception {
         try {
             testHelper("rc4-md5.badssl.com", 443, new String[] { "(-12286)", "Cannot communicate securely" });
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
 
     public static void testRC4() throws Exception {
         try {
             testHelper("rc4.badssl.com", 443, new String[] { "(-12286)", "Cannot communicate securely" });
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
 
     public static void test3DES() throws Exception {
         try {
             testHelper("3des.badssl.com", 443, new String[] { "(-12286)", "Cannot communicate securely" });
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
 
     public static void testNULL() throws Exception {
         try {
             testHelper("null.badssl.com", 443, new String[] { "(-12286)", "Cannot communicate securely" });
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
 
     /* Test cases which should handshake successfully below. */

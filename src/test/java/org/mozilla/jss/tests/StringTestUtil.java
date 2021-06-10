@@ -8,8 +8,7 @@ public class StringTestUtil {
 
     public final static String NULL_CHARS = "\u0000";
 
-    public final static String PRINTABLE_CHARS =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 \'()+,-./:=?";
+    public final static String PRINTABLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 \'()+,-./:=?";
 
     public final static String NON_PRINTABLE_CHARS = "\"\\";
 

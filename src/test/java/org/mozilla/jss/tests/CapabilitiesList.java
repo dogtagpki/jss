@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * The listing is done via two methods:
  * 1) A brief enumeration from example given at page that can no longer be found
- *    http://www.java2s.com/Code/Java/Security/ListAllProviderAndItsAlgorithms.html
+ * http://www.java2s.com/Code/Java/Security/ListAllProviderAndItsAlgorithms.html
  * 2) A verbose enumeration based on example 1 from Cryptography for Java by David Hook
  *
  * Initialization code is like the one in org.mozilla.jss.tests.HmacTest
@@ -43,10 +43,12 @@ public class CapabilitiesList {
     /* Inner class to use existing system nss database
      */
     public static class UseSystemDB {
-       /* Same location in the Linux distros we have tested
+        /* Same location in the Linux distros we have tested
         */
         public static String NSS_DB_LOCATION = "/etc/pki/nssdb";
-        private UseSystemDB() {}
+
+        private UseSystemDB() {
+        }
         /* Only a static method */
 
         /* Method adapted from one used in the candlepin projects
@@ -72,7 +74,7 @@ public class CapabilitiesList {
      *
      * The listing is done via two methods:
      * 1) A brief enumeration from example given at page that can no longer be found
-     *    http://www.java2s.com/Code/Java/Security/ListAllProviderAndItsAlgorithms.html
+     * http://www.java2s.com/Code/Java/Security/ListAllProviderAndItsAlgorithms.html
      * 2) A verbose enumeration based on example 1 from Cryptography for Java by David Hook
      *
      * It incorporates code from org.mozilla.jss.tests.JSSProvider
@@ -90,9 +92,9 @@ public class CapabilitiesList {
         public void listCapabilities(FileWriter fw, Provider p) throws Exception {
 
             Set<Object> keySet = p.keySet();
-            assert(keySet != null);
+            assert (keySet != null);
             Iterator it = keySet.iterator();
-            assert(it != null);
+            assert (it != null);
 
             // In the verbose listing, we want to create a mapping from
             // an implementation onto all of its aliases. To do this in one
@@ -101,9 +103,9 @@ public class CapabilitiesList {
             HashMap<String, HashSet<String>> mapping = new HashMap<>();
 
             while (it.hasNext()) {
-                String entry = (String)it.next();
+                String entry = (String) it.next();
                 if (entry.startsWith("Alg.Alias.")) {
-                    String implementation = (String)p.get(entry);
+                    String implementation = (String) p.get(entry);
                     assert !implementation.startsWith("Alg.Alias.");
 
                     // We need to do a little bit of "fixup" here. Each alias
@@ -132,8 +134,8 @@ public class CapabilitiesList {
             Collections.sort(entries);
             for (String entry : entries) {
                 String factoryClass = entry.substring(0, entry.indexOf('.'));
-                String name = entry.substring(factoryClass.length()+1);
-                assert(name != null);
+                String name = entry.substring(factoryClass.length() + 1);
+                assert (name != null);
                 fw.write(String.format("\t %s : %s", factoryClass, name));
                 fw.write(System.lineSeparator());
 
@@ -158,9 +160,9 @@ public class CapabilitiesList {
                     break;
                 }
             }
-            assert(jssProvider != null);
-            assert(jssProvider.getName().equals("Mozilla-JSS"));
-            assert(jssProvider instanceof org.mozilla.jss.JSSProvider);
+            assert (jssProvider != null);
+            assert (jssProvider.getName().equals("Mozilla-JSS"));
+            assert (jssProvider instanceof org.mozilla.jss.JSSProvider);
             return (jssProvider != null);
         }
 
@@ -179,18 +181,18 @@ public class CapabilitiesList {
         }
 
         public boolean createOutputDirs() throws Exception {
-           /* Create hierarchy of directores for the results */
+            /* Create hierarchy of directores for the results */
 
-           File dir4Listings = new File("listings");
-           dir4Listings.mkdir();
+            File dir4Listings = new File("listings");
+            dir4Listings.mkdir();
 
-           File dir4verboseListings = new File("listings/verbose");
-           dir4verboseListings.mkdir();
+            File dir4verboseListings = new File("listings/verbose");
+            dir4verboseListings.mkdir();
 
-           File dir4briefListings = new File("listings/brief");
-           dir4briefListings.mkdir();
+            File dir4briefListings = new File("listings/brief");
+            dir4briefListings.mkdir();
 
-           return true;
+            return true;
         }
 
         /* List providers capabilities using the brief listing method which adds
@@ -207,7 +209,7 @@ public class CapabilitiesList {
                     }
                     fw.close();
                     File resultsFile = new File(fileName);
-                    assert(resultsFile.exists());
+                    assert (resultsFile.exists());
                 }
             } catch (Exception e) {
                 logger.info("Exception caught in listBrief: " + e.getMessage(), e);
@@ -226,7 +228,7 @@ public class CapabilitiesList {
                     listCapabilities(fw, ps[i]);
                     fw.close();
                     File resultsFile = new File(fileName);
-                    assert(resultsFile.exists());
+                    assert (resultsFile.exists());
                 }
             } catch (Exception e) {
                 logger.info("Exception caught in listVerbose: " + e.getMessage(), e);
@@ -237,7 +239,8 @@ public class CapabilitiesList {
 
     public static void main(String[] args) throws Exception {
         Capabilities lister = new Capabilities();
-        if (!lister.createOutputDirs()) return;
+        if (!lister.createOutputDirs())
+            return;
         lister.addJssProvider();
         Provider ps[] = Security.getProviders();
         lister.listBrief(ps);

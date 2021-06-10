@@ -19,8 +19,8 @@ import java.util.Vector;
  */
 public abstract class ClassServer implements Runnable {
 
-    private ServerSocket server             = null;
-    private Vector<String>       supportedCiphers   = new Vector<>();
+    private ServerSocket server = null;
+    private Vector<String> supportedCiphers = new Vector<>();
 
     /**
      * Constructs a ClassServer based on <b>ss</b>
@@ -38,11 +38,11 @@ public abstract class ClassServer implements Runnable {
      */
     @Override
     public void run() {
-        Socket  socket             = null;
+        Socket socket = null;
         boolean socketListenStatus = true;
 
         // accept a connection
-        while ( socketListenStatus ) {
+        while (socketListenStatus) {
             try {
                 socket = server.accept();
             } catch (Exception ex) {
@@ -53,18 +53,18 @@ public abstract class ClassServer implements Runnable {
 
             //try to read some bytes, to allow the handshake to go through
             try {
-                InputStream is     = socket.getInputStream();
+                InputStream is = socket.getInputStream();
                 BufferedReader bir = new BufferedReader(
                         new InputStreamReader(is));
-                String socketData  = bir.readLine();
-                if ( socketData.equals("null") )
+                String socketData = bir.readLine();
+                if (socketData.equals("null"))
                     socketListenStatus = false;
-                else if ( socketData != null )
+                else if (socketData != null)
                     supportedCiphers.add(socketData);
                 socket.close();
-            } catch(EOFException e) {
-            } catch(IOException ex) {
-            } catch(NullPointerException npe) {
+            } catch (EOFException e) {
+            } catch (IOException ex) {
+            } catch (NullPointerException npe) {
                 socketListenStatus = false;
             }
         }
@@ -77,34 +77,33 @@ public abstract class ClassServer implements Runnable {
 
         System.out.println("Server exiting");
         System.out.println("-------------------------------------------" +
-                           "-------------");
+                "-------------");
         System.out.println("Summary of JSS client to JSSE server " +
-                           "communication test :");
+                "communication test :");
         System.out.println("-------------------------------------------" +
-                           "-------------");
+                "-------------");
         System.out.println("supportedCiphers.size " + supportedCiphers.size());
-        System.out.println("Constants.jssCiphersSuites "+
-                            Constants.jssCipherSuites.length);
+        System.out.println("Constants.jssCiphersSuites " +
+                Constants.jssCipherSuites.length);
 
-        for ( int i=0; i<(supportedCiphers.size()-1); i++ ) {
+        for (int i = 0; i < (supportedCiphers.size() - 1); i++) {
             System.out.print(i + " SC " +
-            supportedCiphers.elementAt(i));
+                    supportedCiphers.elementAt(i));
 
-            for ( int j=0; j<(Constants.jssCipherSuites.length); j++ ) {
-               if (Integer.parseInt(supportedCiphers.elementAt(i))
-                   == Constants.jssCipherSuites[j].value ) {
+            for (int j = 0; j < (Constants.jssCipherSuites.length); j++) {
+                if (Integer.parseInt(supportedCiphers.elementAt(i)) == Constants.jssCipherSuites[j].value) {
                     System.out.print(" JSSC ");
-                    System.out.println(" ["+ i +"]\t" +
-                                       Constants.jssCipherSuites[j].name);
+                    System.out.println(" [" + i + "]\t" +
+                            Constants.jssCipherSuites[j].name);
                     System.out.flush();
                 }
             }
         }
         System.out.println("-------------------------------------------" +
-                           "-------------");
+                "-------------");
         System.out.flush();
 
-        if( !socketListenStatus ) {
+        if (!socketListenStatus) {
             System.exit(0);
         }
     }

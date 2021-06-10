@@ -11,21 +11,20 @@ import org.mozilla.jss.SecretDecoderRing.*;
 import javax.crypto.*;
 
 /**
-* Secret Decoder ring tests.
-*/ 
+ * Secret Decoder ring tests.
+ */
 public class TestSDR {
 
-    public static final EncryptionAlgorithm encAlg =
-        EncryptionAlgorithm.DES3_CBC;
+    public static final EncryptionAlgorithm encAlg = EncryptionAlgorithm.DES3_CBC;
     public static final KeyGenAlgorithm keyGenAlg = KeyGenAlgorithm.DES3;
 
     public static void main(String[] args) throws Exception {
-        if( args.length != 2 ) {
+        if (args.length != 2) {
             throw new Exception("Usage: java TestSDR <dbdir> <pwfile>");
         }
 
         CryptoManager cm = CryptoManager.getInstance();
-        cm.setPasswordCallback( new FilePasswordCallback(args[1]) );
+        cm.setPasswordCallback(new FilePasswordCallback(args[1]));
 
         CryptoToken ksToken = cm.getInternalKeyStorageToken();
 
@@ -38,7 +37,7 @@ public class TestSDR {
         System.out.println("Successfully generated key");
 
         SecretKey key = km.lookupKey(encAlg, keyID);
-        if( key == null ) {
+        if (key == null) {
             throw new Exception("Error: generated key not found");
         }
         System.out.println("Successfully looked up key");
@@ -47,7 +46,7 @@ public class TestSDR {
         System.out.println("Successfully deleted key");
 
         key = km.lookupKey(encAlg, keyID);
-        if( key != null ) {
+        if (key != null) {
             throw new Exception("Deleted key still found");
         }
         System.out.println("Good: deleted key not found");
@@ -70,14 +69,14 @@ public class TestSDR {
         byte[] recovered = decryptor.decrypt(ciphertext);
         System.out.println("Decrypted ciphertext");
 
-        if( plaintext.length != recovered.length ) {
+        if (plaintext.length != recovered.length) {
             throw new Exception(
-                "Recovered plaintext does not match original plaintext");
-        }
-        for(int i=0; i < plaintext.length; ++i) {
-            if( plaintext[i] != recovered[i] ) {
-                throw new Exception(
                     "Recovered plaintext does not match original plaintext");
+        }
+        for (int i = 0; i < plaintext.length; ++i) {
+            if (plaintext[i] != recovered[i]) {
+                throw new Exception(
+                        "Recovered plaintext does not match original plaintext");
             }
         }
         System.out.println("Decrypted ciphertext matches original plaintext");
@@ -87,11 +86,12 @@ public class TestSDR {
         try {
             recovered = decryptor.decrypt(ciphertext);
             throw new Exception(
-                "Error: successfully decrypted with deleted key");
-        } catch (InvalidKeyException ike) { }
+                    "Error: successfully decrypted with deleted key");
+        } catch (InvalidKeyException ike) {
+        }
         System.out.println(
-            "Good: as expected did not decrypt plaintext with a " +
-            "deleted key");
+                "Good: as expected did not decrypt plaintext with a " +
+                        "deleted key");
 
         System.out.println("TestSDR: Success");
         System.exit(0);

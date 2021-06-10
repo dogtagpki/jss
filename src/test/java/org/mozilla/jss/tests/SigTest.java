@@ -29,13 +29,13 @@ public class SigTest {
     public static void usage() {
         System.out.println(
                 "Usage: java org.mozilla.jss.crypto.SigTest <dbdir> <pwfile>" +
-                " [tokenname]");
+                        " [tokenname]");
     }
 
     public static void main(String args[]) throws Exception {
         CryptoToken token;
         CryptoManager manager;
-        byte[] data = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        byte[] data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         byte[] signature;
         Signature signer;
         Signature signerPSS;
@@ -50,7 +50,6 @@ public class SigTest {
 
         manager = CryptoManager.getInstance();
         manager.setPasswordCallback(new FilePasswordCallback(args[1]));
-
 
         /* Print out list of available tokens */
         Enumeration<CryptoToken> en = manager.getAllTokens();
@@ -71,11 +70,11 @@ public class SigTest {
         kpgen = token.getKeyPairGenerator(KeyPairAlgorithm.RSA);
         kpgen.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
         KeyPairGeneratorSpi.Usage usages[] = {
-            KeyPairGeneratorSpi.Usage.SIGN,
-            KeyPairGeneratorSpi.Usage.VERIFY};
+                KeyPairGeneratorSpi.Usage.SIGN,
+                KeyPairGeneratorSpi.Usage.VERIFY };
         KeyPairGeneratorSpi.Usage usages_mask[] = {
-            KeyPairGeneratorSpi.Usage.SIGN,
-            KeyPairGeneratorSpi.Usage.VERIFY};
+                KeyPairGeneratorSpi.Usage.SIGN,
+                KeyPairGeneratorSpi.Usage.VERIFY };
 
         kpgen.setKeyPairUsages(usages, usages_mask);
         keyPair = kpgen.genKeyPair();

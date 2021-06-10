@@ -58,89 +58,89 @@ public class BenchmarkSSLSocket {
     public ServerSocket getServerSocket() throws Exception {
         System.err.println("Constructing socket...");
         switch (type) {
-            case "JSS.legacy": {
-                org.mozilla.jss.ssl.SSLServerSocket sock = new org.mozilla.jss.ssl.SSLServerSocket(port);
-                sock.setSoTimeout(0);
-                org.mozilla.jss.ssl.SSLServerSocket.configServerSessionIDCache(0, 43200, 43200, null);
+        case "JSS.legacy": {
+            org.mozilla.jss.ssl.SSLServerSocket sock = new org.mozilla.jss.ssl.SSLServerSocket(port);
+            sock.setSoTimeout(0);
+            org.mozilla.jss.ssl.SSLServerSocket.configServerSessionIDCache(0, 43200, 43200, null);
 
-                sock.setReuseAddress(true);
-                sock.requestClientAuth(false);
-                sock.requireClientAuth(org.mozilla.jss.ssl.SSLSocket.SSL_REQUIRE_NEVER);
-                sock.setUseClientMode(false);
-                sock.setServerCertNickname(nickname);
+            sock.setReuseAddress(true);
+            sock.requestClientAuth(false);
+            sock.requireClientAuth(org.mozilla.jss.ssl.SSLSocket.SSL_REQUIRE_NEVER);
+            sock.setUseClientMode(false);
+            sock.setServerCertNickname(nickname);
 
-                return sock;
-            }
-            case "JSS.SSLSocket": {
-                KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509");
+            return sock;
+        }
+        case "JSS.SSLSocket": {
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("NssX509");
 
-                SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
-                ctx.init(
+            SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
+            ctx.init(
                     kmf.getKeyManagers(),
                     new TrustManager[] { new JSSNativeTrustManager() },
-                    null
-                );
+                    null);
 
-                SSLServerSocketFactory factory = ctx.getServerSocketFactory();
-                org.mozilla.jss.ssl.javax.JSSServerSocket sock = (org.mozilla.jss.ssl.javax.JSSServerSocket) factory.createServerSocket(port);
+            SSLServerSocketFactory factory = ctx.getServerSocketFactory();
+            org.mozilla.jss.ssl.javax.JSSServerSocket sock = (org.mozilla.jss.ssl.javax.JSSServerSocket) factory
+                    .createServerSocket(port);
 
-                sock.setReuseAddress(true);
-                sock.setWantClientAuth(false);
-                sock.setNeedClientAuth(false);
-                sock.setUseClientMode(false);
-                sock.setCertFromAlias(nickname);
+            sock.setReuseAddress(true);
+            sock.setWantClientAuth(false);
+            sock.setNeedClientAuth(false);
+            sock.setUseClientMode(false);
+            sock.setCertFromAlias(nickname);
 
-                return sock;
-            }
-            case "SunJSSE.SSLSocket": {
-                FileInputStream fis = new FileInputStream(nickname);
-                KeyStore store = KeyStore.getInstance("PKCS12");
-                store.load(fis, "m1oZilla".toCharArray());
+            return sock;
+        }
+        case "SunJSSE.SSLSocket": {
+            FileInputStream fis = new FileInputStream(nickname);
+            KeyStore store = KeyStore.getInstance("PKCS12");
+            store.load(fis, "m1oZilla".toCharArray());
 
-                // Courtesy of https://stackoverflow.com/questions/537040/how-to-connect-to-a-secure-website-using-ssl-in-java-with-a-pkcs12-file
-                // Without using a JKS-type KeyStore for the TrustManager,
-                // constructing a TrustManagerFactory will consume 100% CPU
-                // and we won't reach the SSLServerSocketFactory code.
-                KeyStore jks = KeyStore.getInstance("JKS");
-                jks.load(null);
+            // Courtesy of https://stackoverflow.com/questions/537040/how-to-connect-to-a-secure-website-using-ssl-in-java-with-a-pkcs12-file
+            // Without using a JKS-type KeyStore for the TrustManager,
+            // constructing a TrustManagerFactory will consume 100% CPU
+            // and we won't reach the SSLServerSocketFactory code.
+            KeyStore jks = KeyStore.getInstance("JKS");
+            jks.load(null);
 
-                KeyStore ks = store;
-                for (java.util.Enumeration<String> t = ks.aliases(); t.hasMoreElements(); ) {
-                    String alias = t.nextElement();
-                    if (ks.isKeyEntry(alias)) {
-                        java.security.cert.Certificate[] a = ks.getCertificateChain(alias);
-                        // i = 1 skips the CA certificate
-                        for (int i = 1; i < a.length; i++) {
-                            java.security.cert.X509Certificate x509 = (java.security.cert.X509Certificate) a[i];
-                            jks.setCertificateEntry(x509.getSubjectDN().toString(), x509);
-                        }
+            KeyStore ks = store;
+            for (java.util.Enumeration<String> t = ks.aliases(); t.hasMoreElements();) {
+                String alias = t.nextElement();
+                if (ks.isKeyEntry(alias)) {
+                    java.security.cert.Certificate[] a = ks.getCertificateChain(alias);
+                    // i = 1 skips the CA certificate
+                    for (int i = 1; i < a.length; i++) {
+                        java.security.cert.X509Certificate x509 = (java.security.cert.X509Certificate) a[i];
+                        jks.setCertificateEntry(x509.getSubjectDN().toString(), x509);
                     }
                 }
+            }
 
-                KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-                kmf.init(store, "m1oZilla".toCharArray());
-                TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-                tmf.init(jks);
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(store, "m1oZilla".toCharArray());
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf.init(jks);
 
-                SSLContext ctx = SSLContext.getInstance("TLS", "SunJSSE");
-                ctx.init(
+            SSLContext ctx = SSLContext.getInstance("TLS", "SunJSSE");
+            ctx.init(
                     kmf.getKeyManagers(),
                     tmf.getTrustManagers(),
-                    null
-                );
+                    null);
 
-                SSLServerSocketFactory factory = ctx.getServerSocketFactory();
-                javax.net.ssl.SSLServerSocket sock = (javax.net.ssl.SSLServerSocket) factory.createServerSocket(port);
+            SSLServerSocketFactory factory = ctx.getServerSocketFactory();
+            javax.net.ssl.SSLServerSocket sock = (javax.net.ssl.SSLServerSocket) factory.createServerSocket(port);
 
-                sock.setReuseAddress(true);
-                sock.setWantClientAuth(false);
-                sock.setNeedClientAuth(false);
-                sock.setUseClientMode(false);
+            sock.setReuseAddress(true);
+            sock.setWantClientAuth(false);
+            sock.setNeedClientAuth(false);
+            sock.setUseClientMode(false);
 
-                return sock;
-            }
-            default:
-                throw new RuntimeException("Unknown socket type: `" + type + "` -- expected one of `JSS.SSLSocket`, `JSS.legacy`, or `SunJSSE.SSLSocket`.");
+            return sock;
+        }
+        default:
+            throw new RuntimeException("Unknown socket type: `" + type
+                    + "` -- expected one of `JSS.SSLSocket`, `JSS.legacy`, or `SunJSSE.SSLSocket`.");
         }
     }
 
@@ -189,8 +189,7 @@ public class BenchmarkSSLSocket {
         ArrayList<Thread> existing = new ArrayList<Thread>(limit);
 
         try (
-            ServerSocket server_socket = getServerSocket();
-        ) {
+                ServerSocket server_socket = getServerSocket();) {
             System.err.println("Listening for connections...");
             while (true) {
                 int length = existing.size();

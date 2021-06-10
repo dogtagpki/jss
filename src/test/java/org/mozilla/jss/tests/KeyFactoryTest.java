@@ -25,9 +25,8 @@ import org.slf4j.LoggerFactory;
 
 abstract class TestValues {
     protected TestValues(String keyGenAlg, String sigAlg,
-        Class<? extends KeySpec> privateKeySpecClass, Class<? extends KeySpec> publicKeySpecClass,
-        String provider)
-    {
+            Class<? extends KeySpec> privateKeySpecClass, Class<? extends KeySpec> publicKeySpecClass,
+            String provider) {
         this.keyGenAlg = keyGenAlg;
         this.sigAlg = sigAlg;
         this.privateKeySpecClass = privateKeySpecClass;
@@ -45,24 +44,24 @@ abstract class TestValues {
 class RSATestValues extends TestValues {
     public RSATestValues() {
         super("RSA", "SHA512withRSA", RSAPrivateCrtKeySpec.class,
-            RSAPublicKeySpec.class, "SunRsaSign");
+                RSAPublicKeySpec.class, "SunRsaSign");
     }
 
     public RSATestValues(String provider) {
         super("RSA", "SHA512withRSA", RSAPrivateCrtKeySpec.class,
-            RSAPublicKeySpec.class, provider);
+                RSAPublicKeySpec.class, provider);
     }
 }
 
 class DSATestValues extends TestValues {
     public DSATestValues() {
         super("DSA", "SHA512withDSA", DSAPrivateKeySpec.class,
-            DSAPublicKeySpec.class, "SUN");
+                DSAPublicKeySpec.class, "SUN");
     }
 
     public DSATestValues(String provider) {
         super("DSA", "SHA512withDSA", DSAPrivateKeySpec.class,
-            DSAPublicKeySpec.class, provider);
+                DSAPublicKeySpec.class, provider);
     }
 }
 
@@ -71,25 +70,25 @@ public class KeyFactoryTest {
     public static Logger logger = LoggerFactory.getLogger(KeyFactoryTest.class);
 
     public static void main(String argv[]) throws Throwable {
-        if( argv.length < 2 ) {
-	    System.out.println(
-		"Usage: java org.mozilla.jss.tests.KeyFactoryTest " +
-		 "<dbdir> <passwordFile>");
+        if (argv.length < 2) {
+            System.out.println(
+                    "Usage: java org.mozilla.jss.tests.KeyFactoryTest " +
+                            "<dbdir> <passwordFile>");
             System.exit(1);
         }
         CryptoToken tok = CryptoManager.getInstance().getInternalKeyStorageToken();
-	PasswordCallback cb = new FilePasswordCallback(argv[1]);
+        PasswordCallback cb = new FilePasswordCallback(argv[1]);
         tok.login(cb);
 
-/* This is just a huge amount of needless info for the tinderbox and nightly QA
-*        Provider []provs = Security.getProviders();
-*        for( int i=0; i < provs.length; ++i) {
-*            System.out.println("======");
-*            System.out.println(provs[i].getName());
-*            provs[i].list(System.out);
-*            System.out.println("======");
-*        }
-*/
+        /* This is just a huge amount of needless info for the tinderbox and nightly QA
+        *        Provider []provs = Security.getProviders();
+        *        for( int i=0; i < provs.length; ++i) {
+        *            System.out.println("======");
+        *            System.out.println(provs[i].getName());
+        *            provs[i].list(System.out);
+        *            System.out.println("======");
+        *        }
+        */
 
         (new KeyFactoryTest()).doTest();
     }
@@ -108,8 +107,7 @@ public class KeyFactoryTest {
     void genPrivKeyFromSpec(TestValues vals) throws Throwable {
 
         // generate the key pair
-        KeyPairGenerator kpg =
-            KeyPairGenerator.getInstance(vals.keyGenAlg, vals.provider);
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(vals.keyGenAlg, vals.provider);
         if (vals.keyGenAlg.equalsIgnoreCase("RSA")) {
             kpg.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
         } else if (vals.keyGenAlg.equalsIgnoreCase("DSA")) {
@@ -122,25 +120,23 @@ public class KeyFactoryTest {
 
         // get the private key spec
         KeyFactory sunFact = KeyFactory.getInstance(vals.keyGenAlg,
-            vals.provider);
-        KeySpec keySpec =
-            sunFact.getKeySpec(pair.getPrivate(), vals.privateKeySpecClass);
+                vals.provider);
+        KeySpec keySpec = sunFact.getKeySpec(pair.getPrivate(), vals.privateKeySpecClass);
 
         // import it into JSS
         KeyFactory jssFact = KeyFactory.getInstance(vals.keyGenAlg,
-            "Mozilla-JSS");
+                "Mozilla-JSS");
         PrivateKey jssPrivk = jssFact.generatePrivate(keySpec);
 
         signVerify(vals.sigAlg, jssPrivk, "Mozilla-JSS",
-            pair.getPublic(), vals.provider);
+                pair.getPublic(), vals.provider);
 
         System.out.println("Successfully generated a " + vals.keyGenAlg +
-            " private key from a " + vals.privateKeySpecClass.getName());
+                " private key from a " + vals.privateKeySpecClass.getName());
     }
 
     public void signVerify(String sigAlg, PrivateKey privk, String signProv,
-        PublicKey pubk, String verifyProv) throws Throwable
-    {
+            PublicKey pubk, String verifyProv) throws Throwable {
         Signature signSig = Signature.getInstance(sigAlg, signProv);
         signSig.initSign(privk);
         String toBeSigned = "blah blah blah sign me";
@@ -150,18 +146,18 @@ public class KeyFactoryTest {
         Signature verSig = Signature.getInstance(sigAlg, verifyProv);
         verSig.initVerify(pubk);
         verSig.update(toBeSigned.getBytes("UTF-8"));
-        if( ! verSig.verify(signature) ) {
+        if (!verSig.verify(signature)) {
             throw new Exception(
-                "Private/public key mismatch: signing alg=" + sigAlg +
-                ", signing provider=" + signProv + ", verifying provider = " +
-                verifyProv);
+                    "Private/public key mismatch: signing alg=" + sigAlg +
+                            ", signing provider=" + signProv + ", verifying provider = " +
+                            verifyProv);
         }
     }
 
     void genPubKeyFromSpec(TestValues vals) throws Throwable {
         // generate a key pair
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(vals.keyGenAlg,
-            vals.provider);
+                vals.provider);
         if (vals.keyGenAlg.equalsIgnoreCase("RSA")) {
             kpg.initialize(Policy.RSA_MINIMUM_KEY_SIZE);
         } else if (vals.keyGenAlg.equalsIgnoreCase("DSA")) {
@@ -173,19 +169,18 @@ public class KeyFactoryTest {
 
         // get the public key spec
         KeyFactory sunFact = KeyFactory.getInstance(vals.keyGenAlg,
-            vals.provider);
-        KeySpec keySpec =
-            sunFact.getKeySpec(pair.getPublic(), vals.publicKeySpecClass);
+                vals.provider);
+        KeySpec keySpec = sunFact.getKeySpec(pair.getPublic(), vals.publicKeySpecClass);
 
         // import it into JSS
         KeyFactory jssFact = KeyFactory.getInstance(vals.keyGenAlg,
-            "Mozilla-JSS");
+                "Mozilla-JSS");
         PublicKey jssPubk = jssFact.generatePublic(keySpec);
 
         signVerify(vals.sigAlg, pair.getPrivate(), vals.provider,
-            jssPubk, "Mozilla-JSS");
+                jssPubk, "Mozilla-JSS");
 
         System.out.println("Successfully generated a " + vals.keyGenAlg +
-            " public key from a " + vals.publicKeySpecClass.getName());
+                " public key from a " + vals.publicKeySpecClass.getName());
     }
 }

@@ -19,19 +19,19 @@ import org.slf4j.LoggerFactory;
  * Note this implementation accepts all certificates!
  */
 public class TestCertificateApprovalCallback
-    implements SSLCertificateApprovalCallback {
+        implements SSLCertificateApprovalCallback {
 
     public static Logger logger = LoggerFactory.getLogger(TestCertificateApprovalCallback.class);
 
     @Override
     public boolean approve(
-        org.mozilla.jss.crypto.X509Certificate servercert,
-        SSLCertificateApprovalCallback.ValidityStatus status) {
+            org.mozilla.jss.crypto.X509Certificate servercert,
+            SSLCertificateApprovalCallback.ValidityStatus status) {
 
         SSLCertificateApprovalCallback.ValidityItem item;
 
         logger.debug("in TestCertificateApprovalCallback.approve()");
-            /* dump out server cert details */
+        /* dump out server cert details */
 
         logger.debug("Peer cert details:");
         logger.debug("     subject: " + servercert.getSubjectDN());
@@ -40,20 +40,19 @@ public class TestCertificateApprovalCallback
 
         /* iterate through all the problems */
 
-        boolean trust_the_server_cert=false;
+        boolean trust_the_server_cert = false;
 
         Enumeration<ValidityItem> errors = status.getReasons();
-        int i=0;
+        int i = 0;
         while (errors.hasMoreElements()) {
             i++;
             item = errors.nextElement();
-            logger.debug("item "+i+
-                    " reason="+item.getReason()+
-                    " depth="+item.getDepth());
+            logger.debug("item " + i +
+                    " reason=" + item.getReason() +
+                    " depth=" + item.getDepth());
 
             org.mozilla.jss.crypto.X509Certificate cert = item.getCert();
-            if (item.getReason() ==
-                SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
+            if (item.getReason() == SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
                 trust_the_server_cert = true;
             }
             logger.debug(" cert details:");
@@ -66,16 +65,14 @@ public class TestCertificateApprovalCallback
             logger.debug("importing certificate.");
 
             try {
-                InternalCertificate newcert =
-                    org.mozilla.jss.CryptoManager.getInstance().
-                    importCertToPerm(servercert,"testnick");
+                InternalCertificate newcert = org.mozilla.jss.CryptoManager.getInstance().importCertToPerm(servercert,
+                        "testnick");
                 newcert.setSSLTrust(InternalCertificate.TRUSTED_PEER |
-                    InternalCertificate.VALID_PEER);
+                        InternalCertificate.VALID_PEER);
             } catch (Exception e) {
-                System.out.println("thrown exception: "+e);
+                System.out.println("thrown exception: " + e);
             }
         }
-
 
         /* allow the connection to continue.                 */
         /*   returning false here would abort the connection */
@@ -84,4 +81,3 @@ public class TestCertificateApprovalCallback
     }
 
 }
-

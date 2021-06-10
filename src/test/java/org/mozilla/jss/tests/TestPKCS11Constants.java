@@ -16,7 +16,7 @@ public class TestPKCS11Constants {
         Class jss = Class.forName("org.mozilla.jss.pkcs11.PKCS11Constants");
         Class sun = Class.forName("sun.security.pkcs11.wrapper.PKCS11Constants");
 
-        assert(!jss.equals(sun));
+        assert (!jss.equals(sun));
 
         // Get lists of all fields; lets us call the reflection seervices
         // once as they're likely slow.
@@ -52,8 +52,8 @@ public class TestPKCS11Constants {
                 Field sun_field = sun_map.get(key);
 
                 // Validate that types are correct before accessing...
-                assert(jss_field.getType() == long.class);
-                assert(sun_field.getType() == long.class);
+                assert (jss_field.getType() == long.class);
+                assert (sun_field.getType() == long.class);
 
                 if (jss_field.getLong(null) != sun_field.getLong(null)) {
                     System.err.println("Symbol: " + key + " - NOT OK!!\n");
@@ -61,7 +61,7 @@ public class TestPKCS11Constants {
                     System.err.println("\tSun: " + sun_field.getLong(null));
                 }
 
-                assert(jss_field.getLong(null) == sun_field.getLong(null));
+                assert (jss_field.getLong(null) == sun_field.getLong(null));
                 System.out.println("Field: " + key + " - OK");
             } else if (jss_map.containsKey(key)) {
                 System.err.println("Field: " + key + " - only JSS");

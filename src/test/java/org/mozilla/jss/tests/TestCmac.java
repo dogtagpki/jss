@@ -36,22 +36,23 @@ public class TestCmac {
      * These same vectors are also found in FRC 4493, Section 4.
      */
     public static void testNISTExamples() throws Exception {
-        byte[] all_input = Base64.getDecoder().decode("a8G+4i5An5bpPX4Rc5MXKq4tilceA6ycnrdvrEWvjlEwyBxGo1zkEeX7wRkaClLv9p8kRd9PmxetK0F75mw3EA==");
-        int[] input_lengths = new int[] { 0, 16, 20, 64};
+        byte[] all_input = Base64.getDecoder()
+                .decode("a8G+4i5An5bpPX4Rc5MXKq4tilceA6ycnrdvrEWvjlEwyBxGo1zkEeX7wRkaClLv9p8kRd9PmxetK0F75mw3EA==");
+        int[] input_lengths = new int[] { 0, 16, 20, 64 };
 
         byte[][] all_expected = new byte[][] {
-            Base64.getDecoder().decode("ux1pKelZNyh/o30Sm3VnRg=="),
-            Base64.getDecoder().decode("BwoWtGtNQUT3m92d0EoofA=="),
-            Base64.getDecoder().decode("fYVEnqbqGcgjp794g3363g=="),
-            Base64.getDecoder().decode("UfC+v347nZL8SXQXeTY8/g=="),
-            Base64.getDecoder().decode("0X3fRq2qzeUxysSD3nqTZw=="),
-            Base64.getDecoder().decode("npmnvzHnEJAGYvZeYXxRhA=="),
-            Base64.getDecoder().decode("PXXBlO2WBwREqfp+x0Ds+A=="),
-            Base64.getDecoder().decode("odXfDu15D3lNd1iWWfOaEQ=="),
-            Base64.getDecoder().decode("Aoli9ht7+J78a1UfRmfZgw=="),
-            Base64.getDecoder().decode("KKcCP0Uuj4K9S/KNjDfDXA=="),
-            Base64.getDecoder().decode("FWcn3Ah4lEoCPB/gO61tkw=="),
-            Base64.getDecoder().decode("4ZkhkFSfbtVpaiwFbDFUEA==")
+                Base64.getDecoder().decode("ux1pKelZNyh/o30Sm3VnRg=="),
+                Base64.getDecoder().decode("BwoWtGtNQUT3m92d0EoofA=="),
+                Base64.getDecoder().decode("fYVEnqbqGcgjp794g3363g=="),
+                Base64.getDecoder().decode("UfC+v347nZL8SXQXeTY8/g=="),
+                Base64.getDecoder().decode("0X3fRq2qzeUxysSD3nqTZw=="),
+                Base64.getDecoder().decode("npmnvzHnEJAGYvZeYXxRhA=="),
+                Base64.getDecoder().decode("PXXBlO2WBwREqfp+x0Ds+A=="),
+                Base64.getDecoder().decode("odXfDu15D3lNd1iWWfOaEQ=="),
+                Base64.getDecoder().decode("Aoli9ht7+J78a1UfRmfZgw=="),
+                Base64.getDecoder().decode("KKcCP0Uuj4K9S/KNjDfDXA=="),
+                Base64.getDecoder().decode("FWcn3Ah4lEoCPB/gO61tkw=="),
+                Base64.getDecoder().decode("4ZkhkFSfbtVpaiwFbDFUEA==")
         };
 
         for (int i = 0; i < all_expected.length; i++) {
@@ -83,6 +84,6 @@ public class TestCmac {
 
         byte[] actual = mac.doFinal(input);
 
-        assert(Arrays.equals(actual, expected));
+        assert (Arrays.equals(actual, expected));
     }
 }

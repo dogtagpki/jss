@@ -32,22 +32,21 @@ import org.mozilla.jss.CryptoManager;
 /**
  * JSSE SSLServer class that acts as SSL Server
  *
- * @author  Sandeep.Konchady@Sun.COM
+ * @author Sandeep.Konchady@Sun.COM
  * @version 1.0
  */
 
 public class JSSE_SSLServer {
 
-    private int DefaultServerPort   = 29753;
-    private int port                = DefaultServerPort;
-    private String type             = "SSLv3";
-    private String configDir      = "";
-    private boolean bClientAuth     = false;
-    private boolean       bVerbose        = false;
+    private int DefaultServerPort = 29753;
+    private int port = DefaultServerPort;
+    private String type = "SSLv3";
+    private String configDir = "";
+    private boolean bClientAuth = false;
+    private boolean bVerbose = false;
     private Vector<String> supportedCiphers = new Vector<>();
     private CryptoManager manager;
     private String provider = "SunJCE";
-
 
     /**
      * Constructs a JSSE_SSLServer.
@@ -55,8 +54,9 @@ public class JSSE_SSLServer {
     public JSSE_SSLServer() throws IOException {
     }
 
-       /**
+    /**
      * Set the provider to use.
+     * 
      * @param p
      */
     public void setProvider(String p) {
@@ -65,13 +65,16 @@ public class JSSE_SSLServer {
 
     /**
      * Get the configured provider.
+     * 
      * @return String provider
      */
     public String getProvider() {
         return provider;
     }
+
     /**
      * Set the location of keystore file.
+     * 
      * @param fconfigDir
      */
     public void setKeystore(String fconfigDir) {
@@ -80,6 +83,7 @@ public class JSSE_SSLServer {
 
     /**
      * Get the location of keystore file.
+     * 
      * @return String configDir
      */
     public String getKeystore() {
@@ -94,11 +98,13 @@ public class JSSE_SSLServer {
     public static void main(String args[]) {
         try {
             (new JSSE_SSLServer()).startSSLServer(args);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     /**
      * Start SSLServer and accept connections.
+     * 
      * @param args
      */
     public void startSSLServer(String[] args) throws Exception {
@@ -107,18 +113,18 @@ public class JSSE_SSLServer {
         String nssConfig = "";
         JSSE_SSLServer sslServer = new JSSE_SSLServer();
 
-        if ( args.length <= 1 ) {
+        if (args.length <= 1) {
             System.out.println(
-                "USAGE: java JSSE_SSLServer [port] [TLS | SSLv3]" +
-                "[ClientAuth = true | false]" +
-                "[config directory] [keystore filename]" +
-                "[NSS DB passwordFile]" +
-                "[JCE || Mozilla-JSS || Sunpkcs11]");
+                    "USAGE: java JSSE_SSLServer [port] [TLS | SSLv3]" +
+                            "[ClientAuth = true | false]" +
+                            "[config directory] [keystore filename]" +
+                            "[NSS DB passwordFile]" +
+                            "[JCE || Mozilla-JSS || Sunpkcs11]");
             System.out.println(
-                "\nIf the second argument is TLS, it will start as a\n" +
-                "TLS server, otherwise, it will be started in SSLv3 mode." +
-                "\nIf the third argument is true,it will require\n" +
-                "client authentication as well.");
+                    "\nIf the second argument is TLS, it will start as a\n" +
+                            "TLS server, otherwise, it will be started in SSLv3 mode." +
+                            "\nIf the third argument is true,it will require\n" +
+                            "client authentication as well.");
             System.exit(1);
         }
 
@@ -137,11 +143,11 @@ public class JSSE_SSLServer {
         if (args.length >= 4 && args.length >= 5) {
             configDir = args[3];
             String keystore = configDir + "/" + args[4];
-            if ( keystore != null ) {
+            if (keystore != null) {
                 sslServer.setKeystore(keystore);
             }
         }
-        if (args.length >= 7 && args.length >=8 ) {
+        if (args.length >= 7 && args.length >= 8) {
             if ((args[5].equalsIgnoreCase("Mozilla-JSS"))) {
                 if (args.length >= 8) {
                     pwFile = args[7];
@@ -151,48 +157,42 @@ public class JSSE_SSLServer {
 
                 manager = CryptoManager.getInstance();
                 manager.setPasswordCallback(
-                    new FilePasswordCallback(pwFile) );
+                        new FilePasswordCallback(pwFile));
 
-             } else if (args[5].equalsIgnoreCase("Sunpkcs11")) {
+            } else if (args[5].equalsIgnoreCase("Sunpkcs11")) {
 
                 System.out.println("Sunpkcs11 requires JDK 1.5" +
                         "at this time JSS need to build with JDK 1.4.2");
-//SunPKCS11     nssConfig = args[6];
-//SunPKCS11     System.out.println("Initializing " +  args[5] + "-NSS");
-//SunPKCS11     Provider nss = null;
-//SunPKCS11     nss = new sun.security.pkcs11.SunPKCS11(nssConfig);
-//SunPKCS11     Security.insertProviderAt(nss, 1);
-//SunPKCS11     System.out.println("Initialized " +  args[5] + "-NSS");
+                //SunPKCS11     nssConfig = args[6];
+                //SunPKCS11     System.out.println("Initializing " +  args[5] + "-NSS");
+                //SunPKCS11     Provider nss = null;
+                //SunPKCS11     nss = new sun.security.pkcs11.SunPKCS11(nssConfig);
+                //SunPKCS11     Security.insertProviderAt(nss, 1);
+                //SunPKCS11     System.out.println("Initialized " +  args[5] + "-NSS");
 
             } else {
                 //use default
             }
 
-
         }
 
-            Provider[] providers = Security.getProviders();
-            for ( int i=0; i < providers.length; i++ ) {
-                System.out.println("Provider "+i+": "+providers[i].getName());
-            }
+        Provider[] providers = Security.getProviders();
+        for (int i = 0; i < providers.length; i++) {
+            System.out.println("Provider " + i + ": " + providers[i].getName());
+        }
 
-
-
-//        System.out.println("using port: " + port);
-//        System.out.println("mode type " + type + " ClientAuth " +
-//            (bClientAuth ? "true" : "false"));
-//        System.out.println("configDir " + configDir);
+        //        System.out.println("using port: " + port);
+        //        System.out.println("mode type " + type + " ClientAuth " +
+        //            (bClientAuth ? "true" : "false"));
+        //        System.out.println("configDir " + configDir);
 
         try {
             System.out.println("creating SSLSockets:");
 
-            SSLServerSocketFactory ssf =
-                sslServer.getServerSocketFactory(type);
+            SSLServerSocketFactory ssf = sslServer.getServerSocketFactory(type);
 
-
-            if ( ssf != null ) {
-                SSLServerSocket ss =
-                    (SSLServerSocket)ssf.createServerSocket(port);
+            if (ssf != null) {
+                SSLServerSocket ss = (SSLServerSocket) ssf.createServerSocket(port);
                 // Set server socket timeout to 5 minutes
                 ss.setSoTimeout(300 * 1000);
                 System.out.println("Enable ciphers.");
@@ -209,38 +209,38 @@ public class JSSE_SSLServer {
                         //The client will tell the server to shutdown
                         Socket socket = ss.accept();
                         socket.setSoTimeout(300 * 1000);
-                        socketCntr ++;
+                        socketCntr++;
                         readWriteThread rwThread = new readWriteThread(socket,
-                            socketCntr);
+                                socketCntr);
                         rwThread.start();
                     } catch (IOException ex) {
                         System.out.println("Exception caught in " +
-                            "SSLServerSocket.accept():" +
-                            ex.getMessage());
+                                "SSLServerSocket.accept():" +
+                                ex.getMessage());
                         try {
                             ss.close();
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                         break;
                     }
                 }
             } else {
 
-
-                if(System.getProperty("java.vendor").equals("IBM Corporation")){
+                if (System.getProperty("java.vendor").equals("IBM Corporation")) {
                     System.out.println("Using IBM JDK: Cannot load keystore " +
-                        "due to strong security encryption settings\nwith " +
-                        "limited Jurisdiction policy files :\n http://" +
-                        "www-1.ibm.com/support/docview.wss?uid=swg21169931");
+                            "due to strong security encryption settings\nwith " +
+                            "limited Jurisdiction policy files :\n http://" +
+                            "www-1.ibm.com/support/docview.wss?uid=swg21169931");
                     System.exit(0);
                 }
                 System.out.println("unable to initialize JSSE_SocketFactory " +
-                    "exiting!");
+                        "exiting!");
                 System.exit(1);
 
             }
         } catch (Exception e) {
             System.out.println("Unable to start JSSE_SSLServer: " +
-                e.getMessage());
+                    e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }
@@ -256,10 +256,10 @@ public class JSSE_SSLServer {
      */
     private class readWriteThread extends Thread {
         private Socket socket = null;
-        private int socketCntr   = 0;
+        private int socketCntr = 0;
 
         public readWriteThread(Socket sock, int cntr) {
-            this.socket     = sock;
+            this.socket = sock;
             this.socketCntr = cntr;
         }
 
@@ -267,14 +267,14 @@ public class JSSE_SSLServer {
         public void run() {
 
             try {
-                String inputLine   = null;
-                String outputLine  = null;
-                InputStream  is    = socket.getInputStream();
-                OutputStream os    = socket.getOutputStream();
+                String inputLine = null;
+                String outputLine = null;
+                InputStream is = socket.getInputStream();
+                OutputStream os = socket.getOutputStream();
                 BufferedReader bir = new BufferedReader(
-                    new InputStreamReader(is));
-                PrintWriter out    = new PrintWriter(new BufferedWriter(
-                    new OutputStreamWriter(os)));
+                        new InputStreamReader(is));
+                PrintWriter out = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(os)));
 
                 while (true) {
 
@@ -283,7 +283,7 @@ public class JSSE_SSLServer {
                             if (inputLine.equalsIgnoreCase("shutdown")) {
                                 if (bVerbose) {
                                     System.out.println("Client told  " +
-                                        "JSSE_SSLServer to Shutdown!");
+                                            "JSSE_SSLServer to Shutdown!");
                                 }
                                 is.close();
                                 os.close();
@@ -294,30 +294,31 @@ public class JSSE_SSLServer {
 
                             if (bVerbose) {
                                 System.out.println("ServerSSLSocket-" +
-                                    socketCntr + ": Received " + inputLine);
+                                        socketCntr + ": Received " + inputLine);
                                 System.out.println("Sending" + outputLine);
                             }
                             out.println(outputLine);
                             out.flush();
                         } else {
-                                 /* if you read null then quit. otherwise you
-                                  * will be in endless loop with the socket
-                                  * stuck in CLOSED_WAIT.
-                                  */
+                            /* if you read null then quit. otherwise you
+                             * will be in endless loop with the socket
+                             * stuck in CLOSED_WAIT.
+                             */
                             if (bVerbose) {
                                 System.out.println("ServerSSLSocket-" +
-                                    socketCntr +
-                                    " read null aborting connection.");
+                                        socketCntr +
+                                        " read null aborting connection.");
                             }
                             break;
                         }
 
                     } catch (SocketTimeoutException ste) {
                         System.out.println("ServerSSLSocket-" + socketCntr +
-                            " timed out: " +  ste.toString());
+                                " timed out: " + ste.toString());
                         break;
                     } catch (IOException ex) {
-                        if (bVerbose) ex.printStackTrace();
+                        if (bVerbose)
+                            ex.printStackTrace();
                         break;
                     }
                 }
@@ -328,7 +329,7 @@ public class JSSE_SSLServer {
                 socket.close();
                 if (bVerbose) {
                     System.out.println("ServerSSLSocket " + socketCntr +
-                        " has been Closed.");
+                            " has been Closed.");
                 }
             } catch (IOException e) {
 
@@ -338,21 +339,19 @@ public class JSSE_SSLServer {
         }
     }
 
-
-
     SSLServerSocketFactory getServerSocketFactory(String type) {
 
         // set up key manager to do server authentication
-        SSLContext             ctx = null;
-        KeyManagerFactory      kmf = null;
-        KeyStore                ks = null;
-        char[]          passphrase = "m1oZilla".toCharArray();
+        SSLContext ctx = null;
+        KeyManagerFactory kmf = null;
+        KeyStore ks = null;
+        char[] passphrase = "m1oZilla".toCharArray();
         SSLServerSocketFactory ssf = null;
 
         System.setProperty("javax.net.ssl.trustStore",
-            System.getProperty("java.home") + "/jre/lib/security/cacerts");
+                System.getProperty("java.home") + "/jre/lib/security/cacerts");
         String certificate = "SunX509";
-        String javaVendor  = System.getProperty("java.vendor");
+        String javaVendor = System.getProperty("java.vendor");
         if (javaVendor.equals("IBM Corporation"))
             certificate = "IbmX509";
 

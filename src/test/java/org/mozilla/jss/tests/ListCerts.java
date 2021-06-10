@@ -24,7 +24,7 @@ public class ListCerts {
 
         try {
 
-            if( args.length != 2 ) {
+            if (args.length != 2) {
                 System.out.println("Usage: ListCerts <dbdir> <nickname>");
                 return;
             }
@@ -34,38 +34,36 @@ public class ListCerts {
 
             X509Certificate[] certs = cm.findCertsByNickname(nickname);
             System.out.println(certs.length + " certs found with this nickname.");
-            for(int i=0; i < certs.length; i++) {
-                System.out.println("\nSubject: "+certs[i].getSubjectDN());
-                Certificate cert =
-                    (Certificate)ASN1Util.decode(Certificate.getTemplate(),
-                    certs[i].getEncoded());
+            for (int i = 0; i < certs.length; i++) {
+                System.out.println("\nSubject: " + certs[i].getSubjectDN());
+                Certificate cert = (Certificate) ASN1Util.decode(Certificate.getTemplate(),
+                        certs[i].getEncoded());
                 CertificateInfo info = cert.getInfo();
                 OBJECT_IDENTIFIER sigalg = info.getSignatureAlgId().getOID();
                 System.out.println("Signature oid " +
-                    info.getSignatureAlgId().getOID());
+                        info.getSignatureAlgId().getOID());
 
                 SEQUENCE extensions = info.getExtensions();
                 for (int j = 0; j < extensions.size(); j++) {
-                    Extension ext = (Extension)extensions.elementAt(i);
+                    Extension ext = (Extension) extensions.elementAt(i);
                     OBJECT_IDENTIFIER oid = ext.getExtnId();
                     OCTET_STRING value = ext.getExtnValue();
                     System.out.println("Extension " + oid.toString());
                     if (ext.getCritical()) {
                         System.out.println("Critical extension: "
-                            + oid.toString());
+                                + oid.toString());
                     } else {
                         System.out.println("NON Critical extension: "
-                            + oid.toString());
+                                + oid.toString());
                     }
                 }
                 System.out.println("Convert to JDK cert");
                 //Convert to JDK certificate
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 ByteArrayInputStream bais = new ByteArrayInputStream(
-                    certs[i].getEncoded());
-                java.security.cert.X509Certificate jdkCert =
-                    (java.security.cert.X509Certificate)
-                    cf.generateCertificate(bais);
+                        certs[i].getEncoded());
+                java.security.cert.X509Certificate jdkCert = (java.security.cert.X509Certificate) cf
+                        .generateCertificate(bais);
                 bais.close();
 
                 System.out.println("Subject " + jdkCert.getSubjectDN());
@@ -77,7 +75,9 @@ public class ListCerts {
                         String oid = j.next();
                         System.out.println(oid);
                     }
-                } else { System.out.println("no NON Critical Extensions"); }
+                } else {
+                    System.out.println("no NON Critical Extensions");
+                }
 
                 /* critical extensions */
                 Set<String> critSet = jdkCert.getCriticalExtensionOIDs();
@@ -87,11 +87,13 @@ public class ListCerts {
                         String oid = j.next();
                         System.out.println(oid);
                     }
-                } else { System.out.println("no Critical Extensions"); }
+                } else {
+                    System.out.println("no Critical Extensions");
+                }
             }
             System.out.println("END");
 
-        } catch( Exception e ) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
