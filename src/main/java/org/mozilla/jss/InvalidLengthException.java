@@ -6,7 +6,9 @@ package org.mozilla.jss;
 public final class InvalidLengthException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    public InvalidLengthException() {}
+    public InvalidLengthException() {
+    }
+
     public InvalidLengthException(String mesg) {
         super(mesg);
     }

@@ -8,7 +8,9 @@ package org.mozilla.jss;
  */
 public class NoSuchTokenException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
-    public NoSuchTokenException() {}
+
+    public NoSuchTokenException() {
+    }
 
     public NoSuchTokenException(String mesg) {
         super(mesg);

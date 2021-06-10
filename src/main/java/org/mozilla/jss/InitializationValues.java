@@ -39,7 +39,8 @@ public final class InitializationValues {
      * This class enumerates the possible modes for FIPS compliance.
      */
     public static final class FIPSMode {
-        private FIPSMode() {}
+        private FIPSMode() {
+        }
 
         /**
          * Enable FIPS mode.
@@ -50,7 +51,7 @@ public final class InitializationValues {
          */
         public static final InitializationValues.FIPSMode DISABLED = new FIPSMode();
         /**
-         * Leave FIPS mode unchanged.  All servers except Admin
+         * Leave FIPS mode unchanged. All servers except Admin
          * Server should use this, because only Admin Server should
          * be altering FIPS mode.
          */
@@ -70,8 +71,7 @@ public final class InitializationValues {
      * and the name of the secmod/pkcs11 database.
      */
     public InitializationValues(String configDir, String certPrefix,
-        String keyPrefix, String secmodName)
-    {
+            String keyPrefix, String secmodName) {
         this.configDir = configDir;
         this.certPrefix = certPrefix;
         this.keyPrefix = keyPrefix;
@@ -88,24 +88,25 @@ public final class InitializationValues {
      * is needed. May be NULL, in which the library will immediately fail
      * to get a password if it tries to login automatically while
      * performing
-     * a cryptographic operation.  It will still work if the token
+     * a cryptographic operation. It will still work if the token
      * has been manually logged in with <code>CryptoToken.login</code>.
-     * <p>The default is a <code>ConsolePasswordCallback</code>.
+     * <p>
+     * The default is a <code>ConsolePasswordCallback</code>.
      */
-    public PasswordCallback passwordCallback =
-        new ConsolePasswordCallback();
+    public PasswordCallback passwordCallback = new ConsolePasswordCallback();
 
     /**
-     * The FIPS mode of the security library.  Servers should
+     * The FIPS mode of the security library. Servers should
      * use <code>FIPSMode.UNCHANGED</code>, since only
      * Admin Server is supposed to alter this value.
-     * <p>The default is <code>FIPSMode.UNCHANGED</code>.
+     * <p>
+     * The default is <code>FIPSMode.UNCHANGED</code>.
      */
     public InitializationValues.FIPSMode fipsMode = FIPSMode.UNCHANGED;
 
     /**
      * To open the databases in read-only mode, set this flag to
-     * <code>true</code>.  The default is <code>false</code>, meaning
+     * <code>true</code>. The default is <code>false</code>, meaning
      * the databases are opened in read-write mode.
      */
     public boolean readOnly = false;
@@ -115,11 +116,14 @@ public final class InitializationValues {
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the Manufacturer ID of the internal PKCS #11 module.
-     * <p>The default is <code>"mozilla.org                     "</code>.
+     * <p>
+     * The default is <code>"mozilla.org                     "</code>.
      *
      * @return Manufacturer ID.
      */
-    public String getManufacturerID() { return manufacturerID; }
+    public String getManufacturerID() {
+        return manufacturerID;
+    }
 
     /**
      * Sets the Manufacturer ID of the internal PKCS #11 module.
@@ -128,7 +132,7 @@ public final class InitializationValues {
      *
      * @param s Manufacturer ID.
      * @exception InvalidLengthException If <code>s.length()</code> is not
-     *      exactly <code>MANUFACTURER_LENGTH</code>.
+     *                exactly <code>MANUFACTURER_LENGTH</code>.
      */
     public void setManufacturerID(String s) throws InvalidLengthException {
         if (s.length() != MANUFACTURER_LENGTH) {
@@ -139,32 +143,34 @@ public final class InitializationValues {
         }
         manufacturerID = s;
     }
-    private String manufacturerID =
-        "mozilla.org                      ";
+
+    private String manufacturerID = "mozilla.org                      ";
 
     ////////////////////////////////////////////////////////////////////
     // Library Description
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the description of the internal PKCS #11 module.
-     * <p>The default is <code>"Internal Crypto Services         "</code>.
+     * <p>
+     * The default is <code>"Internal Crypto Services         "</code>.
      *
      * @return Library description.
      */
-    public String getLibraryDescription() { return libraryDescription; }
+    public String getLibraryDescription() {
+        return libraryDescription;
+    }
 
     /**
      * Sets the description of the internal PKCS #11 module.
      * This value must be exactly <code>LIBRARY_LENGTH</code>
-     *  characters long.
+     * characters long.
      *
      * @param s Library description.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>LIBRARY_LENGTH</code>.
+     *                not exactly <code>LIBRARY_LENGTH</code>.
      */
     public void setLibraryDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != LIBRARY_LENGTH) {
             String msg = "Expected internal library description of length ";
             msg += LIBRARY_LENGTH + " but was " + s.length();
@@ -172,15 +178,16 @@ public final class InitializationValues {
         }
         libraryDescription = s;
     }
-    private String libraryDescription =
-        "Internal Crypto Services         ";
+
+    private String libraryDescription = "Internal Crypto Services         ";
 
     ////////////////////////////////////////////////////////////////////
     // Internal Token Description
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the description of the internal PKCS #11 token.
-     * <p>The default is <code>"Internal Crypto Services Token   "</code>.
+     * <p>
+     * The default is <code>"Internal Crypto Services Token   "</code>.
      *
      * @return Description of internal PKCS #11 token.
      */
@@ -194,11 +201,10 @@ public final class InitializationValues {
      *
      * @param s Description of internal PKCS #11 token.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>TOKEN_LENGTH</code>.
+     *                not exactly <code>TOKEN_LENGTH</code>.
      */
     public void setInternalTokenDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != TOKEN_LENGTH) {
             String msg = "Expected internal token description of length ";
             msg += TOKEN_LENGTH + " but was " + s.length();
@@ -206,15 +212,16 @@ public final class InitializationValues {
         }
         internalTokenDescription = s;
     }
-    private String internalTokenDescription =
-        "NSS Generic Crypto Services      ";
+
+    private String internalTokenDescription = "NSS Generic Crypto Services      ";
 
     ////////////////////////////////////////////////////////////////////
     // Internal Key Storage Token Description
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the description of the internal PKCS #11 key storage token.
-     * <p>The default is <code>"Internal Key Storage Token       "</code>.
+     * <p>
+     * The default is <code>"Internal Key Storage Token       "</code>.
      *
      * @return Description of internal PKCS #11 key storage token.
      */
@@ -228,11 +235,10 @@ public final class InitializationValues {
      *
      * @param s Description of internal PKCS #11 key storage token.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>TOKEN_LENGTH</code>.
+     *                not exactly <code>TOKEN_LENGTH</code>.
      */
     public void setInternalKeyStorageTokenDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != TOKEN_LENGTH) {
             String msg = "Expected internal key storage token description ";
             msg += "of length " + TOKEN_LENGTH + " but was " + s.length();
@@ -240,15 +246,16 @@ public final class InitializationValues {
         }
         internalKeyStorageTokenDescription = s;
     }
-    private String internalKeyStorageTokenDescription =
-        "Internal Key Storage Token       ";
+
+    private String internalKeyStorageTokenDescription = "Internal Key Storage Token       ";
 
     ////////////////////////////////////////////////////////////////////
     // Internal Slot Description
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the description of the internal PKCS #11 slot.
-     * <p>The default is <code>"NSS Internal Cryptographic Services                              "</code>.
+     * <p>
+     * The default is <code>"NSS Internal Cryptographic Services                              "</code>.
      *
      * @return Description of internal PKCS #11 slot.
      */
@@ -263,11 +270,10 @@ public final class InitializationValues {
      *
      * @param s Description of internal PKCS #11 slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>SLOT_LENGTH</code>.
+     *                not exactly <code>SLOT_LENGTH</code>.
      */
     public void setInternalSlotDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != SLOT_LENGTH) {
             String msg = "Expected internal slot description of length ";
             msg += SLOT_LENGTH + " but was " + s.length();
@@ -275,15 +281,16 @@ public final class InitializationValues {
         }
         internalSlotDescription = s;
     }
-    private String internalSlotDescription =
-        "NSS Internal Cryptographic Services                              ";
+
+    private String internalSlotDescription = "NSS Internal Cryptographic Services                              ";
 
     ////////////////////////////////////////////////////////////////////
     // Internal Key Storage Slot Description
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the description of the internal PKCS #11 key storage slot.
-     * <p>The default is <code>"NSS Internal Private Key and Certificate Storage                 "</code>.
+     * <p>
+     * The default is <code>"NSS Internal Private Key and Certificate Storage                 "</code>.
      *
      * @return Description of internal PKCS #11 key storage slot.
      */
@@ -298,11 +305,10 @@ public final class InitializationValues {
      *
      * @param s Description of internal PKCS #11 key storage slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>SLOT_LENGTH</code>.
+     *                not exactly <code>SLOT_LENGTH</code>.
      */
     public void setInternalKeyStorageSlotDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != SLOT_LENGTH) {
             String msg = "Expected internal key storage slot description of ";
             msg += "length " + SLOT_LENGTH + " but was " + s.length();
@@ -310,15 +316,16 @@ public final class InitializationValues {
         }
         internalKeyStorageSlotDescription = s;
     }
-    private String internalKeyStorageSlotDescription =
-        "NSS User Private Key and Certificate Services                    ";
+
+    private String internalKeyStorageSlotDescription = "NSS User Private Key and Certificate Services                    ";
 
     ////////////////////////////////////////////////////////////////////
     // FIPS Slot Description
     ////////////////////////////////////////////////////////////////////
     /**
      * Returns the description of the internal PKCS #11 FIPS slot.
-     * <p>The default is
+     * <p>
+     * The default is
      * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
      *
      * @return Description of internal PKCS #11 FIPS slot.
@@ -334,11 +341,10 @@ public final class InitializationValues {
      *
      * @param s Description of internal PKCS #11 FIPS slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>SLOT_LENGTH</code>.
+     *                not exactly <code>SLOT_LENGTH</code>.
      */
     public void setFIPSSlotDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != SLOT_LENGTH) {
             String msg = "Expected FIPS slot description of length ";
             msg += SLOT_LENGTH + " but was " + s.length();
@@ -346,8 +352,8 @@ public final class InitializationValues {
         }
         FIPSSlotDescription = s;
     }
-    private String FIPSSlotDescription =
-        "NSS FIPS 140-2 User Private Key Services                         ";
+
+    private String FIPSSlotDescription = "NSS FIPS 140-2 User Private Key Services                         ";
 
     ////////////////////////////////////////////////////////////////////
     // FIPS Key Storage Slot Description
@@ -355,7 +361,8 @@ public final class InitializationValues {
     /**
      * Returns the description of the internal PKCS #11 FIPS
      * Key Storage slot.
-     * <p>The default is
+     * <p>
+     * The default is
      * <code>"NSS FIPS 140-2 User Private Key Services"</code>.
      *
      * @return Description of internal PKCS #11 FIPS key storage slot.
@@ -371,11 +378,10 @@ public final class InitializationValues {
      *
      * @param s Description of internal PKCS #11 FIPS key storage slot.
      * @exception InvalidLengthException If <code>s.length()</code> is
-     *      not exactly <code>SLOT_LENGTH</code>.
+     *                not exactly <code>SLOT_LENGTH</code>.
      */
     public void setFIPSKeyStorageSlotDescription(String s)
-        throws InvalidLengthException
-    {
+            throws InvalidLengthException {
         if (s.length() != SLOT_LENGTH) {
             String msg = "Expected FIPS key storage slot description of ";
             msg += "length " + SLOT_LENGTH + " but was " + s.length();
@@ -383,8 +389,8 @@ public final class InitializationValues {
         }
         FIPSKeyStorageSlotDescription = s;
     }
-    private String FIPSKeyStorageSlotDescription =
-        "NSS FIPS 140-2 User Private Key Services                         ";
+
+    private String FIPSKeyStorageSlotDescription = "NSS FIPS 140-2 User Private Key Services                         ";
 
     /**
      * To have NSS check the OCSP responder for when verifying
@@ -415,7 +421,6 @@ public final class InitializationValues {
      */
     public String ocspResponderCertNickname = null;
 
-
     /**
      * Install the JSS crypto provider. Default is true.
      */
@@ -437,21 +442,23 @@ public final class InitializationValues {
      * initialized. This should only be used if NSS has been initialized
      * elsewhere.
      *
-     * <p>Specifically, the following components will <b>not</b> be
-     *  configured by <code>CryptoManager.initialize</code> if this flag is set:
+     * <p>
+     * Specifically, the following components will <b>not</b> be
+     * configured by <code>CryptoManager.initialize</code> if this flag is set:
      * <ul>
      * <li>The NSS databases.
      * <li>OCSP checking.
      * <li>The NSS password callback.
      * <li>The internal PKCS #11 software token's identifier labels:
-     *      slot, token, module, and manufacturer.
+     * slot, token, module, and manufacturer.
      * <li>The minimum PIN length for the software token.
      * <li>The frequency with which the user must login to the software
-     *      token.
+     * token.
      * <li>The cipher strength policy (export/domestic).
      * </ul>
      *
-     * <p>The default is <code>false</code>.
+     * <p>
+     * The default is <code>false</code>.
      */
     public boolean initializeJavaOnly = false;
 

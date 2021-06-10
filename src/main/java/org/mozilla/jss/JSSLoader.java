@@ -18,59 +18,59 @@ import org.slf4j.LoggerFactory;
  * String path or its contents via an InputStream). This configuration file is
  * a java.util.Properties file. The following keys are understood:
  *
- *  - nss.config_dir -- the path to the NSS DB to initialize with
- *  - nss.cert_prefix -- the prefix for the certificate store
- *  - nss.key_prefix -- the prefix for the key store
- *  - nss.secmod_name -- the name of the secmod file
+ * - nss.config_dir -- the path to the NSS DB to initialize with
+ * - nss.cert_prefix -- the prefix for the certificate store
+ * - nss.key_prefix -- the prefix for the key store
+ * - nss.secmod_name -- the name of the secmod file
  *
- *  - nss.read_only -- whether to open the NSS DB read-only (default: false)
- *  - nss.java_only -- whether to initialize only the java portion of JSS,
- *                     and assume that NSS is already initialized (default:
- *                     false)
+ * - nss.read_only -- whether to open the NSS DB read-only (default: false)
+ * - nss.java_only -- whether to initialize only the java portion of JSS,
+ * and assume that NSS is already initialized (default:
+ * false)
  *
- *  - nss.pkix_verify -- whether to use PKIX for verification (default: false)
- *  - nss.no_cert_db -- whether to open the certificate and key databases;
- *                      see InitializationValues for more info (default: false)
- *  - nss.no_mod_db -- whether to open the security module database; see
- *                     InitializationValues for more info (default: false)
- *  - nss.force_open -- whether to force initializations even if the database
- *                      cannot be opened; see InitializationValues for more
- *                      info (default: false)
- *  - nss.no_root_init -- whether to look for root certificate module and load
- *                        it; see InitializationValues for more info
- *                        (default: false)
- *  - nss.optimize_space -- whether to use smaller tables and caches; see
- *                          InitializationValues for more info (default: false)
- *  - nss.pk11_thread_safe -- whether to only load PKCS#11 modules that are
- *                            thread-safe; see InitializationValues for more
- *                            info (default: false)
- *  - nss.pk11_reload -- whether to ignore already initialized errors when
- *                       loading PKCS#11 modules; see InitializationValues for
- *                       more info (default: false)
- *  - nss.no_pk11_finalize -- whether to avoid calling C_Finalize on PKCS#11
- *                            modules; see InitializationValues for more info
- *                            (default: false)
- *  - nss.cooperate -- whether to cooperate with other parts of the program
- *                     already having initialized NSS (default: false)
+ * - nss.pkix_verify -- whether to use PKIX for verification (default: false)
+ * - nss.no_cert_db -- whether to open the certificate and key databases;
+ * see InitializationValues for more info (default: false)
+ * - nss.no_mod_db -- whether to open the security module database; see
+ * InitializationValues for more info (default: false)
+ * - nss.force_open -- whether to force initializations even if the database
+ * cannot be opened; see InitializationValues for more
+ * info (default: false)
+ * - nss.no_root_init -- whether to look for root certificate module and load
+ * it; see InitializationValues for more info
+ * (default: false)
+ * - nss.optimize_space -- whether to use smaller tables and caches; see
+ * InitializationValues for more info (default: false)
+ * - nss.pk11_thread_safe -- whether to only load PKCS#11 modules that are
+ * thread-safe; see InitializationValues for more
+ * info (default: false)
+ * - nss.pk11_reload -- whether to ignore already initialized errors when
+ * loading PKCS#11 modules; see InitializationValues for
+ * more info (default: false)
+ * - nss.no_pk11_finalize -- whether to avoid calling C_Finalize on PKCS#11
+ * modules; see InitializationValues for more info
+ * (default: false)
+ * - nss.cooperate -- whether to cooperate with other parts of the program
+ * already having initialized NSS (default: false)
  *
- *  - jss.experimental.sslengine -- whether to enable experimental SSLEngine
- *                                  support
+ * - jss.experimental.sslengine -- whether to enable experimental SSLEngine
+ * support
  *
- *  - jss.fips -- whether to switch this NSS DB into FIPS mode; allowed values
- *                are ENABLED (to force FIPS mode), DISABLED (to force
- *                non-FIPS mode), or UNCHANGED (default, to infer the value
- *                from the NSS DB and/or the system)
+ * - jss.fips -- whether to switch this NSS DB into FIPS mode; allowed values
+ * are ENABLED (to force FIPS mode), DISABLED (to force
+ * non-FIPS mode), or UNCHANGED (default, to infer the value
+ * from the NSS DB and/or the system)
  *
- *  - jss.ocsp.enabled -- whether or not to enable OCSP checking
- *  - jss.ocsp.responder.url -- URL of the OCSP responder to check
- *  - jss.ocsp.responder.cert_nickname -- nickname of the OCSP responder's
- *                                        certificate in the NSS DB
- *  - jss.ocsp.policy -- which JSS OCSP checking policy to use; allowed values
- *                       are NONE, NORMAL, and LEAF_AND_CHAIN; refer to
- *                       CryptoManager documentation for the difference
+ * - jss.ocsp.enabled -- whether or not to enable OCSP checking
+ * - jss.ocsp.responder.url -- URL of the OCSP responder to check
+ * - jss.ocsp.responder.cert_nickname -- nickname of the OCSP responder's
+ * certificate in the NSS DB
+ * - jss.ocsp.policy -- which JSS OCSP checking policy to use; allowed values
+ * are NONE, NORMAL, and LEAF_AND_CHAIN; refer to
+ * CryptoManager documentation for the difference
  *
- *  - jss.password -- static password to use to authenticate to tokens; if
- *                    this fails, the user will be prompted via the console
+ * - jss.password -- static password to use to authenticate to tokens; if
+ * this fails, the user will be prompted via the console
  */
 public class JSSLoader {
     public static Logger logger = LoggerFactory.getLogger(JSSLoader.class);
@@ -134,10 +134,10 @@ public class JSSLoader {
      * reading only the properties required to construct a new instance.
      *
      * These properties are:
-     *  - nss.config_dir
-     *  - nss.cert_prefix
-     *  - nss.key_prefix
-     *  - nss.secmod_name
+     * - nss.config_dir
+     * - nss.cert_prefix
+     * - nss.key_prefix
+     * - nss.secmod_name
      */
     private static InitializationValues constructIV(Properties config) {
         String configDir = config.getProperty("nss.config_dir", "/etc/pki/nssdb");
@@ -157,7 +157,7 @@ public class JSSLoader {
      * properties.
      *
      * These properties are:
-     *  - jss.fips
+     * - jss.fips
      */
     private static void parseFipsMode(Properties config, InitializationValues ivs) {
         String mode = config.getProperty("jss.fips", "unchanged");
@@ -191,9 +191,9 @@ public class JSSLoader {
      * properties.
      *
      * These properties are:
-     *  - jss.ocsp.enabled
-     *  - jss.ocsp.responder.url
-     *  - jss.ocsp.responder.cert_nickname
+     * - jss.ocsp.enabled
+     * - jss.ocsp.responder.url
+     * - jss.ocsp.responder.cert_nickname
      */
     private static void parseOCSPSettings(Properties config, InitializationValues ivs) {
         Boolean enabled = parseBoolean(config, "jss.ocsp.enabled");
@@ -226,17 +226,17 @@ public class JSSLoader {
      * NSS-specific configuration values.
      *
      * These properties are:
-     *  - nss.java_only
-     *  - nss.pkix_verify
-     *  - nss.no_cert_db
-     *  - nss.no_mod_db
-     *  - nss.force_open
-     *  - nss.no_root_init
-     *  - nss.optimize_space
-     *  - nss.pk11_thread_safe
-     *  - nss.pk11_reload
-     *  - nss.no_pk11_finalize
-     *  - nss.cooperate
+     * - nss.java_only
+     * - nss.pkix_verify
+     * - nss.no_cert_db
+     * - nss.no_mod_db
+     * - nss.force_open
+     * - nss.no_root_init
+     * - nss.optimize_space
+     * - nss.pk11_thread_safe
+     * - nss.pk11_reload
+     * - nss.no_pk11_finalize
+     * - nss.cooperate
      */
     private static void parseNSSSettings(Properties config, InitializationValues ivs) {
         Boolean initializeJavaOnly = parseBoolean(config, "nss.java_only");
@@ -245,8 +245,8 @@ public class JSSLoader {
         }
 
         Boolean PKIXVerify = parseBoolean(config, "nss.pkix_verify");
-        if (PKIXVerify!= null) {
-            ivs.PKIXVerify= PKIXVerify;
+        if (PKIXVerify != null) {
+            ivs.PKIXVerify = PKIXVerify;
         }
 
         Boolean noCertDB = parseBoolean(config, "nss.no_cert_db");
