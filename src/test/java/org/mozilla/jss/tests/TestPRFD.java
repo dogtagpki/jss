@@ -81,7 +81,7 @@ public class TestPRFD {
     }
 
     public static void main(String[] args) {
-        System.loadLibrary("jss4");
+        System.loadLibrary("jss");
 
         System.out.println("Calling TestPROpenNoCreate()...");
         TestPROpenNoCreate();

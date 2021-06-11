@@ -28,9 +28,9 @@ public class JSSPackageTest {
                                "from CryptoManager");
             System.out.println("\n\t" + org.mozilla.jss.CryptoManager.JAR_JSS_VERSION);
 
-            System.out.println("\n\tTo check the JNI version in libjss4.so:");
-            System.out.println("\n\ttry: strings libjss4.so | grep -i header");
-            System.out.println("\n\tor : ident libjss4.so");
+            System.out.println("\n\tTo check the JNI version in libjss.so:");
+            System.out.println("\n\ttry: strings libjss.so | grep -i header");
+            System.out.println("\n\tor : ident libjss.so");
             System.exit(0);
 
         } catch (Exception e) {

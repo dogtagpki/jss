@@ -53,7 +53,7 @@ To install these dependencies on Debian, execute the following:
 At run time, the following JARs are required to be specified on the
 `CLASSPATH` of anyone wishing to use JSS:
 
- - `jss4.jar`
+ - `jss.jar`
  - `slf4j-api.jar`
  - `apache-commons-lang.jar`
  - `jaxb-api.jar`

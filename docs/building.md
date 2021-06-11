@@ -64,20 +64,20 @@ information, read `man ctest`.
 
 ### Installation
 
-To install JSS, place `jss4.jar` and `libjss4.so` in places where the system
+To install JSS, place `jss.jar` and `libjss.so` in places where the system
 can find them. We recommend the following locations on a 64-bit system:
 
     cd jss/build
-    sudo cp jss4.jar /usr/lib/java/jss4.jar
-    sudo chown root:root /usr/lib/java/jss4.jar
-    sudo chmod 644 /usr/lib/java/jss4.jar
+    sudo cp jss.jar /usr/lib/java/jss.jar
+    sudo chown root:root /usr/lib/java/jss.jar
+    sudo chmod 644 /usr/lib/java/jss.jar
 
-    sudo cp libjss4.so /usr/lib64/jss/libjss4.so
-    sudo chown root:root /usr/lib64/jss/libjss4.so
-    sudo chmod 755 /usr/lib64/jss/libjss4.so
+    sudo cp libjss.so /usr/lib64/jss/libjss.so
+    sudo chown root:root /usr/lib64/jss/libjss.so
+    sudo chmod 755 /usr/lib64/jss/libjss.so
 
-To uninstall, simply remove the created files (`/usr/lib/java/jss4.jar` and
-`/usr/lib64/jss/libjss4.so`).
+To uninstall, simply remove the created files (`/usr/lib/java/jss.jar` and
+`/usr/lib64/jss/libjss.so`).
 
 Note that the preferred way to install JSS is from your distribution or via
 an RPM built with `build.sh`.

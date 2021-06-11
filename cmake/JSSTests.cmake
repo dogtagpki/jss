@@ -470,7 +470,7 @@ macro(jss_tests_compile_c C_FILE C_OUTPUT C_TARGET)
 
     add_custom_command(
         OUTPUT "${C_OUTPUT}"
-        COMMAND ${CMAKE_C_COMPILER} ${JSS_C_FLAGS} -o ${C_OUTPUT} ${C_FILE} -L${LIB_OUTPUT_DIR} -ljss4 ${JSS_LD_FLAGS}
+        COMMAND ${CMAKE_C_COMPILER} ${JSS_C_FLAGS} -o ${C_OUTPUT} ${C_FILE} -L${LIB_OUTPUT_DIR} -ljss ${JSS_LD_FLAGS}
         WORKING_DIRECTORY ${C_DIR}
         DEPENDS "${C_FILE}"
         DEPENDS "${JSS_TESTS_SO_PATH}"

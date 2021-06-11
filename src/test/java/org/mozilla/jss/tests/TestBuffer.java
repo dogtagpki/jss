@@ -72,7 +72,7 @@ public class TestBuffer {
     }
 
     public static void main(String[] args) {
-        System.loadLibrary("jss4");
+        System.loadLibrary("jss");
 
         System.out.println("Calling TestCreateFree()...");
         TestCreateFree();

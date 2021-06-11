@@ -3,7 +3,7 @@ macro(jss_config)
     #   MAJOR MINOR PATCH BETA
     # When BETA is 1, it is a pre-release (it enables some tests).
     # When BETA is 0, it is a final release.
-    jss_config_version(4 9 0 1)
+    jss_config_version(5 0 0 1)
 
     # Configure output directories
     jss_config_outputs()
@@ -91,8 +91,8 @@ macro(jss_config_outputs)
     set(REPRODUCIBLE_TEMP_DIR "${CMAKE_BINARY_DIR}/reproducible")
 
     set(JSS_BUILD_JAR "staging.jar")
-    set(JSS_JAR "jss${JSS_VERSION_MAJOR}.jar")
-    set(JSS_SO "libjss${JSS_VERSION_MAJOR}.so")
+    set(JSS_JAR "jss.jar")
+    set(JSS_SO "libjss.so")
     set(JSS_BUILD_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_BUILD_JAR}")
     set(JSS_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_JAR}")
     set(JSS_SO_PATH "${CMAKE_BINARY_DIR}/${JSS_SO}")
@@ -104,7 +104,7 @@ macro(jss_config_outputs)
     set(TESTS_CLASSES_OUTPUT_DIR "${CMAKE_BINARY_DIR}/classes/tests")
     set(TESTS_INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/tests")
     set(TESTS_JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss/_jni")
-    set(JSS_TESTS_JAR "tests-jss${JSS_VERSION_MAJOR}.jar")
+    set(JSS_TESTS_JAR "tests-jss.jar")
     set(JSS_TESTS_SO "${JSS_SO}")
     set(JSS_TESTS_JAR_PATH "${CMAKE_BINARY_DIR}/${JSS_TESTS_JAR}")
     set(JSS_TESTS_SO_PATH "${LIB_OUTPUT_DIR}/${JSS_TESTS_SO}")

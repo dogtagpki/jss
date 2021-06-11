@@ -1,10 +1,10 @@
 # Using JSS
 
-Please make sure `libjss4.so` is included in your library path or set it via
+Please make sure `libjss.so` is included in your library path or set it via
 the `LD_LIBRARY_PATH` environment variable. See `man 8 ld.so` for more
 information. Alternatively, this can be done by setting `-Djava.library.path`
-to the directory with `libjss4.so` on the command line of all Java programs
-using JSS. Note that without `libjss4.so`, using JSS in nearly any capacity
+to the directory with `libjss.so` on the command line of all Java programs
+using JSS. Note that without `libjss.so`, using JSS in nearly any capacity
 will fail.
 
 ## Classpath Dependencies
@@ -12,8 +12,8 @@ will fail.
 To use JSS in your project after installation, you'll need to ensure the
 following dependencies are available in your `CLASSPATH`:
 
- - `jss4.jar` -- provided by the `jss` package and installed to
-   `/usr/lib/java/jss4.jar`.
+ - `jss.jar` -- provided by the `jss` package and installed to
+   `/usr/lib/java/jss.jar`.
  - `slf4j-api.jar` -- provided by the `slf4j` package and installed to
    `/usr/share/java/slf4j/slf4j-api.jar`.
  - `apache-commons-lang.jar` -- provided by the `apache-commons-lang` package

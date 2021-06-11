@@ -20,7 +20,7 @@ Usage
 ========================================
 First build jss according to the instructions
 here [README](../../README.md)
-You should see in the build directory tests_jss4.jar which is what
+You should see in the build directory tests_jss.jar which is what
 contains the application along with the regular tests.
 From the `jss/build` directory execute
 
