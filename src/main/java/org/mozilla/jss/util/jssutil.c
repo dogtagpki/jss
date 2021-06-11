@@ -17,7 +17,7 @@
 #include "pk11util.h"
 
 #include "secerr.h"
-
+#include "keyhi.h"
 
 /***********************************************************************
 **
@@ -925,6 +925,290 @@ JSS_clearPtrFromProxy(JNIEnv *env, jobject nativeProxy)
         return PR_SUCCESS;
     }
 }
+
+/* V2 refers to PKCS #5 V2 here. If a PKCS #5 v1 or PKCS #12 pbe is passed
+ * for pbeTag, then encTag and hashTag are ignored. If pbe is an encryption
+ * algorithm, then PKCS #5 V2 is used with prfTag for the prf. If prfTag isn't
+ * supplied prf will be SEC_OID_HMAC_SHA1 
+ * JSS ported version of nss routine :   PK11_ExportEncryptedPrivateKeyInfoV2 */
+SECKEYEncryptedPrivateKeyInfo *
+JSS_ExportEncryptedPrivKeyInfoV2(
+    PK11SlotInfo *slot,   /* optional, encrypt key in this slot */
+    SECOidTag pbeAlg,     /* PBE algorithm to encrypt the with key */
+    SECOidTag encAlg,     /* Encryption algorithm to Encrypt the key with */
+    SECOidTag prfAlg,     /* Hash algorithm for PRF */
+    SECItem *pwitem,      /* password for PBE encryption */
+    SECKEYPrivateKey *pk, /* encrypt this private key */
+    int iteration,        /* interations for PBE alg */
+    void *pwArg)          /* context for password callback */
+{
+    SECKEYEncryptedPrivateKeyInfo *epki = NULL;
+    PLArenaPool *arena = NULL;
+    SECAlgorithmID *algid;
+    SECOidTag pbeAlgTag = SEC_OID_UNKNOWN;
+    SECItem *crypto_param = NULL;
+    PK11SymKey *key = NULL;
+    PK11SymKey *finalKey = NULL;
+    SECStatus rv = SECSuccess;
+    CK_RV crv;
+    CK_ULONG encBufLen;
+    CK_MECHANISM_TYPE pbeMechType;
+    CK_MECHANISM_TYPE cryptoMechType;
+    CK_MECHANISM cryptoMech;
+    SECItem *iv = NULL;
+
+    if (!pwitem || !pk) {
+        PORT_SetError(SEC_ERROR_INVALID_ARGS);
+        return NULL;
+    }
+
+    algid = PK11_CreatePBEV2AlgorithmID(pbeAlg, encAlg, prfAlg,
+                                        0,iteration , NULL);
+    if (algid == NULL) {
+        return NULL;
+    }
+
+    arena = PORT_NewArena(2048);
+    if (arena)
+        epki = PORT_ArenaZNew(arena, SECKEYEncryptedPrivateKeyInfo);
+    if (epki == NULL) {
+        rv = SECFailure;
+        goto loser;
+    }
+    epki->arena = arena;
+
+    /* if we didn't specify a slot, use the slot the private key was in */
+    if (!slot) {
+        slot = pk->pkcs11Slot;
+    }
+
+    /* if we specified a different slot, and the private key slot can do the
+     * pbe key gen, generate the key in the private key slot so we don't have
+     * to move it later */
+    pbeMechType = PK11_AlgtagToMechanism(pbeAlgTag);
+    if (slot != pk->pkcs11Slot) {
+        if (PK11_DoesMechanism(pk->pkcs11Slot, pbeMechType)) {
+            slot = pk->pkcs11Slot;
+
+        }
+    }
+
+    key = PK11_PBEKeyGen(slot, algid, pwitem, PR_FALSE, pwArg);
+    if (key == NULL) {
+        rv = SECFailure;
+        goto loser;
+    }
+
+    cryptoMechType = PK11_GetPBECryptoMechanism(algid, &crypto_param, pwitem);
+    if (cryptoMechType == CKM_INVALID_MECHANISM) {
+        rv = SECFailure;
+        goto loser;
+    }
+
+    cryptoMech.mechanism = PK11_GetPadMechanism(cryptoMechType);
+    cryptoMech.pParameter = crypto_param ? crypto_param->data : NULL;
+    cryptoMech.ulParameterLen = crypto_param ? crypto_param->len : 0;
+
+    /* If the key isn't in the private key slot, move it */
+    if (PK11_GetSlotFromKey(key) != pk->pkcs11Slot) {
+        PK11SymKey *newkey = PK11_MoveSymKey(pk->pkcs11Slot,
+                                             CKA_WRAP, 0, PR_FALSE, key);
+	/* We expect the PK11_MoveSymKey to fail in fips mode,
+	 * thus the need for further intervention with JSS_KeyExchange
+	 */
+
+        if (newkey == NULL) {
+            /* couldn't import the wrapping key, try exchanging the
+             *  key */
+            CK_FLAGS opFlags = 0;
+            opFlags |= CKF_UNWRAP;
+            opFlags |= CKF_DECRYPT;
+            opFlags |= CKF_ENCRYPT;
+            newkey  = JSS_KeyExchange(slot, cryptoMech.mechanism,
+                 CKA_WRAP,opFlags ,
+                 PR_FALSE, key);
+
+            if (newkey == NULL) {
+                rv = SECFailure;
+                goto loser;
+            }
+            finalKey = newkey;
+        } else {
+            /* free the old key and use the new key */
+            PK11_FreeSymKey(key);
+            key = NULL;
+            finalKey = newkey;
+        }
+    } else {
+        finalKey = key;
+	key = NULL;
+    }
+
+    /* we are extracting an encrypted privateKey structure.
+     * which needs to be freed along with the buffer into which it is
+     * returned.  eventually, we should retrieve an encrypted key using
+     * pkcs8/pkcs5.
+     */
+
+    /* Allocate  a large buffer to make sure we can fit the wrapped key */
+    encBufLen = 16384;
+
+    epki->encryptedData.data = PORT_ArenaAlloc(arena, encBufLen);
+    if (!epki->encryptedData.data) {
+        rv = SECFailure;
+        goto loser;
+    }
+    epki->encryptedData.len = (unsigned int)encBufLen;
+
+    if (!epki->encryptedData.len) {
+        rv = SECFailure;
+        goto loser;
+    }
+
+    crv = PK11_WrapPrivKey(pk->pkcs11Slot,  finalKey,
+                            pk,  cryptoMechType,
+                           iv,  &epki->encryptedData, NULL);
+
+  /*  crv = PK11_GETTAB(pk->pkcs11Slot)->C_WrapKey(pk->pkcs11Slot->session, &cryptoMech, key->objectID, pk->pkcs11ID, NULL, &encBufLen); */
+    if (crv != CKR_OK) {
+        rv = SECFailure;
+        goto loser;
+    }
+
+    rv = SECOID_CopyAlgorithmID(arena, &epki->algorithm, algid);
+
+    loser:
+    if (crypto_param != NULL) {
+        SECITEM_ZfreeItem(crypto_param, PR_TRUE);
+        crypto_param = NULL;
+    }
+
+    if (key != NULL) {
+        PK11_FreeSymKey(key);
+    }
+
+    if (finalKey != NULL) {
+        PK11_FreeSymKey(finalKey);
+    }
+
+    SECOID_DestroyAlgorithmID(algid, PR_TRUE);
+
+    if (rv == SECFailure) {
+        if (arena != NULL) {
+            PORT_FreeArena(arena, PR_TRUE);
+        }
+        epki = NULL;
+    }
+
+    return epki;
+}
+
+/* Routine to exchange a key from one token to another, needed in extreme situations
+ * where either we are in  fips mode or a relectant hardware module won't allow the normal calls to work.
+ * Based on original work from cipherboy aka ascheel. His code was based on the nss routine: pk11_KeyExchange
+ * Note: the isPerm param is not yet observed since nss has no perm variant of PK11_PubUnwrapSymKeyWithMechanism.
+ * In the future when this is true, we can change this to observe the perm flag which now is just treated as false.
+ */
+
+ 
+PK11SymKey *
+JSS_KeyExchange(PK11SlotInfo *slot, CK_MECHANISM_TYPE type,
+                 CK_ATTRIBUTE_TYPE operation, CK_FLAGS flags,
+                 PRBool isPerm, PK11SymKey *symKey)
+{
+    int tempPrivKeyLength = 2048;
+    PK11SymKey *newSymKey = NULL;
+    SECStatus rv;
+    PK11AttrFlags attrFlags = 0;
+    /* performance improvement can go here --- use a generated key at startup
+     * to generate a per token wrapping key. If it exists, use it, otherwise
+     * do a full key exchange. */
+
+    /* find a common Key Exchange algorithm */
+    /* RSA */
+    int does_pkcs = PK11_DoesMechanism(PK11_GetSlotFromKey(symKey), CKM_RSA_PKCS) && \
+                    PK11_DoesMechanism(slot, CKM_RSA_PKCS);
+    int does_oaep = PK11_DoesMechanism(slot, CKM_RSA_PKCS_OAEP) && \
+                    PK11_DoesMechanism(slot, CKM_RSA_PKCS_OAEP);
+
+    if (does_pkcs || does_oaep) {
+        SECKEYPublicKey *pubKey = NULL;
+        SECKEYPrivateKey *privKey = NULL;
+        SECItem wrapData;
+        unsigned int symKeyLength = PK11_GetKeyLength(symKey);
+
+        /* RSA-PKCS requires no parameters, but RSA-OAEP does. Construct with
+         * sane defaults in case we end up needing to use them. */
+        CK_MECHANISM_TYPE our_mech = CKM_RSA_PKCS_OAEP;
+        CK_RSA_PKCS_OAEP_PARAMS oaep_params = {CKM_SHA384, CKG_MGF1_SHA384,
+                                               CKZ_DATA_SPECIFIED, NULL, 0};
+        SECItem oaep_param = {siBuffer, (unsigned char*)&oaep_params,
+                              sizeof(oaep_params)};
+        SECItem *mech_param = &oaep_param;
+
+        if (!does_oaep) {
+            /* Default to RSA OAEP. If the token does not do RSA OAEP, fall
+             * back to RSA PKCS#1v1.5. */
+            our_mech = CKM_RSA_PKCS;
+            mech_param = NULL;
+        }
+
+        wrapData.data = NULL;
+
+        /* Just go ahead and generate a temp private key,
+         * since this method is not going to be called often,
+	 * and we don't have to worry about finding a key with the
+	 * proper attributes..
+         */
+         PK11RSAGenParams rsaParams;
+
+         rsaParams.keySizeInBits = tempPrivKeyLength;
+
+         rsaParams.pe = 0x10001;
+         attrFlags |= PK11_ATTR_SESSION;
+         attrFlags |= PK11_ATTR_EXTRACTABLE;
+         attrFlags |= (PK11_ATTR_SENSITIVE | PK11_ATTR_PRIVATE);
+
+         privKey = PK11_GenerateKeyPairWithOpFlags(slot, CKM_RSA_PKCS_KEY_PAIR_GEN,
+                                           &rsaParams, &pubKey,attrFlags, flags,flags, NULL);
+
+        if (privKey == NULL)
+            goto rsa_failed;
+        if (pubKey == NULL)
+            goto rsa_failed;
+
+        wrapData.len = SECKEY_PublicKeyStrength(pubKey);
+        if (!wrapData.len)
+            goto rsa_failed;
+        wrapData.data = PORT_Alloc(wrapData.len);
+        if (wrapData.data == NULL)
+            goto rsa_failed;
+        /* now wrap the keys in and out */
+        rv = PK11_PubWrapSymKeyWithMechanism(pubKey, our_mech, mech_param, symKey, &wrapData);
+        if (rv == SECSuccess) {
+            newSymKey = PK11_PubUnwrapSymKeyWithMechanism(privKey, our_mech, mech_param,
+                                                              &wrapData, type, operation,
+                                                              symKeyLength);
+            /* make sure we wound up where we wanted to be! */
+            if (newSymKey && PK11_GetSlotFromKey(newSymKey) != slot) {
+                PK11_FreeSymKey(newSymKey);
+                newSymKey = NULL;
+            }
+        }
+    rsa_failed:
+        if (wrapData.data != NULL)
+            PORT_Free(wrapData.data);
+        if (privKey != NULL)
+            SECKEY_DestroyPrivateKey(privKey);
+        if (pubKey != NULL)
+            SECKEY_DestroyPublicKey(pubKey);
+
+        return newSymKey;
+    }
+    PORT_SetError(SEC_ERROR_NO_MODULE);
+    return NULL;
+}
+
 
 /*
  * External references to the rcs and sccsc ident information in 

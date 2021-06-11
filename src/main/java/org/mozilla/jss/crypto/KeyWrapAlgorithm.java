@@ -144,6 +144,7 @@ public class KeyWrapAlgorithm extends Algorithm {
                 (Class<?>) null, true, 8);
 
     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
+    public static final OBJECT_IDENTIFIER AES_KEY_WRAP_KWP_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.5");
     public static final OBJECT_IDENTIFIER AES_CBC_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.2");
     public static final OBJECT_IDENTIFIER DES3_CBC_PAD_OID = new OBJECT_IDENTIFIER("1.2.840.113549.3.7");

@@ -261,4 +261,7 @@ public class Algorithm {
 
     // CKM_AES_KEY_WRAP_KWP for HSM support
     protected static final int CKM_AES_KEY_WRAP_KWP = 80;
+    protected static final int SEC_OID_AES_128_KEY_WRAP_KWP = 81;
+    protected static final int SEC_OID_AES_192_KEY_WRAP_KWP = 82;
+    protected static final int SEC_OID_AES_256_KEY_WRAP_KWP = 83;
 }

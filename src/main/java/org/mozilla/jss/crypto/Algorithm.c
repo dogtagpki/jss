@@ -33,6 +33,50 @@ getAlgInfo(JNIEnv *env, jobject alg, JSS_AlgInfo *info);
 #define CKM_NSS_SP800_108_DOUBLE_PIPELINE_KDF_DERIVE_DATA CKM_INVALID_MECHANISM
 #endif
 
+#define OI(x)                                  \
+    {                                          \
+        siDEROID, (unsigned char *)x, sizeof x \
+    }
+#define OD(oid, tag, desc, mech, ext) \
+    {                                 \
+        OI(oid)                       \
+        , tag, desc, mech, ext        \
+    }
+#define ODN(oid, desc)                                           \
+    {                                                            \
+        OI(oid)                                                  \
+        , 0, desc, CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION \
+    }
+
+#define OIDT static const unsigned char
+
+
+/* USGov algorithm OID space: { 2 16 840 1 101 } */
+#define USGOV 0x60, 0x86, 0x48, 0x01, 0x65
+#define NISTALGS USGOV, 3, 4
+#define AES NISTALGS, 1
+
+/* AES_KEY_WRAP_KWP oids */
+
+OIDT aes128_KEY_WRAP_KWP[] = { AES, 8 };
+OIDT aes192_KEY_WRAP_KWP[] = { AES, 28 };
+OIDT aes256_KEY_WRAP_KWP[] = { AES, 48 };
+
+/* ------------------------------------------------------------------- */
+static const SECOidData oids[] = {
+    /* AES_KEY_WRAP_KWP oids */
+
+    OD(aes128_KEY_WRAP_KWP,0,"AES-128 Key Wrap Kwp", CKM_AES_KEY_WRAP_KWP, INVALID_CERT_EXTENSION),
+    OD(aes192_KEY_WRAP_KWP,0,"AES-192 Key Wrap Kwp", CKM_AES_KEY_WRAP_KWP, INVALID_CERT_EXTENSION),
+    OD(aes256_KEY_WRAP_KWP,0,"AES-256 Key Wrap Kwp", CKM_AES_KEY_WRAP_KWP, INVALID_CERT_EXTENSION),
+
+};
+
+static const unsigned int numOids = (sizeof oids) / (sizeof oids[0]);
+
+static SECOidTag newOIDTags[3];
+
+
 /***********************************************************************
 **
 **  Algorithm indices.  This must be kept in sync with the algorithm
@@ -131,9 +175,42 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
 /* 78 */    {SEC_OID_PKCS1_RSA_PSS_SIGNATURE, SEC_OID_TAG},
 /* 79 */    {CKM_RSA_PKCS_OAEP, PK11_MECH},
 /* 80 */    {CKM_AES_KEY_WRAP_KWP, PK11_MECH},
+/* 81 */    {SEC_OID_AES_128_KEY_WRAP_KWP, SEC_OID_TAG},
+/* 82 */    {SEC_OID_AES_192_KEY_WRAP_KWP, SEC_OID_TAG},
+/* 83 */    {SEC_OID_AES_256_KEY_WRAP_KWP, SEC_OID_TAG},
+
 
 /* REMEMBER TO UPDATE NUM_ALGS!!! (in Algorithm.h) */
 };
+
+/* Fetch and register an oid if it hasn't been done already */
+void
+JSS_cert_fetchOID(SECOidTag *data, const SECOidData *src)
+{
+    if (*data == SEC_OID_UNKNOWN) {
+        /* AddEntry does the right thing if someone else has already
+         * added the oid. (that is return that oid tag) */
+        *data = SECOID_AddEntry(src);
+    }
+}
+
+SECStatus
+JSS_RegisterDynamicOids(void)
+{
+    unsigned int i;
+    SECStatus rv = SECSuccess;
+
+    for (i = 0; i < numOids; ++i) {
+        SECOidTag tag = SECOID_AddEntry(&oids[i]);
+        if (tag == SEC_OID_UNKNOWN) {
+            rv = SECFailure;
+        } else {
+            newOIDTags[i] = tag;
+        }
+    }
+    return rv;
+}
+
 
 /***********************************************************************
  *
