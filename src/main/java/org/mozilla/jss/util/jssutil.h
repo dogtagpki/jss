@@ -7,6 +7,7 @@
 #include <nspr.h>
 #include <jni.h>
 #include <secitem.h>
+#include "pk11pub.h"
 
 #ifndef JSS_NATIVE_UTIL_H
 #define JSS_NATIVE_UTIL_H
@@ -413,6 +414,22 @@ void JSS_SECStatusToException(JNIEnv *env, SECStatus result, PRErrorCode code);
 */
 void JSS_SECStatusToExceptionMessage(JNIEnv *env, SECStatus result,
                                      PRErrorCode code, const char *message);
+SECKEYEncryptedPrivateKeyInfo *
+JSS_ExportEncryptedPrivKeyInfoV2(
+    PK11SlotInfo *slot,   /* optional, encrypt key in this slot */
+    SECOidTag pbeAlg,     /* PBE algorithm to encrypt the with key */
+    SECOidTag encAlg,     /* Encryption algorithm to Encrypt the key with */
+    SECOidTag prfAlg,     /* Hash algorithm for PRF */
+    SECItem *pwitem,      /* password for PBE encryption */
+    SECKEYPrivateKey *pk, /* encrypt this private key */
+    int iteration,        /* interations for PBE alg */
+    void *pwArg);
+
+
+PK11SymKey *
+JSS_KeyExchange(PK11SlotInfo *slot, CK_MECHANISM_TYPE type,
+                 CK_ATTRIBUTE_TYPE operation, CK_FLAGS flags,
+                 PRBool isPerm, PK11SymKey *symKey);
 
 PR_END_EXTERN_C
 

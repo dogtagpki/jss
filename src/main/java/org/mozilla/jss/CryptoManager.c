@@ -22,7 +22,7 @@
 #include <jssver.h>
 
 #include "pk11util.h"
-
+#include <Algorithm.h>
 #if defined(AIX) || defined(HPUX)
 #include <signal.h>
 #endif
@@ -460,6 +460,14 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNative2
         goto finish;
     }
 
+    /* Register additional OIDs, see Algorithm.c */
+    rv = JSS_RegisterDynamicOids();
+
+    if( rv != SECSuccess ) {
+        JSS_throwMsgPrErr(env, SECURITY_EXCEPTION,
+            "Unable to ad dynamic oids" );
+        goto finish;
+    }
     /*
      * Set default password callback.  This is the only place this
      * should ever be called if you are using Ninja.
