@@ -206,6 +206,7 @@ public final class KeyType {
                             KeyWrapAlgorithm.AES_CBC_PAD,
                             KeyWrapAlgorithm.AES_KEY_WRAP,
                             KeyWrapAlgorithm.AES_KEY_WRAP_PAD,
+			    KeyWrapAlgorithm.AES_KEY_WRAP_PAD_KWP,
                             EncryptionAlgorithm.AES_128_ECB,
                             EncryptionAlgorithm.AES_128_CBC,
                             EncryptionAlgorithm.AES_192_ECB,

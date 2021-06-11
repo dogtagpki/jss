@@ -165,6 +165,46 @@ public class EncryptionAlgorithm extends Algorithm {
         algList.addElement(this);
     }
 
+    protected EncryptionAlgorithm(int oidTag, Alg alg, Mode mode,
+        Padding padding, Class<?> paramClass, int blockSize,
+        OBJECT_IDENTIFIER oid, int keyStrength,String name)
+    {
+        super(oidTag, name, oid, paramClass);
+        this.alg = alg;
+        this.mode = mode;
+        this.padding = padding;
+        this.blockSize = blockSize;
+        if(oid!=null) {
+            oidMap.put(oid, this);
+        }
+        if( name != null ) {
+            nameMap.put(name.toLowerCase(), this);
+        }
+        this.keyStrength = keyStrength;
+        algList.addElement(this);
+    }
+
+    protected EncryptionAlgorithm(int oidTag, Alg alg, Mode mode,
+        Padding padding, Class<?> []paramClasses, int blockSize,
+        OBJECT_IDENTIFIER oid, int keyStrength,String name)
+    {
+        super(oidTag, name, oid, paramClasses);
+        this.alg = alg;
+        this.mode = mode;
+        this.padding = padding;
+        this.blockSize = blockSize;
+
+        if(oid!=null) {
+            oidMap.put(oid, this);
+        }
+        if( name != null ) {
+            nameMap.put(name.toLowerCase(), this);
+        }
+        this.keyStrength = keyStrength;
+        algList.addElement(this);
+    }
+
+
     private int blockSize;
     private Alg alg;
     private Mode mode;
@@ -390,5 +430,23 @@ public class EncryptionAlgorithm extends Algorithm {
             Alg.AES, Mode.CBC,
             Padding.PKCS5, IVParameterSpecClasses, 16,
             AES_ROOT_OID.subBranch(42), 256);
+
+  public static final EncryptionAlgorithm
+   AES_128_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_128_KEY_WRAP_KWP,
+        Alg.AES,Mode.NONE,
+        Padding.PKCS5, IVParameterSpecClasses, 16,
+        AES_ROOT_OID.subBranch(8), 128,"AES/None/PKCS5Padding/Kwp/128");
+
+  public static final EncryptionAlgorithm
+   AES_192_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_192_KEY_WRAP_KWP,
+        Alg.AES,Mode.NONE,
+        Padding.PKCS5, IVParameterSpecClasses, 16,
+        AES_ROOT_OID.subBranch(28), 192,"AES/None/PKCSPadding/Kwp/192");
+
+  public static final EncryptionAlgorithm
+   AES_256_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_256_KEY_WRAP_KWP,
+        Alg.AES,Mode.NONE,
+        Padding.PKCS5, IVParameterSpecClasses, 16,
+        AES_ROOT_OID.subBranch(48), 256,"AES/None/PKCS5Padding/Kwp/256");
 
 }
