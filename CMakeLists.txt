@@ -100,6 +100,9 @@ install(
 install(
     CODE "execute_process(
         COMMAND ln -sf ${JAVA_LIB_INSTALL_DIR}/jss4.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss4.jar
+        COMMAND ln -sf jss4.jar \$ENV{DESTDIR}${JAVA_LIB_INSTALL_DIR}/jss.jar
+        COMMAND ln -sf jss4.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss.jar
+        COMMAND ln -sf libjss4.so \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/libjss.so
     )"
 )
 
