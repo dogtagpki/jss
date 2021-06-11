@@ -129,31 +129,31 @@ If JSS already exists on the system, run something similar to the
 following command(s):
 
 ```
-# sudo mv /usr/lib/java/jss4.jar /usr/lib/java/jss4.jar.orig
+# sudo mv /usr/lib/java/jss.jar /usr/lib/java/jss.jar.orig
 ```
 
 If the platform is 32-bit Linux:
 
 ```
-# sudo mv /usr/lib/jss/libjss4.so /usr/lib/jss/libjss4.so.orig
+# sudo mv /usr/lib/jss/libjss.so /usr/lib/jss/libjss.so.orig
 ```
 
 else if the platform is 64-bit Linux:
 
 ```
-# sudo mv /usr/lib64/jss/libjss4.so /usr/lib64/jss/libjss4.so.orig
+# sudo mv /usr/lib64/jss/libjss.so /usr/lib64/jss/libjss.so.orig
 ```
 
 Then install the new JSS binaries:
 
 ```
-# sudo cp sandbox/dist/xpclass.jar /usr/lib/java/jss4.jar
-# sudo chown root:root /usr/lib/java/jss4.jar
-# sudo chmod 644 /usr/lib/java/jss4.jar
+# sudo cp sandbox/dist/xpclass.jar /usr/lib/java/jss.jar
+# sudo chown root:root /usr/lib/java/jss.jar
+# sudo chmod 644 /usr/lib/java/jss.jar
 
-# sudo cp sandbox/jss/lib/Linux*.OBJ/libjss4.so /usr/lib64/jss/libjss4.so
-# sudo chown root:root /usr/lib64/jss/libjss4.so
-# sudo chmod 755 /usr/lib64/jss/libjss4.so
+# sudo cp sandbox/jss/lib/Linux*.OBJ/libjss.so /usr/lib64/jss/libjss.so
+# sudo chown root:root /usr/lib64/jss/libjss.so
+# sudo chmod 755 /usr/lib64/jss/libjss.so
 ```
 
 ### 5. Run JSS Tests (Optional, but only if build method (1)(a) was utilized)
@@ -185,19 +185,19 @@ other than test, the user may wish to restore the original system JSS
 by running the following commands:
 
 ```
-# sudo mv /usr/lib/java/jss4.jar.orig /usr/lib/java/jss4.jar
+# sudo mv /usr/lib/java/jss.jar.orig /usr/lib/java/jss.jar
 ```
 
 If the platform is 32-bit Linux:
 
 ```
-# sudo mv /usr/lib/jss/libjss4.so.orig /usr/lib/jss/libjss4.so
+# sudo mv /usr/lib/jss/libjss.so.orig /usr/lib/jss/libjss.so
 ```
 
 else if the platform is 64-bit Linux:
 
 ```
-# sudo mv /usr/lib64/jss/libjss4.so.orig /usr/lib64/jss/libjss4.so
+# sudo mv /usr/lib64/jss/libjss.so.orig /usr/lib64/jss/libjss.so
 ```
 
 NOTE:  For this procedure, no ownership or permission changes should

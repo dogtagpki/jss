@@ -38,19 +38,19 @@ import org.slf4j.LoggerFactory;
  * For debugging purposes you should modify Constant.java debug_level to 4.
  *
  * First create db's and certificates
- * java -cp jss4.jar org.mozilla.jss.tests.SetupDBs . ./passwords
- * java -cp jss4.jar org.mozilla.jss.tests.GenerateTestCert . /passwords
+ * java -cp jss.jar org.mozilla.jss.tests.SetupDBs . ./passwords
+ * java -cp jss.jar org.mozilla.jss.tests.GenerateTestCert . /passwords
  *                             localhost SHA-256/RSA CA_RSA Client_RSA Server_RSA
  *
  * Start the server:
  *
- *  java -cp ./jss4.jar org.mozilla.jss.tests.JSS_SelfServServer . passwords
+ *  java -cp ./jss.jar org.mozilla.jss.tests.JSS_SelfServServer . passwords
  *             localhost false 2921 verboseoff
  *
  * Start the client with 4 threads using ciphersuite 0x33.
  * Look at the file Constant.java for the ciphersuites values.
  *
- * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 2 0x33
+ * java -cp jss.jar org.mozilla.jss.tests.JSS_SelfServClient 2 0x33
  * . localhost 2921 verboseoff JSS Client_RSA
  *
  * If you envoke the client with a ciphersuite value -1
@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * will closed all client SSLSockets and then tell the server to
  * shutdown. This case is for the nightly automated tests.
  *
- * java -cp jss4.jar org.mozilla.jss.tests.JSS_SelfServClient 4 -1
+ * java -cp jss.jar org.mozilla.jss.tests.JSS_SelfServClient 4 -1
  * . passwords localhost 2921 verboseoff JSS
  */
 

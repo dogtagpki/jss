@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss;
 
-import java.security.Security;
 import java.security.GeneralSecurityException;
+import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -57,22 +57,22 @@ public final class CryptoManager implements TokenSupplier
         logger.debug("CryptoManager: loading JSS library");
 
         try {
-            System.loadLibrary("jss4");
+            System.loadLibrary("jss");
             logger.debug("CryptoManager: loaded JSS library from java.library.path");
 
         } catch (UnsatisfiedLinkError e) {
 
             try {
-                System.load("/usr/lib64/jss/libjss4.so");
-                logger.debug("CryptoManager: loaded JSS library from /usr/lib64/jss/libjss4.so");
+                System.load("/usr/lib64/jss/libjss.so");
+                logger.debug("CryptoManager: loaded JSS library from /usr/lib64/jss/libjss.so");
 
             } catch (UnsatisfiedLinkError e1) {
                 try {
-                    System.load("/usr/lib/jss/libjss4.so");
-                    logger.debug("CryptoManager: loaded JSS library from /usr/lib/jss/libjss4.so");
+                    System.load("/usr/lib/jss/libjss.so");
+                    logger.debug("CryptoManager: loaded JSS library from /usr/lib/jss/libjss.so");
                 } catch (UnsatisfiedLinkError e2) {
-                    logger.warn("Unable to load jss4 via loadLibrary: " + e.toString());
-                    logger.warn("Unable to load /usr/lib64/jss/libjss4.so: " + e1.toString());
+                    logger.warn("Unable to load jss via loadLibrary: " + e.toString());
+                    logger.warn("Unable to load /usr/lib64/jss/libjss.so: " + e1.toString());
                     throw e2;
                 }
             }
@@ -1352,7 +1352,7 @@ public final class CryptoManager implements TokenSupplier
      * @param policy - Either cert and chain or normal default processing.
      *
      */
- 
+
     public static synchronized void setOCSPPolicy(OCSPPolicy policy) {
         ocspPolicy = policy;
     }
@@ -1378,8 +1378,8 @@ public final class CryptoManager implements TokenSupplier
     {
         /* set the ocsp policy */
 
-        if(ocspCheckingEnabled && 
-            ocspResponderURL == null && 
+        if(ocspCheckingEnabled &&
+            ocspResponderURL == null &&
             ocspResponderCertNickname == null) {
             setOCSPPolicy(OCSPPolicy.LEAF_AND_CHAIN);
         } else {

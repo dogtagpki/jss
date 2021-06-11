@@ -14,7 +14,7 @@ built in five stages:
    done in a single pass of the `javac` compiler. All Java source files under
    `org/` are currently compiled to the `build/classes/` folder.
 2. Any C header files are moved to the `build/includes/` folder.
-3. C source files are compiled to objects and linked to form `libjss4.so`,
+3. C source files are compiled to objects and linked to form `libjss.so`,
    excluding any C source files in `org/mozilla/jss/tests`. If any exist,
    they'll be compiled at a later stage for `ctest`. This step is dependent
    on steps 1 and 2.
@@ -99,7 +99,7 @@ in output and when running particular tests), a `COMMAND` to execute, and an
 optional set of dependencies (`DEPENDS ...`) on other tests. We use this
 because `add_test` doesn't itself handle dependencies or set environment
 variables (we need to inject `LD_LIBRARY_PATH` to handle testing our built
-`libjss4.so`).
+`libjss.so`).
 
 `jss_test_java` is a wrapper over `jss_test_exec` which handles setting up
 the JVM and passing required arguments to it (`-classpath`, `-enableasserts`,

@@ -54,7 +54,7 @@ macro(jss_build_globs)
     # We exclude any C files in the tests directory because they shouldn't
     # contribute to our library. They should instead be built as part of the
     # test suite and probably be built as stand alone binaries which link
-    # against libjss4.so (at most).
+    # against libjss.so (at most).
     file(GLOB_RECURSE C_SOURCES src/main/java/*.c)
     file(GLOB_RECURSE C_TEST_SOURCES src/test/java/*.c)
 endmacro()

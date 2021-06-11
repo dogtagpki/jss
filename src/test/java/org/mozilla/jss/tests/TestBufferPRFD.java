@@ -1,10 +1,20 @@
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.*;
-import org.mozilla.jss.pkcs11.*;
-import org.mozilla.jss.nss.*;
-import org.mozilla.jss.ssl.*;
-import org.mozilla.jss.util.*;
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.nss.Buffer;
+import org.mozilla.jss.nss.BufferProxy;
+import org.mozilla.jss.nss.PR;
+import org.mozilla.jss.nss.PRErrors;
+import org.mozilla.jss.nss.PRFDProxy;
+import org.mozilla.jss.nss.SSL;
+import org.mozilla.jss.nss.SSLFDProxy;
+import org.mozilla.jss.nss.SecurityStatusResult;
+import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.pkcs11.PK11PrivKey;
+import org.mozilla.jss.ssl.SSLAlertEvent;
+import org.mozilla.jss.ssl.SSLVersion;
+import org.mozilla.jss.ssl.SSLVersionRange;
+import org.mozilla.jss.util.Password;
 
 public class TestBufferPRFD {
     public static void TestCreateClose() {
@@ -259,7 +269,7 @@ public class TestBufferPRFD {
     }
 
     public static void main(String[] args) throws Exception {
-        System.loadLibrary("jss4");
+        System.loadLibrary("jss");
 
         System.out.println("Calling TestCreateClose()...");
         TestCreateClose();

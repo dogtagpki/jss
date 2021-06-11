@@ -2,12 +2,11 @@ package org.mozilla.jss.tests;
 
 import org.mozilla.jss.nss.PR;
 import org.mozilla.jss.nss.PRFDProxy;
-import org.mozilla.jss.nss.SSLFDProxy;
 import org.mozilla.jss.nss.SSL;
-import org.mozilla.jss.nss.SecurityStatusResult;
 import org.mozilla.jss.nss.SSLChannelInfo;
+import org.mozilla.jss.nss.SSLFDProxy;
 import org.mozilla.jss.nss.SSLPreliminaryChannelInfo;
-
+import org.mozilla.jss.nss.SecurityStatusResult;
 import org.mozilla.jss.ssl.SSLCipher;
 
 public class TestRawSSL {
@@ -155,7 +154,7 @@ public class TestRawSSL {
     }
 
     public static void main(String[] args) throws Exception {
-        System.loadLibrary("jss4");
+        System.loadLibrary("jss");
 
         if (args.length != 1) {
             System.out.println("Usage: TestRawSSL /path/to/nssdb");
