@@ -24,7 +24,7 @@ typedef struct JSS_AlgInfoStr {
     JSS_AlgType type;
 } JSS_AlgInfo;
 
-#define NUM_ALGS 81
+#define NUM_ALGS 84
 
 extern JSS_AlgInfo JSS_AlgTable[];
 extern CK_ULONG JSS_symkeyUsage[];
@@ -57,6 +57,14 @@ JSS_getOidTagFromAlg(JNIEnv *env, jobject alg);
 CK_MECHANISM_TYPE
 JSS_getPK11MechFromAlg(JNIEnv *env, jobject alg);
 
+
+SECStatus
+JSS_RegisterDynamicOids(void);
+
+void
+SECU_cert_fetchOID(SECOidTag *data, const SECOidData *src);
+
+
 // The following are put here because NSS has not defined these yet
 #ifndef CKM_AES_KEY_WRAP
 #define CKM_AES_KEY_WRAP 0x2109
@@ -66,6 +74,17 @@ JSS_getPK11MechFromAlg(JNIEnv *env, jobject alg);
 #endif
 #ifndef CKM_AES_KEY_WRAP_KWP
 #define CKM_AES_KEY_WRAP_KWP 0x210b
+#endif
+#ifndef  SEC_OID_AES_128_KEY_WRAP_KWP
+#define  SEC_OID_AES_128_KEY_WRAP_KWP (SEC_OID_TOTAL + 0)
+#endif
+
+#ifndef  SEC_OID_AES_192_KEY_WRAP_KWP
+#define  SEC_OID_AES_192_KEY_WRAP_KWP (SEC_OID_TOTAL + 1)
+#endif
+
+#ifndef  SEC_OID_AES_256_KEY_WRAP_KWP
+#define  SEC_OID_AES_256_KEY_WRAP_KWP (SEC_OID_TOTAL + 2)
 #endif
 
 PR_END_EXTERN_C
