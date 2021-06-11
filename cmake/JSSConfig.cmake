@@ -228,7 +228,7 @@ macro(jss_config_java)
     )
     find_jar(
         HAMCREST_JAR
-        NAMES hamcrest/core hamcrest-core
+        NAMES hamcrest/core hamcrest-core hamcrest/hamcrest
     )
 
     # Validate that we've found the required JARs
