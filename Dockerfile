@@ -16,14 +16,14 @@ ARG BUILD_OPTS
 # Enable COPR repo if specified
 RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
 
-# Import JSS sources
-COPY . /tmp/jss/
-WORKDIR /tmp/jss
+# Import source
+COPY . /tmp/src/
+WORKDIR /tmp/src
 
-# Build JSS packages
+# Build packages
 RUN dnf install -y git rpm-build
 RUN dnf builddep -y --spec jss.spec
-RUN ./build.sh $BUILD_OPTS --work-dir=build rpm
+RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
 
 ################################################################################
 FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-runner
@@ -35,10 +35,10 @@ EXPOSE 389 8080 8443
 # Enable COPR repo if specified
 RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
 
-# Import JSS packages
-COPY --from=jss-builder /tmp/jss/build/RPMS /tmp/RPMS/
+# Import packages
+COPY --from=jss-builder /tmp/build/RPMS /tmp/RPMS/
 
-# Install JSS packages
+# Install packages
 RUN dnf localinstall -y /tmp/RPMS/*; rm -rf /tmp/RPMS
 
 # Install systemd to run the container
