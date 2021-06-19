@@ -5,7 +5,7 @@
 #
 
 ARG OS_VERSION="latest"
-ARG COPR_REPO="@pki/master"
+ARG COPR_REPO="@pki/10.11"
 
 ################################################################################
 FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-builder
