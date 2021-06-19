@@ -3,14 +3,34 @@ name: PKI Tests
 on: [push, pull_request]
 
 jobs:
+  init:
+    name: Initializing Workflow
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set up test matrix
+        id: set-matrix
+        run: |
+          export latest=$(cat /etc/fedora-release | awk '{ print $3 }')
+          export previous=$(cat /etc/fedora-release | awk '{ print $3 - 1 }')
+          echo "Running CI against Fedora $previous and $latest"
+          if [ "${{ secrets.MATRIX }}" == "" ]
+          then
+              echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
+          else
+              echo "::set-output name=matrix::${{ secrets.MATRIX }}"
+          fi
+
   build:
     name: Building JSS
+    needs: init
     runs-on: ubuntu-latest
     env:
-      COPR_REPO: "@pki/master"
+      COPR_REPO: "@pki/10.11"
     strategy:
-      matrix:
-        os: ['33', '34']
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v2
@@ -38,14 +58,13 @@ jobs:
 
   ca-test:
     name: Installing CA
-    needs: build
+    needs: [init, build]
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss
-      COPR_REPO: "@pki/master"
+      COPR_REPO: "@pki/10.11"
     strategy:
-      matrix:
-        os: ['33', '34']
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v2
