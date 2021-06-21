@@ -8,8 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     container: fedora:latest
     outputs:
+      test_repo: ${{ steps.set-test-repo.outputs.test_repo }}
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      - name: Set up test repository
+        id: set-test-repo
+        run: |
+          if [ "${{ secrets.COPR_REPO }}" == "" ]
+          then
+              echo "Running CI using @pki/master repository"
+              echo "::set-output name=test_repo::@pki/master"
+          else
+              echo "::set-output name=test_repo::${{ secrets.COPR_REPO }}"
+          fi
+
       - name: Set up test matrix
         id: set-matrix
         run: |
@@ -28,7 +40,7 @@ jobs:
     needs: init
     runs-on: ubuntu-latest
     env:
-      COPR_REPO: "@pki/master"
+      COPR_REPO: ${{ needs.init.outputs.test_repo }}
     strategy:
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
@@ -62,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss
-      COPR_REPO: "@pki/master"
+      COPR_REPO: ${{ needs.init.outputs.test_repo }}
     strategy:
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
