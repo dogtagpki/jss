@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>GetCert</i>.
+ * 
  * <pre>
  * GetCert ::= SEQUENCE {
  *      issuerName      GeneralName,
@@ -53,13 +54,13 @@ public class GetCert implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Constructs a new <code>GetCert</code> from its components.  Neither
+     * Constructs a new <code>GetCert</code> from its components. Neither
      * component may be <code>null</code>.
      */
     public GetCert(ANY issuerName, INTEGER serialNumber) {
-        if( issuerName == null || serialNumber == null ) {
+        if (issuerName == null || serialNumber == null) {
             throw new IllegalArgumentException(
-                "parameter to GetCert constructor is null");
+                    "parameter to GetCert constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -74,6 +75,7 @@ public class GetCert implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -91,6 +93,7 @@ public class GetCert implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -103,9 +106,9 @@ public class GetCert implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( ANY.getTemplate() );
-            seqt.addElement( INTEGER.getTemplate() );
-         }
+            seqt.addElement(ANY.getTemplate());
+            seqt.addElement(INTEGER.getTemplate());
+        }
 
         @Override
         public boolean tagMatch(Tag tag) {
@@ -123,8 +126,8 @@ public class GetCert implements ASN1Value {
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new GetCert( (ANY)       seq.elementAt(0),
-                                (INTEGER)   seq.elementAt(1) );
+            return new GetCert((ANY) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1));
         }
     }
 }

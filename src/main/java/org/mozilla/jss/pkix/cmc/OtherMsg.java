@@ -19,6 +19,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>OtherMsg</i>.
+ * 
  * <pre>
  * The definition of OtherMsg comes from RFC 2797.
  * OtherMsg ::= SEQUENCE {
@@ -70,7 +71,7 @@ public class OtherMsg implements ASN1Value {
         if (bodyPartID == null || otherMsgType == null
                 || otherMsgValue == null) {
             throw new IllegalArgumentException(
-                "parameter to OtherMsg constructor is null");
+                    "parameter to OtherMsg constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -88,6 +89,7 @@ public class OtherMsg implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -105,6 +107,7 @@ public class OtherMsg implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -138,9 +141,9 @@ public class OtherMsg implements ASN1Value {
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new OtherMsg((INTEGER)seq.elementAt(0),
-                                (OBJECT_IDENTIFIER)seq.elementAt(1),
-                                (ANY)seq.elementAt(2));
+            return new OtherMsg((INTEGER) seq.elementAt(0),
+                    (OBJECT_IDENTIFIER) seq.elementAt(1),
+                    (ANY) seq.elementAt(2));
         }
     }
 }

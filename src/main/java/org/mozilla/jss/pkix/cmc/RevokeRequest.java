@@ -54,6 +54,7 @@ import org.mozilla.jss.asn1.UTF8String;
 
 /**
  * CMC <i>RevokeRequest</i>.
+ * 
  * <pre>
  * RevokeRequest ::= SEQUENCE {
  *      issuerName      Name,
@@ -67,6 +68,7 @@ import org.mozilla.jss.asn1.UTF8String;
  * For maintenance and conformance reasons, this code is brought over
  * and mildly updated and renamed from cmmf/RevRequest during the process
  * of CMC update to rfc 5272
+ * 
  * @author Christina Fu (cfu)
  */
 public class RevokeRequest implements ASN1Value {
@@ -77,55 +79,54 @@ public class RevokeRequest implements ASN1Value {
 
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED unspecified = new ENUMERATED(0);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED keyCompromise = new ENUMERATED(1);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED cACompromise = new ENUMERATED(2);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED affiliationChanged = new ENUMERATED(3);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED superseded = new ENUMERATED(4);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED cessationOfOperation = new ENUMERATED(5);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED certificateHold = new ENUMERATED(6);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED removeFromCRL = new ENUMERATED(8);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED privilegeWithdrawn = new ENUMERATED(9);
     /**
      * A <code>CRLReason</code>, which can be used in the <code>reason</code>
-     *  field.
+     * field.
      */
     public static final ENUMERATED aACompromise = new ENUMERATED(10);
-
 
     ///////////////////////////////////////////////////////////////////////
     // Members and member access
@@ -154,7 +155,8 @@ public class RevokeRequest implements ASN1Value {
 
     /**
      * Returns the <code>reason</code> field, which should indicate the
-     *  reason for the revocation.  The currently supported reasons are:
+     * reason for the revocation. The currently supported reasons are:
+     * 
      * <pre>
      * CRLReason ::= ENUMERATED {
      *      unspecified             (0),
@@ -168,6 +170,7 @@ public class RevokeRequest implements ASN1Value {
      *      privilegeWithdrawn      (9),
      *      aACompromise            (10) }
      * </pre>
+     * 
      * These are all defined as constants in this class.
      */
     public ENUMERATED getReason() {
@@ -183,15 +186,15 @@ public class RevokeRequest implements ASN1Value {
     }
 
     /**
-     * Returns the <code>passphrase</code> field.  Returns
-     *  <code>null</code> if the field is not present.
+     * Returns the <code>passphrase</code> field. Returns
+     * <code>null</code> if the field is not present.
      */
     public OCTET_STRING getSharedSecret() {
         return passphrase;
     }
 
     /**
-     * Returns the <code>comment</code> field.  Returns <code>null</code>
+     * Returns the <code>comment</code> field. Returns <code>null</code>
      * if the field is not present.
      */
     public UTF8String getComment() {
@@ -204,25 +207,24 @@ public class RevokeRequest implements ASN1Value {
 
     /**
      * Constructs a new <code>RevokeRequest</code> from its components,
-     *  omitting the <code>invalidityDate</code> field.
+     * omitting the <code>invalidityDate</code> field.
      *
      * @deprecated This constructor is obsolete now that
-     *      <code>invalidityDate</code> has been added to the class.
+     *             <code>invalidityDate</code> has been added to the class.
      *
      * @param issuerName The <code>issuerName</code> field.
      * @param serialNumber The <code>serialNumber</code> field.
-     * @param reason The <code>reason</code> field.  The constants defined
-     *      in this class may be used.
-     * @param passphrase The <code>passphrase</code> field.  This field is
-     *      optional, so <code>null</code> may be used.
-     * @param comment The <code>comment</code> field.  This field is optional,
-     *      so <code>null</code> may be used.
+     * @param reason The <code>reason</code> field. The constants defined
+     *            in this class may be used.
+     * @param passphrase The <code>passphrase</code> field. This field is
+     *            optional, so <code>null</code> may be used.
+     * @param comment The <code>comment</code> field. This field is optional,
+     *            so <code>null</code> may be used.
      */
     @Deprecated
     public RevokeRequest(ANY issuerName, INTEGER serialNumber,
-                    ENUMERATED reason, OCTET_STRING passphrase,
-                    UTF8String comment)
-    {
+            ENUMERATED reason, OCTET_STRING passphrase,
+            UTF8String comment) {
         this(issuerName, serialNumber, reason, null, passphrase, comment);
     }
 
@@ -231,23 +233,22 @@ public class RevokeRequest implements ASN1Value {
      *
      * @param issuerName The <code>issuerName</code> field.
      * @param serialNumber The <code>serialNumber</code> field.
-     * @param reason The <code>reason</code> field.  The constants defined
-     *      in this class may be used.
+     * @param reason The <code>reason</code> field. The constants defined
+     *            in this class may be used.
      * @param invalidityDate The suggested value for the Invalidity Date
-     *      CRL extension. This field is optional, so <code>null</code> may be
-     *      used.
-     * @param passphrase The <code>passphrase</code> field.  This field is
-     *      optional, so <code>null</code> may be used.
-     * @param comment The <code>comment</code> field.  This field is optional,
-     *      so <code>null</code> may be used.
+     *            CRL extension. This field is optional, so <code>null</code> may be
+     *            used.
+     * @param passphrase The <code>passphrase</code> field. This field is
+     *            optional, so <code>null</code> may be used.
+     * @param comment The <code>comment</code> field. This field is optional,
+     *            so <code>null</code> may be used.
      */
     public RevokeRequest(ANY issuerName, INTEGER serialNumber,
-                    ENUMERATED reason, GeneralizedTime invalidityDate,
-                    OCTET_STRING passphrase, UTF8String comment)
-    {
-        if( issuerName==null || serialNumber==null || reason==null ) {
+            ENUMERATED reason, GeneralizedTime invalidityDate,
+            OCTET_STRING passphrase, UTF8String comment) {
+        if (issuerName == null || serialNumber == null || reason == null) {
             throw new IllegalArgumentException(
-                "parameter to RevokeRequest constructor is null");
+                    "parameter to RevokeRequest constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -270,12 +271,12 @@ public class RevokeRequest implements ASN1Value {
         sequence.addElement(comment);
     }
 
-
     ///////////////////////////////////////////////////////////////////////
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -291,8 +292,6 @@ public class RevokeRequest implements ASN1Value {
             throws IOException {
         sequence.encode(implicitTag, ostream);
     }
-
-
 
     /**
      * A Template class for decoding a <code>RevokeRequest</code>.
@@ -328,12 +327,12 @@ public class RevokeRequest implements ASN1Value {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new RevokeRequest(  (ANY) seq.elementAt(0),
-                                    (INTEGER) seq.elementAt(1),
-                                    (ENUMERATED) seq.elementAt(2),
-                                    (GeneralizedTime) seq.elementAt(3),
-                                    (OCTET_STRING) seq.elementAt(4),
-                                    (UTF8String) seq.elementAt(5) );
+            return new RevokeRequest((ANY) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1),
+                    (ENUMERATED) seq.elementAt(2),
+                    (GeneralizedTime) seq.elementAt(3),
+                    (OCTET_STRING) seq.elementAt(4),
+                    (UTF8String) seq.elementAt(5));
 
         }
     }

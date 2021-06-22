@@ -19,6 +19,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>CMCCertId</i>.
+ * 
  * <pre>
  * The definition of IssuerSerial comes from RFC 3281.
  * CMCCertId ::= SEQUENCE {
@@ -70,11 +71,11 @@ public class CMCCertId implements ASN1Value {
     public CMCCertId(SEQUENCE issuer, INTEGER serial, BIT_STRING issuerUID) {
         if (issuer == null || serial == null) {
             throw new IllegalArgumentException(
-                "parameter to CMCCertId constructor is null");
+                    "parameter to CMCCertId constructor is null");
         }
         if (issuer.size() == 0) {
             throw new IllegalArgumentException(
-                "issuer parameter to CMCCertId constructor is empty");
+                    "issuer parameter to CMCCertId constructor is empty");
         }
         sequence = new SEQUENCE();
 
@@ -96,7 +97,7 @@ public class CMCCertId implements ASN1Value {
     public CMCCertId(ANY issuer, INTEGER serial, BIT_STRING issuerUID) {
         if (issuer == null || serial == null) {
             throw new IllegalArgumentException(
-                "parameter to CMCCertId constructor is null");
+                    "parameter to CMCCertId constructor is null");
         }
         sequence = new SEQUENCE();
         this.issuer = new SEQUENCE();
@@ -115,6 +116,7 @@ public class CMCCertId implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -132,6 +134,7 @@ public class CMCCertId implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -145,7 +148,7 @@ public class CMCCertId implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
             seqt.addElement(new SEQUENCE.OF_Template(ANY.getTemplate()));
-            seqt.addElement( INTEGER.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
             seqt.addOptionalElement(BIT_STRING.getTemplate());
         }
 
@@ -165,9 +168,9 @@ public class CMCCertId implements ASN1Value {
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new CMCCertId((SEQUENCE)seq.elementAt(0),
-                                 (INTEGER)seq.elementAt(1),
-                                 (BIT_STRING)seq.elementAt(2));
+            return new CMCCertId((SEQUENCE) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1),
+                    (BIT_STRING) seq.elementAt(2));
         }
     }
 }

@@ -18,6 +18,7 @@ import org.mozilla.jss.pkix.cms.ContentInfo;
 
 /**
  * CMC <i>TaggedContentInfo</i>.
+ * 
  * <pre>
  * The definition of TaggedContentInfo comes from RFC 2797 Section 3.6.
  * TaggedContentInfo ::= SEQUENCE {
@@ -58,7 +59,7 @@ public class TaggedContentInfo implements ASN1Value {
     public TaggedContentInfo(INTEGER bodyPartID, ContentInfo contentInfo) {
         if (bodyPartID == null || contentInfo == null) {
             throw new IllegalArgumentException(
-                "parameter to TaggedContentInfo constructor is null");
+                    "parameter to TaggedContentInfo constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -73,6 +74,7 @@ public class TaggedContentInfo implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -90,6 +92,7 @@ public class TaggedContentInfo implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -122,8 +125,8 @@ public class TaggedContentInfo implements ASN1Value {
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new TaggedContentInfo((INTEGER)seq.elementAt(0),
-                                         (ContentInfo)seq.elementAt(1));
+            return new TaggedContentInfo((INTEGER) seq.elementAt(0),
+                    (ContentInfo) seq.elementAt(1));
         }
     }
 }

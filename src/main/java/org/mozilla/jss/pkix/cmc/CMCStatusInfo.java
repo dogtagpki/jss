@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 package org.mozilla.jss.pkix.cmc;
 
 import java.io.IOException;
@@ -19,6 +18,7 @@ import org.mozilla.jss.asn1.UTF8String;
 
 /**
  * CMC <i>CMCStatusInfo</i>:
+ * 
  * <pre>
  *     CMCStatusInfo ::= SEQUENCE {
  *          cMCStatus           CMCStatus,
@@ -35,7 +35,7 @@ import org.mozilla.jss.asn1.UTF8String;
  * </pre>
  */
 public class CMCStatusInfo implements ASN1Value {
-	public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
+    public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
 
     ///////////////////////////////////////////////////////////////////////
     // Members
@@ -43,7 +43,7 @@ public class CMCStatusInfo implements ASN1Value {
     private INTEGER status;
     private SEQUENCE bodyList;
     private UTF8String statusString;
-	private OtherInfo otherInfo;
+    private OtherInfo otherInfo;
 
     // CMCStatus constants
     public static final int SUCCESS = 0;
@@ -53,12 +53,12 @@ public class CMCStatusInfo implements ASN1Value {
     public static final int NOSUPPORT = 4;
     public static final int CONFIRM_REQUIRED = 5;
 
-    public static final String[] STATUS = {"success",
-										   "reserved",
-										   "failed",
-										   "pending",
-										   "not supported",
-										   "confirm required"};
+    public static final String[] STATUS = { "success",
+            "reserved",
+            "failed",
+            "pending",
+            "not supported",
+            "confirm required" };
 
     ///////////////////////////////////////////////////////////////////////
     // Constructors
@@ -70,9 +70,9 @@ public class CMCStatusInfo implements ASN1Value {
      */
     public CMCStatusInfo(int status, SEQUENCE bodyList) {
         this.status = new INTEGER(status);
-		this.bodyList = bodyList;
+        this.bodyList = bodyList;
         this.statusString = null;
-		this.otherInfo = null;
+        this.otherInfo = null;
     }
 
     /**
@@ -81,83 +81,85 @@ public class CMCStatusInfo implements ASN1Value {
      * @param statusString A String.
      * @param otherInfo The OtherInfo choice.
      */
-    public CMCStatusInfo(int status, SEQUENCE bodyList, String
-						 statusString, OtherInfo otherInfo) {
+    public CMCStatusInfo(int status, SEQUENCE bodyList, String statusString, OtherInfo otherInfo) {
         this.status = new INTEGER(status);
-		this.bodyList = bodyList;
-		if (statusString != null){
-			try{
-			    this.statusString = new UTF8String(statusString);
-			}catch (Exception e){}
-		}else
-			this.statusString = null;
+        this.bodyList = bodyList;
+        if (statusString != null) {
+            try {
+                this.statusString = new UTF8String(statusString);
+            } catch (Exception e) {
+            }
+        } else
+            this.statusString = null;
         this.otherInfo = otherInfo;
     }
 
     /**
      * Create a CMCStatusInfo from decoding.
+     * 
      * @param status A CMCStatus constant.
      * @param bodyList The sequence of bodyPartID.
      * @param statusString A UTF8String.
      * @param otherInfo A CHOICE.
      */
-    public CMCStatusInfo(INTEGER status, SEQUENCE bodyList, UTF8String
-						 statusString, OtherInfo otherInfo) {
+    public CMCStatusInfo(INTEGER status, SEQUENCE bodyList, UTF8String statusString, OtherInfo otherInfo) {
         this.status = status;
-		this.bodyList = bodyList;
+        this.bodyList = bodyList;
         this.statusString = statusString;
-		this.otherInfo = otherInfo;
+        this.otherInfo = otherInfo;
     }
 
     /**
      * Sets the <code>statusString</code> field. May be null, since this
-     *  field is optional.
+     * field is optional.
      */
     public void setStatusString(String statusString) {
-		if (statusString != null){
-			try{
-				this.statusString = new UTF8String(statusString);
-			}catch (Exception e){}
-		}else{
-			this.statusString = null;
-		}
+        if (statusString != null) {
+            try {
+                this.statusString = new UTF8String(statusString);
+            } catch (Exception e) {
+            }
+        } else {
+            this.statusString = null;
+        }
     }
 
     /**
      * Adds a BodyPartID to the bodyList SEQUENCE.
      */
     public void addBodyPartID(int id) {
-		INTEGER id1 = new INTEGER(id);
-        assert(id1.compareTo(BODYIDMAX) <= 0);
-        bodyList.addElement( id1 );
+        INTEGER id1 = new INTEGER(id);
+        assert (id1.compareTo(BODYIDMAX) <= 0);
+        bodyList.addElement(id1);
     }
 
     ///////////////////////////////////////////////////////////////////////
     // member access
     ///////////////////////////////////////////////////////////////////////
-	public int getStatus() {
-		return status.intValue();
-	}
+    public int getStatus() {
+        return status.intValue();
+    }
 
-	public SEQUENCE getBodyList() {
-		return bodyList;
-	}
+    public SEQUENCE getBodyList() {
+        return bodyList;
+    }
 
-	public String getStatusString() {
-		if (statusString != null)
-			return statusString.toString();
-		return null;
-	}
+    public String getStatusString() {
+        if (statusString != null)
+            return statusString.toString();
+        return null;
+    }
 
-	public OtherInfo getOtherInfo() {
-		return otherInfo;
-	}
+    public OtherInfo getOtherInfo() {
+        return otherInfo;
+    }
 
     ///////////////////////////////////////////////////////////////////////
     // decoding/encoding
     ///////////////////////////////////////////////////////////////////////
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -170,28 +172,27 @@ public class CMCStatusInfo implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
         seq.addElement(status);
         seq.addElement(bodyList);
-        if( statusString != null ) {
-            seq.addElement( statusString );
+        if (statusString != null) {
+            seq.addElement(statusString);
         }
 
-		if ( otherInfo != null) {
-			seq.addElement( otherInfo );
-		}
+        if (otherInfo != null) {
+            seq.addElement(otherInfo);
+        }
 
         seq.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
-
 
     public static class Template implements ASN1Template {
 
@@ -199,11 +200,11 @@ public class CMCStatusInfo implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( new SEQUENCE.OF_Template(INTEGER.getTemplate()) );
-            seqt.addOptionalElement( UTF8String.getTemplate());
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(new SEQUENCE.OF_Template(INTEGER.getTemplate()));
+            seqt.addOptionalElement(UTF8String.getTemplate());
 
-            seqt.addOptionalElement( OtherInfo.getTemplate() );
+            seqt.addOptionalElement(OtherInfo.getTemplate());
         }
 
         @Override
@@ -224,11 +225,10 @@ public class CMCStatusInfo implements ASN1Value {
             CMCStatusInfo psi;
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-			return new CMCStatusInfo((INTEGER)seq.elementAt(0),
-									 (SEQUENCE)seq.elementAt(1),
-									 (UTF8String)seq.elementAt(2),
-									 (OtherInfo)seq.elementAt(3));
+            return new CMCStatusInfo((INTEGER) seq.elementAt(0),
+                    (SEQUENCE) seq.elementAt(1),
+                    (UTF8String) seq.elementAt(2),
+                    (OtherInfo) seq.elementAt(3));
         }
     }
 }
-

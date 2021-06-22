@@ -51,6 +51,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>OtherReqMsg</i>.
+ * 
  * <pre>
  * OtherReqMsg is to be used by the "orm" field of the TaggedRequest per
  *     definition in RFC 5272.
@@ -106,7 +107,7 @@ public class OtherReqMsg implements ASN1Value {
         if (bodyPartID == null || requestMessageType == null
                 || requestMessageValue == null) {
             throw new IllegalArgumentException(
-                "parameter to OtherReqMsg constructor is null");
+                    "parameter to OtherReqMsg constructor is null");
         }
         sequence = new SEQUENCE();
 
@@ -124,6 +125,7 @@ public class OtherReqMsg implements ASN1Value {
     // encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -141,6 +143,7 @@ public class OtherReqMsg implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -174,9 +177,9 @@ public class OtherReqMsg implements ASN1Value {
                 throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new OtherReqMsg((INTEGER)seq.elementAt(0),
-                                (OBJECT_IDENTIFIER)seq.elementAt(1),
-                                (ANY)seq.elementAt(2));
+            return new OtherReqMsg((INTEGER) seq.elementAt(0),
+                    (OBJECT_IDENTIFIER) seq.elementAt(1),
+                    (ANY) seq.elementAt(2));
         }
     }
 }

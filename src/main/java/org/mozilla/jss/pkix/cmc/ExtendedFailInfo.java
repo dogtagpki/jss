@@ -50,7 +50,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * ExtendedFailInfo per rfc 5272
- *    It is to be used in CMCStatusInfoV2 as a CHOICE of otherInfo
+ * It is to be used in CMCStatusInfoV2 as a CHOICE of otherInfo
  *
  * <pre>
  *      ExtendedFailInfo ::= SEQUENCE {
@@ -66,6 +66,7 @@ public class ExtendedFailInfo implements ASN1Value {
     private ANY failInfoValue;
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -73,13 +74,13 @@ public class ExtendedFailInfo implements ASN1Value {
 
     public ExtendedFailInfo(OBJECT_IDENTIFIER failInfoOID, ASN1Value failInfoValue) {
         this.failInfoOID = failInfoOID;
-        if( failInfoValue instanceof ANY ) {
+        if (failInfoValue instanceof ANY) {
             this.failInfoValue = (ANY) failInfoValue;
         } else {
             byte[] encoded = ASN1Util.encode(failInfoValue);
             try {
-              this.failInfoValue = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
-            } catch( InvalidBERException e ) {
+                this.failInfoValue = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
+            } catch (InvalidBERException e) {
                 throw new RuntimeException("InvalidBERException while decoding as ANY: " + e.getMessage(), e);
             }
         }
@@ -103,8 +104,7 @@ public class ExtendedFailInfo implements ASN1Value {
 
     @Override
     public void encode(Tag implicit, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
         seq.addElement(failInfoOID);
         seq.addElement(failInfoValue);
@@ -113,6 +113,7 @@ public class ExtendedFailInfo implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -129,27 +130,25 @@ public class ExtendedFailInfo implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             SEQUENCE.Template seqt = new SEQUENCE.Template();
 
-            seqt.addElement( new OBJECT_IDENTIFIER.Template()   );
-            seqt.addElement( new ANY.Template()                 );
+            seqt.addElement(new OBJECT_IDENTIFIER.Template());
+            seqt.addElement(new ANY.Template());
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
             // The template should have enforced this
-            assert(seq.size() == 2);
+            assert (seq.size() == 2);
 
-            return new ExtendedFailInfo( (OBJECT_IDENTIFIER) seq.elementAt(0),
-                                            seq.elementAt(1) );
+            return new ExtendedFailInfo((OBJECT_IDENTIFIER) seq.elementAt(0),
+                    seq.elementAt(1));
         }
     }
 

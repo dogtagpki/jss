@@ -10,6 +10,7 @@ import java.io.*;
 
 /**
  * CMC <i>TaggedRequest</i>:
+ * 
  * <pre>
  *   TaggedRequest ::= CHOICE { 
  *       tcr               [0] TaggedCertificationRequest, 
@@ -19,7 +20,7 @@ import java.io.*;
  *            requestMessageType    OBJECT IDENTIFIER,
  *            requestMessageValue   ANY DEFINED BY requestMessageType
  *       } // added for rfc 5272; defined in OtherReqMsg
- *   } 
+ *   }
  * </pre>
  */
 public class TaggedRequest implements ASN1Value {
@@ -27,12 +28,14 @@ public class TaggedRequest implements ASN1Value {
      * The type of TaggedRequest.
      */
     public static class Type {
-        private Type() { }
+        private Type() {
+        }
 
         static Type PKCS10 = new Type();
         static Type CRMF = new Type();
         static Type OTHER = new Type();
     }
+
     public static Type PKCS10 = Type.PKCS10;
     public static Type CRMF = Type.CRMF;
     public static Type OTHER = Type.OTHER;
@@ -51,11 +54,13 @@ public class TaggedRequest implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     // no default constructor
-    public TaggedRequest() { }
+    public TaggedRequest() {
+    }
 
-    /** 
+    /**
      * Constructs a TaggedRequest from its components.
-     *   kept for backward compatibility for now
+     * kept for backward compatibility for now
+     * 
      * @param type The type of the request.
      * @param tcr Tagged pkcs10 request.
      * @param crm CRMF request.
@@ -66,9 +71,10 @@ public class TaggedRequest implements ASN1Value {
         this.crm = crm;
     }
 
-    /** 
+    /**
      * Constructs a TaggedRequest from its components.
-     *   rfc 5272
+     * rfc 5272
+     * 
      * @param type The type of the request.
      * @param tcr Tagged pkcs10 request.
      * @param crm CRMF request.
@@ -89,7 +95,8 @@ public class TaggedRequest implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Returns the type of TaggedRequest: <ul>
+     * Returns the type of TaggedRequest:
+     * <ul>
      * <li><code>PKCS10</code>
      * <li><code>CRMF</code>
      * <li><code>OTHER</code>
@@ -129,12 +136,12 @@ public class TaggedRequest implements ASN1Value {
 
     @Override
     public Tag getTag() {
-        if( type == PKCS10 ) {
+        if (type == PKCS10) {
             return Tag.get(0);
-        } else if( type == CRMF ){
+        } else if (type == CRMF) {
             return Tag.get(1);
         } else {
-            assert( type == OTHER );
+            assert (type == OTHER);
             return Tag.get(2);
         }
     }
@@ -142,18 +149,18 @@ public class TaggedRequest implements ASN1Value {
     @Override
     public void encode(OutputStream ostream) throws IOException {
 
-        if( type == PKCS10 ) {
+        if (type == PKCS10) {
             tcr.encode(Tag.get(0), ostream);
             // a CHOICE must be explicitly tagged
             //EXPLICIT e = new EXPLICIT( Tag.get(0), tcr );
             //e.encode(ostream);
-        } else if( type == CRMF ) {
+        } else if (type == CRMF) {
             crm.encode(Tag.get(1), ostream);
             // a CHOICE must be explicitly tagged
             //EXPLICIT e = new EXPLICIT( Tag.get(1), crm );
             //e.encode(ostream);
         } else {
-            assert( type == OTHER );
+            assert (type == OTHER);
             orm.encode(Tag.get(2), ostream);
             // a CHOICE must be explicitly tagged
             //EXPLICIT e = new EXPLICIT( Tag.get(2), orm );
@@ -164,12 +171,13 @@ public class TaggedRequest implements ASN1Value {
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
-				//Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
-				//tagAt() of SET.java actually returns the underlying type
-			encode(ostream);
+        //Assert.notReached("A CHOICE cannot be implicitly tagged " +implicitTag.getNum());
+        //tagAt() of SET.java actually returns the underlying type
+        encode(ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -187,15 +195,15 @@ public class TaggedRequest implements ASN1Value {
             //EXPLICIT.Template et = new EXPLICIT.Template(
             //    Tag.get(0), TaggedCertificationRequest.getTemplate() );
             //choicet.addElement( et );
-            choicet.addElement( Tag.get(0), TaggedCertificationRequest.getTemplate() );
+            choicet.addElement(Tag.get(0), TaggedCertificationRequest.getTemplate());
             //et = new EXPLICIT.Template(
             //    Tag.get(1), CertReqMsg.getTemplate() );
             //choicet.addElement( et );
-            choicet.addElement( Tag.get(1), CertReqMsg.getTemplate() );
+            choicet.addElement(Tag.get(1), CertReqMsg.getTemplate());
             //et = new EXPLICIT.Template(
             //    Tag.get(2), CertReqMsg.getTemplate() );
             //choicet.addElement( et );
-            choicet.addElement( Tag.get(2), OtherReqMsg.getTemplate() );
+            choicet.addElement(Tag.get(2), OtherReqMsg.getTemplate());
         }
 
         @Override
@@ -208,20 +216,21 @@ public class TaggedRequest implements ASN1Value {
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
 
-            if( c.getTag().equals(Tag.get(0)) ) {
+            if (c.getTag().equals(Tag.get(0))) {
                 //EXPLICIT e = (EXPLICIT) c.getValue();
                 //return new TaggedRequest(PKCS10,
                 //            (TaggedCertificationRequest)
                 //            e.getContent(), null );
-                return new TaggedRequest(PKCS10, (TaggedCertificationRequest) c.getValue() , null);
-            } if( c.getTag().equals(Tag.get(1)) ) {
+                return new TaggedRequest(PKCS10, (TaggedCertificationRequest) c.getValue(), null);
+            }
+            if (c.getTag().equals(Tag.get(1))) {
                 //EXPLICIT e = (EXPLICIT) c.getValue();
                 //return new TaggedRequest(CRMF,
                 //            (CertReqMsg)
                 //            e.getContent(), null );
-                return new TaggedRequest(CRMF, null, (CertReqMsg) c.getValue() , null);
+                return new TaggedRequest(CRMF, null, (CertReqMsg) c.getValue(), null);
             } else {
-                assert( c.getTag().equals(Tag.get(2)) );
+                assert (c.getTag().equals(Tag.get(2)));
                 //EXPLICIT e = (EXPLICIT) c.getValue();
                 //return new TaggedRequest(OTHER, null,
                 //            (CertReqMsg) e.getContent() );
@@ -232,11 +241,8 @@ public class TaggedRequest implements ASN1Value {
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
                 throws InvalidBERException, IOException {
-					//Assert.notReached("A CHOICE cannot be implicitly tagged");
-				return decode(istream);
-		}
-	}
+            //Assert.notReached("A CHOICE cannot be implicitly tagged");
+            return decode(istream);
+        }
+    }
 }
-
-
-

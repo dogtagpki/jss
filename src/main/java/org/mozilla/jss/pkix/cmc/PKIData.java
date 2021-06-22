@@ -17,12 +17,12 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * A PKIData for CMC full enrollment request.
- *  PKIData ::= SEQUENCE {
- *        controlSequence    SEQUENCE SIZE(0..MAX) OF TaggedAttribute,
- *        reqSequence        SEQUENCE SIZE(0..MAX) OF TaggedRequest,
- *        cmsSequence        SEQUENCE SIZE(0..MAX) OF TaggedContentInfo,
- *        otherMsgSequence   SEQUENCE SIZE(0..MAX) OF OtherMsg
- *  }
+ * PKIData ::= SEQUENCE {
+ * controlSequence SEQUENCE SIZE(0..MAX) OF TaggedAttribute,
+ * reqSequence SEQUENCE SIZE(0..MAX) OF TaggedRequest,
+ * cmsSequence SEQUENCE SIZE(0..MAX) OF TaggedContentInfo,
+ * otherMsgSequence SEQUENCE SIZE(0..MAX) OF OtherMsg
+ * }
  */
 public class PKIData implements ASN1Value {
 
@@ -32,8 +32,8 @@ public class PKIData implements ASN1Value {
     private SEQUENCE sequence;
     private SEQUENCE controlSequence;
     private SEQUENCE reqSequence;
-	private SEQUENCE cmsSequence;
-	private SEQUENCE otherMsgSequence;
+    private SEQUENCE cmsSequence;
+    private SEQUENCE otherMsgSequence;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -47,8 +47,7 @@ public class PKIData implements ASN1Value {
      * @param cmsSequence Sequence of TagggedContentInfo.
      * @param otherMsgSequence Sequence of OtherMsg.
      */
-    public PKIData(SEQUENCE controlSequence, SEQUENCE reqSequence, SEQUENCE
-			cmsSequence, SEQUENCE otherMsgSequence) {
+    public PKIData(SEQUENCE controlSequence, SEQUENCE reqSequence, SEQUENCE cmsSequence, SEQUENCE otherMsgSequence) {
         sequence = new SEQUENCE();
         this.controlSequence = controlSequence;
         sequence.addElement(controlSequence);
@@ -59,7 +58,6 @@ public class PKIData implements ASN1Value {
         this.otherMsgSequence = otherMsgSequence;
         sequence.addElement(otherMsgSequence);
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     // accessors
@@ -81,11 +79,11 @@ public class PKIData implements ASN1Value {
         return otherMsgSequence;
     }
 
-
     ///////////////////////////////////////////////////////////////////////
     // DER encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     static Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -98,12 +96,12 @@ public class PKIData implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -116,10 +114,10 @@ public class PKIData implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement(new SEQUENCE.OF_Template(TaggedAttribute.getTemplate()) );
-            seqt.addElement( new SEQUENCE.OF_Template(TaggedRequest.getTemplate()) );
-            seqt.addElement( new SEQUENCE.OF_Template(new ANY.Template()) );
-            seqt.addElement( new SEQUENCE.OF_Template(new ANY.Template()) );
+            seqt.addElement(new SEQUENCE.OF_Template(TaggedAttribute.getTemplate()));
+            seqt.addElement(new SEQUENCE.OF_Template(TaggedRequest.getTemplate()));
+            seqt.addElement(new SEQUENCE.OF_Template(new ANY.Template()));
+            seqt.addElement(new SEQUENCE.OF_Template(new ANY.Template()));
         }
 
         @Override
@@ -129,25 +127,22 @@ public class PKIData implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            assert(seq.size() == 4);
+            assert (seq.size() == 4);
 
             return new PKIData(
-                            (SEQUENCE)      seq.elementAt(0),
-                            (SEQUENCE)      seq.elementAt(1),
-                            (SEQUENCE)      seq.elementAt(2),
-                            (SEQUENCE)      seq.elementAt(3));
+                    (SEQUENCE) seq.elementAt(0),
+                    (SEQUENCE) seq.elementAt(1),
+                    (SEQUENCE) seq.elementAt(2),
+                    (SEQUENCE) seq.elementAt(3));
         }
     }
 }
-

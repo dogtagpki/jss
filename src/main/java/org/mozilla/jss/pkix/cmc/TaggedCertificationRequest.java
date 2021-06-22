@@ -18,6 +18,7 @@ import org.mozilla.jss.pkcs10.CertificationRequest;
 
 /**
  * CMC <i>TaggedCertificationRequest</i>:
+ * 
  * <pre>
  *   TaggedCertificationRequest ::= SEQUENCE {
  *       bodyPartID            BodyPartID,
@@ -29,14 +30,14 @@ import org.mozilla.jss.pkcs10.CertificationRequest;
  * </pre>
  */
 public class TaggedCertificationRequest implements ASN1Value {
-	public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
+    public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
 
     ///////////////////////////////////////////////////////////////////////
     // Members
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private INTEGER bodyPartID;
-	private CertificationRequest certificationRequest;
+    private CertificationRequest certificationRequest;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -50,12 +51,12 @@ public class TaggedCertificationRequest implements ASN1Value {
      */
     public TaggedCertificationRequest(INTEGER bodyPartID, CertificationRequest certificationRequest) {
         sequence = new SEQUENCE();
-        assert(bodyPartID.compareTo(BODYIDMAX) <= 0);
+        assert (bodyPartID.compareTo(BODYIDMAX) <= 0);
         this.bodyPartID = bodyPartID;
         sequence.addElement(bodyPartID);
         this.certificationRequest = certificationRequest;
         sequence.addElement(certificationRequest);
-	}
+    }
 
     ///////////////////////////////////////////////////////////////////////
     // accessors
@@ -73,6 +74,7 @@ public class TaggedCertificationRequest implements ASN1Value {
     // DER encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -85,12 +87,12 @@ public class TaggedCertificationRequest implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -103,8 +105,8 @@ public class TaggedCertificationRequest implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( CertificationRequest.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(CertificationRequest.getTemplate());
         }
 
         @Override
@@ -114,22 +116,20 @@ public class TaggedCertificationRequest implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            assert(seq.size() == 2);
+            assert (seq.size() == 2);
 
             return new TaggedCertificationRequest(
-                            (INTEGER)      seq.elementAt(0),
-                            (CertificationRequest)      seq.elementAt(1));
+                    (INTEGER) seq.elementAt(0),
+                    (CertificationRequest) seq.elementAt(1));
         }
     }
 }

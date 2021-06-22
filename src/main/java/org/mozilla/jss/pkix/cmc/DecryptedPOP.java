@@ -51,6 +51,7 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
 /**
  * CMC <i>DecryptedPOP</i>:
+ * 
  * <pre>
  *     DecryptedPOP ::= SEQUENCE {
  *         bodyPartID      BodyPartID,
@@ -69,7 +70,7 @@ public class DecryptedPOP implements ASN1Value {
     private INTEGER bodyPartID;
     private AlgorithmIdentifier thePOPAlgID;
     private OCTET_STRING thePOP;
-    private SEQUENCE sequence;  // for DER encoding
+    private SEQUENCE sequence; // for DER encoding
 
     /**
      * Returns the <code>bodyPartID</code> field.
@@ -93,12 +94,11 @@ public class DecryptedPOP implements ASN1Value {
     public DecryptedPOP(
             INTEGER bodyPartID,
             AlgorithmIdentifier thePOPAlgID,
-            OCTET_STRING thePOP)
-    {
-        if( bodyPartID==null || thePOPAlgID==null ||
-                thePOP==null ) {
+            OCTET_STRING thePOP) {
+        if (bodyPartID == null || thePOPAlgID == null ||
+                thePOP == null) {
             throw new IllegalArgumentException("DecryptedPOP constructor"
-                +" parameter is null");
+                    + " parameter is null");
         }
 
         this.bodyPartID = bodyPartID;
@@ -134,6 +134,7 @@ public class DecryptedPOP implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -148,9 +149,9 @@ public class DecryptedPOP implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -171,9 +172,9 @@ public class DecryptedPOP implements ASN1Value {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new DecryptedPOP(
-                            (INTEGER) seq.elementAt(0),
-                            (AlgorithmIdentifier) seq.elementAt(1),
-                            (OCTET_STRING) seq.elementAt(2) );
+                    (INTEGER) seq.elementAt(0),
+                    (AlgorithmIdentifier) seq.elementAt(1),
+                    (OCTET_STRING) seq.elementAt(2));
         }
     }
 }

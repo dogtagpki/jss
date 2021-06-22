@@ -34,7 +34,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-
 package org.mozilla.jss.pkix.cmc;
 
 import java.io.IOException;
@@ -52,6 +51,7 @@ import org.mozilla.jss.asn1.UTF8String;
 /**
  * CMCStatusInfoV2 replaces CMCStatusInfo in rfc 5272
  * CMC <i>CMCStatusInfoV2</i>:
+ * 
  * <pre>
  *     CMCStatusInfoV2 ::= SEQUENCE {
  *          cMCStatus           CMCStatus,
@@ -72,7 +72,7 @@ import org.mozilla.jss.asn1.UTF8String;
  *          pendTime            GeneralizedTime
  *     }
  *
- * @author Christina Fu (cfu)
+ * &#64;author Christina Fu (cfu)
  * </pre>
  */
 public class CMCStatusInfoV2 implements ASN1Value {
@@ -96,14 +96,14 @@ public class CMCStatusInfoV2 implements ASN1Value {
     public static final int POP_REQUIRED = 6;
     public static final int PARTIAL = 7;
 
-    public static final String[] STATUS = {"success",
-                                           "reserved",
-                                           "failed",
-                                           "pending",
-                                           "not supported",
-                                           "confirm required",
-                                           "pop required",
-                                           "partial"};
+    public static final String[] STATUS = { "success",
+            "reserved",
+            "failed",
+            "pending",
+            "not supported",
+            "confirm required",
+            "pop required",
+            "partial" };
 
     ///////////////////////////////////////////////////////////////////////
     // Constructors
@@ -126,14 +126,14 @@ public class CMCStatusInfoV2 implements ASN1Value {
      * @param statusString A String.
      * @param otherInfo The OtherInfo choice.
      */
-    public CMCStatusInfoV2(int status, SEQUENCE bodyList, String
-                         statusString, OtherInfo otherInfo) {
+    public CMCStatusInfoV2(int status, SEQUENCE bodyList, String statusString, OtherInfo otherInfo) {
         this.status = new INTEGER(status);
         this.bodyList = bodyList;
-        if (statusString != null){
+        if (statusString != null) {
             try {
                 this.statusString = new UTF8String(statusString);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         } else
             this.statusString = null;
         this.otherInfo = otherInfo;
@@ -141,13 +141,13 @@ public class CMCStatusInfoV2 implements ASN1Value {
 
     /**
      * Create a CMCStatusInfoV2 from decoding.
+     * 
      * @param status A CMCStatus constant.
      * @param bodyList The sequence of BodyPartReference.
      * @param statusString A UTF8String.
      * @param otherInfo A CHOICE.
      */
-    public CMCStatusInfoV2(INTEGER status, SEQUENCE bodyList, UTF8String
-                         statusString, OtherInfo otherInfo) {
+    public CMCStatusInfoV2(INTEGER status, SEQUENCE bodyList, UTF8String statusString, OtherInfo otherInfo) {
         this.status = status;
         this.bodyList = bodyList;
         this.statusString = statusString;
@@ -156,14 +156,15 @@ public class CMCStatusInfoV2 implements ASN1Value {
 
     /**
      * Sets the <code>statusString</code> field. May be null, since this
-     *  field is optional.
+     * field is optional.
      */
     public void setStatusString(String statusString) {
-        if (statusString != null){
+        if (statusString != null) {
             try {
                 this.statusString = new UTF8String(statusString);
-            } catch (Exception e){}
-        } else{
+            } catch (Exception e) {
+            }
+        } else {
             this.statusString = null;
         }
     }
@@ -173,8 +174,8 @@ public class CMCStatusInfoV2 implements ASN1Value {
      */
     public void addBodyPartID(int id) {
         INTEGER id1 = new INTEGER(id);
-        assert(id1.compareTo(BODYIDMAX) <= 0);
-        bodyList.addElement( id1 );
+        assert (id1.compareTo(BODYIDMAX) <= 0);
+        bodyList.addElement(id1);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -203,6 +204,7 @@ public class CMCStatusInfoV2 implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -215,28 +217,27 @@ public class CMCStatusInfoV2 implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
         seq.addElement(status);
         seq.addElement(bodyList);
-        if( statusString != null ) {
-            seq.addElement( statusString );
+        if (statusString != null) {
+            seq.addElement(statusString);
         }
 
-        if ( otherInfo != null) {
-            seq.addElement( otherInfo );
+        if (otherInfo != null) {
+            seq.addElement(otherInfo);
         }
 
         seq.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
-
 
     public static class Template implements ASN1Template {
 
@@ -244,11 +245,11 @@ public class CMCStatusInfoV2 implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( new SEQUENCE.OF_Template(INTEGER.getTemplate()) );
-            seqt.addOptionalElement( UTF8String.getTemplate());
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(new SEQUENCE.OF_Template(INTEGER.getTemplate()));
+            seqt.addOptionalElement(UTF8String.getTemplate());
 
-            seqt.addOptionalElement( OtherInfo.getTemplate() );
+            seqt.addOptionalElement(OtherInfo.getTemplate());
         }
 
         @Override
@@ -269,11 +270,10 @@ public class CMCStatusInfoV2 implements ASN1Value {
             CMCStatusInfoV2 psi;
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new CMCStatusInfoV2((INTEGER)seq.elementAt(0),
-                                     (SEQUENCE)seq.elementAt(1),
-                                     (UTF8String)seq.elementAt(2),
-                                     (OtherInfo)seq.elementAt(3));
+            return new CMCStatusInfoV2((INTEGER) seq.elementAt(0),
+                    (SEQUENCE) seq.elementAt(1),
+                    (UTF8String) seq.elementAt(2),
+                    (OtherInfo) seq.elementAt(3));
         }
     }
 }
-

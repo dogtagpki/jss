@@ -19,6 +19,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMC <i>PendInfo</i>:
+ * 
  * <pre>
  *   PendInfo ::= SEQUENCE {
  *       pendToken            OCTET STRING,
@@ -32,7 +33,7 @@ public class PendInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     private SEQUENCE sequence;
     private OCTET_STRING pendToken;
-	private GeneralizedTime pendTime;
+    private GeneralizedTime pendTime;
 
     ///////////////////////////////////////////////////////////////////////
     // Construction
@@ -50,7 +51,7 @@ public class PendInfo implements ASN1Value {
         sequence.addElement(pendToken);
         this.pendTime = pendTime;
         sequence.addElement(pendTime);
-	}
+    }
 
     /**
      * Constructs a PendInfo from requestId and date.
@@ -64,7 +65,7 @@ public class PendInfo implements ASN1Value {
         sequence.addElement(new OCTET_STRING(reqId.getBytes()));
         this.pendTime = new GeneralizedTime(date);
         sequence.addElement(new GeneralizedTime(date));
-	}
+    }
     ///////////////////////////////////////////////////////////////////////
     // accessors
     ///////////////////////////////////////////////////////////////////////
@@ -81,6 +82,7 @@ public class PendInfo implements ASN1Value {
     // DER encoding/decoding
     ///////////////////////////////////////////////////////////////////////
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -93,12 +95,12 @@ public class PendInfo implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -111,8 +113,8 @@ public class PendInfo implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( OCTET_STRING.getTemplate() );
-            seqt.addElement( GeneralizedTime.getTemplate() );
+            seqt.addElement(OCTET_STRING.getTemplate());
+            seqt.addElement(GeneralizedTime.getTemplate());
         }
 
         @Override
@@ -122,22 +124,20 @@ public class PendInfo implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            assert(seq.size() == 2);
+            assert (seq.size() == 2);
 
             return new PendInfo(
-                            (OCTET_STRING)      seq.elementAt(0),
-                            (GeneralizedTime)      seq.elementAt(1));
+                    (OCTET_STRING) seq.elementAt(0),
+                    (GeneralizedTime) seq.elementAt(1));
         }
     }
 }
