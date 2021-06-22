@@ -59,8 +59,7 @@ public class SubjectKeyIdentifierExtension extends Extension
      * Identifier for this attribute, to be used with the
      * get, set, delete methods of Certificate, x509 type.
      */
-    public static final String IDENT =
-                         "x509.info.extensions.SubjectKeyIdentifier";
+    public static final String IDENT = "x509.info.extensions.SubjectKeyIdentifier";
     /**
      * Attribute names.
      */
@@ -131,7 +130,7 @@ public class SubjectKeyIdentifierExtension extends Extension
         if (id == null)
             return "";
         String s = super.toString() + "SubjectKeyIdentifier [\n"
-                 + id.toString() + "]\n";
+                + id.toString() + "]\n";
         return (s);
     }
 
@@ -173,7 +172,7 @@ public class SubjectKeyIdentifierExtension extends Extension
         if (name.equalsIgnoreCase(KEY_ID)) {
             if (!(obj instanceof KeyIdentifier)) {
                 throw new IOException("Attribute value should be of" +
-                                    " type KeyIdentifier.");
+                        " type KeyIdentifier.");
             }
             id = (KeyIdentifier) obj;
         } else {

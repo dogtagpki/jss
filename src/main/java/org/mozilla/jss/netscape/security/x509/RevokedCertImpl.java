@@ -393,7 +393,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
 
         if (derVal.tag != DerValue.tag_Sequence) {
             throw new CRLException("Invalid encoded RevokedCertificate, " +
-                                  "starting sequence tag missing.");
+                    "starting sequence tag missing.");
         }
         if (derVal.data.available() == 0)
             throw new CRLException("No data encoded for RevokedCertificates");
@@ -405,7 +405,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
             this.serialNumber = new SerialNumber(val);
         } catch (IOException e) {
             throw new CRLException("Parsing Serial Number error: "
-                                   + e.toString());
+                    + e.toString());
         }
 
         // revocationDate
@@ -420,7 +420,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
             }
         } catch (IOException e) {
             throw new CRLException("Parsing Revocation Date error: "
-                                   + e.toString());
+                    + e.toString());
         }
 
         if (derVal.data.available() == 0)
@@ -431,7 +431,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
             this.extensions = new CRLExtensions(derVal.toDerInputStream());
         } catch (IOException e) {
             throw new CRLException("Parsing CRL Entry Extensions error: "
-                                   + e.toString());
+                    + e.toString());
         }
     }
 

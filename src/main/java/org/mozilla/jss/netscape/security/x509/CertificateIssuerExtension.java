@@ -40,7 +40,7 @@ import org.mozilla.jss.netscape.security.util.DerValue;
  */
 
 public class CertificateIssuerExtension extends Extension
-                                        implements CertAttrSet {
+        implements CertAttrSet {
     /**
      *
      */
@@ -62,7 +62,7 @@ public class CertificateIssuerExtension extends Extension
     static {
         try {
             OIDMap.addAttribute(CertificateIssuerExtension.class.getName(),
-                                OID, NAME);
+                    OID, NAME);
         } catch (CertificateException e) {
         }
     }
@@ -151,7 +151,7 @@ public class CertificateIssuerExtension extends Extension
         if (names == null)
             return "";
         String s = super.toString() + "CertificateIssuerName [\n"
-                  + names.toString() + "]\n";
+                + names.toString() + "]\n";
         return (s);
     }
 
@@ -192,12 +192,12 @@ public class CertificateIssuerExtension extends Extension
         if (name.equalsIgnoreCase(CERTIFICATE_ISSUER)) {
             if (!(obj instanceof GeneralNames)) {
                 throw new IOException("Attribute value should be of" +
-                                      " type GeneralNames.");
+                        " type GeneralNames.");
             }
             names = (GeneralNames) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateIssuerName.");
+                    "CertAttrSet:CertificateIssuerName.");
         }
     }
 
@@ -210,7 +210,7 @@ public class CertificateIssuerExtension extends Extension
             return (names);
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateIssuerName.");
+                    "CertAttrSet:CertificateIssuerName.");
         }
     }
 
@@ -223,7 +223,7 @@ public class CertificateIssuerExtension extends Extension
             names = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet:CertificateIssuerName.");
+                    "CertAttrSet:CertificateIssuerName.");
         }
     }
 

@@ -161,7 +161,7 @@ public class PrivateKeyUsageExtension extends Extension
                 notBefore = str.getGeneralizedTime();
 
             } else if (opt.isContextSpecific(TAG_AFTER) &&
-                       !opt.isConstructed()) {
+                    !opt.isConstructed()) {
                 if (notAfter != null) {
                     throw new CertificateParsingException(
                             "Duplicate notAfter in PrivateKeyUsage.");
@@ -171,7 +171,7 @@ public class PrivateKeyUsageExtension extends Extension
                 notAfter = str.getGeneralizedTime();
             } else
                 throw new IOException("Invalid encoding of " +
-                                      "PrivateKeyUsageExtension");
+                        "PrivateKeyUsageExtension");
         }
     }
 
@@ -232,11 +232,11 @@ public class PrivateKeyUsageExtension extends Extension
          */
         if (notBefore.after(now)) {
             throw new CertificateNotYetValidException("NotBefore: " +
-                                                      notBefore.toString());
+                    notBefore.toString());
         }
         if (notAfter.before(now)) {
             throw new CertificateExpiredException("NotAfter: " +
-                                                  notAfter.toString());
+                    notAfter.toString());
         }
     }
 
@@ -287,7 +287,7 @@ public class PrivateKeyUsageExtension extends Extension
             notAfter = (Date) obj;
         } else {
             throw new CertificateException("Attribute name not recognized by"
-                           + " CertAttrSet:PrivateKeyUsage.");
+                    + " CertAttrSet:PrivateKeyUsage.");
         }
     }
 
@@ -304,7 +304,7 @@ public class PrivateKeyUsageExtension extends Extension
             return (new Date(notAfter.getTime()));
         } else {
             throw new CertificateException("Attribute name not recognized by"
-                           + " CertAttrSet:PrivateKeyUsage.");
+                    + " CertAttrSet:PrivateKeyUsage.");
         }
     }
 
@@ -321,7 +321,7 @@ public class PrivateKeyUsageExtension extends Extension
             notAfter = null;
         } else {
             throw new CertificateException("Attribute name not recognized by"
-                           + " CertAttrSet:PrivateKeyUsage.");
+                    + " CertAttrSet:PrivateKeyUsage.");
         }
     }
 

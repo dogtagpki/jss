@@ -42,9 +42,8 @@ public class OIDMap {
      * Location for where the OID/Classes maps are stored on
      * the local system.
      */
-    public static final String EXTENSIONS_HOME =
-            (System.getProperty("java.home") + File.separator + "lib"
-                    + File.separator + "security" + File.separator + "cert"
+    public static final String EXTENSIONS_HOME = (System.getProperty("java.home") + File.separator + "lib"
+            + File.separator + "security" + File.separator + "cert"
             + File.separator);
     /**
      * File names for where OIDs and Classes are registered
@@ -55,28 +54,28 @@ public class OIDMap {
 
     // Make default names easier
     private static final String ROOT = X509CertImpl.NAME + "." +
-                                 X509CertInfo.NAME + "." +
-                                 X509CertInfo.EXTENSIONS;
+            X509CertInfo.NAME + "." +
+            X509CertInfo.EXTENSIONS;
     private static final String AUTH_KEY_IDENTIFIER = ROOT + "." +
-                                          AuthorityKeyIdentifierExtension.NAME;
+            AuthorityKeyIdentifierExtension.NAME;
     private static final String SUB_KEY_IDENTIFIER = ROOT + "." +
-                                          SubjectKeyIdentifierExtension.NAME;
+            SubjectKeyIdentifierExtension.NAME;
     private static final String KEY_USAGE = ROOT + "." +
-                                          KeyUsageExtension.NAME;
+            KeyUsageExtension.NAME;
     private static final String PRIVATE_KEY_USAGE = ROOT + "." +
-                                          PrivateKeyUsageExtension.NAME;
+            PrivateKeyUsageExtension.NAME;
     private static final String POLICY_MAPPINGS = ROOT + "." +
-                                          PolicyMappingsExtension.NAME;
+            PolicyMappingsExtension.NAME;
     private static final String SUB_ALT_NAME = ROOT + "." +
-                                          SubjectAlternativeNameExtension.NAME;
+            SubjectAlternativeNameExtension.NAME;
     private static final String ISSUER_ALT_NAME = ROOT + "." +
-                                          IssuerAlternativeNameExtension.NAME;
+            IssuerAlternativeNameExtension.NAME;
     private static final String BASIC_CONSTRAINTS = ROOT + "." +
-                                          BasicConstraintsExtension.NAME;
+            BasicConstraintsExtension.NAME;
     private static final String NAME_CONSTRAINTS = ROOT + "." +
-                                          NameConstraintsExtension.NAME;
+            NameConstraintsExtension.NAME;
     private static final String POLICY_CONSTRAINTS = ROOT + "." +
-                                          PolicyConstraintsExtension.NAME;
+            PolicyConstraintsExtension.NAME;
     private static final String CERT_POLICIES = ROOT + "." +
             CertificatePoliciesExtension.NAME;
     private static final String SUBJ_DIR_ATTR = ROOT + "." +
@@ -87,9 +86,9 @@ public class OIDMap {
             EXT_KEY_USAGE_NAME;
 
     private static final String CRL_NUMBER = ROOT + "." +
-                                          CRLNumberExtension.NAME;
+            CRLNumberExtension.NAME;
     private static final String CRL_REASON = ROOT + "." +
-                                          CRLReasonExtension.NAME;
+            CRLReasonExtension.NAME;
 
     private static final Hashtable<ObjectIdentifier, String> oid2Name = new Hashtable<ObjectIdentifier, String>();
     private static final Hashtable<String, ObjectIdentifier> name2OID = new Hashtable<String, ObjectIdentifier>();
@@ -124,31 +123,31 @@ public class OIDMap {
     // Load the default name to class map (EXTENSIONS_CLASSES)
     private static void loadClassDefault(Properties props) {
         props.put(AUTH_KEY_IDENTIFIER,
-                   "org.mozilla.jss.netscape.security.x509.AuthorityKeyIdentifierExtension");
+                "org.mozilla.jss.netscape.security.x509.AuthorityKeyIdentifierExtension");
         props.put(SUB_KEY_IDENTIFIER,
-                  "org.mozilla.jss.netscape.security.x509.SubjectKeyIdentifierExtension");
+                "org.mozilla.jss.netscape.security.x509.SubjectKeyIdentifierExtension");
         props.put(KEY_USAGE,
-                  "org.mozilla.jss.netscape.security.x509.KeyUsageExtension");
+                "org.mozilla.jss.netscape.security.x509.KeyUsageExtension");
         props.put(PRIVATE_KEY_USAGE,
-                  "org.mozilla.jss.netscape.security.x509.PrivateKeyUsageExtension");
+                "org.mozilla.jss.netscape.security.x509.PrivateKeyUsageExtension");
         props.put(POLICY_MAPPINGS,
-                  "org.mozilla.jss.netscape.security.x509.PolicyMappingsExtension");
+                "org.mozilla.jss.netscape.security.x509.PolicyMappingsExtension");
         props.put(SUB_ALT_NAME,
-                  "org.mozilla.jss.netscape.security.x509.SubjectAlternativeNameExtension");
+                "org.mozilla.jss.netscape.security.x509.SubjectAlternativeNameExtension");
         props.put(ISSUER_ALT_NAME,
-                  "org.mozilla.jss.netscape.security.x509.IssuerAlternativeNameExtension");
+                "org.mozilla.jss.netscape.security.x509.IssuerAlternativeNameExtension");
         props.put(BASIC_CONSTRAINTS,
-                  "org.mozilla.jss.netscape.security.x509.BasicConstraintsExtension");
+                "org.mozilla.jss.netscape.security.x509.BasicConstraintsExtension");
         props.put(NAME_CONSTRAINTS,
-                  "org.mozilla.jss.netscape.security.x509.NameConstraintsExtension");
+                "org.mozilla.jss.netscape.security.x509.NameConstraintsExtension");
         props.put(POLICY_CONSTRAINTS,
-                  "org.mozilla.jss.netscape.security.x509.PolicyConstraintsExtension");
+                "org.mozilla.jss.netscape.security.x509.PolicyConstraintsExtension");
         props.put(CERT_POLICIES,
-                  "org.mozilla.jss.netscape.security.x509.CertificatePoliciesExtension");
+                "org.mozilla.jss.netscape.security.x509.CertificatePoliciesExtension");
         props.put(SUBJ_DIR_ATTR,
-                  "org.mozilla.jss.netscape.security.x509.SubjectDirAttributesExtension");
+                "org.mozilla.jss.netscape.security.x509.SubjectDirAttributesExtension");
         props.put(EXT_KEY_USAGE,
-                  "org.mozilla.jss.netscape.security.extensions.ExtendedKeyUsageExtension");
+                "org.mozilla.jss.netscape.security.extensions.ExtendedKeyUsageExtension");
         props.put(CRL_NUMBER, "org.mozilla.jss.netscape.security.x509.CRLNumberExtension");
         props.put(CRL_REASON, "org.mozilla.jss.netscape.security.x509.CRLReasonExtension");
     }
@@ -236,11 +235,11 @@ public class OIDMap {
     public static void addClass(Class<? extends Extension> clazz) {
         try {
             addAttribute(clazz.getName(),
-                (String) clazz.getField("OID").get(null),
-                (String) clazz.getField("NAME").get(null));
+                    (String) clazz.getField("OID").get(null),
+                    (String) clazz.getField("NAME").get(null));
         } catch (Throwable e) {
             System.out.println(
-                "Error adding class " + clazz.getName() + " to OIDMap: " + e);
+                    "Error adding class " + clazz.getName() + " to OIDMap: " + e);
         }
     }
 
@@ -308,7 +307,7 @@ public class OIDMap {
             return (extClass);
         } catch (Exception e) {
             throw new CertificateException("Error instantiating class for "
-                                + name + " " + e.toString());
+                    + name + " " + e.toString());
         }
     }
 
@@ -331,7 +330,7 @@ public class OIDMap {
             return (extClass);
         } catch (Exception e) {
             throw new CertificateException("Error instantiating class for "
-                                   + name + " " +  e.getMessage(), e);
+                    + name + " " + e.getMessage(), e);
         }
     }
 }

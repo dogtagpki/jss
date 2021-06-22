@@ -77,7 +77,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      * @see X500NameAttrMap
      */
     public LdapV3DNStrConverter(X500NameAttrMap attributeMap,
-                boolean doAcceptUnknownOids) {
+            boolean doAcceptUnknownOids) {
         attrMap = attributeMap;
         acceptUnknownOids = doAcceptUnknownOids;
 
@@ -357,7 +357,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
                 if (c == '\\') {
                     if ((c = in.read()) == -1)
                         throw new IOException("Bad AVA format: expecting " +
-                                              "escaped char.");
+                                "escaped char.");
                     // expect escaping of special chars, space and CR.
                     if (specialChars.indexOf((char) c) != -1 || c == '\n' ||
                             c == '\\' || c == '"' || c == ' ') {
@@ -393,7 +393,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
                                 getStringFromHexpairs(hexCharsBuf.toCharArray()));
                     } else {
                         throw new IOException("Bad AVA format: " +
-                                              "invalid escaping");
+                                "invalid escaping");
                     }
                 } else
                     valueBuf.append((char) c);
@@ -810,8 +810,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
             byte[] buffer = new byte[hexPairs.length / 2];
 
             for (int i = 0; i < buffer.length; i++) {
-                buffer[i] = (byte)
-                        ((Character.digit(hexPairs[i * 2], 16) << 4) +
+                buffer[i] = (byte) ((Character.digit(hexPairs[i * 2], 16) << 4) +
                         Character.digit(hexPairs[i * 2 + 1], 16));
             }
 

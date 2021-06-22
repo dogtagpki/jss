@@ -33,8 +33,8 @@ import org.mozilla.jss.netscape.security.util.DerValue;
  * Signature Standard (DSS), FIPS 186.
  *
  * <P>
- * <em><b>NOTE:</b>  At this time, DSS/DSA Algorithm IDs must always
- * include these parameters.  Use of DSS/DSA in modes where parameters are
+ * <em><b>NOTE:</b> At this time, DSS/DSA Algorithm IDs must always
+ * include these parameters. Use of DSS/DSA in modes where parameters are
  * either implicit (e.g. a default applicable to a site or a larger scope),
  * or are derived from some Certificate Authority's DSS certificate, is
  * not currently supported. </em>

@@ -65,8 +65,8 @@ public class CertificatePolicySet {
     @Override
     public String toString() {
         String s = "CertificatePolicySet:[\n"
-                 + ids.toString()
-                 + "]\n";
+                + ids.toString()
+                + "]\n";
 
         return (s);
     }

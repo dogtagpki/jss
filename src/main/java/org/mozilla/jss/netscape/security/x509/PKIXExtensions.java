@@ -102,8 +102,7 @@ public class PKIXExtensions {
     /**
      * Allows additional identities to be associated with the certificate issuer.
      */
-    public static final ObjectIdentifier IssuerAlternativeName_Id =
-                           new ObjectIdentifier(IssuerAlternativeName_data);
+    public static final ObjectIdentifier IssuerAlternativeName_Id = new ObjectIdentifier(IssuerAlternativeName_data);
 
     /**
      * Identifies additional directory attributes.
@@ -116,8 +115,7 @@ public class PKIXExtensions {
      * Identifies whether the subject of the certificate is a CA and how deep
      * a certification path may exist through that CA.
      */
-    public static final ObjectIdentifier BasicConstraints_Id =
-                           new ObjectIdentifier(BasicConstraints_data);
+    public static final ObjectIdentifier BasicConstraints_Id = new ObjectIdentifier(BasicConstraints_data);
 
     /**
      * Provides for permitted and excluded subtrees that place restrictions

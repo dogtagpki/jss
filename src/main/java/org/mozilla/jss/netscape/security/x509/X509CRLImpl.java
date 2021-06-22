@@ -190,7 +190,7 @@ public class X509CRLImpl extends X509CRL {
      * @exception X509ExtensionException on extension handling errors.
      */
     public X509CRLImpl(X500Name issuer, Date thisDate, Date nextDate,
-                       RevokedCertificate[] badCerts)
+            RevokedCertificate[] badCerts)
             throws CRLException, X509ExtensionException {
         this.issuer = issuer;
         this.thisUpdate = thisDate;
@@ -198,7 +198,7 @@ public class X509CRLImpl extends X509CRL {
         if (badCerts != null) {
             for (int i = 0; i < badCerts.length; i++)
                 this.revokedCerts.put(badCerts[i].getSerialNumber(),
-                                 badCerts[i]);
+                        badCerts[i]);
         }
     }
 
@@ -215,7 +215,7 @@ public class X509CRLImpl extends X509CRL {
      * @exception X509ExtensionException on extension handling errors.
      */
     public X509CRLImpl(X500Name issuer, Date thisDate, Date nextDate,
-               RevokedCertificate[] badCerts, CRLExtensions crlExts)
+            RevokedCertificate[] badCerts, CRLExtensions crlExts)
             throws CRLException, X509ExtensionException {
         this.issuer = issuer;
         this.thisUpdate = thisDate;
@@ -224,7 +224,7 @@ public class X509CRLImpl extends X509CRL {
             for (int i = 0; i < badCerts.length; i++) {
                 if (badCerts[i] != null) {
                     this.revokedCerts.put(badCerts[i].getSerialNumber(),
-                                          badCerts[i]);
+                            badCerts[i]);
                     if (badCerts[i].hasExtensions())
                         this.version = 1;
                 }
@@ -250,7 +250,7 @@ public class X509CRLImpl extends X509CRL {
      * @param crlExts the CRL extensions.
      */
     public X509CRLImpl(X500Name issuer, AlgorithmId algId, Date thisDate, Date nextDate,
-               RevokedCertificate[] badCerts, CRLExtensions crlExts)
+            RevokedCertificate[] badCerts, CRLExtensions crlExts)
             throws CRLException, X509ExtensionException {
         this(issuer, thisDate, nextDate, badCerts, crlExts);
         infoSigAlgId = algId;
@@ -270,8 +270,8 @@ public class X509CRLImpl extends X509CRL {
      * @exception X509ExtensionException on extension handling errors.
      */
     public X509CRLImpl(X500Name issuer, AlgorithmId algId,
-                       Date thisDate, Date nextDate,
-                       Hashtable<BigInteger, RevokedCertificate> badCerts, CRLExtensions crlExts)
+            Date thisDate, Date nextDate,
+            Hashtable<BigInteger, RevokedCertificate> badCerts, CRLExtensions crlExts)
             throws CRLException, X509ExtensionException {
         this.issuer = issuer;
         this.thisUpdate = thisDate;
@@ -486,7 +486,7 @@ public class X509CRLImpl extends X509CRL {
     public void sign(PrivateKey key, String algorithm, String provider)
             throws CRLException, NoSuchAlgorithmException, InvalidKeyException,
             NoSuchProviderException, SignatureException, X509ExtensionException {
-        try (DerOutputStream out = new DerOutputStream()){
+        try (DerOutputStream out = new DerOutputStream()) {
             if (readOnly)
                 throw new CRLException("cannot over-write existing CRL");
             Signature sigEngine = null;
@@ -521,7 +521,7 @@ public class X509CRLImpl extends X509CRL {
 
         } catch (IOException e) {
             throw new CRLException("Error while encoding data: " +
-                                   e.getMessage());
+                    e.getMessage());
         }
     }
 
@@ -549,8 +549,8 @@ public class X509CRLImpl extends X509CRL {
                 sb.append("\nCRL Extension[" + i + "]: " + extensions.elementAt(i));
             }
         }
-        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
-                new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
+        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp = new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(
+                " ", 20);
         String signaturebits = pp.toHexString(signature);
         sb.append("\nSignature:\n" + signaturebits);
 
@@ -991,7 +991,7 @@ public class X509CRLImpl extends X509CRL {
 
         if (val.data.available() != 0)
             throw new CRLException("signed overrun, bytes = "
-                                     + val.data.available());
+                    + val.data.available());
 
         if (seq[0].tag != DerValue.tag_Sequence)
             throw new CRLException("signed CRL fields invalid");
@@ -1043,7 +1043,7 @@ public class X509CRLImpl extends X509CRL {
             thisUpdate = derStrm.getGeneralizedTime();
         } else {
             throw new CRLException("Invalid encoding for thisUpdate"
-                                   + " (tag=" + nextByte + ")");
+                    + " (tag=" + nextByte + ")");
         }
 
         if (derStrm.available() == 0)
@@ -1073,7 +1073,7 @@ public class X509CRLImpl extends X509CRL {
                                 " not supported in CRL v1 entries.");
 
                     revokedCerts.put(entry.getSerialNumber(),
-                                     entry);
+                            entry);
                 }
             } else {
                 derStrm.skipSequence(4);
@@ -1088,7 +1088,7 @@ public class X509CRLImpl extends X509CRL {
         if (tmp.isConstructed() && tmp.isContextSpecific((byte) 0)) {
             if (version == 0)
                 throw new CRLException("Invalid encoding, extensions not" +
-                                   " supported in CRL v1.");
+                        " supported in CRL v1.");
             extensions = new CRLExtensions(tmp.data);
         }
     }

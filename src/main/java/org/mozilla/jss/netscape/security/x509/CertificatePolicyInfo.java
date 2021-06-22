@@ -87,9 +87,9 @@ public class CertificatePolicyInfo implements java.io.Serializable {
     @Override
     public String toString() {
         String s = "CertificatePolicyInfo: [\n"
-                 + "PolicyIdentifier:" + mPolicyIdentifier.toString()
+                + "PolicyIdentifier:" + mPolicyIdentifier.toString()
 
-                 + "]\n";
+                + "]\n";
         return (s);
     }
 

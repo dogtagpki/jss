@@ -117,7 +117,7 @@ public class IssuingDistributionPointExtension extends Extension
     static {
         try {
             OIDMap.addAttribute(IssuingDistributionPointExtension.class.getName(),
-                                OID, NAME);
+                    OID, NAME);
         } catch (CertificateException e) {
         }
     }
@@ -162,9 +162,11 @@ public class IssuingDistributionPointExtension extends Extension
                                                     issuingDistributionPoint.setFullName(fullName);
                                                 }
                                             } catch (GeneralNamesException e) {
-                                                throw new IOException("Invalid encoding of IssuingDistributionPoint " + e, e);
+                                                throw new IOException(
+                                                        "Invalid encoding of IssuingDistributionPoint " + e, e);
                                             } catch (IOException e) {
-                                                throw new IOException("Invalid encoding of IssuingDistributionPoint " + e, e);
+                                                throw new IOException(
+                                                        "Invalid encoding of IssuingDistributionPoint " + e, e);
                                             }
                                         } else {
                                             throw new IOException("Invalid encoding of IssuingDistributionPoint");
@@ -180,7 +182,8 @@ public class IssuingDistributionPointExtension extends Extension
                                                     issuingDistributionPoint.setRelativeName(relativeName);
                                                 }
                                             } catch (IOException e) {
-                                                throw new IOException("Invalid encoding of IssuingDistributionPoint " + e, e);
+                                                throw new IOException(
+                                                        "Invalid encoding of IssuingDistributionPoint " + e, e);
                                             }
                                         } else {
                                             throw new IOException("Invalid encoding of IssuingDistributionPoint");
@@ -385,8 +388,7 @@ public class IssuingDistributionPointExtension extends Extension
             GeneralNames generalNames = new GeneralNames();
             generalNames.addElement(uri);
             idp.setFullName(generalNames);
-            IssuingDistributionPointExtension idpExt =
-                    new IssuingDistributionPointExtension(idp);
+            IssuingDistributionPointExtension idpExt = new IssuingDistributionPointExtension(idp);
 
             // DN only
             idp = new IssuingDistributionPoint();
@@ -416,8 +418,6 @@ public class IssuingDistributionPointExtension extends Extension
 
             idpExt.setCritical(false);
             idpExt.encode(bos);
-
-
 
         } catch (Exception e) {
             e.printStackTrace();

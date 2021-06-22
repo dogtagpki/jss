@@ -147,7 +147,7 @@ public class CertificateSerialNumber implements CertAttrSet {
             serial = (SerialNumber) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                "CertAttrSet:CertificateSerialNumber.");
+                    "CertAttrSet:CertificateSerialNumber.");
         }
     }
 
@@ -160,7 +160,7 @@ public class CertificateSerialNumber implements CertAttrSet {
             return (serial);
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                "CertAttrSet:CertificateSerialNumber.");
+                    "CertAttrSet:CertificateSerialNumber.");
         }
     }
 
@@ -173,7 +173,7 @@ public class CertificateSerialNumber implements CertAttrSet {
             serial = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                "CertAttrSet:CertificateSerialNumber.");
+                    "CertAttrSet:CertificateSerialNumber.");
         }
     }
 

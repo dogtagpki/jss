@@ -62,8 +62,7 @@ public class AuthorityKeyIdentifierExtension extends Extension
      * Identifier for this attribute, to be used with the
      * get, set, delete methods of Certificate, x509 type.
      */
-    public static final String IDENT =
-                         "x509.info.extensions.AuthorityKeyIdentifier";
+    public static final String IDENT = "x509.info.extensions.AuthorityKeyIdentifier";
     /**
      * Attribute names.
      */
@@ -84,7 +83,7 @@ public class AuthorityKeyIdentifierExtension extends Extension
     // Encode only the extension value
     private void encodeThis() throws IOException {
         try (DerOutputStream tmp = new DerOutputStream();
-             DerOutputStream seq = new DerOutputStream()) {
+                DerOutputStream seq = new DerOutputStream()) {
 
             if (id != null) {
                 DerOutputStream tmp1 = new DerOutputStream();
@@ -118,7 +117,7 @@ public class AuthorityKeyIdentifierExtension extends Extension
      */
     public AuthorityKeyIdentifierExtension(boolean critical,
             KeyIdentifier kid, GeneralNames name,
-                                          SerialNumber sn)
+            SerialNumber sn)
             throws IOException {
         this.id = kid;
         this.names = name;
@@ -140,7 +139,7 @@ public class AuthorityKeyIdentifierExtension extends Extension
      * @exception IOException on error.
      */
     public AuthorityKeyIdentifierExtension(KeyIdentifier kid, GeneralNames name,
-                                           SerialNumber sn)
+            SerialNumber sn)
             throws IOException {
         this.id = kid;
         this.names = name;
@@ -174,7 +173,7 @@ public class AuthorityKeyIdentifierExtension extends Extension
         DerValue val = new DerValue(extValue);
         if (val.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoding for " +
-                                  "AuthorityKeyIdentifierExtension.");
+                    "AuthorityKeyIdentifierExtension.");
         }
 
         // NB. this is always encoded with the IMPLICIT tag
@@ -186,15 +185,15 @@ public class AuthorityKeyIdentifierExtension extends Extension
             if (opt.isContextSpecific(TAG_ID) && !opt.isConstructed()) {
                 if (id != null)
                     throw new IOException("Duplicate KeyIdentifier in " +
-                                          "AuthorityKeyIdentifier.");
+                            "AuthorityKeyIdentifier.");
                 opt.resetTag(DerValue.tag_OctetString);
                 id = new KeyIdentifier(opt);
 
             } else if (opt.isContextSpecific(TAG_NAMES) &&
-                       opt.isConstructed()) {
+                    opt.isConstructed()) {
                 if (names != null)
                     throw new IOException("Duplicate GeneralNames in " +
-                                          "AuthorityKeyIdentifier.");
+                            "AuthorityKeyIdentifier.");
                 try {
                     opt.resetTag(DerValue.tag_Sequence);
                     names = new GeneralNames(opt);
@@ -203,15 +202,15 @@ public class AuthorityKeyIdentifierExtension extends Extension
                 }
 
             } else if (opt.isContextSpecific(TAG_SERIAL_NUM) &&
-                       !opt.isConstructed()) {
+                    !opt.isConstructed()) {
                 if (serialNum != null)
                     throw new IOException("Duplicate SerialNumber in " +
-                                          "AuthorityKeyIdentifier.");
+                            "AuthorityKeyIdentifier.");
                 opt.resetTag(DerValue.tag_Integer);
                 serialNum = new SerialNumber(opt);
             } else
                 throw new IOException("Invalid encoding of " +
-                                      "AuthorityKeyIdentifierExtension.");
+                        "AuthorityKeyIdentifierExtension.");
         }
     }
 
@@ -271,19 +270,19 @@ public class AuthorityKeyIdentifierExtension extends Extension
         if (name.equalsIgnoreCase(KEY_ID)) {
             if (!(obj instanceof KeyIdentifier)) {
                 throw new IOException("Attribute value should be of " +
-                                    "type KeyIdentifier.");
+                        "type KeyIdentifier.");
             }
             id = (KeyIdentifier) obj;
         } else if (name.equalsIgnoreCase(AUTH_NAME)) {
             if (!(obj instanceof GeneralNames)) {
                 throw new IOException("Attribute value should be of " +
-                                    "type GeneralNames.");
+                        "type GeneralNames.");
             }
             names = (GeneralNames) obj;
         } else if (name.equalsIgnoreCase(SERIAL_NUMBER)) {
             if (!(obj instanceof SerialNumber)) {
                 throw new IOException("Attribute value should be of " +
-                                    "type SerialNumber.");
+                        "type SerialNumber.");
             }
             serialNum = (SerialNumber) obj;
         } else {

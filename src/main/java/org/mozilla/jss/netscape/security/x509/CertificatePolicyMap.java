@@ -40,7 +40,7 @@ public class CertificatePolicyMap {
      * @param subject the CertificatePolicyId for the subject CA.
      */
     public CertificatePolicyMap(CertificatePolicyId issuer,
-                                CertificatePolicyId subject) {
+            CertificatePolicyId subject) {
         this.issuerDomain = issuer;
         this.subjectDomain = subject;
     }
@@ -78,9 +78,9 @@ public class CertificatePolicyMap {
     @Override
     public String toString() {
         String s = "CertificatePolicyMap: [\n"
-                 + "IssuerDomain:" + issuerDomain.toString()
-                 + "SubjectDomain:" + subjectDomain.toString()
-                 + "]\n";
+                + "IssuerDomain:" + issuerDomain.toString()
+                + "SubjectDomain:" + subjectDomain.toString()
+                + "]\n";
 
         return (s);
     }

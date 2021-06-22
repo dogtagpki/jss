@@ -64,7 +64,7 @@ public class DeltaCRLIndicatorExtension extends Extension
     static {
         try {
             OIDMap.addAttribute(DeltaCRLIndicatorExtension.class.getName(),
-                                OID, NAME);
+                    OID, NAME);
         } catch (CertificateException e) {
         }
     }
@@ -153,7 +153,7 @@ public class DeltaCRLIndicatorExtension extends Extension
             baseCRLNumber = new BigInt((BigInteger) obj);
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:DeltaCRLIndicator.");
+                    " CertAttrSet:DeltaCRLIndicator.");
         }
     }
 
@@ -169,7 +169,7 @@ public class DeltaCRLIndicatorExtension extends Extension
                 return baseCRLNumber.toBigInteger();
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:DeltaCRLIndicator.");
+                    " CertAttrSet:DeltaCRLIndicator.");
         }
     }
 
@@ -182,7 +182,7 @@ public class DeltaCRLIndicatorExtension extends Extension
             baseCRLNumber = null;
         } else {
             throw new IOException("Attribute name not recognized by" +
-                                  " CertAttrSet:DeltaCRLIndicator.");
+                    " CertAttrSet:DeltaCRLIndicator.");
         }
     }
 
@@ -192,8 +192,8 @@ public class DeltaCRLIndicatorExtension extends Extension
     @Override
     public String toString() {
         String s = super.toString() + "Delta CRL Indicator: " +
-                   ((baseCRLNumber == null) ? "" : baseCRLNumber.toString())
-                   + "\n";
+                ((baseCRLNumber == null) ? "" : baseCRLNumber.toString())
+                + "\n";
         return (s);
     }
 

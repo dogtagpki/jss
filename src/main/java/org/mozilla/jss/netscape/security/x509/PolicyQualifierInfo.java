@@ -40,12 +40,10 @@ public class PolicyQualifierInfo implements java.io.Serializable {
      */
     private static final long serialVersionUID = -2930016944517192379L;
     public static final int OID_CPS[] = { 1, 3, 6, 1, 5, 5, 7, 2, 1 };
-    public static final ObjectIdentifier QT_CPS = new
-            ObjectIdentifier(OID_CPS);
+    public static final ObjectIdentifier QT_CPS = new ObjectIdentifier(OID_CPS);
 
     public static final int OID_UNOTICE[] = { 1, 3, 6, 1, 5, 5, 7, 2, 2 };
-    public static final ObjectIdentifier QT_UNOTICE = new
-            ObjectIdentifier(OID_UNOTICE);
+    public static final ObjectIdentifier QT_UNOTICE = new ObjectIdentifier(OID_UNOTICE);
 
     private ObjectIdentifier mId = null;
     private Qualifier mQualifier = null;

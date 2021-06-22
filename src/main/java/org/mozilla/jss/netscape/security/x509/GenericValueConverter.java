@@ -138,10 +138,10 @@ public class GenericValueConverter implements AVAValueConverter {
 
     private static byte DefEncodingTags[] = {
             DerValue.tag_PrintableString,
-                    DerValue.tag_IA5String,
-                    DerValue.tag_BMPString,
-                    DerValue.tag_UTF8String,
-                    DerValue.tag_T61String,
-                    DerValue.tag_UniversalString
-             };
+            DerValue.tag_IA5String,
+            DerValue.tag_BMPString,
+            DerValue.tag_UTF8String,
+            DerValue.tag_T61String,
+            DerValue.tag_UniversalString
+    };
 }

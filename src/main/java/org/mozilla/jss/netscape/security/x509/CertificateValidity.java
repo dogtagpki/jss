@@ -75,7 +75,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
     private void construct(DerValue derVal) throws IOException {
         if (derVal.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoded CertificateValidity, " +
-                                  "starting sequence tag missing.");
+                    "starting sequence tag missing.");
         }
         // check if UTCTime encoded or GeneralizedTime
         if (derVal.data.available() == 0)
@@ -179,7 +179,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
                     " null values to encode.\n");
         }
         try (DerOutputStream pair = new DerOutputStream();
-             DerOutputStream seq = new DerOutputStream()) {
+                DerOutputStream seq = new DerOutputStream()) {
             if (notBefore.getTime() < YR_2050) {
                 pair.putUTCTime(notBefore);
             } else
@@ -210,7 +210,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
             notAfter = (Date) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                            "CertAttrSet: CertificateValidity.");
+                    "CertAttrSet: CertificateValidity.");
         }
     }
 
@@ -225,7 +225,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
             return (getNotAfter());
         } else {
             throw new IOException("Attribute name not recognized by " +
-                            "CertAttrSet: CertificateValidity.");
+                    "CertAttrSet: CertificateValidity.");
         }
     }
 
@@ -240,7 +240,7 @@ public class CertificateValidity implements CertAttrSet, Serializable {
             notAfter = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                            "CertAttrSet: CertificateValidity.");
+                    "CertAttrSet: CertificateValidity.");
         }
     }
 
@@ -299,11 +299,11 @@ public class CertificateValidity implements CertAttrSet, Serializable {
          */
         if (notBefore.after(now)) {
             throw new CertificateNotYetValidException("NotBefore: " +
-                                                      notBefore.toString());
+                    notBefore.toString());
         }
         if (notAfter.before(now)) {
             throw new CertificateExpiredException("NotAfter: " +
-                                                  notAfter.toString());
+                    notAfter.toString());
         }
     }
 }

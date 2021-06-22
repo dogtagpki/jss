@@ -141,7 +141,7 @@ public class CertificateSubjectUniqueIdentity implements CertAttrSet {
             id = (UniqueIdentity) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                      "CertAttrSet: CertificateSubjectUniqueIdentity.");
+                    "CertAttrSet: CertificateSubjectUniqueIdentity.");
         }
     }
 
@@ -154,7 +154,7 @@ public class CertificateSubjectUniqueIdentity implements CertAttrSet {
             return (id);
         } else {
             throw new IOException("Attribute name not recognized by " +
-                      "CertAttrSet: CertificateSubjectUniqueIdentity.");
+                    "CertAttrSet: CertificateSubjectUniqueIdentity.");
         }
     }
 
@@ -167,7 +167,7 @@ public class CertificateSubjectUniqueIdentity implements CertAttrSet {
             id = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                      "CertAttrSet: CertificateSubjectUniqueIdentity.");
+                    "CertAttrSet: CertificateSubjectUniqueIdentity.");
         }
     }
 

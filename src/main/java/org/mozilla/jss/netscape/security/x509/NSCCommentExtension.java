@@ -52,8 +52,7 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
      */
     public static final String NAME = "NSCCommentExtension";
     public static final String INFOS = "infos";
-    public static final ObjectIdentifier OID =
-            new ObjectIdentifier("2.16.840.1.113730.1.13");
+    public static final ObjectIdentifier OID = new ObjectIdentifier("2.16.840.1.113730.1.13");
     public String mComment = null;
 
     // Private data members
@@ -122,7 +121,7 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
         if (mInfos == null)
             return "";
         String s = super.toString() + "Netscape Comment [\n"
-                 + mInfos.toString() + "]\n";
+                + mInfos.toString() + "]\n";
 
         return (s);
     }
@@ -178,12 +177,12 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
         if (name.equalsIgnoreCase(INFOS)) {
             if (!(obj instanceof Vector)) {
                 throw new IOException("Attribute value should be of" +
-                                    " type Vector.");
+                        " type Vector.");
             }
             mInfos = (Vector<Object>) obj;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                        "CertAttrSet:NSCCommentExtension.");
+                    "CertAttrSet:NSCCommentExtension.");
         }
     }
 
@@ -196,7 +195,7 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
             return (mInfos);
         } else {
             throw new IOException("Attribute name not recognized by " +
-                        "CertAttrSet:NSCCommentExtension.");
+                    "CertAttrSet:NSCCommentExtension.");
         }
     }
 
@@ -209,7 +208,7 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
             mInfos = null;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                        "CertAttrSet:NSCCommentExtension.");
+                    "CertAttrSet:NSCCommentExtension.");
         }
     }
 

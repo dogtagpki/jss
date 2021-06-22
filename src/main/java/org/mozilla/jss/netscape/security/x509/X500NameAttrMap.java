@@ -81,8 +81,7 @@ public class X500NameAttrMap {
      * @return An attribute value converter for the attribute name
      */
     public AVAValueConverter getValueConverter(String name) {
-        ObjectIdentifier oid =
-                name2OID.get(name.toUpperCase());
+        ObjectIdentifier oid = name2OID.get(name.toUpperCase());
         if (oid == null)
             return null;
         return oid2ValueConverter.get(oid);
@@ -145,7 +144,7 @@ public class X500NameAttrMap {
      *            a DerValue and vice versa.
      */
     public void addNameOID(String name, ObjectIdentifier oid,
-               AVAValueConverter valueConverter) {
+            AVAValueConverter valueConverter) {
         // normalize name for case insensitive compare.
         ObjectIdentifier theOid;
         Class<? extends AVAValueConverter> expValueConverter;
@@ -206,8 +205,7 @@ public class X500NameAttrMap {
 
     Hashtable<String, ObjectIdentifier> name2OID = new Hashtable<String, ObjectIdentifier>();
     Hashtable<ObjectIdentifier, String> oid2Name = new Hashtable<ObjectIdentifier, String>();
-    Hashtable<ObjectIdentifier, AVAValueConverter> oid2ValueConverter =
-            new Hashtable<ObjectIdentifier, AVAValueConverter>();
+    Hashtable<ObjectIdentifier, AVAValueConverter> oid2ValueConverter = new Hashtable<ObjectIdentifier, AVAValueConverter>();
 
     //
     // global defaults.
@@ -301,76 +299,76 @@ public class X500NameAttrMap {
         AVAValueConverter directoryStr = new DirStrConverter();
 
         defDirMap.addNameOID("CN",
-                          new ObjectIdentifier("2.5.4.3"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.3"),
+                directoryStr);
         defDirMap.addNameOID("OU",
-                          new ObjectIdentifier("2.5.4.11"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.11"),
+                directoryStr);
         defDirMap.addNameOID("O",
-                          new ObjectIdentifier("2.5.4.10"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.10"),
+                directoryStr);
         // serialNumber added for CEP support
         defDirMap.addNameOID("SERIALNUMBER",
-                          new ObjectIdentifier("2.5.4.5"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.5"),
+                directoryStr);
         defDirMap.addNameOID("C",
-                          new ObjectIdentifier("2.5.4.6"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.6"),
+                directoryStr);
         defDirMap.addNameOID("L",
-                          new ObjectIdentifier("2.5.4.7"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.7"),
+                directoryStr);
         defDirMap.addNameOID("ST",
-                          new ObjectIdentifier("2.5.4.8"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.8"),
+                directoryStr);
         defDirMap.addNameOID("STREET",
-                          new ObjectIdentifier("2.5.4.9"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.9"),
+                directoryStr);
         defDirMap.addNameOID("TITLE",
-                          new ObjectIdentifier("2.5.4.12"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.12"),
+                directoryStr);
         // RFC 1274 UserId, rfc822MailBox
         defDirMap.addNameOID("UID",
-                          new ObjectIdentifier("0.9.2342.19200300.100.1.1"),
-                          directoryStr);
+                new ObjectIdentifier("0.9.2342.19200300.100.1.1"),
+                directoryStr);
         defDirMap.addNameOID("MAIL",
-                          new ObjectIdentifier("0.9.2342.19200300.100.1.3"),
-                          directoryStr);
+                new ObjectIdentifier("0.9.2342.19200300.100.1.3"),
+                directoryStr);
         // PKCS9 e-mail address
         defDirMap.addNameOID("E",
-                          new ObjectIdentifier("1.2.840.113549.1.9.1"),
-                          directoryStr);
+                new ObjectIdentifier("1.2.840.113549.1.9.1"),
+                directoryStr);
 
         // DC definition from draft-ietf-asid-ldap-domains-02.txt
         defDirMap.addNameOID("DC",
-                          new ObjectIdentifier("0.9.2342.19200300.100.1.25"),
-                          directoryStr);
+                new ObjectIdentifier("0.9.2342.19200300.100.1.25"),
+                directoryStr);
 
         // more defined in RFC2459 used in Subject Directory Attr extension
         defDirMap.addNameOID("SN", // surname
                 new ObjectIdentifier("2.5.4.4"),
-                          directoryStr);
+                directoryStr);
         defDirMap.addNameOID("GIVENNAME",
-                          new ObjectIdentifier("2.5.4.42"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.42"),
+                directoryStr);
         defDirMap.addNameOID("INITIALS",
-                          new ObjectIdentifier("2.5.4.43"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.43"),
+                directoryStr);
         defDirMap.addNameOID("GENERATIONQUALIFIER",
-                          new ObjectIdentifier("2.5.4.44"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.44"),
+                directoryStr);
         defDirMap.addNameOID("DNQUALIFIER",
-                          new ObjectIdentifier("2.5.4.46"),
-                          directoryStr);
+                new ObjectIdentifier("2.5.4.46"),
+                directoryStr);
 
         // these two added mainly for CEP support
         // PKCS9 unstructured name
         defDirMap.addNameOID("UNSTRUCTUREDNAME",
-                          new ObjectIdentifier("1.2.840.113549.1.9.2"),
-                          directoryStr);
+                new ObjectIdentifier("1.2.840.113549.1.9.2"),
+                directoryStr);
         // PKCS9 unstructured address
         defDirMap.addNameOID("UNSTRUCTUREDADDRESS",
-                          new ObjectIdentifier("1.2.840.113549.1.9.8"),
-                          directoryStr);
+                new ObjectIdentifier("1.2.840.113549.1.9.8"),
+                directoryStr);
     };
 
 }

@@ -56,7 +56,7 @@ public class CIDRNetmask {
             bits = 128;
         else
             throw new InvalidNetmaskException(
-                "cannot determine type of address for netmask");
+                    "cannot determine type of address for netmask");
 
         if (n > bits)
             throw new InvalidNetmaskException("netmask exceed address size");

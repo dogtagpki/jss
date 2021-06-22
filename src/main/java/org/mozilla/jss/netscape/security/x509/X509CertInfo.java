@@ -356,8 +356,8 @@ public class X509CertInfo implements CertAttrSet, Serializable {
             sb.append("  Subject Id:\n" + subjectUniqueId.toString() + "\n");
         }
         if (extensions != null) {
-            org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
-                    new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
+            org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp = new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(
+                    " ", 20);
             for (int i = 0; i < extensions.size(); i++) {
                 sb.append("  Extension[" + i + "] = ");
                 Extension ext = extensions.elementAt(i);
@@ -372,8 +372,8 @@ public class X509CertInfo implements CertAttrSet, Serializable {
                             extValue = out.toByteArray();
                             String extValuebits = pp.toHexString(extValue);
                             sb.append("Extension unknown: "
-                                      + "DER encoded OCTET string =\n"
-                                      + extValuebits);
+                                    + "DER encoded OCTET string =\n"
+                                    + extValuebits);
                         }
                     } else
                         sb.append(ext.toString()); //sub-class exists
@@ -412,7 +412,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
         int attr = attributeMap(attrName.getPrefix());
         if (attr == 0) {
             throw new CertificateException("Attribute name not recognized: "
-                                           + name);
+                    + name);
         }
         // set rawCertInfo to null, so that we are forced to re-encode
         rawCertInfo = null;
@@ -515,7 +515,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
         int attr = attributeMap(attrName.getPrefix());
         if (attr == 0) {
             throw new CertificateException("Attribute name not recognized: "
-                                           + name);
+                    + name);
         }
         // set rawCertInfo to null, so that we are forced to re-encode
         rawCertInfo = null;
@@ -610,7 +610,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
         int attr = attributeMap(attrName.getPrefix());
         if (attr == 0) {
             throw new CertificateParsingException(
-                          "Attribute name not recognized: " + name);
+                    "Attribute name not recognized: " + name);
         }
 
         switch (attr) {

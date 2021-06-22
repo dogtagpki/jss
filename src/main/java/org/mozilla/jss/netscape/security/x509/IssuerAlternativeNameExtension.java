@@ -54,8 +54,7 @@ public class IssuerAlternativeNameExtension
      * Identifier for this attribute, to be used with the
      * get, set, delete methods of Certificate, x509 type.
      */
-    public static final String IDENT =
-                         "x509.info.extensions.IssuerAlternativeName";
+    public static final String IDENT = "x509.info.extensions.IssuerAlternativeName";
     /**
      * Attribute names.
      */
@@ -148,7 +147,7 @@ public class IssuerAlternativeNameExtension
         if (names == null)
             return "";
         String s = super.toString() + "IssuerAlternativeName [\n"
-                  + names.toString() + "]\n";
+                + names.toString() + "]\n";
         return (s);
     }
 
@@ -190,7 +189,7 @@ public class IssuerAlternativeNameExtension
         if (name.equalsIgnoreCase(ISSUER_NAME)) {
             if (!(obj instanceof GeneralNames)) {
                 throw new IOException("Attribute value should be of" +
-                                    " type GeneralNames.");
+                        " type GeneralNames.");
             }
             names = (GeneralNames) obj;
         } else {

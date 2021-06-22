@@ -140,7 +140,7 @@ public class CRLNumberExtension extends Extension
             crlNumber = new BigInt((BigInteger) obj);
         } else {
             throw new IOException("Attribute name not recognized by"
-                                + " CertAttrSet:CRLNumber.");
+                    + " CertAttrSet:CRLNumber.");
         }
     }
 
@@ -156,7 +156,7 @@ public class CRLNumberExtension extends Extension
                 return crlNumber.toBigInteger();
         } else {
             throw new IOException("Attribute name not recognized by"
-                                + " CertAttrSet:CRLNumber.");
+                    + " CertAttrSet:CRLNumber.");
         }
     }
 
@@ -169,7 +169,7 @@ public class CRLNumberExtension extends Extension
             crlNumber = null;
         } else {
             throw new IOException("Attribute name not recognized by"
-                                + " CertAttrSet:CRLNumber.");
+                    + " CertAttrSet:CRLNumber.");
         }
     }
 
@@ -179,8 +179,8 @@ public class CRLNumberExtension extends Extension
     @Override
     public String toString() {
         String s = super.toString() + "CRL Number: " +
-                   ((crlNumber == null) ? "" : crlNumber.toString())
-                   + "\n";
+                ((crlNumber == null) ? "" : crlNumber.toString())
+                + "\n";
         return (s);
     }
 

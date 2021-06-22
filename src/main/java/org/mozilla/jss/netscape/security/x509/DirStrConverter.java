@@ -70,16 +70,14 @@ public class DirStrConverter implements AVAValueConverter {
      *                characters covered only in the universal
      *                string (or UCS-4) character set.
      */
-    private static byte[] DefEncodingOrder =
-            new byte[] {
-                    DerValue.tag_UTF8String,
-                    DerValue.tag_PrintableString,
-                    DerValue.tag_T61String,
-                    DerValue.tag_UniversalString
+    private static byte[] DefEncodingOrder = new byte[] {
+            DerValue.tag_UTF8String,
+            DerValue.tag_PrintableString,
+            DerValue.tag_T61String,
+            DerValue.tag_UniversalString
     };
 
-    public static synchronized void
-            setDefEncodingOrder(byte[] defEncodingOrder) {
+    public static synchronized void setDefEncodingOrder(byte[] defEncodingOrder) {
         DefEncodingOrder = defEncodingOrder;
     }
 

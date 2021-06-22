@@ -89,11 +89,9 @@ public class CRLDistributionPointsExtension extends Extension
 
             // decode the value
             try {
-                SEQUENCE.OF_Template seqOfCRLDP =
-                        new SEQUENCE.OF_Template(CRLDistributionPoint.getTemplate());
+                SEQUENCE.OF_Template seqOfCRLDP = new SEQUENCE.OF_Template(CRLDistributionPoint.getTemplate());
 
-                distributionPoints =
-                        (SEQUENCE) ASN1Util.decode(seqOfCRLDP, extensionValue);
+                distributionPoints = (SEQUENCE) ASN1Util.decode(seqOfCRLDP, extensionValue);
             } catch (InvalidBERException e) {
                 throw new IOException("Invalid BER-encoding: " + e, e);
             }
@@ -262,8 +260,7 @@ public class CRLDistributionPointsExtension extends Extension
             GeneralNames generalNames = new GeneralNames();
             generalNames.addElement(uri);
             cdp.setFullName(generalNames);
-            CRLDistributionPointsExtension crldpExt =
-                    new CRLDistributionPointsExtension(cdp);
+            CRLDistributionPointsExtension crldpExt = new CRLDistributionPointsExtension(cdp);
 
             // DN only
             cdp = new CRLDistributionPoint();
@@ -380,20 +377,13 @@ public class CRLDistributionPointsExtension extends Extension
             return retval;
         }
 
-        public static final Reason UNUSED =
-                new Reason("unused", (byte) 0x80);
-        public static final Reason KEY_COMPROMISE =
-                new Reason("keyCompromise", (byte) 0x40);
-        public static final Reason CA_COMPROMISE =
-                new Reason("cACompromise", (byte) 0x20);
-        public static final Reason AFFILIATION_CHANGED =
-                new Reason("affiliationChanged", (byte) 0x10);
-        public static final Reason SUPERSEDED =
-                new Reason("superseded", (byte) 0x08);
-        public static final Reason CESSATION_OF_OPERATION =
-                new Reason("cessationOfOperation", (byte) 0x04);
-        public static final Reason CERTIFICATE_HOLD =
-                new Reason("certificateHold", (byte) 0x02);
+        public static final Reason UNUSED = new Reason("unused", (byte) 0x80);
+        public static final Reason KEY_COMPROMISE = new Reason("keyCompromise", (byte) 0x40);
+        public static final Reason CA_COMPROMISE = new Reason("cACompromise", (byte) 0x20);
+        public static final Reason AFFILIATION_CHANGED = new Reason("affiliationChanged", (byte) 0x10);
+        public static final Reason SUPERSEDED = new Reason("superseded", (byte) 0x08);
+        public static final Reason CESSATION_OF_OPERATION = new Reason("cessationOfOperation", (byte) 0x04);
+        public static final Reason CERTIFICATE_HOLD = new Reason("certificateHold", (byte) 0x02);
     }
 
 }

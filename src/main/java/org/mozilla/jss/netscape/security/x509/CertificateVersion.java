@@ -100,7 +100,7 @@ public class CertificateVersion implements CertAttrSet {
             this.version = version;
         else {
             throw new IOException("X.509 Certificate version " +
-                                   version + " not supported.\n");
+                    version + " not supported.\n");
         }
     }
 
@@ -197,7 +197,7 @@ public class CertificateVersion implements CertAttrSet {
             version = ((Integer) obj).intValue();
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet: CertificateVersion.");
+                    "CertAttrSet: CertificateVersion.");
         }
     }
 
@@ -210,7 +210,7 @@ public class CertificateVersion implements CertAttrSet {
             return (Integer.valueOf(getVersion()));
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet: CertificateVersion.");
+                    "CertAttrSet: CertificateVersion.");
         }
     }
 
@@ -223,7 +223,7 @@ public class CertificateVersion implements CertAttrSet {
             version = V1;
         } else {
             throw new IOException("Attribute name not recognized by " +
-                                  "CertAttrSet: CertificateVersion.");
+                    "CertAttrSet: CertificateVersion.");
         }
     }
 

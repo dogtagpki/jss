@@ -118,7 +118,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
      * @param excluded the excluded GeneralSubtrees (null for optional).
      */
     public NameConstraintsExtension(GeneralSubtrees permitted,
-                                    GeneralSubtrees excluded)
+            GeneralSubtrees excluded)
             throws IOException {
         init(false, permitted, excluded);
     }
@@ -166,7 +166,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
         DerValue val = new DerValue(extValue);
         if (val.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoding for" +
-                                  " NameConstraintsExtension.");
+                    " NameConstraintsExtension.");
         }
 
         // NB. this is always encoded with the IMPLICIT tag
@@ -184,16 +184,16 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
                 permitted = new GeneralSubtrees(opt);
 
             } else if (opt.isContextSpecific(TAG_EXCLUDED) &&
-                       opt.isConstructed()) {
+                    opt.isConstructed()) {
                 if (excluded != null) {
                     throw new IOException("Duplicate excluded " +
-                             "GeneralSubtrees in NameConstraintsExtension.");
+                            "GeneralSubtrees in NameConstraintsExtension.");
                 }
                 opt.resetTag(DerValue.tag_Sequence);
                 excluded = new GeneralSubtrees(opt);
             } else
                 throw new IOException("Invalid encoding of " +
-                                      "NameConstraintsExtension.");
+                        "NameConstraintsExtension.");
         }
     }
 
@@ -203,18 +203,17 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
     @Override
     public String toString() {
         return (super.toString() + "NameConstraints: [" +
-                ((permitted == null) ? "" :
-                        ("\n    Permitted:" + permitted.toString())) +
-                ((excluded == null) ? "" :
-                        ("\n    Excluded:" + excluded.toString())) + "   ]\n");
+                ((permitted == null) ? "" : ("\n    Permitted:" + permitted.toString())) +
+                ((excluded == null) ? "" : ("\n    Excluded:" + excluded.toString())) + "   ]\n");
     }
 
     public String toPrint(int indent) {
         return ("GeneralSubtrees: " +
-                ((permitted == null) ? "" :
-                        ("\n" + pp.indent(indent + 2) + "Permitted:" + permitted.toPrint(indent + 4))) +
-                ((excluded == null) ? "" :
-                        ("\n" + pp.indent(indent + 2) + "Excluded:" + excluded.toPrint(indent + 4))) + "\n");
+                ((permitted == null) ? ""
+                        : ("\n" + pp.indent(indent + 2) + "Permitted:" + permitted.toPrint(indent + 4)))
+                +
+                ((excluded == null) ? "" : ("\n" + pp.indent(indent + 2) + "Excluded:" + excluded.toPrint(indent + 4)))
+                + "\n");
 
     }
 
@@ -255,13 +254,13 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
         if (name.equalsIgnoreCase(PERMITTED_SUBTREES)) {
             if (!(obj instanceof GeneralSubtrees)) {
                 throw new IOException("Attribute value should be"
-                                    + " of type GeneralSubtrees.");
+                        + " of type GeneralSubtrees.");
             }
             permitted = (GeneralSubtrees) obj;
         } else if (name.equalsIgnoreCase(EXCLUDED_SUBTREES)) {
             if (!(obj instanceof GeneralSubtrees)) {
                 throw new IOException("Attribute value should be "
-                                    + "of type GeneralSubtrees.");
+                        + "of type GeneralSubtrees.");
             }
             excluded = (GeneralSubtrees) obj;
         } else {

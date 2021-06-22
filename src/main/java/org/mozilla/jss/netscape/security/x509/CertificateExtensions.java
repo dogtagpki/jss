@@ -96,7 +96,7 @@ public class CertificateExtensions extends Vector<Extension>
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t instanceof IOException) {
-                throw (IOException)t;
+                throw (IOException) t;
             }
             throw new IOException(t);
 

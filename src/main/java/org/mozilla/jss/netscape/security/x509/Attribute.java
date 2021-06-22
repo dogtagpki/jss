@@ -282,7 +282,7 @@ public final class Attribute implements Serializable, DerEncoder {
 
         if (val.data.available() == 0) {
             throw new IOException("No data available in "
-                                   + "passed DER encoded value.");
+                    + "passed DER encoded value.");
         }
         this.oid = val.data.getDerValue().getOID();
 
@@ -316,7 +316,7 @@ public final class Attribute implements Serializable, DerEncoder {
 
         if (val.data.available() == 0) {
             throw new IOException("No data available in "
-                                   + "passed DER encoded attribute value set.");
+                    + "passed DER encoded attribute value set.");
         }
 
         //get the value set

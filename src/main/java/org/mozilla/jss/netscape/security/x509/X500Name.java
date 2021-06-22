@@ -37,10 +37,10 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  * some systems can be searched for according to those attributes.
  *
  * <P>
- * <em>This class exposes only partial X.500 name functionality.  Most
+ * <em>This class exposes only partial X.500 name functionality. Most
  * notably, it works best if Relative Distinguished Names only have one
  * (unique) attribute each, and if only the most common attributes need
- * to be visible to applications.  This limitation, and others, will
+ * to be visible to applications. This limitation, and others, will
  * be lifted over time.</em>
  *
  * @author David Brownell
@@ -124,7 +124,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      * @param ldapDNStrConverter A LdapDNStrConverter
      */
     public X500Name(String ldapDNString,
-             LdapDNStrConverter ldapDNStrConverter)
+            LdapDNStrConverter ldapDNStrConverter)
             throws IOException {
         if (ldapDNString == null || ldapDNString.equals("")) {
             clear();

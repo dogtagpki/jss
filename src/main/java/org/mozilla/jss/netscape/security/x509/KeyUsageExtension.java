@@ -136,16 +136,14 @@ public class KeyUsageExtension extends Extension
      * @param bitString the bits to be set for the extension.
      */
     public KeyUsageExtension(boolean critical, byte[] bitString) throws IOException {
-        this.bitString =
-                new BitArray(bitString.length * 8, bitString).toBooleanArray();
+        this.bitString = new BitArray(bitString.length * 8, bitString).toBooleanArray();
         this.extensionId = PKIXExtensions.KeyUsage_Id;
         this.critical = critical;
         encodeThis();
     }
 
     public KeyUsageExtension(byte[] bitString) throws IOException {
-        this.bitString =
-                new BitArray(bitString.length * 8, bitString).toBooleanArray();
+        this.bitString = new BitArray(bitString.length * 8, bitString).toBooleanArray();
         this.extensionId = PKIXExtensions.KeyUsage_Id;
         this.critical = true;
         encodeThis();
@@ -258,7 +256,7 @@ public class KeyUsageExtension extends Extension
             set(8, val);
         } else {
             throw new IOException("Attribute name not recognized by"
-                                + " CertAttrSet:KeyUsage.");
+                    + " CertAttrSet:KeyUsage.");
         }
         encodeThis();
     }
@@ -288,7 +286,7 @@ public class KeyUsageExtension extends Extension
             return Boolean.valueOf(isSet(8));
         } else {
             throw new IOException("Attribute name not recognized by"
-                                + " CertAttrSet:KeyUsage.");
+                    + " CertAttrSet:KeyUsage.");
         }
     }
 
@@ -317,7 +315,7 @@ public class KeyUsageExtension extends Extension
             set(8, false);
         } else {
             throw new IOException("Attribute name not recognized by"
-                                + " CertAttrSet:KeyUsage.");
+                    + " CertAttrSet:KeyUsage.");
         }
     }
 

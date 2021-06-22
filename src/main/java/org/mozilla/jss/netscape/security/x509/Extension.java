@@ -95,7 +95,7 @@ public class Extension implements Serializable {
      * @param extensionValue the DER encoded octet string of the value.
      */
     public Extension(ObjectIdentifier extensionId, boolean critical,
-                     byte[] extensionValue) throws IOException {
+            byte[] extensionValue) throws IOException {
         this.extensionId = extensionId;
         this.critical = critical;
         // passed in a DER encoded octet string, strip off the tag

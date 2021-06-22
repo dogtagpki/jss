@@ -169,7 +169,7 @@ public class PolicyConstraintsExtension extends Extension
                 this.require = (next.getInteger()).toInt();
 
             } else if (next.isContextSpecific(TAG_INHIBIT) &&
-                       !next.isConstructed()) {
+                    !next.isConstructed()) {
                 if (this.inhibit != -1)
                     throw new IOException("Duplicate inhibitPolicyMapping" +
                             "found in the PolicyConstraintsExtension");
@@ -243,7 +243,7 @@ public class PolicyConstraintsExtension extends Extension
             inhibit = ((Integer) obj).intValue();
         } else {
             throw new IOException("Attribute name " + "[" + name + "]" +
-                                " not recognized by " +
+                    " not recognized by " +
                     "CertAttrSet:PolicyConstraints.");
         }
     }
