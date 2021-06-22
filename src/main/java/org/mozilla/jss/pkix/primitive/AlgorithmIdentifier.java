@@ -11,10 +11,11 @@ import java.io.IOException;
 public class AlgorithmIdentifier implements ASN1Value {
 
     private OBJECT_IDENTIFIER oid;
-    private ASN1Value parameters=null;
+    private ASN1Value parameters = null;
     private SEQUENCE sequence = new SEQUENCE();
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -25,20 +26,20 @@ public class AlgorithmIdentifier implements ASN1Value {
      */
     public AlgorithmIdentifier(OBJECT_IDENTIFIER oid) {
         this.oid = oid;
-        sequence.addElement( oid );
+        sequence.addElement(oid);
     }
 
     /**
      * Creates an <i>AlgorithmIdentifier</i>.
      * 
      * @param parameters The algorithm parameters. A value of <code>null</code>
-     *      will be encoded with an ASN.1 <code>NULL</code>.
+     *            will be encoded with an ASN.1 <code>NULL</code>.
      */
     public AlgorithmIdentifier(OBJECT_IDENTIFIER oid, ASN1Value parameters) {
         this.oid = oid;
-        sequence.addElement( oid );
+        sequence.addElement(oid);
         this.parameters = parameters;
-        if( parameters != null ) {
+        if (parameters != null) {
             sequence.addElement(parameters);
         } else {
             sequence.addElement(new NULL());
@@ -51,7 +52,7 @@ public class AlgorithmIdentifier implements ASN1Value {
 
     /**
      * If this instance was constructed, returns the
-     * parameter passed in to the constructor.  If this instance was
+     * parameter passed in to the constructor. If this instance was
      * decoded from a template, returns an ANY that was read from the
      * BER stream. In either case, it will return null if no parameters
      * were supplied.
@@ -60,8 +61,8 @@ public class AlgorithmIdentifier implements ASN1Value {
         return parameters;
     }
 
-    private static final AlgorithmIdentifier.Template templateInstance =
-                                new AlgorithmIdentifier.Template();
+    private static final AlgorithmIdentifier.Template templateInstance = new AlgorithmIdentifier.Template();
+
     public static AlgorithmIdentifier.Template getTemplate() {
         return templateInstance;
     }
@@ -73,51 +74,48 @@ public class AlgorithmIdentifier implements ASN1Value {
 
     @Override
     public void encode(Tag implicit, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicit, ostream);
     }
 
-public static class Template implements ASN1Template {
+    public static class Template implements ASN1Template {
 
-    @Override
-    public boolean tagMatch(Tag tag) {
-        return TAG.equals(tag);
-    }
-
-    @Override
-    public ASN1Value decode(InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        return decode(TAG, istream);
-    }
-
-    @Override
-    public ASN1Value decode(Tag implicit, InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        SEQUENCE.Template seqt = new SEQUENCE.Template();
-        seqt.addElement( new OBJECT_IDENTIFIER.Template() );
-        seqt.addOptionalElement( new ANY.Template() );
-
-        SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
-
-        // the template should have enforced this
-        assert( seq.size() == 2 );
-
-        OBJECT_IDENTIFIER algOID = (OBJECT_IDENTIFIER)seq.elementAt(0);
-
-        if (seq.elementAt(1) == null) {
-            return new AlgorithmIdentifier(
-                algOID  // OID
-            );
-        } else {
-            return new AlgorithmIdentifier(
-                (OBJECT_IDENTIFIER)seq.elementAt(0),  // OID
-                seq.elementAt(1)                      // parameters
-            );
+        @Override
+        public boolean tagMatch(Tag tag) {
+            return TAG.equals(tag);
         }
-    }
-} // end of Template
+
+        @Override
+        public ASN1Value decode(InputStream istream)
+                throws IOException, InvalidBERException {
+            return decode(TAG, istream);
+        }
+
+        @Override
+        public ASN1Value decode(Tag implicit, InputStream istream)
+                throws IOException, InvalidBERException {
+            SEQUENCE.Template seqt = new SEQUENCE.Template();
+            seqt.addElement(new OBJECT_IDENTIFIER.Template());
+            seqt.addOptionalElement(new ANY.Template());
+
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
+
+            // the template should have enforced this
+            assert (seq.size() == 2);
+
+            OBJECT_IDENTIFIER algOID = (OBJECT_IDENTIFIER) seq.elementAt(0);
+
+            if (seq.elementAt(1) == null) {
+                return new AlgorithmIdentifier(
+                        algOID // OID
+                );
+            } else {
+                return new AlgorithmIdentifier(
+                        (OBJECT_IDENTIFIER) seq.elementAt(0), // OID
+                        seq.elementAt(1) // parameters
+                );
+            }
+        }
+    } // end of Template
 
 }

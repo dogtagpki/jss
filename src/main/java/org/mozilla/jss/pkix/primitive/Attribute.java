@@ -18,7 +18,8 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * An Attribute, which has the following ASN.1
- *      definition (roughly):
+ * definition (roughly):
+ * 
  * <pre>
  *      Attribute ::= SEQUENCE {
  *          type        OBJECT IDENTIFIER,
@@ -31,6 +32,7 @@ public class Attribute implements ASN1Value {
     private SET values;
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -53,7 +55,7 @@ public class Attribute implements ASN1Value {
 
     /**
      * If this AVA was constructed, returns the SET of ASN1Values passed to the
-     * constructor.  If this Attribute was decoded with an Attribute.Template,
+     * constructor. If this Attribute was decoded with an Attribute.Template,
      * returns a SET of ANYs.
      */
     public SET getValues() {
@@ -67,8 +69,7 @@ public class Attribute implements ASN1Value {
 
     @Override
     public void encode(Tag implicit, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
         seq.addElement(type);
         seq.addElement(values);
@@ -79,42 +80,41 @@ public class Attribute implements ASN1Value {
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static Template templateInstance = new Template();
 
-/**
- * A Template for decoding an Attribute.
- */
-public static class Template implements ASN1Template {
+    /**
+     * A Template for decoding an Attribute.
+     */
+    public static class Template implements ASN1Template {
 
-    @Override
-    public boolean tagMatch(Tag tag) {
-        return TAG.equals(tag);
+        @Override
+        public boolean tagMatch(Tag tag) {
+            return TAG.equals(tag);
+        }
+
+        @Override
+        public ASN1Value decode(InputStream istream)
+                throws IOException, InvalidBERException {
+            return decode(TAG, istream);
+        }
+
+        @Override
+        public ASN1Value decode(Tag implicit, InputStream istream)
+                throws IOException, InvalidBERException {
+            SEQUENCE.Template seqt = new SEQUENCE.Template();
+
+            seqt.addElement(new OBJECT_IDENTIFIER.Template());
+            seqt.addElement(new SET.OF_Template(new ANY.Template()));
+
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
+
+            // The template should have enforced this
+            assert (seq.size() == 2);
+
+            return new Attribute((OBJECT_IDENTIFIER) seq.elementAt(0),
+                    (SET) seq.elementAt(1));
+        }
     }
-
-    @Override
-    public ASN1Value decode(InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        return decode(TAG, istream);
-    }
-
-    @Override
-    public ASN1Value decode(Tag implicit, InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        SEQUENCE.Template seqt = new SEQUENCE.Template();
-
-        seqt.addElement( new OBJECT_IDENTIFIER.Template()   );
-        seqt.addElement( new SET.OF_Template(new ANY.Template()));
-
-        SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
-
-        // The template should have enforced this
-        assert(seq.size() == 2);
-
-        return new Attribute( (OBJECT_IDENTIFIER) seq.elementAt(0),
-                              (SET)               seq.elementAt(1));
-    }
-}
 
 }

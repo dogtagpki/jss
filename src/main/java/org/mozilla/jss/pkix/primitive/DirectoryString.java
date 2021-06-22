@@ -24,6 +24,7 @@ import org.mozilla.jss.asn1.UniversalString;
 /**
  * An X.500 <i>DirectoryString</i>.
  * DirectoryString is defined as follows:
+ * 
  * <pre>
  * DirectoryString ::= CHOICE {
  *      teletexString               TeletexString (SIZE (1..MAX)),
@@ -40,21 +41,23 @@ public class DirectoryString implements ASN1Value {
     /**
      * Encodes a Java String into a Directory String.
      * The following rules for choosing an encoding are from the
-     *  <a href="http://www.ietf.org/html.charters/pkix-charter.html">IETF
-     *  PKIX</a> document <i>Internet X.509 Public Key Infrastructure:
-     *  Certificate and CRL Profile</i>: <ul>
-     * <li> The preferred encoding is UTF8String, and all certificates
-     *      issued after December 31, 2003, MUST use UTF8String encoding,
-     *      with a few exceptions.
+     * <a href="http://www.ietf.org/html.charters/pkix-charter.html">IETF
+     * PKIX</a> document <i>Internet X.509 Public Key Infrastructure:
+     * Certificate and CRL Profile</i>:
+     * <ul>
+     * <li>The preferred encoding is UTF8String, and all certificates
+     * issued after December 31, 2003, MUST use UTF8String encoding,
+     * with a few exceptions.
      * <li>Until December 31, 2003, strings that fit in the PrintableString
-     *      character set MAY use PrintableString.
+     * character set MAY use PrintableString.
      * <li>Until December 31, 2003, string that fit in the BMPString character
-     *      set MAY use BMPString.
+     * set MAY use BMPString.
      * <li>Strings that fit in neither the PrintableString nor the BMPString
-     *      character set MUST use UTF8String.
+     * character set MUST use UTF8String.
      * </ul>
      * This is all very nice, but for backwards compatibility, what we really
-     * do is: <ul>
+     * do is:
+     * <ul>
      * <li>Try PrintableString
      * <li>Try TeletexString
      * <li>Try UniversalString
@@ -64,27 +67,27 @@ public class DirectoryString implements ASN1Value {
         try {
             try {
                 asn1String = new PrintableString(s);
-            } catch( CharConversionException e ) {
+            } catch (CharConversionException e) {
                 asn1String = new TeletexString(s);
             }
-        } catch( CharConversionException e ) {
+        } catch (CharConversionException e) {
             asn1String = new UniversalString(s);
         }
     }
 
     /**
      * Creates a DirectoryString from an ASN.1 string.
+     * 
      * @param s Must be a TeletexString, PrintableString, UniversalString,
-     *      UTF8String, or BMPString.
+     *            UTF8String, or BMPString.
      */
     public DirectoryString(CharacterString s) {
-        if( !(s instanceof PrintableString ) && !(s instanceof BMPString) &&
-            !(s instanceof UTF8String) && !(s instanceof TeletexString) &&
-            !(s instanceof UniversalString) )
-        {
-            throw new IllegalArgumentException("DirectoryString must be "+
-                "TeletexString, PrintableString, UniversalString, UTF8STring,"+
-                " or BMPString");
+        if (!(s instanceof PrintableString) && !(s instanceof BMPString) &&
+                !(s instanceof UTF8String) && !(s instanceof TeletexString) &&
+                !(s instanceof UniversalString)) {
+            throw new IllegalArgumentException("DirectoryString must be " +
+                    "TeletexString, PrintableString, UniversalString, UTF8STring," +
+                    " or BMPString");
         }
         asn1String = s;
     }
@@ -109,8 +112,7 @@ public class DirectoryString implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         asn1String.encode(implicitTag, ostream);
     }
 
@@ -120,6 +122,7 @@ public class DirectoryString implements ASN1Value {
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static final Template templateInstance = new Template();
 
     /**
@@ -130,11 +133,11 @@ public class DirectoryString implements ASN1Value {
 
         public Template() {
             choicet = new CHOICE.Template();
-            choicet.addElement( PrintableString.getTemplate() );
-            choicet.addElement( BMPString.getTemplate() );
-            choicet.addElement( UTF8String.getTemplate() );
-            choicet.addElement( TeletexString.getTemplate() );
-            choicet.addElement( UniversalString.getTemplate() );
+            choicet.addElement(PrintableString.getTemplate());
+            choicet.addElement(BMPString.getTemplate());
+            choicet.addElement(UTF8String.getTemplate());
+            choicet.addElement(TeletexString.getTemplate());
+            choicet.addElement(UniversalString.getTemplate());
         }
 
         @Override
@@ -144,24 +147,22 @@ public class DirectoryString implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             CHOICE choice = (CHOICE) choicet.decode(istream);
 
-            return new DirectoryString( (CharacterString) choice.getValue());
+            return new DirectoryString((CharacterString) choice.getValue());
         }
 
         /**
          * @param implicitTag <b>This parameter is ignored</b>, because
-         *      DirectoryStrings (being CHOICEs) cannot have implicit tags.
+         *            DirectoryStrings (being CHOICEs) cannot have implicit tags.
          * @exception InvalidBERException If the encoding does not contain a
-         *      valid DirectoryString.
+         *                valid DirectoryString.
          */
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws IOException, InvalidBERException
-        {
-            assert( tagMatch(implicitTag) );
+                throws IOException, InvalidBERException {
+            assert (tagMatch(implicitTag));
             return decode(istream);
         }
     }

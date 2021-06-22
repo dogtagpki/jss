@@ -18,7 +18,8 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * An AttributeValueAssertion, which has the following ASN.1
- *      definition (roughly):
+ * definition (roughly):
+ * 
  * <pre>
  *      AttributeValueAssertion ::= SEQUENCE {
  *          type        OBJECT IDENTIFIER,
@@ -31,6 +32,7 @@ public class AVA implements ASN1Value {
     private ANY value;
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -38,15 +40,15 @@ public class AVA implements ASN1Value {
 
     public AVA(OBJECT_IDENTIFIER oid, ASN1Value value) {
         this.oid = oid;
-        if( value instanceof ANY ) {
+        if (value instanceof ANY) {
             this.value = (ANY) value;
         } else {
             byte[] encoded = ASN1Util.encode(value);
-          try {
-            this.value = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
-          } catch( InvalidBERException e ) {
-              throw new RuntimeException("InvalidBERException while decoding as ANY: " + e.getMessage(), e);
-          }
+            try {
+                this.value = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
+            } catch (InvalidBERException e) {
+                throw new RuntimeException("InvalidBERException while decoding as ANY: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -68,8 +70,7 @@ public class AVA implements ASN1Value {
 
     @Override
     public void encode(Tag implicit, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
         seq.addElement(oid);
         seq.addElement(value);
@@ -77,40 +78,38 @@ public class AVA implements ASN1Value {
         seq.encode(implicit, ostream);
     }
 
-/**
- * A Template for decoding an AVA.
- */
-public static class Template implements ASN1Template {
+    /**
+     * A Template for decoding an AVA.
+     */
+    public static class Template implements ASN1Template {
 
-    @Override
-    public boolean tagMatch(Tag tag) {
-        return TAG.equals(tag);
+        @Override
+        public boolean tagMatch(Tag tag) {
+            return TAG.equals(tag);
+        }
+
+        @Override
+        public ASN1Value decode(InputStream istream)
+                throws IOException, InvalidBERException {
+            return decode(TAG, istream);
+        }
+
+        @Override
+        public ASN1Value decode(Tag implicit, InputStream istream)
+                throws IOException, InvalidBERException {
+            SEQUENCE.Template seqt = new SEQUENCE.Template();
+
+            seqt.addElement(new OBJECT_IDENTIFIER.Template());
+            seqt.addElement(new ANY.Template());
+
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
+
+            // The template should have enforced this
+            assert (seq.size() == 2);
+
+            return new AVA((OBJECT_IDENTIFIER) seq.elementAt(0),
+                    seq.elementAt(1));
+        }
     }
-
-    @Override
-    public ASN1Value decode(InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        return decode(TAG, istream);
-    }
-
-    @Override
-    public ASN1Value decode(Tag implicit, InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        SEQUENCE.Template seqt = new SEQUENCE.Template();
-
-        seqt.addElement( new OBJECT_IDENTIFIER.Template()   );
-        seqt.addElement( new ANY.Template()                 );
-
-        SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
-
-        // The template should have enforced this
-        assert(seq.size() == 2);
-
-        return new AVA( (OBJECT_IDENTIFIER) seq.elementAt(0),
-                                            seq.elementAt(1) );
-    }
-}
 
 }

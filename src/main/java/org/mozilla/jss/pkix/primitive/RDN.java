@@ -15,6 +15,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * A RelativeDistinguishedName, whose ASN.1 is:
+ * 
  * <pre>
  * RelativeDistinguishedName ::= SET SIZE(1..MAX) OF AttributeValueAssertion
  * </pre>
@@ -25,7 +26,7 @@ public class RDN implements ASN1Value {
 
     /**
      * An RDN must have at least one element at all times, so an initial
-     *  element must be provided.
+     * element must be provided.
      */
     public RDN(AVA initialElement) {
         avas = new SET();
@@ -38,23 +39,23 @@ public class RDN implements ASN1Value {
         this.avas = avas;
     }
 
-    public void add( AVA ava ) {
-        avas.addElement( ava );
+    public void add(AVA ava) {
+        avas.addElement(ava);
     }
 
-    public AVA at( int idx ) {
-        return (AVA) avas.elementAt( idx );
+    public AVA at(int idx) {
+        return (AVA) avas.elementAt(idx);
     }
 
     /**
      * @exception TooFewElementsException If removing this element would
-     *  result in the RDN being empty.
+     *                result in the RDN being empty.
      */
-    public void removeAt( int idx ) throws TooFewElementsException {
-        if( avas.size() <= 1 ) {
+    public void removeAt(int idx) throws TooFewElementsException {
+        if (avas.size() <= 1) {
             throw new TooFewElementsException();
         }
-        avas.removeElementAt( idx );
+        avas.removeElementAt(idx);
     }
 
     public int size() {
@@ -62,6 +63,7 @@ public class RDN implements ASN1Value {
     }
 
     public static final Tag TAG = SET.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -74,41 +76,38 @@ public class RDN implements ASN1Value {
 
     @Override
     public void encode(Tag implicit, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         avas.encode(implicit, ostream);
     }
 
-public static class Template implements ASN1Template {
+    public static class Template implements ASN1Template {
 
-    @Override
-    public boolean tagMatch(Tag tag) {
-        return TAG.equals(tag);
-    }
-
-    @Override
-    public ASN1Value decode(InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        return decode(TAG, istream);
-    }
-
-    @Override
-    public ASN1Value decode(Tag implicit, InputStream istream)
-        throws IOException, InvalidBERException
-    {
-        AVA.Template avatemp = new AVA.Template();
-        SET.OF_Template sett = new SET.OF_Template( avatemp );
-
-        SET set =  (SET) sett.decode(implicit, istream);
-
-        if(set.size() < 1) {
-            throw new InvalidBERException("RDN with zero elements; "+
-                "an RDN must have at least one element");
+        @Override
+        public boolean tagMatch(Tag tag) {
+            return TAG.equals(tag);
         }
 
-        return new RDN(set);
+        @Override
+        public ASN1Value decode(InputStream istream)
+                throws IOException, InvalidBERException {
+            return decode(TAG, istream);
+        }
+
+        @Override
+        public ASN1Value decode(Tag implicit, InputStream istream)
+                throws IOException, InvalidBERException {
+            AVA.Template avatemp = new AVA.Template();
+            SET.OF_Template sett = new SET.OF_Template(avatemp);
+
+            SET set = (SET) sett.decode(implicit, istream);
+
+            if (set.size() < 1) {
+                throw new InvalidBERException("RDN with zero elements; " +
+                        "an RDN must have at least one element");
+            }
+
+            return new RDN(set);
+        }
     }
-}
 
 }

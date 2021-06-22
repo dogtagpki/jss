@@ -18,7 +18,7 @@ import org.mozilla.jss.pkcs11.PK11PubKey;
  * This class implements <code>java.security.PublicKey</code>.
  */
 public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
-    implements ASN1Value, java.security.PublicKey {
+        implements ASN1Value, java.security.PublicKey {
 
     private static final long serialVersionUID = 1L;
     private AlgorithmIdentifier algorithm;
@@ -28,7 +28,7 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
     public String getAlgorithm() {
         try {
             return PrivateKey.Type.fromOID(algorithm.getOID()).toString();
-        } catch( NoSuchAlgorithmException e ) {
+        } catch (NoSuchAlgorithmException e) {
             // unknown algorithm
             return null;
         }
@@ -38,7 +38,6 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
     public byte[] getEncoded() {
         return ASN1Util.encode(this);
     }
-        
 
     public AlgorithmIdentifier getAlgorithmIdentifier() {
         return algorithm;
@@ -48,22 +47,21 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
         return subjectPublicKey;
     }
 
-    private SubjectPublicKeyInfo() { super(new byte[] {0});}
+    private SubjectPublicKeyInfo() {
+        super(new byte[] { 0 });
+    }
 
     public SubjectPublicKeyInfo(AlgorithmIdentifier algorithm,
-        BIT_STRING subjectPublicKey)
-    {
-        super( new byte[] {0} ); // super constructor can't handle null
+            BIT_STRING subjectPublicKey) {
+        super(new byte[] { 0 }); // super constructor can't handle null
         this.algorithm = algorithm;
         this.subjectPublicKey = subjectPublicKey;
     }
 
     public SubjectPublicKeyInfo(PublicKey pubk)
-            throws InvalidBERException, IOException
-    {
-        super( new byte[] {0});
-        SubjectPublicKeyInfo spki = (SubjectPublicKeyInfo)
-            ASN1Util.decode( getTemplate(), pubk.getEncoded() );
+            throws InvalidBERException, IOException {
+        super(new byte[] { 0 });
+        SubjectPublicKeyInfo spki = (SubjectPublicKeyInfo) ASN1Util.decode(getTemplate(), pubk.getEncoded());
         algorithm = spki.algorithm;
         subjectPublicKey = spki.subjectPublicKey;
     }
@@ -82,32 +80,31 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
 
     @Override
     public void encode(Tag implicit, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
-        seq.addElement( algorithm );
-        seq.addElement( subjectPublicKey );
-        seq.encode( implicit, ostream );
+        seq.addElement(algorithm);
+        seq.addElement(subjectPublicKey);
+        seq.encode(implicit, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
 
     /**
      * Creates a PublicKey from the public key information. Currently
-     *      only RSA and DSA keys can be converted.
+     * only RSA and DSA keys can be converted.
      *
      * @exception NoSuchAlgorithmException If the cryptographic provider
-     *      does not recognize the algorithm for this public key.
+     *                does not recognize the algorithm for this public key.
      * @exception InvalidKeyFormatException If the subjectPublicKey could
-     *      not be decoded correctly.
+     *                not be decoded correctly.
      */
     public PublicKey toPublicKey() throws NoSuchAlgorithmException,
-            InvalidKeyFormatException
-    {
-        if( subjectPublicKey.getPadCount() != 0 ) {
+            InvalidKeyFormatException {
+        if (subjectPublicKey.getPadCount() != 0) {
             throw new InvalidKeyFormatException();
         }
 
@@ -121,8 +118,8 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( BIT_STRING.getTemplate() );
+            seqt.addElement(AlgorithmIdentifier.getTemplate());
+            seqt.addElement(BIT_STRING.getTemplate());
         }
 
         @Override
@@ -132,21 +129,18 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
             return new SubjectPublicKeyInfo(
                     (AlgorithmIdentifier) seq.elementAt(0),
-                    (BIT_STRING) seq.elementAt(1)
-            );
+                    (BIT_STRING) seq.elementAt(1));
         }
     }
 }
