@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CRMF <i>ProofOfPossession</i>:
+ * 
  * <pre>
  * ProofOfPossession ::= CHOICE {
  *      raVerified          [0] NULL,
@@ -32,13 +33,15 @@ public class ProofOfPossession implements ASN1Value {
      * The type of ProofOfPossesion.
      */
     public static class Type {
-        private Type() { }
+        private Type() {
+        }
 
         static Type RA_VERIFIED = new Type();
         static Type SIGNATURE = new Type();
         static Type KEY_ENCIPHERMENT = new Type();
         static Type KEY_AGREEMENT = new Type();
     }
+
     public static Type RA_VERIFIED = Type.RA_VERIFIED;
     public static Type SIGNATURE = Type.SIGNATURE;
     public static Type KEY_ENCIPHERMENT = Type.KEY_ENCIPHERMENT;
@@ -54,7 +57,8 @@ public class ProofOfPossession implements ASN1Value {
     private POPOPrivKey keyAgreement; // if type == KEY_AGREEMENT
 
     /**
-     * Returns the type of ProofOfPossesion: <ul>
+     * Returns the type of ProofOfPossesion:
+     * <ul>
      * <li><code>RA_VERIFIED</code>
      * <li><code>SIGNATURE</code>
      * <li><code>KEY_ENCIPHERMENT</code>
@@ -93,10 +97,11 @@ public class ProofOfPossession implements ASN1Value {
     // Constructors
     ///////////////////////////////////////////////////////////////////////
 
-    private ProofOfPossession() { }
+    private ProofOfPossession() {
+    }
 
     private ProofOfPossession(Type type, POPOSigningKey signature,
-                POPOPrivKey keyEncipherment, POPOPrivKey keyAgreement) {
+            POPOPrivKey keyEncipherment, POPOPrivKey keyAgreement) {
         this.type = type;
         this.signature = signature;
         this.keyEncipherment = keyEncipherment;
@@ -106,52 +111,47 @@ public class ProofOfPossession implements ASN1Value {
     /**
      * Creates a new ProofOfPossesion with an raVerified field.
      */
-    public static ProofOfPossession
-    createRaVerified() {
-        return new ProofOfPossession( RA_VERIFIED, null, null, null );
+    public static ProofOfPossession createRaVerified() {
+        return new ProofOfPossession(RA_VERIFIED, null, null, null);
     }
 
     /**
      * Creates a new ProofOfPossesion with the given signature field.
      */
-    public static ProofOfPossession
-    createSignature(POPOSigningKey signature) {
-        return new ProofOfPossession( SIGNATURE, signature, null, null );
+    public static ProofOfPossession createSignature(POPOSigningKey signature) {
+        return new ProofOfPossession(SIGNATURE, signature, null, null);
     }
 
     /**
      * Creates a new ProofOfPossesion with the given keyEncipherment field.
      */
-    public static ProofOfPossession
-    createKeyEncipherment(POPOPrivKey keyEncipherment) {
+    public static ProofOfPossession createKeyEncipherment(POPOPrivKey keyEncipherment) {
         return new ProofOfPossession(
-            KEY_ENCIPHERMENT, null, keyEncipherment, null );
+                KEY_ENCIPHERMENT, null, keyEncipherment, null);
     }
 
     /**
      * Creates a new ProofOfPossesion with the given keyAgreement field.
      */
-    public static ProofOfPossession
-    createKeyAgreement(POPOPrivKey keyAgreement) {
+    public static ProofOfPossession createKeyAgreement(POPOPrivKey keyAgreement) {
         return new ProofOfPossession(
-            KEY_AGREEMENT, null, null, keyAgreement );
+                KEY_AGREEMENT, null, null, keyAgreement);
     }
 
     ///////////////////////////////////////////////////////////////////////
     // decoding/encoding
     ///////////////////////////////////////////////////////////////////////
 
-
     @Override
     public Tag getTag() {
-        if( type == RA_VERIFIED ) {
+        if (type == RA_VERIFIED) {
             return Tag.get(0);
-        } else if( type == SIGNATURE ) {
+        } else if (type == SIGNATURE) {
             return Tag.get(1);
-        } else if( type == KEY_ENCIPHERMENT ) {
+        } else if (type == KEY_ENCIPHERMENT) {
             return Tag.get(2);
         } else {
-            assert( type == KEY_AGREEMENT );
+            assert (type == KEY_AGREEMENT);
             return Tag.get(3);
         }
     }
@@ -159,18 +159,18 @@ public class ProofOfPossession implements ASN1Value {
     @Override
     public void encode(OutputStream ostream) throws IOException {
 
-        if( type == RA_VERIFIED ) {
+        if (type == RA_VERIFIED) {
             (new NULL()).encode(Tag.get(0), ostream);
-        } else if( type == SIGNATURE ) {
+        } else if (type == SIGNATURE) {
             signature.encode(Tag.get(1), ostream);
-        } else if( type == KEY_ENCIPHERMENT ) {
+        } else if (type == KEY_ENCIPHERMENT) {
             // a CHOICE must be explicitly tagged
-            EXPLICIT e = new EXPLICIT( Tag.get(2), keyEncipherment );
+            EXPLICIT e = new EXPLICIT(Tag.get(2), keyEncipherment);
             e.encode(ostream);
         } else {
-            assert( type == KEY_AGREEMENT );
+            assert (type == KEY_AGREEMENT);
             // a CHOICE must be explicitly tagged
-            EXPLICIT e = new EXPLICIT( Tag.get(3), keyAgreement );
+            EXPLICIT e = new EXPLICIT(Tag.get(3), keyAgreement);
             e.encode(ostream);
         }
     }
@@ -178,7 +178,7 @@ public class ProofOfPossession implements ASN1Value {
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
             throws IOException {
-        assert(implicitTag.equals(getTag()));
+        assert (implicitTag.equals(getTag()));
         encode(ostream);
     }
 
@@ -192,14 +192,14 @@ public class ProofOfPossession implements ASN1Value {
         public Template() {
             choicet = new CHOICE.Template();
 
-            choicet.addElement( Tag.get(0), NULL.getTemplate() );
-            choicet.addElement( Tag.get(1), POPOSigningKey.getTemplate() );
+            choicet.addElement(Tag.get(0), NULL.getTemplate());
+            choicet.addElement(Tag.get(1), POPOSigningKey.getTemplate());
             EXPLICIT.Template et = new EXPLICIT.Template(
-                Tag.get(2), POPOPrivKey.getTemplate() );
-            choicet.addElement( et );
+                    Tag.get(2), POPOPrivKey.getTemplate());
+            choicet.addElement(et);
             et = new EXPLICIT.Template(
-                Tag.get(3), POPOPrivKey.getTemplate() );
-            choicet.addElement( et );
+                    Tag.get(3), POPOPrivKey.getTemplate());
+            choicet.addElement(et);
         }
 
         @Override
@@ -212,17 +212,17 @@ public class ProofOfPossession implements ASN1Value {
                 throws InvalidBERException, IOException {
             CHOICE c = (CHOICE) choicet.decode(istream);
 
-            if( c.getTag().equals(Tag.get(0)) ) {
+            if (c.getTag().equals(Tag.get(0))) {
                 return createRaVerified();
-            } else if( c.getTag().equals(Tag.get(1)) ) {
-                return createSignature( (POPOSigningKey) c.getValue() );
-            } else if( c.getTag().equals(Tag.get(2)) ) {
+            } else if (c.getTag().equals(Tag.get(1))) {
+                return createSignature((POPOSigningKey) c.getValue());
+            } else if (c.getTag().equals(Tag.get(2))) {
                 EXPLICIT e = (EXPLICIT) c.getValue();
-                return createKeyEncipherment( (POPOPrivKey) e.getContent() );
+                return createKeyEncipherment((POPOPrivKey) e.getContent());
             } else {
-                assert( c.getTag().equals(Tag.get(3)) );
+                assert (c.getTag().equals(Tag.get(3)));
                 EXPLICIT e = (EXPLICIT) c.getValue();
-                return createKeyAgreement( (POPOPrivKey) e.getContent() );
+                return createKeyAgreement((POPOPrivKey) e.getContent());
             }
         }
 
