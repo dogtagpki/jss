@@ -136,10 +136,8 @@ public class DSAKeyFactory extends KeyFactorySpi {
             if (key instanceof java.security.interfaces.DSAPublicKey) {
 
                 // Determine valid key specs
-                Class<?> dsaPubKeySpec = Class.forName
-                        ("java.security.spec.DSAPublicKeySpec");
-                Class<?> x509KeySpec = Class.forName
-                        ("java.security.spec.X509EncodedKeySpec");
+                Class<?> dsaPubKeySpec = Class.forName("java.security.spec.DSAPublicKeySpec");
+                Class<?> x509KeySpec = Class.forName("java.security.spec.X509EncodedKeySpec");
 
                 if (dsaPubKeySpec.isAssignableFrom(keySpec)) {
                     java.security.interfaces.DSAPublicKey dsaPubKey = (java.security.interfaces.DSAPublicKey) key;
@@ -159,10 +157,8 @@ public class DSAKeyFactory extends KeyFactorySpi {
             } else if (key instanceof java.security.interfaces.DSAPrivateKey) {
 
                 // Determine valid key specs
-                Class<?> dsaPrivKeySpec = Class.forName
-                        ("java.security.spec.DSAPrivateKeySpec");
-                Class<?> pkcs8KeySpec = Class.forName
-                        ("java.security.spec.PKCS8EncodedKeySpec");
+                Class<?> dsaPrivKeySpec = Class.forName("java.security.spec.DSAPrivateKeySpec");
+                Class<?> pkcs8KeySpec = Class.forName("java.security.spec.PKCS8EncodedKeySpec");
 
                 if (dsaPrivKeySpec.isAssignableFrom(keySpec)) {
                     java.security.interfaces.DSAPrivateKey dsaPrivKey = (java.security.interfaces.DSAPrivateKey) key;
@@ -230,7 +226,7 @@ public class DSAKeyFactory extends KeyFactorySpi {
 
         } catch (InvalidKeySpecException e) {
             throw new InvalidKeyException("Cannot translate key: "
-                                          + e.getMessage());
+                    + e.getMessage());
         }
     }
 }

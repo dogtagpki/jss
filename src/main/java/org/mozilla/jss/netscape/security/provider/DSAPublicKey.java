@@ -73,7 +73,7 @@ public final class DSAPublicKey extends X509Key
             encode();
         } catch (IOException e) {
             throw new InvalidKeyException("could not DER encode y: " +
-                      e.getMessage());
+                    e.getMessage());
         }
     }
 
@@ -99,8 +99,7 @@ public final class DSAPublicKey extends X509Key
                 if (algParams == null) {
                     return null;
                 }
-                paramSpec = algParams.getParameterSpec
-                        (DSAParameterSpec.class);
+                paramSpec = algParams.getParameterSpec(DSAParameterSpec.class);
                 return paramSpec;
             }
         } catch (InvalidParameterSpecException e) {
@@ -130,7 +129,7 @@ public final class DSAPublicKey extends X509Key
             y = in.getInteger().toBigInteger();
         } catch (IOException e) {
             throw new InvalidKeyException("Invalid key: y value\n" +
-                      e.getMessage());
+                    e.getMessage());
         }
     }
 
