@@ -16,34 +16,30 @@ import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenRuntimeException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 
-
 public class JSSKeyPairGeneratorSpi
-    extends java.security.KeyPairGeneratorSpi
-{
+        extends java.security.KeyPairGeneratorSpi {
 
     private KeyPairGenerator kpg;
 
     protected JSSKeyPairGeneratorSpi(KeyPairAlgorithm alg) {
         super();
-        CryptoToken token =
-            TokenSupplierManager.getTokenSupplier().getThreadToken();
+        CryptoToken token = TokenSupplierManager.getTokenSupplier().getThreadToken();
         try {
-          try {
-            kpg = token.getKeyPairGenerator(alg);
-          } catch(java.security.NoSuchAlgorithmException e) {
-            throw new UnsupportedOperationException(
-                "Token '" + token.getName() + "' does not support algorithm " +
-                alg.toString());
-          }
-        } catch(TokenException e) {
+            try {
+                kpg = token.getKeyPairGenerator(alg);
+            } catch (java.security.NoSuchAlgorithmException e) {
+                throw new UnsupportedOperationException(
+                        "Token '" + token.getName() + "' does not support algorithm " +
+                                alg.toString());
+            }
+        } catch (TokenException e) {
             throw new TokenRuntimeException(e.getMessage());
         }
     }
 
     @Override
     public void initialize(AlgorithmParameterSpec params,
-        SecureRandom random) throws InvalidAlgorithmParameterException
-    {
+            SecureRandom random) throws InvalidAlgorithmParameterException {
         kpg.initialize(params, random);
     }
 
@@ -53,12 +49,12 @@ public class JSSKeyPairGeneratorSpi
     }
 
     @Override
-    public KeyPair generateKeyPair()  {
-      try {
-        return kpg.genKeyPair();
-      } catch(TokenException e) {
-        throw new TokenRuntimeException(e.getMessage());
-      }
+    public KeyPair generateKeyPair() {
+        try {
+            return kpg.genKeyPair();
+        } catch (TokenException e) {
+            throw new TokenRuntimeException(e.getMessage());
+        }
     }
 
     public static class RSA extends JSSKeyPairGeneratorSpi {
@@ -66,11 +62,13 @@ public class JSSKeyPairGeneratorSpi
             super(KeyPairAlgorithm.RSA);
         }
     }
+
     public static class DSA extends JSSKeyPairGeneratorSpi {
         public DSA() {
             super(KeyPairAlgorithm.DSA);
         }
     }
+
     public static class EC extends JSSKeyPairGeneratorSpi {
         public EC() {
             super(KeyPairAlgorithm.EC);

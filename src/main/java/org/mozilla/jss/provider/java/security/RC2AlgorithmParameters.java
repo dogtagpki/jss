@@ -26,12 +26,11 @@ public class RC2AlgorithmParameters extends AlgorithmParametersSpi {
 
     @Override
     public <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> clazz)
-            throws InvalidParameterSpecException
-    {
-        if( clazz != null && !clazz.isInstance(RC2ParamSpec) ) {
+            throws InvalidParameterSpecException {
+        if (clazz != null && !clazz.isInstance(RC2ParamSpec)) {
             Class<?> paramSpecClass = RC2ParamSpec.getClass();
             throw new InvalidParameterSpecException(
-                "RC2 getParameterSpec has class " + paramSpecClass.getName());
+                    "RC2 getParameterSpec has class " + paramSpecClass.getName());
         }
         return clazz.cast(RC2ParamSpec);
     }
@@ -58,7 +57,7 @@ public class RC2AlgorithmParameters extends AlgorithmParametersSpi {
 
     @Override
     public String engineToString() {
-        String str = new String("Mozilla-JSS RC2AlgorithmParameters " +  getClass().getName());
+        String str = new String("Mozilla-JSS RC2AlgorithmParameters " + getClass().getName());
         return str;
     }
 }

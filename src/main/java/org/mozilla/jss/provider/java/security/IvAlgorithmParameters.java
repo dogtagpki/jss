@@ -24,13 +24,12 @@ public class IvAlgorithmParameters extends AlgorithmParametersSpi {
 
     @Override
     public <T extends AlgorithmParameterSpec> T engineGetParameterSpec(Class<T> clazz)
-            throws InvalidParameterSpecException
-    {
-        if( clazz != null && !(clazz.isInstance(ivParamSpec)) ) {
+            throws InvalidParameterSpecException {
+        if (clazz != null && !(clazz.isInstance(ivParamSpec))) {
             Class<?> paramSpecClass = ivParamSpec.getClass();
             throw new InvalidParameterSpecException(
-                "Mozilla-JSS IvParameter spec class error"
-                    + paramSpecClass.getName());
+                    "Mozilla-JSS IvParameter spec class error"
+                            + paramSpecClass.getName());
         }
         return clazz.cast(ivParamSpec);
     }
