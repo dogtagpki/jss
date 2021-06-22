@@ -19,6 +19,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMMF <i>GetCRL</i>.
+ * 
  * <pre>
  * GetCRL ::= SEQUENCE {
  *      issuerName      Name,
@@ -105,21 +106,21 @@ public class GetCRL implements ASN1Value {
     /**
      * Constructs a <code>GetCRL</code> from its components.
      *
-     * @param issuerName The issuer name of the CRL.  This should be an ASN.1
-     *      <i>Name</i>.
+     * @param issuerName The issuer name of the CRL. This should be an ASN.1
+     *            <i>Name</i>.
      * @param cRLName The name of the CRL, which may be <code>null</code>.
-     *      This should be an ASN.1 <i>GeneralName</i>.
+     *            This should be an ASN.1 <i>GeneralName</i>.
      * @param time The time of the CRL, which may be <code>null</code>.
      * @param reasons Can be used to specify from among CRLs partitioned
-     *      by revocation reason.  The BIT_STRING can be created from a
-     *      Java BitSet.  The positions in the BitSet should be set or cleared
-     *      using the constants provided in this class.
+     *            by revocation reason. The BIT_STRING can be created from a
+     *            Java BitSet. The positions in the BitSet should be set or cleared
+     *            using the constants provided in this class.
      */
-    public GetCRL( ANY issuerName, ANY cRLName, GeneralizedTime time,
-                    BIT_STRING reasons ) {
-        if( issuerName == null ) {
+    public GetCRL(ANY issuerName, ANY cRLName, GeneralizedTime time,
+            BIT_STRING reasons) {
+        if (issuerName == null) {
             throw new IllegalArgumentException(
-                "issuerName parameter to GetCRL constructor is null");
+                    "issuerName parameter to GetCRL constructor is null");
         }
 
         sequence = new SEQUENCE();
@@ -161,6 +162,7 @@ public class GetCRL implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -175,10 +177,10 @@ public class GetCRL implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( ANY.getTemplate() );
-            seqt.addOptionalElement( ANY.getTemplate() );
-            seqt.addOptionalElement( GeneralizedTime.getTemplate() );
-            seqt.addOptionalElement( BIT_STRING.getTemplate() );
+            seqt.addElement(ANY.getTemplate());
+            seqt.addOptionalElement(ANY.getTemplate());
+            seqt.addOptionalElement(GeneralizedTime.getTemplate());
+            seqt.addOptionalElement(BIT_STRING.getTemplate());
         }
 
         @Override
@@ -198,10 +200,10 @@ public class GetCRL implements ASN1Value {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new GetCRL(  (ANY)               seq.elementAt(0),
-                                (ANY)               seq.elementAt(1),
-                                (GeneralizedTime)   seq.elementAt(2),
-                                (BIT_STRING)        seq.elementAt(3)   );
+            return new GetCRL((ANY) seq.elementAt(0),
+                    (ANY) seq.elementAt(1),
+                    (GeneralizedTime) seq.elementAt(2),
+                    (BIT_STRING) seq.elementAt(3));
         }
     }
 }

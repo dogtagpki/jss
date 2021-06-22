@@ -18,6 +18,7 @@ import org.mozilla.jss.asn1.Tag;
 
 /**
  * CMMF <i>IssuerAndSubject</i>.
+ * 
  * <pre>
  * IssuerAndSubject ::= SEQUENCE {
  *      issuer          Name,
@@ -61,9 +62,9 @@ public class IssuerAndSubject implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     public IssuerAndSubject(ANY issuer, ANY subject, INTEGER certReqId) {
-        if( issuer==null || subject==null ) {
+        if (issuer == null || subject == null) {
             throw new IllegalArgumentException(
-                "parameter to IssuerAndSubject constructor is null");
+                    "parameter to IssuerAndSubject constructor is null");
         }
 
         sequence = new SEQUENCE();
@@ -75,7 +76,6 @@ public class IssuerAndSubject implements ASN1Value {
         this.certReqId = certReqId;
         sequence.addElement(certReqId);
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     // encoding/decoding
@@ -100,6 +100,7 @@ public class IssuerAndSubject implements ASN1Value {
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -114,9 +115,9 @@ public class IssuerAndSubject implements ASN1Value {
         public Template() {
             seqt = new SEQUENCE.Template();
 
-            seqt.addElement( ANY.getTemplate() );
-            seqt.addElement( ANY.getTemplate() );
-            seqt.addOptionalElement( INTEGER.getTemplate() );
+            seqt.addElement(ANY.getTemplate());
+            seqt.addElement(ANY.getTemplate());
+            seqt.addOptionalElement(INTEGER.getTemplate());
         }
 
         @Override
@@ -136,9 +137,9 @@ public class IssuerAndSubject implements ASN1Value {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new IssuerAndSubject( (ANY) seq.elementAt(0),
-                                         (ANY) seq.elementAt(1),
-                                         (INTEGER) seq.elementAt(2) );
+            return new IssuerAndSubject((ANY) seq.elementAt(0),
+                    (ANY) seq.elementAt(1),
+                    (INTEGER) seq.elementAt(2));
         }
     }
 }

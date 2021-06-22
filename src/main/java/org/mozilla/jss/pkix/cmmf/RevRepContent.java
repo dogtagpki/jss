@@ -17,6 +17,7 @@ import org.mozilla.jss.pkix.crmf.CertId;
 
 /**
  * CMMF <i>RevRepContent</i>.
+ * 
  * <pre>
  * RevRepContent ::= SEQUENCE {
  *    status          SEQUENCE SIZE (1..MAX) OF PKIStatusInfo,
@@ -49,8 +50,8 @@ public class RevRepContent implements ASN1Value {
 
     /**
      * The <code>revCerts</code> field, which is a <code>SEQUENCE</code>
-     *  of <code>CertId</code>.  Returns <code>null</code> if this
-     *  field is not present.
+     * of <code>CertId</code>. Returns <code>null</code> if this
+     * field is not present.
      *
      * @see org.mozilla.jss.pkix.crmf.CertId
      */
@@ -60,8 +61,8 @@ public class RevRepContent implements ASN1Value {
 
     /**
      * The <code>crls</code> field, which is a <code>SEQUENCE</code> of
-     *  <code>ANY</code>.  Returns <code>null</code> if this field
-     *  is not present.
+     * <code>ANY</code>. Returns <code>null</code> if this field
+     * is not present.
      */
     public SEQUENCE getCrls() {
         return crls;
@@ -76,9 +77,9 @@ public class RevRepContent implements ASN1Value {
      *
      * @param status A <code>SEQUENCE</code> of <code>PKIStatusInfo</code>.
      * @param revCerts A <code>SEQUENCE</code> of <code>CertId</code>. This
-     *      field is optional, so <code>null</code> may be used.
-     * @param crls A <code>SEQUENCE</code> of <code>ANY</code>.  This field
-     *      is optional, so <code>null</code> may be used.
+     *            field is optional, so <code>null</code> may be used.
+     * @param crls A <code>SEQUENCE</code> of <code>ANY</code>. This field
+     *            is optional, so <code>null</code> may be used.
      * @see org.mozilla.jss.pkix.cmmf.PKIStatusInfo
      */
     public RevRepContent(SEQUENCE status, SEQUENCE revCerts, SEQUENCE crls) {
@@ -101,6 +102,7 @@ public class RevRepContent implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -117,7 +119,6 @@ public class RevRepContent implements ASN1Value {
         sequence.encode(implicitTag, ostream);
     }
 
-
     /**
      * A Template for decoding a <code>RevRepContent</code>.
      */
@@ -126,12 +127,12 @@ public class RevRepContent implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( new SEQUENCE.OF_Template(
-                                    PKIStatusInfo.getTemplate() ) );
-            seqt.addOptionalElement( new SEQUENCE.OF_Template(
-                                        CertId.getTemplate() ) );
-            seqt.addOptionalElement( new SEQUENCE.OF_Template(
-                                        ANY.getTemplate() ) );
+            seqt.addElement(new SEQUENCE.OF_Template(
+                    PKIStatusInfo.getTemplate()));
+            seqt.addOptionalElement(new SEQUENCE.OF_Template(
+                    CertId.getTemplate()));
+            seqt.addOptionalElement(new SEQUENCE.OF_Template(
+                    ANY.getTemplate()));
         }
 
         @Override
@@ -151,9 +152,9 @@ public class RevRepContent implements ASN1Value {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new RevRepContent(   (SEQUENCE) seq.elementAt(0),
-                                        (SEQUENCE) seq.elementAt(1),
-                                        (SEQUENCE) seq.elementAt(2)   );
+            return new RevRepContent((SEQUENCE) seq.elementAt(0),
+                    (SEQUENCE) seq.elementAt(1),
+                    (SEQUENCE) seq.elementAt(2));
         }
     }
 }

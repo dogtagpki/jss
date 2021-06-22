@@ -16,18 +16,18 @@ public class CertOrEncCert implements ASN1Value {
 
     /**
      * @exception InvalidBERException If the certificate is not a valid
-     *      BER-encoding.
+     *                BER-encoding.
      */
     public CertOrEncCert(byte[] encodedCert) throws IOException,
-            InvalidBERException
-    {
-        certificate = new ANY( new Tag(0), encodedCert );
+            InvalidBERException {
+        certificate = new ANY(new Tag(0), encodedCert);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         certificate.encodeWithAlternateTag(new Tag(0), bos);
         encoding = bos.toByteArray();
     }
 
     public static final Tag TAG = new Tag(0);
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -40,13 +40,12 @@ public class CertOrEncCert implements ASN1Value {
 
     /**
      * @param implicitTag <b>This parameter is ignored</b>, because a CHOICE
-     *  cannot have an implicit tag.
+     *            cannot have an implicit tag.
      */
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
-        assert( implicitTag.equals(TAG) );
+            throws IOException {
+        assert (implicitTag.equals(TAG));
         ostream.write(encoding);
     }
 }

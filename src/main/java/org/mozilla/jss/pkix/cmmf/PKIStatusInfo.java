@@ -25,7 +25,6 @@ public class PKIStatusInfo implements ASN1Value {
     private int failInfo; // bitwise AND
     private boolean hasFailInfo;
 
-
     // PKIStatus constants
     public static final int granted = 0;
     public static final int grantedWithMods = 1;
@@ -60,6 +59,7 @@ public class PKIStatusInfo implements ASN1Value {
 
     /**
      * Create a PKIStatusInfo with no failure info.
+     * 
      * @param status A PKIStatus constant.
      */
     public PKIStatusInfo(int status) {
@@ -70,7 +70,7 @@ public class PKIStatusInfo implements ASN1Value {
 
     /**
      * Sets the <code>statusString</code> field. May be null, since this
-     *  field is optional.
+     * field is optional.
      */
     public void setStatusString(SEQUENCE statusString) {
         this.statusString = statusString;
@@ -80,21 +80,22 @@ public class PKIStatusInfo implements ASN1Value {
      * Adds a string to the statusString SEQUENCE.
      */
     public void addFreeText(String s) {
-      try {
-        statusString.addElement( new UTF8String(s) );
-      } catch( java.io.CharConversionException e ) {
-          throw new RuntimeException("Error encoding to UTF8: " + e.getMessage(), e);
-      }
+        try {
+            statusString.addElement(new UTF8String(s));
+        } catch (java.io.CharConversionException e) {
+            throw new RuntimeException("Error encoding to UTF8: " + e.getMessage(), e);
+        }
     }
 
     /**
      * Adds a UTF8String to the statusString SEQUENCE.
      */
     public void addFreeText(UTF8String s) {
-        statusString.addElement( s );
+        statusString.addElement(s);
     }
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -107,16 +108,15 @@ public class PKIStatusInfo implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
         seq.addElement(status);
-        if( statusString.size() > 0 ) {
-            seq.addElement( statusString );
+        if (statusString.size() > 0) {
+            seq.addElement(statusString);
         }
 
-        if(hasFailInfo) {
+        if (hasFailInfo) {
             // convert failInfo to BIT_STRING
             byte[] bytes = new byte[2];
             bytes[0] = (byte) ((failInfo & 0xff000000) >>> 24);
@@ -124,17 +124,17 @@ public class PKIStatusInfo implements ASN1Value {
             int padCount = 7; // 7 unused bits
             BIT_STRING bs = new BIT_STRING(bytes, padCount);
             bs.setRemoveTrailingZeroes(true);
-            seq.addElement( bs );
+            seq.addElement(bs);
         }
 
         seq.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
-
 
     public static class Template implements ASN1Template {
 
@@ -142,10 +142,10 @@ public class PKIStatusInfo implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
             seqt.addOptionalElement(
-            new SEQUENCE.OF_Template(UTF8String.getTemplate()));
-            seqt.addOptionalElement( BIT_STRING.getTemplate() );
+                    new SEQUENCE.OF_Template(UTF8String.getTemplate()));
+            seqt.addOptionalElement(BIT_STRING.getTemplate());
         }
 
         @Override
@@ -168,21 +168,21 @@ public class PKIStatusInfo implements ASN1Value {
 
             BIT_STRING failInfo = (BIT_STRING) seq.elementAt(2);
 
-            if( failInfo == null ) {
-                psi = new PKIStatusInfo(((INTEGER)seq.elementAt(0)).intValue());
+            if (failInfo == null) {
+                psi = new PKIStatusInfo(((INTEGER) seq.elementAt(0)).intValue());
             } else {
                 BitSet bs = failInfo.toBitSet();
                 int failinfo = 0;
-                for(int i = 0, bit = 0x80000000; bit > 0; i++, bit >>>= 1 ) {
-                    if( bs.get(i) ) {
+                for (int i = 0, bit = 0x80000000; bit > 0; i++, bit >>>= 1) {
+                    if (bs.get(i)) {
                         failinfo |= bit;
                     }
                 }
-                psi = new PKIStatusInfo(((INTEGER)seq.elementAt(0)).intValue(),
-                                        failinfo);
+                psi = new PKIStatusInfo(((INTEGER) seq.elementAt(0)).intValue(),
+                        failinfo);
             }
 
-            psi.setStatusString( (SEQUENCE) seq.elementAt(1) );
+            psi.setStatusString((SEQUENCE) seq.elementAt(1));
 
             return psi;
         }
