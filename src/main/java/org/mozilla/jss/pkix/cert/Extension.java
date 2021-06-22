@@ -19,12 +19,14 @@ import org.mozilla.jss.asn1.Tag;
 
 public class Extension implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
     }
 
     private OBJECT_IDENTIFIER extnId;
+
     /**
      * Returns the extension identifier.
      */
@@ -33,18 +35,19 @@ public class Extension implements ASN1Value {
     }
 
     private boolean critical;
+
     public boolean getCritical() {
         return critical;
     }
 
     private OCTET_STRING extnValue;
+
     public OCTET_STRING getExtnValue() {
         return extnValue;
     }
 
-    public Extension( OBJECT_IDENTIFIER extnId, boolean critical,
-        OCTET_STRING extnValue )
-    {
+    public Extension(OBJECT_IDENTIFIER extnId, boolean critical,
+            OCTET_STRING extnValue) {
         this.extnId = extnId;
         this.critical = critical;
         this.extnValue = extnValue;
@@ -59,17 +62,18 @@ public class Extension implements ASN1Value {
     public void encode(Tag implicit, OutputStream ostream) throws IOException {
         SEQUENCE seq = new SEQUENCE();
 
-        seq.addElement( extnId );
-        if( critical == true ) {
+        seq.addElement(extnId);
+        if (critical == true) {
             // false is default, so we only code true
-            seq.addElement( new BOOLEAN(true) );
+            seq.addElement(new BOOLEAN(true));
         }
-        seq.addElement( extnValue );
+        seq.addElement(extnValue);
 
         seq.encode(implicit, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -80,9 +84,9 @@ public class Extension implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( OBJECT_IDENTIFIER.getTemplate() );
-            seqt.addElement( BOOLEAN.getTemplate(), new BOOLEAN(false) );
-            seqt.addElement( OCTET_STRING.getTemplate() );
+            seqt.addElement(OBJECT_IDENTIFIER.getTemplate());
+            seqt.addElement(BOOLEAN.getTemplate(), new BOOLEAN(false));
+            seqt.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -92,22 +96,19 @@ public class Extension implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicit, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicit, istream);
 
             return new Extension(
-                (OBJECT_IDENTIFIER) seq.elementAt(0),
-                ((BOOLEAN) seq.elementAt(1)).toBoolean(),
-                (OCTET_STRING) seq.elementAt(2)
-            );
+                    (OBJECT_IDENTIFIER) seq.elementAt(0),
+                    ((BOOLEAN) seq.elementAt(1)).toBoolean(),
+                    (OCTET_STRING) seq.elementAt(2));
         }
     }
 }
