@@ -39,7 +39,7 @@ public class IssuerAndSerialNumber implements ASN1Value {
      * @param serialNumber must not be null.
      */
     public IssuerAndSerialNumber(Name issuer, INTEGER serialNumber) {
-        if(issuer==null || serialNumber==null) {
+        if (issuer == null || serialNumber == null) {
             throw new IllegalArgumentException();
         }
         sequence = new SEQUENCE();
@@ -64,6 +64,7 @@ public class IssuerAndSerialNumber implements ASN1Value {
     // DER encoding
     ///////////////////////////////////////////////////////////////////////
     static Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -76,8 +77,7 @@ public class IssuerAndSerialNumber implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
@@ -87,6 +87,7 @@ public class IssuerAndSerialNumber implements ASN1Value {
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static Template templateInstance = new Template();
 
     /**
@@ -97,8 +98,8 @@ public class IssuerAndSerialNumber implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( Name.getTemplate() );
-            seqt.addElement( INTEGER.getTemplate() );
+            seqt.addElement(Name.getTemplate());
+            seqt.addElement(INTEGER.getTemplate());
         }
 
         @Override
@@ -108,22 +109,20 @@ public class IssuerAndSerialNumber implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            assert(seq.size() == 2);
+            assert (seq.size() == 2);
 
             return new IssuerAndSerialNumber(
-                            (Name)      seq.elementAt(0),
-                            (INTEGER)   seq.elementAt(1) );
+                    (Name) seq.elementAt(0),
+                    (INTEGER) seq.elementAt(1));
         }
     }
 }

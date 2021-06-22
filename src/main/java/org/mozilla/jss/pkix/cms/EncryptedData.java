@@ -28,7 +28,7 @@ public class EncryptedData implements ASN1Value {
     private SEQUENCE sequence;
 
     /**
-     * The default version number.  This should always be used unless
+     * The default version number. This should always be used unless
      * you really know what you are doing.
      */
     public static final INTEGER DEFAULT_VERSION = new INTEGER(0);
@@ -41,12 +41,11 @@ public class EncryptedData implements ASN1Value {
      * Creates a new EncryptedData.
      *
      * @param version Should usually be DEFAULT_VERSION unless you are being
-     *      very clever.
+     *            very clever.
      */
-    public EncryptedData(   INTEGER version,
-                            EncryptedContentInfo encryptedContentInfo )
-    {
-        if( version == null || encryptedContentInfo == null ) {
+    public EncryptedData(INTEGER version,
+            EncryptedContentInfo encryptedContentInfo) {
+        if (version == null || encryptedContentInfo == null) {
             throw new IllegalArgumentException("null parameter");
         }
 
@@ -61,8 +60,8 @@ public class EncryptedData implements ASN1Value {
     /**
      * Creates an EncryptedData with the default version.
      */
-    public EncryptedData( EncryptedContentInfo encryptedContentInfo ) {
-        this( DEFAULT_VERSION, encryptedContentInfo );
+    public EncryptedData(EncryptedContentInfo encryptedContentInfo) {
+        this(DEFAULT_VERSION, encryptedContentInfo);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -76,12 +75,12 @@ public class EncryptedData implements ASN1Value {
         return encryptedContentInfo;
     }
 
-
     ///////////////////////////////////////////////////////////////////////
     //  DER encoding
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -94,14 +93,14 @@ public class EncryptedData implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static final Template templateInstance = new Template();
 
     /**
@@ -113,8 +112,8 @@ public class EncryptedData implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( EncryptedContentInfo.getTemplate() );
+            seqt.addElement(INTEGER.getTemplate());
+            seqt.addElement(EncryptedContentInfo.getTemplate());
         }
 
         @Override
@@ -124,21 +123,19 @@ public class EncryptedData implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
 
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
             return new EncryptedData(
-                        (INTEGER)               seq.elementAt(0),
-                        (EncryptedContentInfo)  seq.elementAt(1) );
+                    (INTEGER) seq.elementAt(0),
+                    (EncryptedContentInfo) seq.elementAt(1));
         }
     }
 }

@@ -24,7 +24,6 @@ public class EncapsulatedContentInfo implements ASN1Value {
 
     public static final Tag TAG = SEQUENCE.TAG; // XXX is this right?
 
-
     private OBJECT_IDENTIFIER contentType;
     private OCTET_STRING content;
     private SEQUENCE sequence = new SEQUENCE();
@@ -34,20 +33,20 @@ public class EncapsulatedContentInfo implements ASN1Value {
      *
      * @param contentType The contentType of the EncapsulatedContentInfo.
      * @param content The content of the EncapsulatedContentInfo. May be <code>null</code>
-     *      to signify that the optional content field is not present.
+     *            to signify that the optional content field is not present.
      */
     public EncapsulatedContentInfo(OBJECT_IDENTIFIER contentType, ASN1Value content) {
         this.contentType = contentType;
         sequence.addElement(contentType);
         if (content != null) {
-            if( content instanceof OCTET_STRING) {
+            if (content instanceof OCTET_STRING) {
                 this.content = (OCTET_STRING) content;
             } else {
                 // convert content to OCTET_STRING
                 this.content = new OCTET_STRING(
-                                    ASN1Util.encode(content) );
+                        ASN1Util.encode(content));
             }
-            sequence.addElement(new EXPLICIT(new Tag(0), this.content) );
+            sequence.addElement(new EXPLICIT(new Tag(0), this.content));
         }
     }
 
@@ -76,14 +75,13 @@ public class EncapsulatedContentInfo implements ASN1Value {
 
     @Override
     public void encode(OutputStream ostream) throws IOException {
-        encode(getTag(),ostream);
+        encode(getTag(), ostream);
     }
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
-        sequence.encode(implicitTag,ostream);
+            throws IOException {
+        sequence.encode(implicitTag, ostream);
     }
 
     @Override
@@ -97,6 +95,7 @@ public class EncapsulatedContentInfo implements ASN1Value {
     public static Template getTemplate() {
         return templateInstance;
     }
+
     private static Template templateInstance = new Template();
 
     /**
@@ -115,41 +114,33 @@ public class EncapsulatedContentInfo implements ASN1Value {
             seqt = new SEQUENCE.Template();
             seqt.addElement(new OBJECT_IDENTIFIER.Template());
             seqt.addOptionalElement(
-               new EXPLICIT.Template(
-                         new Tag(0), new OCTET_STRING.Template()
-                        ));
+                    new EXPLICIT.Template(
+                            new Tag(0), new OCTET_STRING.Template()));
         }
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-            {
-                return decode(EncapsulatedContentInfo.TAG,istream);
-            }
-
+                throws IOException, InvalidBERException {
+            return decode(EncapsulatedContentInfo.TAG, istream);
+        }
 
         @Override
-        public ASN1Value decode(Tag implicitTag, InputStream istream )
-            throws IOException, InvalidBERException
-            {
-                SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
-                assert(seq.size() == 2);
-                ASN1Value content;
+        public ASN1Value decode(Tag implicitTag, InputStream istream)
+                throws IOException, InvalidBERException {
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
+            assert (seq.size() == 2);
+            ASN1Value content;
 
-                if( seq.elementAt(1) == null ) {
-                    content = null;
-                } else {
-                    content = ((EXPLICIT)seq.elementAt(1)).getContent();
-                }
-
-                return new EncapsulatedContentInfo(
-                    (OBJECT_IDENTIFIER) seq.elementAt(0),
-                    content
-                    );
+            if (seq.elementAt(1) == null) {
+                content = null;
+            } else {
+                content = ((EXPLICIT) seq.elementAt(1)).getContent();
             }
+
+            return new EncapsulatedContentInfo(
+                    (OBJECT_IDENTIFIER) seq.elementAt(0),
+                    content);
+        }
     } // end of template
 
 }
-
-
-
