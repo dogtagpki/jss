@@ -17,7 +17,6 @@
 // --- END COPYRIGHT BLOCK ---
 package org.mozilla.jss.netscape.security.util;
 
-
 /**
  * This class will display the certificate content in predefined
  * format.
@@ -38,12 +37,11 @@ public class PrettyPrintFormat {
      * constants
      *
      *==========================================================*/
-    private final static String spaces =
+    private final static String spaces = "                                                 " +
             "                                                 " +
-                    "                                                 " +
-                    "                                                 " +
-                    "                                                 " +
-                    "                                                 ";
+            "                                                 " +
+            "                                                 " +
+            "                                                 ";
 
     /*==========================================================
      * constructors

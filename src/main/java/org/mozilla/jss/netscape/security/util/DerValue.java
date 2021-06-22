@@ -130,12 +130,8 @@ public class DerValue {
     /** Tag value indicating an ASN.1 "UTF8String" value. (since 1998) */
     public final static byte tag_UTF8String = 0x0C;
 
-    public final static byte[] tags_DirectoryString =
-        { tag_T61String
-        , tag_PrintableString
-        , tag_UniversalString
-        , tag_UTF8String
-        , tag_BMPString };
+    public final static byte[] tags_DirectoryString = { tag_T61String, tag_PrintableString, tag_UniversalString,
+            tag_UTF8String, tag_BMPString };
 
     // CONSTRUCTED seq/set
 
@@ -390,9 +386,9 @@ public class DerValue {
              * zero.
              */
             throw new IOException(
-                "getOctetString: short read on DerValue buffer: "
-                + "expected to read " + length + " bytes; "
-                + "actually read " + n + " bytes.");
+                    "getOctetString: short read on DerValue buffer: "
+                            + "expected to read " + length + " bytes; "
+                            + "actually read " + n + " bytes.");
         }
         return bytes;
     }
@@ -450,7 +446,7 @@ public class DerValue {
         if (!tagImplicit) {
             if (tag != tag_Integer) {
                 throw new IOException("DerValue.getInteger, not an int "
-                                       + tag);
+                        + tag);
             }
         }
         return buffer.getUnsigned(data.available());
@@ -502,7 +498,7 @@ public class DerValue {
         if (!tagImplicit) {
             if (tag != tag_BitString)
                 throw new IOException("DerValue.getBitString, not a bit string "
-                                       + tag);
+                        + tag);
         }
         return buffer.getBitString();
     }
@@ -519,7 +515,7 @@ public class DerValue {
         if (!tagImplicit) {
             if (tag != tag_BitString)
                 throw new IOException("DerValue.getBitString, not a bit string "
-                                       + tag);
+                        + tag);
         }
         return buffer.getUnalignedBitString();
     }
@@ -548,7 +544,7 @@ public class DerValue {
         }
         if (!tagValid)
             throw new IOException(
-                "DerValue.getDirectoryString: invalid tag: " + tag);
+                    "DerValue.getDirectoryString: invalid tag: " + tag);
 
         return getASN1CharString();
     }
@@ -735,7 +731,7 @@ public class DerValue {
      * Create the tag of the attribute.
      *
      * @param tagClass the tag class type, one of UNIVERSAL, CONTEXT,
-     *        APPLICATION or PRIVATE
+     *            APPLICATION or PRIVATE
      * @param form if true, the value is constructed, otherwise it
      *            is primitive.
      * @param val the tag value

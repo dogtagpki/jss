@@ -111,7 +111,7 @@ final public class ObjectIdentifier implements Serializable {
 
             components = tmp.clone();
 
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             System.out.println("X509.ObjectIdentifier(), no cloning!");
         }
     }
@@ -134,7 +134,6 @@ final public class ObjectIdentifier implements Serializable {
             System.out.println("X509.ObjectIdentifier(), no cloning!");
         }
     }
-
 
     /**
      * Constructs an object ID from an ASN.1 encoded input stream.
@@ -311,11 +310,11 @@ final public class ObjectIdentifier implements Serializable {
 
         BigInteger bigInt7f = BigInteger.valueOf(0x7f);
 
-        BigInteger cur =  new BigInteger(val.toString());
+        BigInteger cur = new BigInteger(val.toString());
         for (i = 0;; i++) {
             buf[i] = (cur.and(bigInt7f).byteValue());
             cur = cur.shiftRight(7);
-            if (cur.compareTo(BigInteger.ZERO) == 0 )
+            if (cur.compareTo(BigInteger.ZERO) == 0)
                 break;
         }
         for (; i > 0; --i)
@@ -373,7 +372,7 @@ final public class ObjectIdentifier implements Serializable {
         if (componentLen != other.componentLen)
             return false;
         for (i = 0; i < componentLen; i++) {
-            if (components[i].compareTo(other.components[i]) != 0 )
+            if (components[i].compareTo(other.components[i]) != 0)
                 return false;
         }
         return true;

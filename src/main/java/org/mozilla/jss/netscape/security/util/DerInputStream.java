@@ -112,6 +112,7 @@ public class DerInputStream {
     /**
      * Return what has been written to this DerInputStream
      * as a byte array. Useful for debugging.
+     * 
      * @throws IOException
      */
     public byte[] toByteArray() throws IOException {
@@ -629,8 +630,8 @@ public class DerInputStream {
                 throw new IOException("DerInput.getLength(): lengthTag="
                         + tmp + ", "
                         + ((tmp == 0) ? "Indefinite length encoding not supported"
-                                    + " or incorrect DER encoding."
-                                  : "too big."));
+                                + " or incorrect DER encoding."
+                                : "too big."));
 
             for (value = 0; tmp > 0; tmp--) {
                 value <<= 8;

@@ -100,15 +100,15 @@ public class DerOutputStream
      * @param tag the DER value of the context-specific tag that replaces
      *            original tag of the value in the output , such as in
      *
-       <pre>
-     *  {@literal <field>} [N] IMPLICIT {@literal <type>}
-     * </pre>
+     *            <pre>
+    *  {@literal <field>} [N] IMPLICIT {@literal <type>}
+     *            </pre>
      *
-     * For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
-     * would be encoded as "81 01 04" whereas in explicit
-     * tagging it would be encoded as "A1 03 02 01 04".
-     * Notice that the tag is A1 and not 81, this is because with
-     * explicit tagging the form is always constructed.
+     *            For example, <em>FooLength [1] IMPLICIT INTEGER</em>, with value=4;
+     *            would be encoded as "81 01 04" whereas in explicit
+     *            tagging it would be encoded as "A1 03 02 01 04".
+     *            Notice that the tag is A1 and not 81, this is because with
+     *            explicit tagging the form is always constructed.
      * @param value original value being implicitly tagged
      */
     public void writeImplicit(byte tag, DerOutputStream value)
@@ -460,7 +460,7 @@ public class DerOutputStream
      * @param order the order to use when sorting encodings of components.
      */
     private void putOrderedSet(byte tag, DerEncoder[] set,
-                   Comparator<byte[]> order) throws IOException {
+            Comparator<byte[]> order) throws IOException {
         DerOutputStream[] streams = new DerOutputStream[set.length];
 
         for (int i = 0; i < set.length; i++) {
@@ -705,7 +705,7 @@ public class DerOutputStream
      * Put the tag of the attribute in the stream.
      *
      * @param tagClass the tag class type, one of UNIVERSAL, CONTEXT,
-     *        APPLICATION or PRIVATE
+     *            APPLICATION or PRIVATE
      * @param form if true, the value is constructed, otherwise it is
      *            primitive.
      * @param val the tag value

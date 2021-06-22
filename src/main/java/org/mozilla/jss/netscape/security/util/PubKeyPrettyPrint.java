@@ -114,7 +114,7 @@ public class PubKeyPrettyPrint {
                 sb.append(pp.toHexString(mX509Key.getKey(), indentSize + 4, lineLen));
             }
 
-        } catch(InvalidKeyException e){
+        } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
 

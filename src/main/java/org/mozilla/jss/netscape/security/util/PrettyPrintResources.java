@@ -297,6 +297,6 @@ public class PrettyPrintResources extends ListResourceBundle {
             { TOKEN_NONE, "none" },
             { TOKEN_CACHE_NOT_AVAILABLE, "CRL cache is not available. " },
             { TOKEN_CACHE_IS_EMPTY, "CRL cache is empty. " },
-        };
+    };
 
 }
