@@ -15,7 +15,7 @@ public class JSSServerSocketFactory extends SSLServerSocketFactory {
     public JSSServerSocketFactory(String protocol, JSSKeyManager km, X509TrustManager[] tms) {
         try {
             ctx = SSLContext.getInstance(protocol, "Mozilla-JSS");
-            ctx.init(new JSSKeyManager[]{ km }, tms, null);
+            ctx.init(new JSSKeyManager[] { km }, tms, null);
         } catch (Exception e) {
             throw new RuntimeException("Unexpected error recreating SSLContext instance: " + e.getMessage(), e);
         }

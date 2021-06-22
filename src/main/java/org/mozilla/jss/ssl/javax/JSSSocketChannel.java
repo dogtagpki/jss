@@ -39,7 +39,8 @@ public class JSSSocketChannel extends SocketChannel {
 
     private boolean handshakeCompleted = false;
 
-    public JSSSocketChannel(JSSSocket sslSocket, SocketChannel parent, Socket parentSocket, ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
+    public JSSSocketChannel(JSSSocket sslSocket, SocketChannel parent, Socket parentSocket,
+            ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
         super(null);
 
         this.sslSocket = sslSocket;
@@ -60,7 +61,8 @@ public class JSSSocketChannel extends SocketChannel {
         configureBlocking(parent.isBlocking());
     }
 
-    public JSSSocketChannel(JSSSocket sslSocket, Socket parentSocket, ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
+    public JSSSocketChannel(JSSSocket sslSocket, Socket parentSocket, ReadableByteChannel readChannel,
+            WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
         this(sslSocket, null, parentSocket, readChannel, writeChannel, engine);
 
         // When there is no parent channel, this channel must be in
@@ -171,7 +173,8 @@ public class JSSSocketChannel extends SocketChannel {
                         // instead. Use an linear backoff in case
                         // the remote server is really slow.
                         Thread.sleep(handshakeAttempts * 10);
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                 }
 
                 if (handshakeAttempts > maxHandshakeAttempts) {
@@ -190,7 +193,8 @@ public class JSSSocketChannel extends SocketChannel {
                     msg += "Connection stalled.";
                     throw new IOException(msg);
                 }
-            } while (state != SSLEngineResult.HandshakeStatus.FINISHED && state != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
+            } while (state != SSLEngineResult.HandshakeStatus.FINISHED
+                    && state != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING);
         } catch (SSLException ssle) {
             String msg = "Error attempting to handshake with remote peer: ";
             msg += "got unexpected exception: " + ssle.getMessage();
@@ -275,13 +279,13 @@ public class JSSSocketChannel extends SocketChannel {
 
                 result = engine.unwrap(readBuffer, dsts, offset, length);
                 switch (result.getStatus()) {
-                    case CLOSED:
-                        shutdownInput();
-                    case OK:
-                    case BUFFER_UNDERFLOW:
-                        break; // CLOSED, OK and BUFFER_UNDERFLOW are expected
-                    default:
-                        throw new IOException("Unexpected status from unwrap: " + result);
+                case CLOSED:
+                    shutdownInput();
+                case OK:
+                case BUFFER_UNDERFLOW:
+                    break; // CLOSED, OK and BUFFER_UNDERFLOW are expected
+                default:
+                    throw new IOException("Unexpected status from unwrap: " + result);
                 }
                 unwrapped += result.bytesConsumed();
                 decrypted += result.bytesProduced();
@@ -323,7 +327,8 @@ public class JSSSocketChannel extends SocketChannel {
         try {
             do {
                 SSLEngineResult result = engine.wrap(srcs, offset, length, dst);
-                if (result.getStatus() != SSLEngineResult.Status.OK && result.getStatus() != SSLEngineResult.Status.CLOSED) {
+                if (result.getStatus() != SSLEngineResult.Status.OK
+                        && result.getStatus() != SSLEngineResult.Status.CLOSED) {
                     throw new IOException("Unexpected status from wrap: " + result);
                 }
 

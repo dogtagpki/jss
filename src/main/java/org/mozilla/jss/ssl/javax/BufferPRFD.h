@@ -28,5 +28,5 @@ void freeBufferPRFileDesc(PRFileDesc *fd);
  * extended with nulls if it is shorter. It is suggested that this be an IPv4
  * or IPv6 address. Note that this value is not used to validate the hostname
  * in any way (see SSL_SetURL to validate the peer). */
-PRFileDesc *newBufferPRFileDesc(j_buffer *read_buf, j_buffer *write_buf,
-    uint8_t *peer_info, size_t peer_info_len);
+PRFileDesc* newBufferPRFileDesc(j_buffer *read_buf, j_buffer *write_buf,
+		uint8_t *peer_info, size_t peer_info_len);

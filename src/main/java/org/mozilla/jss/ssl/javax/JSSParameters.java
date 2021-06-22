@@ -76,7 +76,8 @@ public class JSSParameters extends SSLParameters {
             try {
                 converted.add(SSLCipher.valueOf(cipherSuite));
             } catch (Exception e) {
-                throw new IllegalArgumentException("JSSParameters.setCipherSuites() - Unknown cipher suite (" + cipherSuite + "): " + e.getMessage(), e);
+                throw new IllegalArgumentException("JSSParameters.setCipherSuites() - Unknown cipher suite ("
+                        + cipherSuite + "): " + e.getMessage(), e);
             }
         }
 
@@ -157,7 +158,7 @@ public class JSSParameters extends SSLParameters {
         }
 
         ArrayList<String> enabledProtocols = new ArrayList<String>();
-        for (SSLVersion v: SSLVersion.values()) {
+        for (SSLVersion v : SSLVersion.values()) {
             if (range.getMinVersion().ordinal() <= v.ordinal() && v.ordinal() <= range.getMaxVersion().ordinal()) {
                 // We've designated the second alias as the standard Java name
                 // for the protocol. However if one isn't provided, fall back
