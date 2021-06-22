@@ -169,7 +169,7 @@ public class PKCS9Attribute implements DerEncoder {
             null, //PublicKey
             null, //SigningDescription
             { Byte.valueOf(DerValue.tag_Sequence) } //ExtensionRequest
-            };
+    };
 
     /**
      * Class types required for values for a given PKCS9
@@ -313,8 +313,7 @@ public class PKCS9Attribute implements DerEncoder {
      * Array indicating which PKCS9 attributes are single-valued,
      * by index in <code>PKCS9_OIDS</code>.
      */
-    private static final boolean[] SINGLE_VALUED =
-    { false,
+    private static final boolean[] SINGLE_VALUED = { false,
             false, // EMailAddress
             false, // UnstructuredName
             true, // ContentType
@@ -354,7 +353,7 @@ public class PKCS9Attribute implements DerEncoder {
      *
      * <P>
      * <TABLE>
-     *  <caption>value</caption>
+     * <caption>value</caption>
      *
      * <TR>
      * <TH>OID</TH>
@@ -482,7 +481,7 @@ public class PKCS9Attribute implements DerEncoder {
      *
      * <P>
      * <TABLE>
-     *  <caption>value</caption>
+     * <caption>value</caption>
      *
      * <TR>
      * <TH>OID</TH>
@@ -709,8 +708,7 @@ public class PKCS9Attribute implements DerEncoder {
         { // open scope
             SignerInfo[] values = new SignerInfo[elems.length];
             for (int i = 0; i < elems.length; i++)
-                values[i] =
-                        new SignerInfo(elems[i].toDerInputStream());
+                values[i] = new SignerInfo(elems[i].toDerInputStream());
             value = values;
         } // close scope
             break;
@@ -742,8 +740,7 @@ public class PKCS9Attribute implements DerEncoder {
             throw new IOException("PKCS9 SigningDescription " +
                     "attribute not supported.");
         case 14: // ExtensionRequest attribute
-            value =
-                    new CertificateExtensions(elems[0].toDerInputStream());
+            value = new CertificateExtensions(elems[0].toDerInputStream());
 
             // break unnecessary
 
@@ -762,16 +759,15 @@ public class PKCS9Attribute implements DerEncoder {
     @Override
     public void derEncode(OutputStream out) throws IOException {
         try (DerOutputStream temp = new DerOutputStream();
-             DerOutputStream temp2 = new DerOutputStream();
-             DerOutputStream derOut = new DerOutputStream()) {
+                DerOutputStream temp2 = new DerOutputStream();
+                DerOutputStream derOut = new DerOutputStream()) {
             temp.putOID(getOID());
             switch (index) {
             case 1: // email address
             case 2: // unstructured name
             { // open scope
                 String[] values = (String[]) value;
-                DerOutputStream[] temps = new
-                        DerOutputStream[values.length];
+                DerOutputStream[] temps = new DerOutputStream[values.length];
 
                 for (int i = 0; i < values.length; i++) {
                     temps[i] = new DerOutputStream();
@@ -817,8 +813,7 @@ public class PKCS9Attribute implements DerEncoder {
             case 8: // unstructured address
             { // open scope
                 String[] values = (String[]) value;
-                DerOutputStream[] temps = new
-                        DerOutputStream[values.length];
+                DerOutputStream[] temps = new DerOutputStream[values.length];
 
                 for (int i = 0; i < values.length; i++) {
                     temps[i] = new DerOutputStream();
@@ -881,7 +876,7 @@ public class PKCS9Attribute implements DerEncoder {
      *
      * <P>
      * <TABLE>
-     *  <caption>value</caption>
+     * <caption>value</caption>
      *
      * <TR>
      * <TH>OID</TH>
@@ -1046,8 +1041,8 @@ public class PKCS9Attribute implements DerEncoder {
 
         if (SINGLE_VALUED[index]) {
             if (value instanceof byte[]) { // special case for octet string
-                org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
-                        new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
+                org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp = new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(
+                        " ", 20);
                 String valuebits = pp.toHexString(((byte[]) value));
                 buf.append(valuebits);
             } else {
@@ -1091,8 +1086,8 @@ public class PKCS9Attribute implements DerEncoder {
      */
     private void throwSingleValuedException() throws IOException {
         throw new IOException("Single-value attribute " +
-                  getOID() + " (" + getName() + ")" +
-                  " has multiple values.");
+                getOID() + " (" + getName() + ")" +
+                " has multiple values.");
     }
 
     /**

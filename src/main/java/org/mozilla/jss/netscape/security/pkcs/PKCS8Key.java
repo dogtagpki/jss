@@ -198,11 +198,11 @@ public class PKCS8Key implements PrivateKey {
         } catch (InstantiationException e) {
         } catch (IllegalAccessException e) {
             throw new IOException("IllegalAccessException : " +
-                      e.getMessage(), e);
+                    e.getMessage(), e);
         } catch (NoSuchMethodException e) {
         } catch (InvocationTargetException e) {
             throw new IOException("InvocationTargetException : " +
-                      e.getMessage(), e);
+                    e.getMessage(), e);
         }
 
         PKCS8Key result = new PKCS8Key();
@@ -270,7 +270,7 @@ public class PKCS8Key implements PrivateKey {
 
             } catch (IOException e) {
                 throw new InvalidKeyException("IOException : " +
-                           e.getMessage());
+                        e.getMessage());
             }
         }
         return copyEncodedKey(encodedKey);
@@ -281,8 +281,8 @@ public class PKCS8Key implements PrivateKey {
      */
     @Override
     public String toString() {
-        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
-                new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
+        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp = new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(
+                " ", 20);
         String keybits = pp.toHexString(key);
 
         return "algorithm = " + algid.toString()
@@ -328,7 +328,7 @@ public class PKCS8Key implements PrivateKey {
         } catch (IOException e) {
             // e.printStackTrace ();
             throw new InvalidKeyException("IOException : " +
-                      e.getMessage());
+                    e.getMessage());
         }
     }
 

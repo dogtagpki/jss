@@ -143,7 +143,7 @@ public class PKCS10Attribute implements DerEncoder, Serializable {
      * @param attributeValue the CertAttrSet.
      */
     public PKCS10Attribute(ObjectIdentifier attributeId,
-                           CertAttrSet attributeValue) {
+            CertAttrSet attributeValue) {
         this.attributeId = attributeId;
         this.attributeValue = attributeValue;
     }

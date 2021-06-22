@@ -40,16 +40,16 @@ public class PKCS12 {
     public final static OBJECT_IDENTIFIER CERT_TRUST_FLAGS_OID = PKCS12_ATTRIBUTES_OID.subBranch(1);
 
     // based on certdb.h in NSS
-    public final static int TERMINAL_RECORD   = 1 << 0;
-    public final static int TRUSTED           = 1 << 1;
-    public final static int SEND_WARN         = 1 << 2;
-    public final static int VALID_CA          = 1 << 3;
-    public final static int TRUSTED_CA        = 1 << 4;
-    public final static int NS_TRUSTED_CA     = 1 << 5;
-    public final static int USER              = 1 << 6;
+    public final static int TERMINAL_RECORD = 1 << 0;
+    public final static int TRUSTED = 1 << 1;
+    public final static int SEND_WARN = 1 << 2;
+    public final static int VALID_CA = 1 << 3;
+    public final static int TRUSTED_CA = 1 << 4;
+    public final static int NS_TRUSTED_CA = 1 << 5;
+    public final static int USER = 1 << 6;
     public final static int TRUSTED_CLIENT_CA = 1 << 7;
-    public final static int INVISIBLE_CA      = 1 << 8;
-    public final static int GOVT_APPROVED_CA  = 1 << 9;
+    public final static int INVISIBLE_CA = 1 << 8;
+    public final static int GOVT_APPROVED_CA = 1 << 9;
 
     public static boolean isFlagEnabled(int flag, int flags) {
         return (flag & flags) > 0;
@@ -60,7 +60,8 @@ public class PKCS12 {
 
         StringBuffer sb = new StringBuffer();
 
-        if (isFlagEnabled(VALID_CA, flags) && !isFlagEnabled(TRUSTED_CA, flags) && !isFlagEnabled(TRUSTED_CLIENT_CA, flags))
+        if (isFlagEnabled(VALID_CA, flags) && !isFlagEnabled(TRUSTED_CA, flags)
+                && !isFlagEnabled(TRUSTED_CLIENT_CA, flags))
             sb.append("c");
 
         if (isFlagEnabled(TERMINAL_RECORD, flags) && !isFlagEnabled(TRUSTED, flags))
@@ -117,7 +118,7 @@ public class PKCS12 {
                 value = value | TRUSTED_CLIENT_CA | VALID_CA;
                 break;
 
-            case 'C' :
+            case 'C':
                 value = value | TRUSTED_CA | VALID_CA;
                 break;
 
@@ -177,7 +178,8 @@ public class PKCS12 {
         certInfosByID.put(id, certInfo);
 
         byte[] keyID = certInfo.getKeyID();
-        if (keyID == null) return;
+        if (keyID == null)
+            return;
 
         certInfosByKeyID.put(new BigInteger(1, keyID), certInfo);
     }
@@ -195,7 +197,8 @@ public class PKCS12 {
         Collection<PKCS12CertInfo> result = new ArrayList<PKCS12CertInfo>();
 
         for (PKCS12CertInfo certInfo : certInfosByID.values()) {
-            if (!friendlyName.equals(certInfo.getFriendlyName())) continue;
+            if (!friendlyName.equals(certInfo.getFriendlyName()))
+                continue;
             result.add(certInfo);
         }
 
@@ -216,7 +219,8 @@ public class PKCS12 {
             certInfosByID.remove(id);
 
             byte[] keyID = certInfo.getKeyID();
-            if (keyID == null) continue;
+            if (keyID == null)
+                continue;
 
             certInfosByKeyID.remove(new BigInteger(1, keyID));
             keyInfosByID.remove(new BigInteger(1, keyID));

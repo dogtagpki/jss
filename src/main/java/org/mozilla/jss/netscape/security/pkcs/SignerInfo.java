@@ -55,10 +55,10 @@ public class SignerInfo implements DerEncoder {
     PKCS9Attributes unauthenticatedAttributes;
 
     public SignerInfo(X500Name issuerName,
-              BigInt serial,
-              AlgorithmId digestAlgorithmId,
-              AlgorithmId digestEncryptionAlgorithmId,
-              byte[] encryptedDigest) {
+            BigInt serial,
+            AlgorithmId digestAlgorithmId,
+            AlgorithmId digestEncryptionAlgorithmId,
+            byte[] encryptedDigest) {
         this.version = new BigInt(1);
         this.issuerName = issuerName;
         this.certificateSerialNumber = serial;
@@ -68,12 +68,12 @@ public class SignerInfo implements DerEncoder {
     }
 
     public SignerInfo(X500Name issuerName,
-              BigInt serial,
-              AlgorithmId digestAlgorithmId,
-              PKCS9Attributes authenticatedAttributes,
-              AlgorithmId digestEncryptionAlgorithmId,
-              byte[] encryptedDigest,
-              PKCS9Attributes unauthenticatedAttributes) {
+            BigInt serial,
+            AlgorithmId digestAlgorithmId,
+            PKCS9Attributes authenticatedAttributes,
+            AlgorithmId digestEncryptionAlgorithmId,
+            byte[] encryptedDigest,
+            PKCS9Attributes unauthenticatedAttributes) {
         this.version = new BigInt(1);
         this.issuerName = issuerName;
         this.certificateSerialNumber = serial;
@@ -94,7 +94,7 @@ public class SignerInfo implements DerEncoder {
         DerValue[] issuerAndSerialNumber = derin.getSequence(2);
         byte[] issuerBytes = issuerAndSerialNumber[0].toByteArray();
         issuerName = new X500Name(new DerValue(DerValue.tag_Sequence,
-                           issuerBytes));
+                issuerBytes));
         certificateSerialNumber = issuerAndSerialNumber[1].getInteger();
 
         // digestAlgorithmId
@@ -194,8 +194,7 @@ public class SignerInfo implements DerEncoder {
                 data = content.getContentBytes();
             }
 
-            String digestAlgname =
-                    getDigestAlgorithmId().getName();
+            String digestAlgname = getDigestAlgorithmId().getName();
 
             byte[] dataSigned;
 
@@ -206,17 +205,15 @@ public class SignerInfo implements DerEncoder {
             } else {
 
                 // first, check content type
-                ObjectIdentifier contentType = (ObjectIdentifier)
-                        authenticatedAttributes.getAttributeValue(
-                                PKCS9Attribute.CONTENT_TYPE_OID);
+                ObjectIdentifier contentType = (ObjectIdentifier) authenticatedAttributes.getAttributeValue(
+                        PKCS9Attribute.CONTENT_TYPE_OID);
                 if (contentType == null ||
                         !contentType.equals(content.contentType))
                     return null; // contentType does not match, bad SignerInfo
 
                 // now, check message digest
-                byte[] messageDigest = (byte[])
-                        authenticatedAttributes.getAttributeValue(
-                                PKCS9Attribute.MESSAGE_DIGEST_OID);
+                byte[] messageDigest = (byte[]) authenticatedAttributes.getAttributeValue(
+                        PKCS9Attribute.MESSAGE_DIGEST_OID);
 
                 if (messageDigest == null) // fail if there is no message digest
                     return null;
@@ -242,8 +239,7 @@ public class SignerInfo implements DerEncoder {
 
             // put together digest algorithm and encryption algorithm
             // to form signing algorithm
-            String encryptionAlgname =
-                    getDigestEncryptionAlgorithmId().getName();
+            String encryptionAlgname = getDigestEncryptionAlgorithmId().getName();
 
             String algname;
             if (encryptionAlgname.equals("DSA") ||
@@ -271,7 +267,7 @@ public class SignerInfo implements DerEncoder {
 
         } catch (IOException e) {
             throw new SignatureException("IO error verifying signature:\n" +
-                     e.getMessage());
+                    e.getMessage());
 
         } catch (InvalidKeyException e) {
             throw new SignatureException("InvalidKey: " + e.getMessage());
@@ -320,8 +316,8 @@ public class SignerInfo implements DerEncoder {
 
     @Override
     public String toString() {
-        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp =
-                new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(" ", 20);
+        org.mozilla.jss.netscape.security.util.PrettyPrintFormat pp = new org.mozilla.jss.netscape.security.util.PrettyPrintFormat(
+                " ", 20);
         String digestbits = pp.toHexString(encryptedDigest);
 
         String out = "";
