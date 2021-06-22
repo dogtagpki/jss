@@ -134,14 +134,15 @@ public class JSSTrustManager implements X509TrustManager {
                 logger.debug("JSSTrustManager: configured to allow null extended key usages field");
             } else {
                 String msg = "Missing EKU: " + keyUsage +
-                    ". Certificate with subject DN `" + cert.getSubjectDN() + "` had ";
+                        ". Certificate with subject DN `" + cert.getSubjectDN() + "` had ";
                 if (extendedKeyUsages == null) {
                     msg += "no EKU extension";
                 } else {
                     msg += "EKUs { ";
                     boolean first = true;
                     for (String eku : extendedKeyUsages) {
-                        if (!first) msg += " , ";
+                        if (!first)
+                            msg += " , ";
                         msg += eku;
                         first = false;
                     }

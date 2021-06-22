@@ -28,22 +28,21 @@ import org.mozilla.jss.crypto.TokenSupplierManager;
 
 public class JSSMacSpi extends javax.crypto.MacSpi {
 
-    private JSSMessageDigest digest=null;
+    private JSSMessageDigest digest = null;
     private DigestAlgorithm alg;
     private String keyName;
 
     protected JSSMacSpi(DigestAlgorithm alg, String keyName) {
-      try {
-        this.alg = alg;
-        this.keyName = keyName;
-        CryptoToken token =
-            TokenSupplierManager.getTokenSupplier().getThreadToken();
-        digest = token.getDigestContext(alg);
-      } catch( DigestException de) {
+        try {
+            this.alg = alg;
+            this.keyName = keyName;
+            CryptoToken token = TokenSupplierManager.getTokenSupplier().getThreadToken();
+            digest = token.getDigestContext(alg);
+        } catch (DigestException de) {
             throw new TokenRuntimeException(de.getMessage());
-      } catch(NoSuchAlgorithmException nsae) {
+        } catch (NoSuchAlgorithmException nsae) {
             throw new TokenRuntimeException(nsae.getMessage());
-      }
+        }
     }
 
     @Override
@@ -53,85 +52,87 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
 
     @Override
     public void engineInit(Key key, AlgorithmParameterSpec params)
-        throws InvalidKeyException, InvalidAlgorithmParameterException
-    {
-      try {
-        SymmetricKey real_key = null;
-        if (key instanceof SecretKeyFacade) {
-            SecretKeyFacade facade = (SecretKeyFacade)key;
-            real_key = facade.key;
-        } else if (key instanceof SymmetricKey) {
-            real_key = (SymmetricKey)key;
-        } else if (key.getEncoded() != null) {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance(keyName, "Mozilla-JSS");
-            SecretKeySpec spec = new SecretKeySpec(key.getEncoded(), keyName);
-            Key manufactured = factory.generateSecret(spec);
-            if (manufactured instanceof SecretKeyFacade) {
-                SecretKeyFacade facade = (SecretKeyFacade)manufactured;
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
+        try {
+            SymmetricKey real_key = null;
+            if (key instanceof SecretKeyFacade) {
+                SecretKeyFacade facade = (SecretKeyFacade) key;
                 real_key = facade.key;
-            } else if (manufactured instanceof SymmetricKey) {
-                real_key = (SymmetricKey)manufactured;
+            } else if (key instanceof SymmetricKey) {
+                real_key = (SymmetricKey) key;
+            } else if (key.getEncoded() != null) {
+                SecretKeyFactory factory = SecretKeyFactory.getInstance(keyName, "Mozilla-JSS");
+                SecretKeySpec spec = new SecretKeySpec(key.getEncoded(), keyName);
+                Key manufactured = factory.generateSecret(spec);
+                if (manufactured instanceof SecretKeyFacade) {
+                    SecretKeyFacade facade = (SecretKeyFacade) manufactured;
+                    real_key = facade.key;
+                } else if (manufactured instanceof SymmetricKey) {
+                    real_key = (SymmetricKey) manufactured;
+                } else {
+                    String msg = "Internal error while converting key: ";
+                    msg += "SecretKeyFactory gave unrecognized manufactured ";
+                    msg += "key type: " + manufactured.getClass().getName();
+                    throw new InvalidKeyException(msg);
+                }
             } else {
-                String msg = "Internal error while converting key: ";
-                msg += "SecretKeyFactory gave unrecognized manufactured ";
-                msg += "key type: " + manufactured.getClass().getName();
+                String msg = "Must use a key created by JSS; got ";
+                msg += key.getClass().getName() + ". ";
+                msg += "Try exporting the key data and importing it via ";
+                msg += "SecretKeyFactory or use an exportable key type ";
+                msg += "so JSS can do this automatically.";
                 throw new InvalidKeyException(msg);
             }
-        } else {
-            String msg = "Must use a key created by JSS; got ";
-            msg += key.getClass().getName() + ". ";
-            msg += "Try exporting the key data and importing it via ";
-            msg += "SecretKeyFactory or use an exportable key type ";
-            msg += "so JSS can do this automatically.";
-            throw new InvalidKeyException(msg);
-        }
 
-        digest.initHMAC(real_key);
-      } catch (DigestException de) {
-        throw new InvalidKeyException("DigestException: " + de.getMessage(), de);
-      } catch (NoSuchAlgorithmException nsae) {
-        throw new InvalidKeyException("NoSuchAlgorithmException when importing key to JSS: " + nsae.getMessage(), nsae);
-      } catch (NoSuchProviderException nspe) {
-        throw new InvalidKeyException("NoSuchProviderException when importing key to JSS: " + nspe.getMessage(), nspe);
-      } catch (InvalidKeySpecException ikse) {
-        throw new InvalidKeyException("InvalidKeySpecException when importing key to JSS: " + ikse.getMessage(), ikse);
-      }
+            digest.initHMAC(real_key);
+        } catch (DigestException de) {
+            throw new InvalidKeyException("DigestException: " + de.getMessage(), de);
+        } catch (NoSuchAlgorithmException nsae) {
+            throw new InvalidKeyException("NoSuchAlgorithmException when importing key to JSS: " + nsae.getMessage(),
+                    nsae);
+        } catch (NoSuchProviderException nspe) {
+            throw new InvalidKeyException("NoSuchProviderException when importing key to JSS: " + nspe.getMessage(),
+                    nspe);
+        } catch (InvalidKeySpecException ikse) {
+            throw new InvalidKeyException("InvalidKeySpecException when importing key to JSS: " + ikse.getMessage(),
+                    ikse);
+        }
     }
 
     @Override
     public void engineUpdate(byte input) {
-      try {
-        digest.update(input);
-      } catch(DigestException de) {
-        throw new TokenRuntimeException("DigestException: " + de.getMessage());
-      }
+        try {
+            digest.update(input);
+        } catch (DigestException de) {
+            throw new TokenRuntimeException("DigestException: " + de.getMessage());
+        }
     }
 
     @Override
     public void engineUpdate(byte[] input, int offset, int len) {
-      try {
-        digest.update(input, offset, len);
-      } catch(DigestException de) {
-        throw new TokenRuntimeException("DigestException: " + de.getMessage());
-      }
+        try {
+            digest.update(input, offset, len);
+        } catch (DigestException de) {
+            throw new TokenRuntimeException("DigestException: " + de.getMessage());
+        }
     }
 
     @Override
     public byte[] engineDoFinal() {
-      try {
-        return digest.digest();
-      } catch(DigestException de) {
-        throw new TokenRuntimeException("DigestException: " + de.getMessage());
-      }
+        try {
+            return digest.digest();
+        } catch (DigestException de) {
+            throw new TokenRuntimeException("DigestException: " + de.getMessage());
+        }
     }
 
     @Override
     public void engineReset() {
-      try {
-        digest.reset();
-      } catch(DigestException de) {
-        throw new TokenRuntimeException("DigestException: " + de.getMessage());
-      }
+        try {
+            digest.reset();
+        } catch (DigestException de) {
+            throw new TokenRuntimeException("DigestException: " + de.getMessage());
+        }
     }
 
     @Override
