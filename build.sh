@@ -57,12 +57,12 @@ usage() {
     echo "    --help                 Show help message."
     echo
     echo "Target:"
-    echo "    dist     Build JSS binaries."
+    echo "    dist     Build JSS binaries (default)."
     echo "    install  Install JSS binaries."
     echo "    src      Generate RPM sources."
     echo "    spec     Generate RPM spec."
     echo "    srpm     Build SRPM package."
-    echo "    rpm      Build RPM packages (default)."
+    echo "    rpm      Build RPM packages."
 }
 
 generate_rpm_sources() {
@@ -353,6 +353,16 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     if [ "$WITHOUT_TEST" != true ] ; then
         ctest --output-on-failure
     fi
+
+    echo
+    echo "Build artifacts:"
+    echo "- Java archive: $WORK_DIR/jss.jar"
+    echo "- shared library: $WORK_DIR/libjss.so"
+    echo "- documentation: $WORK_DIR/docs"
+    echo
+    echo "To install the build: $0 install"
+    echo "To create RPM packages: $0 rpm"
+    echo
 
     exit
 fi
