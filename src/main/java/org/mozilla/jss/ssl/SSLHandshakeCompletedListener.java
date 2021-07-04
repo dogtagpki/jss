@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /*
  * SSLHandshakeCompletedListener.java
- * 
- * 
+ *
+ *
  */
 
 package org.mozilla.jss.ssl;
@@ -16,5 +16,5 @@ import java.util.*;
  * handshake is complete.
  */
 public interface SSLHandshakeCompletedListener extends EventListener {
-    public void handshakeCompleted(SSLHandshakeCompletedEvent event);
+public void handshakeCompleted(SSLHandshakeCompletedEvent event);
 }

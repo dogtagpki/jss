@@ -13,28 +13,28 @@ package org.mozilla.jss.ssl;
  */
 public class SSLSocketException extends java.net.SocketException {
 
-    private static final long serialVersionUID = 1L;
-    private int errcode = -1;
+private static final long serialVersionUID = 1L;
+private int errcode = -1;
 
-    public SSLSocketException() {
-        super();
-    }
+public SSLSocketException() {
+	super();
+}
 
-    public SSLSocketException(String msg) {
-        super(msg);
-    }
+public SSLSocketException(String msg) {
+	super(msg);
+}
 
-    public SSLSocketException(String msg, int errcode) {
-        super(msg);
-        this.errcode = errcode;
-    }
+public SSLSocketException(String msg, int errcode) {
+	super(msg);
+	this.errcode = errcode;
+}
 
-    /**
-     * Returns an error code, as defined in class
-     * <code>org.mozilla.jss.util.NativeErrcodes</code>.
-     * @see org.mozilla.jss.util.NativeErrcodes
-     */
-    public int getErrcode() {
-        return errcode;
-    }
+/**
+ * Returns an error code, as defined in class
+ * <code>org.mozilla.jss.util.NativeErrcodes</code>.
+ * @see org.mozilla.jss.util.NativeErrcodes
+ */
+public int getErrcode() {
+	return errcode;
+}
 }
