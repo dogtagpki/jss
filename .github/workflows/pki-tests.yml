@@ -68,6 +68,43 @@ jobs:
           name: jss-runner-${{ matrix.os }}
           path: /tmp/jss-runner.tar
 
+  pki-build-test:
+    name: Building PKI
+    needs: [init, build]
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/jss
+      COPR_REPO: "@pki/master"
+    strategy:
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Download runner image
+        uses: actions/download-artifact@v2
+        with:
+          name: jss-runner-${{ matrix.os }}
+          path: /tmp
+
+      - name: Load runner image
+        run: docker load --input /tmp/jss-runner.tar
+
+      - name: Run container
+        run: |
+          IMAGE=jss-runner \
+          NAME=pki \
+          HOSTNAME=pki.example.com \
+          tests/bin/runner-init.sh
+
+      - name: Build PKI
+        run: |
+          docker exec pki dnf install -y git rpm-build
+          docker exec pki git clone https://github.com/dogtagpki/pki
+          docker exec pki dnf build-dep -y --spec pki/pki.spec
+          docker exec pki pki/build.sh --with-timestamp --with-commit-id rpm
+          docker exec pki dnf install -y /root/build/pki/RPMS/*.rpm
+
   ca-test:
     name: Installing CA
     needs: [init, build]
