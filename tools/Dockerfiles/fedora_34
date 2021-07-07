@@ -36,6 +36,7 @@ CMD true \
                    --pkcs11n /usr/include/nss3/pkcs11n.h \
                    -o PKCS11Constants-py2.java \
                    --verbose \
+        && diff PKCS11Constants-py2.java src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java \
         && echo "############################################################" \
         && echo "## Generating PKCS #11 constants with Python 3" \
         && python3 ./tools/build_pkcs11_constants.py -s \
@@ -43,6 +44,5 @@ CMD true \
                    --pkcs11n /usr/include/nss3/pkcs11n.h \
                    -o PKCS11Constants-py3.java \
                    --verbose \
-        && diff PKCS11Constants-py2.java PKCS11Constants-py3.java \
         && diff PKCS11Constants-py3.java src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java \
         && true
