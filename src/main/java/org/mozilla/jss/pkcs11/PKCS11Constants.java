@@ -7074,6 +7074,55 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKS_NSS_UNINITIALIZED = 0xFFFFFFFFL;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKS_NSS_FIPS_NOT_OK = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKS_NSS_FIPS_OK = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKT_NSS_SESSION_CHECK = 0x00000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKT_NSS_OBJECT_CHECK = 0x00000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKT_NSS_BOTH_CHECK = 0x00000003L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKT_NSS_SESSION_LAST_CHECK = 0x00000004L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKR_NSS = 0xCE534350L;
 
     /**
