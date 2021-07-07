@@ -43,7 +43,7 @@ Lastly, run the utility:
     python3 ./tools/build_pkcs11_constants.py --system \
         --pkcs11t /usr/include/nss3/pkcs11t.h \
         --pkcs11n /usr/include/nss3/pkcs11n.h \
-        --output org/mozilla/jss/pkcs11/PKCS11Constants.java
+        --output src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
 
 While not required, it is suggested to use the `--system` flag to ensure
 the values of `PKCS11Constants.java` are the same as the installed NSS
@@ -106,7 +106,7 @@ For more information about this script, please refer to the comments therein.
 ## Java Test
 
 Included in the test suite when run on a JDK8 machine is a test called
-[`TestPKCS11Constants`](../org/mozilla/jss/tests/TestPKCS11Constants.java).
+[`TestPKCS11Constants`](../src/test/java/org/mozilla/jss/tests/TestPKCS11Constants.java).
 This uses reflection to compare the values of the PKCS11Constants.java
 provided by JSS and the version provided by Sun, reporting constants in
 four categories:

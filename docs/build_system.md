@@ -12,10 +12,10 @@ built in five stages:
 
 1. Classes are built from Java source and JNI headers are generated. This is
    done in a single pass of the `javac` compiler. All Java source files under
-   `org/` are currently compiled to the `build/classes/` folder.
+   `src/main/java/` are currently compiled to the `build/classes/` folder.
 2. Any C header files are moved to the `build/includes/` folder.
 3. C source files are compiled to objects and linked to form `libjss.so`,
-   excluding any C source files in `org/mozilla/jss/tests`. If any exist,
+   excluding any C source files in `src/test/java/`. If any exist,
    they'll be compiled at a later stage for `ctest`. This step is dependent
    on steps 1 and 2.
 4. Build the JAR archive from compiled Java classes. Note that at this time,
