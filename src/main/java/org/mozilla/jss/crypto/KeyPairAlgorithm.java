@@ -24,11 +24,10 @@ public class KeyPairAlgorithm extends Algorithm {
      * on the token even if it doesn't support the keypair gen algorithm.
      * We do this by doing the keypair gen on the internal module and then
      * moving the key out to the other token.
+     * 
      * @return Algorithm family.
      */
-    public Algorithm
-    getAlgFamily()
-    {
+    public Algorithm getAlgFamily() {
         return algFamily;
     }
 
@@ -41,13 +40,12 @@ public class KeyPairAlgorithm extends Algorithm {
      * @param algName Algorithm name.
      * @return Key pair generation algorithm.
      * @throws NoSuchAlgorithmException If the name of the algorithm is not
-     *  recognized as a supported algorithm.
+     *             recognized as a supported algorithm.
      */
     public static KeyPairAlgorithm fromString(String algName)
-        throws NoSuchAlgorithmException
-    {
+            throws NoSuchAlgorithmException {
         KeyPairAlgorithm alg = nameMap.get(algName);
-        if( alg == null ) {
+        if (alg == null) {
             throw new NoSuchAlgorithmException();
         }
         return alg;
@@ -58,26 +56,21 @@ public class KeyPairAlgorithm extends Algorithm {
     ////////////////////////////////////////////////////////////////
     // Key-Pair Generation Algorithms
     ////////////////////////////////////////////////////////////////
-    public static final Algorithm
-    RSAFamily = new Algorithm(SEC_OID_PKCS1_RSA_ENCRYPTION, "RSA");
+    public static final Algorithm RSAFamily = new Algorithm(SEC_OID_PKCS1_RSA_ENCRYPTION, "RSA");
 
-    public static final Algorithm
-    DSAFamily = new Algorithm(SEC_OID_ANSIX9_DSA_SIGNATURE, "DSA");
+    public static final Algorithm DSAFamily = new Algorithm(SEC_OID_ANSIX9_DSA_SIGNATURE, "DSA");
 
     public static final Algorithm
 
-//    To support both ECDSA and ECDH, it is best to provide two EC Families;
-//    However, since there is no token that does only CKM_DERIVE to
-//    date, we will just do ECDSA for now as it is sufficient enough today.
-//    This fix will support tokens that do not do ECDH
+    //    To support both ECDSA and ECDH, it is best to provide two EC Families;
+    //    However, since there is no token that does only CKM_DERIVE to
+    //    date, we will just do ECDSA for now as it is sufficient enough today.
+    //    This fix will support tokens that do not do ECDH
     ECFamily = new Algorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST, "EC");
 
-    public static final KeyPairAlgorithm
-    RSA = new KeyPairAlgorithm(CKM_RSA_PKCS_KEY_PAIR_GEN, "RSA", RSAFamily);
+    public static final KeyPairAlgorithm RSA = new KeyPairAlgorithm(CKM_RSA_PKCS_KEY_PAIR_GEN, "RSA", RSAFamily);
 
-    public static final KeyPairAlgorithm
-    DSA = new KeyPairAlgorithm(CKM_DSA_KEY_PAIR_GEN, "DSA", DSAFamily);
+    public static final KeyPairAlgorithm DSA = new KeyPairAlgorithm(CKM_DSA_KEY_PAIR_GEN, "DSA", DSAFamily);
 
-    public static final KeyPairAlgorithm
-    EC = new KeyPairAlgorithm(CKM_EC_KEY_PAIR_GEN, "EC", ECFamily);
+    public static final KeyPairAlgorithm EC = new KeyPairAlgorithm(CKM_EC_KEY_PAIR_GEN, "EC", ECFamily);
 }

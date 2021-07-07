@@ -10,7 +10,10 @@ package org.mozilla.jss.crypto;
  */
 public class AlreadyInitializedException extends java.lang.Exception {
     private static final long serialVersionUID = 1L;
-    public AlreadyInitializedException() {}
+
+    public AlreadyInitializedException() {
+    }
+
     public AlreadyInitializedException(String mesg) {
         super(mesg);
     }
@@ -19,7 +22,8 @@ public class AlreadyInitializedException extends java.lang.Exception {
         super(mesg, cause);
     }
 
-    public AlreadyInitializedException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public AlreadyInitializedException(String mesg, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

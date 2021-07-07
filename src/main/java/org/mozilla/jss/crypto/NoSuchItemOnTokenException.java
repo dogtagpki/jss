@@ -12,7 +12,8 @@ public class NoSuchItemOnTokenException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public NoSuchItemOnTokenException() {}
+    public NoSuchItemOnTokenException() {
+    }
 
     public NoSuchItemOnTokenException(String mesg) {
         super(mesg);
@@ -22,7 +23,8 @@ public class NoSuchItemOnTokenException extends Exception {
         super(mesg, cause);
     }
 
-    public NoSuchItemOnTokenException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public NoSuchItemOnTokenException(String mesg, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }
