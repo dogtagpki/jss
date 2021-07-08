@@ -18,8 +18,12 @@ following dependencies are available in your `CLASSPATH`:
    `/usr/share/java/slf4j/slf4j-api.jar`.
  - `apache-commons-lang.jar` -- provided by the `apache-commons-lang` package
    and installed to `/usr/share/java/apache-commons-lang.jar`.
- - `jaxb-api.jar` -- provided by the `glassfish-jaxb-api` package
-   and installed to `/usr/share/java/jaxb-api.jar`.
+ - `jackson-annotations.jar` -- provided by the `jackson-annotations` package and installed to
+   `/usr/share/java/jackson-annotations.jar`.
+ - `jackson-core.jar` -- provided by the `jackson-core` package and installed to
+   `/usr/share/java/jackson-core.jar`.
+ - `jackson-databind.jar` -- provided by the `jackson-databind` package and installed to
+   `/usr/share/java/jackson-databind.jar`.
 
 Note that the above paths and packages are for Fedora; for a list of packages
 in Debian, please see the [dependencies document](dependencies.md). Note that
