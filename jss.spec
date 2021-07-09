@@ -29,6 +29,13 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Patch: jss-VERSION-RELEASE.patch
 
 ################################################################################
+# NSS
+################################################################################
+
+%define min_nss_version 3.44.0
+%define max_nss_version 3.66.0
+
+################################################################################
 # Java
 ################################################################################
 
@@ -55,8 +62,9 @@ BuildRequires:  zip
 BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
-BuildRequires:  nss-devel >= 3.66
-BuildRequires:  nss-tools >= 3.66
+BuildRequires:  nss-devel >= %{min_nss_version}, nss-devel < %{max_nss_version}
+BuildRequires:  nss-util-devel >= %{nss_version}, nss-util-devel < %{max_nss_version}
+BuildRequires:  nss-tools >= %{min_nss_version}, nss-tools < %{max_nss_version}
 BuildRequires:  %{java_devel}
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
@@ -66,7 +74,9 @@ BuildRequires:  apache-commons-lang3
 
 BuildRequires:  junit
 
-Requires:       nss >= 3.66
+Requires:       nss >= %{min_nss_version}, nss < %{max_nss_version}
+Requires:       nss-util >= %{min_nss_version}, nss-util < %{max_nss_version}
+Requires:       nss-tools >= %{min_nss_version}, nss-tools < %{max_nss_version}
 Requires:       %{java_headless}
 Requires:       jpackage-utils
 Requires:       slf4j
