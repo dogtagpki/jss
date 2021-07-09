@@ -224,8 +224,16 @@ macro(jss_config_java)
         NAMES apache-commons-lang3 commons-lang3
     )
     find_jar(
-        JAXB_JAR
-        NAMES jaxb-api
+        JACKSON2_ANNOTATIONS_JAR
+        NAMES jackson-annotations libjackson2-annotations-java
+    )
+    find_jar(
+        JACKSON2_CORE_JAR
+        NAMES jackson-core libjackson2-core-java
+    )
+    find_jar(
+        JACKSON2_DATABIND_JAR
+        NAMES jackson-databind libjackson2-databind-java
     )
     find_jar(
         SLF4J_JDK14_JAR
@@ -249,8 +257,16 @@ macro(jss_config_java)
         message(FATAL_ERROR "Required dependency apache-commons-lang.jar not found by find_jar!")
     endif()
 
-    if(JAXB_JAR STREQUAL "JAXB_JAR-NOTFOUND")
-        message(FATAL_ERROR "Required dependency javaee-jaxb-api.jar not found by find_jar!")
+    if(JACKSON2_ANNOTATIONS_JAR STREQUAL "JACKSON2_ANNOTATIONS_JAR-NOTFOUND")
+        message(FATAL_ERROR "Required dependency jackson-annotations.jar not found by find_jar!")
+    endif()
+
+    if(JACKSON2_CORE_JAR STREQUAL "JACKSON2_CORE_JAR-NOTFOUND")
+        message(FATAL_ERROR "Required dependency jackson-core.jar not found by find_jar!")
+    endif()
+
+    if(JACKSON2_DATABIND_JAR STREQUAL "JACKSON2_DATABIND_JAR-NOTFOUND")
+        message(FATAL_ERROR "Required dependency jackson-databind.jar not found by find_jar!")
     endif()
 
     if(SLF4J_JDK14_JAR STREQUAL "SLF4J_JDK14_JAR-NOTFOUND")
@@ -266,8 +282,8 @@ macro(jss_config_java)
     endif()
 
     # Set class paths
-    set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}:${JAXB_JAR}")
-    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${HAMCREST_JAR}")
+    set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}:${JACKSON2_ANNOTATIONS_JAR}:${JACKSON2_CORE_JAR}:${JACKSON2_DATABIND_JAR}")
+    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${HAMCREST_JAR}:${JACKSON2_ANNOTATIONS_JAR}:${JACKSON2_CORE_JAR}:${JACKSON2_DATABIND_JAR}")
 
     message(STATUS "javac classpath: ${JAVAC_CLASSPATH}")
     message(STATUS "tests classpath: ${TEST_CLASSPATH}")

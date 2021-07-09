@@ -23,6 +23,13 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+
 /**
  * Represent the enumerated type used in CRLReason Extension of CRL entry.
  *
@@ -30,13 +37,14 @@ import java.util.Map;
  * @author galperin
  * @version $Revision$, $Date$
  */
-
+@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class RevocationReason implements Serializable {
     private static final long serialVersionUID = -2582403666913588806L;
 
-    public static final Collection<RevocationReason> INSTANCES = new ArrayList<RevocationReason>();
-    public static final Map<Integer, RevocationReason> CODES = new LinkedHashMap<Integer, RevocationReason>();
-    public static final Map<String, RevocationReason> LABELS = new LinkedHashMap<String, RevocationReason>();
+    public static final Collection<RevocationReason> INSTANCES = new ArrayList<>();
+    public static final Map<Integer, RevocationReason> CODES = new LinkedHashMap<>();
+    public static final Map<String, RevocationReason> LABELS = new LinkedHashMap<>();
 
     /**
      * Reasons
@@ -70,6 +78,8 @@ public final class RevocationReason implements Serializable {
         CODES.put(reason, this);
         LABELS.put(label.toLowerCase(), this);
     }
+
+    private RevocationReason() {} // Required for Jackson serialisation
 
     public int getCode() {
         return code;
@@ -127,4 +137,18 @@ public final class RevocationReason implements Serializable {
         result = prime * result + ((label == null) ? 0 : label.hashCode());
         return result;
     }
+
+    public String toJSON() throws Exception {
+        return new ObjectMapper()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .setAnnotationIntrospector(new JacksonAnnotationIntrospector())
+                .writeValueAsString(this);
+    }
+
+    public static RevocationReason fromJSON(String json) throws Exception {
+        return new ObjectMapper()
+                .setAnnotationIntrospector(new JacksonAnnotationIntrospector())
+                .readValue(json, RevocationReason.class);
+    }
+
 }

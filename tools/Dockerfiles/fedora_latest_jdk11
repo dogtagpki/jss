@@ -4,7 +4,8 @@ FROM registry.fedoraproject.org/fedora:latest
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build cmake \
-                          glassfish-jaxb-api java-11-openjdk nss-tools \
+                          java-11-openjdk nss-tools \
+                          jackson-annotations jackson-core jackson-databind \
                           apache-commons-lang3 gcc-c++ java-11-openjdk-devel \
                           jpackage-utils slf4j nss zlib-devel nss-devel \
                           nspr-devel perl slf4j-jdk14 junit \

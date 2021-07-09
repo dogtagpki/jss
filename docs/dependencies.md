@@ -11,7 +11,7 @@ This project has the following dependencies:
  - [OpenJDK 1.8.0 or newer](http://openjdk.java.net/)
  - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
- - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
+ - [Jackson](https://github.com/FasterXML/jackson/)
  - [SLF4J](https://www.slf4j.org/)
 
 Additionally, a zipping and unzipping program is required to create
@@ -20,15 +20,15 @@ reproducible builds.
 To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-lang gcc-c++ java-devel jpackage-utils \
-                     slf4j zlib-devel glassfish-jaxb-api nss-tools nss-devel \
-                     cmake junit
+                     slf4j zlib-devel nss-tools nss-devel cmake junit \
+                     jackson-annotations jackson-core jackson-databind
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-lang-java libnss3-dev \
                          libslf4j-java default-jdk pkg-config zlib1g-dev \
-                         libjaxb-api-java libnss3-tools cmake zip unzip \
-                         junit4
+                         libnss3-tools cmake zip unzip junit4 \
+                         jackson-annotations jackson-core jackson-databind
 
 ## Test Suite Dependencies:
 
@@ -53,10 +53,12 @@ To install these dependencies on Debian, execute the following:
 At run time, the following JARs are required to be specified on the
 `CLASSPATH` of anyone wishing to use JSS:
 
+ - `jackson-annotations.jar`
+ - `jackson-core.jar`
+ - `jackson-databind.jar`
  - `jss.jar`
  - `slf4j-api.jar`
  - `apache-commons-lang.jar`
- - `jaxb-api.jar`
 
 Note that these should already be installed when building JSS. For more
 information, please refer to our documentation on using JSS:
