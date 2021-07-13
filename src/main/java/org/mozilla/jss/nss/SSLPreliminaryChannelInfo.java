@@ -57,13 +57,13 @@ public class SSLPreliminaryChannelInfo {
      * NSS gives the following description of this field:
      *
      * The number of early data octets that a client is permitted to send on
-     * this connection.  The value will be zero if the connection was not
-     * resumed or early data is not permitted.  For a client, this value only
-     * has meaning if |canSendEarlyData| is true.  For a server, this indicates
+     * this connection. The value will be zero if the connection was not
+     * resumed or early data is not permitted. For a client, this value only
+     * has meaning if |canSendEarlyData| is true. For a server, this indicates
      * the value that was advertised in the session ticket that was used to
      * resume this session.
      */
-     private long maxEarlyDataSize;
+    private long maxEarlyDataSize;
 
     /**
      * This field controls whether or not we have the zeroRttCipherSuite
@@ -87,9 +87,9 @@ public class SSLPreliminaryChannelInfo {
      *
      * NSS gives the following description of this field:
      *
-     * This reports the cipher suite used for 0-RTT if it sent or accepted.  For
+     * This reports the cipher suite used for 0-RTT if it sent or accepted. For
      * a client, this is set earlier than |cipherSuite|, and will match that
-     * value if 0-RTT is accepted by the server.  The server only sets this
+     * value if 0-RTT is accepted by the server. The server only sets this
      * after accepting 0-RTT, so this will contain the same value.
      */
     private SSLCipher zeroRttCipherSuite;
@@ -97,9 +97,9 @@ public class SSLPreliminaryChannelInfo {
     /**
      * This field controls whether or not we have the following three fields:
      *
-     *  - peerDelegCred,
-     *  - authKeyBits, and
-     *  - signatureScheme.
+     * - peerDelegCred,
+     * - authKeyBits, and
+     * - signatureScheme.
      *
      * When this field is true, these fields could be set with a value.
      * Otherwise, their values should be ignored. Check the corresponding
@@ -151,10 +151,9 @@ public class SSLPreliminaryChannelInfo {
      * This translates between ints and enum constants.
      */
     public SSLPreliminaryChannelInfo(long valuesSet, int protocolVersion,
-        int cipherSuite, boolean canSendEarlyData, long maxEarlyDataSize,
-        boolean haveNSS343, int zeroRttCipherSuite, boolean haveNSS348,
-        boolean peerDelegCred, int authKeyBits, int signatureScheme)
-    {
+            int cipherSuite, boolean canSendEarlyData, long maxEarlyDataSize,
+            boolean haveNSS343, int zeroRttCipherSuite, boolean haveNSS348,
+            boolean peerDelegCred, int authKeyBits, int signatureScheme) {
         this.valuesSet = valuesSet;
 
         if (haveProtocolVersion()) {

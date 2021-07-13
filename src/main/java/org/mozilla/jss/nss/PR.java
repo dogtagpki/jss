@@ -10,7 +10,7 @@ public class PR {
      * Shut down the receiving side of the TCP connection.
      *
      * See also: Shutdown
-    */
+     */
     public static final int SHUTDOWN_RCV = getPRShutdownRcv();
 
     /**
@@ -63,8 +63,9 @@ public class PR {
      * See also: newBufferPRFileDesc in org/mozilla/jss/ssl/javax/BufferPRFD.h
      */
     public static native PRFDProxy NewBufferPRFD(BufferProxy read_buf,
-                                                 BufferProxy write_buf,
-                                                 byte[] peer_info);
+            BufferProxy write_buf,
+            byte[] peer_info);
+
     /**
      * Close an existing PRFDProxy, clearing the pointer if successful.
      *
@@ -89,7 +90,7 @@ public class PR {
      * Close an existing SSLFDProxy.
      *
      * See also: org.mozilla.jss.nss.PR.Close
-     *           org.mozilla.jss.nss.SSLFDProxy.releaseNativeResources
+     * org.mozilla.jss.nss.SSLFDProxy.releaseNativeResources
      */
     public synchronized static int Close(SSLFDProxy fd) throws Exception {
         if (fd == null || fd.isNull()) {
@@ -124,7 +125,7 @@ public class PR {
      * See also: PR_Recv in /usr/include/nspr4/prio.h
      */
     public static native byte[] Recv(PRFDProxy fd, int amount, int flags,
-                                     long timeout);
+            long timeout);
 
     /**
      * Write the specified bytes to the PRFDProxy.
@@ -143,7 +144,7 @@ public class PR {
      * See also: PR_Send in /usr/include/nspr4/prio.h
      */
     public static native int Send(PRFDProxy fd, byte[] buf, int flags,
-                                  long timeout);
+            long timeout);
 
     /**
      * Get the value of the current PR error. This is cleared on each NSPR
@@ -167,6 +168,7 @@ public class PR {
 
         return new String(text);
     }
+
     private static native byte[] GetErrorTextNative();
 
     /**
@@ -183,12 +185,17 @@ public class PR {
 
         return new String(name);
     }
+
     private static native byte[] ErrorToNameNative(int code);
 
     /* Internal methods for querying constants. */
     private static native int getPRShutdownRcv();
+
     private static native int getPRShutdownSend();
+
     private static native int getPRShutdownBoth();
+
     private static native int getPRSuccess();
+
     private static native int getPRFailure();
 }

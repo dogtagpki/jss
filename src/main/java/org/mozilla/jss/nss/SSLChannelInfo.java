@@ -39,12 +39,12 @@ public class SSLChannelInfo {
      *
      * NSS describes this as follows:
      *
-     * The strength of the key used to authenticate the peer.  Before
+     * The strength of the key used to authenticate the peer. Before
      * interpreting this value, check authType, signatureScheme, and
      * peerDelegCred, to determine the type of the key and how it was used.
      *
      * Typically, this is the length of the key from the peer's end-entity
-     * certificate.  If delegated credentials are used (i.e., peerDelegCred is
+     * certificate. If delegated credentials are used (i.e., peerDelegCred is
      * PR_TRUE), then this is the strength of the delegated credential key.
      */
     private int authKeyBits;
@@ -177,8 +177,8 @@ public class SSLChannelInfo {
     /**
      * This field controls whether or not we have the following two fields:
      *
-     *  - originalKeaGroup, and
-     *  - resumed.
+     * - originalKeaGroup, and
+     * - resumed.
      *
      * When this field is true, the values of these fields can be trusted.
      * Otherwise, their values should be ignored.
@@ -234,14 +234,13 @@ public class SSLChannelInfo {
      * This translates between ints and enum constants.
      */
     public SSLChannelInfo(int protocolVersion, int cipherSuite,
-        int authKeyBits, int keaKeyBits, long creationTime,
-        long lastAccessTime, long expirationTime, byte[] sessionID,
-        int compressionMethod, boolean extendedMasterSecretUsed,
-        boolean earlyDataAccepted, int keaType, int keaGroup, int symCipher,
-        int macAlgorithm, int authType, int signatureScheme,
-        boolean haveNSS334, int originalKeaGroup, boolean resumed,
-        boolean haveNSS345, boolean peerDelegCred)
-    {
+            int authKeyBits, int keaKeyBits, long creationTime,
+            long lastAccessTime, long expirationTime, byte[] sessionID,
+            int compressionMethod, boolean extendedMasterSecretUsed,
+            boolean earlyDataAccepted, int keaType, int keaGroup, int symCipher,
+            int macAlgorithm, int authType, int signatureScheme,
+            boolean haveNSS334, int originalKeaGroup, boolean resumed,
+            boolean haveNSS345, boolean peerDelegCred) {
         try {
             this.protocolVersion = SSLVersion.valueOf(protocolVersion);
         } catch (IllegalArgumentException iae) {
@@ -289,119 +288,153 @@ public class SSLChannelInfo {
      *
      * See also: protocolVersion
      */
-    public SSLVersion getProtocolVersion() { return protocolVersion; }
+    public SSLVersion getProtocolVersion() {
+        return protocolVersion;
+    }
 
     /**
      * Gets the value of cipherSuite.
      *
      * See also: cipherSuite.
      */
-    public SSLCipher getCipherSuite() { return cipherSuite; }
+    public SSLCipher getCipherSuite() {
+        return cipherSuite;
+    }
 
     /**
      * Gets the value of authKeyBits.
      *
      * See also: authKeyBits.
      */
-    public int getAuthKeyBits() { return authKeyBits; }
+    public int getAuthKeyBits() {
+        return authKeyBits;
+    }
 
     /**
      * Gets the value of keaKeyBits.
      *
      * See also: keaKeyBits.
      */
-    public int getKeaKeyBits() { return keaKeyBits; }
+    public int getKeaKeyBits() {
+        return keaKeyBits;
+    }
 
     /**
      * Gets the value of creationTime.
      *
      * See also: creationTime.
      */
-    public long getCreationTime() { return creationTime; }
+    public long getCreationTime() {
+        return creationTime;
+    }
 
     /**
      * Gets the value of lastAccessTime.
      *
      * See also: lastAccessTime.
      */
-    public long getLastAccessTime() { return lastAccessTime; }
+    public long getLastAccessTime() {
+        return lastAccessTime;
+    }
 
     /**
      * Gets the value of expirationTime.
      *
      * See also: expirationTime.
      */
-    public long getExpirationTime() { return expirationTime; }
+    public long getExpirationTime() {
+        return expirationTime;
+    }
 
     /**
      * Gets the value of sessionID.
      *
      * See also: sessionID.
      */
-    public byte[] getSessionID() { return sessionID; }
+    public byte[] getSessionID() {
+        return sessionID;
+    }
 
     /**
      * Gets the value of compressionMethod.
      *
      * See also: compressionMethod.
      */
-    public SSLCompressionMethod getCompressionMethod() { return compressionMethod; }
+    public SSLCompressionMethod getCompressionMethod() {
+        return compressionMethod;
+    }
 
     /**
      * Gets the value of extendedMasterSecretUsed.
      *
      * See also: extendedMasterSecretUsed.
      */
-    public boolean getExtendedMasterSecretUsed() { return extendedMasterSecretUsed; }
+    public boolean getExtendedMasterSecretUsed() {
+        return extendedMasterSecretUsed;
+    }
 
     /**
      * Gets the value of earlyDataAccepted.
      *
      * See also: earlyDataAccepted.
      */
-    public boolean getEarlyDataAccepted() { return earlyDataAccepted; }
+    public boolean getEarlyDataAccepted() {
+        return earlyDataAccepted;
+    }
 
     /**
      * Gets the value of keaType.
      *
      * See also: keaType.
      */
-    public SSLKEAType getKeaType() { return keaType; }
+    public SSLKEAType getKeaType() {
+        return keaType;
+    }
 
     /**
      * Gets the value of keaGroup.
      *
      * See also: keaGroup.
      */
-    public SSLNamedGroup getKeaGroup() { return keaGroup; }
+    public SSLNamedGroup getKeaGroup() {
+        return keaGroup;
+    }
 
     /**
      * Gets the value of symCipher.
      *
      * See also: symCipher.
      */
-    public SSLCipherAlgorithm getSymCipher() { return symCipher; }
+    public SSLCipherAlgorithm getSymCipher() {
+        return symCipher;
+    }
 
     /**
      * Gets the value of macAlgorithm.
      *
      * See also: macAlgorithm.
      */
-    public SSLMACAlgorithm getMacAlgorithm() { return macAlgorithm; }
+    public SSLMACAlgorithm getMacAlgorithm() {
+        return macAlgorithm;
+    }
 
     /**
      * Gets the value of authType.
      *
      * See also: authType.
      */
-    public SSLAuthType getAuthType() { return authType; }
+    public SSLAuthType getAuthType() {
+        return authType;
+    }
 
     /**
      * Gets the value of signatureScheme.
      *
      * See also: signatureScheme.
      */
-    public SSLSignatureScheme getSignatureScheme() { return signatureScheme; }
+    public SSLSignatureScheme getSignatureScheme() {
+        return signatureScheme;
+    }
 
     /**
      * Gets the value of originalKeaGroup; throws an exception when the

@@ -7,4 +7,5 @@
 jobject JSS_PR_wrapJBuffer(JNIEnv *env, j_buffer **buffer);
 
 /* Extract a j_buffer pointer from an instance of a BufferProxy. */
-PRStatus JSS_PR_unwrapJBuffer(JNIEnv *env, jobject buffer_proxy, j_buffer **buffer);
+PRStatus JSS_PR_unwrapJBuffer(JNIEnv *env, jobject buffer_proxy,
+		j_buffer **buffer);

@@ -22,5 +22,6 @@ public class PRErrors {
     public static final int SOCKET_SHUTDOWN_ERROR = getSocketShutdownError();
 
     private static native int getWouldBlockError();
+
     private static native int getSocketShutdownError();
 }

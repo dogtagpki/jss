@@ -11,7 +11,7 @@ public class SSLErrors {
     /**
      * Certificate has a bad hostname.
      *
-     * See also:  in /usr/include/nss3/sslcerr.h
+     * See also: in /usr/include/nss3/sslcerr.h
      */
     public static final int BAD_CERT_DOMAIN = getBadCertDomain();
 

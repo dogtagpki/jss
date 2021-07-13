@@ -14,23 +14,23 @@ public class Cert {
 
         // Lower case, no spaces. Easier to find matches in
         // messy messages.
-        String message = excpt.getMessage().toLowerCase().replaceAll("\\s+","");
+        String message = excpt.getMessage().toLowerCase().replaceAll("\\s+", "");
 
         if (excpt instanceof CertificateEncodingException ||
-            message.contains("encoding") ||
-            excpt instanceof CertificateParsingException ||
-            message.contains("parsing")) {
+                message.contains("encoding") ||
+                excpt instanceof CertificateParsingException ||
+                message.contains("parsing")) {
             return SECErrors.BAD_DER;
         }
 
         if (excpt instanceof CertificateExpiredException ||
-            message.contains("expired")) {
+                message.contains("expired")) {
             return SECErrors.EXPIRED_CERTIFICATE;
         }
 
         if (excpt instanceof CertificateNotYetValidException ||
-            message.contains("notyetvalid") ||
-            message.contains("notvalid")) {
+                message.contains("notyetvalid") ||
+                message.contains("notvalid")) {
             return SECErrors.CERT_NOT_VALID;
         }
 
@@ -41,7 +41,7 @@ public class Cert {
         }
 
         if (excpt instanceof CertificateRevokedException ||
-            message.contains("revoked")) {
+                message.contains("revoked")) {
             return SECErrors.REVOKED_CERTIFICATE;
         }
 

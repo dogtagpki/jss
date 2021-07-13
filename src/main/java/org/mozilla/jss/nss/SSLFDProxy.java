@@ -34,10 +34,11 @@ public class SSLFDProxy extends PRFDProxy {
 
     public void SetClientCert(X509Certificate cert) throws IllegalArgumentException {
         if (!(cert instanceof PK11Cert)) {
-            throw new IllegalArgumentException("Unable to cast given certificate to PK11Cert: " + cert.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Unable to cast given certificate to PK11Cert: " + cert.getClass().getName());
         }
 
-        clientCert = (PK11Cert)cert;
+        clientCert = (PK11Cert) cert;
     }
 
     @Override

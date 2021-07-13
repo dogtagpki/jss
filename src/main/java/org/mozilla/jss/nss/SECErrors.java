@@ -58,10 +58,16 @@ public class SECErrors {
     public static final int UNTRUSTED_CERT = getUntrustedCert();
 
     private static native int getBadDER();
+
     private static native int getExpiredCertificate();
+
     private static native int getCertNotValid();
+
     private static native int getRevokedCertificateOCSP();
+
     private static native int getRevokedCertificate();
+
     private static native int getUntrustedIssuer();
+
     private static native int getUntrustedCert();
 }
