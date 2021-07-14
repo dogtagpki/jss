@@ -10,11 +10,9 @@ import java.io.IOException;
 
 import org.mozilla.jss.util.AssertionException;
 
-
 abstract class PK11Key
-    implements java.security.Key,
-               java.lang.AutoCloseable
-{
+        implements java.security.Key,
+        java.lang.AutoCloseable {
 
     //////////////////////////////////////////////////////////
     // Public Interface
@@ -38,8 +36,8 @@ abstract class PK11Key
     /////////////////////////////////////////////////////////////
     // Construction
     /////////////////////////////////////////////////////////////
-    protected PK11Key() {}
-        
+    protected PK11Key() {
+    }
 
     /////////////////////////////////////////////////////////////
     // Implementation
@@ -52,10 +50,9 @@ abstract class PK11Key
     }
 
     private void readObject(ObjectInputStream in)
-        throws IOException, ClassNotFoundException {
+            throws IOException, ClassNotFoundException {
         throw new AssertionException("PKCS#11 Key is not really serializable");
     }
-
 
     /////////////////////////////////////////////////////////////
     // Members

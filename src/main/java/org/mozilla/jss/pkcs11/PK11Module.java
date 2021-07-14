@@ -18,7 +18,7 @@ public final class PK11Module {
      * This constructor should only be called from native code.
      */
     private PK11Module(byte[] pointer) {
-        assert(pointer!=null);
+        assert (pointer != null);
         moduleProxy = new ModuleProxy(pointer);
         reloadTokens();
     }

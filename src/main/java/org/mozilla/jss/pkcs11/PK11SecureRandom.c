@@ -64,102 +64,91 @@
  */
 
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed
-    ( JNIEnv* env, jobject this, jbyteArray jseed )
-{
-    /*
-     * "JNI" data members
-     */
+Java_org_mozilla_jss_pkcs11_PK11SecureRandom_setSeed(JNIEnv *env, jobject this,
+		jbyteArray jseed) {
+	/*
+	 * "JNI" data members
+	 */
 
-    jbyte*    jdata   = NULL;
-    jsize     jlen    = 0;
+	jbyte *jdata = NULL;
+	jsize jlen = 0;
 
+	/*
+	 * "C" data members
+	 */
 
-    /*
-     * "C" data members
-     */
+	PRThread *VARIABLE_MAY_NOT_BE_USED pThread = NULL;
+	SECStatus status = PR_FALSE;
+	PK11SlotInfo *slot = NULL;
 
-    PRThread*     VARIABLE_MAY_NOT_BE_USED pThread = NULL;
-    SECStatus     status  = PR_FALSE;
-    PK11SlotInfo* slot    = NULL;
+	/*
+	 * Perform initial assertions
+	 */
 
+	PR_ASSERT(env != NULL && this != NULL);
 
-    /*
-     * Perform initial assertions
-     */
+	/*
+	 * Attach to the external java thread
+	 */
 
-    PR_ASSERT( env != NULL && this != NULL );
+	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
+	PR_ASSERT(pThread != NULL);
 
+	/*
+	 * Obtain the appropriate "slot"
+	 */
 
-    /*
-     * Attach to the external java thread
-     */
+	slot = PK11_GetBestSlot(CKM_FAKE_RANDOM, NULL);
+	if (slot == NULL) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
 
-    pThread = PR_AttachThread( PR_SYSTEM_THREAD, 0, NULL );
-    PR_ASSERT( pThread != NULL );
+	/*
+	 * Convert "JNI jbyteArray" into "JNI jbyte*" so
+	 * that it can be cast into a "C unsigned char*";
+	 * also get its length.
+	 */
 
+	JSS_RefByteArray(env, jseed, &jdata, &jlen);
 
-    /*
-     * Obtain the appropriate "slot"
-     */
+	/*
+	 * Seed the pseudo-random number generator;
+	 * currently, failures from this routine are ignored
+	 */
 
-    slot = PK11_GetBestSlot( CKM_FAKE_RANDOM, NULL );
-    if( slot == NULL ) {
-        PR_ASSERT( PR_FALSE );
-        goto finish;
-    }
+	status = PK11_SeedRandom(slot, (unsigned char*) jdata, (int) jlen);
+	if (status != SECSuccess) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
 
+	finish:
 
-    /*
-     * Convert "JNI jbyteArray" into "JNI jbyte*" so
-     * that it can be cast into a "C unsigned char*";
-     * also get its length.
-     */
+	/*
+	 * Copy back the contents of the "JNI jbyte*" and
+	 * free any resources associated with it
+	 */
 
-    JSS_RefByteArray(env, jseed, &jdata, &jlen);
+	JSS_DerefByteArray(env, jseed, jdata, 0);
 
+	/*
+	 * Free any "C" resources
+	 */
 
-    /*
-     * Seed the pseudo-random number generator;
-     * currently, failures from this routine are ignored
-     */
+	if (slot != NULL) {
+		PK11_FreeSlot(slot);
+	}
+	slot = NULL;
 
-    status = PK11_SeedRandom( slot, ( unsigned char* ) jdata, ( int ) jlen );
-    if( status != SECSuccess ) {
-        PR_ASSERT( PR_FALSE );
-        goto finish;
-    }
+	/*
+	 * Detach from the external java thread and return
+	 */
 
+	PR_DetachThread();
 
-finish:
-
-    /*
-     * Copy back the contents of the "JNI jbyte*" and
-     * free any resources associated with it
-     */
-
-    JSS_DerefByteArray(env, jseed, jdata, 0);
-
-
-    /*
-     * Free any "C" resources
-     */
-
-    if( slot != NULL ) {
-        PK11_FreeSlot( slot );
-    }
-    slot = NULL;
-
-
-    /*
-     * Detach from the external java thread and return
-     */
-
-    PR_DetachThread();
-
-    return;
+	return;
 }
-
 
 /*
  * JNI FUNCTION:  PK11SecureRandom.nextBytes
@@ -204,75 +193,67 @@ finish:
  */
 
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11SecureRandom_nextBytes
-    ( JNIEnv* env, jobject this, jbyteArray jbytes )
-{
-    /*
-     * "JNI" data members
-     */
+Java_org_mozilla_jss_pkcs11_PK11SecureRandom_nextBytes(JNIEnv *env,
+		jobject this, jbyteArray jbytes) {
+	/*
+	 * "JNI" data members
+	 */
 
-    jbyte*    jdata   = NULL;
-    jsize     jlen    = 0;
+	jbyte *jdata = NULL;
+	jsize jlen = 0;
 
+	/*
+	 * "C" data members
+	 */
 
-    /*
-     * "C" data members
-     */
+	PRThread *VARIABLE_MAY_NOT_BE_USED pThread = NULL;
+	SECStatus status = PR_FALSE;
 
-    PRThread*     VARIABLE_MAY_NOT_BE_USED pThread = NULL;
-    SECStatus     status  = PR_FALSE;
+	/*
+	 * Perform initial assertions
+	 */
 
+	PR_ASSERT(env != NULL && this != NULL);
 
-    /*
-     * Perform initial assertions
-     */
+	/*
+	 * Attach to the external java thread
+	 */
 
-    PR_ASSERT( env != NULL && this != NULL );
+	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
+	PR_ASSERT(pThread != NULL);
 
+	/*
+	 * Convert "JNI jbyteArray" into "JNI jbyte*" so
+	 * that it can be cast into a "C unsigned char*";
+	 * also get its length.
+	 */
+	JSS_RefByteArray(env, jbytes, &jdata, &jlen);
 
-    /*
-     * Attach to the external java thread
-     */
+	/*
+	 * Generate a pseudo-random number; currently,
+	 * failures from this routine are ignored
+	 */
 
-    pThread = PR_AttachThread( PR_SYSTEM_THREAD, 0, NULL );
-    PR_ASSERT( pThread != NULL );
+	status = PK11_GenerateRandom((unsigned char*) jdata, (int) jlen);
+	if (status != SECSuccess) {
+		goto finish;
+	}
 
+	finish:
 
-    /*
-     * Convert "JNI jbyteArray" into "JNI jbyte*" so
-     * that it can be cast into a "C unsigned char*";
-     * also get its length.
-     */
-    JSS_RefByteArray(env, jbytes, &jdata, &jlen);
+	/*
+	 * Copy back the contents of the "JNI jbyte*" and
+	 * free any resources associated with it
+	 */
 
+	JSS_DerefByteArray(env, jbytes, jdata, 0);
 
-    /*
-     * Generate a pseudo-random number; currently,
-     * failures from this routine are ignored
-     */
+	/*
+	 * Detach from the external java thread and return
+	 */
 
-    status = PK11_GenerateRandom( ( unsigned char* ) jdata, ( int ) jlen );
-    if( status != SECSuccess ) {
-        goto finish;
-    }
+	PR_DetachThread();
 
-
-finish:
-
-    /*
-     * Copy back the contents of the "JNI jbyte*" and
-     * free any resources associated with it
-     */
-
-    JSS_DerefByteArray(env, jbytes, jdata, 0);
-
-
-    /*
-     * Detach from the external java thread and return
-     */
-
-    PR_DetachThread();
-
-    return;
+	return;
 }
 

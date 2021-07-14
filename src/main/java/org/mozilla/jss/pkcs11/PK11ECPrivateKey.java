@@ -7,13 +7,14 @@ import java.math.BigInteger;
 import org.mozilla.jss.crypto.PrivateKey;
 
 public class PK11ECPrivateKey
-    extends PK11PrivKey
-    implements ECPrivateKey
-{
+        extends PK11PrivKey
+        implements ECPrivateKey {
 
     private static final long serialVersionUID = 1L;
 
-    private PK11ECPrivateKey() { super(null); }
+    private PK11ECPrivateKey() {
+        super(null);
+    }
 
     protected PK11ECPrivateKey(byte[] pointer) {
         super(pointer);
@@ -28,10 +29,12 @@ public class PK11ECPrivateKey
     public ECParameterSpec getParams() {
         PK11PubKey publicKey = getPublicKey();
         if (!(publicKey instanceof PK11ECPublicKey)) {
-            throw new RuntimeException("Unknown key type: expected the public key of an EC key to be an PK11ECPublicKey; got: " + publicKey);
+            throw new RuntimeException(
+                    "Unknown key type: expected the public key of an EC key to be an PK11ECPublicKey; got: "
+                            + publicKey);
         }
 
-        PK11ECPublicKey ecPublicKey = (PK11ECPublicKey)publicKey;
+        PK11ECPublicKey ecPublicKey = (PK11ECPublicKey) publicKey;
         return ecPublicKey.getParams();
     }
 

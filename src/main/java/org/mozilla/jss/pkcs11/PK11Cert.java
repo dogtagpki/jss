@@ -15,12 +15,10 @@ import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class PK11Cert
-       extends java.security.cert.X509Certificate
-       implements org.mozilla.jss.crypto.X509Certificate,
-                  java.lang.AutoCloseable
-{
+        extends java.security.cert.X509Certificate
+        implements org.mozilla.jss.crypto.X509Certificate,
+        java.lang.AutoCloseable {
     public static Logger logger = LoggerFactory.getLogger(PK11Cert.class);
 
     // Internal X509CertImpl to handle java.security.cert.X509Certificate
@@ -69,18 +67,18 @@ public class PK11Cert
         }
 
         @Override
-        public boolean
-        equals(Object other) {
-            if( ! (other instanceof StringPrincipal) ) {
+        public boolean equals(Object other) {
+            if (!(other instanceof StringPrincipal)) {
                 return false;
             }
-            return getName().equals( ((StringPrincipal)other).getName() );
+            return getName().equals(((StringPrincipal) other).getName());
         }
 
         @Override
         public String getName() {
             return str;
         }
+
         @Override
         public int hashCode() {
             return str.hashCode();
@@ -90,36 +88,35 @@ public class PK11Cert
         public String toString() {
             return str;
         }
+
         protected String str;
     }
 
     @Override
-    public Principal
-    getSubjectDN() {
-        return new StringPrincipal( getSubjectDNString() );
+    public Principal getSubjectDN() {
+        return new StringPrincipal(getSubjectDNString());
     }
 
     @Override
-    public Principal
-    getIssuerDN() {
-        return new StringPrincipal( getIssuerDNString() );
+    public Principal getIssuerDN() {
+        return new StringPrincipal(getIssuerDNString());
     }
 
     @Override
-    public BigInteger
-    getSerialNumber() {
-        return new BigInteger( getSerialNumberByteArray() );
+    public BigInteger getSerialNumber() {
+        return new BigInteger(getSerialNumberByteArray());
     }
+
     protected native byte[] getSerialNumberByteArray();
 
     protected native String getSubjectDNString();
 
     protected native String getIssuerDNString();
 
-	@Override
+    @Override
     public native java.security.PublicKey getPublicKey();
 
-	@Override
+    @Override
     public native int getVersion();
 
     /* Begin methods necessary for java.security.cert.X509Certificate */
@@ -270,8 +267,7 @@ public class PK11Cert
 
     @Override
     public void checkValidity()
-            throws CertificateExpiredException, CertificateNotYetValidException
-    {
+            throws CertificateExpiredException, CertificateNotYetValidException {
         try {
             if (x509 == null) {
                 x509 = new X509CertImpl(getEncoded());
@@ -289,8 +285,7 @@ public class PK11Cert
 
     @Override
     public void checkValidity(Date date)
-            throws CertificateExpiredException, CertificateNotYetValidException
-    {
+            throws CertificateExpiredException, CertificateNotYetValidException {
         try {
             if (x509 == null) {
                 x509 = new X509CertImpl(getEncoded());
@@ -322,8 +317,7 @@ public class PK11Cert
     @Override
     public void verify(PublicKey key)
             throws CertificateException, NoSuchAlgorithmException,
-            InvalidKeyException, NoSuchProviderException, SignatureException
-    {
+            InvalidKeyException, NoSuchProviderException, SignatureException {
         try {
             if (x509 == null) {
                 x509 = new X509CertImpl(getEncoded());
@@ -348,8 +342,7 @@ public class PK11Cert
     @Override
     public void verify(PublicKey key, String sigProvider)
             throws CertificateException, NoSuchAlgorithmException,
-            InvalidKeyException, NoSuchProviderException, SignatureException
-    {
+            InvalidKeyException, NoSuchProviderException, SignatureException {
         try {
             if (x509 == null) {
                 x509 = new X509CertImpl(getEncoded());
@@ -481,30 +474,30 @@ public class PK11Cert
      */
     protected native int getTrust(int type);
 
-	/////////////////////////////////////////////////////////////
-	// Construction
-	/////////////////////////////////////////////////////////////
-	//PK11Cert(CertProxy proxy) {
+    /////////////////////////////////////////////////////////////
+    // Construction
+    /////////////////////////////////////////////////////////////
+    //PK11Cert(CertProxy proxy) {
     //    assert(proxy!=null);
-	//	this.certProxy = proxy;
-	//}
+    //	this.certProxy = proxy;
+    //}
 
-	PK11Cert(byte[] certPtr, byte[] slotPtr, String nickname) {
-        assert(certPtr!=null);
-        assert(slotPtr!=null);
-		certProxy = new CertProxy(certPtr);
-		tokenProxy = new TokenProxy(slotPtr);
-		this.nickname = nickname;
-	}
+    PK11Cert(byte[] certPtr, byte[] slotPtr, String nickname) {
+        assert (certPtr != null);
+        assert (slotPtr != null);
+        certProxy = new CertProxy(certPtr);
+        tokenProxy = new TokenProxy(slotPtr);
+        this.nickname = nickname;
+    }
 
-	/////////////////////////////////////////////////////////////
-	// private data
-	/////////////////////////////////////////////////////////////
-	protected CertProxy certProxy;
+    /////////////////////////////////////////////////////////////
+    // private data
+    /////////////////////////////////////////////////////////////
+    protected CertProxy certProxy;
 
-	protected TokenProxy tokenProxy;
+    protected TokenProxy tokenProxy;
 
-	protected String nickname;
+    protected String nickname;
 }
 
 class CertProxy extends org.mozilla.jss.util.NativeProxy {

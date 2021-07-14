@@ -21,37 +21,35 @@
 #include "pk11util.h"
 #include <jssutil.h>
 
-
 /*
  * Class:     org_mozilla_jss_pkcs11_PK11Cert
  * Method:    getEncoded
  * Signature: ()[B
  */
-JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getEncoded
-  (JNIEnv *env, jobject this)
-{
-	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
+JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getEncoded(
+		JNIEnv *env, jobject this) {
+	PRThread *VARIABLE_MAY_NOT_BE_USED pThread;
 	CERTCertificate *cert;
 	SECItem *derCert;
-	jbyteArray derArray=NULL;
+	jbyteArray derArray = NULL;
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
 
-	PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
 	/*
 	 * extract the DER cert from the CERTCertificate*
 	 */
-	if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 	PR_ASSERT(cert != NULL);
 
 	derCert = &cert->derCert;
 	/* the SECItem type does not have to be siDERCertBuffer */
-	if(derCert->data==NULL || derCert->len<1) {
+	if (derCert->data == NULL || derCert->len < 1) {
 		JSS_throw(env, CERTIFICATE_ENCODING_EXCEPTION);
 		goto finish;
 	}
@@ -65,8 +63,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getEncoded
 		goto finish;
 	}
 
-finish:
-	PR_DetachThread();
+	finish: PR_DetachThread();
 	return derArray;
 }
 
@@ -75,40 +72,38 @@ finish:
  * Method:    getVersion
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getVersion
-  (JNIEnv *env, jobject this)
-{
-	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
+JNIEXPORT jint JNICALL Java_org_mozilla_jss_pkcs11_PK11Cert_getVersion(
+		JNIEnv *env, jobject this) {
+	PRThread *VARIABLE_MAY_NOT_BE_USED pThread;
 	CERTCertificate *cert;
 	long lVersion = 0;
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
 
-	PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
 	/*
 	 * Get the version from the CERTCertificate *
 	 */
-	if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
-	PR_ASSERT(cert!=NULL);
+	PR_ASSERT(cert != NULL);
 
-	if(cert->version.data==NULL || cert->version.len<=0) {
-        /* default value is 0 */
-        lVersion = 0;
-        goto finish;
-    }
+	if (cert->version.data == NULL || cert->version.len <= 0) {
+		/* default value is 0 */
+		lVersion = 0;
+		goto finish;
+	}
 
 	lVersion = DER_GetInteger(&cert->version);
 
 	/* jint is 2s complement 32 bits.  The max value is 0111...111. */
-	PR_ASSERT( (lVersion >= 0L) && (lVersion < (long)0x7fffffff) );
+	PR_ASSERT((lVersion >= 0L) && (lVersion < (long) 0x7fffffff));
 
-finish:
-	PR_DetachThread();
+	finish: PR_DetachThread();
 	return (jint) lVersion;
 }
 
@@ -120,42 +115,38 @@ finish:
  * in a Java wrapper, and returns it.
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getPublicKey
-	(JNIEnv *env, jobject this)
-{
+Java_org_mozilla_jss_pkcs11_PK11Cert_getPublicKey(JNIEnv *env, jobject this) {
 	CERTCertificate *cert;
-	SECKEYPublicKey *pubk=NULL;
-	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
-	jobject pubKey=NULL;
+	SECKEYPublicKey *pubk = NULL;
+	PRThread *VARIABLE_MAY_NOT_BE_USED pThread;
+	jobject pubKey = NULL;
 
-	PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
 
-	if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 
 	pubk = CERT_ExtractPublicKey(cert);
-	if(pubk==NULL) {
-		PR_ASSERT( PR_GetError() == SEC_ERROR_NO_MEMORY);
+	if (pubk == NULL) {
+		PR_ASSERT(PR_GetError() == SEC_ERROR_NO_MEMORY);
 		JSS_throw(env, OUT_OF_MEMORY_ERROR);
 		goto finish;
 	}
 
 	pubKey = JSS_PK11_wrapPubKey(env, &pubk);
-	if(pubKey == NULL) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+	if (pubKey == NULL) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
 		goto finish;
 	}
 
-finish:
-	if(pubk!=NULL) {
+	finish: if (pubk != NULL) {
 		SECKEY_DestroyPublicKey(pubk);
-	}
-	PR_DetachThread();
+	} PR_DetachThread();
 	return pubKey;
 }
 
@@ -166,20 +157,19 @@ finish:
  * Calls CERT_DestroyCertificate on the underlying CERTCertificate.
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_CertProxy_releaseNativeResources
-  (JNIEnv *env, jobject this)
-{
+Java_org_mozilla_jss_pkcs11_CertProxy_releaseNativeResources(JNIEnv *env,
+		jobject this) {
 	CERTCertificate *cert = NULL;
-	PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
+	PRThread *VARIABLE_MAY_NOT_BE_USED pThread;
 
-	PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
 	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
 	PR_ASSERT(pThread != NULL);
 
 	/* Get the CERTCertificate structure */
-	if(JSS_getPtrFromProxy(env, this, (void**)&cert) != PR_SUCCESS) {
-		PR_ASSERT( PR_FALSE );
+	if (JSS_getPtrFromProxy(env, this, (void**) &cert) != PR_SUCCESS) {
+		PR_ASSERT(PR_FALSE);
 		goto finish;
 	}
 
@@ -187,10 +177,8 @@ Java_org_mozilla_jss_pkcs11_CertProxy_releaseNativeResources
 		CERT_DestroyCertificate(cert);
 	}
 
-finish:
-	PR_DetachThread();
+	finish: PR_DetachThread();
 }
-	
 
 /******************************************************************
  *
@@ -203,14 +191,13 @@ finish:
  * ptr: Address of a CERTCertificate* that will receive the pointer.
  * Returns: PR_SUCCESS for success, PR_FAILURE if an exception was thrown.
  */
-PRStatus
-JSS_PK11_getCertPtr(JNIEnv *env, jobject certObject, CERTCertificate **ptr)
-{
-	PR_ASSERT(env!=NULL && certObject!=NULL && ptr!=NULL);
+PRStatus JSS_PK11_getCertPtr(JNIEnv *env, jobject certObject,
+		CERTCertificate **ptr) {
+	PR_ASSERT(env != NULL && certObject != NULL && ptr != NULL);
 
 	/* Get the pointer from the cert proxy */
 	return JSS_getPtrFromProxyOwner(env, certObject, CERT_PROXY_FIELD,
-			CERT_PROXY_SIG, (void**)ptr);
+	CERT_PROXY_SIG, (void**) ptr);
 }
 
 /******************************************************************
@@ -224,14 +211,13 @@ JSS_PK11_getCertPtr(JNIEnv *env, jobject certObject, CERTCertificate **ptr)
  * ptr: Address of a PK11SlotInfo* that will receive the pointer.
  * Returns: PR_SUCCESS for success, PR_FAILURE if an exception was thrown.
  */
-PRStatus
-JSS_PK11_getCertSlotPtr(JNIEnv *env, jobject certObject, PK11SlotInfo **ptr)
-{
-	PR_ASSERT(env!=NULL && certObject!=NULL && ptr!=NULL);
+PRStatus JSS_PK11_getCertSlotPtr(JNIEnv *env, jobject certObject,
+		PK11SlotInfo **ptr) {
+	PR_ASSERT(env != NULL && certObject != NULL && ptr != NULL);
 
 	/* Get the pointer from the token proxy */
 	return JSS_getPtrFromProxyOwner(env, certObject, PK11TOKEN_PROXY_FIELD,
-			PK11TOKEN_PROXY_SIG, (void**)ptr);
+	PK11TOKEN_PROXY_SIG, (void**) ptr);
 }
 
 /*
@@ -250,35 +236,33 @@ JSS_PK11_getCertSlotPtr(JNIEnv *env, jobject certObject, PK11SlotInfo **ptr)
  * Find the slot containing the token with the given name
  * and cert.
  */
-static PK11SlotInfo *
-findSlotByTokenNameAndCert(char *name, CERTCertificate *cert)
-{
-    PK11SlotList *list;
-    PK11SlotListElement *le;
-    PK11SlotInfo *slot = NULL;
+static PK11SlotInfo*
+findSlotByTokenNameAndCert(char *name, CERTCertificate *cert) {
+	PK11SlotList *list;
+	PK11SlotListElement *le;
+	PK11SlotInfo *slot = NULL;
 
-    list = PK11_GetAllTokens(CKM_INVALID_MECHANISM, PR_FALSE, PR_FALSE, NULL);
-    if(list == NULL) {
-        return NULL;
-    }
+	list = PK11_GetAllTokens(CKM_INVALID_MECHANISM, PR_FALSE, PR_FALSE, NULL);
+	if (list == NULL) {
+		return NULL;
+	}
 
-    for(le = list->head; le; le = le->next) {
-        if( (PORT_Strcmp(PK11_GetTokenName(le->slot),name) == 0) &&
-                (PK11_FindCertInSlot(le->slot,cert,NULL) !=
-                CK_INVALID_HANDLE)) {
-            slot = PK11_ReferenceSlot(le->slot);
-            break;
-        }
-    }
-    PK11_FreeSlotList(list);
+	for (le = list->head; le; le = le->next) {
+		if ((PORT_Strcmp(PK11_GetTokenName(le->slot), name) == 0)
+				&& (PK11_FindCertInSlot(le->slot, cert, NULL)
+						!= CK_INVALID_HANDLE)) {
+			slot = PK11_ReferenceSlot(le->slot);
+			break;
+		}
+	}
+	PK11_FreeSlotList(list);
 
-    if(slot == NULL) {
-        PORT_SetError(SEC_ERROR_NO_TOKEN);
-    }
+	if (slot == NULL) {
+		PORT_SetError(SEC_ERROR_NO_TOKEN);
+	}
 
-    return slot;
+	return slot;
 }
-
 
 /*************************************************************************
  *
@@ -291,33 +275,31 @@ findSlotByTokenNameAndCert(char *name, CERTCertificate *cert)
  * contains the specified token is returned.  Otherwise the internal
  * key slot (which contains the permanent database token) is returned.
  */
-CERTCertificate *
+CERTCertificate*
 JSS_PK11_findCertAndSlotFromNickname(const char *nickname, void *wincx,
-    PK11SlotInfo **ppSlot)
-{
-    CERTCertificate *cert;
+		PK11SlotInfo **ppSlot) {
+	CERTCertificate *cert;
 
-    cert = PK11_FindCertFromNickname(nickname, wincx);
-    if(cert == NULL) {
-        return NULL;
-    }
-    if( PORT_Strchr(nickname, ':')) {
-        char* tokenname = PORT_Strdup(nickname);
-        char* colon = PORT_Strchr(tokenname, ':');
-        *colon = '\0';
-        *ppSlot = findSlotByTokenNameAndCert(tokenname, cert);
-        PORT_Free(tokenname);
-        if(*ppSlot == NULL) {
-            /* The token containing the cert was just removed. */
-            CERT_DestroyCertificate(cert);
-            return NULL;
-        }
-    } else {
-        *ppSlot = PK11_GetInternalKeySlot();
-    }
-    return cert;
+	cert = PK11_FindCertFromNickname(nickname, wincx);
+	if (cert == NULL) {
+		return NULL;
+	}
+	if (PORT_Strchr(nickname, ':')) {
+		char *tokenname = PORT_Strdup(nickname);
+		char *colon = PORT_Strchr(tokenname, ':');
+		*colon = '\0';
+		*ppSlot = findSlotByTokenNameAndCert(tokenname, cert);
+		PORT_Free(tokenname);
+		if (*ppSlot == NULL) {
+			/* The token containing the cert was just removed. */
+			CERT_DestroyCertificate(cert);
+			return NULL;
+		}
+	} else {
+		*ppSlot = PK11_GetInternalKeySlot();
+	}
+	return cert;
 }
-
 
 /***************************************************************************
  *
@@ -330,34 +312,32 @@ JSS_PK11_findCertAndSlotFromNickname(const char *nickname, void *wincx,
  * contains the specified token is returned.  Otherwise the internal
  * key slot (which contains the permanent database token) is returned.
  */
-CERTCertList *
+CERTCertList*
 JSS_PK11_findCertsAndSlotFromNickname(char *nickname, void *wincx,
-    PK11SlotInfo **ppSlot)
-{
-    CERTCertList *certList;
+		PK11SlotInfo **ppSlot) {
+	CERTCertList *certList;
 
-    certList = PK11_FindCertsFromNickname(nickname, wincx);
-    if(certList == NULL) {
-        return NULL;
-    }
-    if( PORT_Strchr(nickname, ':')) {
-        char* tokenname = PORT_Strdup(nickname);
-        char* colon = PORT_Strchr(tokenname, ':');
-        CERTCertListNode *head = CERT_LIST_HEAD(certList);
-        *colon = '\0';
-        *ppSlot = findSlotByTokenNameAndCert(tokenname, head->cert);
-        PORT_Free(tokenname);
-        if(*ppSlot == NULL) {
-            /* The token containing the certs was just removed. */
-            CERT_DestroyCertList(certList);
-            return NULL;
-        }
-    } else {
-        *ppSlot = PK11_GetInternalKeySlot();
-    }
-    return certList;
+	certList = PK11_FindCertsFromNickname(nickname, wincx);
+	if (certList == NULL) {
+		return NULL;
+	}
+	if (PORT_Strchr(nickname, ':')) {
+		char *tokenname = PORT_Strdup(nickname);
+		char *colon = PORT_Strchr(tokenname, ':');
+		CERTCertListNode *head = CERT_LIST_HEAD(certList);
+		*colon = '\0';
+		*ppSlot = findSlotByTokenNameAndCert(tokenname, head->cert);
+		PORT_Free(tokenname);
+		if (*ppSlot == NULL) {
+			/* The token containing the certs was just removed. */
+			CERT_DestroyCertList(certList);
+			return NULL;
+		}
+	} else {
+		*ppSlot = PK11_GetInternalKeySlot();
+	}
+	return certList;
 }
-
 
 /***********************************************************************
  *
@@ -371,19 +351,16 @@ JSS_PK11_findCertsAndSlotFromNickname(char *nickname, void *wincx,
  * returns: a new PK11Cert wrapping the CERTCertificate, PK11SlotInfo,
  *		and nickname, or NULL if an exception was thrown.
  */
-jobject
-JSS_PK11_wrapCertAndSlotAndNickname(JNIEnv *env, CERTCertificate **cert,
-    PK11SlotInfo **slot, const char *nickname)
-{
+jobject JSS_PK11_wrapCertAndSlotAndNickname(JNIEnv *env, CERTCertificate **cert,
+		PK11SlotInfo **slot, const char *nickname) {
 	jclass certClass;
 	jmethodID constructor;
 	jbyteArray certPtr;
 	jbyteArray slotPtr;
 	jstring jnickname = NULL;
-	jobject Cert=NULL;
+	jobject Cert = NULL;
 
-	PR_ASSERT(env!=NULL && cert!=NULL && *cert!=NULL
-		&& slot!=NULL);
+	PR_ASSERT(env != NULL && cert != NULL && *cert != NULL && slot != NULL);
 
 	certPtr = JSS_ptrToByteArray(env, *cert);
 	slotPtr = JSS_ptrToByteArray(env, *slot);
@@ -392,32 +369,29 @@ JSS_PK11_wrapCertAndSlotAndNickname(JNIEnv *env, CERTCertificate **cert,
 	}
 
 	certClass = (*env)->FindClass(env, INTERNAL_TOKEN_CERT_CLASS_NAME);
-	if(certClass == NULL) {
+	if (certClass == NULL) {
 		ASSERT_OUTOFMEM(env);
 		goto finish;
 	}
 
-	constructor = (*env)->GetMethodID(
-							env,
-							certClass,
-							PLAIN_CONSTRUCTOR,
-							CERT_CONSTRUCTOR_SIG);
-	if(constructor == NULL) {
+	constructor = (*env)->GetMethodID(env, certClass,
+	PLAIN_CONSTRUCTOR,
+	CERT_CONSTRUCTOR_SIG);
+	if (constructor == NULL) {
 		ASSERT_OUTOFMEM(env);
 		goto finish;
 	}
 
 	/* Call the constructor */
-	Cert = (*env)->NewObject(env, certClass, constructor, certPtr,
-		slotPtr, jnickname);
-	if(Cert==NULL) {
+	Cert = (*env)->NewObject(env, certClass, constructor, certPtr, slotPtr,
+			jnickname);
+	if (Cert == NULL) {
 		goto finish;
 	}
 
-finish:
-	if(Cert==NULL) {
+	finish: if (Cert == NULL) {
 		CERT_DestroyCertificate(*cert);
-		if(*slot!=NULL) {
+		if (*slot != NULL) {
 			PK11_FreeSlot(*slot);
 		}
 	}
@@ -437,10 +411,8 @@ finish:
  * returns: a new PK11Cert wrapping the CERTCertificate and PK11SlotInfo,
  *		or NULL if an exception was thrown.
  */
-jobject
-JSS_PK11_wrapCertAndSlot(JNIEnv *env, CERTCertificate **cert,
-    PK11SlotInfo **slot)
-{
+jobject JSS_PK11_wrapCertAndSlot(JNIEnv *env, CERTCertificate **cert,
+		PK11SlotInfo **slot) {
 	return JSS_PK11_wrapCertAndSlotAndNickname(env, cert, slot,
 			(*cert)->nickname);
 }
@@ -458,32 +430,28 @@ JSS_PK11_wrapCertAndSlot(JNIEnv *env, CERTCertificate **cert,
  * object to have the correct slot pointer or the slot pointer is readily
  * available.
  */
-jobject
-JSS_PK11_wrapCert(JNIEnv *env, CERTCertificate **cert)
-{
+jobject JSS_PK11_wrapCert(JNIEnv *env, CERTCertificate **cert) {
 	PK11SlotInfo *slot = (*cert)->slot;
-	if(slot != NULL) {
+	if (slot != NULL) {
 		slot = PK11_ReferenceSlot(slot);
 	}
 	return JSS_PK11_wrapCertAndSlot(env, cert, &slot);
 }
 
-static ssize_t
-CERT_LIST_COUNT(CERTCertList *chain) {
-    ssize_t count = -1;
-    CERTCertListNode *node = NULL;
+static ssize_t CERT_LIST_COUNT(CERTCertList *chain) {
+	ssize_t count = -1;
+	CERTCertListNode *node = NULL;
 
-    if (chain == NULL) {
-        return count;
-    }
+	if (chain == NULL) {
+		return count;
+	}
 
-    for (node = CERT_LIST_HEAD(chain);
-            !CERT_LIST_END(node, chain);
-            node = CERT_LIST_NEXT(node)) {
-        count += 1;
-    }
+	for (node = CERT_LIST_HEAD(chain); !CERT_LIST_END(node, chain); node =
+			CERT_LIST_NEXT(node)) {
+		count += 1;
+	}
 
-    return count + 1;
+	return count + 1;
 }
 
 /****************************************************************
@@ -498,131 +466,119 @@ CERT_LIST_COUNT(CERTCertList *chain) {
  *      will be set to NULL whether the functions fails or succeeds.
  * Returns: a new Java PK11Cert[] object, or NULL if an exception was thrown.
  */
-jobjectArray
-JSS_PK11_wrapCertChain(JNIEnv *env, CERTCertList **chain)
-{
-    jobjectArray result = NULL;
-    jobject wrappedCert = NULL;
-    CERTCertListNode *node = NULL;
-    ssize_t count = 0;
+jobjectArray JSS_PK11_wrapCertChain(JNIEnv *env, CERTCertList **chain) {
+	jobjectArray result = NULL;
+	jobject wrappedCert = NULL;
+	CERTCertListNode *node = NULL;
+	ssize_t count = 0;
 
-    if (chain == NULL || *chain == NULL) {
-        goto done;
-    }
+	if (chain == NULL || *chain == NULL) {
+		goto done;
+	}
 
-    // Since we can't easily resize our jobjectArray once created, walk the
-    // chain and count its length.
-    count = CERT_LIST_COUNT(*chain);
-    if (count <= 0) {
-        goto done;
-    }
+	// Since we can't easily resize our jobjectArray once created, walk the
+	// chain and count its length.
+	count = CERT_LIST_COUNT(*chain);
+	if (count <= 0) {
+		goto done;
+	}
 
-    // Allocate our result structure.
-    result = (*env)->NewObjectArray(env, count,
-                                    (*env)->FindClass(env, CERT_CLASS_NAME),
-                                    NULL);
-    count = 0;
+	// Allocate our result structure.
+	result = (*env)->NewObjectArray(env, count,
+			(*env)->FindClass(env, CERT_CLASS_NAME), NULL);
+	count = 0;
 
-    for (node = CERT_LIST_HEAD((*chain));
-            !CERT_LIST_END(node, (*chain));
-            node = CERT_LIST_NEXT(node)) {
-        // Wrap the certificate and insert it into the array.
-        wrappedCert = JSS_PK11_wrapCert(env, &node->cert);
-        (*env)->SetObjectArrayElement(env, result, count, wrappedCert);
-        count += 1;
-    }
+	for (node = CERT_LIST_HEAD((*chain)); !CERT_LIST_END(node, (*chain)); node =
+			CERT_LIST_NEXT(node)) {
+		// Wrap the certificate and insert it into the array.
+		wrappedCert = JSS_PK11_wrapCert(env, &node->cert);
+		(*env)->SetObjectArrayElement(env, result, count, wrappedCert);
+		count += 1;
+	}
 
+	done: if (chain) {
+		CERT_DestroyCertList(*chain);
+		*chain = NULL;
+	}
 
-done:
-    if (chain) {
-        CERT_DestroyCertList(*chain);
-        *chain = NULL;
-    }
-
-    return result;
+	return result;
 }
 
 /**********************************************************************
  * PK11Cert.getOwningToken
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getOwningToken
-    (JNIEnv *env, jobject this)
-{
-    PK11SlotInfo *slot;
-    jobject token = NULL;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getOwningToken(JNIEnv *env, jobject this) {
+	PK11SlotInfo *slot;
+	jobject token = NULL;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    /* get the C PK11SlotInfo structure */
-    if( JSS_PK11_getCertSlotPtr(env, this, &slot) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-        goto finish;
-    }
+	/* get the C PK11SlotInfo structure */
+	if (JSS_PK11_getCertSlotPtr(env, this, &slot) != PR_SUCCESS) {
+		PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+		goto finish;
+	}
 
-    PR_ASSERT(slot != NULL);
+	PR_ASSERT(slot != NULL);
 
-    /* wrap the slot in a Java PK11Token */
-    token = JSS_PK11_wrapPK11Token(env, &slot);
-    if(token == NULL) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) );
-        goto finish;
-    }
+	/* wrap the slot in a Java PK11Token */
+	token = JSS_PK11_wrapPK11Token(env, &slot);
+	if (token == NULL) {
+		PR_ASSERT((*env)->ExceptionOccurred(env));
+		goto finish;
+	}
 
-finish:
-    return token;
+	finish: return token;
 }
 
 /*
  * workaround for bug 100791: misspelled function prototypes in pk11func.h
  */
 SECItem*
-PK11_GetLowLevelKeyIDForCert(PK11SlotInfo*,CERTCertificate*,void*);
+PK11_GetLowLevelKeyIDForCert(PK11SlotInfo*, CERTCertificate*, void*);
 
 /**********************************************************************
  * PK11Cert.getUniqueID
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getUniqueID
-    (JNIEnv *env, jobject this)
-{
-    CERTCertificate *cert;
-    SECItem *id = NULL;
-    jbyteArray byteArray=NULL;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getUniqueID(JNIEnv *env, jobject this) {
+	CERTCertificate *cert;
+	SECItem *id = NULL;
+	jbyteArray byteArray = NULL;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    /**************************************************
-     * Get the CERTCertificate structure
-     **************************************************/
-    if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-        goto finish;
-    }
+	/**************************************************
+	 * Get the CERTCertificate structure
+	 **************************************************/
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		goto finish;
+	}
 
-    /***************************************************
-     * Get the id
-     ***************************************************/
-    id = PK11_GetLowLevelKeyIDForCert(NULL /*slot*/, cert, NULL/*pinarg*/);
-    if( id == NULL ) {
-        PR_ASSERT(PR_FALSE);
-        goto finish;
-    }
+	/***************************************************
+	 * Get the id
+	 ***************************************************/
+	id = PK11_GetLowLevelKeyIDForCert(NULL /*slot*/, cert, NULL/*pinarg*/);
+	if (id == NULL) {
+		PR_ASSERT(PR_FALSE);
+		goto finish;
+	}
 
-    /***************************************************
-     * Write the id to a new byte array
-     ***************************************************/
-    byteArray = JSS_ToByteArray(env, id->data, id->len);
-    if (byteArray == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+	/***************************************************
+	 * Write the id to a new byte array
+	 ***************************************************/
+	byteArray = JSS_ToByteArray(env, id->data, id->len);
+	if (byteArray == NULL) {
+		ASSERT_OUTOFMEM(env);
+		goto finish;
+	}
 
-finish:
-    if( id != NULL ) {
-        SECITEM_FreeItem(id, PR_TRUE /*freeit*/);
-    }
+	finish: if (id != NULL) {
+		SECITEM_FreeItem(id, PR_TRUE /*freeit*/);
+	}
 
-    return byteArray;
+	return byteArray;
 }
 
 /**********************************************************************
@@ -630,154 +586,145 @@ finish:
  * satisfy the symbol export file jss.def.
  */
 JNIEXPORT jstring JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getNickname
-    (JNIEnv *env, jobject this)
-{
-    PR_NOT_REACHED("a stub function");
-    return NULL;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getNickname(JNIEnv *env, jobject this) {
+	PR_NOT_REACHED("a stub function");
+	return NULL;
 }
 
 /**********************************************************************
  * PK11Cert.setTrust
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_setTrust
-    (JNIEnv *env, jobject this, jint type, jint newTrust)
-{
-    CERTCertificate *cert;
-    CERTCertTrust trust;
+Java_org_mozilla_jss_pkcs11_PK11Cert_setTrust(JNIEnv *env, jobject this,
+		jint type, jint newTrust) {
+	CERTCertificate *cert;
+	CERTCertTrust trust;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-        return;
-    }
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		return;
+	}
 
-    if( CERT_GetCertTrust( cert, &trust ) != SECSuccess) {
-        /* cert doesn't have any trust yet, so initialize to 0 */
-        memset(&trust, 0, sizeof(trust));
-    }
+	if (CERT_GetCertTrust(cert, &trust) != SECSuccess) {
+		/* cert doesn't have any trust yet, so initialize to 0 */
+		memset(&trust, 0, sizeof(trust));
+	}
 
-    switch(type) {
-    case 0: /* SSL */
-        trust.sslFlags = newTrust;
-        break;
-    case 1: /* email */
-        trust.emailFlags = newTrust;
-        break;
-    case 2: /* object signing */
-        trust.objectSigningFlags = newTrust;
-        break;
-    default:
-        PR_ASSERT(PR_FALSE);
-        return;
-    }
+	switch (type) {
+	case 0: /* SSL */
+		trust.sslFlags = newTrust;
+		break;
+	case 1: /* email */
+		trust.emailFlags = newTrust;
+		break;
+	case 2: /* object signing */
+		trust.objectSigningFlags = newTrust;
+		break;
+	default:
+		PR_ASSERT(PR_FALSE);
+		return;
+	}
 
-    if( CERT_ChangeCertTrust(CERT_GetDefaultCertDB(), cert, &trust)
-            != SECSuccess)
-    {
-        PR_ASSERT(PR_FALSE);
-        return;
-    }
-    return;
+	if (CERT_ChangeCertTrust(CERT_GetDefaultCertDB(), cert, &trust)
+			!= SECSuccess) {
+		PR_ASSERT(PR_FALSE);
+		return;
+	}
+	return;
 }
 
 /**********************************************************************
  * PK11Cert.getTrust
  */
 JNIEXPORT jint JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getTrust
-    (JNIEnv *env, jobject this, jint type)
-{
-    CERTCertificate *cert;
-    CERTCertTrust trust;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getTrust(JNIEnv *env, jobject this,
+		jint type) {
+	CERTCertificate *cert;
+	CERTCertTrust trust;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+	PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-        return 0;
-    }
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		return 0;
+	}
 
-    if( CERT_GetCertTrust( cert, &trust ) != SECSuccess) {
-        PR_ASSERT(PR_FALSE);
-        return 0;
-    }
+	if (CERT_GetCertTrust(cert, &trust) != SECSuccess) {
+		PR_ASSERT(PR_FALSE);
+		return 0;
+	}
 
-    switch(type) {
-    case 0: /* SSL */
-        return trust.sslFlags;
-    case 1: /* email */
-        return trust.emailFlags;
-    case 2: /* object signing */
-        return trust.objectSigningFlags;
-    default:
-        PR_ASSERT(PR_FALSE);
-        return 0;
-    }
+	switch (type) {
+	case 0: /* SSL */
+		return trust.sslFlags;
+	case 1: /* email */
+		return trust.emailFlags;
+	case 2: /* object signing */
+		return trust.objectSigningFlags;
+	default:
+		PR_ASSERT(PR_FALSE);
+		return 0;
+	}
 }
 
 /**********************************************************************
  * PK11Cert.getSerialNumberByteArray
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getSerialNumberByteArray
-    (JNIEnv *env, jobject this)
-{
-    CERTCertificate *cert;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getSerialNumberByteArray(JNIEnv *env,
+		jobject this) {
+	CERTCertificate *cert;
 
-    if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-        return NULL;
-    }
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		return NULL;
+	}
 
-    PR_ASSERT(cert->serialNumber.len > 0);
-    PR_ASSERT(cert->serialNumber.data != NULL);
+	PR_ASSERT(cert->serialNumber.len > 0);
+	PR_ASSERT(cert->serialNumber.data != NULL);
 
-    return JSS_OctetStringToByteArray(env, &cert->serialNumber);
+	return JSS_OctetStringToByteArray(env, &cert->serialNumber);
 }
-
 
 /**********************************************************************
  * PK11Cert.getSubjectDNString
  */
 JNIEXPORT jstring JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getSubjectDNString
-    (JNIEnv *env, jobject this)
-{
-    CERTCertificate *cert;
-    char *ascii;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getSubjectDNString(JNIEnv *env,
+		jobject this) {
+	CERTCertificate *cert;
+	char *ascii;
 
-    if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-        return NULL;
-    }
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		return NULL;
+	}
 
-    ascii = CERT_NameToAscii(&cert->subject);
+	ascii = CERT_NameToAscii(&cert->subject);
 
-    if( ascii ) {
-        return (*env)->NewStringUTF(env, ascii);
-    } else {
-        return NULL;
-    }
+	if (ascii) {
+		return (*env)->NewStringUTF(env, ascii);
+	} else {
+		return NULL;
+	}
 }
 
 /**********************************************************************
  * PK11Cert.getIssuerDNString
  */
 JNIEXPORT jstring JNICALL
-Java_org_mozilla_jss_pkcs11_PK11Cert_getIssuerDNString
-    (JNIEnv *env, jobject this)
-{
-    CERTCertificate *cert;
-    char *ascii;
+Java_org_mozilla_jss_pkcs11_PK11Cert_getIssuerDNString(JNIEnv *env,
+		jobject this) {
+	CERTCertificate *cert;
+	char *ascii;
 
-    if( JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
-        return NULL;
-    }
+	if (JSS_PK11_getCertPtr(env, this, &cert) != PR_SUCCESS) {
+		return NULL;
+	}
 
-    ascii = CERT_NameToAscii(&cert->issuer);
+	ascii = CERT_NameToAscii(&cert->issuer);
 
-    if( ascii ) {
-        return (*env)->NewStringUTF(env, ascii);
-    } else {
-        return NULL;
-    }
+	if (ascii) {
+		return (*env)->NewStringUTF(env, ascii);
+	} else {
+		return NULL;
+	}
 }

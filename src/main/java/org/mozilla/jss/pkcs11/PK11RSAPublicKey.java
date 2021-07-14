@@ -8,29 +8,32 @@ import java.security.interfaces.RSAPublicKey;
 import java.math.BigInteger;
 
 public class PK11RSAPublicKey extends PK11PubKey implements RSAPublicKey {
-    
+
     private static final long serialVersionUID = 1L;
+
     public PK11RSAPublicKey(byte[] pointer) {
         super(pointer);
     }
 
     @Override
     public BigInteger getModulus() {
-      try {
-        return new BigInteger(1, getModulusByteArray());
-      } catch( NumberFormatException e) {
-        return null;
-      }
+        try {
+            return new BigInteger(1, getModulusByteArray());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
+
     private native byte[] getModulusByteArray();
 
     @Override
     public BigInteger getPublicExponent() {
-      try {
-        return new BigInteger(1, getPublicExponentByteArray());
-      } catch( NumberFormatException e) {
-        return null;
-      }
+        try {
+            return new BigInteger(1, getPublicExponentByteArray());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
+
     private native byte[] getPublicExponentByteArray();
 }

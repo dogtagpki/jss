@@ -12,6 +12,7 @@ import org.mozilla.jss.util.EC;
 public final class PK11ECPublicKey extends PK11PubKey implements ECPublicKey {
 
     private static final long serialVersionUID = 1L;
+
     public PK11ECPublicKey(byte[] pointer) {
         super(pointer);
     }
@@ -33,5 +34,6 @@ public final class PK11ECPublicKey extends PK11PubKey implements ECPublicKey {
     }
 
     private native byte[] getCurveByteArray();
+
     public native byte[] getWByteArray();
 }

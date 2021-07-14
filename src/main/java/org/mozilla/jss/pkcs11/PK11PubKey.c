@@ -34,8 +34,7 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PublicKeyProxy_releaseNativeR
 
     PR_ASSERT(env!=NULL && this!=NULL);
 
-    pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
-    PR_ASSERT(pThread != NULL);
+    pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);PR_ASSERT(pThread != NULL);
 
     /* Get the SECKEYPublicKey structure */
     if(JSS_getPtrFromProxy(env, this, (void**) &pubk) != PR_SUCCESS) {
@@ -48,77 +47,71 @@ JNIEXPORT void JNICALL Java_org_mozilla_jss_pkcs11_PublicKeyProxy_releaseNativeR
     }
 
 finish:
-    PR_DetachThread();
-    return;
+    PR_DetachThread(); return;
 }
 
 /***********************************************************************
-** JSS_PK11_wrapPubKey
-*/
-jobject
-JSS_PK11_wrapPubKey(JNIEnv *env, SECKEYPublicKey **pKey)
-{
-	jobject pubKey=NULL;
-	jclass keyClass;
-    KeyType keyType;
-	jmethodID constructor;
-	jbyteArray ptr;
-    char *keyClassName;
+ ** JSS_PK11_wrapPubKey
+ */
+jobject JSS_PK11_wrapPubKey(JNIEnv *env, SECKEYPublicKey **pKey) {
+jobject pubKey = NULL;
+jclass keyClass;
+KeyType keyType;
+jmethodID constructor;
+jbyteArray ptr;
+char *keyClassName;
 
-	PR_ASSERT(env!=NULL && pKey!=NULL);
+PR_ASSERT(env != NULL && pKey != NULL);
 
-    /* What kind of public key? */
-    keyType = (*pKey)->keyType;
-    switch(keyType) {
-      case rsaKey:
-        keyClassName = PK11_RSA_PUBKEY_CLASS_NAME;
-        break;
-      case dsaKey:
-        keyClassName = PK11_DSA_PUBKEY_CLASS_NAME;
-        break;
-      case ecKey:
-        keyClassName = PK11_EC_PUBKEY_CLASS_NAME;
-        break;
-      default:
-        keyClassName = PK11PUBKEY_CLASS_NAME;
-        break;
-    }
+/* What kind of public key? */
+keyType = (*pKey)->keyType;
+switch (keyType) {
+case rsaKey:
+	keyClassName = PK11_RSA_PUBKEY_CLASS_NAME;
+	break;
+case dsaKey:
+	keyClassName = PK11_DSA_PUBKEY_CLASS_NAME;
+	break;
+case ecKey:
+	keyClassName = PK11_EC_PUBKEY_CLASS_NAME;
+	break;
+default:
+	keyClassName = PK11PUBKEY_CLASS_NAME;
+	break;
+}
 
-	keyClass = (*env)->FindClass(env, keyClassName);
-	if(keyClass==NULL) {
-		ASSERT_OUTOFMEM(env);
-		goto finish;
-	}
+keyClass = (*env)->FindClass(env, keyClassName);
+if (keyClass == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
 
-	constructor = (*env)->GetMethodID(	env,
-										keyClass,
-										PK11PUBKEY_CONSTRUCTOR_NAME,
-										PK11PUBKEY_CONSTRUCTOR_SIG);
-	if(constructor == NULL) {
-		ASSERT_OUTOFMEM(env);
-		goto finish;
-	}
+constructor = (*env)->GetMethodID(env, keyClass,
+PK11PUBKEY_CONSTRUCTOR_NAME,
+PK11PUBKEY_CONSTRUCTOR_SIG);
+if (constructor == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
 
-	ptr = JSS_ptrToByteArray(env, (void*)*pKey);
-	if(ptr == NULL) {
-		ASSERT_OUTOFMEM(env);
-		goto finish;
-	}
+ptr = JSS_ptrToByteArray(env, (void*) *pKey);
+if (ptr == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
 
-	pubKey = (*env)->NewObject(env, keyClass, constructor, ptr);
-	if(pubKey == NULL) {
-		ASSERT_OUTOFMEM(env);
-		goto finish;
-	}
+pubKey = (*env)->NewObject(env, keyClass, constructor, ptr);
+if (pubKey == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
+*pKey = NULL;
+
+finish: if (pubKey == NULL && *pKey != NULL) {
+	SECKEY_DestroyPublicKey(*pKey);
 	*pKey = NULL;
-
-finish:
-	if(pubKey==NULL && *pKey!=NULL) {
-		SECKEY_DestroyPublicKey(*pKey);
-		*pKey = NULL;
-	}
-	PR_DetachThread();
-	return pubKey;
+} PR_DetachThread();
+return pubKey;
 }
 
 /***********************************************************************
@@ -129,74 +122,69 @@ finish:
  * ptr: Address of a SECKEYPublicKey* that will receive the pointer.
  * Returns: PR_SUCCESS for success, PR_FAILURE if an exception was thrown.
  */
-PRStatus
-JSS_PK11_getPubKeyPtr(JNIEnv *env, jobject pubkObject,
-    SECKEYPublicKey** ptr)
-{
-    PR_ASSERT(env!=NULL && pubkObject!=NULL);
+PRStatus JSS_PK11_getPubKeyPtr(JNIEnv *env, jobject pubkObject,
+	SECKEYPublicKey **ptr) {
+PR_ASSERT(env != NULL && pubkObject != NULL);
 
-    /* Get the pointer from the key proxy */
-    PR_ASSERT(sizeof(SECKEYPublicKey*) == sizeof(void*));
-    return JSS_getPtrFromProxyOwner(env, pubkObject, KEY_PROXY_FIELD,
-		KEY_PROXY_SIG, (void**)ptr);
+/* Get the pointer from the key proxy */
+PR_ASSERT(sizeof(SECKEYPublicKey*) == sizeof(void*));
+return JSS_getPtrFromProxyOwner(env, pubkObject, KEY_PROXY_FIELD,
+KEY_PROXY_SIG, (void**) ptr);
 }
 
 /***********************************************************************
  * PK11PubKey.verifyKeyIsOnToken
  */
 JNIEXPORT void JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken
-  (JNIEnv *env, jobject this, jobject token)
-{
-    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
-	SECKEYPublicKey *key = NULL;
-	PK11SlotInfo *slot = NULL;
-	PK11SlotInfo *keySlot = NULL;
-  PK11SlotInfo *internalSlot = NULL;
+Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken(JNIEnv *env,
+	jobject this, jobject token) {
+PRThread *VARIABLE_MAY_NOT_BE_USED pThread;
+SECKEYPublicKey *key = NULL;
+PK11SlotInfo *slot = NULL;
+PK11SlotInfo *keySlot = NULL;
+PK11SlotInfo *internalSlot = NULL;
 
-	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
-	PR_ASSERT(pThread != NULL);
+pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
+PR_ASSERT(pThread != NULL);
 
-	if( JSS_PK11_getPubKeyPtr(env, this, &key) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-		goto finish;
-	}
+if (JSS_PK11_getPubKeyPtr(env, this, &key) != PR_SUCCESS) {
+	PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+	goto finish;
+}
 
-	if( JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-		goto finish;
-	}
+if (JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
+	PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+	goto finish;
+}
 
-  internalSlot = PK11_GetInternalSlot();
+internalSlot = PK11_GetInternalSlot();
 
 #if 0
   /* There is no way to extract a slot from a SECKEYPublicKey, except by
    * directly referencing the slot field. */
 	keySlot = PK11_GetSlotFromPublicKey(key);
 #else
-    keySlot = PK11_ReferenceSlot(key->pkcs11Slot);
+keySlot = PK11_ReferenceSlot(key->pkcs11Slot);
 #endif
-	if (PK11_IsInternalKeySlot(keySlot)) {
-		/* hack for internal module */
-		if (slot != keySlot && slot != internalSlot) {
-			JSS_throwMsg(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION,
-				"Key is not present on this token");
-			goto finish;
-		}
-	} else if(keySlot != slot) {
+if (PK11_IsInternalKeySlot(keySlot)) {
+	/* hack for internal module */
+	if (slot != keySlot && slot != internalSlot) {
 		JSS_throwMsg(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION,
-			"Key is not present on this token");
+				"Key is not present on this token");
 		goto finish;
 	}
+} else if (keySlot != slot) {
+	JSS_throwMsg(env, NO_SUCH_ITEM_ON_TOKEN_EXCEPTION,
+			"Key is not present on this token");
+	goto finish;
+}
 
-finish:
-	if (keySlot != NULL) {
-		PK11_FreeSlot(keySlot);
-	}
-  if (internalSlot != NULL) {
-      PK11_FreeSlot(internalSlot);
-  }
-	PR_DetachThread();
+finish: if (keySlot != NULL) {
+	PK11_FreeSlot(keySlot);
+}
+if (internalSlot != NULL) {
+	PK11_FreeSlot(internalSlot);
+} PR_DetachThread();
 }
 
 /***********************************************************************
@@ -205,94 +193,88 @@ finish:
  * Returns: The KeyType of this key.
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_getKeyType
-  (JNIEnv *env, jobject this)
-{
-    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
-    SECKEYPublicKey *pubk;
-    KeyType keyType;
-    char* keyTypeFieldName;
-    jclass keyTypeClass;
-    jfieldID keyTypeField;
-    jobject keyTypeObject = NULL;
+Java_org_mozilla_jss_pkcs11_PK11PubKey_getKeyType(JNIEnv *env, jobject this) {
+PRThread *VARIABLE_MAY_NOT_BE_USED pThread;
+SECKEYPublicKey *pubk;
+KeyType keyType;
+char *keyTypeFieldName;
+jclass keyTypeClass;
+jfieldID keyTypeField;
+jobject keyTypeObject = NULL;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+PR_ASSERT(env != NULL && this != NULL);
 
-    pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
-    PR_ASSERT(pThread != NULL);
+pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
+PR_ASSERT(pThread != NULL);
 
-	if(JSS_PK11_getPubKeyPtr(env, this, &pubk) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL );
-        goto finish;
-    }
-    PR_ASSERT(pubk!=NULL);
+if (JSS_PK11_getPubKeyPtr(env, this, &pubk) != PR_SUCCESS) {
+	PR_ASSERT((*env)->ExceptionOccurred(env) != NULL);
+	goto finish;
+}
+PR_ASSERT(pubk != NULL);
 
-    keyType = pubk->keyType;
+keyType = pubk->keyType;
 
-    switch(keyType) {
-    case nullKey:
-        keyTypeFieldName = NULL_KEYTYPE_FIELD;
-        break;
-    case rsaKey:
-        keyTypeFieldName = RSA_KEYTYPE_FIELD;
-        break;
-    case dsaKey:
-        keyTypeFieldName = DSA_KEYTYPE_FIELD;
-        break;
-    case ecKey:
-        keyTypeFieldName = EC_KEYTYPE_FIELD;
-        break;
-    case fortezzaKey:
-        keyTypeFieldName = FORTEZZA_KEYTYPE_FIELD;
-        break;
-    case dhKey:
-        keyTypeFieldName = DH_KEYTYPE_FIELD;
-        break;
-    case keaKey:
-        keyTypeFieldName = KEA_KEYTYPE_FIELD;
-        break;
-    default:
-        PR_ASSERT(PR_FALSE);
-        keyTypeFieldName = NULL_KEYTYPE_FIELD;
-        break;
-    }
+switch (keyType) {
+case nullKey:
+	keyTypeFieldName = NULL_KEYTYPE_FIELD;
+	break;
+case rsaKey:
+	keyTypeFieldName = RSA_KEYTYPE_FIELD;
+	break;
+case dsaKey:
+	keyTypeFieldName = DSA_KEYTYPE_FIELD;
+	break;
+case ecKey:
+	keyTypeFieldName = EC_KEYTYPE_FIELD;
+	break;
+case fortezzaKey:
+	keyTypeFieldName = FORTEZZA_KEYTYPE_FIELD;
+	break;
+case dhKey:
+	keyTypeFieldName = DH_KEYTYPE_FIELD;
+	break;
+case keaKey:
+	keyTypeFieldName = KEA_KEYTYPE_FIELD;
+	break;
+default:
+	PR_ASSERT(PR_FALSE);
+	keyTypeFieldName = NULL_KEYTYPE_FIELD;
+	break;
+}
 
-    keyTypeClass = (*env)->FindClass(env, KEYTYPE_CLASS_NAME);
-    if(keyTypeClass == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+keyTypeClass = (*env)->FindClass(env, KEYTYPE_CLASS_NAME);
+if (keyTypeClass == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
 
-    keyTypeField = (*env)->GetStaticFieldID(env, keyTypeClass,
-        keyTypeFieldName, KEYTYPE_FIELD_SIG);
-    if(keyTypeField==NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+keyTypeField = (*env)->GetStaticFieldID(env, keyTypeClass, keyTypeFieldName,
+		KEYTYPE_FIELD_SIG);
+if (keyTypeField == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
 
-    keyTypeObject = (*env)->GetStaticObjectField(
-                                env,
-                                keyTypeClass,
-                                keyTypeField);
-    if(keyTypeObject == NULL) {
-        ASSERT_OUTOFMEM(env);
-        goto finish;
-    }
+keyTypeObject = (*env)->GetStaticObjectField(env, keyTypeClass, keyTypeField);
+if (keyTypeObject == NULL) {
+	ASSERT_OUTOFMEM(env);
+	goto finish;
+}
 
-finish:
-    PR_DetachThread();
-    return keyTypeObject;
+finish: PR_DetachThread();
+return keyTypeObject;
 }
 
 typedef enum {
-    DSA_P,
-    DSA_Q,
-    DSA_G,
-    DSA_PUBLIC,
-    RSA_MODULUS,
-    RSA_PUBLIC_EXPONENT,
-    EC_CURVE,
-    EC_W
+DSA_P,
+DSA_Q,
+DSA_G,
+DSA_PUBLIC,
+RSA_MODULUS,
+RSA_PUBLIC_EXPONENT,
+EC_CURVE,
+EC_W
 } PublicKeyField;
 
 static jbyteArray
@@ -307,10 +289,9 @@ get_public_key_info(JNIEnv *env, jobject this, PublicKeyField field);
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getModulusByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, RSA_MODULUS);
+Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getModulusByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, RSA_MODULUS);
 }
 
 /**********************************************************************
@@ -322,10 +303,9 @@ Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getModulusByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getPublicExponentByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, RSA_PUBLIC_EXPONENT);
+Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getPublicExponentByteArray(
+	JNIEnv *env, jobject this) {
+return get_public_key_info(env, this, RSA_PUBLIC_EXPONENT);
 }
 
 /**********************************************************************
@@ -337,10 +317,9 @@ Java_org_mozilla_jss_pkcs11_PK11RSAPublicKey_getPublicExponentByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getPByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, DSA_P);
+Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getPByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, DSA_P);
 }
 
 /**********************************************************************
@@ -352,10 +331,9 @@ Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getPByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getQByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, DSA_Q);
+Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getQByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, DSA_Q);
 }
 
 /**********************************************************************
@@ -367,10 +345,9 @@ Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getQByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getGByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, DSA_G);
+Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getGByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, DSA_G);
 }
 
 /**********************************************************************
@@ -383,10 +360,9 @@ Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getGByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getYByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, DSA_PUBLIC);
+Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getYByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, DSA_PUBLIC);
 }
 
 /**********************************************************************
@@ -398,10 +374,9 @@ Java_org_mozilla_jss_pkcs11_PK11DSAPublicKey_getYByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11ECPublicKey_getCurveByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, EC_CURVE);
+Java_org_mozilla_jss_pkcs11_PK11ECPublicKey_getCurveByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, EC_CURVE);
 }
 
 /**********************************************************************
@@ -414,10 +389,9 @@ Java_org_mozilla_jss_pkcs11_PK11ECPublicKey_getCurveByteArray
  *
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11ECPublicKey_getWByteArray
-    (JNIEnv *env, jobject this)
-{
-    return get_public_key_info(env, this, EC_W);
+Java_org_mozilla_jss_pkcs11_PK11ECPublicKey_getWByteArray(JNIEnv *env,
+	jobject this) {
+return get_public_key_info(env, this, EC_W);
 }
 /**********************************************************************
  * g e t _ p u b l i c _ k e y _ i n f o 
@@ -426,70 +400,66 @@ Java_org_mozilla_jss_pkcs11_PK11ECPublicKey_getWByteArray
  * The field is assumed to be a SECItem big-endian octet string. The byte
  * array is suitable for feeding to a BigInteger constructor.
  */
-static jbyteArray
-get_public_key_info
-    (JNIEnv *env, jobject this, PublicKeyField field)
-{
-    SECKEYPublicKey *pubk;
-    jbyteArray byteArray=NULL;
-    SECItem *item=NULL;
+static jbyteArray get_public_key_info(JNIEnv *env, jobject this,
+	PublicKeyField field) {
+SECKEYPublicKey *pubk;
+jbyteArray byteArray = NULL;
+SECItem *item = NULL;
 
-    PR_ASSERT(env!=NULL && this!=NULL);
+PR_ASSERT(env != NULL && this != NULL);
 
-    if( JSS_PK11_getPubKeyPtr(env, this, &pubk) != PR_SUCCESS) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) );
-        goto finish;
-    }
-
-    switch( field ) {
-    case DSA_P:
-        PR_ASSERT(pubk->keyType == dsaKey);
-        item = &pubk->u.dsa.params.prime;
-        break;
-    case DSA_Q:
-        PR_ASSERT(pubk->keyType == dsaKey);
-        item = &pubk->u.dsa.params.subPrime;
-        break;
-    case DSA_G:
-        PR_ASSERT(pubk->keyType == dsaKey);
-        item = &pubk->u.dsa.params.base;
-        break;
-    case DSA_PUBLIC:
-        PR_ASSERT(pubk->keyType == dsaKey);
-        item = &pubk->u.dsa.publicValue;
-        break;
-    case RSA_MODULUS:
-        PR_ASSERT(pubk->keyType == rsaKey);
-        item = &pubk->u.rsa.modulus;
-        break;
-    case RSA_PUBLIC_EXPONENT:
-        PR_ASSERT(pubk->keyType == rsaKey);
-        item = &pubk->u.rsa.publicExponent;
-        break;
-    case EC_CURVE:
-        PR_ASSERT(pubk->keyType == ecKey);
-        item = &pubk->u.ec.DEREncodedParams;
-        break;
-    case EC_W:
-        PR_ASSERT(pubk->keyType == ecKey);
-        item = &pubk->u.ec.publicValue;
-        break;
-    default:
-        PR_ASSERT(PR_FALSE);
-        break;
-    }
-    PR_ASSERT(item != NULL);
-
-    byteArray = JSS_OctetStringToByteArray(env, item);
-    if(byteArray == NULL) {
-        PR_ASSERT( (*env)->ExceptionOccurred(env) );
-        goto finish;
-    }
-
-finish:
-    return byteArray;
+if (JSS_PK11_getPubKeyPtr(env, this, &pubk) != PR_SUCCESS) {
+	PR_ASSERT((*env)->ExceptionOccurred(env));
+	goto finish;
 }
 
+switch (field) {
+case DSA_P:
+	PR_ASSERT(pubk->keyType == dsaKey);
+	item = &pubk->u.dsa.params.prime;
+	break;
+case DSA_Q:
+	PR_ASSERT(pubk->keyType == dsaKey);
+	item = &pubk->u.dsa.params.subPrime;
+	break;
+case DSA_G:
+	PR_ASSERT(pubk->keyType == dsaKey);
+	item = &pubk->u.dsa.params.base;
+	break;
+case DSA_PUBLIC:
+	PR_ASSERT(pubk->keyType == dsaKey);
+	item = &pubk->u.dsa.publicValue;
+	break;
+case RSA_MODULUS:
+	PR_ASSERT(pubk->keyType == rsaKey);
+	item = &pubk->u.rsa.modulus;
+	break;
+case RSA_PUBLIC_EXPONENT:
+	PR_ASSERT(pubk->keyType == rsaKey);
+	item = &pubk->u.rsa.publicExponent;
+	break;
+case EC_CURVE:
+	PR_ASSERT(pubk->keyType == ecKey);
+	item = &pubk->u.ec.DEREncodedParams;
+	break;
+case EC_W:
+	PR_ASSERT(pubk->keyType == ecKey);
+	item = &pubk->u.ec.publicValue;
+	break;
+default:
+	PR_ASSERT(PR_FALSE);
+	break;
+}
+PR_ASSERT(item != NULL);
+
+byteArray = JSS_OctetStringToByteArray(env, item);
+if (byteArray == NULL) {
+	PR_ASSERT((*env)->ExceptionOccurred(env));
+	goto finish;
+}
+
+finish: return byteArray;
+}
 
 /***********************************************************************
  *
@@ -499,44 +469,41 @@ finish:
  * of the public key.  For example, this is what is stored in a
  * SubjectPublicKeyInfo.
  */
-static jobject
-pubkFromRaw(JNIEnv *env, CK_KEY_TYPE type, jbyteArray rawBA)
-{
-    jobject pubkObj=NULL;
-    SECKEYPublicKey *pubk=NULL;
-    SECItem *pubkDER=NULL;
+static jobject pubkFromRaw(JNIEnv *env, CK_KEY_TYPE type, jbyteArray rawBA) {
+jobject pubkObj = NULL;
+SECKEYPublicKey *pubk = NULL;
+SECItem *pubkDER = NULL;
 
-    /* validate args */
-    PR_ASSERT(env!=NULL);
-    if( rawBA == NULL ) {
-        JSS_throw(env, NULL_POINTER_EXCEPTION);
-        goto finish;
-    }
+/* validate args */
+PR_ASSERT(env != NULL);
+if (rawBA == NULL) {
+	JSS_throw(env, NULL_POINTER_EXCEPTION);
+	goto finish;
+}
 
-    pubkDER = JSS_ByteArrayToSECItem(env, rawBA);
-    if( pubkDER == NULL ) {
-        /* exception was thrown */
-        goto finish;
-    }
+pubkDER = JSS_ByteArrayToSECItem(env, rawBA);
+if (pubkDER == NULL) {
+	/* exception was thrown */
+	goto finish;
+}
 
-    pubk = SECKEY_ImportDERPublicKey(pubkDER, type);
-    if( pubk == NULL ) {
-        JSS_throw(env, INVALID_KEY_FORMAT_EXCEPTION);
-        goto finish;
-    }
+pubk = SECKEY_ImportDERPublicKey(pubkDER, type);
+if (pubk == NULL) {
+	JSS_throw(env, INVALID_KEY_FORMAT_EXCEPTION);
+	goto finish;
+}
 
-    /* this clears pubk */
-    pubkObj = JSS_PK11_wrapPubKey(env, &pubk);
-    if( pubkObj == NULL ) {
-        /* exception was thrown */
-        goto finish;
-    }
+/* this clears pubk */
+pubkObj = JSS_PK11_wrapPubKey(env, &pubk);
+if (pubkObj == NULL) {
+	/* exception was thrown */
+	goto finish;
+}
 
-finish:
-    if(pubkDER!=NULL) {
-        SECITEM_FreeItem(pubkDER, PR_TRUE /*freeit*/);
-    }
-    return pubkObj;
+finish: if (pubkDER != NULL) {
+	SECITEM_FreeItem(pubkDER, PR_TRUE /*freeit*/);
+}
+return pubkObj;
 }
 
 /***********************************************************************
@@ -544,22 +511,20 @@ finish:
  * PK11PubKey.fromRawNative
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_fromRawNative
-    (JNIEnv *env, jclass clazz, jint type, jbyteArray rawBA)
-{
-    return pubkFromRaw(env, type, rawBA);
+Java_org_mozilla_jss_pkcs11_PK11PubKey_fromRawNative(JNIEnv *env, jclass clazz,
+	jint type, jbyteArray rawBA) {
+return pubkFromRaw(env, type, rawBA);
 }
- 
+
 /***********************************************************************
  *
  * PK11PubKey.RSAfromRaw
  * Deprecated: call fromRawNative instead.
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_RSAFromRaw
-    (JNIEnv *env, jclass clazz, jbyteArray rawBA)
-{
-    return pubkFromRaw(env, CKK_RSA, rawBA);
+Java_org_mozilla_jss_pkcs11_PK11PubKey_RSAFromRaw(JNIEnv *env, jclass clazz,
+	jbyteArray rawBA) {
+return pubkFromRaw(env, CKK_RSA, rawBA);
 }
 
 /***********************************************************************
@@ -568,10 +533,9 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_RSAFromRaw
  * Deprecated: call fromRawNative instead.
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_DSAFromRaw
-    (JNIEnv *env, jclass clazz, jbyteArray rawBA)
-{
-    return pubkFromRaw(env, CKK_DSA, rawBA);
+Java_org_mozilla_jss_pkcs11_PK11PubKey_DSAFromRaw(JNIEnv *env, jclass clazz,
+	jbyteArray rawBA) {
+return pubkFromRaw(env, CKK_DSA, rawBA);
 }
 
 /***********************************************************************
@@ -582,35 +546,32 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_DSAFromRaw
  * DER-encoding.
  */
 JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_getEncoded
-    (JNIEnv *env, jobject this)
-{
-    SECKEYPublicKey *pubk;
-    jbyteArray encodedBA=NULL;
-    SECItem *spkiDER=NULL;
-    
-    /* get the public key */
-    if( JSS_PK11_getPubKeyPtr(env, this, &pubk) != PR_SUCCESS ) {
-        /* exception was thrown */
-        goto finish;
-    }
+Java_org_mozilla_jss_pkcs11_PK11PubKey_getEncoded(JNIEnv *env, jobject this) {
+SECKEYPublicKey *pubk;
+jbyteArray encodedBA = NULL;
+SECItem *spkiDER = NULL;
 
-    spkiDER = PK11_DEREncodePublicKey(pubk);
-    if( spkiDER == NULL ) {
-        JSS_trace(env, JSS_TRACE_ERROR, "unable to DER-encode"
-                " SubjectPublicKeyInfo");
-        JSS_throw(env, OUT_OF_MEMORY_ERROR);
-        goto finish;
-    }
+/* get the public key */
+if (JSS_PK11_getPubKeyPtr(env, this, &pubk) != PR_SUCCESS) {
+	/* exception was thrown */
+	goto finish;
+}
 
-    /* convert the der-encoding to a Java byte array */
-    encodedBA = JSS_SECItemToByteArray(env, spkiDER);
+spkiDER = PK11_DEREncodePublicKey(pubk);
+if (spkiDER == NULL) {
+	JSS_trace(env, JSS_TRACE_ERROR, "unable to DER-encode"
+			" SubjectPublicKeyInfo");
+	JSS_throw(env, OUT_OF_MEMORY_ERROR);
+	goto finish;
+}
 
-finish:
-    if(spkiDER!=NULL) {
-        SECITEM_FreeItem(spkiDER, PR_TRUE /*freeit*/);
-    }
-    return encodedBA;
+/* convert the der-encoding to a Java byte array */
+encodedBA = JSS_SECItemToByteArray(env, spkiDER);
+
+finish: if (spkiDER != NULL) {
+	SECITEM_FreeItem(spkiDER, PR_TRUE /*freeit*/);
+}
+return encodedBA;
 }
 
 /***********************************************************************
@@ -620,59 +581,57 @@ finish:
  * Generates a PK11PubKey from a DER-encoded SubjectPublicKeyInfo. 
  */
 JNIEXPORT jobject JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PubKey_fromSPKI
-    (JNIEnv *env, jobject this, jbyteArray spkiBA)
-{
-    jobject pubkObj = NULL;
-    SECItem *spkiItem = NULL;
-    CERTSubjectPublicKeyInfo *spki = NULL;
-    SECKEYPublicKey *pubk = NULL;
+Java_org_mozilla_jss_pkcs11_PK11PubKey_fromSPKI(JNIEnv *env, jobject this,
+	jbyteArray spkiBA) {
+jobject pubkObj = NULL;
+SECItem *spkiItem = NULL;
+CERTSubjectPublicKeyInfo *spki = NULL;
+SECKEYPublicKey *pubk = NULL;
 
-    /*
-     * convert byte array to SECItem
-     */
-    spkiItem = JSS_ByteArrayToSECItem(env, spkiBA);
-    if( spkiItem == NULL ) {
-        /* exception was thrown */
-        goto finish;
-    }
+/*
+ * convert byte array to SECItem
+ */
+spkiItem = JSS_ByteArrayToSECItem(env, spkiBA);
+if (spkiItem == NULL) {
+	/* exception was thrown */
+	goto finish;
+}
 
-    /*
-     * convert SECItem to SECKEYPublicKey
-     */
-    spki = SECKEY_DecodeDERSubjectPublicKeyInfo(spkiItem);
-    if( spki == NULL ) {
-        JSS_throwMsg(env, INVALID_KEY_FORMAT_EXCEPTION,
-            "Unable to decode DER-encoded SubjectPublicKeyInfo: "
-            "invalid DER encoding");
-        goto finish;
-    }
-    pubk = SECKEY_ExtractPublicKey(spki);
-    if( pubk == NULL ) {
-        JSS_throwMsg(env, INVALID_KEY_FORMAT_EXCEPTION,
-            "Unable to decode SubjectPublicKeyInfo: DER encoding problem, or"
-            " unrecognized key type ");
-        goto finish;
-    }
+/*
+ * convert SECItem to SECKEYPublicKey
+ */
+spki = SECKEY_DecodeDERSubjectPublicKeyInfo(spkiItem);
+if (spki == NULL) {
+	JSS_throwMsg(env, INVALID_KEY_FORMAT_EXCEPTION,
+			"Unable to decode DER-encoded SubjectPublicKeyInfo: "
+					"invalid DER encoding");
+	goto finish;
+}
+pubk = SECKEY_ExtractPublicKey(spki);
+if (pubk == NULL) {
+	JSS_throwMsg(env, INVALID_KEY_FORMAT_EXCEPTION,
+			"Unable to decode SubjectPublicKeyInfo: DER encoding problem, or"
+					" unrecognized key type ");
+	goto finish;
+}
 
-    /*
-     * put a Java wrapper around it
-     */
-    pubkObj = JSS_PK11_wrapPubKey(env, &pubk); /* this clears pubk */
-    if( pubkObj == NULL ) {
-        /* exception was thrown */
-        goto finish;
-    }
+/*
+ * put a Java wrapper around it
+ */
+pubkObj = JSS_PK11_wrapPubKey(env, &pubk); /* this clears pubk */
+if (pubkObj == NULL) {
+	/* exception was thrown */
+	goto finish;
+}
 
-finish:
-    if( spkiItem != NULL ) {
-        SECITEM_FreeItem(spkiItem, PR_TRUE /*freeit*/);
-    }
-    if( spki != NULL ) {
-        SECKEY_DestroySubjectPublicKeyInfo(spki);
-    }
-    if( pubk != NULL ) {
-        SECKEY_DestroyPublicKey(pubk);
-    }
-    return pubkObj;
+finish: if (spkiItem != NULL) {
+	SECITEM_FreeItem(spkiItem, PR_TRUE /*freeit*/);
+}
+if (spki != NULL) {
+	SECKEY_DestroySubjectPublicKeyInfo(spki);
+}
+if (pubk != NULL) {
+	SECKEY_DestroyPublicKey(pubk);
+}
+return pubkObj;
 }

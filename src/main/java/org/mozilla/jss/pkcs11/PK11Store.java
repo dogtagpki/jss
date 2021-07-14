@@ -44,17 +44,15 @@ public final class PK11Store implements CryptoStore {
      * @exception KeyAlreadyImportedException If the key already on this token.
      */
     @Override
-    public PrivateKey
-    importPrivateKey(byte[] key, PrivateKey.Type type)
-            throws TokenException,KeyAlreadyImportedException {
+    public PrivateKey importPrivateKey(byte[] key, PrivateKey.Type type)
+            throws TokenException, KeyAlreadyImportedException {
         return importPrivateKey(key, type, false);
     }
 
     @Override
-    public native PrivateKey
-    importPrivateKey(
-        byte[] key, PrivateKey.Type type, boolean temporary)
-        throws TokenException,KeyAlreadyImportedException;
+    public native PrivateKey importPrivateKey(
+            byte[] key, PrivateKey.Type type, boolean temporary)
+            throws TokenException, KeyAlreadyImportedException;
 
     @Override
     public synchronized PrivateKey[] getPrivateKeys() throws TokenException {
@@ -124,22 +122,20 @@ public final class PK11Store implements CryptoStore {
     }
 
     @Override
-    public synchronized SymmetricKey[]
-    getSymmetricKeys() throws TokenException {
+    public synchronized SymmetricKey[] getSymmetricKeys() throws TokenException {
 
         Vector<SymmetricKey> keys = new Vector<>();
         putSymKeysInVector(keys);
         SymmetricKey[] array = new SymmetricKey[keys.size()];
-        keys.copyInto( array);
+        keys.copyInto(array);
         return array;
     }
 
     protected native void putSymKeysInVector(Vector<SymmetricKey> symKeys) throws TokenException;
 
-
     @Override
     public native void deletePrivateKey(PrivateKey privateKey)
-        throws NoSuchItemOnTokenException, TokenException;
+            throws NoSuchItemOnTokenException, TokenException;
 
     @Override
     public native void deletePublicKey(PublicKey publicKey)
@@ -152,46 +148,44 @@ public final class PK11Store implements CryptoStore {
             Password pw,
             int iteration)
             throws NotInitializedException,
-                ObjectNotFoundException, TokenException {
+            ObjectNotFoundException, TokenException {
         return getEncryptedPrivateKeyInfo(
-            null,
-            pw,
-            pbeAlg,
-            iteration,
-            CryptoManager.getInstance().findPrivKeyByCert(cert)
-        );
+                null,
+                pw,
+                pbeAlg,
+                iteration,
+                CryptoManager.getInstance().findPrivKeyByCert(cert));
     }
 
     @Override
     public native byte[] getEncryptedPrivateKeyInfo(
-        KeyGenerator.CharToByteConverter conv,
-        Password pw,
-        Algorithm alg,
-        int n,
-        PrivateKey k);
+            KeyGenerator.CharToByteConverter conv,
+            Password pw,
+            Algorithm alg,
+            int n,
+            PrivateKey k);
 
     @Override
     public native void importEncryptedPrivateKeyInfo(
-        KeyGenerator.CharToByteConverter conv,
-        Password pw,
-        String nickname,
-        PublicKey pubKey,
-        byte[] epkiBytes);
+            KeyGenerator.CharToByteConverter conv,
+            Password pw,
+            String nickname,
+            PublicKey pubKey,
+            byte[] epkiBytes);
 
     ////////////////////////////////////////////////////////////
     // Certs
     ////////////////////////////////////////////////////////////
 
     @Override
-    public X509Certificate[]
-    getCertificates() throws TokenException
-    {
+    public X509Certificate[] getCertificates() throws TokenException {
         Vector<X509Certificate> certs = new Vector<>();
         putCertsInVector(certs);
         X509Certificate[] array = new X509Certificate[certs.size()];
-        certs.copyInto( array );
+        certs.copyInto(array);
         return array;
     }
+
     protected native void putCertsInVector(Vector<X509Certificate> certs) throws TokenException;
 
     /**
@@ -202,11 +196,11 @@ public final class PK11Store implements CryptoStore {
      * @exception NoSuchItemOnTokenException If the certificate not found
      * @exception TokenException General token error
      */
-	// Currently have to use PK11_DeleteTokenObject + PK11_FindObjectForCert
-	// or maybe SEC_DeletePermCertificate.
+    // Currently have to use PK11_DeleteTokenObject + PK11_FindObjectForCert
+    // or maybe SEC_DeletePermCertificate.
     @Override
     public native void deleteCert(X509Certificate cert)
-        throws NoSuchItemOnTokenException, TokenException;
+            throws NoSuchItemOnTokenException, TokenException;
 
     /**
      * Deletes the specified certificate from the store.
@@ -217,21 +211,23 @@ public final class PK11Store implements CryptoStore {
      */
     @Override
     public native void deleteCertOnly(X509Certificate cert)
-        throws NoSuchItemOnTokenException, TokenException;
+            throws NoSuchItemOnTokenException, TokenException;
 
-	////////////////////////////////////////////////////////////
-	// Construction
-	////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    // Construction
+    ////////////////////////////////////////////////////////////
     protected boolean updated;
-	public PK11Store(TokenProxy proxy) {
-        assert(proxy!=null);
-		this.storeProxy = proxy;
-	}
 
-	protected PK11Store() { }
+    public PK11Store(TokenProxy proxy) {
+        assert (proxy != null);
+        this.storeProxy = proxy;
+    }
 
-	////////////////////////////////////////////////////////////
-	// Private data
-	////////////////////////////////////////////////////////////
-	protected TokenProxy storeProxy;
+    protected PK11Store() {
+    }
+
+    ////////////////////////////////////////////////////////////
+    // Private data
+    ////////////////////////////////////////////////////////////
+    protected TokenProxy storeProxy;
 }
