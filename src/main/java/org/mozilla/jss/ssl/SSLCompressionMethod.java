@@ -1,8 +1,7 @@
 package org.mozilla.jss.ssl;
 
 public enum SSLCompressionMethod {
-    NULL (0),
-    DEFLATE (1);
+    NULL(0), DEFLATE(1);
 
     private int value;
 

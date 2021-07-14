@@ -10,4 +10,4 @@ jobject JSS_SSL_wrapVersionRange(JNIEnv *env, SSLVersionRange vrange);
 // Not implemented: easier to do in Java
 /* Unwrap a org.mozilla.jss.ssl.SSLVersionRange object and return a NSS SSLVersionRange. */
 /* PRStatus JSS_SSL_unwrapVersionRange(JNIEnv *env, jobject range_proxy,
-    SSLVersionRange *vrange); */
+ SSLVersionRange *vrange); */
