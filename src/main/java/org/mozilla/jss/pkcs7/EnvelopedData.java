@@ -18,23 +18,26 @@ import org.mozilla.jss.asn1.Tag;
 
 public class EnvelopedData implements ASN1Value {
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
     }
 
-    private INTEGER              version;
-    private SET                  recipientInfos;
-    private EncryptedContentInfo         encryptedContentInfo;
+    private INTEGER version;
+    private SET recipientInfos;
+    private EncryptedContentInfo encryptedContentInfo;
 
     private SEQUENCE sequence = new SEQUENCE();
 
     public INTEGER getVersion() {
         return version;
     }
+
     public SET getRecipientInfos() {
         return recipientInfos;
     }
+
     public EncryptedContentInfo getEncryptedContentInfo() {
         return encryptedContentInfo;
     }
@@ -43,8 +46,8 @@ public class EnvelopedData implements ASN1Value {
      * Create a EnvelopedData ASN1 object.
      */
 
-    public EnvelopedData(  INTEGER version, SET recipientInfos,
-                        EncryptedContentInfo encryptedContentInfo) {
+    public EnvelopedData(INTEGER version, SET recipientInfos,
+            EncryptedContentInfo encryptedContentInfo) {
 
         this.version = version;
         this.recipientInfos = recipientInfos;
@@ -57,14 +60,13 @@ public class EnvelopedData implements ASN1Value {
 
     @Override
     public void encode(OutputStream ostream) throws IOException {
-        encode(getTag(),ostream);
+        encode(getTag(), ostream);
     }
 
     @Override
     public void encode(Tag tag, OutputStream ostream) throws IOException {
-        sequence.encode(tag,ostream);
+        sequence.encode(tag, ostream);
     }
-
 
     /**
      * A template file for decoding a EnvelopedData blob
@@ -83,29 +85,26 @@ public class EnvelopedData implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-            {
-                return decode(getTag(),istream);
-            }
+                throws IOException, InvalidBERException {
+            return decode(getTag(), istream);
+        }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws IOException, InvalidBERException
-            {
-                SEQUENCE.Template seqt = new SEQUENCE.Template();
-                seqt.addElement(new INTEGER.Template());
-                seqt.addElement(new SET.OF_Template(new RecipientInfo.Template()));
-                seqt.addElement(new EncryptedContentInfo.Template());
+                throws IOException, InvalidBERException {
+            SEQUENCE.Template seqt = new SEQUENCE.Template();
+            seqt.addElement(new INTEGER.Template());
+            seqt.addElement(new SET.OF_Template(new RecipientInfo.Template()));
+            seqt.addElement(new EncryptedContentInfo.Template());
 
-                SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
-                assert(seq.size() ==3);
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
+            assert (seq.size() == 3);
 
-                return new EnvelopedData(
-                    (INTEGER)               seq.elementAt(0),
-                    (SET)                   seq.elementAt(1),
-                    (EncryptedContentInfo)  seq.elementAt(2)
-                    );
-            }
+            return new EnvelopedData(
+                    (INTEGER) seq.elementAt(0),
+                    (SET) seq.elementAt(1),
+                    (EncryptedContentInfo) seq.elementAt(2));
+        }
     } // end of template
 
 }

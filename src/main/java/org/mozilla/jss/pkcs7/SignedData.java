@@ -22,8 +22,10 @@ import org.mozilla.jss.pkix.cert.Certificate;
 /**
  * A PKCS #7 <i>SignedData</i> structure. This class implements version 1
  * of the spec.
- * <p>The certificates field should only contain X.509 certificates.
+ * <p>
+ * The certificates field should only contain X.509 certificates.
  * PKCS #6 extended certificates will fail to decode properly.
+ * 
  * @author stevep
  * @author nicolson
  */
@@ -35,12 +37,12 @@ public class SignedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
 
-    private INTEGER     version;
-    private SET         digestAlgorithms;
+    private INTEGER version;
+    private SET digestAlgorithms;
     private ContentInfo contentInfo;
-    private SET         certificates;  // [0] optional, may be null
-    private SET         crls;          // [1] optional, may be null
-    private SET         signerInfos;
+    private SET certificates; // [0] optional, may be null
+    private SET crls; // [1] optional, may be null
+    private SET signerInfos;
 
     // This class implements version 1 of the spec.
     private static final INTEGER VERSION = new INTEGER(1);
@@ -52,13 +54,13 @@ public class SignedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private static void verifyNotNull(Object obj) {
-        if( obj == null ) {
+        if (obj == null) {
             throw new IllegalArgumentException();
         }
     }
 
     /**
-     * Returns the version of this SignedData.  The current version of the
+     * Returns the version of this SignedData. The current version of the
      * spec is version 1.
      */
     public INTEGER getVersion() {
@@ -67,11 +69,12 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level function to set the version.
+     * 
      * @param version Must not be null.
-    public void setVersion(INTEGER version) {
-        verifyNotNull(version);
-        this.version = version;
-    }
+     *            public void setVersion(INTEGER version) {
+     *            verifyNotNull(version);
+     *            this.version = version;
+     *            }
      */
 
     /**
@@ -85,15 +88,16 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level function to set the digest algorithm identifiers.
+     * 
      * @param digestAlgIds Must not be null.
-    public void setDigestAlgorithmIdentifiers(SET digestAlgIds) {
-        verifyNotNull(digestAlgIds);
-        this.digestAlgorithms = digestAlgIds;
-    }
+     *            public void setDigestAlgorithmIdentifiers(SET digestAlgIds) {
+     *            verifyNotNull(digestAlgIds);
+     *            this.digestAlgorithms = digestAlgIds;
+     *            }
      */
 
     /**
-     * Returns the ContentInfo containing the signed content.  The simple
+     * Returns the ContentInfo containing the signed content. The simple
      * case is for the content to be of type <i>data</i>, although any
      * content type can be signed.
      */
@@ -103,11 +107,12 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level function to set the contentInfo.
+     * 
      * @param ci Must not be null.
-    public void setContentInfo(ContentInfo ci) {
-        verifyNotNull(ci);
-        this.contentInfo = ci;
-    }
+     *            public void setContentInfo(ContentInfo ci) {
+     *            verifyNotNull(ci);
+     *            this.contentInfo = ci;
+     *            }
      */
 
     /**
@@ -123,18 +128,19 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level function to set the certificates.
+     * 
      * @param certs May be null to signify that the <code>certificates</code>
-     *  field is not present.
-    public void setCertificates(SET certs) {
-        this.certificates = certs;
-    }
+     *            field is not present.
+     *            public void setCertificates(SET certs) {
+     *            this.certificates = certs;
+     *            }
      */
 
     /**
      * Returns true if the <code>certificates</code> field is present.
      */
     public boolean hasCertificates() {
-        return (certificates!=null);
+        return (certificates != null);
     }
 
     /**
@@ -148,11 +154,12 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level function to set the crls.
+     * 
      * @param certs May be null to signify that the <code>crls</code>
-     *  field is not present.
-    public void setCrls(SET crls) {
-        this.crls = crls;
-    }
+     *            field is not present.
+     *            public void setCrls(SET crls) {
+     *            this.crls = crls;
+     *            }
      */
 
     /**
@@ -164,7 +171,7 @@ public class SignedData implements ASN1Value {
 
     /**
      * Returns the signerInfos field, which is a SET of
-     *  org.mozilla.jss.pkcs7.SignerInfo.
+     * org.mozilla.jss.pkcs7.SignerInfo.
      */
     public SET getSignerInfos() {
         return signerInfos;
@@ -172,11 +179,12 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level function to set the SignerInfos.
+     * 
      * @param signerInfos Must not be null.
-    public void setSignerInfos(SET signerInfos) {
-        verifyNotNull(sis);
-        this.signerInfos = signerInfos;
-    }
+     *            public void setSignerInfos(SET signerInfos) {
+     *            verifyNotNull(sis);
+     *            this.signerInfos = signerInfos;
+     *            }
      */
 
     ///////////////////////////////////////////////////////////////////////
@@ -187,7 +195,7 @@ public class SignedData implements ASN1Value {
 
     /**
      * Low-level constructor that merely initializes all fields to null.
-    private SignedData() {}
+     * private SignedData() {}
      */
 
     /**
@@ -196,48 +204,49 @@ public class SignedData implements ASN1Value {
      * parameter will not get written in the sequence.
      *
      * @param digestAlgorithms A SET of zero or more
-     *      algorithm identifiers.  The purpose of this item is to list
-     *      the digest algorithms used by the various signers to digest
-     *      the signed content. This field will also be updated by
-     *      the <code>addSigner</code> method. If all the signers are added
-     *      with <code>addSigner</code>, it is not necessary to list
-     *      the digest algorithms here.
-     *      <p> If <code>null</code> is passed in, the
-     *      <code>digestAlgorithms</code> field will be initialized
-     *      with an empty <code>SET</code>.
+     *            algorithm identifiers. The purpose of this item is to list
+     *            the digest algorithms used by the various signers to digest
+     *            the signed content. This field will also be updated by
+     *            the <code>addSigner</code> method. If all the signers are added
+     *            with <code>addSigner</code>, it is not necessary to list
+     *            the digest algorithms here.
+     *            <p>
+     *            If <code>null</code> is passed in, the
+     *            <code>digestAlgorithms</code> field will be initialized
+     *            with an empty <code>SET</code>.
      * @param contentInfo The content that is being signed. This parameter
-     *      may not be <code>null</code>.  However, the <code>content</code>
-     *      field of the contentInfo may be omitted, in which case the
-     *      signatures contained in the <code>SignerInfo</code> structures
-     *      are presumed to be on externally-supplied data.
+     *            may not be <code>null</code>. However, the <code>content</code>
+     *            field of the contentInfo may be omitted, in which case the
+     *            signatures contained in the <code>SignerInfo</code> structures
+     *            are presumed to be on externally-supplied data.
      * @param certificates A SET of org.mozilla.jss.pkix.cert.Certificate,
-     *      the certificates
-     *      containing the public keys used to sign the content.  It may
-     *      also contain elements of the CA chain extending from the leaf
-     *      certificates. It is not necessary to include the CA chain, or
-     *      indeed to include any certificates, if the certificates are
-     *      expected to already be possessed by the recipient.  The recipient
-     *      can use the issuer and serial number in the SignerInfo structure
-     *      to search for the necessary certificates. If this parameter is
-     *      <code>null</code>, the <code>certificates</code> field will be
-     *      omitted.
+     *            the certificates
+     *            containing the public keys used to sign the content. It may
+     *            also contain elements of the CA chain extending from the leaf
+     *            certificates. It is not necessary to include the CA chain, or
+     *            indeed to include any certificates, if the certificates are
+     *            expected to already be possessed by the recipient. The recipient
+     *            can use the issuer and serial number in the SignerInfo structure
+     *            to search for the necessary certificates. If this parameter is
+     *            <code>null</code>, the <code>certificates</code> field will be
+     *            omitted.
      * @param crls A SET of ASN1Values, which should encode to the ASN1 type
-     *      <i>CertificateRevocationList</i>. This implementation does
-     *      not interpret CRLs. If this parameter is <code>null</code>,
-     *      the <code>crls</code> field will be omitted.
+     *            <i>CertificateRevocationList</i>. This implementation does
+     *            not interpret CRLs. If this parameter is <code>null</code>,
+     *            the <code>crls</code> field will be omitted.
      * @param signerInfos <i>SignerInfo</i> structures containing signatures
-     *      of the content.  Additional signerInfos can be added with
-     *      the <code>addSigner</code> method. If this parameter is
-     *      <code>null</code>, the field will be initialized with an
-     *      empty <code>SET</code>.
+     *            of the content. Additional signerInfos can be added with
+     *            the <code>addSigner</code> method. If this parameter is
+     *            <code>null</code>, the field will be initialized with an
+     *            empty <code>SET</code>.
      */
-    public SignedData(  SET digestAlgorithms,
-                        ContentInfo contentInfo, SET certificates,
-                        SET crls, SET signerInfos) {
+    public SignedData(SET digestAlgorithms,
+            ContentInfo contentInfo, SET certificates,
+            SET crls, SET signerInfos) {
 
         version = VERSION;
 
-        if(digestAlgorithms == null ) {
+        if (digestAlgorithms == null) {
             this.digestAlgorithms = new SET();
         } else {
             this.digestAlgorithms = digestAlgorithms;
@@ -252,7 +261,7 @@ public class SignedData implements ASN1Value {
         // crls may be null
         this.crls = crls;
 
-        if(signerInfos == null) {
+        if (signerInfos == null) {
             this.signerInfos = new SET();
         } else {
             this.signerInfos = signerInfos;
@@ -262,13 +271,12 @@ public class SignedData implements ASN1Value {
     /**
      * Constructor for creating a SignedData from its encoding.
      */
-    SignedData( INTEGER version,
-                SET digestAlgorithms,
-                ContentInfo contentInfo,
-                SET certificates,
-                SET crls,
-                SET signerInfos )
-    {
+    SignedData(INTEGER version,
+            SET digestAlgorithms,
+            ContentInfo contentInfo,
+            SET certificates,
+            SET crls,
+            SET signerInfos) {
 
         verifyNotNull(version);
         this.version = version;
@@ -295,7 +303,6 @@ public class SignedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
 
-
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     // DER encoding
@@ -303,6 +310,7 @@ public class SignedData implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -310,7 +318,7 @@ public class SignedData implements ASN1Value {
 
     @Override
     public void encode(OutputStream ostream) throws IOException {
-        encode(getTag(),ostream);
+        encode(getTag(), ostream);
     }
 
     @Override
@@ -320,24 +328,23 @@ public class SignedData implements ASN1Value {
         sequence.addElement(version);
         sequence.addElement(digestAlgorithms);
         sequence.addElement(contentInfo);
-        if( certificates != null ) {
-            sequence.addElement( new Tag(0), certificates );
+        if (certificates != null) {
+            sequence.addElement(new Tag(0), certificates);
         }
-        if( crls != null ) {
-            sequence.addElement( new Tag(1), crls );
+        if (crls != null) {
+            sequence.addElement(new Tag(1), crls);
         }
         sequence.addElement(signerInfos);
 
-        sequence.encode(tag,ostream);
+        sequence.encode(tag, ostream);
     }
-
 
     /**
      * A template file for decoding a SignedData blob
      *
      */
     public static class Template implements ASN1Template {
-            private SEQUENCE.Template seqt;
+        private SEQUENCE.Template seqt;
 
         public Template() {
             seqt = new SEQUENCE.Template();
@@ -347,20 +354,20 @@ public class SignedData implements ASN1Value {
 
             // digestAlgorithms
             seqt.addElement(new SET.OF_Template(
-                            AlgorithmIdentifier.getTemplate()));
+                    AlgorithmIdentifier.getTemplate()));
 
             // content info
             seqt.addElement(ContentInfo.getTemplate());
 
             // [0] IMPLICIT certificates OPTIONAL
             seqt.addOptionalElement(
-                        new Tag(0),
-                        new SET.OF_Template(Certificate.getTemplate()));
+                    new Tag(0),
+                    new SET.OF_Template(Certificate.getTemplate()));
 
             // [1] IMPLICIT CertificateRevocationLists OPTIONAL
             seqt.addOptionalElement(
-                        new Tag(1),
-                        new SET.OF_Template(ANY.getTemplate()));
+                    new Tag(1),
+                    new SET.OF_Template(ANY.getTemplate()));
 
             // signerInfos
             seqt.addElement(new SET.OF_Template(SignerInfo.getTemplate()));
@@ -372,28 +379,25 @@ public class SignedData implements ASN1Value {
         }
 
         @Override
-        public ASN1Value decode(InputStream istream) 
-            throws IOException, InvalidBERException
-            {
-                return decode(TAG, istream);
-            }
+        public ASN1Value decode(InputStream istream)
+                throws IOException, InvalidBERException {
+            return decode(TAG, istream);
+        }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws IOException, InvalidBERException
-            {
-                SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
-                assert(seq.size() == 6);
+                throws IOException, InvalidBERException {
+            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
+            assert (seq.size() == 6);
 
-                return new SignedData(
-                    (INTEGER)     seq.elementAt(0),
-                    (SET)         seq.elementAt(1),
+            return new SignedData(
+                    (INTEGER) seq.elementAt(0),
+                    (SET) seq.elementAt(1),
                     (ContentInfo) seq.elementAt(2),
-                    (SET)         seq.elementAt(3),
-                    (SET)         seq.elementAt(4),
-                    (SET)         seq.elementAt(5)
-                    );
-            }
+                    (SET) seq.elementAt(3),
+                    (SET) seq.elementAt(4),
+                    (SET) seq.elementAt(5));
+        }
     } // end of template
 
 }
