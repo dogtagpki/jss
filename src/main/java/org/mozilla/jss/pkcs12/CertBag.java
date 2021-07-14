@@ -25,18 +25,14 @@ import org.mozilla.jss.asn1.Tag;
  */
 public class CertBag implements ASN1Value {
 
-
     ///////////////////////////////////////////////////////////////////////
     // Cert Type OIDs
     ///////////////////////////////////////////////////////////////////////
-    private static final OBJECT_IDENTIFIER CERT_TYPES =
-        OBJECT_IDENTIFIER.PKCS9.subBranch(22);
+    private static final OBJECT_IDENTIFIER CERT_TYPES = OBJECT_IDENTIFIER.PKCS9.subBranch(22);
 
-    public static final OBJECT_IDENTIFIER X509_CERT_TYPE =
-        CERT_TYPES.subBranch(1);
+    public static final OBJECT_IDENTIFIER X509_CERT_TYPE = CERT_TYPES.subBranch(1);
 
-    public static final OBJECT_IDENTIFIER SDSI_CERT_TYPE =
-        CERT_TYPES.subBranch(2);
+    public static final OBJECT_IDENTIFIER SDSI_CERT_TYPE = CERT_TYPES.subBranch(2);
 
     ///////////////////////////////////////////////////////////////////////
     // members and member access
@@ -67,24 +63,23 @@ public class CertBag implements ASN1Value {
      * Returns the cert field of the CertBag based on its type.
      * <ul>
      * <li>If the type is <code>X509_CERT_TYPE</code>, returns
-     *      and OCTET_STRING which is the DER-encoding of an X.509 certificate.
+     * and OCTET_STRING which is the DER-encoding of an X.509 certificate.
      * <li>If the type is <code>SDSI_CERT_TYPE</code>, returns
-     *      an IA5String.
+     * an IA5String.
      * <li>For all other types, returns an ANY.
      * </ul>
      *
      * @exception InvalidBERException If the cert is not encoded correctly.
      */
     public ASN1Value getInterpretedCert() throws InvalidBERException {
-        if( certType.equals(X509_CERT_TYPE) ) {
+        if (certType.equals(X509_CERT_TYPE)) {
             return cert.decodeWith(OCTET_STRING.getTemplate());
-        } else if( certType.equals(SDSI_CERT_TYPE) ) {
+        } else if (certType.equals(SDSI_CERT_TYPE)) {
             return cert.decodeWith(IA5String.getTemplate());
         } else {
             return cert;
         }
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     // constructors
@@ -94,23 +89,23 @@ public class CertBag implements ASN1Value {
      * Creates a CertBag from a type and a cert.
      */
     public CertBag(OBJECT_IDENTIFIER certType, ASN1Value cert) {
-        if( certType==null || cert==null ) {
+        if (certType == null || cert == null) {
             throw new IllegalArgumentException("certType or cert is null");
         }
         this.certType = certType;
-        if( cert instanceof ANY ) {
+        if (cert instanceof ANY) {
             this.cert = (ANY) cert;
         } else {
-          try {
-            byte[] encoded = ASN1Util.encode(cert);
-            this.cert = (ANY) ASN1Util.decode( ANY.getTemplate(), encoded);
-          } catch(InvalidBERException e) {
-            throw new RuntimeException("Unable to convert ASN1Value to ANY: "+ e.getMessage(), e);
-          }
+            try {
+                byte[] encoded = ASN1Util.encode(cert);
+                this.cert = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
+            } catch (InvalidBERException e) {
+                throw new RuntimeException("Unable to convert ASN1Value to ANY: " + e.getMessage(), e);
+            }
         }
         sequence = new SEQUENCE();
         sequence.addElement(this.certType);
-        sequence.addElement(new EXPLICIT(new Tag(0), this.cert) );
+        sequence.addElement(new EXPLICIT(new Tag(0), this.cert));
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -130,12 +125,12 @@ public class CertBag implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -149,10 +144,10 @@ public class CertBag implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( OBJECT_IDENTIFIER.getTemplate() );
-            seqt.addElement( new EXPLICIT.Template(
-                                    new Tag(0),
-                                    ANY.getTemplate() ) );
+            seqt.addElement(OBJECT_IDENTIFIER.getTemplate());
+            seqt.addElement(new EXPLICIT.Template(
+                    new Tag(0),
+                    ANY.getTemplate()));
         }
 
         @Override
@@ -162,19 +157,17 @@ public class CertBag implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new CertBag( (OBJECT_IDENTIFIER) seq.elementAt(0),
-                                ((EXPLICIT)seq.elementAt(1)).getContent() );
+            return new CertBag((OBJECT_IDENTIFIER) seq.elementAt(0),
+                    ((EXPLICIT) seq.elementAt(1)).getContent());
         }
     }
 }

@@ -46,29 +46,29 @@ public class SecretBag implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates a SecretBag with the given secret type and secret.  Neither
+     * Creates a SecretBag with the given secret type and secret. Neither
      * may be null.
      */
     public SecretBag(OBJECT_IDENTIFIER secretType, ASN1Value secret) {
-        if( secretType==null || secret==null ) {
+        if (secretType == null || secret == null) {
             throw new IllegalArgumentException("SecretBag parameter is null");
         }
 
         this.secretType = secretType;
-        if( secret instanceof ANY ) {
+        if (secret instanceof ANY) {
             this.secret = (ANY) secret;
         } else {
             byte[] encoded = ASN1Util.encode(secret);
             try {
                 this.secret = (ANY) ASN1Util.decode(ANY.getTemplate(), encoded);
-            } catch(InvalidBERException e) {
+            } catch (InvalidBERException e) {
                 throw new RuntimeException("Unable to convert ASN1Value to ANY: " + e.getMessage(), e);
             }
         }
 
         sequence = new SEQUENCE();
         sequence.addElement(secretType);
-        sequence.addElement( new EXPLICIT(new Tag(0), this.secret) );
+        sequence.addElement(new EXPLICIT(new Tag(0), this.secret));
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -76,6 +76,7 @@ public class SecretBag implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     private static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -88,12 +89,12 @@ public class SecretBag implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         sequence.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
@@ -107,9 +108,9 @@ public class SecretBag implements ASN1Value {
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            seqt.addElement( OBJECT_IDENTIFIER.getTemplate() );
-            seqt.addElement( new EXPLICIT.Template(
-                                new Tag(0), ANY.getTemplate()) );
+            seqt.addElement(OBJECT_IDENTIFIER.getTemplate());
+            seqt.addElement(new EXPLICIT.Template(
+                    new Tag(0), ANY.getTemplate()));
         }
 
         @Override
@@ -119,19 +120,17 @@ public class SecretBag implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
+                throws InvalidBERException, IOException {
             SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
 
-            return new SecretBag( (OBJECT_IDENTIFIER)seq.elementAt(0),
-                            ((EXPLICIT)seq.elementAt(1)).getContent() );
+            return new SecretBag((OBJECT_IDENTIFIER) seq.elementAt(0),
+                    ((EXPLICIT) seq.elementAt(1)).getContent());
         }
     }
 }
