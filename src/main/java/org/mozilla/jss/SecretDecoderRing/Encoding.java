@@ -10,7 +10,7 @@ import java.io.*;
 
 /**
  * An ASN.1 class for encoding the SecretDecoderRing result.
- * This class is used internally by the SecretDecoderRing. 
+ * This class is used internally by the SecretDecoderRing.
  * You need not use this class directly in order to use the SecretDecoderRing.
  */
 public class Encoding implements ASN1Value {
@@ -22,14 +22,13 @@ public class Encoding implements ASN1Value {
     private byte[] keyID;
 
     public Encoding(byte[] keyID, byte[] iv, OBJECT_IDENTIFIER encOID,
-            byte[] ctext)
-    {
+            byte[] ctext) {
         this.keyID = keyID;
         this.iv = iv;
         this.encOID = encOID;
         this.ctext = ctext;
         AlgorithmIdentifier algID = new AlgorithmIdentifier(
-            encOID, new OCTET_STRING(iv) );
+                encOID, new OCTET_STRING(iv));
         seq.addElement(new OCTET_STRING(keyID));
         seq.addElement(algID);
         seq.addElement(new OCTET_STRING(ctext));
@@ -50,9 +49,9 @@ public class Encoding implements ASN1Value {
     public byte[] getCiphertext() {
         return ctext;
     }
-        
 
     public static final Tag TAG = SEQUENCE.TAG;
+
     @Override
     public Tag getTag() {
         return TAG;
@@ -65,30 +64,30 @@ public class Encoding implements ASN1Value {
 
     @Override
     public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
+            throws IOException {
         seq.encode(implicitTag, ostream);
     }
 
     private static final Template templateInstance = new Template();
+
     public static Template getTemplate() {
         return templateInstance;
     }
 
     /**
      * An ASN.1 class for decoding the SecretDecoderRing result.
-     * This class is used internally by the SecretDecoderRing. 
+     * This class is used internally by the SecretDecoderRing.
      * You need not use this class directly in order to use the
      * SecretDecoderRing.
-    */
+     */
     public static class Template extends SEQUENCE.Template {
         private SEQUENCE.Template template;
 
         public Template() {
             template = new SEQUENCE.Template();
-            template.addElement(OCTET_STRING.getTemplate() );
-            template.addElement(AlgorithmIdentifier.getTemplate() );
-            template.addElement(OCTET_STRING.getTemplate() );
+            template.addElement(OCTET_STRING.getTemplate());
+            template.addElement(AlgorithmIdentifier.getTemplate());
+            template.addElement(OCTET_STRING.getTemplate());
         }
 
         @Override
@@ -98,30 +97,24 @@ public class Encoding implements ASN1Value {
 
         @Override
         public ASN1Value decode(InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             return decode(TAG, istream);
         }
 
         @Override
         public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws IOException, InvalidBERException
-        {
+                throws IOException, InvalidBERException {
             SEQUENCE seq = (SEQUENCE) template.decode(implicitTag, istream);
 
             OCTET_STRING keyID = (OCTET_STRING) seq.elementAt(0);
-            AlgorithmIdentifier algID = (AlgorithmIdentifier)
-                seq.elementAt(1);
-            OCTET_STRING ivOS = (OCTET_STRING)
-                ((ANY)algID.getParameters()).decodeWith(
-                        OCTET_STRING.getTemplate());
-            OCTET_STRING ctextOS = (OCTET_STRING)seq.elementAt(2);
+            AlgorithmIdentifier algID = (AlgorithmIdentifier) seq.elementAt(1);
+            OCTET_STRING ivOS = (OCTET_STRING) ((ANY) algID.getParameters()).decodeWith(
+                    OCTET_STRING.getTemplate());
+            OCTET_STRING ctextOS = (OCTET_STRING) seq.elementAt(2);
 
             return new Encoding(keyID.toByteArray(),
-                ivOS.toByteArray(), algID.getOID(),
-                ctextOS.toByteArray());
+                    ivOS.toByteArray(), algID.getOID(),
+                    ctextOS.toByteArray());
         }
     }
 }
-
-

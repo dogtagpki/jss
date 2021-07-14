@@ -42,15 +42,14 @@ public class Decryptor {
      * matches the keyID in the encoded SecretDecoderRing result.
      *
      * @param ciphertext A DER-encoded Encoding object, created from a previous
-     *  call to Encryptor.encrypt(), or with the NSS SecretDecoderRing.
+     *            call to Encryptor.encrypt(), or with the NSS SecretDecoderRing.
      * @return The decrypted plaintext.
      * @throws InvalidKeyException If no key can be found with the matching
-     *  keyID.
+     *             keyID.
      */
     public byte[] decrypt(byte[] ciphertext)
-        throws NotInitializedException,
-        GeneralSecurityException, TokenException
-    {
+            throws NotInitializedException,
+            GeneralSecurityException, TokenException {
         CryptoManager cm = CryptoManager.getInstance();
         CryptoToken savedToken = cm.getThreadToken();
 
@@ -60,20 +59,19 @@ public class Decryptor {
             //
             // decode ASN1
             //
-            Encoding encoding = (Encoding)
-                ASN1Util.decode(Encoding.getTemplate(), ciphertext);
+            Encoding encoding = (Encoding) ASN1Util.decode(Encoding.getTemplate(), ciphertext);
 
             //
             // lookup the algorithm
             //
             EncryptionAlgorithm alg = EncryptionAlgorithm.fromOID(
-                encoding.getEncryptionOID() );
+                    encoding.getEncryptionOID());
 
             //
             // Lookup the key
             //
             SecretKey key = keyManager.lookupKey(alg, encoding.getKeyID());
-            if( key == null ) {
+            if (key == null) {
                 throw new InvalidKeyException("No matching key found");
             }
 
@@ -83,15 +81,15 @@ public class Decryptor {
             IvParameterSpec ivSpec = new IvParameterSpec(encoding.getIv());
 
             Cipher cipher = Cipher.getInstance(alg.toString(),
-                Encryptor.PROVIDER);
+                    Encryptor.PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
 
             byte[] paddedPtext = cipher.doFinal(encoding.getCiphertext());
             return org.mozilla.jss.crypto.Cipher.unPad(paddedPtext,
-                alg.getBlockSize() );
-        } catch(InvalidBERException ibe) {
+                    alg.getBlockSize());
+        } catch (InvalidBERException ibe) {
             throw new GeneralSecurityException(ibe.toString());
-        } catch(IllegalStateException ise) {
+        } catch (IllegalStateException ise) {
             throw new GeneralSecurityException(ise.toString());
         } finally {
             cm.setThreadToken(savedToken);
