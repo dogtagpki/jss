@@ -9,11 +9,21 @@ package org.mozilla.jss.util;
  */
 public class NotImplementedException extends Exception {
     private static final long serialVersionUID = 1L;
-    public NotImplementedException() { super(); }
-    public NotImplementedException(String mesg) { super(mesg); }
-    public NotImplementedException(String mesg, Throwable cause) { super(mesg, cause); }
 
-    public NotImplementedException(String mesg, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public NotImplementedException() {
+        super();
+    }
+
+    public NotImplementedException(String mesg) {
+        super(mesg);
+    }
+
+    public NotImplementedException(String mesg, Throwable cause) {
+        super(mesg, cause);
+    }
+
+    public NotImplementedException(String mesg, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(mesg, cause, enableSuppression, writableStackTrace);
     }
 }

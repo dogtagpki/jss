@@ -35,7 +35,7 @@ public class EC {
             int total_length = data.length - index;
 
             // Remaining length should be even by above.
-            assert((total_length & 1) == 0);
+            assert ((total_length & 1) == 0);
 
             // Length of the point is now half of the total_length.
             int point_length = total_length / 2;
@@ -49,7 +49,7 @@ public class EC {
 
             // We should now be at the end of the buffer; there should be
             // no trailing data.
-            assert(index + point_length == data.length);
+            assert (index + point_length == data.length);
 
             return new ECPoint(x1, y1);
         }
@@ -75,7 +75,7 @@ public class EC {
             throw new RuntimeException(e.getMessage() + "\nData: " + Utils.HexEncode(data), e);
         }
 
-        OBJECT_IDENTIFIER oid = (OBJECT_IDENTIFIER)value;
+        OBJECT_IDENTIFIER oid = (OBJECT_IDENTIFIER) value;
         ECCurve curve = ECCurve.fromOID(oid);
 
         if (curve == null) {

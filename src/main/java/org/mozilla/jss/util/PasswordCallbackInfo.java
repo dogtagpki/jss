@@ -13,28 +13,28 @@ public class PasswordCallbackInfo {
     /**
      * @param name The name of the file or token that is being logged into.
      * @param type The type of object (<code>FILE</code> or
-     *      <code>TOKEN</code>) that is being logged into.
+     *            <code>TOKEN</code>) that is being logged into.
      */
-	public PasswordCallbackInfo(String name, int type) {
-		assert(type==FILE || type==TOKEN);
-		this.name = name;
-		this.type = type;
-	}
+    public PasswordCallbackInfo(String name, int type) {
+        assert (type == FILE || type == TOKEN);
+        this.name = name;
+        this.type = type;
+    }
 
-	/**
-	 * The name of the file or token that is being logged into.
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * The name of the file or token that is being logged into.
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * The type of object that is being logged into, <code>FILE</code>
-     *  or <code>TOKEN</code>.
-	 */
-	public int getType() {
-		return type;
-	}
+    /**
+     * The type of object that is being logged into, <code>FILE</code>
+     * or <code>TOKEN</code>.
+     */
+    public int getType() {
+        return type;
+    }
 
     protected String name;
     protected int type;

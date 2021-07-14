@@ -15,7 +15,8 @@ package org.mozilla.jss.util;
 public class AssertionException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public AssertionException() {}
+    public AssertionException() {
+    }
 
     public AssertionException(String mesg) {
         super(mesg);

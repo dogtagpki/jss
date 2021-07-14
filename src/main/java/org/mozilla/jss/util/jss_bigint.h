@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* Need to include these first:
-#include <jni.h>
-#include <seccomon.h>
-*/
+ #include <jni.h>
+ #include <seccomon.h>
+ */
 
 #ifndef JSS_BIG_INT_H
 #define JSS_BIG_INT_H

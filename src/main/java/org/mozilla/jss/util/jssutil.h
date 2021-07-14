@@ -28,12 +28,12 @@ PR_BEGIN_EXTERN_C
 
 /**** NSPR private thread functions ****/
 /*
-PRThread* PR_AttachThread(PRThreadType type,
-                                     PRThreadPriority priority,
-                     PRThreadStack *stack);
+ PRThread* PR_AttachThread(PRThreadType type,
+ PRThreadPriority priority,
+ PRThreadStack *stack);
 
-void PR_DetachThread(void);
-*/
+ void PR_DetachThread(void);
+ */
 #define PR_AttachThread(a, b, c)  ((PRThread*)1)
 #define PR_DetachThread()
 
@@ -61,7 +61,6 @@ void
 JSS_throwMsg(JNIEnv *env, const char *throwableClassName, const char *message);
 
 #define JSS_nativeThrowMsg JSS_throwMsg
-
 
 /***********************************************************************
  * J S S _ t h r o w
@@ -100,74 +99,74 @@ JSS_assertOutOfMem(JNIEnv *env);
 #endif
 
 /***********************************************************************
-**
-** J S S _ g e t P t r F r o m P r o x y
-**
-** Given a NativeProxy, extract the pointer and store it at the given
-** address.
-**
-** nativeProxy: a JNI reference to a NativeProxy.
-** ptr: address of a void* that will receive the pointer extracted from
-**      the NativeProxy.
-** Returns: PR_SUCCESS on success, PR_FAILURE if an exception was thrown.
-**
-** Example:
-**  DataStructure *recovered;
-**  jobject proxy;
-**  JNIEnv *env;
-**  [...]
-**  if(JSS_getPtrFromProxy(env, proxy, (void**)&recovered) != PR_SUCCESS) {
-**      return;  // exception was thrown!
-**  }
-*/
+ **
+ ** J S S _ g e t P t r F r o m P r o x y
+ **
+ ** Given a NativeProxy, extract the pointer and store it at the given
+ ** address.
+ **
+ ** nativeProxy: a JNI reference to a NativeProxy.
+ ** ptr: address of a void* that will receive the pointer extracted from
+ **      the NativeProxy.
+ ** Returns: PR_SUCCESS on success, PR_FAILURE if an exception was thrown.
+ **
+ ** Example:
+ **  DataStructure *recovered;
+ **  jobject proxy;
+ **  JNIEnv *env;
+ **  [...]
+ **  if(JSS_getPtrFromProxy(env, proxy, (void**)&recovered) != PR_SUCCESS) {
+ **      return;  // exception was thrown!
+ **  }
+ */
 PRStatus
 JSS_getPtrFromProxy(JNIEnv *env, jobject nativeProxy, void **ptr);
 
 /***********************************************************************
-**
-** J S S _ c l e a r P t r F r o m P r o x y
-**
-** Given a NativeProxy, clear the value of the pointer stored in it. This
-** helps to ensure that a double free doesn't occur.
-**
-** Returns: PR_SUCCESS on success, PR_FAILURE if an exception was thrown.
-*/
+ **
+ ** J S S _ c l e a r P t r F r o m P r o x y
+ **
+ ** Given a NativeProxy, clear the value of the pointer stored in it. This
+ ** helps to ensure that a double free doesn't occur.
+ **
+ ** Returns: PR_SUCCESS on success, PR_FAILURE if an exception was thrown.
+ */
 PRStatus
 JSS_clearPtrFromProxy(JNIEnv *env, jobject nativeProxy);
 
 /***********************************************************************
-**
-** J S S _ g e t P t r F r o m P r o x y O w n e r
-**
-** Given an object which contains a NativeProxy, extract the pointer
-** from the NativeProxy and store it at the given address.
-**
-** proxyOwner: an object which contains a NativeProxy member.
-** proxyFieldName: the name of the NativeProxy member.
-** proxyFieldSig: the signature of the NativeProxy member.
-** ptr: address of a void* that will receive the extract pointer.
-** Returns: PR_SUCCESS for success, PR_FAILURE if an exception was thrown.
-**
-** Example:
-** <Java>
-** public class Owner {
-**      protected MyProxy myProxy;
-**      [...]
-** }
-** 
-** <C>
-**  DataStructure *recovered;
-**  jobject owner;
-**  JNIEnv *env;
-**  [...]
-**  if(JSS_getPtrFromProxyOwner(env, owner, "myProxy", (void**)&recovered)
-**              != PR_SUCCESS) {
-**      return;  // exception was thrown!
-**  }
-*/
+ **
+ ** J S S _ g e t P t r F r o m P r o x y O w n e r
+ **
+ ** Given an object which contains a NativeProxy, extract the pointer
+ ** from the NativeProxy and store it at the given address.
+ **
+ ** proxyOwner: an object which contains a NativeProxy member.
+ ** proxyFieldName: the name of the NativeProxy member.
+ ** proxyFieldSig: the signature of the NativeProxy member.
+ ** ptr: address of a void* that will receive the extract pointer.
+ ** Returns: PR_SUCCESS for success, PR_FAILURE if an exception was thrown.
+ **
+ ** Example:
+ ** <Java>
+ ** public class Owner {
+ **      protected MyProxy myProxy;
+ **      [...]
+ ** }
+ **
+ ** <C>
+ **  DataStructure *recovered;
+ **  jobject owner;
+ **  JNIEnv *env;
+ **  [...]
+ **  if(JSS_getPtrFromProxyOwner(env, owner, "myProxy", (void**)&recovered)
+ **              != PR_SUCCESS) {
+ **      return;  // exception was thrown!
+ **  }
+ */
 PRStatus
-JSS_getPtrFromProxyOwner(JNIEnv *env, jobject proxyOwner, char* proxyFieldName,
-	char *proxyFieldSig, void **ptr);
+JSS_getPtrFromProxyOwner(JNIEnv *env, jobject proxyOwner, char *proxyFieldName,
+		char *proxyFieldSig, void **ptr);
 
 /*
  * Turn a C pointer into a Java byte array. The byte array can be passed
@@ -186,7 +185,7 @@ JSS_ptrToByteArray(JNIEnv *env, void *ptr);
  * Given a string, set it to all zeroes. Don't pass in NULL.
  */
 void
-JSS_wipeCharArray(char* array);
+JSS_wipeCharArray(char *array);
 
 /**********************************************************************
  *
@@ -245,32 +244,31 @@ JSS_ByteArrayToSECItem(JNIEnv *env, jbyteArray byteArray);
  *      A UTF-8 encoded constant error string for errNum.
  *      NULL if errNum is unknown.
  */
-const char *
+const char*
 JSS_strerror(PRErrorCode errNum);
 
-
 /***********************************************************************
-**
-** J S S _ t h r o w M s g P r E r r A r g
-**
-** Throw an exception in native code.  You should return right after
-** calling this function.
-**
-** throwableClassName is the name of the throwable you are throwing in
-** JNI class name format (xxx/xx/xxx/xxx). It must not be NULL.
-**
-** message is the message parameter of the throwable. It must not be NULL.
-** If you don't have a message, call JSS_throw.
-**
-** errCode is a PRErrorCode returned from PR_GetError().
-**
-** Example:
-**      JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION, PR_GetError());
-**      return -1;
-*/
+ **
+ ** J S S _ t h r o w M s g P r E r r A r g
+ **
+ ** Throw an exception in native code.  You should return right after
+ ** calling this function.
+ **
+ ** throwableClassName is the name of the throwable you are throwing in
+ ** JNI class name format (xxx/xx/xxx/xxx). It must not be NULL.
+ **
+ ** message is the message parameter of the throwable. It must not be NULL.
+ ** If you don't have a message, call JSS_throw.
+ **
+ ** errCode is a PRErrorCode returned from PR_GetError().
+ **
+ ** Example:
+ **      JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION, PR_GetError());
+ **      return -1;
+ */
 void
 JSS_throwMsgPrErrArg(JNIEnv *env, const char *throwableClassName,
-    const char *message, PRErrorCode errCode);
+		const char *message, PRErrorCode errCode);
 
 #define JSS_throwMsgPrErr(e, cn, m) \
     JSS_throwMsgPrErrArg((e), (cn), (m), PR_GetError())
@@ -279,140 +277,140 @@ JSS_throwMsgPrErrArg(JNIEnv *env, const char *throwableClassName,
     JSS_throwMsgPrErrArg((e), (cn), (m), PORT_GetError())
 
 /************************************************************************
-**
-** J S S _ i n i t E r r c o d e T r a n s l a t i o n T a b l e.
-**
-** Initializes the error code translation table. This should be called
-** by CryptoManager.initialize(), and must be called before any calls to
-** JSS_ConvertNativeErrcodeToJava.
-**
-*/
+ **
+ ** J S S _ i n i t E r r c o d e T r a n s l a t i o n T a b l e.
+ **
+ ** Initializes the error code translation table. This should be called
+ ** by CryptoManager.initialize(), and must be called before any calls to
+ ** JSS_ConvertNativeErrcodeToJava.
+ **
+ */
 void JSS_initErrcodeTranslationTable();
 
 /************************************************************************
-**
-** J S S _ C o n v e r t N a t i v e E r r c o d e T o J a v a
-**
-** Converts an NSPR or NSS error code to a Java error code.
-** (defined in the class o.m.util.NativeErrcodes)
-**
-** Returns
-**  The Java error code, or -1 if a corresponding Java error code could
-**  not be found.
-*/
+ **
+ ** J S S _ C o n v e r t N a t i v e E r r c o d e T o J a v a
+ **
+ ** Converts an NSPR or NSS error code to a Java error code.
+ ** (defined in the class o.m.util.NativeErrcodes)
+ **
+ ** Returns
+ **  The Java error code, or -1 if a corresponding Java error code could
+ **  not be found.
+ */
 int JSS_ConvertNativeErrcodeToJava(int nativeErrcode);
 
 /************************************************************************
-** JSS_ToByteArray.
-**
-** Converts the given chararacter array to a Java byte array.
-**
-** Returns
-**  The new jbyteArray object or NULL on failure.
-*/
+ ** JSS_ToByteArray.
+ **
+ ** Converts the given chararacter array to a Java byte array.
+ **
+ ** Returns
+ **  The new jbyteArray object or NULL on failure.
+ */
 jbyteArray JSS_ToByteArray(JNIEnv *env, const void *data, int length);
 
 /************************************************************************
-** JSS_RefByteArray.
-**
-** References the contents of a Java ByteArray into *data, and optionally
-** records length information to *lenght. Must be dereferenced via calling
-** JSS_DerefByteArray.
-**
-** Returns
-**  bool - whether or not the operation succeeded.
-*/
+ ** JSS_RefByteArray.
+ **
+ ** References the contents of a Java ByteArray into *data, and optionally
+ ** records length information to *lenght. Must be dereferenced via calling
+ ** JSS_DerefByteArray.
+ **
+ ** Returns
+ **  bool - whether or not the operation succeeded.
+ */
 bool JSS_RefByteArray(JNIEnv *env, jbyteArray array, jbyte **data,
-    jsize *length);
+		jsize *length);
 
 /************************************************************************
-** JSS_DerefByteArray.
-**
-** Dereferences the specified ByteArray and passed reference. mode is the
-** same as given to (*env)->ReleaseByteArrayElements: 0 for copy and free,
-** JNI_COMMIT for copy without freeing, and JNI_ABORT for free-only.
-**
-*/
+ ** JSS_DerefByteArray.
+ **
+ ** Dereferences the specified ByteArray and passed reference. mode is the
+ ** same as given to (*env)->ReleaseByteArrayElements: 0 for copy and free,
+ ** JNI_COMMIT for copy without freeing, and JNI_ABORT for free-only.
+ **
+ */
 void JSS_DerefByteArray(JNIEnv *env, jbyteArray array, void *data, jint mode);
 
 /************************************************************************
-** JSS_FromByteArray.
-**
-** Converts the given chararacter array from a Java byte array into a array of
-** uint_t. When length is passed and is not NULL, *length is updated with the
-** length of the array.
-**
-** Returns
-**  bool - whether or not the operation succeeded.
-*/
+ ** JSS_FromByteArray.
+ **
+ ** Converts the given chararacter array from a Java byte array into a array of
+ ** uint_t. When length is passed and is not NULL, *length is updated with the
+ ** length of the array.
+ **
+ ** Returns
+ **  bool - whether or not the operation succeeded.
+ */
 bool JSS_FromByteArray(JNIEnv *env, jbyteArray array, uint8_t **data,
-    size_t *length);
+		size_t *length);
 
 /************************************************************************
-** JSS_RefJString
-**
-** Converts the given jstring object to a char *; must be freed with
-** JSS_DerefJString().
-**
-** Returns
-**  A reference to the characters underlying the given string.
-*/
-const char *JSS_RefJString(JNIEnv *env, jstring str);
+ ** JSS_RefJString
+ **
+ ** Converts the given jstring object to a char *; must be freed with
+ ** JSS_DerefJString().
+ **
+ ** Returns
+ **  A reference to the characters underlying the given string.
+ */
+const char* JSS_RefJString(JNIEnv *env, jstring str);
 
 /************************************************************************
-** JSS_DerefJString
-**
-** Returns the reference given by the JVM to a jstring's contents.
-**
-*/
+ ** JSS_DerefJString
+ **
+ ** Returns the reference given by the JVM to a jstring's contents.
+ **
+ */
 void JSS_DerefJString(JNIEnv *env, jstring str, const char *ref);
 
 /************************************************************************
-** JSS_PK11_WrapCertToChain
-**
-** Inquires about the certificate chain for cert, and returns the full or
-** partial as a jobjectArray for use in JNI'd code.
-**
-*/
+ ** JSS_PK11_WrapCertToChain
+ **
+ ** Inquires about the certificate chain for cert, and returns the full or
+ ** partial as a jobjectArray for use in JNI'd code.
+ **
+ */
 jobjectArray JSS_PK11_WrapCertToChain(JNIEnv *env, CERTCertificate *cert,
-                                      SECCertUsage certUsage);
+		SECCertUsage certUsage);
 
 /************************************************************************
-** JSS_ExceptionToSECStatus
-**
-** When the JNI has thrown a known exception, convert this to a SECStatus
-** code and set the appropriate PRErrorCode.
-**
-** The supported exceptions are:
-**  - CertificateException
-**
-*/
+ ** JSS_ExceptionToSECStatus
+ **
+ ** When the JNI has thrown a known exception, convert this to a SECStatus
+ ** code and set the appropriate PRErrorCode.
+ **
+ ** The supported exceptions are:
+ **  - CertificateException
+ **
+ */
 SECStatus JSS_ExceptionToSECStatus(JNIEnv *env);
 
 /************************************************************************
-** JSS_SECStatusToException
-**
-** Convert a failing SECStatus and PRErrorCode combination into a raised
-** JNI exception.
-**
-** The supported exceptions are:
-**  - CertificateException
-**
-*/
+ ** JSS_SECStatusToException
+ **
+ ** Convert a failing SECStatus and PRErrorCode combination into a raised
+ ** JNI exception.
+ **
+ ** The supported exceptions are:
+ **  - CertificateException
+ **
+ */
 void JSS_SECStatusToException(JNIEnv *env, SECStatus result, PRErrorCode code);
 
 /************************************************************************
-** JSS_SECStatusToException
-**
-** Convert a failing SECStatus and PRErrorCode combination into a raised
-** JNI exception with the specified message.
-**
-** The supported exceptions are:
-**  - CertificateException
-**
-*/
+ ** JSS_SECStatusToException
+ **
+ ** Convert a failing SECStatus and PRErrorCode combination into a raised
+ ** JNI exception with the specified message.
+ **
+ ** The supported exceptions are:
+ **  - CertificateException
+ **
+ */
 void JSS_SECStatusToExceptionMessage(JNIEnv *env, SECStatus result,
-                                     PRErrorCode code, const char *message);
+		PRErrorCode code, const char *message);
 
 PR_END_EXTERN_C
 
