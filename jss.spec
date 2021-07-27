@@ -61,8 +61,8 @@ BuildRequires:  zip
 BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
-BuildRequires:  nss-devel >= 3.66
-BuildRequires:  nss-tools >= 3.66
+BuildRequires:  nss-devel >= 3.44
+BuildRequires:  nss-tools >= 3.44
 BuildRequires:  %{java_devel}
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
@@ -72,7 +72,7 @@ BuildRequires:  apache-commons-lang3
 
 BuildRequires:  junit
 
-Requires:       nss >= 3.66
+Requires:       nss >= 3.44
 Requires:       %{java_headless}
 Requires:       jpackage-utils
 Requires:       slf4j
