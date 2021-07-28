@@ -8,8 +8,6 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'fedora_33'
-          - 'fedora_34'
           - 'fedora_latest_jdk11'
           - 'symbolcheck'
           - 'debian_jdk11'
