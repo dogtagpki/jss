@@ -9,7 +9,6 @@ jobs:
       matrix:
         image:
           - 'fedora_latest_jdk11'
-          - 'symbolcheck'
           - 'debian_jdk11'
           - 'ubuntu_jdk11'
           # Disable tests due to missing dependencies
@@ -22,3 +21,28 @@ jobs:
 
     - name: Build and Run the Docker Image
       run: bash tools/run_container.sh "${{ matrix.image }}"
+
+  # Compare JNI symbols in the code and in the version script.
+  # If there are JNI symbols in the code but not in the version script -> fail.
+  symbol-test:
+    name: Symbol Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Get JNI symbols in the code
+        run: |
+          grep -iroh '^Java_org_mozilla[^(;]*' src/main/java/ | sort -u > /tmp/functions.txt
+          cat /tmp/functions.txt
+
+      - name: Get JNI symbols in the version script
+        run: |
+          grep -iroh '^Java_org_mozilla[^(;]*' lib/ | sort -u > /tmp/version.txt
+          cat /tmp/version.txt
+
+      - name: Compare JNI symbols
+        run: |
+          diff /tmp/functions.txt /tmp/version.txt || true
+          comm -23 --check-order /tmp/functions.txt /tmp/version.txt > /tmp/diff.txt
+          test ! -s /tmp/diff.txt
