@@ -3,24 +3,40 @@ name: Required Tests
 on: [push, pull_request]
 
 jobs:
-  test:
+  build-test:
+    name: Build Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image:
-          - 'fedora_latest_jdk11'
-          - 'debian_jdk11'
-          - 'ubuntu_jdk11'
-          # Disable tests due to missing dependencies
-          # - 'centos_7'
-          # - 'centos_8'
-
+        os:
+          - 'fedora:latest'
+          - 'debian:testing'
+          - 'ubuntu:rolling'
+          # Disable CentOS due to missing dependencies
+          # - 'centos:7'
+          # - 'centos:8'
+    container: ${{ matrix.os }}
     steps:
-    - name: Clone the repository
+    - name: Clone repository
       uses: actions/checkout@v2
 
-    - name: Build and Run the Docker Image
-      run: bash tools/run_container.sh "${{ matrix.image }}"
+    - name: Install Fedora/CentOS dependencies
+      if: ${{ startsWith(matrix.os, 'fedora:') || startsWith(matrix.os, 'centos:') }}
+      run: |
+        dnf install -y dnf-plugins-core rpm-build
+        dnf builddep -y --spec jss.spec
+
+    - name: Install Debian/Ubuntu dependencies
+      if: ${{ startsWith(matrix.os, 'debian:') || startsWith(matrix.os, 'ubuntu:') }}
+      run: |
+        apt-get update
+        apt-get install -y \
+            cmake zip unzip \
+            g++ libnss3-dev libnss3-tools \
+            openjdk-11-jdk libcommons-lang3-java libjaxb-api-java libslf4j-java junit4
+
+    - name: Build JSS binaries, Javadoc, and run tests
+      run: ./build.sh
 
   # Compare JNI symbols in the code and in the version script.
   # If there are JNI symbols in the code but not in the version script -> fail.
