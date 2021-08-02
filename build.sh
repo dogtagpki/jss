@@ -448,10 +448,6 @@ if [ "$DIST" != "" ] ; then
     OPTIONS+=(--define "dist .$DIST")
 fi
 
-if [ "$WITHOUT_TEST" = true ] ; then
-    OPTIONS+=(--without test)
-fi
-
 if [ "$DEBUG" = true ] ; then
     echo rpmbuild -bs "${OPTIONS[@]}" "$WORK_DIR/SPECS/$RPM_SPEC"
 fi
