@@ -43,6 +43,8 @@ if (DEFINED ENV{WITH_INTERNET})
 endif()
 option(TEST_WITH_INTERNET "When enabled, runs various tests which require an internet connection. " ${TEST_WITH_INTERNET_ENV})
 
+option(WITH_JAVADOC "Build Javadoc package." TRUE)
+
 # Find NSPR and NSS Libraries.
 find_package(NSPR REQUIRED)
 find_package(NSS REQUIRED)
@@ -103,16 +105,18 @@ install(
     )"
 )
 
-install(
-    DIRECTORY
-        ${CMAKE_CURRENT_BINARY_DIR}/docs/
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
-)
+if(WITH_JAVADOC)
+    install(
+        DIRECTORY
+            ${CMAKE_CURRENT_BINARY_DIR}/docs/
+        DESTINATION
+            ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
+    )
 
-install(
-    FILES
-        jss.html MPL-1.1.txt gpl.txt lgpl.txt
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
-)
+    install(
+        FILES
+            jss.html MPL-1.1.txt gpl.txt lgpl.txt
+        DESTINATION
+            ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
+    )
+endif(WITH_JAVADOC)

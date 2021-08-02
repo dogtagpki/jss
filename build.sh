@@ -30,6 +30,7 @@ WITH_TIMESTAMP=
 WITH_COMMIT_ID=
 DIST=
 
+WITHOUT_JAVADOC=
 WITHOUT_TEST=
 
 VERBOSE=
@@ -50,6 +51,7 @@ usage() {
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
+    echo "    --without-javadoc      Do not build Javadoc package."
     echo "    --without-test         Do not run unit tests."
     echo " -v,--verbose              Run in verbose mode."
     echo "    --debug                Run in debug mode."
@@ -143,6 +145,12 @@ generate_rpm_spec() {
         commands="${commands}; s/# Patch: jss-VERSION-RELEASE.patch/Patch: $PATCH/g"
     fi
 
+    # hard-code Javadoc option
+    if [ "$WITHOUT_JAVADOC" = true ] ; then
+        # convert bcond_without into bcond_with such that Javadoc package is not built by default
+        commands="${commands}; s/%\(bcond_without *javadoc\)\$/# \1\n%bcond_with javadoc/g"
+    fi
+
     # hard-code test option
     if [ "$WITHOUT_TEST" = true ] ; then
         # convert bcond_without into bcond_with such that unit tests do not run by default
@@ -195,6 +203,9 @@ while getopts v-: arg ; do
             ;;
         dist=?*)
             DIST="$LONG_OPTARG"
+            ;;
+        without-javadoc)
+            WITHOUT_JAVADOC=true
             ;;
         without-test)
             WITHOUT_TEST=true
@@ -276,6 +287,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     OPTIONS+=(-DJAVA_LIB_INSTALL_DIR=$JAVA_LIB_DIR )
     OPTIONS+=(-DJSS_LIB_INSTALL_DIR=$JSS_LIB_DIR)
 
+    if [ "$WITHOUT_JAVADOC" = true ] ; then
+        OPTIONS+=(-DWITH_JAVADOC=FALSE)
+    fi
+
     OPTIONS+=(-S $SRC_DIR)
     OPTIONS+=(-B .)
 
@@ -291,7 +306,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     OPTIONS+=(--no-print-directory)
 
     make "${OPTIONS[@]}" all
-    make "${OPTIONS[@]}" javadoc
+
+    if [ "$WITHOUT_JAVADOC" != true ] ; then
+        make "${OPTIONS[@]}" javadoc
+    fi
 
     if [ "$WITHOUT_TEST" != true ] ; then
         ctest --output-on-failure
