@@ -40,6 +40,11 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Build Options
 ################################################################################
 
+# By default the javadoc package will be built unless --without javadoc
+# option is specified.
+
+%bcond_without javadoc
+
 # By default the build will execute unit tests unless --without test
 # option is specified.
 
@@ -84,6 +89,7 @@ Java Security Services (JSS) is a java native interface which provides a bridge
 for java-based applications to use native Network Security Services (NSS).
 This only works with gcj. Other JREs require that JCE providers be signed.
 
+%if %{with javadoc}
 ################################################################################
 %package javadoc
 ################################################################################
@@ -93,6 +99,7 @@ Requires:       jss = %{version}-%{release}
 
 %description javadoc
 This package contains the API documentation for JSS.
+%endif
 
 ################################################################################
 %prep
@@ -122,6 +129,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
     --java-lib-dir=%{_jnidir} \
     --jss-lib-dir=%{_libdir}/jss \
     --version=%{version} \
+    %{!?with_javadoc:--without-javadoc} \
     %{!?with_test:--without-test} \
     dist
 
@@ -143,11 +151,13 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 %{_libdir}/*
 %{_jnidir}/*
 
+%if %{with javadoc}
 ################################################################################
 %files javadoc
 
 %defattr(-,root,root,-)
 %{_javadocdir}/%{name}-%{version}/
+%endif
 
 ################################################################################
 %changelog
