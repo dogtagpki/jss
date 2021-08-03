@@ -5,12 +5,11 @@
 # All rights reserved.
 # END COPYRIGHT BLOCK
 
-NAME=jss
-
 SCRIPT_PATH="$(readlink -f "$0")"
 SCRIPT_NAME="$(basename "$SCRIPT_PATH")"
-
 SRC_DIR="$(dirname "$SCRIPT_PATH")"
+
+NAME=jss
 WORK_DIR="$HOME/build/$NAME"
 JAVA_LIB_DIR="/usr/lib/java"
 
@@ -257,6 +256,86 @@ if [ "$BUILD_TARGET" != "dist" ] &&
     exit 1
 fi
 
+mkdir -p "$WORK_DIR"
+cd "$WORK_DIR"
+
+if [ "$BUILD_TARGET" = "dist" ] ; then
+
+    if [ "$VERBOSE" = true ] ; then
+        echo "Building $NAME"
+    fi
+
+    OPTIONS=()
+    OPTIONS+=(-DVERSION=$VERSION)
+
+    if [ "$JAVA_HOME" != "" ] ; then
+        OPTIONS+=(-DJAVA_HOME=$JAVA_HOME)
+    fi
+
+    OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
+    OPTIONS+=(-DJAVA_LIB_INSTALL_DIR=$JAVA_LIB_DIR )
+    OPTIONS+=(-DJSS_LIB_INSTALL_DIR=$JSS_LIB_DIR)
+
+    OPTIONS+=(-S $SRC_DIR)
+    OPTIONS+=(-B .)
+
+    cmake "${OPTIONS[@]}"
+
+    OPTIONS=()
+
+    if [ "$VERBOSE" = true ] ; then
+        OPTIONS+=(VERBOSE=1)
+    fi
+
+    OPTIONS+=(CMAKE_NO_VERBOSE=1)
+    OPTIONS+=(--no-print-directory)
+
+    make "${OPTIONS[@]}" all
+    make "${OPTIONS[@]}" javadoc
+
+    if [ "$WITHOUT_TEST" != true ] ; then
+        ctest --output-on-failure
+    fi
+
+    echo
+    echo "Build artifacts:"
+    echo "- Java archive: $WORK_DIR/jss.jar"
+    echo "- shared library: $WORK_DIR/libjss.so"
+    echo "- documentation: $WORK_DIR/docs"
+    echo
+    echo "To install the build: $0 install"
+    echo "To create RPM packages: $0 rpm"
+    echo
+
+    exit
+fi
+
+if [ "$BUILD_TARGET" = "install" ] ; then
+
+    if [ "$VERBOSE" = true ] ; then
+        echo "Installing $NAME"
+    fi
+
+    OPTIONS=()
+
+    if [ "$VERBOSE" = true ] ; then
+        OPTIONS+=(VERBOSE=1)
+    fi
+
+    OPTIONS+=(CMAKE_NO_VERBOSE=1)
+    OPTIONS+=(DESTDIR=$INSTALL_DIR)
+    OPTIONS+=(INSTALL="install -p")
+    OPTIONS+=(--no-print-directory)
+
+    make "${OPTIONS[@]}" install
+
+    exit
+fi
+
+################################################################################
+# Prepare RPM build
+################################################################################
+
 if [ "$SPEC_TEMPLATE" = "" ] ; then
     SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
 fi
@@ -308,86 +387,6 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 echo "Building $NAME-$VERSION-$RELEASE${_TIMESTAMP}${_COMMIT_ID}"
-
-################################################################################
-# Initialize working directory
-################################################################################
-
-if [ "$VERBOSE" = true ] ; then
-    echo "Initializing $WORK_DIR"
-fi
-
-mkdir -p "$WORK_DIR"
-cd "$WORK_DIR"
-
-if [ "$BUILD_TARGET" = "dist" ] ; then
-
-    OPTIONS=()
-    OPTIONS+=(-DVERSION=$VERSION)
-
-    if [ "$JAVA_HOME" != "" ] ; then
-        OPTIONS+=(-DJAVA_HOME=$JAVA_HOME)
-    fi
-
-    OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
-    OPTIONS+=(-DJAVA_LIB_INSTALL_DIR=$JAVA_LIB_DIR )
-    OPTIONS+=(-DJSS_LIB_INSTALL_DIR=$JSS_LIB_DIR)
-
-    OPTIONS+=(-S $SRC_DIR)
-    OPTIONS+=(-B .)
-
-    cmake "${OPTIONS[@]}"
-
-    OPTIONS=()
-
-    if [ "$VERBOSE" = true ] ; then
-        OPTIONS+=(VERBOSE=1)
-    fi
-
-    OPTIONS+=(CMAKE_NO_VERBOSE=1)
-    OPTIONS+=(--no-print-directory)
-
-    make "${OPTIONS[@]}" all
-    make "${OPTIONS[@]}" javadoc
-
-    if [ "$WITHOUT_TEST" != true ] ; then
-        ctest --output-on-failure
-    fi
-
-    echo
-    echo "Build artifacts:"
-    echo "- Java archive: $WORK_DIR/jss.jar"
-    echo "- shared library: $WORK_DIR/libjss.so"
-    echo "- documentation: $WORK_DIR/docs"
-    echo
-    echo "To install the build: $0 install"
-    echo "To create RPM packages: $0 rpm"
-    echo
-
-    exit
-fi
-
-if [ "$BUILD_TARGET" = "install" ] ; then
-
-    OPTIONS=()
-
-    if [ "$VERBOSE" = true ] ; then
-        OPTIONS+=(VERBOSE=1)
-    fi
-
-    OPTIONS+=(CMAKE_NO_VERBOSE=1)
-    OPTIONS+=(DESTDIR=$INSTALL_DIR)
-    OPTIONS+=(INSTALL="install -p")
-    OPTIONS+=(--no-print-directory)
-
-    make "${OPTIONS[@]}" install
-
-    exit
-fi
-
-################################################################################
-# Prepare RPM build directories
-################################################################################
 
 rm -rf BUILD
 rm -rf RPMS
