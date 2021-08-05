@@ -1,0 +1,6 @@
+= API Changes =
+
+== Changes in org.mozilla.jss.netscape.security.x509.CertAndKeyGen ==
+
+* The `getSelfCert()` has been deprecated in JSS 4 and dropped in JSS 5. Use `getSelfCertificate()` instead.
+* The `setRandom()` has been deprecated in JSS 4 and dropped in JSS 5. It is no longer used.

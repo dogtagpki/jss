@@ -25,7 +25,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
@@ -74,20 +73,6 @@ public final class CertAndKeyGen {
             throws NoSuchAlgorithmException {
         keyGen = KeyPairGenerator.getInstance(keyType);
         this.sigAlg = sigAlg;
-    }
-
-    /**
-     * Sets the source of random numbers used when generating keys.
-     * If you do not provide one, a system default facility is used.
-     * You may wish to provide your own source of random numbers
-     * to get a reproducible sequence of keys and signatures, or
-     * because you may be able to take advantage of strong sources
-     * of randomness/entropy in your environment.
-     *
-     * @deprecated All random numbers come from PKCS #11 now.
-     */
-    @Deprecated
-    public void setRandom(SecureRandom generator) {
     }
 
     // want "public void generate (X509Certificate)" ... inherit DSA/D-H param
@@ -153,37 +138,6 @@ public final class CertAndKeyGen {
     }
 
     /**
-     * Returns a self-signed X.509v1 certificate for the public key.
-     * The certificate is immediately valid.
-     *
-     * <P>
-     * Such certificates normally are used to identify a "Certificate Authority" (CA). Accordingly, they will not always
-     * be accepted by other parties. However, such certificates are also useful when you are bootstrapping your security
-     * infrastructure, or deploying system prototypes.
-     *
-     * @deprecated Use the new {@link #getSelfCertificate(X500Name, long)}
-     *
-     * @param myname X.500 name of the subject (who is also the issuer)
-     * @param validity how long the certificate should be valid, in seconds
-     */
-    @Deprecated
-    public X509Cert getSelfCert(X500Name myname, long validity)
-            throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
-        X509Certificate cert;
-
-        try {
-            cert = getSelfCertificate(myname, validity);
-            return new X509Cert(cert.getEncoded());
-        } catch (CertificateException e) {
-            throw new SignatureException(e.getMessage());
-        } catch (NoSuchProviderException e) {
-            throw new NoSuchAlgorithmException(e.getMessage());
-        } catch (IOException e) {
-            throw new SignatureException(e.getMessage());
-        }
-    }
-
-    /**
      * Returns a self-signed X.509v3 certificate for the public key.
      * The certificate is immediately valid. No extensions.
      *
@@ -238,7 +192,7 @@ public final class CertAndKeyGen {
             return cert;
 
         } catch (IOException e) {
-            throw new CertificateEncodingException("getSelfCert: " +
+            throw new CertificateEncodingException("getSelfCertificate: " +
                                                     e.getMessage());
         }
     }
