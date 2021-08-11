@@ -18,7 +18,6 @@
 package org.mozilla.jss.netscape.security.provider;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.security.InvalidKeyException;
 
 import org.mozilla.jss.netscape.security.util.BigInt;
@@ -38,7 +37,7 @@ import org.mozilla.jss.netscape.security.x509.X509Key;
  *
  */
 
-public final class RSAPublicKey extends X509Key implements Serializable {
+public final class RSAPublicKey extends X509Key {
 
     /* XXX This currently understands only PKCS#1 RSA Encryption OID
        and parameter format

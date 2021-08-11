@@ -8,7 +8,7 @@ import java.io.CharConversionException;
 /**
  * The ASN.1 type <i>TeletexString</i>.
  */
-public class TeletexString extends CharacterString implements ASN1Value {
+public class TeletexString extends CharacterString {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 20);
 
@@ -32,7 +32,7 @@ public class TeletexString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
-     * 
+     *
      * @return Template.
      */
     public static Template getTemplate() {
@@ -43,7 +43,7 @@ public class TeletexString extends CharacterString implements ASN1Value {
 
     // nested class
     public static class Template
-            extends CharacterString.Template implements ASN1Template {
+            extends CharacterString.Template {
 
         @Override
         protected Tag getTag() {

@@ -6,7 +6,7 @@ package org.mozilla.jss.asn1;
 import java.io.CharConversionException;
 import java.io.UnsupportedEncodingException;
 
-public class UTF8String extends CharacterString implements ASN1Value {
+public class UTF8String extends CharacterString {
 
     public UTF8String(char[] chars) throws CharConversionException {
         super(chars);
@@ -34,7 +34,7 @@ public class UTF8String extends CharacterString implements ASN1Value {
     /**
      * Returns a singleton instance of UTF8String.Template. This is more
      * efficient than creating a new UTF8String.Template.
-     * 
+     *
      * @return Template.
      */
     public static Template getTemplate() {
@@ -43,7 +43,7 @@ public class UTF8String extends CharacterString implements ASN1Value {
 
     // nested class
     public static class Template
-            extends CharacterString.Template implements ASN1Template {
+            extends CharacterString.Template {
         @Override
         protected Tag getTag() {
             return TAG;

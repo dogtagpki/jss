@@ -10,7 +10,7 @@ import java.io.InputStream;
  * Represents an ASN.1 <code>ENUMERATED</code> value. This has the same
  * interface as <code>INTEGER</code>
  */
-public class ENUMERATED extends INTEGER implements ASN1Value {
+public class ENUMERATED extends INTEGER {
 
     private static final long serialVersionUID = 1L;
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 10);
@@ -22,7 +22,7 @@ public class ENUMERATED extends INTEGER implements ASN1Value {
 
     /**
      * Creates a new ENUMERATED value from a long int.
-     * 
+     *
      * @param val Input value.
      */
     public ENUMERATED(long val) {
@@ -52,7 +52,7 @@ public class ENUMERATED extends INTEGER implements ASN1Value {
      * is a valid value for the ENUMERATED type.
      */
     public static class Template
-            extends INTEGER.Template implements ASN1Template {
+            extends INTEGER.Template {
         @Override
         Tag getTag() {
             return ENUMERATED.TAG;

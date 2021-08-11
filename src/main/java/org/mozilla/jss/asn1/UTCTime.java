@@ -5,7 +5,7 @@ package org.mozilla.jss.asn1;
 
 import java.util.Date;
 
-public class UTCTime extends TimeBase implements ASN1Value {
+public class UTCTime extends TimeBase {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 23);
 

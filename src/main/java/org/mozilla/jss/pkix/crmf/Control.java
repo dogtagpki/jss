@@ -4,14 +4,22 @@
 
 package org.mozilla.jss.pkix.crmf;
 
-import org.mozilla.jss.asn1.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.UTF8String;
 import org.mozilla.jss.pkix.primitive.AVA;
 
 /**
  * A CRMF <code>Control</code>.
  */
-public class Control extends AVA implements ASN1Value {
+public class Control extends AVA {
 
     // general CRMF OIDs
         public static final OBJECT_IDENTIFIER
@@ -20,7 +28,7 @@ public class Control extends AVA implements ASN1Value {
     id_pkip = id_pkix.subBranch( 5 );
         public static final OBJECT_IDENTIFIER
     id_regCtrl = id_pkip.subBranch( 1 );
-        
+
 
     // Control OIDs
         public static final OBJECT_IDENTIFIER
@@ -70,7 +78,7 @@ public class Control extends AVA implements ASN1Value {
     /**
      * A template class for decoding a Control from a BER stream.
      */
-    public static class Template extends AVA.Template implements ASN1Template {
+    public static class Template extends AVA.Template {
         private SEQUENCE.Template seqTemplate;
 
         public Template() {

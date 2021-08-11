@@ -18,7 +18,6 @@
 package org.mozilla.jss.netscape.security.provider;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
@@ -44,7 +43,7 @@ import org.mozilla.jss.netscape.security.x509.X509Key;
  */
 
 public final class DSAPublicKey extends X509Key
-        implements java.security.interfaces.DSAPublicKey, Serializable {
+        implements java.security.interfaces.DSAPublicKey {
 
     /** use serialVersionUID from JDK 1.1. for interoperability */
     private static final long serialVersionUID = -2994193307391104133L;

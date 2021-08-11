@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * The ASN.1 type <code>GeneralizedTime</code>
  */
-public class GeneralizedTime extends TimeBase implements ASN1Value {
+public class GeneralizedTime extends TimeBase {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 24);
 
@@ -19,7 +19,7 @@ public class GeneralizedTime extends TimeBase implements ASN1Value {
 
     /**
      * Creates a <code>GeneralizedTime</code> from a Date.
-     * 
+     *
      * @param date Input date.
      */
     public GeneralizedTime(Date date) {
