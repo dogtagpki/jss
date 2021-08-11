@@ -1,0 +1,72 @@
+# Workaround to install sudo
+# https://github.com/Microsoft/azure-pipelines-agent/issues/2043#issuecomment-687983301
+resources:
+  containers:
+  - container: debian_testing
+    image: debian:testing
+    options: '--name ci-container -v /usr/bin/docker:/tmp/docker:ro'
+  - container: ubuntu_rolling
+    image: ubuntu:rolling
+    options: '--name ci-container -v /usr/bin/docker:/tmp/docker:ro'
+
+jobs:
+- job: BuildTest
+  pool:
+    vmImage: ubuntu-latest
+  strategy:
+    matrix:
+      fedora_latest:
+        image: fedora:latest
+      debian_testing:
+        image: debian_testing
+      ubuntu_rolling:
+        image: ubuntu_rolling
+      # Disable CentOS due to missing dependencies
+      # centos_7:
+      #   image: centos:7
+      # centos_8:
+      #   image: centos:8
+  container: $[variables['image']]
+  steps:
+  - script: |
+      sudo dnf install -y dnf-plugins-core rpm-build
+      sudo dnf builddep -y --spec jss.spec
+    condition: or(startsWith(variables.image, 'fedora:'), startsWith(variables.image, 'centos:'))
+    displayName: Install Fedora/CentOS dependencies
+
+  - script: |
+      # Workaround to install sudo
+      # https://github.com/Microsoft/azure-pipelines-agent/issues/2043#issuecomment-687983301
+      /tmp/docker exec -t -u 0 ci-container \
+          apt-get update
+      /tmp/docker exec -t -u 0 -e DEBIAN_FRONTEND=noninteractive ci-container \
+          apt-get -o Dpkg::Options::="--force-confold" -y install sudo
+      sudo apt-get install -y \
+          cmake zip unzip \
+          g++ libnss3-dev libnss3-tools \
+          openjdk-11-jdk libcommons-lang3-java libjaxb-api-java libslf4j-java junit4
+    condition: or(startsWith(variables.image, 'debian_'), startsWith(variables.image, 'ubuntu_'))
+    displayName: Install Debian/Ubuntu dependencies
+
+  - script: ./build.sh
+    displayName: Build JSS binaries, Javadoc, and run tests
+
+- job: SymbolTest
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - script: |
+      grep -iroh '^Java_org_mozilla[^(;]*' src/main/java/ | sort -u > /tmp/functions.txt
+      cat /tmp/functions.txt
+    displayName: Get JNI symbols in the code
+
+  - script: |
+      grep -iroh '^Java_org_mozilla[^(;]*' lib/ | sort -u > /tmp/version.txt
+      cat /tmp/version.txt
+    displayName: Get JNI symbols in the version script
+
+  - script: |
+      diff /tmp/functions.txt /tmp/version.txt || true
+      comm -23 --check-order /tmp/functions.txt /tmp/version.txt > /tmp/diff.txt
+      test ! -s /tmp/diff.txt
+    displayName: Compare JNI symbols
