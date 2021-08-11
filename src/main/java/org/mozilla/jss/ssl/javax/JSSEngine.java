@@ -1,17 +1,30 @@
 package org.mozilla.jss.ssl.javax;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.net.ssl.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.X509KeyManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.mozilla.jss.crypto.Policy;
-import org.mozilla.jss.nss.*;
-import org.mozilla.jss.pkcs11.*;
-import org.mozilla.jss.provider.javax.crypto.*;
-import org.mozilla.jss.ssl.*;
+import org.mozilla.jss.nss.PR;
+import org.mozilla.jss.nss.PRFDProxy;
+import org.mozilla.jss.nss.SSL;
+import org.mozilla.jss.nss.SSLFDProxy;
+import org.mozilla.jss.nss.SecurityStatusResult;
+import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.pkcs11.PK11PrivKey;
+import org.mozilla.jss.provider.javax.crypto.JSSKeyManager;
+import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
+import org.mozilla.jss.ssl.SSLCipher;
+import org.mozilla.jss.ssl.SSLVersion;
+import org.mozilla.jss.ssl.SSLVersionRange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JSS's SSLEngine base class for alternative implementations.
@@ -532,7 +545,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         for (SSLCipher cipher : SSLCipher.values()) {
             try {
-                if (SSL.CipherPrefGetDefault(cipher.getID()) && cipher.isSupported()) {
+                if (cipher.isSupported() && SSL.CipherPrefGetDefault(cipher.getID())) {
                     logger.debug("Enabled: " + cipher.name() + " (" + cipher.getID() + ")");
                     enabledCiphers.add(cipher);
                 }

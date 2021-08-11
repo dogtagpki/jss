@@ -353,7 +353,7 @@ public enum SSLCipher {
     private SSLCipher(int id) {
         /* Should only be used with TLS_EMPTY_RENEGOTIATION_INFO_SCSV and
          * TLS_FALLBACK_SCSV. */
-        this(id, false, null, true);
+        this(id, false, (SSLVersion[]) null);
     }
 
     private SSLCipher(int id, SSLVersion version) {
@@ -369,14 +369,10 @@ public enum SSLCipher {
     }
 
     private SSLCipher(int id, boolean ecc, SSLVersion[] versions) {
-        this(id, ecc, versions, checkSupportedStatus(id));
-    }
-
-    private SSLCipher(int id, boolean ecc, SSLVersion[] versions, boolean supported) {
         this.id = id;
         this.ecc = ecc;
         this.versions = versions;
-        this.supported = supported;
+        this.supported = checkSupportedStatus(id);
     }
 
     private static native boolean checkSupportedStatus(int id);
