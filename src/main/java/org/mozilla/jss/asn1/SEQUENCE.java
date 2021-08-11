@@ -15,7 +15,7 @@ import java.util.Vector;
  * It has an interface similar to a Java <code>Vector</code>.
  * Null entries may be added; they will be skipped when encoded.
  */
-public class SEQUENCE extends SET implements ASN1Value {
+public class SEQUENCE extends SET {
 
     public static final Tag TAG = new Tag(Tag.Class.UNIVERSAL, 16);
 
@@ -71,19 +71,19 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Adds a sub-template to the end of this SEQUENCE template. For example,
          * if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySequence ::= SEQUENCE {
          *      item        SubType,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySequence template with:
-         * 
+         *
          * <pre>
          * mySequence.addElement(new SubType.Template());
          * </pre>
-         * 
+         *
          * @param t Sub-template.
          */
         public void addElement(ASN1Template t) {
@@ -92,7 +92,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Inserts the template at the given index.
-         * 
+         *
          * @param t Sub-template.
          * @param index Index.
          */
@@ -103,19 +103,19 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Adds a sub-template to the end of this SEQUENCE template, with the
          * given implicit tag. For example, if the ASN.1 were:
-         * 
+         *
          * <pre>
          * MySequence ::= SEQUENCE {
          *      item        [0] IMPLICIT  SubType,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySequence template with:
-         * 
+         *
          * <pre>
          * mySequence.addElement(new Tag(0), new SubType.Template());
          * </pre>
-         * 
+         *
          * @param implicitTag Implicit tag.
          * @param t Sub-template.
          */
@@ -125,7 +125,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Inserts the template with the given implicit tag at the given index.
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Sub-Template.
          * @param index Index.
@@ -137,19 +137,19 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Adds an optional sub-template. For example, if the ASN.1 were:
-         * 
+         *
          * <pre>
          * MySequence ::= SEQUENCE {
          *      item        SubType OPTIONAL,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySequence template with:
-         * 
+         *
          * <pre>
          * mySequence.addOptionalElement(new SubType.Template());
          * </pre>
-         * 
+         *
          * @param t Optional sub-template.
          */
         public void addOptionalElement(ASN1Template t) {
@@ -158,7 +158,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Inserts the optional template at the given index.
-         * 
+         *
          * @param t Optional sub-template.
          * @param index Index.
          */
@@ -169,19 +169,19 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Adds an optional sub-template with an implicit tag. For example,
          * if the ASN.1 were:
-         * 
+         *
          * <pre>
          * MySequence ::= SEQUENCE {
          *      item        [0] IMPLICIT SubType OPTIONAL,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySequence template with:
-         * 
+         *
          * <pre>
          * mySequence.addOptionalElement(new SubType.Template());
          * </pre>
-         * 
+         *
          * @param implicitTag Implicit tag.
          * @param t Optional sub-template.
          */
@@ -192,7 +192,7 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Inserts the optional template with the given default
          * value at the given index.
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Optional sub-template.
          * @param index Index.
@@ -205,19 +205,19 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Adds a sub-template with a default value. For example,
          * if the ASN.1 were:
-         * 
+         *
          * <pre>
          * MySequence ::= SEQUENCE {
          *      version     INTEGER DEFAULT 1,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySequence template with:
-         * 
+         *
          * <pre>
          * mySequence.addElement(new INTEGER.Template(), new INTEGER(1));
          * </pre>
-         * 
+         *
          * @param t Sub-template.
          * @param def The default value for this field, which will be used if
          *            no value is supplied by the encoded structure. It must be of
@@ -230,7 +230,7 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Inserts the template with the given default
          * value at the given index.
-         * 
+         *
          * @param t Sub-template.
          * @param def Default value.
          * @param index Index.
@@ -242,20 +242,20 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Adds a sub-template with a default value and an implicit tag.
          * For example, if the ASN.1 were:
-         * 
+         *
          * <pre>
          * MySequence ::= SEQUENCE {
          *      version     [0] IMPLICIT INTEGER DEFAULT 1,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySequence template with:
-         * 
+         *
          * <pre>
          * mySequence.addElement(new Tag(0), new INTEGER.Template(),
          *         new INTEGER(1));
          * </pre>
-         * 
+         *
          * @param implicitTag Implicit tag.
          * @param t Sub-template.
          * @param def The default value for this field, which will be used if
@@ -269,7 +269,7 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Inserts the template with the given implicit tag and given default
          * value at the given index.
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Sub-template.
          * @param def Default value.
@@ -283,7 +283,7 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Returns the implicit tag of the item stored at the given index.
          * May be NULL if no implicit tag was specified.
-         * 
+         *
          * @param index Index.
          * @return Tag.
          */
@@ -293,7 +293,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Returns the sub-template stored at the given index.
-         * 
+         *
          * @param index Index.
          * @return Sub-template.
          */
@@ -303,7 +303,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Returns whether the sub-template at the given index is optional.
-         * 
+         *
          * @param index Index.
          * @return True if the sub-template is optional.
          */
@@ -314,7 +314,7 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Returns the default value for the sub-template at the given index.
          * May return NULL if no default value was specified.
-         * 
+         *
          * @param index Index.
          * @return Default value.
          */
@@ -338,7 +338,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Removes the sub-template at the given index.
-         * 
+         *
          * @param index Index.
          */
         public void removeElementAt(int index) {
@@ -356,7 +356,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
         /**
          * Decodes a SEQUENCE from its BER encoding.
-         * 
+         *
          * @param istream Input stream.
          */
         @Override
@@ -368,7 +368,7 @@ public class SEQUENCE extends SET implements ASN1Value {
         /**
          * Decodes a SEQUENCE from its BER encoding, where the SEQUENCE itself has
          * an implicit tag.
-         * 
+         *
          * @param tag Tag.
          * @param istream Input stream.
          */
@@ -506,7 +506,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
             /**
              * Creates a new element, which may or may not be optional.
-             * 
+             *
              * @param implicitTag Implicit tag.
              * @param type Type.
              * @param optional Optional.
@@ -517,7 +517,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
             /**
              * Creates a new element, which may or may not be optional.
-             * 
+             *
              * @param implicitTag Implicit tag.
              * @param type Type.
              * @param optional Optional.
@@ -534,7 +534,7 @@ public class SEQUENCE extends SET implements ASN1Value {
 
             /**
              * Creates a new element with a default value.
-             * 
+             *
              * @param implicitTag Implicit tag.
              * @param type Type.
              * @param defaultVal Default value.
@@ -605,19 +605,19 @@ public class SEQUENCE extends SET implements ASN1Value {
      * while
      * an OF_Template has an indefinite number of elements, all the same type.
      * For example, given:
-     * 
+     *
      * <pre>
      * MyType ::= SEQUENCE OF Extension
      * </pre>
-     * 
+     *
      * a MyType could be decoded with:
-     * 
+     *
      * <pre>
      *  SEQUENCE.OF_Template myTypeTemplate = new SEQUENCE.OF_Template( new
      *      Extension.Template) );
      *  SEQUENCE seq = (SEQUENCE) myTypeTemplate.decode(someInputStream);
      * </pre>
-     * 
+     *
      * The number of <code>Extension</code>s actually decoded could be found
      * with <code>seq.size()</code>.
      */

@@ -10,7 +10,7 @@ import java.io.CharConversionException;
 /**
  * A UCS4 string.
  */
-public class UniversalString extends CharacterString implements ASN1Value {
+public class UniversalString extends CharacterString {
 
     public static final Tag TAG = new Tag(Tag.UNIVERSAL, 28);
 
@@ -34,7 +34,7 @@ public class UniversalString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
-     * 
+     *
      * @return Template.
      */
     public static Template getTemplate() {
@@ -45,7 +45,7 @@ public class UniversalString extends CharacterString implements ASN1Value {
 
     // nested class
     public static class Template
-            extends CharacterString.Template implements ASN1Template {
+            extends CharacterString.Template {
         @Override
         protected Tag getTag() {
             return TAG;

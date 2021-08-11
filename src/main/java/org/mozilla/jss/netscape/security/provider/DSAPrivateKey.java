@@ -18,7 +18,6 @@
 package org.mozilla.jss.netscape.security.provider;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
@@ -43,7 +42,7 @@ import org.mozilla.jss.netscape.security.x509.AlgIdDSA;
  */
 
 public final class DSAPrivateKey extends PKCS8Key
-        implements java.security.interfaces.DSAPrivateKey, Serializable {
+        implements java.security.interfaces.DSAPrivateKey {
 
     /** use serialVersionUID from JDK 1.1. for interoperability */
     private static final long serialVersionUID = -3244453684193605938L;

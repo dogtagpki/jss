@@ -10,11 +10,11 @@ import java.io.UnsupportedEncodingException;
  * The ASN.1 type <i>BMPString</i>. BMPStrings use the Unicode character set.
  * They are encoded and decoded in big-endian format using two octets.
  */
-public class BMPString extends CharacterString implements ASN1Value {
+public class BMPString extends CharacterString {
 
     /**
      * Creates a new BMPString from an array of Java characters.
-     * 
+     *
      * @param chars Input characters.
      * @throws CharConversionException If an error occurred.
      */
@@ -24,7 +24,7 @@ public class BMPString extends CharacterString implements ASN1Value {
 
     /**
      * Creates a new BMPString from a Java String.
-     * 
+     *
      * @param s Input string.
      * @throws CharConversionException If an error occurred.
      */
@@ -35,7 +35,7 @@ public class BMPString extends CharacterString implements ASN1Value {
     /**
      * Returns the conversion object for converting between an encoded byte
      * array an an array of Java characters.
-     * 
+     *
      * @return Character converter.
      */
     @Override
@@ -56,7 +56,7 @@ public class BMPString extends CharacterString implements ASN1Value {
     /**
      * Returns a singleton instance of BMPString.Template. This is more
      * efficient than creating a new BMPString.Template.
-     * 
+     *
      * @return BMSString template.
      */
     public static Template getTemplate() {
@@ -66,8 +66,7 @@ public class BMPString extends CharacterString implements ASN1Value {
     private static final Template templateInstance = new Template();
 
     // nested class
-    public static class Template
-            extends CharacterString.Template implements ASN1Template {
+    public static class Template extends CharacterString.Template {
         @Override
         protected Tag getTag() {
             return TAG;

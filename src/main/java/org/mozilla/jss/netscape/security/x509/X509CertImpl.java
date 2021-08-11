@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -81,7 +80,7 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  * @see X509CertInfo
  */
 public class X509CertImpl extends X509Certificate
-        implements Serializable, DerEncoder {
+        implements DerEncoder {
     // Serialization compatibility with the X509CertImpl in x509v1.jar
     // supporting the subset of X509Certificate on JDK1.1.x platforms.
     static final long serialVersionUID = -2048442350420423405L;

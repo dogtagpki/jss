@@ -5,7 +5,7 @@ package org.mozilla.jss.asn1;
 
 import java.io.CharConversionException;
 
-public class PrintableString extends CharacterString implements ASN1Value {
+public class PrintableString extends CharacterString {
 
     public PrintableString(char[] chars) throws CharConversionException {
         super(chars);
@@ -30,7 +30,7 @@ public class PrintableString extends CharacterString implements ASN1Value {
 
     /**
      * Returns a singleton instance of the decoding template for this class.
-     * 
+     *
      * @return The template.
      */
     public static Template getTemplate() {
@@ -41,7 +41,7 @@ public class PrintableString extends CharacterString implements ASN1Value {
 
     // nested class
     public static class Template
-            extends CharacterString.Template implements ASN1Template {
+            extends CharacterString.Template {
         @Override
         protected Tag getTag() {
             return TAG;

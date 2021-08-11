@@ -5,7 +5,7 @@ package org.mozilla.jss.asn1;
 
 import java.io.CharConversionException;
 
-public class IA5String extends CharacterString implements ASN1Value {
+public class IA5String extends CharacterString {
 
     public IA5String(char[] chars) throws CharConversionException {
         super(chars);
@@ -35,7 +35,7 @@ public class IA5String extends CharacterString implements ASN1Value {
 
     // nested class
     public static class Template
-            extends CharacterString.Template implements ASN1Template {
+            extends CharacterString.Template {
         @Override
         public Tag getTag() {
             return IA5String.TAG;
