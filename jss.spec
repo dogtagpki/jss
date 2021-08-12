@@ -156,7 +156,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 %files javadoc
 
 %defattr(-,root,root,-)
-%{_javadocdir}/%{name}-%{version}/
+%{_javadocdir}/%{name}/
 %endif
 
 ################################################################################

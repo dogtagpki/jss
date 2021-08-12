@@ -110,13 +110,13 @@ if(WITH_JAVADOC)
         DIRECTORY
             ${CMAKE_CURRENT_BINARY_DIR}/docs/
         DESTINATION
-            ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
+            ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss
     )
 
     install(
         FILES
             jss.html MPL-1.1.txt gpl.txt lgpl.txt
         DESTINATION
-            ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss-${VERSION}
+            ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss
     )
 endif(WITH_JAVADOC)
