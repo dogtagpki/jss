@@ -1,0 +1,5 @@
+= API Changes =
+
+== Changes in org.mozilla.jss.netscape.security.x509.RevocationReasonAdapter ==
+
+The class has been deprecated in JSS 4 and will be dropped in JSS 5. Use the revocation reason code or label instead.

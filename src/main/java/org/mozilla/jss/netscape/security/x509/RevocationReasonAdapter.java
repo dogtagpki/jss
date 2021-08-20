@@ -24,8 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * The RevocationReasonAdapter class provides custom marshaling for RevocationReason.
  *
+ * @deprecated Use the revocation reason code or label instead.
  * @author Endi S. Dewata
  */
+@Deprecated(since="4.9.1", forRemoval=true)
 public class RevocationReasonAdapter extends XmlAdapter<String, RevocationReason> {
 
     @Override
