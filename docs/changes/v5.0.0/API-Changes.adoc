@@ -8,3 +8,7 @@
 == Changes in org.mozilla.jss.netscape.security.x509.X509Cert ==
 
 The class has been deprecated in JSS 4 and dropped in JSS 5. Use `java.security.cert.Certificate` instead.
+
+== Changes in org.mozilla.jss.netscape.security.x509.RevocationReasonAdapter ==
+
+The class has been deprecated in JSS 4 and dropped in JSS 5. Use the revocation reason code or label instead.

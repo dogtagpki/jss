@@ -30,21 +30,20 @@ This project has the following dependencies:
  - [OpenJDK 1.8.0 or newer](https://openjdk.java.net/)
  - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
- - [JavaEE JAXB](https://github.com/eclipse-ee4j/jaxb-ri)
  - [SLF4J](https://www.slf4j.org/)
  - [JUnit 4](https://junit.org/junit4/)
 
 To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-lang gcc-c++ java-devel jpackage-utils \
-                     slf4j zlib-devel glassfish-jaxb-api nss-tools nss-devel \
+                     slf4j zlib-devel nss-tools nss-devel \
                      cmake junit
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-lang-java libnss3-dev \
                          libslf4j-java default-jdk pkg-config zlib1g-dev \
-                         libjaxb-api-java libnss3-tools cmake zip unzip \
+                         libnss3-tools cmake zip unzip \
                          junit4
 
 
