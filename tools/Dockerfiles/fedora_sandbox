@@ -4,7 +4,7 @@ FROM registry.fedoraproject.org/fedora:rawhide
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build cmake \
-                          glassfish-jaxb-api nss-tools apache-commons-lang3 \
+                          nss-tools apache-commons-lang3 \
                           gcc-c++ jpackage-utils slf4j zlib-devel perl \
                           slf4j-jdk14 junit ninja-build gyp gtest mercurial \
                           python-unversioned-command \

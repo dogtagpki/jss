@@ -224,10 +224,6 @@ macro(jss_config_java)
         NAMES apache-commons-lang3 commons-lang3
     )
     find_jar(
-        JAXB_JAR
-        NAMES jaxb-api
-    )
-    find_jar(
         SLF4J_JDK14_JAR
         NAMES jdk14 slf4j/jdk14 slf4j-jdk14
     )
@@ -249,10 +245,6 @@ macro(jss_config_java)
         message(FATAL_ERROR "Required dependency apache-commons-lang.jar not found by find_jar!")
     endif()
 
-    if(JAXB_JAR STREQUAL "JAXB_JAR-NOTFOUND")
-        message(FATAL_ERROR "Required dependency javaee-jaxb-api.jar not found by find_jar!")
-    endif()
-
     if(SLF4J_JDK14_JAR STREQUAL "SLF4J_JDK14_JAR-NOTFOUND")
         message(WARNING "Test dependency sfl4j-jdk14.jar not found by find_jar! Tests might not run properly.")
     endif()
@@ -266,7 +258,7 @@ macro(jss_config_java)
     endif()
 
     # Set class paths
-    set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}:${JAXB_JAR}")
+    set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}")
     set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${HAMCREST_JAR}")
 
     message(STATUS "javac classpath: ${JAVAC_CLASSPATH}")
