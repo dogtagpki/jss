@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
  * @deprecated Use the revocation reason code or label instead.
  * @author Endi S. Dewata
  */
-@Deprecated(since="4.9.1", forRemoval=true)
+@Deprecated
 public class RevocationReasonAdapter extends XmlAdapter<String, RevocationReason> {
 
     @Override
