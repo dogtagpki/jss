@@ -428,6 +428,25 @@ public class JSSSocket extends SSLSocket {
         engine.setTrustManagers(xtms);
     }
 
+    /**
+     * Set the listeners this SSLSocket will fire on certain events.
+     *
+     * @see JSSEngine#setListeners(Collection)
+     */
+    public void setListeners(Collection<EventListener> listeners) {
+        engine.setListeners(listeners);
+    }
+
+    /**
+     * Gets the current list of event listeners this SSLSocket will fire on
+     * certain events.
+     *
+     * @see JSSEngine#getListeners()
+     */
+    public Collection<EventListener> getListeners() {
+        return engine.getListeners();
+    }
+
     /* == stubs over SSLSocket == */
 
     /**
