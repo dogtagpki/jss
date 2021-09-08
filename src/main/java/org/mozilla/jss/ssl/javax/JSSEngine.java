@@ -208,7 +208,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Set of listeners to fire on events (SSL alerts, handshake completed).
      */
-    private Collection<EventListener> listeners = new ArrayList<>();
+    private Collection<? extends EventListener> listeners = new ArrayList<>();
 
     /**
      * Constructor for a JSSEngine, providing no hints for an internal
@@ -956,7 +956,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Sets a SSLSocketListener on this object.
      */
-    public void setListeners(Collection<EventListener> new_listeners) {
+    public void setListeners(Collection<? extends EventListener> new_listeners) {
         listeners = new_listeners;
     }
 
@@ -964,7 +964,11 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Gets the set of SSLSocketListeners on this object.
      */
     public Collection<EventListener> getListeners() {
-        return listeners;
+        ArrayList<EventListener> result = new ArrayList<>();
+        if (listeners != null) {
+            result.addAll(listeners);
+        }
+        return result;
     }
 
     /**

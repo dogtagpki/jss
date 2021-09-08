@@ -26,7 +26,7 @@ public class JSSParameters extends SSLParameters {
     private SSLVersionRange range;
     private String alias;
     private String hostname;
-    private Collection<EventListener> listeners;
+    private Collection<? extends EventListener> listeners;
 
     public JSSParameters() {
         // Choose our default set of SSLParameters here; default to null
@@ -197,10 +197,14 @@ public class JSSParameters extends SSLParameters {
     }
 
     public Collection<EventListener> getListeners() {
-        return listeners;
+        ArrayList<EventListener> result = new ArrayList<>();
+        if (listeners != null) {
+            result.addAll(listeners);
+        }
+        return result;
     }
 
-    public void setListeners(Collection<EventListener> new_listeners) {
+    public void setListeners(Collection<? extends EventListener> new_listeners) {
         listeners = new_listeners;
     }
 }

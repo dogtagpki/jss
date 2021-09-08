@@ -433,7 +433,7 @@ public class JSSSocket extends SSLSocket {
      *
      * @see JSSEngine#setListeners(Collection)
      */
-    public void setListeners(Collection<EventListener> listeners) {
+    public void setListeners(Collection<? extends EventListener> listeners) {
         engine.setListeners(listeners);
     }
 

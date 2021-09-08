@@ -69,7 +69,7 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
      *
      * @see JSSEngine#setListeners(Collection)
      */
-    public void setListeners(Collection<EventListener> listeners) {
+    public void setListeners(Collection<? extends EventListener> listeners) {
         engine.setListeners(listeners);
     }
 
