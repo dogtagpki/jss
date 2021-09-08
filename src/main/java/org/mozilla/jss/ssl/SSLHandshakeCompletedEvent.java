@@ -12,6 +12,8 @@ package org.mozilla.jss.ssl;
 import java.net.*;
 import java.util.*;
 
+import org.mozilla.jss.ssl.javax.JSSEngine;
+
 /*
  * right now, this only extends EventObject, but it will eventually
  * extend javax.net.ssl.HandshakeCompletedEvent
@@ -25,21 +27,44 @@ public class SSLHandshakeCompletedEvent extends EventObject {
     private static final long serialVersionUID = 1L;
 
     public SSLHandshakeCompletedEvent(SSLSocket socket) {
-	super(socket);
+        super(socket);
+    }
+
+    public SSLHandshakeCompletedEvent(JSSEngine engine) {
+        super(engine);
     }
     
     /**
-     * get security information about this socket, including
-     * cert data
+     * Get security information about this socket, including
+     * cert data; null if on a SSLEngine.
      */
     public SSLSecurityStatus getStatus() throws SocketException {
-	return getSocket().getStatus();
+        if (getSocket() != null) {
+            return getSocket().getStatus();
+        }
+
+        return null;
     }
     
     /**
-     * get socket on which the event occured
+     * Get socket on which the event occurred; null if on a SSLEngine.
      */
     public SSLSocket getSocket() {
-	return (SSLSocket)getSource();
+        if (getSource() instanceof SSLSocket) {
+            return (SSLSocket)getSource();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get engine on which the event occurred; null if on a SSLSocket.
+     */
+    public JSSEngine getEngine() {
+        if (getSource() instanceof JSSEngine) {
+            return (JSSEngine)getSource();
+        }
+
+        return null;
     }
 }
