@@ -139,7 +139,7 @@ public class SSLEngineSimpleDemo {
             CryptoManager.initialize(args[0]);
             cm = CryptoManager.getInstance();
         }
-        cm.setPasswordCallback(new FilePasswordCallback(args[1]));
+        cm.setPasswordCallback(new org.mozilla.jss.tests.FilePasswordCallback(args[1]));
 
         SSLEngineSimpleDemo demo = new SSLEngineSimpleDemo();
         if (args.length >= 3) {
