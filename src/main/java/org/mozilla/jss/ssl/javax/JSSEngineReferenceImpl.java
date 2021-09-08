@@ -947,6 +947,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             debug("JSSEngine: Got inbound alert: " + event);
 
+            // Fire inbound alert prior to raising any exception.
+            fireAlertReceived(event);
+
             // Not every SSL Alert is fatal; toException() only returns a
             // SSLException on fatal instances. We shouldn't return NULL
             // early without checking all alerts.
@@ -966,6 +969,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
 
             debug("JSSEngine: Got outbound alert: " + event);
+
+            // Fire outbound alert prior to raising any exception. Note that
+            // this still triggers after this alert is written to the output
+            // wire buffer.
+            fireAlertSent(event);
 
             SSLException exception = event.toException();
             if (exception != null) {
@@ -1078,6 +1086,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             // Also update our session information here.
             session.refreshData();
+
+            // Finally, fire any handshake completed event listeners now.
+            fireHandshakeComplete(new SSLHandshakeCompletedEvent(this));
 
             return;
         }
