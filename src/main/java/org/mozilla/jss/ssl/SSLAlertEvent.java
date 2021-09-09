@@ -9,6 +9,7 @@ import java.util.EventObject;
 import javax.net.ssl.SSLException;
 
 import org.mozilla.jss.nss.SSLFDProxy;
+import org.mozilla.jss.ssl.javax.JSSEngine;
 
 public class SSLAlertEvent extends EventObject {
 
@@ -17,6 +18,7 @@ public class SSLAlertEvent extends EventObject {
     int level;
     int description;
 
+    transient JSSEngine engine;
     SSLAlertLevel levelEnum;
     SSLAlertDescription descriptionEnum;
 
@@ -98,6 +100,14 @@ public class SSLAlertEvent extends EventObject {
     public void setDescription(SSLAlertDescription description) {
         this.descriptionEnum = description;
         this.description = description.getID();
+    }
+
+    public JSSEngine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(JSSEngine new_engine) {
+        engine = new_engine;
     }
 
     public SSLException toException() {
