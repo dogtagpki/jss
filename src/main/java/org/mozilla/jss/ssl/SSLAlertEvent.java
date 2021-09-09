@@ -102,6 +102,10 @@ public class SSLAlertEvent extends EventObject {
         this.description = description.getID();
     }
 
+    public boolean isEngine() {
+        return engine != null;
+    }
+
     public JSSEngine getEngine() {
         return engine;
     }

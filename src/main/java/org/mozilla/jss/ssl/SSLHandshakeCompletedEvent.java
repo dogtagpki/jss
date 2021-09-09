@@ -58,6 +58,14 @@ public class SSLHandshakeCompletedEvent extends EventObject {
     }
 
     /**
+     * Returns true if this is a JSSEngine-based event or false if this is a
+     * SSLSocket-based event.
+     */
+    public boolean isEngine() {
+        return getSource() instanceof JSSEngine;
+    }
+
+    /**
      * Get engine on which the event occurred; null if on a SSLSocket.
      */
     public JSSEngine getEngine() {
