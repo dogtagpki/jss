@@ -1,6 +1,8 @@
 package org.mozilla.jss.ssl.javax;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,7 +22,11 @@ import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.provider.javax.crypto.JSSKeyManager;
 import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
+import org.mozilla.jss.ssl.SSLAlertEvent;
 import org.mozilla.jss.ssl.SSLCipher;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedListener;
+import org.mozilla.jss.ssl.SSLSocketListener;
 import org.mozilla.jss.ssl.SSLVersion;
 import org.mozilla.jss.ssl.SSLVersionRange;
 import org.slf4j.Logger;
@@ -200,6 +206,11 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     private final static AtomicBoolean sessionCacheInitialized = new AtomicBoolean();
 
     /**
+     * Set of listeners to fire on events (SSL alerts, handshake completed).
+     */
+    private Collection<? extends EventListener> listeners = new ArrayList<>();
+
+    /**
      * Constructor for a JSSEngine, providing no hints for an internal
      * session reuse strategy and no key.
      *
@@ -326,6 +337,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         ret.setAlias(certAlias);
         ret.setHostname(hostname);
+        ret.setListeners(listeners);
 
         return ret;
     }
@@ -336,7 +348,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      *
      * Aligning with the parent implementation, this calls:
      *  - setEnabledCipherSuites when getCipherSuites is non-null,
-     *  - setEnabledProtocols when getProtocols is non-null, and
+     *  - setEnabledProtocols when getProtocols is non-null,
+     *  - setListeners when getListeners is non-null, and
      *  - setWantClientAuth and setNeedClientAuth.
      *
      * This doesn't yet understand from the parent implementation, the
@@ -397,6 +410,11 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         // it.
         if (parsed.getHostname() != null) {
             setHostname(parsed.getHostname());
+        }
+
+        // When we have some listeners, we should add it to our copy.
+        if (parsed.getListeners() != null) {
+            setListeners(parsed.getListeners());
         }
     }
 
@@ -933,6 +951,68 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     @Override
     public boolean getWantClientAuth() {
         return want_client_auth;
+    }
+
+    /**
+     * Sets a SSLSocketListener on this object.
+     */
+    public void setListeners(Collection<? extends EventListener> new_listeners) {
+        listeners = new_listeners;
+    }
+
+    /**
+     * Gets the set of SSLSocketListeners on this object.
+     */
+    public Collection<? extends EventListener> getListeners() {
+        return listeners;
+    }
+
+    /**
+     * Fires any and all SSLSocketListeners on the specified alert received event.
+     *
+     * To be used by other implementations of JSSEngine.
+     */
+    protected void fireAlertReceived(SSLAlertEvent event) {
+        if (listeners != null) {
+            for (EventListener event_listener : listeners) {
+                if (event_listener instanceof SSLSocketListener) {
+                    SSLSocketListener socket_listener = (SSLSocketListener) event_listener;
+                    socket_listener.alertReceived(event);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fires any and all SSLSocketListeners on the specified alert sent event.
+     *
+     * To be used by other implementations of JSSEngine.
+     */
+    protected void fireAlertSent(SSLAlertEvent event) {
+        if (listeners != null) {
+            for (EventListener event_listener : listeners) {
+                if (event_listener instanceof SSLSocketListener) {
+                    SSLSocketListener socket_listener = (SSLSocketListener) event_listener;
+                    socket_listener.alertSent(event);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fires any and all SSLHandshakeCompletedListener on the specified event.
+     *
+     * To be used by other implementations of JSSEngine.
+     */
+    protected void fireHandshakeComplete(SSLHandshakeCompletedEvent event) {
+        if (listeners != null) {
+            for (EventListener event_listener : listeners) {
+                if (event_listener instanceof SSLHandshakeCompletedListener) {
+                    SSLHandshakeCompletedListener handshake_listener = (SSLHandshakeCompletedListener) event_listener;
+                    handshake_listener.handshakeCompleted(event);
+                }
+            }
+        }
     }
 
     /**

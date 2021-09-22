@@ -64,6 +64,25 @@ public class JSSServerSocketChannel extends ServerSocketChannel {
         return this;
     }
 
+    /**
+     * Set the listeners this SSLSocket will fire on certain events.
+     *
+     * @see JSSEngine#setListeners(Collection)
+     */
+    public void setListeners(Collection<? extends EventListener> listeners) {
+        engine.setListeners(listeners);
+    }
+
+    /**
+     * Gets the current list of event listeners this SSLSocket will fire on
+     * certain events.
+     *
+     * @see JSSEngine#getListeners()
+     */
+    public Collection<? extends EventListener> getListeners() {
+        return engine.getListeners();
+    }
+
     @Override
     public <T> T getOption(SocketOption<T> name) throws IOException {
         if (parent == null) {
