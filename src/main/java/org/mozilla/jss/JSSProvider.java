@@ -31,7 +31,7 @@ public final class JSSProvider extends java.security.Provider {
     }
 
     public JSSProvider(boolean initialize) {
-        super("Mozilla-JSS", JSS_VERSION,
+        super("Mozilla-JSS", String.valueOf(JSS_VERSION),
                 "Provides Signature, Message Digesting, and RNG");
 
         if (initialize) {
@@ -92,16 +92,6 @@ public final class JSSProvider extends java.security.Provider {
         /////////////////////////////////////////////////////////////
         // Signature
         /////////////////////////////////////////////////////////////
-        put("Signature.SHA1withDSA",
-            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$DSA");
-
-        put("Alg.Alias.Signature.DSA", "SHA1withDSA");
-        put("Alg.Alias.Signature.DSS", "SHA1withDSA");
-        put("Alg.Alias.Signature.SHA/DSA", "SHA1withDSA");
-        put("Alg.Alias.Signature.SHA-1/DSA", "SHA1withDSA");
-        put("Alg.Alias.Signature.SHA1/DSA", "SHA1withDSA");
-        put("Alg.Alias.Signature.DSAWithSHA1", "SHA1withDSA");
-        put("Alg.Alias.Signature.SHAwithDSA", "SHA1withDSA");
 
         put("Signature.MD5/RSA",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MD5RSA");
@@ -109,11 +99,6 @@ public final class JSSProvider extends java.security.Provider {
 
         put("Signature.MD2/RSA",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MD2RSA");
-
-        put("Signature.SHA-1/RSA",
-            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA1RSA");
-        put("Alg.Alias.Signature.SHA1/RSA", "SHA-1/RSA");
-        put("Alg.Alias.Signature.SHA1withRSA", "SHA-1/RSA");
 
         put("Signature.SHA-256/RSA",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA256RSA");
@@ -152,17 +137,6 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.Signature.SHA512/RSA", "SHA-512/RSA");
         put("Alg.Alias.Signature.SHA512withRSA", "SHA-512/RSA");
 // ECC
-        put("Signature.SHA1withEC",
-            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA1EC");
-        put("Alg.Alias.Signature.EC", "SHA1withEC");
-        put("Alg.Alias.Signature.ECC", "SHA1withEC");
-        put("Alg.Alias.Signature.ECDSA", "SHA1withEC");
-        put("Alg.Alias.Signature.SHA/EC", "SHA1withEC");
-        put("Alg.Alias.Signature.SHA1/EC", "SHA1withEC");
-        put("Alg.Alias.Signature.SHA-1/EC", "SHA1withEC");
-        put("Alg.Alias.Signature.SHA/ECDSA", "SHA1withEC");
-        put("Alg.Alias.Signature.SHA1/ECDSA", "SHA1withEC");
-        put("Alg.Alias.Signature.SHA1withECDSA", "SHA1withEC"); //JCE Standard Name
 
         put("Signature.SHA256withEC",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$SHA256EC");
@@ -186,8 +160,6 @@ public final class JSSProvider extends java.security.Provider {
         // Message Digesting
         /////////////////////////////////////////////////////////////
 
-        put("MessageDigest.SHA-1",
-                "org.mozilla.jss.provider.java.security.JSSMessageDigestSpi$SHA1");
         put("MessageDigest.MD2",
                 "org.mozilla.jss.provider.java.security.JSSMessageDigestSpi$MD2");
         put("MessageDigest.MD5",
@@ -199,8 +171,6 @@ public final class JSSProvider extends java.security.Provider {
         put("MessageDigest.SHA-512",
                 "org.mozilla.jss.provider.java.security.JSSMessageDigestSpi$SHA512");
 
-        put("Alg.Alias.MessageDigest.SHA1", "SHA-1");
-        put("Alg.Alias.MessageDigest.SHA", "SHA-1");
         put("Alg.Alias.MessageDigest.SHA256", "SHA-256");
         put("Alg.Alias.MessageDigest.SHA384", "SHA-384");
         put("Alg.Alias.MessageDigest.SHA512", "SHA-512");
@@ -381,7 +351,6 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.javax.crypto.JSSMacSpi$HmacSHA512");
         put("Mac.CmacAES", "org.mozilla.jss.provider.javax.crypto.JSSMacSpi$CmacAES");
         put("Alg.Alias.Mac.Hmac-SHA512", "HmacSHA512");
-        put("Alg.Alias.Mac.SHA-1-HMAC", "HmacSHA1");
         put("Alg.Alias.Mac.SHA-256-HMAC", "HmacSHA256");
         put("Alg.Alias.Mac.SHA-384-HMAC", "HmacSHA384");
         put("Alg.Alias.Mac.SHA-512-HMAC", "HmacSHA512");
