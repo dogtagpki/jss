@@ -1,0 +1,11 @@
+= API Changes =
+
+== Deprecate org.mozilla.jss.pkcs11.PK11InternalTokenCert ==
+
+The `org.mozilla.jss.pkcs11.PK11InternalTokenCert` class has been deprecated and will be removed in the future.
+Use `org.mozilla.jss.pkcs11.PK11Cert` instead.
+
+== Deprecate org.mozilla.jss.pkcs11.PK11InternalCert ==
+
+The `org.mozilla.jss.pkcs11.PK11InternalCert` class has been deprecated and will be removed in the future.
+Use `org.mozilla.jss.pkcs11.PK11Cert` instead.

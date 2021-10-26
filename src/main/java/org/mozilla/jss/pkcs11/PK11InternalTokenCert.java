@@ -4,24 +4,14 @@
 
 package org.mozilla.jss.pkcs11;
 
-import org.mozilla.jss.crypto.*;
-
 /**
  * A certificate that lives on the internal token.  It has database information
  * (like trust flags) but also PKCS #11 information (like unique ID).
+ *
+ * @deprecated Use PK11Cert instead.
  */
-public final class PK11InternalTokenCert extends PK11InternalCert
-    implements TokenCertificate
-{
-    @Override
-    public byte[] getUniqueID() {
-        return super.getUniqueID();
-    }
-
-    @Override
-    public CryptoToken getOwningToken() {
-        return super.getOwningToken();
-    }
+@Deprecated
+public final class PK11InternalTokenCert extends PK11InternalCert {
 
     PK11InternalTokenCert(byte[] certPtr, byte[] slotPtr, String nickname) {
         super(certPtr, slotPtr, nickname);

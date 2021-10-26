@@ -4,24 +4,45 @@
 
 package org.mozilla.jss.pkcs11;
 
-import java.util.*;
 import java.math.BigInteger;
-import java.security.*;
-import java.security.cert.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Principal;
+import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Set;
 
 import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.InternalCertificate;
+import org.mozilla.jss.crypto.TokenCertificate;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class PK11Cert
-       extends java.security.cert.X509Certificate
-       implements org.mozilla.jss.crypto.X509Certificate,
-                  java.lang.AutoCloseable
+        extends java.security.cert.X509Certificate
+        implements org.mozilla.jss.crypto.X509Certificate,
+                InternalCertificate,
+                TokenCertificate,
+                java.lang.AutoCloseable
 {
     public static Logger logger = LoggerFactory.getLogger(PK11Cert.class);
+
+    ///////////////////////////////////////////////////////////////////////
+    // Trust Management
+    ///////////////////////////////////////////////////////////////////////
+
+    public static final int SSL               = 0;
+    public static final int EMAIL             = 1;
+    public static final int OBJECT_SIGNING    = 2;
 
     // Internal X509CertImpl to handle java.security.cert.X509Certificate
     // methods.
@@ -457,9 +478,9 @@ public class PK11Cert
     // PKCS #11 Cert stuff. Must only be called on certs that have
     // an associated slot.
     ///////////////////////////////////////////////////////////////////////
-    protected native byte[] getUniqueID();
+    public native byte[] getUniqueID();
 
-    protected native CryptoToken getOwningToken();
+    public native CryptoToken getOwningToken();
 
     ///////////////////////////////////////////////////////////////////////
     // Trust Management.  Must only be called on certs that live in the
@@ -480,6 +501,72 @@ public class PK11Cert
      * @return The trust flags for this type of trust.
      */
     protected native int getTrust(int type);
+
+    /**
+     * Set the SSL trust flags for this certificate.
+     *
+     * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
+     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     */
+    @Override
+    public void setSSLTrust(int trust) {
+        setTrust(SSL, trust);
+    }
+
+    /**
+     * Set the email (S/MIME) trust flags for this certificate.
+     *
+     * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
+     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     */
+    @Override
+    public void setEmailTrust(int trust) {
+        setTrust(EMAIL, trust);
+    }
+
+    /**
+     * Set the object signing trust flags for this certificate.
+     *
+     * @param trust A bitwise OR of the trust flags VALID_PEER, VALID_CA,
+     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     */
+    @Override
+    public void setObjectSigningTrust(int trust) {
+        setTrust(OBJECT_SIGNING, trust);
+    }
+
+    /**
+     * Get the SSL trust flags for this certificate.
+     *
+     * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
+     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     */
+    @Override
+    public int getSSLTrust() {
+        return getTrust(SSL);
+    }
+
+    /**
+     * Get the email (S/MIME) trust flags for this certificate.
+     *
+     * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
+     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     */
+    @Override
+    public int getEmailTrust() {
+        return getTrust(EMAIL);
+    }
+
+    /**
+     * Get the object signing trust flags for this certificate.
+     *
+     * @return A bitwise OR of the trust flags VALID_PEER, VALID_CA,
+     *      TRUSTED_CA, USER, and TRUSTED_CLIENT_CA.
+     */
+    @Override
+    public int getObjectSigningTrust() {
+        return getTrust(OBJECT_SIGNING);
+    }
 
 	/////////////////////////////////////////////////////////////
 	// Construction
