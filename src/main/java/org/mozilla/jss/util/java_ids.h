@@ -142,11 +142,6 @@ PR_BEGIN_EXTERN_C
 #define INTERNAL_CERT_CLASS_NAME "org/mozilla/jss/pkcs11/PK11InternalCert"
 
 /*
- * PK11TokenCert
- */
-#define TOKEN_CERT_CLASS_NAME "org/mozilla/jss/pkcs11/PK11TokenCert"
-
-/*
  * PK11InternalTokenCert
  */
 #define INTERNAL_TOKEN_CERT_CLASS_NAME "org/mozilla/jss/pkcs11/PK11InternalTokenCert"
