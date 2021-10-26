@@ -62,3 +62,34 @@ Use the corresponding constants in `org.mozilla.jss.pkcs11.PK11Cert` instead.
 |
 | `GOVT_APPROVED_CA`
 |===
+
+== Consolidate trust flag methods ==
+
+The trust flag methods in `org.mozilla.jss.netscape.security.pkcs.PKCS12` have been deprecated.
+Use the corresponding methods in `org.mozilla.jss.pkcs11.PK11Cert` instead.
+
+|===
+| `PKCS12` | `PK11Cert`
+
+| `isFlagEnabled()`
+| `isTrustFlagEnabled()`
+
+| `encodeFlags()`
+| `encodeTrustFlags()`
+
+| `decodeFlags()`
+| `decodeTrustFlags()`
+|===
+
+The trust flag methods in `org.mozilla.jss.netscape.security.pkcs.PKCS12Util` have been deprecated.
+Use the corresponding methods in `org.mozilla.jss.pkcs11.PK11Cert` instead.
+
+|===
+| `PKCS12Util` | `PK11Cert`
+
+| `getTrustFlags()`
+| `getTrustFlags()`
+
+| `setTrustFlags()`
+| `setTrustFlags()`
+|===

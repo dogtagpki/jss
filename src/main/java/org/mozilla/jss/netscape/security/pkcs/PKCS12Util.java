@@ -29,10 +29,14 @@ import java.security.Principal;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
+
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mozilla.jss.CryptoManager;
@@ -46,12 +50,14 @@ import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
-import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.PBEAlgorithm;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.netscape.security.util.Utils;
+import org.mozilla.jss.netscape.security.x509.X509CertImpl;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11Store;
 import org.mozilla.jss.pkcs12.AuthenticatedSafes;
 import org.mozilla.jss.pkcs12.CertBag;
@@ -63,13 +69,6 @@ import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.util.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
-import javax.naming.InvalidNameException;
-
-import org.mozilla.jss.netscape.security.util.Utils;
-import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 
 public class PKCS12Util {
 
@@ -164,31 +163,22 @@ public class PKCS12Util {
         this.trustFlagsEnabled = trustFlagsEnabled;
     }
 
+    /**
+     * @deprecated Use PK11Cert.getTrustFlags() instead.
+     */
+    @Deprecated
     public String getTrustFlags(X509Certificate cert) {
-
-        InternalCertificate icert = (InternalCertificate) cert;
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(PKCS12.encodeFlags(icert.getSSLTrust()));
-        sb.append(",");
-        sb.append(PKCS12.encodeFlags(icert.getEmailTrust()));
-        sb.append(",");
-        sb.append(PKCS12.encodeFlags(icert.getObjectSigningTrust()));
-
-        return sb.toString();
+        PK11Cert pk11Cert = (PK11Cert) cert;
+        return pk11Cert.getTrustFlags();
     }
 
+    /**
+     * @deprecated Use PK11Cert.setTrustFlags() instead.
+     */
+    @Deprecated
     public void setTrustFlags(X509Certificate cert, String trustFlags) throws Exception {
-
-        InternalCertificate icert = (InternalCertificate) cert;
-
-        String[] flags = trustFlags.split(",", -1); // don't remove empty string
-        if (flags.length < 3) throw new Exception("Invalid trust flags: " + trustFlags);
-
-        icert.setSSLTrust(PKCS12.decodeFlags(flags[0]));
-        icert.setEmailTrust(PKCS12.decodeFlags(flags[1]));
-        icert.setObjectSigningTrust(PKCS12.decodeFlags(flags[2]));
+        PK11Cert pk11Cert = (PK11Cert) cert;
+        pk11Cert.setTrustFlags(trustFlags);
     }
 
     /**
@@ -524,7 +514,8 @@ public class PKCS12Util {
         }
 
         X509CertImpl certImpl = new X509CertImpl(cert.getEncoded());
-        String trustFlags = getTrustFlags(cert);
+        PK11Cert p11Cert = (PK11Cert) cert;
+        String trustFlags = p11Cert.getTrustFlags();
 
         PKCS12CertInfo certInfo = new PKCS12CertInfo();
         certInfo.setID(id);
@@ -967,7 +958,8 @@ public class PKCS12Util {
 
         String trustFlags = certInfo.getTrustFlags();
         if (trustFlags != null && trustFlagsEnabled) {
-            setTrustFlags(cert, trustFlags);
+            PK11Cert pk11Cert = (PK11Cert) cert;
+            pk11Cert.setTrustFlags(trustFlags);
         }
     }
 

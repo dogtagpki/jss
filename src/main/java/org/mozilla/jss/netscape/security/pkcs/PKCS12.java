@@ -100,93 +100,28 @@ public class PKCS12 {
     @Deprecated
     public final static int GOVT_APPROVED_CA  = PK11Cert.GOVT_APPROVED_CA;
 
+    /**
+     * @deprecated Use PK11Cert.isTrustFlagEnabled() instead.
+     */
+    @Deprecated
     public static boolean isFlagEnabled(int flag, int flags) {
-        return (flag & flags) > 0;
+        return PK11Cert.isTrustFlagEnabled(flag, flags);
     }
 
-    // based on printflags() in secutil.c in NSS
+    /**
+     * @deprecated Use PK11Cert.encodeTrustFlags() instead.
+     */
+    @Deprecated
     public static String encodeFlags(int flags) {
-
-        StringBuffer sb = new StringBuffer();
-
-        if (isFlagEnabled(VALID_CA, flags) && !isFlagEnabled(TRUSTED_CA, flags) && !isFlagEnabled(TRUSTED_CLIENT_CA, flags))
-            sb.append("c");
-
-        if (isFlagEnabled(TERMINAL_RECORD, flags) && !isFlagEnabled(TRUSTED, flags))
-            sb.append("p");
-
-        if (isFlagEnabled(TRUSTED_CA, flags))
-            sb.append("C");
-
-        if (isFlagEnabled(TRUSTED_CLIENT_CA, flags))
-            sb.append("T");
-
-        if (isFlagEnabled(TRUSTED, flags))
-            sb.append("P");
-
-        if (isFlagEnabled(USER, flags))
-            sb.append("u");
-
-        if (isFlagEnabled(SEND_WARN, flags))
-            sb.append("w");
-
-        if (isFlagEnabled(INVISIBLE_CA, flags))
-            sb.append("I");
-
-        if (isFlagEnabled(GOVT_APPROVED_CA, flags))
-            sb.append("G");
-
-        return sb.toString();
+        return PK11Cert.encodeTrustFlags(flags);
     }
 
-    // based on CERT_DecodeTrustString() in certdb.c in NSS
+    /**
+     * @deprecated Use PK11Cert.decodeTrustFlags() instead.
+     */
+    @Deprecated
     public static int decodeFlags(String flags) throws Exception {
-
-        int value = 0;
-
-        for (char c : flags.toCharArray()) {
-            switch (c) {
-            case 'p':
-                value = value | TERMINAL_RECORD;
-                break;
-
-            case 'P':
-                value = value | TRUSTED | TERMINAL_RECORD;
-                break;
-
-            case 'w':
-                value = value | SEND_WARN;
-                break;
-
-            case 'c':
-                value = value | VALID_CA;
-                break;
-
-            case 'T':
-                value = value | TRUSTED_CLIENT_CA | VALID_CA;
-                break;
-
-            case 'C' :
-                value = value | TRUSTED_CA | VALID_CA;
-                break;
-
-            case 'u':
-                value = value | USER;
-                break;
-
-            case 'i':
-                value = value | INVISIBLE_CA;
-                break;
-            case 'g':
-                value = value | GOVT_APPROVED_CA;
-                break;
-
-            default:
-                throw new Exception("Invalid trust flag: " + c);
-            }
-        }
-
-        return value;
+        return PK11Cert.decodeTrustFlags(flags);
     }
 
     Map<BigInteger, PKCS12KeyInfo> keyInfosByID = new LinkedHashMap<BigInteger, PKCS12KeyInfo>();

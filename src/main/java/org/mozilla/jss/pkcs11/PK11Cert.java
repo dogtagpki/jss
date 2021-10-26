@@ -83,6 +83,90 @@ public class PK11Cert
     // methods.
     private X509CertImpl x509 = null;
 
+    public static boolean isTrustFlagEnabled(int flag, int flags) {
+        return (flag & flags) > 0;
+    }
+
+    // based on printflags() in secutil.c in NSS
+    public static String encodeTrustFlags(int flags) {
+
+        StringBuffer sb = new StringBuffer();
+
+        if (isTrustFlagEnabled(VALID_CA, flags)
+                && !isTrustFlagEnabled(TRUSTED_CA, flags)
+                && !isTrustFlagEnabled(TRUSTED_CLIENT_CA, flags))
+            sb.append("c");
+
+        if (isTrustFlagEnabled(VALID_PEER, flags)
+                && !isTrustFlagEnabled(TRUSTED_PEER, flags))
+            sb.append("p");
+
+        if (isTrustFlagEnabled(TRUSTED_CA, flags))
+            sb.append("C");
+
+        if (isTrustFlagEnabled(TRUSTED_CLIENT_CA, flags))
+            sb.append("T");
+
+        if (isTrustFlagEnabled(TRUSTED_PEER, flags))
+            sb.append("P");
+
+        if (isTrustFlagEnabled(USER, flags))
+            sb.append("u");
+
+        if (isTrustFlagEnabled(SEND_WARN, flags))
+            sb.append("w");
+
+        if (isTrustFlagEnabled(INVISIBLE_CA, flags))
+            sb.append("I");
+
+        if (isTrustFlagEnabled(GOVT_APPROVED_CA, flags))
+            sb.append("G");
+
+        return sb.toString();
+    }
+
+    // based on CERT_DecodeTrustString() in certdb.c in NSS
+    public static int decodeTrustFlags(String flags) throws Exception {
+
+        int value = 0;
+
+        for (char c : flags.toCharArray()) {
+            switch (c) {
+            case 'p':
+                value = value | VALID_PEER;
+                break;
+            case 'P':
+                value = value | TRUSTED_PEER | VALID_PEER;
+                break;
+            case 'w':
+                value = value | SEND_WARN;
+                break;
+            case 'c':
+                value = value | VALID_CA;
+                break;
+            case 'T':
+                value = value | TRUSTED_CLIENT_CA | VALID_CA;
+                break;
+            case 'C' :
+                value = value | TRUSTED_CA | VALID_CA;
+                break;
+            case 'u':
+                value = value | USER;
+                break;
+            case 'i':
+                value = value | INVISIBLE_CA;
+                break;
+            case 'g':
+                value = value | GOVT_APPROVED_CA;
+                break;
+            default:
+                throw new Exception("Invalid trust flag: " + c);
+            }
+        }
+
+        return value;
+    }
+
     @Override
     public native byte[] getEncoded() throws CertificateEncodingException;
 
@@ -601,6 +685,29 @@ public class PK11Cert
     @Override
     public int getObjectSigningTrust() {
         return getTrust(OBJECT_SIGNING);
+    }
+
+    public String getTrustFlags() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(PK11Cert.encodeTrustFlags(getSSLTrust()));
+        sb.append(",");
+        sb.append(PK11Cert.encodeTrustFlags(getEmailTrust()));
+        sb.append(",");
+        sb.append(PK11Cert.encodeTrustFlags(getObjectSigningTrust()));
+
+        return sb.toString();
+    }
+
+    public void setTrustFlags(String trustFlags) throws Exception {
+
+        String[] flags = trustFlags.split(",", -1); // don't remove empty string
+        if (flags.length < 3) throw new Exception("Invalid trust flags: " + trustFlags);
+
+        setSSLTrust(PK11Cert.decodeTrustFlags(flags[0]));
+        setEmailTrust(PK11Cert.decodeTrustFlags(flags[1]));
+        setObjectSigningTrust(PK11Cert.decodeTrustFlags(flags[2]));
     }
 
 	/////////////////////////////////////////////////////////////
