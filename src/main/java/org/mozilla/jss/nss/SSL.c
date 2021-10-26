@@ -275,8 +275,9 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefGet(JNIEnv *env, jclass clazz,
     }
 
     if (SSL_CipherPrefGet(real_fd, cipher, &enabled) != SECSuccess) {
-        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION,
-            "Unknown cipher suite to get or getting its value failed");
+        char *message = PR_smprintf("Unable to get preference for cipher 0x%04d", cipher);
+        JSS_throwMsgPrErr(env, ILLEGAL_ARGUMENT_EXCEPTION, message);
+        PR_smprintf_free(message);
         return enabled;
     }
 
@@ -303,8 +304,9 @@ Java_org_mozilla_jss_nss_SSL_CipherPrefGetDefault(JNIEnv *env, jclass clazz,
     PR_SetError(0, 0);
 
     if (SSL_CipherPrefGetDefault(cipher, &enabled) != SECSuccess) {
-        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION,
-            "Unknown cipher suite to get or getting its value failed");
+        char *message = PR_smprintf("Unable to get default preference for cipher 0x%04d", cipher);
+        JSS_throwMsgPrErr(env, ILLEGAL_ARGUMENT_EXCEPTION, message);
+        PR_smprintf_free(message);
         return enabled;
     }
 

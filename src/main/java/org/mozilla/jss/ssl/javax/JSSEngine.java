@@ -554,7 +554,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
                 // synced with NSS. However, we'll just log this exception as
                 // a warning. At worst we fail to report that a cipher suite is
                 // enabled.
-                logger.warn("Unable to get the value of cipher: " + cipher.name() + " (" + cipher.getID() + "): " + e.getMessage());
+                logger.warn("Unable to get default preference for cipher {}: {}",
+                        cipher.name(), e.getMessage());
             }
         }
 
