@@ -7,6 +7,7 @@ package org.mozilla.jss.tests;
 import java.util.Enumeration;
 
 import org.mozilla.jss.crypto.InternalCertificate;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +70,7 @@ public class TestCertificateApprovalCallback
                 InternalCertificate newcert =
                     org.mozilla.jss.CryptoManager.getInstance().
                     importCertToPerm(servercert,"testnick");
-                newcert.setSSLTrust(InternalCertificate.TRUSTED_PEER |
-                    InternalCertificate.VALID_PEER);
+                newcert.setSSLTrust(PK11Cert.TRUSTED_PEER | PK11Cert.VALID_PEER);
             } catch (Exception e) {
                 System.out.println("thrown exception: "+e);
             }

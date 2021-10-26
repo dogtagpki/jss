@@ -4,6 +4,8 @@
 
 package org.mozilla.jss.crypto;
 
+import org.mozilla.jss.pkcs11.PK11Cert;
+
 /**
  * Certificates residing in the internal database.  Their trust flags
  * can be viewed and modified. Other types of certificates do not
@@ -11,15 +13,41 @@ package org.mozilla.jss.crypto;
  */
 public interface InternalCertificate extends X509Certificate
 {
-    ////////////////////////////////////////////////////
-    // Trust manipulation
-    ////////////////////////////////////////////////////
-    public static final int VALID_PEER          = (1<<0);
-    public static final int TRUSTED_PEER        = (1<<1); // CERTDB_TRUSTED
-    public static final int VALID_CA            = (1<<3);
-    public static final int TRUSTED_CA          = (1<<4);
-    public static final int USER                = (1<<6);
-    public static final int TRUSTED_CLIENT_CA   = (1<<7);
+    /**
+     * @deprecated Use PK11Cert.VALID_PEER instead.
+     */
+    @Deprecated
+    public static final int VALID_PEER          = PK11Cert.VALID_PEER;
+
+    /**
+     * @deprecated Use PK11Cert.TRUSTED_PEER instead.
+     */
+    @Deprecated
+    public static final int TRUSTED_PEER        = PK11Cert.TRUSTED_PEER;
+
+    /**
+     * @deprecated Use PK11Cert.VALID_CA instead.
+     */
+    @Deprecated
+    public static final int VALID_CA            = PK11Cert.VALID_CA;
+
+    /**
+     * @deprecated Use PK11Cert.TRUSTED_CA instead.
+     */
+    @Deprecated
+    public static final int TRUSTED_CA          = PK11Cert.TRUSTED_CA;
+
+    /**
+     * @deprecated Use PK11Cert.USER instead.
+     */
+    @Deprecated
+    public static final int USER                = PK11Cert.USER;
+
+    /**
+     * @deprecated Use PK11Cert.TRUSTED_CLIENT_CA instead.
+     */
+    @Deprecated
+    public static final int TRUSTED_CLIENT_CA   = PK11Cert.TRUSTED_CLIENT_CA;
 
     /**
      * Set the SSL trust flags for this certificate.

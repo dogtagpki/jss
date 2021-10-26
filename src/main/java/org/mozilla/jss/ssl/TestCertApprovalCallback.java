@@ -7,6 +7,7 @@ package org.mozilla.jss.ssl;
 import java.util.Enumeration;
 
 import org.mozilla.jss.crypto.InternalCertificate;
+import org.mozilla.jss.pkcs11.PK11Cert;
 
 /**
  * This is a test implementation of the certificate approval callback which
@@ -60,8 +61,7 @@ public class TestCertApprovalCallback
             try {
                 InternalCertificate newcert = org.mozilla.jss.CryptoManager.getInstance().importCertToPerm(servercert,
                         "testnick");
-                newcert.setSSLTrust(InternalCertificate.TRUSTED_PEER |
-                        InternalCertificate.VALID_PEER);
+                newcert.setSSLTrust(PK11Cert.TRUSTED_PEER | PK11Cert.VALID_PEER);
             } catch (Exception e) {
                 System.out.println("thrown exception: " + e);
             }
