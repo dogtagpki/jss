@@ -3,23 +3,50 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.tests;
 
+import java.io.EOFException;
+import java.io.InputStream;
+import java.net.SocketException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.cert.CertificateEncodingException;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NicknameConflictException;
 import org.mozilla.jss.UserCertConflictException;
-import org.mozilla.jss.ssl.*;
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.pkix.cert.*;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.BOOLEAN;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.InternalCertificate;
+import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkix.cert.Certificate;
+import org.mozilla.jss.pkix.cert.CertificateInfo;
+import org.mozilla.jss.pkix.cert.Extension;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.Name;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedListener;
+import org.mozilla.jss.ssl.SSLProtocolVariant;
+import org.mozilla.jss.ssl.SSLSecurityStatus;
+import org.mozilla.jss.ssl.SSLServerSocket;
+import org.mozilla.jss.ssl.SSLSocket;
+import org.mozilla.jss.ssl.SSLVersionRange;
 import org.mozilla.jss.util.PasswordCallback;
-import java.util.Calendar;
-import java.util.Date;
-import java.security.*;
-import java.security.PrivateKey;
-import java.io.*;
-import java.net.SocketException;
 
 /**
  * SSLClientAuth Server/client test.
@@ -186,10 +213,10 @@ public class SSLClientAuth implements Runnable {
                     ASN1Util.encode(caCert), "SSLCA-"+serialNum);
             InternalCertificate intern = (InternalCertificate)nssCaCert;
             intern.setSSLTrust(
-                    InternalCertificate.TRUSTED_CA |
-                    InternalCertificate.TRUSTED_CLIENT_CA |
-                    InternalCertificate.VALID_CA);
-            
+                    PK11Cert.TRUSTED_CA |
+                    PK11Cert.TRUSTED_CLIENT_CA |
+                    PK11Cert.VALID_CA);
+
             // generate server cert
             kpg.initialize(keyLength);
             KeyPair serverPair = kpg.genKeyPair();

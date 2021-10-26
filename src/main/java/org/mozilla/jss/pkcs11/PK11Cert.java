@@ -37,6 +37,41 @@ public class PK11Cert
     public static Logger logger = LoggerFactory.getLogger(PK11Cert.class);
 
     ///////////////////////////////////////////////////////////////////////
+    // Trust Flags
+    // https://github.com/nss-dev/nss/blob/master/lib/certdb/certdb.h
+    ///////////////////////////////////////////////////////////////////////
+
+    // CERTDB_TERMINAL_RECORD
+    public static final int VALID_PEER        = 1 << 0;
+
+    // CERTDB_TRUSTED
+    public static final int TRUSTED_PEER      = 1 << 1;
+
+    // CERTDB_SEND_WARN
+    public final static int SEND_WARN         = 1 << 2;
+
+    // CERTDB_VALID_CA
+    public static final int VALID_CA          = 1 << 3;
+
+    // CERTDB_TRUSTED_CA
+    public static final int TRUSTED_CA        = 1 << 4;
+
+    // CERTDB_NS_TRUSTED_CA
+    public final static int NS_TRUSTED_CA     = 1 << 5;
+
+    // CERTDB_USER
+    public static final int USER              = 1 << 6;
+
+    // CERTDB_TRUSTED_CLIENT_CA
+    public static final int TRUSTED_CLIENT_CA = 1 << 7;
+
+    // CERTDB_INVISIBLE_CA
+    public static final int INVISIBLE_CA      = 1 << 8;
+
+    // CERTDB_GOVT_APPROVED_CA
+    public static final int GOVT_APPROVED_CA  = 1 << 9;
+
+    ///////////////////////////////////////////////////////////////////////
     // Trust Management
     ///////////////////////////////////////////////////////////////////////
 

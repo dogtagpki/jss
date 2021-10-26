@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.pkcs11.PK11Cert;
 
 public class PKCS12 {
 
@@ -39,17 +40,65 @@ public class PKCS12 {
     // Certificate trust flags OID: 2.16.840.1.113730.5.1.1.1
     public final static OBJECT_IDENTIFIER CERT_TRUST_FLAGS_OID = PKCS12_ATTRIBUTES_OID.subBranch(1);
 
-    // based on certdb.h in NSS
-    public final static int TERMINAL_RECORD   = 1 << 0;
-    public final static int TRUSTED           = 1 << 1;
-    public final static int SEND_WARN         = 1 << 2;
-    public final static int VALID_CA          = 1 << 3;
-    public final static int TRUSTED_CA        = 1 << 4;
-    public final static int NS_TRUSTED_CA     = 1 << 5;
-    public final static int USER              = 1 << 6;
-    public final static int TRUSTED_CLIENT_CA = 1 << 7;
-    public final static int INVISIBLE_CA      = 1 << 8;
-    public final static int GOVT_APPROVED_CA  = 1 << 9;
+    /**
+     * @deprecated Use PK11Cert.VALID_PEER instead.
+     */
+    @Deprecated
+    public final static int TERMINAL_RECORD   = PK11Cert.VALID_PEER;
+
+    /**
+     * @deprecated Use PK11Cert.TRUSTED_PEER instead.
+     */
+    @Deprecated
+    public final static int TRUSTED           = PK11Cert.TRUSTED_PEER;
+
+    /**
+     * @deprecated Use PK11Cert.SEND_WARN instead.
+     */
+    @Deprecated
+    public final static int SEND_WARN         = PK11Cert.SEND_WARN;
+
+    /**
+     * @deprecated Use PK11Cert.VALID_CA instead.
+     */
+    @Deprecated
+    public final static int VALID_CA          = PK11Cert.VALID_CA;
+
+    /**
+     * @deprecated Use PK11Cert.TRUSTED_CA instead.
+     */
+    @Deprecated
+    public final static int TRUSTED_CA        = PK11Cert.TRUSTED_CA;
+
+    /**
+     * @deprecated Use PK11Cert.NS_TRUSTED_CA instead.
+     */
+    @Deprecated
+    public final static int NS_TRUSTED_CA     = PK11Cert.NS_TRUSTED_CA;
+
+    /**
+     * @deprecated Use PK11Cert.USER instead.
+     */
+    @Deprecated
+    public final static int USER              = PK11Cert.USER;
+
+    /**
+     * @deprecated Use PK11Cert.TRUSTED_CLIENT_CA instead.
+     */
+    @Deprecated
+    public final static int TRUSTED_CLIENT_CA = PK11Cert.TRUSTED_CLIENT_CA;
+
+    /**
+     * @deprecated Use PK11Cert.INVISIBLE_CA instead.
+     */
+    @Deprecated
+    public final static int INVISIBLE_CA      = PK11Cert.INVISIBLE_CA;
+
+    /**
+     * @deprecated Use PK11Cert.GOVT_APPROVED_CA instead.
+     */
+    @Deprecated
+    public final static int GOVT_APPROVED_CA  = PK11Cert.GOVT_APPROVED_CA;
 
     public static boolean isFlagEnabled(int flag, int flags) {
         return (flag & flags) > 0;

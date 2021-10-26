@@ -28,6 +28,7 @@ import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkix.cert.Certificate;
 import org.mozilla.jss.pkix.cert.CertificateInfo;
 import org.mozilla.jss.pkix.cert.Extension;
@@ -206,9 +207,9 @@ public class GenerateTestCert {
                 ASN1Util.encode(caCert), caCertNick);
             InternalCertificate intern = (InternalCertificate)nssCaCert;
             intern.setSSLTrust(
-                InternalCertificate.TRUSTED_CA |
-                InternalCertificate.TRUSTED_CLIENT_CA |
-                InternalCertificate.VALID_CA);
+                    PK11Cert.TRUSTED_CA |
+                    PK11Cert.TRUSTED_CLIENT_CA |
+                    PK11Cert.VALID_CA);
 
             // generate server cert
             kpg.initialize(keyLength);

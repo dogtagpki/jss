@@ -13,3 +13,52 @@ Use `org.mozilla.jss.pkcs11.PK11Cert` instead.
 
 The `org.mozilla.jss.pkcs11.PK11InternalCert` class has been deprecated and will be removed in the future.
 Use `org.mozilla.jss.pkcs11.PK11Cert` instead.
+
+== Consolidate trust flag constants ==
+
+The trust flag constants defined in `org.mozilla.jss.netscape.security.pkcs.PKCS12` and `org.mozilla.jss.crypto.InternalCertificate` have been deprecated.
+Use the corresponding constants in `org.mozilla.jss.pkcs11.PK11Cert` instead.
+
+|===
+| `PKCS12` | `InternalCertificate` | `PK11Cert`
+
+| `TERMINAL_RECORD`
+| `VALID_PEER`
+| `VALID_PEER`
+
+| `TRUSTED`
+| `TRUSTED_PEER`
+| `TRUSTED_PEER`
+
+| `SEND_WARN`
+|
+| `SEND_WARN`
+
+| `VALID_CA`
+| `VALID_CA`
+| `VALID_CA`
+
+| `TRUSTED_CA`
+| `TRUSTED_CA`
+| `TRUSTED_CA`
+
+| `NS_TRUSTED_CA`
+|
+| `NS_TRUSTED_CA`
+
+| `USER`
+| `USER`
+| `USER`
+
+| `TRUSTED_CLIENT_CA`
+| `TRUSTED_CLIENT_CA`
+| `TRUSTED_CLIENT_CA`
+
+| `INVISIBLE_CA`
+|
+| `INVISIBLE_CA`
+
+| `GOVT_APPROVED_CA`
+|
+| `GOVT_APPROVED_CA`
+|===
