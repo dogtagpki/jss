@@ -46,10 +46,10 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Build Options
 ################################################################################
 
-# By default the build will execute unit tests unless --without test
+# By default the build will not execute unit tests unless --with tests
 # option is specified.
 
-%bcond_without test
+%bcond_with tests
 
 ################################################################################
 # Build Dependencies
@@ -142,7 +142,7 @@ cd %{_vpath_builddir}
     --no-print-directory \
     javadoc
 
-%if %{with test}
+%if %{with tests}
 ctest --output-on-failure
 %endif
 

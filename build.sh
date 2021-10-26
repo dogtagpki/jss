@@ -20,7 +20,7 @@ WITH_TIMESTAMP=
 WITH_COMMIT_ID=
 DIST=
 
-WITHOUT_TEST=
+WITH_TESTS=
 
 VERBOSE=
 DEBUG=
@@ -35,7 +35,7 @@ usage() {
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
-    echo "    --without-test         Do not run unit tests."
+    echo "    --with-tests           Run unit tests."
     echo " -v,--verbose              Run in verbose mode."
     echo "    --debug                Run in debug mode."
     echo "    --help                 Show help message."
@@ -127,9 +127,9 @@ generate_rpm_spec() {
     fi
 
     # hard-code test option
-    if [ "$WITHOUT_TEST" = true ] ; then
-        # convert bcond_without into bcond_with such that unit tests do not run by default
-        commands="${commands}; s/%\(bcond_without *test\)\$/# \1\n%bcond_with test/g"
+    if [ "$WITH_TESTS" = true ] ; then
+        # convert bcond_with into bcond_without such that it runs unit tests by default
+        commands="${commands}; s/%\(bcond_with *tests\)\$/# \1\n%bcond_without tests/g"
     fi
 
     sed "$commands" "$SPEC_TEMPLATE" > "$WORK_DIR/SPECS/$RPM_SPEC"
@@ -164,8 +164,8 @@ while getopts v-: arg ; do
         dist=?*)
             DIST="$LONG_OPTARG"
             ;;
-        without-test)
-            WITHOUT_TEST=true
+        with-tests)
+            WITH_TESTS=true
             ;;
         verbose)
             VERBOSE=true
@@ -335,8 +335,8 @@ if [ "$DIST" != "" ] ; then
     OPTIONS+=(--define "dist .$DIST")
 fi
 
-if [ "$WITHOUT_TEST" = true ] ; then
-    OPTIONS+=(--without test)
+if [ "$WITH_TESTS" = true ] ; then
+    OPTIONS+=(--with tests)
 fi
 
 if [ "$DEBUG" = true ] ; then
