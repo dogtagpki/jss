@@ -31,7 +31,7 @@ WITH_COMMIT_ID=
 DIST=
 
 WITHOUT_JAVADOC=
-WITHOUT_TEST=
+WITH_TESTS=
 
 VERBOSE=
 DEBUG=
@@ -52,7 +52,7 @@ usage() {
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
     echo "    --without-javadoc      Do not build Javadoc package."
-    echo "    --without-test         Do not run unit tests."
+    echo "    --with-tests           Run unit tests."
     echo " -v,--verbose              Run in verbose mode."
     echo "    --debug                Run in debug mode."
     echo "    --help                 Show help message."
@@ -152,9 +152,9 @@ generate_rpm_spec() {
     fi
 
     # hard-code test option
-    if [ "$WITHOUT_TEST" = true ] ; then
-        # convert bcond_without into bcond_with such that unit tests do not run by default
-        commands="${commands}; s/%\(bcond_without *test\)\$/# \1\n%bcond_with test/g"
+    if [ "$WITH_TESTS" = true ] ; then
+        # convert bcond_with into bcond_without such that it runs unit tests by default
+        commands="${commands}; s/%\(bcond_with *tests\)\$/# \1\n%bcond_without tests/g"
     fi
 
     sed "$commands" "$SPEC_TEMPLATE" > "$WORK_DIR/SPECS/$RPM_SPEC"
@@ -207,8 +207,8 @@ while getopts v-: arg ; do
         without-javadoc)
             WITHOUT_JAVADOC=true
             ;;
-        without-test)
-            WITHOUT_TEST=true
+        with-tests)
+            WITH_TESTS=true
             ;;
         verbose)
             VERBOSE=true
@@ -311,7 +311,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
         make "${OPTIONS[@]}" javadoc
     fi
 
-    if [ "$WITHOUT_TEST" != true ] ; then
+    if [ "$WITH_TESTS" = true ] ; then
         ctest --output-on-failure
     fi
 
@@ -321,6 +321,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     echo "- shared library: $WORK_DIR/libjss.so"
     echo "- documentation: $WORK_DIR/docs"
     echo
+    echo "To run the tests: $0 --with-tests"
     echo "To install the build: $0 install"
     echo "To create RPM packages: $0 rpm"
     echo
