@@ -48,7 +48,7 @@ jobs:
     condition: or(startsWith(variables.image, 'debian_'), startsWith(variables.image, 'ubuntu_'))
     displayName: Install Debian/Ubuntu dependencies
 
-  - script: ./build.sh
+  - script: ./build.sh --with-tests
     displayName: Build JSS binaries, Javadoc, and run tests
 
 - job: SymbolTest
