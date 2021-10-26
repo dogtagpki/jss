@@ -36,7 +36,7 @@ jobs:
             openjdk-11-jdk libcommons-lang3-java libslf4j-java junit4
 
     - name: Build JSS binaries, Javadoc, and run tests
-      run: ./build.sh
+      run: ./build.sh --with-tests
 
   # Compare JNI symbols in the code and in the version script.
   # If there are JNI symbols in the code but not in the version script -> fail.

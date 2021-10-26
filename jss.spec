@@ -45,10 +45,10 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 
 %bcond_without javadoc
 
-# By default the build will execute unit tests unless --without test
+# By default the build will not execute unit tests unless --with tests
 # option is specified.
 
-%bcond_without test
+%bcond_with tests
 
 ################################################################################
 # Build Dependencies
@@ -128,7 +128,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
     --jss-lib-dir=%{_libdir}/jss \
     --version=%{version} \
     %{!?with_javadoc:--without-javadoc} \
-    %{!?with_test:--without-test} \
+    %{?with_tests:--with-tests} \
     dist
 
 ################################################################################
