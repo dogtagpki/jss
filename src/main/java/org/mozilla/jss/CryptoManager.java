@@ -792,13 +792,10 @@ public final class CryptoManager implements TokenSupplier
         importCertToPerm(X509Certificate cert, String nickname)
         throws TokenException, InvalidNicknameException
     {
-        if (nickname==null) {
+        if (nickname == null) {
             throw new InvalidNicknameException("Nickname must be non-null");
         }
-
-        else {
-            return importCertToPermNative(cert,nickname);
-        }
+        return importCertToPermNative(cert,nickname);
     }
 
     /**
@@ -1053,15 +1050,15 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
 
-    private static native int getJSSMajorVersion();
-    private static native int getJSSMinorVersion();
-    private static native int getJSSPatchVersion();
+    public static native int getJSSMajorVersion();
+    public static native int getJSSMinorVersion();
+    public static native int getJSSPatchVersion();
 
     public static final String getJSSVersion() {
         return String.format("%d.%d.%d", getJSSMajorVersion(), getJSSMinorVersion(), getJSSPatchVersion());
     }
 
-    private static native boolean getJSSDebug();
+    public static native boolean getJSSDebug();
 
     public static final boolean JSS_DEBUG = getJSSDebug();
 
@@ -1166,21 +1163,12 @@ public final class CryptoManager implements TokenSupplier
         }
         // 0 certificate usage will get current usage
         // should call isCertValid() call above that returns certificate usage
-        if ((certificateUsage == null) ||
-                (certificateUsage == CertificateUsage.CheckAllUsages)){
-            int currCertificateUsage = 0x0000;
-            currCertificateUsage = verifyCertificateNowCUNative(nickname,
-                checkSig);
-
-            if (currCertificateUsage == CertificateUsage.basicCertificateUsages){
-                // cert is good for nothing
-                return false;
-            } else
-                return true;
-        } else {
-            return verifyCertificateNowNative(nickname, checkSig,
-              certificateUsage.getUsage());
+        if (certificateUsage == null || certificateUsage == CertificateUsage.CheckAllUsages) {
+            int currCertificateUsage = verifyCertificateNowCUNative(nickname, checkSig);
+            return currCertificateUsage != CertificateUsage.basicCertificateUsages;
         }
+        return verifyCertificateNowNative(nickname, checkSig,
+          certificateUsage.getUsage());
     }
 
     /**
