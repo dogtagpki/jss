@@ -1053,15 +1053,15 @@ public final class CryptoManager implements TokenSupplier
     /********************************************************************/
 
 
-    public native static int getJSSMajorVersion();
-    public native static int getJSSMinorVersion();
-    public native static int getJSSPatchVersion();
-    private native static boolean getJSSDebug();
+    private static native int getJSSMajorVersion();
+    private static native int getJSSMinorVersion();
+    private static native int getJSSPatchVersion();
 
-    public static final String
-    JAR_JSS_VERSION     = "JSS_VERSION = JSS_" + getJSSMajorVersion() +
-                          "_" + getJSSMinorVersion() +
-                          "_" + getJSSPatchVersion();
+    public static final String getJSSVersion() {
+        return String.format("%d.%d.%d", getJSSMajorVersion(), getJSSMinorVersion(), getJSSPatchVersion());
+    }
+
+    private static native boolean getJSSDebug();
 
     public static final boolean JSS_DEBUG = getJSSDebug();
 
