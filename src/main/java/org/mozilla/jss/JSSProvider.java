@@ -15,12 +15,7 @@ public final class JSSProvider extends java.security.Provider {
     /* of JSS is generated. Note that this is done by changing          */
     /* cmake/JSSConfig.cmake.                                           */
     /********************************************************************/
-    private static int JSS_MAJOR_VERSION  = CryptoManager.getJSSMajorVersion();
-    private static int JSS_MINOR_VERSION  = CryptoManager.getJSSMinorVersion();
-    private static int JSS_PATCH_VERSION  = CryptoManager.getJSSPatchVersion();
-    private static double JSS_VERSION     = JSS_MAJOR_VERSION +
-                                           (JSS_MINOR_VERSION * 100 +
-                                            JSS_PATCH_VERSION)/10000.0;
+    private static final String JSS_VERSION = CryptoManager.getJSSVersion();
 
     private static JSSLoader loader = new JSSLoader();
 
@@ -31,8 +26,7 @@ public final class JSSProvider extends java.security.Provider {
     }
 
     public JSSProvider(boolean initialize) {
-        super("Mozilla-JSS", String.valueOf(JSS_VERSION),
-                "Provides Signature, Message Digesting, and RNG");
+        super("Mozilla-JSS", JSS_VERSION, "Provides Signature, Message Digesting, and RNG");
 
         if (initialize) {
             initializeProvider();
@@ -398,13 +392,6 @@ public final class JSSProvider extends java.security.Provider {
 
     @Override
     public String toString() {
-        String mozillaProviderVersion = JSS_MAJOR_VERSION + "." +
-                                        JSS_MINOR_VERSION;
-        if ( JSS_PATCH_VERSION != 0 ) {
-            mozillaProviderVersion = mozillaProviderVersion + "." +
-                                     JSS_PATCH_VERSION;
-        }
-
-        return "Mozilla-JSS version " + mozillaProviderVersion;
+        return "Mozilla-JSS version: " + JSS_VERSION;
     }
 }

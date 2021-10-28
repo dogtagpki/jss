@@ -26,7 +26,7 @@ public class JSSPackageTest {
             }
             System.out.println("\n\tFetching version information " +
                                "from CryptoManager");
-            System.out.println("\n\t" + org.mozilla.jss.CryptoManager.JAR_JSS_VERSION);
+            System.out.println("\n\t" + org.mozilla.jss.CryptoManager.getJSSVersion());
 
             System.out.println("\n\tTo check the JNI version in libjss.so:");
             System.out.println("\n\ttry: strings libjss.so | grep -i header");
