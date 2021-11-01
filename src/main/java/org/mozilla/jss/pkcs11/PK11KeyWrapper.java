@@ -18,7 +18,6 @@ import javax.crypto.spec.RC2ParameterSpec;
 
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
-import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.JSSOAEPParameterSpec;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
@@ -661,8 +660,6 @@ public final class PK11KeyWrapper implements KeyWrapper {
             return EncryptionAlgorithm.RC4;
         } else if( type == SymmetricKey.AES ) {
             return EncryptionAlgorithm.AES_128_ECB;
-        } else if( type == SymmetricKey.SHA1_HMAC) {
-            return HMACAlgorithm.SHA1;
         } else  {
             assert( type == SymmetricKey.RC2 );
             return EncryptionAlgorithm.RC2_CBC;

@@ -139,12 +139,6 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
         throw new CloneNotSupportedException();
     }
 
-    public static class HmacSHA1 extends JSSMacSpi {
-        public HmacSHA1() {
-            super(HMACAlgorithm.SHA1, "HmacSHA1");
-        }
-    }
-
     public static class HmacSHA256 extends JSSMacSpi {
         public HmacSHA256() {
             super(HMACAlgorithm.SHA256, "HmacSHA256");

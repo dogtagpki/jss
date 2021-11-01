@@ -423,7 +423,7 @@ public class PFX implements ASN1Value {
                             getSecureRNG();
                         rand.nextBytes(salt);
                         epki = EncryptedPrivateKeyInfo.createPBE(
-                            PBEAlgorithm.PBE_SHA1_DES3_CBC, newPass,
+                            PBEAlgorithm.PBE_PKCS5_PBMAC1, newPass,
                             salt, 1, new PasswordConverter(), pki);
 
                         // replace the old safe bag with the new

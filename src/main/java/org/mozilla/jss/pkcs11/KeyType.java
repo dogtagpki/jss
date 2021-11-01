@@ -8,8 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
 import org.mozilla.jss.crypto.Algorithm;
-import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.CMACAlgorithm;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
@@ -115,7 +115,6 @@ public final class KeyType {
                     SignatureAlgorithm.RSASignature,
                     SignatureAlgorithm.RSASignatureWithMD2Digest,
                     SignatureAlgorithm.RSASignatureWithMD5Digest,
-                    SignatureAlgorithm.RSASignatureWithSHA1Digest,
                     SignatureAlgorithm.RSASignatureWithSHA256Digest,
                     SignatureAlgorithm.RSASignatureWithSHA384Digest,
                     SignatureAlgorithm.RSASignatureWithSHA512Digest,
@@ -133,8 +132,7 @@ public final class KeyType {
     static public final KeyType
     DSA     = new KeyType(new Algorithm[]
                     {
-                    SignatureAlgorithm.DSASignature,
-                    SignatureAlgorithm.DSASignatureWithSHA1Digest
+                    SignatureAlgorithm.DSASignature
                     },
                     "DSA"
                 );
@@ -144,7 +142,6 @@ public final class KeyType {
     EC     = new KeyType(new Algorithm[]
                     {
                     SignatureAlgorithm.ECSignature,
-                    SignatureAlgorithm.ECSignatureWithSHA1Digest,
                     SignatureAlgorithm.ECSignatureWithSHA256Digest,
                     SignatureAlgorithm.ECSignatureWithSHA384Digest,
                     SignatureAlgorithm.ECSignatureWithSHA512Digest
@@ -242,13 +239,6 @@ public final class KeyType {
                         );
 
     //////////////////////////////////////////////////////////////
-    static public final KeyType
-    SHA1_HMAC = new KeyType(new Algorithm[]
-                            {
-                            HMACAlgorithm.SHA1
-                            },
-                            "SHA1_HMAC"
-                        );
 
     static public final KeyType
     SHA256_HMAC = new KeyType(new Algorithm[]

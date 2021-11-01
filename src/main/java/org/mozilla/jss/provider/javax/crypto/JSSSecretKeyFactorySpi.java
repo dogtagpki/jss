@@ -322,7 +322,7 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         int iterationCount = 2;
 
         // generate a PBE key the old-fashioned way
-        keygen = tok.getKeyGenerator(PBEAlgorithm.PBE_SHA1_DES3_CBC);
+        keygen = tok.getKeyGenerator(PBEAlgorithm.PBE_PKCS5_PBMAC1);
         PBEKeyGenParams jssKeySpec =
             new PBEKeyGenParams(pw, salt, iterationCount);
         keygen.initialize(jssKeySpec);
@@ -383,33 +383,6 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
     public static class PBE_MD5_DES_CBC extends JSSSecretKeyFactorySpi {
         public PBE_MD5_DES_CBC() {
             super(PBEAlgorithm.PBE_MD5_DES_CBC);
-        }
-    }
-    public static class PBE_SHA1_DES_CBC extends JSSSecretKeyFactorySpi {
-        public PBE_SHA1_DES_CBC() {
-            super(PBEAlgorithm.PBE_SHA1_DES_CBC);
-        }
-    }
-    public static class PBE_SHA1_DES3_CBC extends JSSSecretKeyFactorySpi {
-        public PBE_SHA1_DES3_CBC() {
-            super(PBEAlgorithm.PBE_SHA1_DES3_CBC);
-        }
-    }
-    public static class PBE_SHA1_RC4_128 extends JSSSecretKeyFactorySpi {
-        public PBE_SHA1_RC4_128() {
-            super(PBEAlgorithm.PBE_SHA1_RC4_128);
-        }
-    }
-
-    public static class HmacSHA1 extends JSSSecretKeyFactorySpi {
-        public HmacSHA1() {
-            super(KeyGenAlgorithm.SHA1_HMAC);
-        }
-    }
-
-    public static class PBAHmacSHA1 extends JSSSecretKeyFactorySpi {
-        public PBAHmacSHA1() {
-            super(KeyGenAlgorithm.PBA_SHA1_HMAC);
         }
     }
 

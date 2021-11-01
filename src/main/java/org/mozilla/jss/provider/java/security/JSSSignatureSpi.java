@@ -191,16 +191,6 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
             "name/value parameters not supported");
     }
 
-    public static class DSA extends JSSSignatureSpi {
-        public DSA() {
-            super(SignatureAlgorithm.DSASignatureWithSHA1Digest);
-        }
-    }
-    public static class SHA1EC extends JSSSignatureSpi {
-        public SHA1EC() {
-            super(SignatureAlgorithm.ECSignatureWithSHA1Digest);
-        }
-    }
     public static class SHA256EC extends JSSSignatureSpi {
         public SHA256EC() {
             super(SignatureAlgorithm.ECSignatureWithSHA256Digest);
@@ -224,11 +214,6 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
     public static class MD5RSA extends JSSSignatureSpi {
         public MD5RSA() {
             super(SignatureAlgorithm.RSASignatureWithMD5Digest);
-        }
-    }
-    public static class SHA1RSA extends JSSSignatureSpi {
-        public SHA1RSA() {
-            super(SignatureAlgorithm.RSASignatureWithSHA1Digest);
         }
     }
     public static class SHA256RSA extends JSSSignatureSpi {

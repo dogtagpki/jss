@@ -103,16 +103,6 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
             super(KeyGenAlgorithm.RC2);
         }
     }
-    public static class HmacSHA1 extends JSSKeyGeneratorSpi {
-        public HmacSHA1() {
-            super(KeyGenAlgorithm.SHA1_HMAC);
-        }
-    }
-    public static class PBAHmacSHA1 extends JSSKeyGeneratorSpi {
-        public PBAHmacSHA1() {
-            super(KeyGenAlgorithm.PBA_SHA1_HMAC);
-        }
-    }
     public static class HmacSHA256 extends JSSKeyGeneratorSpi {
         public HmacSHA256() {
             super(KeyGenAlgorithm.SHA256_HMAC);

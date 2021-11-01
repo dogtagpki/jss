@@ -285,7 +285,7 @@ public final class SafeBag implements ASN1Value {
     {
       try {
 
-        PBEAlgorithm pbeAlg = PBEAlgorithm.PBE_SHA1_DES3_CBC;
+        PBEAlgorithm pbeAlg = PBEAlgorithm.PBE_PKCS5_PBMAC1;
         final int DEFAULT_ITERATIONS = 1;
         byte[] salt = new byte[pbeAlg.getSaltLength()];
 
@@ -293,7 +293,7 @@ public final class SafeBag implements ASN1Value {
         rand.nextBytes(salt);
 
         EncryptedPrivateKeyInfo epki= EncryptedPrivateKeyInfo.createPBE(
-                PBEAlgorithm.PBE_SHA1_DES3_CBC, password, salt,
+                PBEAlgorithm.PBE_PKCS5_PBMAC1, password, salt,
                 DEFAULT_ITERATIONS, new PasswordConverter(), privk);
 
         SET attributes = new SET();

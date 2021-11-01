@@ -123,27 +123,6 @@ public class SignatureAlgorithm extends Algorithm {
 
     //////////////////////////////////////////////////////////////////////
     public static final SignatureAlgorithm
-    RSASignatureWithSHA1Digest =
-        new SignatureAlgorithm(SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION,
-            "RSASignatureWithSHA1Digest", RSASignature, DigestAlgorithm.SHA1,
-            OBJECT_IDENTIFIER.PKCS1.subBranch(5) );
-
-    //////////////////////////////////////////////////////////////////////
-    public static final SignatureAlgorithm
-    DSASignatureWithSHA1Digest =
-        new SignatureAlgorithm(SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST,
-            "DSASignatureWithSHA1Digest", DSASignature, DigestAlgorithm.SHA1,
-            ANSI_X9_ALGORITHM.subBranch(3) );
-
-    //////////////////////////////////////////////////////////////////////
-    public static final SignatureAlgorithm
-    ECSignatureWithSHA1Digest =
-        new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE,
-            "ECSignatureWithSHA1Digest", ECSignature, DigestAlgorithm.SHA1,
-            ANSI_X962_OID.subBranch(4).subBranch(1) );
-
-    //////////////////////////////////////////////////////////////////////
-    public static final SignatureAlgorithm
     ECSignatureWithSHA256Digest =
         new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE,
             "ECSignatureWithSHA256Digest", ECSignature, DigestAlgorithm.SHA256,

@@ -65,7 +65,6 @@ import org.mozilla.jss.pkcs12.PFX;
 import org.mozilla.jss.pkcs12.PasswordConverter;
 import org.mozilla.jss.pkcs12.SafeBag;
 import org.mozilla.jss.pkix.primitive.Attribute;
-import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.util.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,13 +77,11 @@ public class PKCS12Util {
 
     public final static List<PBEAlgorithm> SUPPORTED_CERT_ENCRYPTIONS = Arrays.asList(new PBEAlgorithm[] {
             null, // none
-            PBEAlgorithm.PBE_SHA1_RC2_40_CBC
     });
 
     public final static List<PBEAlgorithm> SUPPORTED_KEY_ENCRYPTIONS = Arrays.asList(new PBEAlgorithm[] {
-            PBEAlgorithm.PBE_PKCS5_PBES2,
-            PBEAlgorithm.PBE_SHA1_DES3_CBC
-    });
+            PBEAlgorithm.PBE_PKCS5_PBES2
+            });
 
     public final static PBEAlgorithm DEFAULT_CERT_ENCRYPTION = SUPPORTED_CERT_ENCRYPTIONS.get(0);
     public final static String DEFAULT_CERT_ENCRYPTION_NAME = NO_ENCRYPTION;
@@ -223,12 +220,8 @@ public class PKCS12Util {
 
             CryptoToken token = CryptoManager.getInstance().getInternalKeyStorageToken();
 
-            if (keyEncryption == PBEAlgorithm.PBE_SHA1_DES3_CBC) {
-                content = create_EPKI_with_PBE_SHA1_DES3_CBC(token, privateKey, password);
-
-            } else if (keyEncryption == PBEAlgorithm.PBE_PKCS5_PBES2) {
+            if (keyEncryption == PBEAlgorithm.PBE_PKCS5_PBES2) {
                 content = create_EPKI_with_PBE_PKCS5_PBES2(token, privateKey, password);
-
             } else {
                 throw new Exception("Unsupported key encryption: " + keyEncryption);
             }
@@ -238,24 +231,6 @@ public class PKCS12Util {
 
         SafeBag safeBag = new SafeBag(SafeBag.PKCS8_SHROUDED_KEY_BAG, content, keyAttrs);
         encSafeContents.addElement(safeBag);
-    }
-
-    public ASN1Value create_EPKI_with_PBE_SHA1_DES3_CBC(CryptoToken token, PrivateKey privateKey, Password password)
-            throws Exception {
-
-        // Use the same salt size and number of iterations as in pk12util.
-
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-
-        return EncryptedPrivateKeyInfo.createPBE(
-                PBEAlgorithm.PBE_SHA1_DES3_CBC,
-                password,
-                salt,
-                100000, // iterations
-                new PasswordConverter(),
-                privateKey,
-                token);
     }
 
     public ASN1Value create_EPKI_with_PBE_PKCS5_PBES2(CryptoToken token, PrivateKey privateKey, Password password)
@@ -579,18 +554,6 @@ public class PKCS12Util {
 
             if (certEncryption == null) {
                 authSafes.addSafeContents(certSafeContents);
-
-            } else if (certEncryption == PBEAlgorithm.PBE_SHA1_RC2_40_CBC) {
-
-                byte[] salt = new byte[16];
-                random.nextBytes(salt);
-
-                authSafes.addEncryptedSafeContents(
-                        certEncryption,
-                        password,
-                        salt,
-                        100000, // iterations
-                        certSafeContents);
 
             } else {
                 throw new Exception("Unsupported certificate encryption: " + certEncryption);

@@ -91,44 +91,4 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
         SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC, "PBE/MD5/DES/CBC", 56,
             PKCS5.subBranch(3), EncryptionAlgorithm.DES_CBC, 8 );
 
-    //////////////////////////////////////////////////////////////
-    public static final PBEAlgorithm
-    PBE_SHA1_DES_CBC = new PBEAlgorithm(
-        SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC, "PBE/SHA1/DES/CBC", 56,
-            PKCS5.subBranch(10), EncryptionAlgorithm.DES_CBC, 8 );
-
-    //////////////////////////////////////////////////////////////
-    public static final PBEAlgorithm
-    PBE_SHA1_RC4_128 = new PBEAlgorithm(
-        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4,
-            "PBE/SHA1/RC4-128", 128, PKCS12_PBE.subBranch(1),
-            EncryptionAlgorithm.RC4, 20 );
-
-    //////////////////////////////////////////////////////////////
-    public static final PBEAlgorithm
-    PBE_SHA1_RC4_40 = new PBEAlgorithm(
-        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4,
-            "PBE/SHA1/RC4-40", 40, PKCS12_PBE.subBranch(2),
-            EncryptionAlgorithm.RC4, 20 );
-
-    //////////////////////////////////////////////////////////////
-    public static final PBEAlgorithm
-    PBE_SHA1_DES3_CBC = new PBEAlgorithm(
-        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC,
-            "PBE/SHA1/DES3/CBC", 168, PKCS12_PBE.subBranch(3),
-            EncryptionAlgorithm.DES3_CBC, 20 );
-
-    //////////////////////////////////////////////////////////////
-    public static final PBEAlgorithm
-    PBE_SHA1_RC2_128_CBC = new PBEAlgorithm(
-        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC,
-            "PBE/SHA1/RC2-128", 128, PKCS12_PBE.subBranch(5),
-            EncryptionAlgorithm.RC2_CBC, 20 );
-
-    //////////////////////////////////////////////////////////////
-    public static final PBEAlgorithm
-    PBE_SHA1_RC2_40_CBC = new PBEAlgorithm(
-        SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC,
-            "PBE/SHA1/RC2-40", 40, PKCS12_PBE.subBranch(6),
-            EncryptionAlgorithm.RC2_CBC, 20 );
 }

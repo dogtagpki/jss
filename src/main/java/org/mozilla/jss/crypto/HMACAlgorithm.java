@@ -53,10 +53,6 @@ public class HMACAlgorithm extends DigestAlgorithm {
      * symmetric key together with SHA-X digesting to create a form of
      * signature.
      */
-    public static final HMACAlgorithm SHA1 = new HMACAlgorithm
-        (CKM_SHA_1_HMAC, "SHA-1-HMAC",
-             OBJECT_IDENTIFIER.ALGORITHM.subBranch(26), 20);
-
     public static final HMACAlgorithm SHA256 = new HMACAlgorithm
         (CKM_SHA256_HMAC, "SHA-256-HMAC",
              OBJECT_IDENTIFIER.RSA_DIGEST.subBranch(9), 32);

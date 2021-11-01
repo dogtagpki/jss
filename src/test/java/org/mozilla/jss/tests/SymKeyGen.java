@@ -308,9 +308,6 @@ public class SymKeyGen {
         skg.cipherTest(key, EncryptionAlgorithm.RC4);
         System.out.println("RC4 key and cipher tests correct");
 
-        //Todo
-        //KeyGenAlgorithm.PBA_SHA1_HMAC, SymmetricKey.SHA1_HMAC, 160);
-
         //PBE key gen test.
         // PBEAlgorithm.PBE_MD2_DES_CBC
         key = skg.genPBEKey(PBEAlgorithm.PBE_MD2_DES_CBC, SymmetricKey.DES,
@@ -325,42 +322,6 @@ public class SymKeyGen {
         skg.cipherTest(key, EncryptionAlgorithm.DES_CBC_PAD);
         skg.cipherTest(key, EncryptionAlgorithm.DES_CBC);
         skg.cipherTest(key, EncryptionAlgorithm.DES_ECB);
-
-        //PBEAlgorithm.PBE_SHA1_DES_CBC
-        key = skg.genPBEKey(PBEAlgorithm.PBE_SHA1_DES_CBC, SymmetricKey.DES,
-                      64);
-        skg.cipherTest(key, EncryptionAlgorithm.DES_CBC_PAD);
-        skg.cipherTest(key, EncryptionAlgorithm.DES_CBC);
-        skg.cipherTest(key, EncryptionAlgorithm.DES_ECB);
-
-        //PBEAlgorithm.PBE_SHA1_DES3_CBC
-        key = skg.genPBEKey(PBEAlgorithm.PBE_SHA1_DES3_CBC, SymmetricKey.DES3,
-                      168);
-        skg.cipherTest(key, EncryptionAlgorithm.DES3_CBC_PAD);
-        skg.cipherTest(key, EncryptionAlgorithm.DES3_CBC);
-        skg.cipherTest(key, EncryptionAlgorithm.DES3_ECB);
-
-        //PBEAlgorithm.PBE_SHA1_RC2_40_CBC
-        key = skg.genPBEKey(PBEAlgorithm.PBE_SHA1_RC2_40_CBC, SymmetricKey.RC2,
-                      40);
-        skg.cipherTest(key, EncryptionAlgorithm.RC2_CBC);
-        skg.cipherTest(key, EncryptionAlgorithm.RC2_CBC_PAD);
-
-        //PBEAlgorithm.PBE_SHA1_RC2_128_CBC
-        key = skg.genPBEKey(PBEAlgorithm.PBE_SHA1_RC2_128_CBC, SymmetricKey.RC2,
-                      128);
-        skg.cipherTest(key, EncryptionAlgorithm.RC2_CBC);
-        skg.cipherTest(key, EncryptionAlgorithm.RC2_CBC_PAD);
-
-        //PBEAlgorithm.PBE_SHA1_RC4_40
-        key = skg.genPBEKey(PBEAlgorithm.PBE_SHA1_RC4_40, SymmetricKey.RC4,
-                      40);
-        skg.cipherTest(key, EncryptionAlgorithm.RC4);
-
-        //PBEAlgorithm.PBE_SHA1_RC4_128
-        key = skg.genPBEKey(PBEAlgorithm.PBE_SHA1_RC4_128, SymmetricKey.RC4,
-                      128);
-        skg.cipherTest(key, EncryptionAlgorithm.RC4);
 
         System.out.println("Password Based key generation tests correct");
 

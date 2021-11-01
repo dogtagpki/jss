@@ -63,12 +63,6 @@ public class DigestAlgorithm extends Algorithm {
     public static final DigestAlgorithm MD5 = new DigestAlgorithm
         (SEC_OID_MD5, "MD5", OBJECT_IDENTIFIER.RSA_DIGEST.subBranch(5), 16 );
 
-    /**
-     * The SHA-1 digest algorithm, from Uncle Sam.
-     */
-    public static final DigestAlgorithm SHA1 = new DigestAlgorithm
-        (SEC_OID_SHA1, "SHA-1", OBJECT_IDENTIFIER.ALGORITHM.subBranch(26), 20);
-
     /*
     * The SHA-256 digest Algorithm from FIPS 180-2
     */

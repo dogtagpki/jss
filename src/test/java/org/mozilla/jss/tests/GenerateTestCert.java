@@ -90,18 +90,12 @@ public class GenerateTestCert {
 
     private void setSigAlg(String alg) {
 
-        if (alg.equalsIgnoreCase("SHA-1/RSA")) {
-            sigAlg = SignatureAlgorithm.RSASignatureWithSHA1Digest;
-        } else if (alg.equalsIgnoreCase("SHA-256/RSA")) {
+        if (alg.equalsIgnoreCase("SHA-256/RSA")) {
             sigAlg = SignatureAlgorithm.RSASignatureWithSHA256Digest;
         } else if (alg.equalsIgnoreCase("SHA-384/RSA")) {
             sigAlg = SignatureAlgorithm.RSASignatureWithSHA384Digest;
         } else if (alg.equalsIgnoreCase("SHA-512/RSA")) {
             sigAlg = SignatureAlgorithm.RSASignatureWithSHA512Digest;
-        } else if (alg.equalsIgnoreCase("SHA-1/DSA")) {
-            sigAlg = SignatureAlgorithm.DSASignatureWithSHA1Digest;
-        } else if (alg.equalsIgnoreCase("SHA-1/EC")) {
-            sigAlg = SignatureAlgorithm.ECSignatureWithSHA1Digest;
         } else if (alg.equalsIgnoreCase("SHA-256/EC")) {
             sigAlg = SignatureAlgorithm.ECSignatureWithSHA256Digest;
         } else if (alg.equalsIgnoreCase("SHA-384/EC")) {

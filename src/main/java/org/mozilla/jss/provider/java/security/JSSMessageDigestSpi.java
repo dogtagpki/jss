@@ -100,11 +100,6 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
       }
     }
 
-    public static class SHA1 extends JSSMessageDigestSpi {
-        public SHA1() {
-            super( DigestAlgorithm.SHA1 );
-        }
-    }
     public static class SHA256 extends JSSMessageDigestSpi {
         public SHA256() {
             super( DigestAlgorithm.SHA256 );

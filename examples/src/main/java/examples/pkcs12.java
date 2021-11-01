@@ -208,12 +208,12 @@ public class pkcs12 {
                     // re-encrypt the PrivateKeyInfo with the new password
                     // and random salt
                     byte[] salt = new byte[
-                            PBEAlgorithm.PBE_SHA1_DES3_CBC.getSaltLength()];
+                            PBEAlgorithm.PBE_PKCS5_PBMAC1.getSaltLength()];
                     JSSSecureRandom rand = CryptoManager.getInstance().
                         getSecureRNG();
                     rand.nextBytes(salt);
                     epki = EncryptedPrivateKeyInfo.createPBE(
-                        PBEAlgorithm.PBE_SHA1_DES3_CBC, newPass,
+                        PBEAlgorithm.PBE_PKCS5_PBMAC1, newPass,
                         salt, 1, new PasswordConverter(), pki);
 
                     // Overwrite the previous EncryptedPrivateKeyInfo with

@@ -51,10 +51,10 @@ public class AuthenticatedSafes implements ASN1Value {
     private static final int SALT_LENGTH = 20;
 
     /**
-     * The default PBE key generation algorithm: SHA-1 with RC2 40-bit CBC.
+     * The default PBE key generation algorithm: PBMAC1 with AES 128-bit CBC.
      */
     public static final PBEAlgorithm DEFAULT_KEY_GEN_ALG =
-                PBEAlgorithm.PBE_SHA1_RC2_40_CBC;
+                PBEAlgorithm.PBE_PKCS5_PBMAC1;
 
     // security dynamics has a weird way of packaging things, we'll
     // work with it for debugging
