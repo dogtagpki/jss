@@ -10,7 +10,7 @@ jobs:
         image:
           - 'fedora_33'
           - 'fedora_34'
-          - 'fedora_latest_jdk11'
+          - 'fedora_34_jdk11'
           - 'symbolcheck'
           - 'debian_jdk11'
           - 'ubuntu_jdk11'
