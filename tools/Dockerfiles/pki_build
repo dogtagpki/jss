@@ -1,10 +1,10 @@
-FROM registry.fedoraproject.org/fedora:latest
+FROM registry.fedoraproject.org/fedora:34
 
 # Install generic dependencies to build jss and pki
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build \
-        && dnf copr -y enable ${JSS_4_6_REPO:-@pki/10.11} \
+        && dnf copr -y enable ${JSS_4_6_REPO:-@pki/10.12} \
         && dnf build-dep -y jss pki-core \
         && mkdir -p /home/sandbox \
         && git clone -b v10.11 https://github.com/dogtagpki/pki /home/sandbox/pki \

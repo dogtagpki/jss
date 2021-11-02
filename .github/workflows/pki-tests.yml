@@ -6,19 +6,19 @@ jobs:
   init:
     name: Initializing Workflow
     runs-on: ubuntu-latest
-    container: fedora:latest
+    container: fedora:34
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Set up test matrix
         id: set-matrix
         run: |
-          export latest=$(cat /etc/fedora-release | awk '{ print $3 }')
+          export current=$(cat /etc/fedora-release | awk '{ print $3 }')
           export previous=$(cat /etc/fedora-release | awk '{ print $3 - 1 }')
-          echo "Running CI against Fedora $previous and $latest"
+          echo "Running CI against Fedora $previous and $current"
           if [ "${{ secrets.MATRIX }}" == "" ]
           then
-              echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
+              echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$current\"]}"
           else
               echo "::set-output name=matrix::${{ secrets.MATRIX }}"
           fi
@@ -28,7 +28,7 @@ jobs:
     needs: init
     runs-on: ubuntu-latest
     env:
-      COPR_REPO: "@pki/10.11"
+      COPR_REPO: "@pki/10.12"
     strategy:
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss
-      COPR_REPO: "@pki/10.11"
+      COPR_REPO: "@pki/10.12"
     strategy:
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:

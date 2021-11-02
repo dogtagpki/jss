@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-ARG OS_VERSION="latest"
-ARG COPR_REPO="@pki/10.11"
+ARG OS_VERSION="34"
+ARG COPR_REPO="@pki/10.12"
 
 ################################################################################
 FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-builder
