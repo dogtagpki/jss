@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/apache-commons-lang3.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/hamcrest/core.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-simple.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
