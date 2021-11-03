@@ -317,8 +317,12 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     echo
     echo "Build artifacts:"
-    echo "- Java archive: $WORK_DIR/jss.jar"
-    echo "- shared library: $WORK_DIR/libjss.so"
+    echo "- Java archives:"
+    echo "    $WORK_DIR/jss.jar"
+    echo "    $WORK_DIR/symkey/jss-symkey.jar"
+    echo "- shared libraries:"
+    echo "    $WORK_DIR/libjss.so"
+    echo "    $WORK_DIR/symkey/libjss-symkey.so"
     echo "- documentation: $WORK_DIR/docs"
     echo
     echo "To run the tests: $0 --with-tests"

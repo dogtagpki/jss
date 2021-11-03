@@ -93,3 +93,11 @@ Use the corresponding methods in `org.mozilla.jss.pkcs11.PK11Cert` instead.
 | `setTrustFlags()`
 | `setTrustFlags()`
 |===
+
+== Add symkey library ==
+
+The PKI symkey library has been moved into JSS with the following changes:
+
+- the package name has been renamed to `org.mozilla.jss.symkey`
+- the JAR file has been renamed to `jss-symkey.jar`
+- the shared library file has been renamed to `libjss-symkey.so`
