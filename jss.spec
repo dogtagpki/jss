@@ -145,7 +145,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 
 %defattr(-,root,root,-)
 %doc jss.html
-%license MPL-1.1.txt gpl.txt lgpl.txt
+%license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
 %{_libdir}/*
 %{_jnidir}/*
 

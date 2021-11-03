@@ -59,6 +59,7 @@ include(Shims)
 
 # Since we found Java, include UseJava to provide the find_jar function.
 include(UseJava)
+include(Java)
 
 # These includes are required for the macro check_symbol_exists and
 # check_struct_has_member in jss_config().
@@ -80,6 +81,8 @@ include(JSSTests)
 jss_config()
 jss_build()
 jss_tests()
+
+add_subdirectory(symkey)
 
 install(
     FILES
@@ -115,7 +118,7 @@ if(WITH_JAVADOC)
 
     install(
         FILES
-            jss.html MPL-1.1.txt gpl.txt lgpl.txt
+            jss.html MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
         DESTINATION
             ${CMAKE_INSTALL_PREFIX}/share/javadoc/jss
     )
