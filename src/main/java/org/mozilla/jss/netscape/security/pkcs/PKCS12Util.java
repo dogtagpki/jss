@@ -76,10 +76,10 @@ public class PKCS12Util {
 
     public final static String NO_ENCRYPTION = "none";
 
-    public final static List<PBEAlgorithm> SUPPORTED_CERT_ENCRYPTIONS = Arrays.asList(new PBEAlgorithm[] {
+    public final static List<PBEAlgorithm> SUPPORTED_CERT_ENCRYPTIONS = Arrays.asList(
             null, // none
             PBEAlgorithm.PBE_SHA1_RC2_40_CBC
-    });
+    );
 
     public final static List<PBEAlgorithm> SUPPORTED_KEY_ENCRYPTIONS = Arrays.asList(new PBEAlgorithm[] {
             PBEAlgorithm.PBE_PKCS5_PBES2,
@@ -299,7 +299,7 @@ public class PKCS12Util {
     }
 
     BigInteger createLocalID(X509Certificate cert) throws Exception {
-        // SHA1 hash of the X509Cert DER encoding
+        // SHA-256 hash of the X509Cert DER encoding
         return createLocalID(cert.getEncoded());
     }
 

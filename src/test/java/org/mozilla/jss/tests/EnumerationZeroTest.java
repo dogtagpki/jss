@@ -102,7 +102,7 @@ public class EnumerationZeroTest {
      *   parameters              ANY DEFINED BY algorithm OPTIONAL  }
      * </pre>
      *
-     * A KeyIdentifier is a SHA-1 digest of the subjectPublicKey bit string from the ASN.1 above.
+     * A KeyIdentifier is a SHA-256 digest of the subjectPublicKey bit string.
      *
      * @param key the RSAPublicKey to use
      * @return an AuthorityKeyIdentifierExtension based on the key

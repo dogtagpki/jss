@@ -4,19 +4,20 @@
 
 package org.mozilla.jss.provider.java.security;
 
-import java.security.*;
+import java.io.IOException;
+import java.security.AlgorithmParametersSpi;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidParameterSpecException;
-import java.security.spec.PSSParameterSpec;
 import java.security.spec.MGF1ParameterSpec;
-import java.io.IOException;
-import org.mozilla.jss.util.Assert;
+import java.security.spec.PSSParameterSpec;
+
 import org.mozilla.jss.netscape.security.util.BigInt;
-import org.mozilla.jss.netscape.security.x509.AlgorithmId;
-import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
+import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
+import org.mozilla.jss.netscape.security.x509.AlgorithmId;
+import org.mozilla.jss.util.Assert;
 
 /**
  * A RSAPSSAlgorithmParameter implements the trandcoding between a
@@ -210,28 +211,28 @@ public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
         int trailer = spec.getTrailerField();
 
         // Create the hash alg and mask gen func objects
-        if (hashAlgName.equals("SHA-256")) {
-            hashAlg = new AlgorithmId(AlgorithmId.SHA256_oid);
+        if (hashAlgName.equals("SHA-1") || hashAlgName.equals("SHA")) {
+            hashAlg = new AlgorithmId(AlgorithmId.SHA_oid);
         }  else if(hashAlgName.equals("SHA-512")) {
             hashAlg = new AlgorithmId(AlgorithmId.SHA512_oid);
         }  else if(hashAlgName.equals("SHA-384")) {
             hashAlg = new AlgorithmId(AlgorithmId.SHA384_oid);
         } else {
-            // Default to SHA-1 per above ASN.1 encoding.
-            hashAlg = new AlgorithmId(AlgorithmId.SHA_oid);
+            // Default to SHA-256
+            hashAlg = new AlgorithmId(AlgorithmId.SHA256_oid);
         }
     }
 
     private String getSpecAlgName(String algName) {
-        if ("SHA256".equals(algName)) {
-            return "SHA-256";
+        if ("SHA1".equals(algName) || "SHA".equals(algName)) {
+            return "SHA-1";
         } else if("SHA384".equals(algName)) {
             return "SHA-384";
         } else if("SHA512".equals(algName)) {
             return "SHA-512";
         } else {
-            // Default to SHA-1 per above ASN.1 encoding.
-            return "SHA-1";
+            // Default to SHA-256
+            return "SHA-256";
         }
     }
 }
