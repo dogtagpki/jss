@@ -121,7 +121,7 @@ public class KerberosName {
     }
 
     public static void main(String[] argv) {
-        Vector<String> strings = new Vector<String>();
+        Vector<String> strings = new Vector<>();
         strings.addElement("name");
         KerberosName k = new KerberosName("realm", 0, strings);
 

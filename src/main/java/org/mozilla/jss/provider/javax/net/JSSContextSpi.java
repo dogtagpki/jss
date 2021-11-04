@@ -38,7 +38,7 @@ public class JSSContextSpi extends SSLContextSpi {
         }
 
         if (tms != null) {
-            ArrayList<X509TrustManager> xtms = new ArrayList<X509TrustManager>();
+            ArrayList<X509TrustManager> xtms = new ArrayList<>();
             for (TrustManager tm : tms) {
                 if (tm instanceof X509TrustManager) {
                     xtms.add((X509TrustManager) tm);

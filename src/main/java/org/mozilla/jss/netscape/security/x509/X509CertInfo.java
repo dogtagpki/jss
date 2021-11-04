@@ -119,7 +119,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
     private byte[] rawCertInfo = null;
 
     // The certificate attribute name to integer mapping stored here
-    private static final Hashtable<String, Integer> map = new Hashtable<String, Integer>();
+    private static final Hashtable<String, Integer> map = new Hashtable<>();
     static {
         map.put(VERSION, Integer.valueOf(ATTR_VERSION));
         map.put(SERIAL_NUMBER, Integer.valueOf(ATTR_SERIAL));
@@ -229,7 +229,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(VERSION);
         elements.addElement(SERIAL_NUMBER);
         elements.addElement(ALGORITHM_ID);

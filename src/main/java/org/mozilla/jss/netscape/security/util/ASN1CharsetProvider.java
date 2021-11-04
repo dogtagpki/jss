@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ASN1CharsetProvider extends CharsetProvider {
 
-    protected Map<String, Charset> charsets = new HashMap<String, Charset>();
+    protected Map<String, Charset> charsets = new HashMap<>();
 
     public ASN1CharsetProvider() {
         addCharset(new PrintableCharset());

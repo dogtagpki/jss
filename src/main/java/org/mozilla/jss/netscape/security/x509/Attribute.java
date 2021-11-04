@@ -64,7 +64,7 @@ public final class Attribute implements Serializable, DerEncoder {
     private static final long serialVersionUID = -931486084625476764L;
     //private variables
     ObjectIdentifier oid;
-    Vector<String> valueSet = new Vector<String>();
+    Vector<String> valueSet = new Vector<>();
     transient protected X500NameAttrMap attrMap;
 
     //========== CONSTRUCTOR ==================================

@@ -115,7 +115,7 @@ public class NSCertTypeExtension extends Extension implements CertAttrSet {
                 new MapEntry(OBJECT_SIGNING_CA, 7),
         };
 
-    private static Vector<String> mAttributeNames = new Vector<String>();
+    private static Vector<String> mAttributeNames = new Vector<>();
 
     static {
         for (int i = 0; i < mMapData.length; ++i) {

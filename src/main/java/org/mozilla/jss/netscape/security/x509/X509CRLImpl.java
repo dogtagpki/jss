@@ -101,7 +101,7 @@ public class X509CRLImpl extends X509CRL {
     private Date thisUpdate = null;
     private Date nextUpdate = null;
     //    private static final Hashtable revokedCerts = new Hashtable();
-    private Hashtable<BigInteger, RevokedCertificate> revokedCerts = new Hashtable<BigInteger, RevokedCertificate>();
+    private Hashtable<BigInteger, RevokedCertificate> revokedCerts = new Hashtable<>();
     //    private static CRLExtensions    extensions = null;
     private CRLExtensions extensions = null;
     private boolean entriesIncluded = true;
@@ -686,7 +686,7 @@ public class X509CRLImpl extends X509CRL {
         if (revokedCerts == null || revokedCerts.isEmpty())
             return null;
         else {
-            Set<RevokedCertificate> certSet = new LinkedHashSet<RevokedCertificate>(revokedCerts.values());
+            Set<RevokedCertificate> certSet = new LinkedHashSet<>(revokedCerts.values());
             return certSet;
         }
     }
@@ -825,7 +825,7 @@ public class X509CRLImpl extends X509CRL {
     public Set<String> getCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
-        Set<String> extSet = new LinkedHashSet<String>();
+        Set<String> extSet = new LinkedHashSet<>();
         Extension ex;
         for (Enumeration<Extension> e = extensions.getElements(); e.hasMoreElements();) {
             ex = e.nextElement();
@@ -847,7 +847,7 @@ public class X509CRLImpl extends X509CRL {
     public Set<String> getNonCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
-        Set<String> extSet = new LinkedHashSet<String>();
+        Set<String> extSet = new LinkedHashSet<>();
         Extension ex;
         for (Enumeration<Extension> e = extensions.getElements(); e.hasMoreElements();) {
             ex = e.nextElement();

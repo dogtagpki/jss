@@ -108,7 +108,7 @@ public class CertificateExtensions extends Vector<Extension>
      * Default constructor for the certificate attribute.
      */
     public CertificateExtensions() {
-        map = new LinkedHashMap<String, Extension>();
+        map = new LinkedHashMap<>();
     }
 
     /**
@@ -120,7 +120,7 @@ public class CertificateExtensions extends Vector<Extension>
     public CertificateExtensions(DerInputStream in)
             throws IOException {
 
-        map = new LinkedHashMap<String, Extension>();
+        map = new LinkedHashMap<>();
         DerValue[] exts = in.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {
@@ -140,7 +140,7 @@ public class CertificateExtensions extends Vector<Extension>
         DerValue val = new DerValue(in);
         DerInputStream str = val.toDerInputStream();
 
-        map = new LinkedHashMap<String, Extension>();
+        map = new LinkedHashMap<>();
         DerValue[] exts = str.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {
@@ -164,7 +164,7 @@ public class CertificateExtensions extends Vector<Extension>
             str = val.toDerInputStream();
         }
 
-        map = new LinkedHashMap<String, Extension>();
+        map = new LinkedHashMap<>();
         DerValue[] exts = str.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {

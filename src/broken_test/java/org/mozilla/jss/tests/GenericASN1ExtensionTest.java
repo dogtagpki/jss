@@ -16,7 +16,7 @@ public class GenericASN1ExtensionTest {
         String name1 = "testExtension1";
         String oid1 = "1.2.3.4";
         String pattern = "";
-        Hashtable<String, String> config = new Hashtable<String, String>();
+        Hashtable<String, String> config = new Hashtable<>();
         GenericASN1Extension extension1 = new GenericASN1Extension(name1, oid1,
                 pattern, false, config);
         Assert.assertEquals(name1, extension1.getName());
@@ -35,7 +35,7 @@ public class GenericASN1ExtensionTest {
         String name1 = "testExtension1";
         String oid1 = "1.2.3.4";
         String pattern = "";
-        Hashtable<String, String> config = new Hashtable<String, String>();
+        Hashtable<String, String> config = new Hashtable<>();
         config.put("oid", oid1);
         config.put("name", name1);
         config.put("pattern", pattern);

@@ -204,10 +204,10 @@ public class X500NameAttrMap {
     // private variables
     //
 
-    Hashtable<String, ObjectIdentifier> name2OID = new Hashtable<String, ObjectIdentifier>();
-    Hashtable<ObjectIdentifier, String> oid2Name = new Hashtable<ObjectIdentifier, String>();
+    Hashtable<String, ObjectIdentifier> name2OID = new Hashtable<>();
+    Hashtable<ObjectIdentifier, String> oid2Name = new Hashtable<>();
     Hashtable<ObjectIdentifier, AVAValueConverter> oid2ValueConverter =
-            new Hashtable<ObjectIdentifier, AVAValueConverter>();
+            new Hashtable<>();
 
     //
     // global defaults.

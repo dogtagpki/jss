@@ -231,7 +231,7 @@ public class IssuerAlternativeNameExtension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(ISSUER_NAME);
 
         return (elements.elements());

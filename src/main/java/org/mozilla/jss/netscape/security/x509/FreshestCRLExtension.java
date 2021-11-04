@@ -337,8 +337,8 @@ public class FreshestCRLExtension extends Extension
             list.addElement(this);
         }
 
-        private static Hashtable<String, Reason> map = new Hashtable<String, Reason>();
-        private static Vector<Reason> list = new Vector<Reason>();
+        private static Hashtable<String, Reason> map = new Hashtable<>();
+        private static Vector<Reason> list = new Vector<>();
 
         public static Reason fromString(String name) {
             return map.get(name);
@@ -377,7 +377,7 @@ public class FreshestCRLExtension extends Extension
         public static Reason[] bitArrayToReasonArray(byte[] bitFlags) {
             byte first = bitFlags[0];
             int size = list.size();
-            Vector<Reason> result = new Vector<Reason>();
+            Vector<Reason> result = new Vector<>();
             for (int i = 0; i < size; i++) {
                 Reason r = list.elementAt(i);
                 byte b = r.getBitMask();

@@ -306,7 +306,7 @@ public class NameConstraintsExtension extends Extension implements CertAttrSet {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(PERMITTED_SUBTREES);
         elements.addElement(EXCLUDED_SUBTREES);
 

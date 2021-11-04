@@ -89,7 +89,7 @@ public class CRLExtensions extends Vector<Extension> {
      * Default constructor.
      */
     public CRLExtensions() {
-        map = new Hashtable<String, Extension>();
+        map = new Hashtable<>();
     }
 
     /**
@@ -102,7 +102,7 @@ public class CRLExtensions extends Vector<Extension> {
     public CRLExtensions(DerInputStream in)
             throws CRLException, X509ExtensionException {
 
-        map = new Hashtable<String, Extension>();
+        map = new Hashtable<>();
         try {
             DerValue[] exts = in.getSequence(5);
 
@@ -128,7 +128,7 @@ public class CRLExtensions extends Vector<Extension> {
             DerValue val = new DerValue(in);
             DerInputStream str = val.toDerInputStream();
 
-            map = new Hashtable<String, Extension>();
+            map = new Hashtable<>();
             DerValue[] exts = str.getSequence(5);
 
             for (int i = 0; i < exts.length; i++) {

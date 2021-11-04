@@ -133,7 +133,7 @@ public class ASN1CharStrConvMap {
 
     // private methods and variables.
 
-    private Map<Byte, Charset> charsets = new HashMap<Byte, Charset>();
+    private Map<Byte, Charset> charsets = new HashMap<>();
 
     private static ASN1CharStrConvMap defaultMap;
 

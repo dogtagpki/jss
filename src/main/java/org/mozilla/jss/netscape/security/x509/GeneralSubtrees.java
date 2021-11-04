@@ -55,7 +55,7 @@ public class GeneralSubtrees implements Serializable {
      * @param val the DER encoded form of the same.
      */
     public GeneralSubtrees(DerValue val) throws IOException {
-        trees = new Vector<GeneralSubtree>(1, 1);
+        trees = new Vector<>(1, 1);
         if (val.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoding of GeneralSubtrees.");
         }

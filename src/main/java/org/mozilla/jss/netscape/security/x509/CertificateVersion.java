@@ -233,7 +233,7 @@ public class CertificateVersion implements CertAttrSet {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(VERSION);
 
         return (elements.elements());

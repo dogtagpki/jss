@@ -102,7 +102,7 @@ public class Extensions extends Vector<Extension>
      * Default constructor for the certificate attribute.
      */
     public Extensions() {
-        map = new Hashtable<String, Extension>();
+        map = new Hashtable<>();
     }
 
     /**
@@ -114,7 +114,7 @@ public class Extensions extends Vector<Extension>
     public Extensions(DerInputStream in)
             throws IOException {
 
-        map = new Hashtable<String, Extension>();
+        map = new Hashtable<>();
         DerValue[] exts = in.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {
@@ -134,7 +134,7 @@ public class Extensions extends Vector<Extension>
         DerValue val = new DerValue(in);
         DerInputStream str = val.toDerInputStream();
 
-        map = new Hashtable<String, Extension>();
+        map = new Hashtable<>();
         DerValue[] exts = str.getSequence(5);
 
         for (int i = 0; i < exts.length; i++) {

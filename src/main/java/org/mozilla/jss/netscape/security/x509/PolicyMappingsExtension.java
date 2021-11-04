@@ -116,7 +116,7 @@ public class PolicyMappingsExtension extends Extension
     public PolicyMappingsExtension() {
         extensionId = PKIXExtensions.PolicyMappings_Id;
         critical = false;
-        maps = new Vector<CertificatePolicyMap>(1, 1);
+        maps = new Vector<>(1, 1);
     }
 
     /**
@@ -142,7 +142,7 @@ public class PolicyMappingsExtension extends Extension
             throw new IOException("Invalid encoding for " +
                                   "PolicyMappingsExtension.");
         }
-        maps = new Vector<CertificatePolicyMap>(1, 1);
+        maps = new Vector<>(1, 1);
         while (val.data.available() != 0) {
             DerValue seq = val.data.getDerValue();
             CertificatePolicyMap map = new CertificatePolicyMap(seq);
@@ -243,7 +243,7 @@ public class PolicyMappingsExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(MAP);
 
         return (elements.elements());

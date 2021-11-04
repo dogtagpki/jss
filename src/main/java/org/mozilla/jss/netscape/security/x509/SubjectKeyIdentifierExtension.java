@@ -214,7 +214,7 @@ public class SubjectKeyIdentifierExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(KEY_ID);
 
         return (elements.elements());

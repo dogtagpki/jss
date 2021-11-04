@@ -72,7 +72,7 @@ public class JSSSocket extends SSLSocket {
     /**
      * All registered handshake callbacks.
      */
-    private ArrayList<HandshakeCompletedListener> handshakeCallbacks = new ArrayList<HandshakeCompletedListener>();
+    private ArrayList<HandshakeCompletedListener> handshakeCallbacks = new ArrayList<>();
 
     /**
      * The socket this JSSSocket was created over; all read/write operations

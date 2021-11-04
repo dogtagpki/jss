@@ -77,7 +77,7 @@ public class SubjectDirAttributesExtension extends Extension
     public static final String NAME = "SubjectDirectoryAttributes";
 
     // Private data members
-    private Vector<Attribute> attrList = new Vector<Attribute>();
+    private Vector<Attribute> attrList = new Vector<>();
 
     // Encode this extension value
     private void encodeThis() throws IOException {
@@ -272,7 +272,7 @@ public class SubjectDirAttributesExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         return (elements.elements());
     }
 

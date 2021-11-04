@@ -51,7 +51,7 @@ public class PKCS10Attributes extends Vector<PKCS10Attribute> implements DerEnco
      * Default constructor for the certificate attribute.
      */
     public PKCS10Attributes() {
-        map = new Hashtable<String, PKCS10Attribute>();
+        map = new Hashtable<>();
     }
 
     /**
@@ -63,7 +63,7 @@ public class PKCS10Attributes extends Vector<PKCS10Attribute> implements DerEnco
     public PKCS10Attributes(DerInputStream in)
             throws IOException {
 
-        map = new Hashtable<String, PKCS10Attribute>();
+        map = new Hashtable<>();
         DerValue[] attrs = in.getSet(5, true);
 
         if (attrs != null) {

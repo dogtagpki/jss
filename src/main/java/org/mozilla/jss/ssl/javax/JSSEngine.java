@@ -188,7 +188,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Set of cached server sockets based on the PK11Cert they were
      * initialized with.
      */
-    protected static HashMap<PK11Cert, SSLFDProxy> serverTemplates = new HashMap<PK11Cert, SSLFDProxy>();
+    protected static HashMap<PK11Cert, SSLFDProxy> serverTemplates = new HashMap<>();
 
     /**
      * Whether or not the session cache has been initialized already.
@@ -519,7 +519,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             return;
         }
 
-        ArrayList<SSLCipher> supportedCiphers = new ArrayList<SSLCipher>();
+        ArrayList<SSLCipher> supportedCiphers = new ArrayList<>();
         for (SSLCipher suite : suites) {
             if (suite.isSupported()) {
                 supportedCiphers.add(suite);
@@ -541,7 +541,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      */
     public static SSLCipher[] queryEnabledCipherSuites() {
         logger.debug("JSSEngine: queryEnabledCipherSuites()");
-        ArrayList<SSLCipher> enabledCiphers = new ArrayList<SSLCipher>();
+        ArrayList<SSLCipher> enabledCiphers = new ArrayList<>();
 
         for (SSLCipher cipher : SSLCipher.values()) {
             try {
@@ -592,7 +592,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     @Override
     public String[] getSupportedCipherSuites() {
         logger.debug("JSSEngine: getSupportedCipherSuites()");
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         for (SSLCipher c : SSLCipher.values()) {
             if (c.isSupported()) {
@@ -725,7 +725,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     @Override
     public String[] getSupportedProtocols() {
         logger.debug("JSSEngine: getSupportedProtocols()");
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         for (SSLVersion v : Policy.TLS_VERSION_RANGE.getAllInRange()) {
             logger.debug("JSSEngine: getSupportedProtocol - Supported: " + v);
@@ -966,7 +966,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Gets the default configuration.
      */
     public HashMap<Integer, Integer> getDefaultConfiguration() {
-        HashMap<Integer, Integer> result = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> result = new HashMap<>();
 
         // JSS (and NSS) generally supports post-handshake authentication, but
         // we might not always have key material up front. Set the extension

@@ -287,7 +287,7 @@ public class BasicConstraintsExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(IS_CA);
         elements.addElement(PATH_LEN);
 

@@ -42,9 +42,9 @@ public class KBKDFDerivedKey extends NativeEnclosure {
 
         ArrayList<CKAttribute> ck_attrs;
         if (attrs == null) {
-            ck_attrs = new ArrayList<CKAttribute>(1);
+            ck_attrs = new ArrayList<>(1);
         } else {
-            ck_attrs = new ArrayList<CKAttribute>(Arrays.asList(attrs));
+            ck_attrs = new ArrayList<>(Arrays.asList(attrs));
         }
         ck_attrs.add(attr);
 

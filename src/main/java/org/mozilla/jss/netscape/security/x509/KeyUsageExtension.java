@@ -400,7 +400,7 @@ public class KeyUsageExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(DIGITAL_SIGNATURE);
         elements.addElement(NON_REPUDIATION);
         elements.addElement(KEY_ENCIPHERMENT);

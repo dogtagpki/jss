@@ -257,7 +257,7 @@ public abstract class NativeProxy implements AutoCloseable {
      */
     public synchronized static void purgeAllInRegistry() throws Exception {
         Exception first = null;
-        HashSet<NativeProxy> registryClone = new HashSet<NativeProxy>(registry.size());
+        HashSet<NativeProxy> registryClone = new HashSet<>(registry.size());
         registryClone.addAll(registry);
 
         for (NativeProxy proxy : registryClone) {

@@ -78,9 +78,9 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         }
         critical = crit;
         if (oids != null) {
-            oidSet = new Vector<ObjectIdentifier>(oids);
+            oidSet = new Vector<>(oids);
         } else {
-            oidSet = new Vector<ObjectIdentifier>();
+            oidSet = new Vector<>();
         }
         encodeExtValue();
     }
@@ -115,7 +115,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
 
     public void addOID(ObjectIdentifier oid) {
         if (oidSet == null) {
-            oidSet = new Vector<ObjectIdentifier>();
+            oidSet = new Vector<>();
         }
 
         if (oidSet.contains(oid))
@@ -201,7 +201,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
             throw new IOException("Invalid encoding of AuthInfoAccess extension");
         }
         if (oidSet == null)
-            oidSet = new Vector<ObjectIdentifier>();
+            oidSet = new Vector<>();
         while (val.data.available() != 0) {
             DerValue oidVal = val.data.getDerValue();
 

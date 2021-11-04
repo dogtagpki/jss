@@ -351,7 +351,7 @@ public class IssuingDistributionPointExtension extends Extension
 
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(ISSUING_DISTRIBUTION_POINT);
         return (elements.elements());
         //        return (new Vector()).elements();
