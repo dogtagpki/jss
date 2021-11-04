@@ -38,7 +38,7 @@ public class ExtensionsRequested implements CertAttrSet {
     private String kue_digital_signature = "false";
     private String kue_key_encipherment = "false";
 
-    private Vector<Extension> exts = new Vector<Extension>();
+    private Vector<Extension> exts = new Vector<>();
 
     public ExtensionsRequested(Object stuff) throws IOException {
         ByteArrayInputStream is = new ByteArrayInputStream((byte[]) stuff);

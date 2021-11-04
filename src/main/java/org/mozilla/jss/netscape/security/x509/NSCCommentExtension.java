@@ -87,7 +87,7 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
     public NSCCommentExtension(boolean critical) {
         this.extensionId = new ObjectIdentifier("2.16.840.1.113730.1.13");
         this.critical = critical;
-        mInfos = new Vector<Object>(1, 1);
+        mInfos = new Vector<>(1, 1);
     }
 
     /**
@@ -219,7 +219,7 @@ public class NSCCommentExtension extends Extension implements CertAttrSet {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(INFOS);
         return (elements.elements());
     }

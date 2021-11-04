@@ -353,7 +353,7 @@ public class GenericASN1Extension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement("octet");
 
         return (elements.elements());

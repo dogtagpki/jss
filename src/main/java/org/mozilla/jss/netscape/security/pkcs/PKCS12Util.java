@@ -740,7 +740,7 @@ public class PKCS12Util {
         if (certInfo.getFriendlyName() == null) {
             logger.debug("   Generating new friendly name");
             LdapName dn = new LdapName(subjectDN.getName());
-            ArrayList<String> values = new ArrayList<String>();
+            ArrayList<String> values = new ArrayList<>();
 
             // The getRdns method returns the list in reverse order
             // therefore, we must traverse in reverse order.

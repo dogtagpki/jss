@@ -331,7 +331,7 @@ public class PrivateKeyUsageExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(NOT_BEFORE);
         elements.addElement(NOT_AFTER);
 

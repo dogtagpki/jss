@@ -180,7 +180,7 @@ public class CertificateX509Key implements CertAttrSet, Serializable {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(KEY);
 
         return (elements.elements());

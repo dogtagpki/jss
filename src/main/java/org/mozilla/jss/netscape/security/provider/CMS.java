@@ -36,7 +36,7 @@ public final class CMS extends Provider {
         /* We are the CMS provider */
         super("CMS", 1.0, INFO);
 
-        AccessController.doPrivileged(new java.security.PrivilegedAction<Object>() {
+        AccessController.doPrivileged(new java.security.PrivilegedAction<>() {
             @Override
             public Object run() {
                 /*

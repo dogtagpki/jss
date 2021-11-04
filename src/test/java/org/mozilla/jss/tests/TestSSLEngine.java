@@ -278,8 +278,8 @@ public class TestSSLEngine {
         client_eng.beginHandshake();
         server_eng.beginHandshake();
 
-        ArrayList<ByteBuffer> c2s_buffers = new ArrayList<ByteBuffer>();
-        ArrayList<ByteBuffer> s2c_buffers = new ArrayList<ByteBuffer>();
+        ArrayList<ByteBuffer> c2s_buffers = new ArrayList<>();
+        ArrayList<ByteBuffer> s2c_buffers = new ArrayList<>();
 
         // We're allocating buffers from the server's perspective. Client's
         // wrap buffer goes into a buffer from the readQueue, which gets

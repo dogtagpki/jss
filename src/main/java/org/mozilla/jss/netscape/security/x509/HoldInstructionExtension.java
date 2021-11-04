@@ -349,7 +349,7 @@ public class HoldInstructionExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(HOLD_INSTRUCTION);
         return (elements.elements());
     }

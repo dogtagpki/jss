@@ -183,7 +183,7 @@ public class CertificateSerialNumber implements CertAttrSet {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(NUMBER);
 
         return (elements.elements());

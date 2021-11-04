@@ -332,7 +332,7 @@ public class AuthorityKeyIdentifierExtension extends Extension
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(KEY_ID);
         elements.addElement(AUTH_NAME);
         elements.addElement(SERIAL_NUMBER);

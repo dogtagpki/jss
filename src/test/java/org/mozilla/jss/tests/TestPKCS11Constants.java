@@ -25,9 +25,9 @@ public class TestPKCS11Constants {
 
         // To easily access the fields, build a HashMap of String->Field,
         // and maintain a set of all known field names.
-        HashMap<String, Field> jss_map = new HashMap<String, Field>();
-        HashMap<String, Field> sun_map = new HashMap<String, Field>();
-        HashSet<String> keys = new HashSet<String>();
+        HashMap<String, Field> jss_map = new HashMap<>();
+        HashMap<String, Field> sun_map = new HashMap<>();
+        HashSet<String> keys = new HashSet<>();
 
         for (Field field : jss_fields) {
             jss_map.put(field.getName(), field);

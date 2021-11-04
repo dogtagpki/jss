@@ -79,7 +79,7 @@ public class AuthInfoAccessExtension extends Extension implements CertAttrSet {
     public static final int OID[] = { 1, 3, 6, 1, 5, 5, 7, 1, 1 };
     public static final ObjectIdentifier ID = new ObjectIdentifier(OID);
 
-    private Vector<AccessDescription> mDesc = new Vector<AccessDescription>();
+    private Vector<AccessDescription> mDesc = new Vector<>();
 
     /**
      * Create the extension from the passed DER encoded value of the same.

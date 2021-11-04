@@ -268,7 +268,7 @@ public class ReasonFlags {
      * attribute.
      */
     public Enumeration<String> getElements() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(UNUSED);
         elements.addElement(KEY_COMPROMISE);
         elements.addElement(CA_COMPROMISE);

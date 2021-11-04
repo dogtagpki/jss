@@ -216,7 +216,7 @@ public final class CRLReasonExtension extends Extension implements CertAttrSet {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(REASON);
 
         return (elements.elements());

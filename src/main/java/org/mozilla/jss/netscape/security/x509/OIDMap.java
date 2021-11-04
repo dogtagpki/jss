@@ -91,9 +91,9 @@ public class OIDMap {
     private static final String CRL_REASON = ROOT + "." +
                                           CRLReasonExtension.NAME;
 
-    private static final Hashtable<ObjectIdentifier, String> oid2Name = new Hashtable<ObjectIdentifier, String>();
-    private static final Hashtable<String, ObjectIdentifier> name2OID = new Hashtable<String, ObjectIdentifier>();
-    private static final Hashtable<String, String> name2Class = new Hashtable<String, String>();
+    private static final Hashtable<ObjectIdentifier, String> oid2Name = new Hashtable<>();
+    private static final Hashtable<String, ObjectIdentifier> name2OID = new Hashtable<>();
+    private static final Hashtable<String, String> name2Class = new Hashtable<>();
 
     // Initialize recognized extensions from EXTENSIONS_{OIDS/CLASSES} files
     static {

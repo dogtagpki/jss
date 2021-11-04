@@ -164,7 +164,7 @@ public class CertificateIssuerName implements CertAttrSet {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(DN_NAME);
 
         return (elements.elements());

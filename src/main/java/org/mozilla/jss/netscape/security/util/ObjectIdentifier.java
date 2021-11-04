@@ -434,7 +434,7 @@ final public class ObjectIdentifier implements Serializable {
      * This function never returns null. IOException is raised
      * in error conditions.
      */
-    public static Hashtable<String, ObjectIdentifier> mOIDs = new Hashtable<String, ObjectIdentifier>();
+    public static Hashtable<String, ObjectIdentifier> mOIDs = new Hashtable<>();
 
     public static ObjectIdentifier getObjectIdentifier(String oid)
             throws IOException {

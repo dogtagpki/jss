@@ -186,7 +186,7 @@ public class BenchmarkSSLSocket {
     }
 
     public void run() throws Exception {
-        ArrayList<Thread> existing = new ArrayList<Thread>(limit);
+        ArrayList<Thread> existing = new ArrayList<>(limit);
 
         try (
             ServerSocket server_socket = getServerSocket();

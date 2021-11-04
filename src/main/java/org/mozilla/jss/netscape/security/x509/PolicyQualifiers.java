@@ -36,7 +36,7 @@ public class PolicyQualifiers implements java.io.Serializable {
      *
      */
     private static final long serialVersionUID = 6932694408774694516L;
-    private Vector<PolicyQualifierInfo> mInfo = new Vector<PolicyQualifierInfo>();
+    private Vector<PolicyQualifierInfo> mInfo = new Vector<>();
 
     /**
      * Create a PolicyQualifiers with the ObjectIdentifier.

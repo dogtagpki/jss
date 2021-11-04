@@ -145,7 +145,7 @@ public class CertificateScopeOfUseExtension extends Extension
         if (val.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoding of CertificateWindow extension");
         }
-        mEntries = new Vector<CertificateScopeEntry>();
+        mEntries = new Vector<>();
         while (val.data.available() != 0) {
             mEntries.addElement(new CertificateScopeEntry(
                     val.data.getDerValue()));

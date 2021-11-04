@@ -110,7 +110,7 @@ public class CertificatePoliciesExtension extends Extension
     public CertificatePoliciesExtension() {
         this.extensionId = PKIXExtensions.CertificatePolicies_Id;
         critical = false;
-        mInfos = new Vector<CertificatePolicyInfo>(1, 1);
+        mInfos = new Vector<>(1, 1);
     }
 
     /**
@@ -136,7 +136,7 @@ public class CertificatePoliciesExtension extends Extension
             throw new IOException("Invalid encoding for " +
                                   "CertificatePoliciesExtension.");
         }
-        mInfos = new Vector<CertificatePolicyInfo>(1, 1);
+        mInfos = new Vector<>(1, 1);
         while (val.data.available() != 0) {
             DerValue seq = val.data.getDerValue();
             CertificatePolicyInfo info = new CertificatePolicyInfo(seq);
@@ -236,7 +236,7 @@ public class CertificatePoliciesExtension extends Extension
      * attribute.
      */
     public Enumeration<Vector<CertificatePolicyInfo>> getAttributes() {
-        Vector<Vector<CertificatePolicyInfo>> elements = new Vector<Vector<CertificatePolicyInfo>>();
+        Vector<Vector<CertificatePolicyInfo>> elements = new Vector<>();
         elements.addElement(mInfos);
         return (elements.elements());
     }
@@ -329,7 +329,7 @@ public class CertificatePoliciesExtension extends Extension
         qualifiers1.add(qualifierInfo1);
         CertificatePolicyInfo info1 = new CertificatePolicyInfo(
                 plcyId1, qualifiers1);
-        Vector<CertificatePolicyInfo> infos = new Vector<CertificatePolicyInfo>();
+        Vector<CertificatePolicyInfo> infos = new Vector<>();
         infos.addElement(info0);
         infos.addElement(info1);
         try {

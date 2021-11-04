@@ -153,9 +153,9 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
 
         ArrayList<KBKDFDataParameter> data_params;
         if (this.params == null) {
-            data_params = new ArrayList<KBKDFDataParameter>(1);
+            data_params = new ArrayList<>(1);
         } else {
-            data_params = new ArrayList<KBKDFDataParameter>(Arrays.asList(this.params));
+            data_params = new ArrayList<>(Arrays.asList(this.params));
         }
         data_params.add(param);
 
@@ -187,9 +187,9 @@ public abstract class KBKDFParameterSpec extends NativeEnclosure implements Algo
 
         ArrayList<KBKDFDerivedKey> keys;
         if (additional_keys == null) {
-            keys = new ArrayList<KBKDFDerivedKey>(1);
+            keys = new ArrayList<>(1);
         } else {
-            keys = new ArrayList<KBKDFDerivedKey>(Arrays.asList(additional_keys));
+            keys = new ArrayList<>(Arrays.asList(additional_keys));
         }
         keys.add(derived_key);
 

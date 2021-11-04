@@ -71,7 +71,7 @@ public class JSSParameters extends SSLParameters {
             return;
         }
 
-        ArrayList<SSLCipher> converted = new ArrayList<SSLCipher>();
+        ArrayList<SSLCipher> converted = new ArrayList<>();
         for (String cipherSuite : cipherSuites) {
             try {
                 converted.add(SSLCipher.valueOf(cipherSuite));
@@ -102,7 +102,7 @@ public class JSSParameters extends SSLParameters {
             return null;
         }
 
-        ArrayList<String> ciphers = new ArrayList<String>();
+        ArrayList<String> ciphers = new ArrayList<>();
         for (SSLCipher suite : suites) {
             ciphers.add(suite.name());
         }
@@ -156,7 +156,7 @@ public class JSSParameters extends SSLParameters {
             return null;
         }
 
-        ArrayList<String> enabledProtocols = new ArrayList<String>();
+        ArrayList<String> enabledProtocols = new ArrayList<>();
         for (SSLVersion v: SSLVersion.values()) {
             if (range.getMinVersion().ordinal() <= v.ordinal() && v.ordinal() <= range.getMaxVersion().ordinal()) {
                 // We've designated the second alias as the standard Java name

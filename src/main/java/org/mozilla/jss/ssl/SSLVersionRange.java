@@ -87,7 +87,7 @@ public class SSLVersionRange {
      * @return All SSLVersions in this range
      */
     public SSLVersion[] getAllInRange() {
-        ArrayList<SSLVersion> result = new ArrayList<SSLVersion>();
+        ArrayList<SSLVersion> result = new ArrayList<>();
         for (SSLVersion v : SSLVersion.values()) {
             if (v.compareTo(this.minVersion) >= 0 && v.compareTo(this.maxVersion) <= 0) {
                 result.add(v);

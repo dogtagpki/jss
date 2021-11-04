@@ -34,9 +34,9 @@ import java.util.Map;
 public final class RevocationReason implements Serializable {
     private static final long serialVersionUID = -2582403666913588806L;
 
-    public static final Collection<RevocationReason> INSTANCES = new ArrayList<RevocationReason>();
-    public static final Map<Integer, RevocationReason> CODES = new LinkedHashMap<Integer, RevocationReason>();
-    public static final Map<String, RevocationReason> LABELS = new LinkedHashMap<String, RevocationReason>();
+    public static final Collection<RevocationReason> INSTANCES = new ArrayList<>();
+    public static final Map<Integer, RevocationReason> CODES = new LinkedHashMap<>();
+    public static final Map<String, RevocationReason> LABELS = new LinkedHashMap<>();
 
     /**
      * Reasons

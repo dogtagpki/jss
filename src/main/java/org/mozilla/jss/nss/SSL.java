@@ -425,9 +425,9 @@ public class SSL {
      *           SSL_AlertSentCallback in /usr/include/nss3/ssl.h
      */
     public static int EnableAlertLogging(SSLFDProxy fd) {
-        fd.inboundAlerts = new ArrayList<SSLAlertEvent>();
+        fd.inboundAlerts = new ArrayList<>();
         fd.inboundOffset = 0;
-        fd.outboundAlerts = new ArrayList<SSLAlertEvent>();
+        fd.outboundAlerts = new ArrayList<>();
         fd.outboundOffset = 0;
 
         return EnableAlertLoggingNative(fd);

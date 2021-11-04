@@ -55,7 +55,7 @@ public class NoticeReference implements Serializable {
         if (integers.tag != DerValue.tag_Sequence) {
             throw new IOException("Invalid encoding for NoticeReference (integers)");
         }
-        Vector<BigInt> num = new Vector<BigInt>();
+        Vector<BigInt> num = new Vector<>();
         while (integers.data.available() != 0) {
             DerValue i = integers.data.getDerValue();
             BigInt bigI = i.getInteger();

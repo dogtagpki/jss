@@ -46,7 +46,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
         applicationBufferSize = buffer_size;
         packetBufferSize = buffer_size;
 
-        this.appDataMap = new HashMap<String, Object>();
+        this.appDataMap = new HashMap<>();
     }
 
     public JSSEngine getEngine() {

@@ -193,7 +193,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
             throws IOException {
         RDN rdn;
         int lastChar;
-        Vector<RDN> rdnVector = new Vector<RDN>();
+        Vector<RDN> rdnVector = new Vector<>();
         RDN names[];
         int i, j;
 
@@ -234,7 +234,7 @@ public class LdapV3DNStrConverter extends LdapDNStrConverter {
      */
     public RDN parseRDN(PushbackReader in, byte[] encodingOrder)
             throws IOException {
-        Vector<AVA> avaVector = new Vector<AVA>();
+        Vector<AVA> avaVector = new Vector<>();
         AVA ava;
         int lastChar;
         AVA assertion[];

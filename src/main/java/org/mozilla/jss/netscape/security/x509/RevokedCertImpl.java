@@ -310,7 +310,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
     public Set<String> getCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
-        Set<String> extSet = new LinkedHashSet<String>();
+        Set<String> extSet = new LinkedHashSet<>();
         Extension ex;
         for (Enumeration<Extension> e = extensions.getElements(); e.hasMoreElements();) {
             ex = e.nextElement();
@@ -331,7 +331,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
     public Set<String> getNonCriticalExtensionOIDs() {
         if (extensions == null)
             return null;
-        Set<String> extSet = new LinkedHashSet<String>();
+        Set<String> extSet = new LinkedHashSet<>();
         Extension ex;
         for (Enumeration<Extension> e = extensions.getElements(); e.hasMoreElements();) {
             ex = e.nextElement();

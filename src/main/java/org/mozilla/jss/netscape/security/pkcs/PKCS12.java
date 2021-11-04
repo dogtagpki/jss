@@ -124,10 +124,10 @@ public class PKCS12 {
         return PK11Cert.decodeTrustFlags(flags);
     }
 
-    Map<BigInteger, PKCS12KeyInfo> keyInfosByID = new LinkedHashMap<BigInteger, PKCS12KeyInfo>();
+    Map<BigInteger, PKCS12KeyInfo> keyInfosByID = new LinkedHashMap<>();
 
-    Map<BigInteger, PKCS12CertInfo> certInfosByID = new LinkedHashMap<BigInteger, PKCS12CertInfo>();
-    Map<BigInteger, PKCS12CertInfo> certInfosByKeyID = new LinkedHashMap<BigInteger, PKCS12CertInfo>();
+    Map<BigInteger, PKCS12CertInfo> certInfosByID = new LinkedHashMap<>();
+    Map<BigInteger, PKCS12CertInfo> certInfosByKeyID = new LinkedHashMap<>();
 
     public PKCS12() {
     }
@@ -176,7 +176,7 @@ public class PKCS12 {
 
     public Collection<PKCS12CertInfo> getCertInfosByFriendlyName(String friendlyName) {
 
-        Collection<PKCS12CertInfo> result = new ArrayList<PKCS12CertInfo>();
+        Collection<PKCS12CertInfo> result = new ArrayList<>();
 
         for (PKCS12CertInfo certInfo : certInfosByID.values()) {
             if (!friendlyName.equals(certInfo.getFriendlyName())) continue;

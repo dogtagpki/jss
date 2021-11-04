@@ -620,7 +620,7 @@ public class X509CertImpl extends X509Certificate
      * attribute.
      */
     public Enumeration<String> getElements() {
-        Vector<String> elements = new Vector<String>();
+        Vector<String> elements = new Vector<>();
         elements.addElement(NAME + DOT + INFO);
         elements.addElement(NAME + DOT + ALG_ID);
         elements.addElement(NAME + DOT + SIGNATURE);
@@ -936,7 +936,7 @@ public class X509CertImpl extends X509Certificate
                                              CertificateExtensions.NAME);
             if (exts == null)
                 return null;
-            Set<String> extSet = new LinkedHashSet<String>();
+            Set<String> extSet = new LinkedHashSet<>();
             Extension ex;
             for (Enumeration<Extension> e = exts.getAttributes(); e.hasMoreElements();) {
                 ex = e.nextElement();
@@ -966,7 +966,7 @@ public class X509CertImpl extends X509Certificate
             if (exts == null)
                 return null;
 
-            Set<String> extSet = new LinkedHashSet<String>();
+            Set<String> extSet = new LinkedHashSet<>();
             Extension ex;
             for (Enumeration<Extension> e = exts.getAttributes(); e.hasMoreElements();) {
                 ex = e.nextElement();
