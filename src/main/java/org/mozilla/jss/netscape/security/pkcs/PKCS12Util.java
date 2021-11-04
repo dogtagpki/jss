@@ -305,7 +305,7 @@ public class PKCS12Util {
 
     BigInteger createLocalID(byte[] bytes) throws Exception {
 
-        MessageDigest md = MessageDigest.getInstance("SHA");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(bytes);
         return new BigInteger(1, md.digest());
     }

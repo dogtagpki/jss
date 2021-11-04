@@ -193,7 +193,7 @@ public final class SafeBag implements ASN1Value {
     /**
      * Creates a SafeBag that contains an X.509 Certificate.
      * The SafeBag will have a <i>localKeyID</i> attribute equal
-     *  to the SHA-1 hash of the certificate, and a <i>friendlyName</i>
+     *  to the SHA-256 hash of the certificate, and a <i>friendlyName</i>
      *  attribute equal to the supplied string.  This is the way Communicator
      *  makes a CertBag.  The same <i>localKeyID</i> attribute should be stored
      *  in the matching private key bag.
@@ -255,13 +255,13 @@ public final class SafeBag implements ASN1Value {
      *  and certificate.
      *
      * @param derCert A DER-encoded X.509 certificate.
-     * @return The SHA-1 hash of the cert, which should be used as the
+     * @return The SHA-256 hash of the cert, which should be used as the
      *      localKeyID attribute for the cert's SafeBag.
      */
     public static final byte[]
     getLocalKeyIDFromCert(byte[] derCert)
             throws DigestException, NoSuchAlgorithmException {
-        MessageDigest digester = MessageDigest.getInstance("SHA-1");
+        MessageDigest digester = MessageDigest.getInstance("SHA-256");
         return digester.digest(derCert);
     }
 
