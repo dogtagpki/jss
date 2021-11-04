@@ -4,11 +4,14 @@
 package org.mozilla.jss.tests;
 
 import java.security.MessageDigest;
-import org.mozilla.jss.CryptoManager;
-import java.security.Security;
 import java.security.Provider;
-import javax.crypto.*;
-import javax.crypto.spec.*;
+import java.security.Security;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.util.PasswordCallback;
@@ -128,11 +131,11 @@ public class CrossHMACTest {
         try {
             CrossHMACTest hmacTest = new CrossHMACTest(argv);
 
-            //The secret key must be a JSS key. That is, it must be an 
+            //The secret key must be a JSS key. That is, it must be an
             //instanceof org.mozilla.jss.crypto.SecretKeyFacade.
 
             //Generate the secret key using PKCS # 5 password Based Encryption
-            //we have to specify a salt and an iteration count.  
+            //we have to specify a salt and an iteration count.
 
             PBEKeySpec pbeKeySpec;
             SecretKeyFactory keyFac;
@@ -145,7 +148,7 @@ public class CrossHMACTest {
 
             pbeKeySpec = new PBEKeySpec("password".toCharArray(),
                     salt, iterationCount);
-            keyFac = SecretKeyFactory.getInstance("PBEWithSHA1AndDES3",
+            keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES",
                     "Mozilla-JSS");
             sk = (SecretKeyFacade) keyFac.generateSecret(pbeKeySpec);
 

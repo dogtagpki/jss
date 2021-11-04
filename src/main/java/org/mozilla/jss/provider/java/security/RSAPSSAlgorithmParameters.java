@@ -24,8 +24,8 @@ import org.mozilla.jss.util.Assert;
  * PSSAlgorithmSpec instance and the DER-encoded form.
  *
  * RSASSA-PSS-params ::= SEQUENCE {
- *  hashAlgorithm      [0] OAEP-PSSDigestAlgorithms  DEFAULT sha1,
- * maskGenAlgorithm   [1] PKCS1MGFAlgorithms  DEFAULT mgf1SHA1,
+ *  hashAlgorithm      [0] OAEP-PSSDigestAlgorithms  DEFAULT sha256,
+ * maskGenAlgorithm   [1] PKCS1MGFAlgorithms  DEFAULT mgf1SHA256,
  * saltLength         [2] INTEGER  DEFAULT 20,
  *  trailerField       [3] INTEGER  DEFAULT 1
  * }
@@ -47,7 +47,7 @@ import org.mozilla.jss.util.Assert;
  *  }
  */
 public class RSAPSSAlgorithmParameters extends AlgorithmParametersSpi {
-    public final static AlgorithmId defaultHashAlg = new AlgorithmId(AlgorithmId.SHA_oid);
+    public final static AlgorithmId defaultHashAlg = new AlgorithmId(AlgorithmId.SHA256_oid);
     public final static AlgorithmId defaultMaskGenFunc  = new AlgorithmId(AlgorithmId.MGF1_oid);
     public final static BigInt          defaultSaltLen = new BigInt(20);
     public final static BigInt          defaultTrailerField = new BigInt(1);

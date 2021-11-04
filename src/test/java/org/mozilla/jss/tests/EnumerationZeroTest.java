@@ -127,7 +127,7 @@ public class EnumerationZeroTest {
             return new AuthorityKeyIdentifierExtension(ki, null, null);
         }
         catch (NoSuchAlgorithmException e) {
-            throw new IOException("Could not find SHA1 implementation", e);
+            throw new IOException("Could not find SHA256 implementation", e);
         }
     }
 

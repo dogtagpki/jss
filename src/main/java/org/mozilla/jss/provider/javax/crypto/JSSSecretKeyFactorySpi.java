@@ -322,7 +322,7 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         int iterationCount = 2;
 
         // generate a PBE key the old-fashioned way
-        keygen = tok.getKeyGenerator(PBEAlgorithm.PBE_SHA1_DES3_CBC);
+        keygen = tok.getKeyGenerator(PBEAlgorithm.PBE_PKCS5_PBMAC1);
         PBEKeyGenParams jssKeySpec =
             new PBEKeyGenParams(pw, salt, iterationCount);
         keygen.initialize(jssKeySpec);
@@ -330,7 +330,7 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         byte[] keydata = symk.getKeyData();
 
         // generate a PBE key with the JCE
-        SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBEWithSHA1AndDESede", "Mozilla-JSS");
+        SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBEWithSHA256AndDESede", "Mozilla-JSS");
         newKey = (SecretKeyFacade) keyFact.generateSecret(jssKeySpec);
         byte[] newkeydata = newKey.key.getKeyData();
         if( ! java.util.Arrays.equals(keydata, newkeydata) ) {

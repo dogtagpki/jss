@@ -571,13 +571,13 @@ public final class CryptoManager implements TokenSupplier
         // Force class load before we install the provider. Otherwise we get
         // an infinite loop as the Security manager tries to instantiate the
         // digest to verify its own JAR file.
-        JSSMessageDigestSpi mds = new JSSMessageDigestSpi.SHA1();
+        JSSMessageDigestSpi mds = new JSSMessageDigestSpi.SHA256();
         logger.debug("Loaded " + mds);
 
         // Force the KeyType class to load before we can install JSS as a
         // provider.  JSS's signature provider accesses KeyType.
         KeyType kt = KeyType.getKeyTypeFromAlgorithm(
-            SignatureAlgorithm.RSASignatureWithSHA1Digest);
+            SignatureAlgorithm.RSASignatureWithSHA256Digest);
         logger.debug("Loaded " + kt);
 
         if( values.installJSSProvider ) {

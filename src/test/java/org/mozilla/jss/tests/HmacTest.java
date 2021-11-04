@@ -3,6 +3,7 @@ package org.mozilla.jss.tests;
 
 
 import java.security.Key;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKeyFactory;
@@ -10,7 +11,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.InitializationValues;
-
 import org.mozilla.jss.crypto.CryptoToken;
 
 
