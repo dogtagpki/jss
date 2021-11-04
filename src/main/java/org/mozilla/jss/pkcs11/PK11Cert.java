@@ -29,8 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public class PK11Cert
         extends java.security.cert.X509Certificate
-        implements org.mozilla.jss.crypto.X509Certificate,
-                InternalCertificate,
+        implements InternalCertificate,
                 TokenCertificate,
                 java.lang.AutoCloseable
 {
