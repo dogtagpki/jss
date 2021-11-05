@@ -27,16 +27,14 @@ import java.util.TimeZone;
 
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.SET;
-import org.mozilla.jss.pkcs7.ContentInfo;
-import org.mozilla.jss.pkcs7.SignedData;
-
-
 import org.mozilla.jss.netscape.security.x509.CertificateExtensions;
 import org.mozilla.jss.netscape.security.x509.CertificateX509Key;
 import org.mozilla.jss.netscape.security.x509.Extension;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.mozilla.jss.netscape.security.x509.X509CertInfo;
 import org.mozilla.jss.netscape.security.x509.X509Key;
+import org.mozilla.jss.pkcs7.ContentInfo;
+import org.mozilla.jss.pkcs7.SignedData;
 
 /**
  * This class will display the certificate content in predefined
@@ -323,7 +321,7 @@ public class CertPrettyPrint {
             sb.append(pp.toHexString(mX509Cert.getSignature(), 16, 16));
 
             // fingerprints
-            String[] hashes = new String[] { "MD2", "MD5", "SHA-1", "SHA-256", "SHA-512" };
+            String[] hashes = new String[] { "MD2", "MD5", "SHA-256", "SHA-512" };
             StringBuffer certFingerprints = new StringBuffer();
 
             sb.append(pp.indent(8) + "FingerPrint\n");
