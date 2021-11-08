@@ -28,8 +28,8 @@ public class DigestTest {
         boolean bTested = false;
 
         // get the digest for the Mozilla-JSS provider
-        java.security.MessageDigest mozillaDigest =
-                java.security.MessageDigest.getInstance(alg,
+        MessageDigest mozillaDigest =
+                MessageDigest.getInstance(alg,
                 MOZ_PROVIDER_NAME);
         mozillaDigestOut = mozillaDigest.digest(toBeDigested);
 
@@ -45,8 +45,8 @@ public class DigestTest {
                 continue;
             }
 
-            java.security.MessageDigest otherDigest =
-                    java.security.MessageDigest.getInstance(alg, provider);
+            MessageDigest otherDigest =
+                    MessageDigest.getInstance(alg, provider);
 
             otherDigestOut =
                     otherDigest.digest(toBeDigested);
@@ -69,8 +69,8 @@ public class DigestTest {
     throws Exception {
         byte[] mozillaDigestOut;
 
-        java.security.MessageDigest mozillaDigest =
-                java.security.MessageDigest.getInstance(alg, MOZ_PROVIDER_NAME);
+        MessageDigest mozillaDigest =
+                MessageDigest.getInstance(alg, MOZ_PROVIDER_NAME);
 
         mozillaDigestOut = mozillaDigest.digest(toBeDigested);
 
