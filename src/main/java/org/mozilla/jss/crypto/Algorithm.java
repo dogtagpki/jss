@@ -154,7 +154,9 @@ public class Algorithm {
     // to the org.mozilla.jss.crypto.PKCS11Algorithm enum.
     protected static final int SEC_OID_PKCS1_MD2_WITH_RSA_ENCRYPTION = 0;
     protected static final int SEC_OID_PKCS1_MD5_WITH_RSA_ENCRYPTION = 1;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION = 2;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST = 3;
     protected static final int SEC_OID_PKCS1_RSA_ENCRYPTION = 4;
     protected static final int CKM_RSA_PKCS_KEY_PAIR_GEN = 5;
@@ -173,17 +175,26 @@ public class Algorithm {
 
     protected static final int SEC_OID_PKCS5_PBE_WITH_MD2_AND_DES_CBC = 18;
     protected static final int SEC_OID_PKCS5_PBE_WITH_MD5_AND_DES_CBC = 19;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC = 20;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4 = 21;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4 = 22;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC = 23;
     protected static final int SEC_OID_MD2 = 24;
     protected static final int SEC_OID_MD5 = 25;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_SHA1 = 26;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int CKM_SHA_1_HMAC = 27;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC = 28;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC = 29;
     protected static final int SEC_OID_RC2_CBC = 30;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int CKM_PBA_SHA1_WITH_SHA1_HMAC = 31;
 
     // AES
@@ -201,6 +212,7 @@ public class Algorithm {
     protected static final int SEC_OID_PKCS1_SHA384_WITH_RSA_ENCRYPTION = 42;
     protected static final int SEC_OID_PKCS1_SHA512_WITH_RSA_ENCRYPTION = 43;
     protected static final int SEC_OID_ANSIX962_EC_PUBLIC_KEY = 44;
+    @Deprecated(since="5.0.0", forRemoval=true)
     protected static final int SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE = 45;
     protected static final int CKM_EC_KEY_PAIR_GEN = 46;
     protected static final int SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE = 47;

@@ -53,6 +53,7 @@ public class AuthenticatedSafes implements ASN1Value {
     /**
      * The default PBE key generation algorithm: SHA-1 with RC2 40-bit CBC.
      */
+    @Deprecated(since="5.0.0", forRemoval=true)
     public static final PBEAlgorithm DEFAULT_KEY_GEN_ALG =
                 PBEAlgorithm.PBE_SHA1_RC2_40_CBC;
 
