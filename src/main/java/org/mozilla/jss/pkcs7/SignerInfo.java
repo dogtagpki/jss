@@ -4,16 +4,37 @@
 
 package org.mozilla.jss.pkcs7;
 
-import java.io.*;
-import org.mozilla.jss.asn1.*;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.crypto.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.InvalidKeyException;
-import java.security.SignatureException;
-import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
-import org.mozilla.jss.*;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.SignatureException;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NotInitializedException;
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.OCTET_STRING;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.SET;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.DigestAlgorithm;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.crypto.PrivateKey;
+import org.mozilla.jss.crypto.Signature;
+import org.mozilla.jss.crypto.SignatureAlgorithm;
+import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
 /*
  * The high-level interface takes care of all
@@ -306,7 +327,7 @@ public class SignerInfo implements ASN1Value {
             // digest the contents octets of the authenticated attributes
             byte[] enc = ASN1Util.encode(authenticatedAttributes);
             MessageDigest md =
-                        MessageDigest.getInstance(digestAlg.toString());
+                    MessageDigest.getInstance(digestAlg.toString());
             digest = md.digest( enc );
         }
 
