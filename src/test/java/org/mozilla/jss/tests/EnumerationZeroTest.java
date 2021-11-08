@@ -18,22 +18,6 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.JSSProvider;
-import org.mozilla.jss.netscape.security.util.BitArray;
-import org.mozilla.jss.netscape.security.util.DerInputStream;
-import org.mozilla.jss.netscape.security.util.DerValue;
-import org.mozilla.jss.netscape.security.x509.AuthorityKeyIdentifierExtension;
-import org.mozilla.jss.netscape.security.x509.CRLExtensions;
-import org.mozilla.jss.netscape.security.x509.CRLNumberExtension;
-import org.mozilla.jss.netscape.security.x509.CRLReasonExtension;
-import org.mozilla.jss.netscape.security.x509.Extension;
-import org.mozilla.jss.netscape.security.x509.KeyIdentifier;
-import org.mozilla.jss.netscape.security.x509.RevocationReason;
-import org.mozilla.jss.netscape.security.x509.RevokedCertImpl;
-import org.mozilla.jss.netscape.security.x509.RevokedCertificate;
-import org.mozilla.jss.netscape.security.x509.X500Name;
-import org.mozilla.jss.netscape.security.x509.X509CRLImpl;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,6 +34,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.mozilla.jss.JSSProvider;
+import org.mozilla.jss.netscape.security.util.BitArray;
+import org.mozilla.jss.netscape.security.util.DerInputStream;
+import org.mozilla.jss.netscape.security.util.DerValue;
+import org.mozilla.jss.netscape.security.x509.AuthorityKeyIdentifierExtension;
+import org.mozilla.jss.netscape.security.x509.CRLExtensions;
+import org.mozilla.jss.netscape.security.x509.CRLNumberExtension;
+import org.mozilla.jss.netscape.security.x509.CRLReasonExtension;
+import org.mozilla.jss.netscape.security.x509.Extension;
+import org.mozilla.jss.netscape.security.x509.KeyIdentifier;
+import org.mozilla.jss.netscape.security.x509.RevocationReason;
+import org.mozilla.jss.netscape.security.x509.RevokedCertImpl;
+import org.mozilla.jss.netscape.security.x509.RevokedCertificate;
+import org.mozilla.jss.netscape.security.x509.X500Name;
+import org.mozilla.jss.netscape.security.x509.X509CRLImpl;
 
 /** Class to demonstrate DER encoding failure when using an ASN.1 enumerated type with a value of zero.
  *
@@ -171,7 +171,7 @@ public class EnumerationZeroTest {
             entryExtensions.add(reasonExt);
 
             revokedCerts.add(
-                new RevokedCertImpl(BigInteger.valueOf((long) i), new Date(), entryExtensions));
+                new RevokedCertImpl(BigInteger.valueOf(i), new Date(), entryExtensions));
         }
 
         CRLExtensions crlExtensions = new CRLExtensions();

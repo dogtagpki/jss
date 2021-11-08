@@ -4,9 +4,18 @@
 package org.mozilla.jss;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
 import java.security.Provider;
+import java.util.Arrays;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class JSSProvider extends java.security.Provider {
+
+    private static final Logger logger = LoggerFactory.getLogger(JSSProvider.class);
+
     public static boolean ENABLE_JSSENGINE = true;
 
     private static final long serialVersionUID = 1L;
@@ -21,6 +30,12 @@ public final class JSSProvider extends java.security.Provider {
     private static double JSS_VERSION     = JSS_MAJOR_VERSION +
                                            (JSS_MINOR_VERSION * 100 +
                                             JSS_PATCH_VERSION)/10000.0;
+
+    private static final List<String> DEPRECATED_ALGORITHMS = Arrays.asList(
+            "SHA-1",
+            "SHA1",
+            "SHA_1",
+            "SHA");
 
     private static JSSLoader loader = new JSSLoader();
 
@@ -86,6 +101,38 @@ public final class JSSProvider extends java.security.Provider {
             } catch (NotInitializedException nie) {}
         }
         return cm;
+    }
+
+    @Override
+    public Service getService(String type, String algorithm) {
+        if (isAlgorithmDeprecated(algorithm)) {
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            int i = 0;
+            for (i = 0; i < stackTrace.length; i++) {
+                if (stackTrace[i].getClassName().contains(MessageDigest.class.getCanonicalName())) {
+                    int lineNumber = stackTrace[i + 1].getLineNumber();
+                    String methodName = stackTrace[i + 1].getMethodName();
+                    String className = stackTrace[i + 1].getClassName();
+                    logger.warn(
+                            "The {} algorithm used in {}::{}:{} is deprecated. Use a more secure algorithm.",
+                            algorithm,
+                            className,
+                            methodName,
+                            lineNumber
+                            );
+                    break;
+                }
+            }
+        }
+        return super.getService(type, algorithm);
+    }
+
+    public static boolean isAlgorithmDeprecated(String algorithm) {
+        return DEPRECATED_ALGORITHMS.contains(algorithm.toUpperCase());
+    }
+
+    public static List<String> getDeprecatedAlgortihms() {
+        return DEPRECATED_ALGORITHMS;
     }
 
     protected void initializeProvider() {
