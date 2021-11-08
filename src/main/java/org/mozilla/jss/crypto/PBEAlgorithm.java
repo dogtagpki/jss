@@ -92,12 +92,14 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
             PKCS5.subBranch(3), EncryptionAlgorithm.DES_CBC, 8 );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final PBEAlgorithm
     PBE_SHA1_DES_CBC = new PBEAlgorithm(
         SEC_OID_PKCS5_PBE_WITH_SHA1_AND_DES_CBC, "PBE/SHA1/DES/CBC", 56,
             PKCS5.subBranch(10), EncryptionAlgorithm.DES_CBC, 8 );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final PBEAlgorithm
     PBE_SHA1_RC4_128 = new PBEAlgorithm(
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC4,
@@ -105,6 +107,7 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
             EncryptionAlgorithm.RC4, 20 );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final PBEAlgorithm
     PBE_SHA1_RC4_40 = new PBEAlgorithm(
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC4,
@@ -112,6 +115,7 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
             EncryptionAlgorithm.RC4, 20 );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final PBEAlgorithm
     PBE_SHA1_DES3_CBC = new PBEAlgorithm(
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_3KEY_TRIPLE_DES_CBC,
@@ -119,6 +123,7 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
             EncryptionAlgorithm.DES3_CBC, 20 );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final PBEAlgorithm
     PBE_SHA1_RC2_128_CBC = new PBEAlgorithm(
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_128_BIT_RC2_CBC,
@@ -126,6 +131,7 @@ public class PBEAlgorithm extends KeyGenAlgorithm {
             EncryptionAlgorithm.RC2_CBC, 20 );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final PBEAlgorithm
     PBE_SHA1_RC2_40_CBC = new PBEAlgorithm(
         SEC_OID_PKCS12_V2_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC,

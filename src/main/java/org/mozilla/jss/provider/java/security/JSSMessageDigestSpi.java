@@ -100,6 +100,7 @@ public abstract class JSSMessageDigestSpi extends MessageDigestSpi {
       }
     }
 
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class SHA1 extends JSSMessageDigestSpi {
         public SHA1() {
             super( DigestAlgorithm.SHA1 );

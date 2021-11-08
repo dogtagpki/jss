@@ -20,7 +20,6 @@ package org.mozilla.jss.netscape.security.x509;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.IllegalArgumentException;
 import java.security.AlgorithmParameters;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -787,6 +786,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     private static final int MD2_data[] = { 1, 2, 840, 113549, 2, 2 };
     private static final int MD5_data[] = { 1, 2, 840, 113549, 2, 5 };
     // sha = { 1, 3, 14, 3, 2, 18 };
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int SHA1_OIW_data[] = { 1, 3, 14, 3, 2, 26 };
     private static final int SHA256_data[] = { 2, 16, 840, 1, 101, 3, 4, 2, 1 };
     private static final int SHA384_data[] = { 2, 16, 840, 1, 101, 3, 4, 2, 2 };
@@ -810,6 +810,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * many people refer to FIPS 180 (which has an error) as defining SHA.
      * OID = 1.3.14.3.2.26
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier SHA_oid = new ObjectIdentifier(SHA1_OIW_data);
 
     public static final ObjectIdentifier SHA256_oid = new ObjectIdentifier(SHA256_data);
@@ -834,6 +835,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
                                          { 1, 2, 840, 10045, 4, 1 };
 
     public static final ObjectIdentifier ANSIX962_EC_Public_Key_oid = new ObjectIdentifier(ANSI_X962_public_key_data);
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier ANSIX962_SHA1_With_EC_oid = new ObjectIdentifier(ANSI_X962_sha1_with_ec_data);
 
     /*
@@ -897,6 +899,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /*
      * COMMON SIGNATURE ALGORITHMS
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int sha1WithEC_data[] =
                                    { 1, 2, 840, 10045, 4, 1 };
     private static final int sha224WithEC_data[] =
@@ -911,6 +914,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
                                    { 1, 2, 840, 113549, 1, 1, 2 };
     private static final int md5WithRSAEncryption_data[] =
                                    { 1, 2, 840, 113549, 1, 1, 4 };
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int sha1WithRSAEncryption_data[] =
                                    { 1, 2, 840, 113549, 1, 1, 5 };
     private static final int sha256WithRSAEncryption_data[] =
@@ -919,19 +923,23 @@ public class AlgorithmId implements Serializable, DerEncoder {
                                    { 1, 2, 840, 113549, 1, 1, 12 };
     private static final int sha512WithRSAEncryption_data[] =
                                    { 1, 2, 840, 113549, 1, 1, 13 };
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int sha1WithRSAEncryption_OIW_data[] =
                                    { 1, 3, 14, 3, 2, 29 };
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int shaWithDSA_OIW_data[] =
                                    { 1, 3, 14, 3, 2, 13 };
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int sha1WithDSA_OIW_data[] =
                                    { 1, 3, 14, 3, 2, 27 };
+    @Deprecated(since="5.0.1", forRemoval=true)
     private static final int dsaWithSHA1_PKIX_data[] =
                                    { 1, 2, 840, 10040, 4, 3 };
 
     private static final int rsaPSS_data[] =
                                    { 1, 2, 840, 113549, 1, 1, 10 };
 
-
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithEC_oid = new
             ObjectIdentifier(sha1WithEC_data);
 
@@ -971,6 +979,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * The proper one for sha1/rsa
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithRSAEncryption_oid = new
             ObjectIdentifier(sha1WithRSAEncryption_data);
 
@@ -997,6 +1006,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * encrypted using an RSA private key; defined in NIST OIW.
      * OID = 1.3.14.3.2.29
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithRSAEncryption_OIW_oid = new
             ObjectIdentifier(sha1WithRSAEncryption_OIW_data);
 
@@ -1006,6 +1016,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * This should not be used.
      * OID = 1.3.14.3.2.13
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier shaWithDSA_OIW_oid = new ObjectIdentifier(shaWithDSA_OIW_data);
 
     /**
@@ -1013,6 +1024,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * SHA1 digest is signed using the Digital Signing Algorithm (DSA).
      * OID = 1.3.14.3.2.27
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithDSA_OIW_oid = new ObjectIdentifier(sha1WithDSA_OIW_data);
 
     /**
@@ -1020,11 +1032,13 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * SHA1 digest is signed using the Digital Signing Algorithm (DSA).
      * OID = 1.2.840.10040.4.3
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithDSA_oid = new ObjectIdentifier(dsaWithSHA1_PKIX_data);
 
     /**
      * Supported signing algorithms for a DSA key.
      */
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final String[] DSA_SIGNING_ALGORITHMS = new String[]
     { "SHA1withDSA" };
 

@@ -385,28 +385,36 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
             super(PBEAlgorithm.PBE_MD5_DES_CBC);
         }
     }
+
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBE_SHA1_DES_CBC extends JSSSecretKeyFactorySpi {
         public PBE_SHA1_DES_CBC() {
             super(PBEAlgorithm.PBE_SHA1_DES_CBC);
         }
     }
+
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBE_SHA1_DES3_CBC extends JSSSecretKeyFactorySpi {
         public PBE_SHA1_DES3_CBC() {
             super(PBEAlgorithm.PBE_SHA1_DES3_CBC);
         }
     }
+
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBE_SHA1_RC4_128 extends JSSSecretKeyFactorySpi {
         public PBE_SHA1_RC4_128() {
             super(PBEAlgorithm.PBE_SHA1_RC4_128);
         }
     }
 
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class HmacSHA1 extends JSSSecretKeyFactorySpi {
         public HmacSHA1() {
             super(KeyGenAlgorithm.SHA1_HMAC);
         }
     }
 
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBAHmacSHA1 extends JSSSecretKeyFactorySpi {
         public PBAHmacSHA1() {
             super(KeyGenAlgorithm.PBA_SHA1_HMAC);
