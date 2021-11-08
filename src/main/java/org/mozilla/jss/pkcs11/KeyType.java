@@ -8,8 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
 import org.mozilla.jss.crypto.Algorithm;
-import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.CMACAlgorithm;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
@@ -242,6 +242,7 @@ public final class KeyType {
                         );
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     static public final KeyType
     SHA1_HMAC = new KeyType(new Algorithm[]
                             {

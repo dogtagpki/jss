@@ -119,6 +119,7 @@ public class KeyGenAlgorithm extends Algorithm {
             null);
 
     //////////////////////////////////////////////////////////////
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final KeyGenAlgorithm PBA_SHA1_HMAC = new KeyGenAlgorithm(
             CKM_PBA_SHA1_WITH_SHA1_HMAC,
             "PBA/SHA1/HMAC",
@@ -126,6 +127,7 @@ public class KeyGenAlgorithm extends Algorithm {
             null,
             PBEKeyGenParams.class);
 
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final KeyGenAlgorithm SHA1_HMAC = new KeyGenAlgorithm(
             CKM_SHA_1_HMAC,
             "SHA1/HMAC",
