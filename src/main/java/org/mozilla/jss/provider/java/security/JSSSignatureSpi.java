@@ -191,11 +191,13 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
             "name/value parameters not supported");
     }
 
+    @Deprecated(since="5.0.0", forRemoval=true)
     public static class DSA extends JSSSignatureSpi {
         public DSA() {
             super(SignatureAlgorithm.DSASignatureWithSHA1Digest);
         }
     }
+    @Deprecated(since="5.0.0", forRemoval=true)
     public static class SHA1EC extends JSSSignatureSpi {
         public SHA1EC() {
             super(SignatureAlgorithm.ECSignatureWithSHA1Digest);

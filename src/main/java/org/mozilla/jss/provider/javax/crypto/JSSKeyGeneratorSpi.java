@@ -103,11 +103,13 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
             super(KeyGenAlgorithm.RC2);
         }
     }
+    @Deprecated(since="5.0.0", forRemoval=true)
     public static class HmacSHA1 extends JSSKeyGeneratorSpi {
         public HmacSHA1() {
             super(KeyGenAlgorithm.SHA1_HMAC);
         }
     }
+    @Deprecated(since="5.0.0", forRemoval=true)
     public static class PBAHmacSHA1 extends JSSKeyGeneratorSpi {
         public PBAHmacSHA1() {
             super(KeyGenAlgorithm.PBA_SHA1_HMAC);
