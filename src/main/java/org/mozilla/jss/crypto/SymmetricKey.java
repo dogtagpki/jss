@@ -17,7 +17,7 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
     public static final Type DES3 = Type.DES3;
     public static final Type RC4 = Type.RC4;
     public static final Type RC2 = Type.RC2;
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final Type SHA1_HMAC = Type.SHA1_HMAC;
     public static final Type SHA256_HMAC = Type.SHA256_HMAC;
     public static final Type SHA384_HMAC = Type.SHA384_HMAC;
@@ -91,7 +91,7 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
         public static final Type DESede = DES3;
         public static final Type RC4 = new Type(new String[] { "RC4" }, KeyGenAlgorithm.RC4, KeyType.RC4);
         public static final Type RC2 = new Type(new String[] { "RC2" }, KeyGenAlgorithm.RC2, KeyType.RC4);
-        @Deprecated(since="5.0.0", forRemoval=true)
+        @Deprecated(since="5.0.1", forRemoval=true)
         public static final Type SHA1_HMAC = new Type(
                 new String[] { "SHA1_HMAC", "SHA1-HMAC", "SHA1HMAC", "HMAC_SHA1", "HMAC-SHA1", "HMACSHA1" },
                 KeyGenAlgorithm.SHA1_HMAC, KeyType.SHA1_HMAC);
@@ -104,7 +104,7 @@ public interface SymmetricKey extends javax.crypto.SecretKey {
         public static final Type SHA512_HMAC = new Type(
                 new String[] { "SHA512_HMAC", "SHA512-HMAC", "SHA512HMAC", "HMAC_SHA512", "HMAC-SHA512", "HMACSHA512" },
                 KeyGenAlgorithm.SHA512_HMAC, KeyType.SHA512_HMAC);
-        @Deprecated(since="5.0.0", forRemoval=true)
+        @Deprecated(since="5.0.1", forRemoval=true)
         public static final Type PBA_SHA1_HMAC = new Type(new String[] { "PBA_SHA1_HMAC" },
                 KeyGenAlgorithm.PBA_SHA1_HMAC, null);
         public static final Type AES = new Type(new String[] { "AES" }, KeyGenAlgorithm.AES, KeyType.AES);

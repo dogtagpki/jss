@@ -122,7 +122,7 @@ public class SignatureAlgorithm extends Algorithm {
                 OBJECT_IDENTIFIER.PKCS1.subBranch(4) );
 
     //////////////////////////////////////////////////////////////////////
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final SignatureAlgorithm
     RSASignatureWithSHA1Digest =
         new SignatureAlgorithm(SEC_OID_PKCS1_SHA1_WITH_RSA_ENCRYPTION,
@@ -130,7 +130,7 @@ public class SignatureAlgorithm extends Algorithm {
             OBJECT_IDENTIFIER.PKCS1.subBranch(5) );
 
     //////////////////////////////////////////////////////////////////////
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final SignatureAlgorithm
     DSASignatureWithSHA1Digest =
         new SignatureAlgorithm(SEC_OID_ANSIX9_DSA_SIGNATURE_WITH_SHA1_DIGEST,
@@ -138,7 +138,7 @@ public class SignatureAlgorithm extends Algorithm {
             ANSI_X9_ALGORITHM.subBranch(3) );
 
     //////////////////////////////////////////////////////////////////////
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final SignatureAlgorithm
     ECSignatureWithSHA1Digest =
         new SignatureAlgorithm(SEC_OID_ANSIX962_ECDSA_SHA1_SIGNATURE,
