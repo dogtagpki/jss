@@ -242,7 +242,7 @@ public final class KeyType {
                         );
 
     //////////////////////////////////////////////////////////////
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     static public final KeyType
     SHA1_HMAC = new KeyType(new Algorithm[]
                             {

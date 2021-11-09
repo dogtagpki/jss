@@ -66,7 +66,7 @@ public class DigestAlgorithm extends Algorithm {
     /**
      * The SHA-1 digest algorithm, from Uncle Sam.
      */
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static final DigestAlgorithm SHA1 = new DigestAlgorithm
         (SEC_OID_SHA1, "SHA-1", OBJECT_IDENTIFIER.ALGORITHM.subBranch(26), 20);
 

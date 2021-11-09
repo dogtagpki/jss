@@ -16,13 +16,13 @@ public enum PKCS11Algorithm {
     CKM_EC_KEY_PAIR_GEN (Algorithm.CKM_EC_KEY_PAIR_GEN, PKCS11Constants.CKM_EC_KEY_PAIR_GEN),
     CKM_NSS_AES_KEY_WRAP (Algorithm.CKM_NSS_AES_KEY_WRAP, PKCS11Constants.CKM_NSS_AES_KEY_WRAP),
     CKM_NSS_AES_KEY_WRAP_PAD (Algorithm.CKM_NSS_AES_KEY_WRAP_PAD, PKCS11Constants.CKM_NSS_AES_KEY_WRAP_PAD),
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     CKM_PBA_SHA1_WITH_SHA1_HMAC (Algorithm.CKM_PBA_SHA1_WITH_SHA1_HMAC, PKCS11Constants.CKM_PBA_SHA1_WITH_SHA1_HMAC),
     CKM_RC2_CBC_PAD (Algorithm.CKM_RC2_CBC_PAD, PKCS11Constants.CKM_RC2_CBC_PAD),
     CKM_RC2_KEY_GEN (Algorithm.CKM_RC2_KEY_GEN, PKCS11Constants.CKM_RC2_KEY_GEN),
     CKM_RC4_KEY_GEN (Algorithm.CKM_RC4_KEY_GEN, PKCS11Constants.CKM_RC4_KEY_GEN),
     CKM_RSA_PKCS_KEY_PAIR_GEN (Algorithm.CKM_RSA_PKCS_KEY_PAIR_GEN, PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN),
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     CKM_SHA_1_HMAC (Algorithm.CKM_SHA_1_HMAC, PKCS11Constants.CKM_SHA_1_HMAC),
     CKM_SHA_256_HMAC (Algorithm.CKM_SHA256_HMAC, PKCS11Constants.CKM_SHA256_HMAC),
     CKM_SHA_384_HMAC (Algorithm.CKM_SHA384_HMAC, PKCS11Constants.CKM_SHA384_HMAC),

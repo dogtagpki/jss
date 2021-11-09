@@ -139,7 +139,7 @@ public class JSSMacSpi extends javax.crypto.MacSpi {
         throw new CloneNotSupportedException();
     }
 
-    @Deprecated(since="5.0.0", forRemoval=true)
+    @Deprecated(since="5.0.1", forRemoval=true)
     public static class HmacSHA1 extends JSSMacSpi {
         public HmacSHA1() {
             super(HMACAlgorithm.SHA1, "HmacSHA1");
