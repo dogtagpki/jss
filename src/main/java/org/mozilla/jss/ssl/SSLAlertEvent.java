@@ -60,18 +60,13 @@ public class SSLAlertEvent extends EventObject {
 
     public SSLSocket getSocket() {
         Object obj = getSource();
-	if( obj != null && obj instanceof SSLSocket) {
-            return (SSLSocket) obj;
-	}
-	return null;
+        return obj instanceof SSLSocket ? (SSLSocket) obj : null;
     }
 
     public SSLFDProxy getFileDesc() {
         Object obj = getSource();
-	if( obj != null && obj instanceof SSLFDProxy) { 
-            return (SSLFDProxy) getSource();
-        }
-        return null;
+        return obj instanceof SSLFDProxy ? (SSLFDProxy) obj : null;
+
     }
 
     public int getLevel() {

@@ -39,11 +39,7 @@ public class SSLHandshakeCompletedEvent extends EventObject {
      * cert data; null if on a SSLEngine.
      */
     public SSLSecurityStatus getStatus() throws SocketException {
-        if (getSocket() != null) {
-            return getSocket().getStatus();
-        }
-
-        return null;
+        return getSocket() != null ? getSocket().getStatus() : null;
     }
     
     /**
@@ -51,11 +47,7 @@ public class SSLHandshakeCompletedEvent extends EventObject {
      */
     public SSLSocket getSocket() {
         Object obj = getSource();
-        if (obj != null && obj instanceof SSLSocket) {
-            return (SSLSocket)getSource();
-        }
-
-        return null;
+        return obj instanceof SSLSocket ? (SSLSocket) obj : null;
     }
 
     /**
@@ -63,10 +55,6 @@ public class SSLHandshakeCompletedEvent extends EventObject {
      */
     public JSSEngine getEngine() {
         Object obj = getSource();
-        if (obj != null  && obj instanceof JSSEngine) {
-            return (JSSEngine)getSource();
-        }
-
-        return null;
+        return obj instanceof JSSEngine ? (JSSEngine) obj : null;
     }
 }
