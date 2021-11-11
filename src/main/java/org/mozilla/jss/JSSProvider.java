@@ -8,6 +8,8 @@ import java.security.MessageDigest;
 import java.security.Provider;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +34,9 @@ public final class JSSProvider extends java.security.Provider {
                                             JSS_PATCH_VERSION)/10000.0;
 
     private static final List<String> DEPRECATED_ALGORITHMS = Arrays.asList(
-            "SHA-1",
-            "SHA1",
-            "SHA_1",
-            "SHA");
+            "SHA$|SHAwith|SHA1|SHA-1|SHA_1", // SHA-1 and variations thereof
+            "MD(2|4|5)" // MD2, MD4, MD5 and variations thereof
+            );
 
     private static JSSLoader loader = new JSSLoader();
 
@@ -128,7 +129,13 @@ public final class JSSProvider extends java.security.Provider {
     }
 
     public static boolean isAlgorithmDeprecated(String algorithm) {
-        return DEPRECATED_ALGORITHMS.contains(algorithm.toUpperCase());
+        for (String alg : DEPRECATED_ALGORITHMS) {
+            Matcher m = Pattern.compile(alg).matcher(algorithm.toUpperCase());
+            if (m.find()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static List<String> getDeprecatedAlgortihms() {
