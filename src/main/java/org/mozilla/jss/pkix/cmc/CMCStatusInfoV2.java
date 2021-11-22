@@ -52,7 +52,8 @@ import org.mozilla.jss.asn1.UTF8String;
 /**
  * CMCStatusInfoV2 replaces CMCStatusInfo in rfc 5272
  * CMC <i>CMCStatusInfoV2</i>:
- * <pre>
+ *
+ * <pre>{@code
  *     CMCStatusInfoV2 ::= SEQUENCE {
  *          cMCStatus           CMCStatus,
  *          bodyList            SEQUENCE SIZE (1..MAX)
@@ -71,9 +72,9 @@ import org.mozilla.jss.asn1.UTF8String;
  *          pendToken           OCTET STRING,
  *          pendTime            GeneralizedTime
  *     }
+ * }</pre>
  *
  * @author Christina Fu (cfu)
- * </pre>
  */
 public class CMCStatusInfoV2 implements ASN1Value {
     public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
