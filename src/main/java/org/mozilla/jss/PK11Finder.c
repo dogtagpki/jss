@@ -258,7 +258,7 @@ Java_org_mozilla_jss_CryptoManager_findPrivKeyByCertNative
     }
     if(cert==NULL) {
         PR_ASSERT(PR_FALSE);
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, "Certificate not found");
         goto finish;
     }
     if( JSS_PK11_getCertSlotPtr(env, Cert, &slot) != PR_SUCCESS) {
@@ -267,13 +267,13 @@ Java_org_mozilla_jss_CryptoManager_findPrivKeyByCertNative
     }
     if(slot==NULL) {
         PR_ASSERT(PR_FALSE);
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, "Token not found");
         goto finish;
     }
 
     privKey = PK11_FindPrivateKeyFromCert(slot, cert, NULL);
     if(privKey == NULL) {
-        JSS_throw(env, OBJECT_NOT_FOUND_EXCEPTION);
+        JSS_throwMsg(env, OBJECT_NOT_FOUND_EXCEPTION, "Private key not found");
         goto finish;
     }
 
