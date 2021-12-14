@@ -81,22 +81,13 @@ jobs:
           tests/bin/runner-init.sh
 
       - name: Install dependencies
-        run: docker exec jss dnf install -y nss-util-devel python2 python3 java-devel
+        run: docker exec jss dnf install -y nss-util-devel python3 java-devel
 
-      - name: Generate PKCS11 constants with Python 2
-        run: |
-          docker exec jss python2 $SHARED/tools/build_pkcs11_constants.py \
-                   --pkcs11t /usr/include/nss3/pkcs11t.h \
-                   --pkcs11n /usr/include/nss3/pkcs11n.h \
-                   -o PKCS11Constants-py2.java \
-                   --verbose
-          docker exec jss diff PKCS11Constants-py2.java $SHARED/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
-
-      - name: Generate PKCS11 constants with Python 3
+      - name: Generate PKCS11 constants
         run: |
           docker exec jss python3 $SHARED/tools/build_pkcs11_constants.py \
                    --pkcs11t /usr/include/nss3/pkcs11t.h \
                    --pkcs11n /usr/include/nss3/pkcs11n.h \
-                   -o PKCS11Constants-py3.java \
+                   -o PKCS11Constants.java \
                    --verbose
-          docker exec jss diff PKCS11Constants-py3.java $SHARED/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
+          docker exec jss diff PKCS11Constants.java $SHARED/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
