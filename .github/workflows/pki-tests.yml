@@ -151,7 +151,7 @@ jobs:
         run: |
           docker exec pki pki client-cert-import \
               --pkcs12 /root/.dogtag/pki-tomcat/ca_admin_cert.p12 \
-              --pkcs12-password-file /root/.dogtag/pki-tomcat/ca/pkcs12_password.conf
+              --pkcs12-password Secret.123
           docker exec pki pki -n caadmin ca-user-show caadmin
 
       - name: Test CA agent
