@@ -1166,7 +1166,6 @@ JSS_KeyExchange(PK11SlotInfo *slot, CK_MECHANISM_TYPE type,
 
          rsaParams.pe = 0x10001;
          attrFlags |= PK11_ATTR_SESSION;
-         attrFlags |= PK11_ATTR_EXTRACTABLE;
          attrFlags |= (PK11_ATTR_SENSITIVE | PK11_ATTR_PRIVATE);
 
          privKey = PK11_GenerateKeyPairWithOpFlags(slot, CKM_RSA_PKCS_KEY_PAIR_GEN,
