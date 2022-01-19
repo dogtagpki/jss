@@ -1197,6 +1197,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         int this_src_write;
         int this_dst_write;
 
+        int error = 0;
         do {
             this_src_write = 0;
             this_dst_write = 0;
@@ -1222,7 +1223,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             int max_dst_size = computeSize(dsts, offset, length);
             byte[] app_buffer = PR.Read(ssl_fd, max_dst_size);
-            int error = PR.GetError();
+            error = PR.GetError();
             debug("JSSEngine.unwrap() - " + app_buffer + " error=" + errorText(error));
             if (app_buffer != null) {
                 this_dst_write = putData(app_buffer, dsts, offset, length);
@@ -1264,7 +1265,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (is_inbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
-        } else if (handshake_already_complete && src_capacity > 0 && app_data == 0) {
+        } else if ((handshake_already_complete) &&
+                   (error != PRErrors.WOULD_BLOCK_ERROR) &&
+                   (src_capacity > 0) &&
+                   (app_data == 0)) {
+
             debug("Underflowed: produced no application data when we expected to.");
             handshake_status = SSLEngineResult.Status.BUFFER_UNDERFLOW;
         }
