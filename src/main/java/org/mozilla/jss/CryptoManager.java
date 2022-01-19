@@ -9,7 +9,6 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -1066,7 +1065,7 @@ public final class CryptoManager implements TokenSupplier
 
     public static final boolean JSS_DEBUG = getJSSDebug();
 
-    private ThreadLocal<CryptoToken> threadToken = new ThreadLocal<CryptoToken>();
+    private ThreadLocal<CryptoToken> threadToken = new ThreadLocal<>();
 
     /**
      * Sets the default token for the current thread. This token will
