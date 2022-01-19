@@ -1066,8 +1066,7 @@ public final class CryptoManager implements TokenSupplier
 
     public static final boolean JSS_DEBUG = getJSSDebug();
 
-    // Hashtable is synchronized.
-    private Hashtable<Thread, CryptoToken> perThreadTokenTable = new Hashtable<>();
+    private ThreadLocal<CryptoToken> threadToken = new ThreadLocal<CryptoToken>();
 
     /**
      * Sets the default token for the current thread. This token will
@@ -1084,9 +1083,9 @@ public final class CryptoManager implements TokenSupplier
     @Override
     public void setThreadToken(CryptoToken token) {
         if( token != null ) {
-            perThreadTokenTable.put(Thread.currentThread(), token);
+            threadToken.set(token);
         } else {
-            perThreadTokenTable.remove(Thread.currentThread());
+            threadToken.remove();
         }
     }
 
@@ -1104,8 +1103,7 @@ public final class CryptoManager implements TokenSupplier
      */
     @Override
     public CryptoToken getThreadToken() {
-        CryptoToken tok =
-            perThreadTokenTable.get(Thread.currentThread());
+        CryptoToken tok = threadToken.get();
         if( tok == null ) {
             tok = getInternalKeyStorageToken();
         }
