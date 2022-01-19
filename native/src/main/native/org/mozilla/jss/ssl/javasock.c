@@ -852,6 +852,12 @@ jsock_close(PRFileDesc *fd)
     PR_Free(fd->secret);
     fd->secret = NULL;
 
+    // Follow pattern in (NSPR) pl_FDDestructor in case fd is ever chained
+    if (NULL != fd->lower) fd->lower->higher = fd->higher;
+    if (NULL != fd->higher) fd->higher->lower = fd->lower;
+    PR_Free(fd);
+    fd = NULL;
+
     retval = PR_SUCCESS;
 
 finish:
