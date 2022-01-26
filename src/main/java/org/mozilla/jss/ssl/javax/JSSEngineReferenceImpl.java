@@ -4,17 +4,39 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.WritableByteChannel;
-import java.nio.channels.Channels;
-import java.security.PublicKey;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
+import java.security.PublicKey;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.X509ExtendedTrustManager;
+import javax.net.ssl.X509TrustManager;
 
-import org.mozilla.jss.nss.*;
-import org.mozilla.jss.pkcs11.*;
-import org.mozilla.jss.provider.javax.crypto.*;
-import org.mozilla.jss.ssl.*;
+import org.mozilla.jss.nss.BadCertHandler;
+import org.mozilla.jss.nss.Buffer;
+import org.mozilla.jss.nss.BufferProxy;
+import org.mozilla.jss.nss.Cert;
+import org.mozilla.jss.nss.CertAuthHandler;
+import org.mozilla.jss.nss.PR;
+import org.mozilla.jss.nss.PRErrors;
+import org.mozilla.jss.nss.PRFDProxy;
+import org.mozilla.jss.nss.SSL;
+import org.mozilla.jss.nss.SSLErrors;
+import org.mozilla.jss.nss.SSLFDProxy;
+import org.mozilla.jss.nss.SSLPreliminaryChannelInfo;
+import org.mozilla.jss.nss.SecurityStatusResult;
+import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
+import org.mozilla.jss.ssl.SSLAlertDescription;
+import org.mozilla.jss.ssl.SSLAlertEvent;
+import org.mozilla.jss.ssl.SSLAlertLevel;
+import org.mozilla.jss.ssl.SSLCipher;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLVersion;
+import org.mozilla.jss.ssl.SSLVersionRange;
 
 /**
  * The reference JSSEngine implementation.
@@ -1638,10 +1660,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (!closed_fd && ssl_fd != null) {
             try {
                 SSL.RemoveCallbacks(ssl_fd);
-                PR.Close(ssl_fd);
                 ssl_fd.close();
+                ssl_fd = null;
             } catch (Exception e) {
-                debug("Got exception trying to cleanup SSLFD: " + e.getMessage());
+                logger.error("Got exception trying to cleanup SSLFD", e);
             } finally {
                 closed_fd = true;
             }
@@ -1657,6 +1679,15 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             write_buf = null;
         }
     }
+
+    // During testing with Tomcat 8.5, most instances did not call
+    // cleanup, so all the JNI resources end up getting leaked: ssl_fd
+    // (and its global ref), read_buf, and write_buf.
+    @Override
+    protected void finalize() {
+        cleanup();
+    }
+
 
     private class CertValidationTask extends CertAuthHandler {
         public CertValidationTask(SSLFDProxy fd) {
