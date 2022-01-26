@@ -12,7 +12,5 @@ public class GlobalRefProxy extends NativeProxy {
     private static native byte[] refOf(Object target);
 
     @Override
-    protected synchronized void releaseNativeResources() {
-        clear();
-    }
+    protected native void releaseNativeResources();
 }
