@@ -1,6 +1,5 @@
 package org.mozilla.jss.nss;
 
-import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
 
 import org.mozilla.jss.crypto.X509Certificate;
@@ -42,13 +41,14 @@ public class SSLFDProxy extends PRFDProxy {
 
     @Override
     protected synchronized void releaseNativeResources() throws Exception {
-        synchronized (globalRef) {
-            if (globalRef != null) {
-                try {
-                    globalRef.close();
-                } finally {
-                    globalRef = null;
-                }
+
+        super.releaseNativeResources();
+
+        if (globalRef != null) {
+            try {
+                globalRef.close();
+            } finally {
+                globalRef = null;
             }
         }
     }
