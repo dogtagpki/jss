@@ -8,6 +8,7 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.channels.Channels;
 import java.security.PublicKey;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import javax.net.ssl.*;
 
@@ -131,6 +132,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * TrustManager instances, passing the result back to NSS.
      */
     private CertValidationTask task;
+
+    /**
+     * Used in unwrap(...) to hold fragments across calls to unwrap(...).
+     *
+     * The backing byte buffers might not have enough space for the entire
+     * fragment we've read from src. While we could resize them to be
+     * large enough (2^16 bytes), we instead store each fragment's data
+     * here between calls to ByteBuffer.Write(...) and also unwrap(...).
+     */
+    private byte fragment_data[] = null;
 
     public JSSEngineReferenceImpl() {
         super();
@@ -1143,6 +1154,21 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
+    private void validate_content_type(byte fragment_type) throws SSLException {
+        // See: https://datatracker.ietf.org/doc/html/rfc8446#section-5.1
+        // These are the same across SSL2.0 to TLSv1.3.
+        switch (fragment_type) {
+        case 0: // invalid
+        case 20: // change_cipher_spec
+        case 21: // alert
+        case 22: // handshake
+        case 23: // application_data
+            break;
+        default:
+            throw new SSLException("unknown record fragment header: " + fragment_type);
+        }
+    }
+
     @Override
     public SSLEngineResult unwrap(ByteBuffer src, ByteBuffer[] dsts, int offset, int length) throws IllegalArgumentException, SSLException {
         debug("JSSEngine: unwrap(ssl_fd=" + ssl_fd + ")");
@@ -1172,9 +1198,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         logUnwrap(src);
 
         // Order of operations:
-        //  1. Read data from srcs
-        //  2. Update handshake status
-        //  3. Write data to dsts
+        //  1. Validate record fragments from srcs
+        //  2. Read a complete record fragment
+        //  3. Update handshake status
+        //  4. Write any data to dsts
         //
         // Since srcs is coming from the data, it could affect our ability to
         // handshake. It could also affect our ability to write data to dsts,
@@ -1197,18 +1224,90 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         int this_src_write;
         int this_dst_write;
 
+        // We assume src begins on a fragment. This is a safe assumption given
+        // our invariant that we only process completed fragments. Incomplete
+        // fragments will yield a BUFFER_UNDERFLOW and be raised to the
+        // calling application to hand us more data; if there is no more, an
+        // IOException will likely be thrown when the connection terminates.
+        // At each stage, we leave src.position() in a state wherein it
+        // should point to the start of where the next record fragment would
+        // be, if one is present.
         do {
             this_src_write = 0;
             this_dst_write = 0;
 
-            if (src != null) {
-                this_src_write = Math.min((int) Buffer.WriteCapacity(read_buf), src.remaining());
+            // Read one record fragment and give it to NSS when we have data.
+            if (src != null && src.hasRemaining() && fragment_data == null) {
+                if (src.remaining() < 5) {
+                    // At this point, we have _some_ data but not enough to
+                    // reconstruct a full record fragment header. Return a
+                    // BUFFER_UNDERFLOW error so we get more data.
+                    return new SSLEngineResult(SSLEngineResult.Status.BUFFER_UNDERFLOW, handshake_state, wire_data, app_data);
+                }
 
-                // When we have data from src, write it to read_buf.
+                // src position is later reset.
+                int fragment_start = src.position();
+
+                // From TLSv1.3's RFC 8446 Section 5.1 Record Layer (and
+                // corresponding RFCs for older protocol versions), each
+                // record fragment consists of:
+                //
+                //  - 1 byte fragment ContentType,
+                //  - 2 bytes of protocol version (unused as of TLSv1.3),
+                //  - 2 bytes of content length
+                //  - Up to 2^16 - 1 bytes of content.
+                //
+                // Fetch and validate the ContentType as a sanity check that
+                // we're at the start of a record.
+                byte fragment_type = src.get();
+                validate_content_type(fragment_type);
+
+                // Ignore the legacy protocol version; we leave it to NSS to
+                // validate this for us.
+                src.get(); src.get();
+
+                // Get and validate the fragment's length against remaining
+                // data in src.
+                int fragment_length = src.getShort();
+                if (src.remaining() < fragment_length) {
+                    // Since we have too little data remaining in our
+                    // fragment, reset to the start of the fragment and
+                    // return.
+                    src.position(fragment_start);
+                    return new SSLEngineResult(SSLEngineResult.Status.BUFFER_UNDERFLOW, handshake_state, wire_data, app_data);
+                }
+
+                // We know we have a complete record fragment in src. This
+                // means we can compute the total bounds of this fragment:
+                int fragment_end = fragment_start + 5 + fragment_length;
+                // and can read it into fragment_data. Note that we have to
+                // reset src's position so we get the fragment header as well.
+                fragment_data = new byte[fragment_end - fragment_start];
+                src.position(fragment_start);
+                src.get(fragment_data);
+
+                debug("JSSEngine.unwrap(): Found record fragment of size " + fragment_data.length + " bytes.");
+            }
+
+            if (fragment_data != null) {
+                // We have previously validated fragment data. Copy it into
+                // our write buffers. First compute the size of this write:
+                this_src_write = Math.min((int) Buffer.WriteCapacity(read_buf), fragment_data.length);
+
                 if (this_src_write > 0) {
-                    byte[] wire_buffer = new byte[this_src_write];
-                    src.get(wire_buffer);
+                    // Create a temporary buffer containing the bytes we know
+                    // will be read into the buffer.
+                    byte[] wire_buffer = Arrays.copyOfRange(fragment_data, 0, this_src_write);
 
+                    // Update our fragment_data, either setting it to null or
+                    // removing the bytes we've read.
+                    if (this_src_write < fragment_data.length) {
+                        fragment_data = Arrays.copyOfRange(fragment_data, this_src_write, fragment_data.length);
+                    } else {
+                        fragment_data = null;
+                    }
+
+                    // Perform the underlying byte buffer call.
                     this_src_write = (int) Buffer.Write(read_buf, wire_buffer);
 
                     wire_data += this_src_write;
