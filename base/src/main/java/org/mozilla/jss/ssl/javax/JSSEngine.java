@@ -53,10 +53,13 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Size of the underlying BUFFERs.
      *
-     * Helps to be large enough to fit most common SSL packets during the
-     * initial handshake.
+     * Helps to be large enough to fit well-formed SSL packets during the
+     * initial handshake and subsequent data transfer.
+     *
+     * See MAX_ENCRYPTED_PACKET_LENGTH calculation from Tomcat's
+     *     org.apache.tomcat.util.net.openssl.OpenSSLEngine.
      */
-    protected static int BUFFER_SIZE = 1 << 12;
+    protected static int BUFFER_SIZE = 5 + 1024 + 1024 + 20 + 256 + (1 << 14);
 
     /**
      * Whether or not this SSLEngine is acting as the client end of the
