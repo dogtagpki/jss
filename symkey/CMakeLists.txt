@@ -8,6 +8,8 @@ javac(symkey-classes
         ${CLASSES_OUTPUT_DIR}
     OUTPUT_DIR
         ${CMAKE_CURRENT_BINARY_DIR}/classes
+    DEPENDS
+        generate_java
 )
 
 # TODO: merge into jss.jar
