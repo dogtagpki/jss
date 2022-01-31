@@ -27,6 +27,7 @@ import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PSSParameterSpec;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mozilla.jss.netscape.security.util.DerEncoder;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
@@ -1046,18 +1047,13 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * Supported signing algorithms for a RSA key.
      */
     public static final String[] RSA_SIGNING_ALGORITHMS = new String[]
-    { "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA", "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS" };
+    { "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS" };
 
     public static final String[] EC_SIGNING_ALGORITHMS = new String[]
-    { "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC" };
+    { "SHA256withEC", "SHA384withEC", "SHA512withEC" };
 
     /**
      * All supported signing algorithms.
      */
-    public static final String[] ALL_SIGNING_ALGORITHMS = new String[]
-    {
-            "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA",
-            "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS",
-            "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC"
-    };
+    public static final String[] ALL_SIGNING_ALGORITHMS = ArrayUtils.addAll(RSA_SIGNING_ALGORITHMS, EC_SIGNING_ALGORITHMS);
 }
