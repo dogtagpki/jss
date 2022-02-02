@@ -3,7 +3,7 @@ macro(jss_config)
     #   MAJOR MINOR PATCH BETA
     # When BETA is 1, it is a pre-release (it enables some tests).
     # When BETA is 0, it is a final release.
-    jss_config_version(5 0 0 0)
+    jss_config_version(5 0 2 0)
 
     # Configure output directories
     jss_config_outputs()
