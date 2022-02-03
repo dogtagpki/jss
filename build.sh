@@ -11,7 +11,7 @@ SRC_DIR="$(dirname "$SCRIPT_PATH")"
 
 NAME=jss
 WORK_DIR="$HOME/build/$NAME"
-JAVA_LIB_DIR="/usr/lib/java"
+JNI_DIR="/usr/lib/java"
 
 if [ "$HOSTTYPE" = "x86_64" ]; then
    JSS_LIB_DIR="/usr/lib64/jss"
@@ -41,7 +41,7 @@ usage() {
     echo
     echo "Options:"
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
-    echo "    --java-lib-dir=<path>  Java library directory (default: $JAVA_LIB_DIR)."
+    echo "    --jni-dir=<path>       JNI directory (default: $JNI_DIR)."
     echo "    --jss-lib-dir=<path>   JSS library directory (default: $JSS_LIB_DIR)."
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
@@ -174,8 +174,8 @@ while getopts v-: arg ; do
         work-dir=?*)
             WORK_DIR="$(readlink -f "$LONG_OPTARG")"
             ;;
-        java-lib-dir=?*)
-            JAVA_LIB_DIR="$(readlink -f "$LONG_OPTARG")"
+        jni-dir=?*)
+            JNI_DIR="$(readlink -f "$LONG_OPTARG")"
             ;;
         jss-lib-dir=?*)
             JSS_LIB_DIR="$(readlink -f "$LONG_OPTARG")"
@@ -224,7 +224,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | java-lib-dir* | jss-lib-dir* | install-dir* | source-tag* | spec* | version* | release* | dist*)
+        work-dir* | jni-dir* | jss-lib-dir* | install-dir* | source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -251,7 +251,7 @@ fi
 
 if [ "$DEBUG" = true ] ; then
     echo "WORK_DIR: $WORK_DIR"
-    echo "JAVA_LIB_DIR: $JAVA_LIB_DIR"
+    echo "JNI_DIR: $JNI_DIR"
     echo "JSS_LIB_DIR: $JSS_LIB_DIR"
     echo "INSTALL_DIR: $INSTALL_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
@@ -284,7 +284,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     fi
 
     OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
-    OPTIONS+=(-DJAVA_LIB_INSTALL_DIR=$JAVA_LIB_DIR )
+    OPTIONS+=(-DJNI_DIR=$JNI_DIR )
     OPTIONS+=(-DJSS_LIB_INSTALL_DIR=$JSS_LIB_DIR)
 
     if [ "$WITHOUT_JAVADOC" = true ] ; then

@@ -26,7 +26,7 @@ install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/jss-symkey.jar
     DESTINATION
-        ${JAVA_LIB_INSTALL_DIR}
+        ${JNI_DIR}
 )
 
 set(SYMKEY_JAR ${CMAKE_BINARY_DIR}/jss-symkey.jar CACHE INTERNAL "symkey jar file")
@@ -93,6 +93,6 @@ install(
 
 install(
     CODE "execute_process(
-        COMMAND ln -sf ${JAVA_LIB_INSTALL_DIR}/jss-symkey.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss-symkey.jar
+        COMMAND ln -sf ${JNI_DIR}/jss-symkey.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss-symkey.jar
     )"
 )

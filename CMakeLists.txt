@@ -88,7 +88,7 @@ install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/jss.jar
     DESTINATION
-        ${JAVA_LIB_INSTALL_DIR}
+        ${JNI_DIR}
 )
 
 install(
@@ -104,7 +104,7 @@ install(
 
 install(
     CODE "execute_process(
-        COMMAND ln -sf ${JAVA_LIB_INSTALL_DIR}/jss.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss.jar
+        COMMAND ln -sf ${JNI_DIR}/jss.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss.jar
     )"
 )
 

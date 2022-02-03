@@ -68,9 +68,9 @@ macro(jss_config_outputs)
     set(INCLUDE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss")
     set(JNI_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include/jss/_jni")
 
-    if (NOT DEFINED JAVA_LIB_INSTALL_DIR)
-        set(JAVA_LIB_INSTALL_DIR "/usr/lib/java")
-    endif(NOT DEFINED JAVA_LIB_INSTALL_DIR)
+    if (NOT DEFINED JNI_DIR)
+        set(JNI_DIR "/usr/lib/java")
+    endif(NOT DEFINED JNI_DIR)
 
     if (NOT DEFINED JSS_LIB_INSTALL_DIR)
         set(JSS_LIB_INSTALL_DIR "/usr/lib/jss")
