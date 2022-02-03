@@ -101,11 +101,13 @@ This package contains the API documentation for JSS.
 
 ################################################################################
 %prep
+################################################################################
 
 %autosetup -n %{name}-%{version}%{?_phase} -p 1
 
 ################################################################################
 %build
+################################################################################
 
 %set_build_flags
 
@@ -124,9 +126,9 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 ./build.sh \
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
+    --lib-dir=%{_libdir} \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
-    --lib-dir=%{_libdir} \
     --version=%{version} \
     %{!?with_javadoc:--without-javadoc} \
     %{?with_tests:--with-tests} \
@@ -134,6 +136,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 
 ################################################################################
 %install
+################################################################################
 
 ./build.sh \
     %{?_verbose:-v} \
@@ -143,6 +146,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 
 ################################################################################
 %files
+################################################################################
 
 %defattr(-,root,root,-)
 %doc jss.html
@@ -153,6 +157,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 %if %{with javadoc}
 ################################################################################
 %files javadoc
+################################################################################
 
 %defattr(-,root,root,-)
 %{_javadocdir}/%{name}/

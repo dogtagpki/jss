@@ -11,7 +11,6 @@ SRC_DIR="$(dirname "$SCRIPT_PATH")"
 
 NAME=jss
 WORK_DIR="$HOME/build/$NAME"
-JNI_DIR="/usr/lib/java"
 
 if [ "$HOSTTYPE" = "x86_64" ]; then
    LIB_DIR="/usr/lib64"
@@ -19,6 +18,7 @@ else
    LIB_DIR="/usr/lib"
 fi
 
+JNI_DIR="/usr/lib/java"
 INSTALL_DIR=
 
 SOURCE_TAG=
@@ -41,9 +41,9 @@ usage() {
     echo
     echo "Options:"
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
+    echo "    --lib-dir=<path>       Library directory (default: $LIB_DIR)."
     echo "    --java-home=<path>     Java home"
     echo "    --jni-dir=<path>       JNI directory (default: $JNI_DIR)."
-    echo "    --lib-dir=<path>       Library directory (default: $LIB_DIR)."
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec."
@@ -175,17 +175,17 @@ while getopts v-: arg ; do
         work-dir=?*)
             WORK_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
+        lib-dir=?*)
+            LIB_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
         java-home=?*)
             JAVA_HOME=$(readlink -f "$LONG_OPTARG")
             ;;
         jni-dir=?*)
-            JNI_DIR="$(readlink -f "$LONG_OPTARG")"
-            ;;
-        lib-dir=?*)
-            LIB_DIR="$(readlink -f "$LONG_OPTARG")"
+            JNI_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
         install-dir=?*)
-            INSTALL_DIR="$(readlink -f "$LONG_OPTARG")"
+            INSTALL_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
         source-tag=?*)
             SOURCE_TAG="$LONG_OPTARG"
@@ -228,7 +228,8 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | jni-dir* | lib-dir* | install-dir* | source-tag* | spec* | version* | release* | dist*)
+        work-dir* | lib-dir* | java-home* | jni-dir* | install-dir* | \
+        source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -255,8 +256,9 @@ fi
 
 if [ "$DEBUG" = true ] ; then
     echo "WORK_DIR: $WORK_DIR"
-    echo "JNI_DIR: $JNI_DIR"
     echo "LIB_DIR: $LIB_DIR"
+    echo "JAVA_HOME: $JAVA_HOME"
+    echo "JNI_DIR: $JNI_DIR"
     echo "INSTALL_DIR: $INSTALL_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi
@@ -281,22 +283,23 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     fi
 
     OPTIONS=()
+
+    OPTIONS+=(-S $SRC_DIR)
+    OPTIONS+=(-B $WORK_DIR)
     OPTIONS+=(-DVERSION=$VERSION)
+
+    OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
 
     if [ "$JAVA_HOME" != "" ] ; then
         OPTIONS+=(-DJAVA_HOME=$JAVA_HOME)
     fi
 
-    OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
-    OPTIONS+=(-DJNI_DIR=$JNI_DIR )
     OPTIONS+=(-DLIB_DIR=$LIB_DIR)
+    OPTIONS+=(-DJNI_DIR=$JNI_DIR )
 
     if [ "$WITHOUT_JAVADOC" = true ] ; then
         OPTIONS+=(-DWITH_JAVADOC=FALSE)
     fi
-
-    OPTIONS+=(-S $SRC_DIR)
-    OPTIONS+=(-B .)
 
     cmake "${OPTIONS[@]}"
 
@@ -414,6 +417,14 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 echo "Building $NAME-$VERSION-$RELEASE${_TIMESTAMP}${_COMMIT_ID}"
+
+################################################################################
+# Initialize working directory
+################################################################################
+
+if [ "$VERBOSE" = true ] ; then
+    echo "Initializing $WORK_DIR"
+fi
 
 rm -rf BUILD
 rm -rf RPMS
