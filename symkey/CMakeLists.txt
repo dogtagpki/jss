@@ -88,11 +88,11 @@ install(
     TARGETS
         ${SYMKEY_SHARED_LIBRARY}
     LIBRARY DESTINATION
-        ${JSS_LIB_INSTALL_DIR}
+        ${LIB_DIR}/jss
 )
 
 install(
     CODE "execute_process(
-        COMMAND ln -sf ${JNI_DIR}/jss-symkey.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss-symkey.jar
+        COMMAND ln -sf ${JNI_DIR}/jss-symkey.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss-symkey.jar
     )"
 )

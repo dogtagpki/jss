@@ -95,7 +95,7 @@ install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/libjss.so
     DESTINATION
-        ${JSS_LIB_INSTALL_DIR}
+        ${LIB_DIR}/jss
     PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
@@ -104,7 +104,7 @@ install(
 
 install(
     CODE "execute_process(
-        COMMAND ln -sf ${JNI_DIR}/jss.jar \$ENV{DESTDIR}${JSS_LIB_INSTALL_DIR}/jss.jar
+        COMMAND ln -sf ${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
     )"
 )
 

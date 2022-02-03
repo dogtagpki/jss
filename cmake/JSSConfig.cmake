@@ -72,9 +72,9 @@ macro(jss_config_outputs)
         set(JNI_DIR "/usr/lib/java")
     endif(NOT DEFINED JNI_DIR)
 
-    if (NOT DEFINED JSS_LIB_INSTALL_DIR)
-        set(JSS_LIB_INSTALL_DIR "/usr/lib/jss")
-    endif(NOT DEFINED JSS_LIB_INSTALL_DIR)
+    if (NOT DEFINED LIB_DIR)
+        set(LIB_DIR "/usr/lib")
+    endif(NOT DEFINED LIB_DIR)
 
     # This folder is for pseudo-locations for CMake targets
     set(TARGETS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/.targets")

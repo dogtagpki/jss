@@ -125,7 +125,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
     --jni-dir=%{_jnidir} \
-    --jss-lib-dir=%{_libdir}/jss \
+    --lib-dir=%{_libdir} \
     --version=%{version} \
     %{!?with_javadoc:--without-javadoc} \
     %{?with_tests:--with-tests} \
