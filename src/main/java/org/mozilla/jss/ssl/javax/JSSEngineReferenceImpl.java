@@ -961,7 +961,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         while (ssl_fd.inboundOffset < ssl_fd.inboundAlerts.size()) {
             SSLAlertEvent event = ssl_fd.inboundAlerts.get(ssl_fd.inboundOffset);
             ssl_fd.inboundOffset += 1;
-	    event.setEngine(this);
 
             if (event.getLevelEnum() == SSLAlertLevel.WARNING && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
                 debug("Got inbound CLOSE_NOTIFY alert");
@@ -985,7 +984,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         while (ssl_fd.outboundOffset < ssl_fd.outboundAlerts.size()) {
             SSLAlertEvent event = ssl_fd.outboundAlerts.get(ssl_fd.outboundOffset);
             ssl_fd.outboundOffset += 1;
-            event.setEngine(this);
 
             if (event.getLevelEnum() == SSLAlertLevel.WARNING && event.getDescriptionEnum() == SSLAlertDescription.CLOSE_NOTIFY) {
                 debug("Sent outbound CLOSE_NOTIFY alert.");
