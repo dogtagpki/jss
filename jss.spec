@@ -8,7 +8,7 @@ License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
 # For official (i.e. supported) releases, use x.y.z-r where r >=1.
-Version:        4.9.2
+Version:        4.9.3
 Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 #global         _phase -alpha1
 
