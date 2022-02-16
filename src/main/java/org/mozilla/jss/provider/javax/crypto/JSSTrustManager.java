@@ -30,8 +30,8 @@ import javax.net.ssl.X509TrustManager;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.netscape.security.util.Cert;
+import org.mozilla.jss.pkcs11.PK11Cert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class JSSTrustManager implements X509TrustManager {
         certChain = Cert.sortCertificateChain(certChain);
 
         for (X509Certificate cert : certChain) {
-            logger.debug("JSSTrustManager:  - " + cert.getSubjectDN());
+            logger.debug("JSSTrustManager:  - " + cert.getSubjectX500Principal());
         }
 
         // get CA certs
@@ -84,7 +84,7 @@ public class JSSTrustManager implements X509TrustManager {
 
     public void checkCert(X509Certificate cert, X509Certificate[] caCerts, String keyUsage) throws Exception {
 
-        logger.debug("JSSTrustManager: checkCert(" + cert.getSubjectDN() + "):");
+        logger.debug("JSSTrustManager: checkCert(" + cert.getSubjectX500Principal() + "):");
 
         boolean[] aki = cert.getIssuerUniqueID();
         logger.debug("JSSTrustManager: cert AKI: " + Arrays.toString(aki));
@@ -93,7 +93,7 @@ public class JSSTrustManager implements X509TrustManager {
         for (X509Certificate caCert : caCerts) {
 
             boolean[] ski = caCert.getSubjectUniqueID();
-            logger.debug("JSSTrustManager: SKI of " + caCert.getSubjectDN() + ": " + Arrays.toString(ski));
+            logger.debug("JSSTrustManager: SKI of " + caCert.getSubjectX500Principal() + ": " + Arrays.toString(ski));
 
             try {
                 cert.verify(caCert.getPublicKey(), "Mozilla-JSS");
@@ -105,10 +105,10 @@ public class JSSTrustManager implements X509TrustManager {
         }
 
         if (issuer == null) {
-            throw new CertificateException("Unable to validate signature: " + cert.getSubjectDN());
+            throw new CertificateException("Unable to validate signature: " + cert.getSubjectX500Principal());
         }
 
-        logger.debug("JSSTrustManager: cert signed by " + issuer.getSubjectDN());
+        logger.debug("JSSTrustManager: cert signed by " + issuer.getSubjectX500Principal());
 
         logger.debug("JSSTrustManager: checking validity range:");
         logger.debug("JSSTrustManager:  - not before: " + cert.getNotBefore());
@@ -134,7 +134,7 @@ public class JSSTrustManager implements X509TrustManager {
                 logger.debug("JSSTrustManager: configured to allow null extended key usages field");
             } else {
                 String msg = "Missing EKU: " + keyUsage +
-                    ". Certificate with subject DN `" + cert.getSubjectDN() + "` had ";
+                    ". Certificate with subject DN `" + cert.getSubjectX500Principal() + "` had ";
                 if (extendedKeyUsages == null) {
                     msg += "no EKU extension";
                 } else {

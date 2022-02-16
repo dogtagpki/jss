@@ -13,6 +13,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+
 import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
 
 /**
@@ -112,7 +113,7 @@ public class BenchmarkSSLSocket {
                         // i = 1 skips the CA certificate
                         for (int i = 1; i < a.length; i++) {
                             java.security.cert.X509Certificate x509 = (java.security.cert.X509Certificate) a[i];
-                            jks.setCertificateEntry(x509.getSubjectDN().toString(), x509);
+                            jks.setCertificateEntry(x509.getSubjectX500Principal().toString(), x509);
                         }
                     }
                 }

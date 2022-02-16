@@ -260,8 +260,8 @@ public class Cert {
         // build maps
         for (java.security.cert.X509Certificate cert : certs) {
 
-            String subjectDN = cert.getSubjectDN().toString();
-            String issuerDN = cert.getIssuerDN().toString();
+            String subjectDN = cert.getSubjectX500Principal().toString();
+            String issuerDN = cert.getIssuerX500Principal().toString();
 
             if (certMap.containsKey(subjectDN)) {
                 throw new Exception("Duplicate certificate: " + subjectDN);
