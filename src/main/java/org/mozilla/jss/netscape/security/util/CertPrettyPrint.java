@@ -229,7 +229,7 @@ public class CertPrettyPrint {
             //XXX I18N IssuerDN ?
             sb.append(pp.indent(12) + resource.getString(
                     PrettyPrintResources.TOKEN_ISSUER) +
-                    mX509Cert.getIssuerDN().toString() + "\n");
+                    mX509Cert.getIssuerX500Principal() + "\n");
             sb.append(pp.indent(12) + resource.getString(
                     PrettyPrintResources.TOKEN_VALIDITY) + "\n");
             String notBefore = dateFormater.format(mX509Cert.getNotBefore());
@@ -287,7 +287,7 @@ public class CertPrettyPrint {
             //XXX I18N SubjectDN ?
             sb.append(pp.indent(12) + resource.getString(
                     PrettyPrintResources.TOKEN_SUBJECT) +
-                    mX509Cert.getSubjectDN().toString() + "\n");
+                    mX509Cert.getSubjectX500Principal() + "\n");
             sb.append(pp.indent(12) + resource.getString(
                     PrettyPrintResources.TOKEN_SPKI) + "\n");
 

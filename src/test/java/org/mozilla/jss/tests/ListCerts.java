@@ -68,7 +68,7 @@ public class ListCerts {
                     cf.generateCertificate(bais);
                 bais.close();
 
-                System.out.println("Subject " + jdkCert.getSubjectDN());
+                System.out.println("Subject " + jdkCert.getSubjectX500Principal());
                 System.out.println("Signature oid " + jdkCert.getSigAlgName());
                 /* non critical extensions */
                 Set<String> nonCritSet = jdkCert.getNonCriticalExtensionOIDs();

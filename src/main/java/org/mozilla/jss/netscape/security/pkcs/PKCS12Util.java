@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
-import java.security.Principal;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -37,6 +36,7 @@ import java.util.List;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
+import javax.security.auth.x500.X500Principal;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mozilla.jss.CryptoManager;
@@ -687,7 +687,7 @@ public class PKCS12Util {
         X509CertImpl cert = new X509CertImpl(x509cert);
         certInfo.setCert(cert);
 
-        Principal subjectDN = cert.getSubjectDN();
+        X500Principal subjectDN = cert.getSubjectX500Principal();
         logger.debug("   Subject DN: " + subjectDN);
 
         SET bagAttrs = bag.getBagAttributes();
@@ -851,7 +851,7 @@ public class PKCS12Util {
             throws CertificateException {
 
         for (PKCS12CertInfo certInfo : pkcs12.getCertInfos()) {
-            Principal certSubjectDN = certInfo.getCert().getSubjectDN();
+            X500Principal certSubjectDN = certInfo.getCert().getSubjectX500Principal();
 
             try {
                 LdapName certSubjdn  = new LdapName(certSubjectDN.toString());

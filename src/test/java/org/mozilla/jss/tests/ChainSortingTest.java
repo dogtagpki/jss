@@ -230,7 +230,7 @@ public class ChainSortingTest {
         } catch (Exception e) {
             String message = e.getMessage();
 
-            String expected = "Duplicate certificate: " + subCA.getSubjectDN();
+            String expected = "Duplicate certificate: " + subCA.getSubjectX500Principal();
             Assert.assertEquals(expected, message);
         }
     }
@@ -249,7 +249,7 @@ public class ChainSortingTest {
         } catch (Exception e) {
             String message = e.getMessage();
 
-            String expected = "Branched chain: " + subCA.getSubjectDN();
+            String expected = "Branched chain: " + subCA.getSubjectX500Principal();
             Assert.assertEquals(expected, message);
         }
     }
@@ -269,7 +269,7 @@ public class ChainSortingTest {
             String message = e.getMessage();
 
             String expected = "Multiple leaf certificates: [" +
-                    rootCA.getSubjectDN() + "], [" + admin.getSubjectDN() + "]";
+                    rootCA.getSubjectX500Principal() + "], [" + admin.getSubjectX500Principal() + "]";
             Assert.assertEquals(expected, message);
         }
     }
