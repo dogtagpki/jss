@@ -56,9 +56,9 @@ import org.mozilla.jss.asn1.Tag;
  *          bodyPartID       BodyPartID
  *          bodyPartPath     SEQUENCE SIZE (1..MAX) OF BodyPartID,
  *     }
+ * </pre>
  *
  * @author Christina Fu (cfu)
- * </pre>
  */
 public class BodyPartReference implements ASN1Value {
     public static final INTEGER BODYIDMAX = new INTEGER("4294967295");

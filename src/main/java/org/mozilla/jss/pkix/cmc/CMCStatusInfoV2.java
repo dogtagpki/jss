@@ -71,9 +71,9 @@ import org.mozilla.jss.asn1.UTF8String;
  *          pendToken           OCTET STRING,
  *          pendTime            GeneralizedTime
  *     }
+ * </pre>
  *
  * @author Christina Fu (cfu)
- * </pre>
  */
 public class CMCStatusInfoV2 implements ASN1Value {
     public static final INTEGER BODYIDMAX = new INTEGER("4294967295");
