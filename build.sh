@@ -41,6 +41,7 @@ usage() {
     echo
     echo "Options:"
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
+    echo "    --java-home=<path>     Java home"
     echo "    --jni-dir=<path>       JNI directory (default: $JNI_DIR)."
     echo "    --lib-dir=<path>       Library directory (default: $LIB_DIR)."
     echo "    --install-dir=<path>   Installation directory."
@@ -172,7 +173,10 @@ while getopts v-: arg ; do
 
         case $OPTARG in
         work-dir=?*)
-            WORK_DIR="$(readlink -f "$LONG_OPTARG")"
+            WORK_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
+        java-home=?*)
+            JAVA_HOME=$(readlink -f "$LONG_OPTARG")
             ;;
         jni-dir=?*)
             JNI_DIR="$(readlink -f "$LONG_OPTARG")"
