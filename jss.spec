@@ -32,9 +32,15 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 # Java
 ################################################################################
 
+%if 0%{?fedora} && 0%{?fedora} >= 36
+%define java_devel java-17-openjdk-devel
+%define java_headless java-17-openjdk-headless
+%define java_home %{_jvmdir}/jre-17-openjdk
+%else
 %define java_devel java-11-openjdk-devel
 %define java_headless java-11-openjdk-headless
 %define java_home %{_jvmdir}/jre-11-openjdk
+%endif
 
 ################################################################################
 # Build Options
