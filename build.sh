@@ -12,11 +12,19 @@ SRC_DIR="$(dirname "$SCRIPT_PATH")"
 NAME=jss
 WORK_DIR="$HOME/build/$NAME"
 
+PREFIX_DIR="/usr"
+INCLUDE_DIR="/usr/include"
+
 if [ "$HOSTTYPE" = "x86_64" ]; then
    LIB_DIR="/usr/lib64"
 else
    LIB_DIR="/usr/lib"
 fi
+
+SYSCONFIG_DIR="/etc"
+SHARE_DIR="/usr/share"
+
+CMAKE="cmake"
 
 JNI_DIR="/usr/lib/java"
 INSTALL_DIR=
@@ -41,7 +49,12 @@ usage() {
     echo
     echo "Options:"
     echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
+    echo "    --prefix-dir=<path>    Prefix directory (default: $PREFIX_DIR)."
+    echo "    --include-dir=<path>   Include directory (default: $INCLUDE_DIR)."
     echo "    --lib-dir=<path>       Library directory (default: $LIB_DIR)."
+    echo "    --sysconfig-dir=<path> System configuration directory (default: $SYSCONFIG_DIR)."
+    echo "    --share-dir=<path>     Share directory (default: $SHARE_DIR)."
+    echo "    --cmake=<path>         Path to CMake executable"
     echo "    --java-home=<path>     Java home"
     echo "    --jni-dir=<path>       JNI directory (default: $JNI_DIR)."
     echo "    --install-dir=<path>   Installation directory."
@@ -175,8 +188,23 @@ while getopts v-: arg ; do
         work-dir=?*)
             WORK_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
+        prefix-dir=?*)
+            PREFIX_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
+        include-dir=?*)
+            INCLUDE_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
         lib-dir=?*)
             LIB_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
+        sysconfig-dir=?*)
+            SYSCONFIG_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
+        share-dir=?*)
+            SHARE_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
+        cmake=?*)
+            CMAKE=$(readlink -f "$LONG_OPTARG")
             ;;
         java-home=?*)
             JAVA_HOME=$(readlink -f "$LONG_OPTARG")
@@ -228,7 +256,8 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | lib-dir* | java-home* | jni-dir* | install-dir* | \
+        work-dir* | prefix-dir* | include-dir* | lib-dir* | sysconfig-dir* | share-dir* | cmake* | \
+        java-home* | jni-dir* | install-dir* | \
         source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
@@ -256,7 +285,12 @@ fi
 
 if [ "$DEBUG" = true ] ; then
     echo "WORK_DIR: $WORK_DIR"
+    echo "PREFIX_DIR: $PREFIX_DIR"
+    echo "INCLUDE_DIR: $INCLUDE_DIR"
     echo "LIB_DIR: $LIB_DIR"
+    echo "SYSCONFIG_DIR: $SYSCONFIG_DIR"
+    echo "SHARE_DIR: $SHARE_DIR"
+    echo "CMAKE: $CMAKE"
     echo "JAVA_HOME: $JAVA_HOME"
     echo "JNI_DIR: $JNI_DIR"
     echo "INSTALL_DIR: $INSTALL_DIR"
@@ -286,9 +320,24 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     OPTIONS+=(-S $SRC_DIR)
     OPTIONS+=(-B $WORK_DIR)
-    OPTIONS+=(-DVERSION=$VERSION)
 
-    OPTIONS+=(-DCMAKE_INSTALL_PREFIX=/usr)
+    # Set environment variables for CMake
+    # (see /usr/lib/rpm/macros.d/macros.cmake)
+
+    OPTIONS+=(-DCMAKE_C_FLAGS_RELEASE:STRING=-DNDEBUG)
+    OPTIONS+=(-DCMAKE_CXX_FLAGS_RELEASE:STRING=-DNDEBUG)
+    OPTIONS+=(-DCMAKE_Fortran_FLAGS_RELEASE:STRING=-DNDEBUG)
+    OPTIONS+=(-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON)
+    OPTIONS+=(-DCMAKE_INSTALL_DO_STRIP:BOOL=OFF)
+    OPTIONS+=(-DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_DIR)
+
+    OPTIONS+=(-DINCLUDE_INSTALL_DIR:PATH=$INCLUDE_DIR)
+    OPTIONS+=(-DLIB_INSTALL_DIR:PATH=$LIB_DIR)
+    OPTIONS+=(-DSYSCONF_INSTALL_DIR:PATH=$SYSCONFIG_DIR)
+    OPTIONS+=(-DSHARE_INSTALL_PREFIX:PATH=$SHARE_DIR)
+
+    OPTIONS+=(-DLIB_SUFFIX=64)
+    OPTIONS+=(-DBUILD_SHARED_LIBS:BOOL=ON)
 
     if [ "$JAVA_HOME" != "" ] ; then
         OPTIONS+=(-DJAVA_HOME=$JAVA_HOME)
@@ -297,11 +346,13 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     OPTIONS+=(-DLIB_DIR=$LIB_DIR)
     OPTIONS+=(-DJNI_DIR=$JNI_DIR )
 
+    OPTIONS+=(-DVERSION=$VERSION)
+
     if [ "$WITHOUT_JAVADOC" = true ] ; then
         OPTIONS+=(-DWITH_JAVADOC=FALSE)
     fi
 
-    cmake "${OPTIONS[@]}"
+    $CMAKE "${OPTIONS[@]}"
 
     OPTIONS=()
 
