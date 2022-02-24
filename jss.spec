@@ -109,6 +109,8 @@ This package contains the API documentation for JSS.
 %build
 ################################################################################
 
+# Set build flags for CMake
+# (see /usr/lib/rpm/macros.d/macros.cmake)
 %set_build_flags
 
 export JAVA_HOME=%{java_home}
@@ -126,7 +128,12 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 ./build.sh \
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
+    --prefix-dir=%{_prefix} \
+    --include-dir=%{_includedir} \
     --lib-dir=%{_libdir} \
+    --sysconfig-dir=%{_sysconfigdir} \
+    --share-dir=%{_datadir} \
+    --cmake=%{__cmake} \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
     --version=%{version} \
