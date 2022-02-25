@@ -81,6 +81,9 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  */
 public class X509CertImpl extends X509Certificate
         implements DerEncoder {
+
+    public static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(X509CertImpl.class);
+
     // Serialization compatibility with the X509CertImpl in x509v1.jar
     // supporting the subset of X509Certificate on JDK1.1.x platforms.
     static final long serialVersionUID = -2048442350420423405L;
@@ -722,14 +725,21 @@ public class X509CertImpl extends X509Certificate
      */
     @Override
     public Principal getSubjectDN() {
-        if (info == null)
+        return getSubjectName();
+    }
+
+    public X500Name getSubjectName() {
+
+        if (info == null) {
             return null;
+        }
+
         try {
-            Principal subject = (Principal) info.get(
-                                     CertificateSubjectName.NAME + DOT +
-                                             CertificateSubjectName.DN_NAME);
-            return subject;
+            String name = CertificateSubjectName.NAME + DOT + CertificateSubjectName.DN_NAME;
+            return (X500Name) info.get(name);
+
         } catch (Exception e) {
+            logger.warn("Unable to get subject name: " + e.getMessage(), e);
             return null;
         }
     }
@@ -749,14 +759,21 @@ public class X509CertImpl extends X509Certificate
      */
     @Override
     public Principal getIssuerDN() {
-        if (info == null)
+        return getIssuerName();
+    }
+
+    public X500Name getIssuerName() {
+
+        if (info == null) {
             return null;
+        }
+
         try {
-            Principal issuer = (Principal) info.get(
-                                    CertificateIssuerName.NAME + DOT +
-                                            CertificateIssuerName.DN_NAME);
-            return issuer;
+            String name = CertificateIssuerName.NAME + DOT + CertificateIssuerName.DN_NAME;
+            return (X500Name) info.get(name);
+
         } catch (Exception e) {
+            logger.warn("Unable to get issuer name: " + e.getMessage(), e);
             return null;
         }
     }
