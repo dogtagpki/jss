@@ -86,7 +86,7 @@ public interface CertAttrSet {
      * Gets an attribute value for this CertAttrSet.
      *
      * @param name the name of the attribute to return.
-     *
+     * @return attribute value
      * @exception CertificateException on attribute handling errors.
      * @exception IOException on other errors.
      */

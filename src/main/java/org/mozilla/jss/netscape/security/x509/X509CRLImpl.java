@@ -52,11 +52,13 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  * <p>
  * The X.509 v2 CRL format is described below in ASN.1:
  *
- * <pre>
- * </pre>
- * <p>
- * CertificateList ::= SEQUENCE { tbsCertList TBSCertList, signatureAlgorithm AlgorithmIdentifier, signature BIT STRING
- * }
+ * <pre>{@code
+ * CertificateList  ::=  SEQUENCE  {
+ *     tbsCertList          TBSCertList,
+ *     signatureAlgorithm   AlgorithmIdentifier,
+ *     signatureValue       BIT STRING  }
+ * }</pre>
+ *
  * <p>
  * A good description and profiling is provided in the IETF PKIX WG draft, Part I: X.509 Certificate and CRL Profile,
  * &lt;draft-ietf-pkix-ipki-part1-06.txt&gt;.

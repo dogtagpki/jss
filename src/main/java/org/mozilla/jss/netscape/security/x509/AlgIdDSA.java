@@ -76,6 +76,7 @@ public final class AlgIdDSA extends AlgorithmId implements DSAParams {
 
     /**
      * Construct an AlgIdDSA from an X.509 encoded byte array.
+     * @param encodedAlg byte array
      */
     public AlgIdDSA(byte[] encodedAlg) throws IOException {
         super(new DerValue(encodedAlg).getOID());

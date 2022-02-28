@@ -99,6 +99,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * with this algorithm name.
      *
      * @param algname the name being used
+     * @return an ID for the algorithm.
      * @exception NoSuchAlgorithmException on error.
      */
     public static AlgorithmId get(String algname)
@@ -210,6 +211,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Constructor that takes the oid and name, so the name can be cachedf or laster use.
+     * @param oid the identifier for the algorithm
+     * @param algName the algorithm name
      * @throws NoSuchAlgorithmException
      * @throws IOException
      *
@@ -315,6 +318,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Marshal a DER-encoded "AlgorithmID" sequence on the DER stream.
+     * @param out the output stream on which to write the DER encoding.
+     * @exception IOException on encoding error.
      */
     public final void encode(DerOutputStream out)
             throws IOException {
@@ -356,6 +361,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      *
      * @param out the output stream on which to write the DER encoding params,
      *            using context value.
+     * @param contextVal context value
      *
      * @exception IOException on encoding error.
      */
@@ -395,6 +401,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
     // XXXX cleaning required
     /**
      * Returns the DER-encoded X.509 AlgorithmId as a byte array.
+     * @return the byte array
+     * @throws IOException If an error occurred.
      */
     public final byte[] encode() throws IOException {
         try (DerOutputStream out = new DerOutputStream()) {
@@ -420,6 +428,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * Returns list of signing algorithms for a key algorithm such as
      * RSA or DSA.
+     * @param alg key algorithm
+     * @return list of signing algorithms
      */
     public static String[] getSigningAlgorithms(AlgorithmId alg) {
         ObjectIdentifier algOid = alg.getOID();
@@ -609,6 +619,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * "OID.1.3.14.3.2.13" style notation. Use the <code>getName</code> call when you do not need to ensure cross-system
      * portability
      * of algorithm names, or need a user friendly name.
+     * @return the ISO OID
      */
     final public ObjectIdentifier getOID() {
         return algid;
@@ -621,6 +632,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * return a name such as "MD5withRSA" for a signature algorithm on
      * some systems. It also returns names like "OID.1.2.3.4", when
      * no particular name for the algorithm is known.
+     * @return the name
      */
     public String getName() {
         return algName();
@@ -631,6 +643,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
      *
      * Use toStringWithParams() for algorithm name and paramaters, or
      * paramsToString() for just parameters.
+     *
+     * @return algorithm name
      */
     @Override
     public String toString() {
@@ -639,6 +653,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Returns a string describing the algorithm and its parameters.
+     * @return algorithm name and parameters
      */
     public String toStringWithParams() {
         if (params == null) {
@@ -653,6 +668,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * used to initialize java.security.AlgorithmParamters.
      *
      * @return DER encoded parameters, or null not present.
+     * @throws IOException If an error occurred.
      */
     public byte[] getEncodedParams() throws IOException {
         if (params == null)
@@ -664,6 +680,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * Provides a human-readable description of the algorithm parameters.
      * This may be redefined by subclasses which parse those parameters.
+     * @return algorithm parameters description
      */
     protected String paramsToString() {
         if (params == null) {
@@ -678,6 +695,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * Returns true iff the argument indicates the same algorithm
      * with the same parameters.
+     * @param other another algorithm ID
+     * @return true iff it's identical
      */
     public boolean equals(AlgorithmId other) {
         if (!algid.equals(other.algid))
@@ -721,6 +740,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
     /**
      * Compares two algorithm IDs for equality. Returns true iff
      * they are the same algorithm, ignoring algorithm parameters.
+     * @param id another algorithm ID
+     * @return true iff it's the same
      */
     public final boolean equals(ObjectIdentifier id) {
         return algid.equals(id);
@@ -747,6 +768,12 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     /**
      * Used to create the PSS algorithm params needed for RSA PSS signatures.
+     * @param algName algorithm name
+     * @return algorithm parameters
+     * @throws IllegalArgumentException
+     * @throws NoSuchProviderException
+     * @throws InvalidParameterSpecException
+     * @throws NoSuchAlgorithmException
     */
     public static AlgorithmParameters createPSSAlgorithmParameters(String algName) throws IllegalArgumentException, NoSuchProviderException, InvalidParameterSpecException, NoSuchAlgorithmException {
         if (algName == null) {
