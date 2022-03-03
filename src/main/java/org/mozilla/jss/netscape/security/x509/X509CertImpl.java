@@ -722,8 +722,10 @@ public class X509CertImpl extends X509Certificate
      * Gets the subject distinguished name from the certificate.
      *
      * @return the subject name.
+     * @deprecated Use getSubjectName() or getSubjectX500Principal() instead.
      */
     @Override
+    @Deprecated(since="5.2.0")
     public Principal getSubjectDN() {
         return getSubjectName();
     }
@@ -756,8 +758,10 @@ public class X509CertImpl extends X509Certificate
      * Gets the issuer distinguished name from the certificate.
      *
      * @return the issuer name.
+     * @deprecated Use getIssuerName() or getIssuerX500Principal() instead.
      */
     @Override
+    @Deprecated(since="5.2.0")
     public Principal getIssuerDN() {
         return getIssuerName();
     }
