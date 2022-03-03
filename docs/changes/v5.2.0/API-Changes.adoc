@@ -1,0 +1,6 @@
+= API Changes =
+
+== Deprecate getSubjectDN() and getIssuerDN() in X509CertImpl ==
+
+The `getSubjectDN()` and `getIssuerDN()` in `org.mozilla.jss.netscape.security.x509.X509CertImpl` have been deprecated.
+Use `getSubjectName()` and `getIssuerName()` or `getSubjectX500Principal​()` and `getIssuerX500Principal​()` instead.
