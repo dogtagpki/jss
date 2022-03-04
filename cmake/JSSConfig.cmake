@@ -238,7 +238,7 @@ macro(jss_config_java)
 
     # Validate that we've found the required JARs
     if(SLF4J_API_JAR STREQUAL "SLF4J_API_JAR-NOTFOUND")
-        message(FATAL_ERROR "Required dependency sfl4j-api.jar not found by find_jar!")
+        message(FATAL_ERROR "Required dependency slf4j-api.jar not found by find_jar!")
     endif()
 
     if(LANG_JAR STREQUAL "LANG_JAR-NOTFOUND")
