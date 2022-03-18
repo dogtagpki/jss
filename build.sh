@@ -30,7 +30,9 @@ JNI_DIR="/usr/lib/java"
 INSTALL_DIR=
 
 SOURCE_TAG=
-SPEC_TEMPLATE=
+SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
+SPEC_FILE=
+
 VERSION=
 RELEASE=
 
@@ -59,7 +61,7 @@ usage() {
     echo "    --jni-dir=<path>       JNI directory (default: $JNI_DIR)."
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
-    echo "    --spec=<file>          Use the specified RPM spec."
+    echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
     echo "    --version=<version>    Use the specified version."
     echo "    --release=<elease>     Use the specified release."
     echo "    --with-timestamp       Append timestamp to release number."
@@ -139,41 +141,39 @@ generate_patch() {
 
 generate_rpm_spec() {
 
-    RPM_SPEC="$NAME.spec"
-
     if [ "$VERBOSE" = true ] ; then
-        echo "Generating $RPM_SPEC"
+        echo "Creating $SPEC_FILE"
     fi
 
+    cp "$SPEC_TEMPLATE" "$SPEC_FILE"
+
     # hard-code timestamp
-    commands="s/%{?_timestamp}/${_TIMESTAMP}/g"
+    sed -i "s/%{?_timestamp}/${_TIMESTAMP}/g" "$SPEC_FILE"
 
     # hard-code commit ID
-    commands="${commands}; s/%{?_commit_id}/${_COMMIT_ID}/g"
+    sed -i "s/%{?_commit_id}/${_COMMIT_ID}/g" "$SPEC_FILE"
 
     # hard-code phase
-    commands="${commands}; s/%{?_phase}/${_PHASE}/g"
+    sed -i "s/%{?_phase}/${_PHASE}/g" "$SPEC_FILE"
 
     # hard-code patch
     if [ "$PATCH" != "" ] ; then
-        commands="${commands}; s/# Patch: jss-VERSION-RELEASE.patch/Patch: $PATCH/g"
+        sed -i "s/# Patch: jss-VERSION-RELEASE.patch/Patch: $PATCH/g" "$SPEC_FILE"
     fi
 
     # hard-code Javadoc option
     if [ "$WITHOUT_JAVADOC" = true ] ; then
         # convert bcond_without into bcond_with such that Javadoc package is not built by default
-        commands="${commands}; s/%\(bcond_without *javadoc\)\$/# \1\n%bcond_with javadoc/g"
+        sed -i "s/%\(bcond_without *javadoc\)\$/# \1\n%bcond_with javadoc/g" "$SPEC_FILE"
     fi
 
     # hard-code test option
     if [ "$WITH_TESTS" = true ] ; then
         # convert bcond_with into bcond_without such that it runs unit tests by default
-        commands="${commands}; s/%\(bcond_with *tests\)\$/# \1\n%bcond_without tests/g"
+        sed -i "s/%\(bcond_with *tests\)\$/# \1\n%bcond_without tests/g" "$SPEC_FILE"
     fi
 
-    sed "$commands" "$SPEC_TEMPLATE" > "$WORK_DIR/SPECS/$RPM_SPEC"
-
-    # rpmlint "$WORK_DIR/SPECS/$RPM_SPEC"
+    # rpmlint "$SPEC_FILE"
 }
 
 while getopts v-: arg ; do
@@ -417,9 +417,7 @@ fi
 # Prepare RPM build
 ################################################################################
 
-if [ "$SPEC_TEMPLATE" = "" ] ; then
-    SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
-fi
+SPEC_FILE="$WORK_DIR/SPECS/$NAME.spec"
 
 if [ "$VERSION" = "" ] ; then
     # if version not specified, get from spec template
@@ -537,11 +535,11 @@ if [ "$DIST" != "" ] ; then
 fi
 
 if [ "$DEBUG" = true ] ; then
-    echo rpmbuild -bs "${OPTIONS[@]}" "$WORK_DIR/SPECS/$RPM_SPEC"
+    echo rpmbuild -bs "${OPTIONS[@]}" "$SPEC_FILE"
 fi
 
 # build SRPM with user-provided options
-rpmbuild -bs "${OPTIONS[@]}" "$WORK_DIR/SPECS/$RPM_SPEC"
+rpmbuild -bs "${OPTIONS[@]}" "$SPEC_FILE"
 
 rc=$?
 
