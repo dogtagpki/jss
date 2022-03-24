@@ -326,10 +326,6 @@ public final class PK11Signature
             throw new SignatureException(NO_KEY);
         }
 
-		if(sigBytes==null) {
-			return false;
-		}
-
         boolean result;
         if( raw ) {
             result = engineRawVerifyNative(token, (PK11PubKey)key,
@@ -370,11 +366,6 @@ public final class PK11Signature
             String msg = "Unsupported algorithm parameter spec class for ";
             msg += "RSA/PSS: " + params.getClass().getName() + " -- ";
             msg += params.toString();
-            throw new InvalidAlgorithmParameterException(msg);
-        }
-
-        if (params == null) {
-            String msg = "Got an unexpected null parameter spec for RSA/PSS";
             throw new InvalidAlgorithmParameterException(msg);
         }
 
