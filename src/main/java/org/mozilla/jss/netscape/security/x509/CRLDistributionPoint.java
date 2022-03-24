@@ -23,10 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.mozilla.jss.netscape.security.util.BitArray;
-import org.mozilla.jss.netscape.security.util.DerOutputStream;
-import org.mozilla.jss.netscape.security.util.DerValue;
-
 import org.mozilla.jss.asn1.ANY;
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
@@ -36,6 +32,9 @@ import org.mozilla.jss.asn1.EXPLICIT;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.netscape.security.util.BitArray;
+import org.mozilla.jss.netscape.security.util.DerOutputStream;
+import org.mozilla.jss.netscape.security.util.DerValue;
 
 /**
  * <pre>
@@ -254,16 +253,13 @@ public class CRLDistributionPoint implements ASN1Value {
         return templateInstance;
     }
 
-    public static void main(String args[]) throws GeneralNamesException, IOException, InvalidBERException {
-        ByteArrayOutputStream bos = null;
-        FileOutputStream fos = null;
-        try {
+    public static void main(String[] args) throws GeneralNamesException, IOException, InvalidBERException {
+        try (FileOutputStream fos = new FileOutputStream(args[0]);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             if (args.length != 1) {
                 System.out.println("Usage: CRLDistributionPoint <outfile>");
                 System.exit(-1);
             }
-
-            bos = new ByteArrayOutputStream();
 
             SEQUENCE cdps = new SEQUENCE();
 
@@ -302,7 +298,6 @@ public class CRLDistributionPoint implements ASN1Value {
             cdps.encode(bos);
 
             byte[] encoded = bos.toByteArray();
-            fos = new FileOutputStream(args[0]);
             fos.write(encoded);
 
             SEQUENCE.OF_Template seqt = new SEQUENCE.OF_Template(getTemplate());
@@ -340,16 +335,6 @@ public class CRLDistributionPoint implements ASN1Value {
             }
             System.out.println("Done");
 
-        } finally {
-            if (bos != null) {
-                bos.close();
-            }
-            if (fos != null) {
-                fos.close();
-            }
-            if (fos != null) {
-                fos.close();
-            }
         }
     }
 
