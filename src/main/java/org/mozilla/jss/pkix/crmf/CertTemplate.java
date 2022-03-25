@@ -3,16 +3,32 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.crmf;
 
-import org.mozilla.jss.asn1.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.IOException;
-import java.util.Date;
-import org.mozilla.jss.pkix.primitive.*;
-import org.mozilla.jss.pkix.cert.Extension;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.CHOICE;
+import org.mozilla.jss.asn1.EXPLICIT;
+import org.mozilla.jss.asn1.GeneralizedTime;
+import org.mozilla.jss.asn1.INTEGER;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.TimeBase;
+import org.mozilla.jss.asn1.UTCTime;
+import org.mozilla.jss.pkix.cert.Extension;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.Name;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 
 /**
  * This class models a CRMF <i>CertTemplate</i> structure.
@@ -512,7 +528,7 @@ public class CertTemplate implements ASN1Value {
 
         ct.setVersion(new INTEGER(5));
         ct.setSerialNumber(new INTEGER(13112));
-        
+
         name = new Name();
         name.addCommonName("You");
         name.addStateOrProvinceName("California");
@@ -527,9 +543,9 @@ public class CertTemplate implements ASN1Value {
         System.out.println("Constructed CertTemplate:");
 
         byte[] encoded = ASN1Util.encode(ct);
-        java.io.FileOutputStream fos = new java.io.FileOutputStream("certTemplate");
-        fos.write(encoded);
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream("certTemplate")) {
+            fos.write(encoded);
+        }
 
         ct.print(System.out, 0);
 
