@@ -10,7 +10,7 @@ SCRIPT_NAME="$(basename "$SCRIPT_PATH")"
 SRC_DIR="$(dirname "$SCRIPT_PATH")"
 
 NAME=jss
-WORK_DIR="$HOME/build/$NAME"
+WORK_DIR=
 
 PREFIX_DIR="/usr"
 INCLUDE_DIR="/usr/include"
@@ -50,7 +50,7 @@ usage() {
     echo "Usage: $SCRIPT_NAME [OPTIONS] <target>"
     echo
     echo "Options:"
-    echo "    --work-dir=<path>      Working directory (default: $WORK_DIR)."
+    echo "    --work-dir=<path>      Working directory (default: ~/build/$NAME)."
     echo "    --prefix-dir=<path>    Prefix directory (default: $PREFIX_DIR)."
     echo "    --include-dir=<path>   Include directory (default: $INCLUDE_DIR)."
     echo "    --lib-dir=<path>       Library directory (default: $LIB_DIR)."
@@ -63,7 +63,7 @@ usage() {
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
     echo "    --version=<version>    Use the specified version."
-    echo "    --release=<elease>     Use the specified release."
+    echo "    --release=<release>    Use the specified release."
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
@@ -140,6 +140,8 @@ generate_patch() {
 }
 
 generate_rpm_spec() {
+
+    SPEC_FILE="$WORK_DIR/SPECS/$NAME.spec"
 
     if [ "$VERBOSE" = true ] ; then
         echo "Creating $SPEC_FILE"
@@ -283,6 +285,10 @@ else
     BUILD_TARGET=$1
 fi
 
+if [ "$WORK_DIR" = "" ] ; then
+    WORK_DIR="$HOME/build/$NAME"
+fi
+
 if [ "$DEBUG" = true ] ; then
     echo "WORK_DIR: $WORK_DIR"
     echo "PREFIX_DIR: $PREFIX_DIR"
@@ -307,8 +313,20 @@ if [ "$BUILD_TARGET" != "dist" ] &&
     exit 1
 fi
 
+################################################################################
+# Initialization
+################################################################################
+
+if [ "$VERBOSE" = true ] ; then
+    echo "Initializing $WORK_DIR"
+fi
+
 mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
+
+################################################################################
+# Build JSS
+################################################################################
 
 if [ "$BUILD_TARGET" = "dist" ] ; then
 
@@ -391,6 +409,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     exit
 fi
 
+################################################################################
+# Install JSS
+################################################################################
+
 if [ "$BUILD_TARGET" = "install" ] ; then
 
     if [ "$VERBOSE" = true ] ; then
@@ -416,8 +438,6 @@ fi
 ################################################################################
 # Prepare RPM build
 ################################################################################
-
-SPEC_FILE="$WORK_DIR/SPECS/$NAME.spec"
 
 if [ "$VERSION" = "" ] ; then
     # if version not specified, get from spec template
@@ -466,14 +486,6 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 echo "Building $NAME-$VERSION-$RELEASE${_TIMESTAMP}${_COMMIT_ID}"
-
-################################################################################
-# Initialize working directory
-################################################################################
-
-if [ "$VERBOSE" = true ] ; then
-    echo "Initializing $WORK_DIR"
-fi
 
 rm -rf BUILD
 rm -rf RPMS
