@@ -19,7 +19,7 @@ Release:        0.2.beta1%{?_timestamp}%{?_commit_id}%{?dist}
 # $ git push origin v4.5.<z>
 # Then go to https://github.com/dogtagpki/jss/releases and download the source
 # tarball.
-Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phase}/%{name}-%{version}%{?_phase}.tar.gz
+Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?_phase}/jss-%{version}%{?_phase}.tar.gz
 
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
@@ -80,6 +80,10 @@ Requires:       slf4j
 Requires:       slf4j-jdk14
 Requires:       apache-commons-lang3
 
+%if "%{name}" != "jss"
+Provides:       jss = %{version}-%{release}
+%endif
+
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
 Conflicts:      tomcatjss < 7.6.0
@@ -106,7 +110,7 @@ This package contains the API documentation for JSS.
 %prep
 ################################################################################
 
-%autosetup -n %{name}-%{version}%{?_phase} -p 1
+%autosetup -n jss-%{version}%{?_phase} -p 1
 
 ################################################################################
 %build
@@ -170,7 +174,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 ################################################################################
 
 %defattr(-,root,root,-)
-%{_javadocdir}/%{name}/
+%{_javadocdir}/jss/
 %endif
 
 ################################################################################

@@ -30,7 +30,7 @@ JNI_DIR="/usr/lib/java"
 INSTALL_DIR=
 
 SOURCE_TAG=
-SPEC_TEMPLATE="$SRC_DIR/$NAME.spec"
+SPEC_TEMPLATE="$SRC_DIR/jss.spec"
 SPEC_FILE=
 
 VERSION=
@@ -50,6 +50,7 @@ usage() {
     echo "Usage: $SCRIPT_NAME [OPTIONS] <target>"
     echo
     echo "Options:"
+    echo "    --name=<name>          Package name (default: $NAME)."
     echo "    --work-dir=<path>      Working directory (default: ~/build/$NAME)."
     echo "    --prefix-dir=<path>    Prefix directory (default: $PREFIX_DIR)."
     echo "    --include-dir=<path>   Include directory (default: $INCLUDE_DIR)."
@@ -84,7 +85,7 @@ usage() {
 
 generate_rpm_sources() {
 
-    TARBALL="$NAME-$VERSION${_PHASE}.tar.gz"
+    TARBALL="jss-$VERSION${_PHASE}.tar.gz"
 
     if [ "$SOURCE_TAG" != "" ] ; then
 
@@ -95,7 +96,7 @@ generate_rpm_sources() {
         git -C "$SRC_DIR" \
             archive \
             --format=tar.gz \
-            --prefix "$NAME-$VERSION${_PHASE}/" \
+            --prefix "jss-$VERSION${_PHASE}/" \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
             $SOURCE_TAG
 
@@ -117,7 +118,7 @@ generate_rpm_sources() {
     fi
 
     tar czf "$WORK_DIR/SOURCES/$TARBALL" \
-        --transform "s,^./,$NAME-$VERSION${_PHASE}/," \
+        --transform "s,^./,jss-$VERSION${_PHASE}/," \
         --exclude .git \
         --exclude bin \
         -C "$SRC_DIR" \
@@ -126,7 +127,7 @@ generate_rpm_sources() {
 
 generate_patch() {
 
-    PATCH="$NAME-$VERSION-$RELEASE.patch"
+    PATCH="jss-$VERSION-$RELEASE.patch"
 
     if [ "$VERBOSE" = true ] ; then
         echo "Generating $PATCH for all changes since $SOURCE_TAG tag"
@@ -148,6 +149,9 @@ generate_rpm_spec() {
     fi
 
     cp "$SPEC_TEMPLATE" "$SPEC_FILE"
+
+    # hard-code package name
+    sed -i "s/^\(Name: *\).*\$/\1${NAME}/g" "$SPEC_FILE"
 
     # hard-code timestamp
     sed -i "s/%{?_timestamp}/${_TIMESTAMP}/g" "$SPEC_FILE"
@@ -187,6 +191,9 @@ while getopts v-: arg ; do
         LONG_OPTARG="${OPTARG#*=}"
 
         case $OPTARG in
+        name=?*)
+            NAME="$LONG_OPTARG"
+            ;;
         work-dir=?*)
             WORK_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
@@ -258,7 +265,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        work-dir* | prefix-dir* | include-dir* | lib-dir* | sysconfig-dir* | share-dir* | cmake* | \
+        name* | work-dir* | prefix-dir* | include-dir* | lib-dir* | sysconfig-dir* | share-dir* | cmake* | \
         java-home* | jni-dir* | install-dir* | \
         source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
@@ -290,6 +297,7 @@ if [ "$WORK_DIR" = "" ] ; then
 fi
 
 if [ "$DEBUG" = true ] ; then
+    echo "NAME: $NAME"
     echo "WORK_DIR: $WORK_DIR"
     echo "PREFIX_DIR: $PREFIX_DIR"
     echo "INCLUDE_DIR: $INCLUDE_DIR"
