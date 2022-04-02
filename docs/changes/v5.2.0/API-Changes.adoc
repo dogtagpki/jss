@@ -4,3 +4,15 @@
 
 The `getSubjectDN()` and `getIssuerDN()` in `org.mozilla.jss.netscape.security.x509.X509CertImpl` have been deprecated.
 Use `getSubjectName()` and `getIssuerName()` or `getSubjectX500Principal​()` and `getIssuerX500Principal​()` instead.
+
+== PKCS11Constants Changes ==
+
+The `PKCS11Constants` class has been updated to include the new constants introduced in NSS 3.73:
+
+* `CKO_NSS_VALIDATION`
+* `CKA_NSS_VALIDATION_TYPE`
+* `CKA_NSS_VALIDATION_VERSION`
+* `CKA_NSS_VALIDATION_LEVEL`
+* `CKA_NSS_VALIDATION_MODULE_ID`
+
+NOTE: These constants should only be used with NSS 3.73 or later.
