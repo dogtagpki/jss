@@ -6283,6 +6283,13 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKO_NSS_VALIDATION = 0xCE534357L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKK_NSS = 0xCE534350L;
 
     /**
@@ -6529,6 +6536,34 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKA_NSS_EMAIL_DISTRUST_AFTER = 0xCE534374L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_VALIDATION_TYPE = 0xCE534374L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_VALIDATION_VERSION = 0xCE534375L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_VALIDATION_LEVEL = 0xCE534376L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_VALIDATION_MODULE_ID = 0xCE534377L;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
