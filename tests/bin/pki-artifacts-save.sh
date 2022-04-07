@@ -10,8 +10,8 @@ fi
 
 ARTIFACTS=/tmp/artifacts/$CONTAINER
 
-mkdir -p $ARTIFACTS/etc/pki
-mkdir -p $ARTIFACTS/var/log
+mkdir -p $ARTIFACTS/etc/pki/$INSTANCE
+mkdir -p $ARTIFACTS/var/log/pki/$INSTANCE
 
 docker exec $CONTAINER ls -la /etc/pki
 docker cp $CONTAINER:/etc/pki/pki.conf $ARTIFACTS/etc/pki
