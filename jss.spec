@@ -28,6 +28,9 @@ Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phas
 #     > jss-VERSION-RELEASE.patch
 # Patch: jss-VERSION-RELEASE.patch
 
+# Java 17 and md2man are not available on i686
+ExcludeArch: i686
+
 ################################################################################
 # Java
 ################################################################################
