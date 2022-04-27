@@ -131,7 +131,7 @@ public class EncryptedContentInfo implements ASN1Value {
      * Creates a new EncryptedContentInfo, where the data is encrypted
      * with a password-based key.
      *
-     * @param keyGenAlg The algorithm for generating a symmetric key from
+     * @param pbeAlg The algorithm for generating a symmetric key from
      *      a password, salt, and iteration count.
      * @param password The password to use in generating the key.
      * @param salt The salt to use in generating the key.
@@ -145,7 +145,7 @@ public class EncryptedContentInfo implements ASN1Value {
      *      padded using PKCS padding.
      */
     public static EncryptedContentInfo
-    createPBE(PBEAlgorithm keyGenAlg, Password password, byte[] salt,
+    createPBE(PBEAlgorithm pbeAlg, Password password, byte[] salt,
             int iterationCount,
             KeyGenerator.CharToByteConverter charToByteConverter,
             byte[] toBeEncrypted)
@@ -155,19 +155,11 @@ public class EncryptedContentInfo implements ASN1Value {
     {
 
       try {
-
-        // check key gen algorithm
-        if( ! (keyGenAlg instanceof PBEAlgorithm) ) {
-            throw new NoSuchAlgorithmException("Key generation algorithm"+
-                " is not a PBE algorithm");
-        }
-        PBEAlgorithm pbeAlg = keyGenAlg;
-
         CryptoManager cman = CryptoManager.getInstance();
 
         // generate key
         CryptoToken token = cman.getInternalCryptoToken();
-        KeyGenerator kg = token.getKeyGenerator( keyGenAlg );
+        KeyGenerator kg = token.getKeyGenerator( pbeAlg );
         PBEKeyGenParams pbekgParams = new PBEKeyGenParams(
             password, salt, iterationCount);
         if( charToByteConverter != null ) {
@@ -196,7 +188,7 @@ public class EncryptedContentInfo implements ASN1Value {
         // make encryption algorithm identifier
         PBEParameter pbeParam = new PBEParameter( salt, iterationCount );
         AlgorithmIdentifier encAlgID = new AlgorithmIdentifier(
-                keyGenAlg.toOID(), pbeParam);
+                pbeAlg.toOID(), pbeParam);
 
         // create EncryptedContentInfo
         EncryptedContentInfo encCI = new EncryptedContentInfo(

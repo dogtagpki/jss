@@ -118,9 +118,7 @@ public class TestBufferPRFD {
         PK11PrivKey server_key = (PK11PrivKey) manager.findPrivKeyByCert(server_cert);
 
         assert(server_cert != null);
-        assert(server_cert instanceof PK11Cert);
         assert(server_key != null);
-        assert(server_key instanceof PK11PrivKey);
 
         /* Find SSL Client Certificate, if nickname given. */
         PK11Cert client_cert = null;
