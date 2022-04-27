@@ -1,7 +1,9 @@
 package org.mozilla.jss.tests;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class TestPKCS11Constants {
     /**
@@ -13,8 +15,8 @@ public class TestPKCS11Constants {
      */
     public static void main(String[] args) throws Exception {
         // Query the two classes to get references to their definitions.
-        Class jss = Class.forName("org.mozilla.jss.pkcs11.PKCS11Constants");
-        Class sun = Class.forName("sun.security.pkcs11.wrapper.PKCS11Constants");
+        Class<?> jss = Class.forName("org.mozilla.jss.pkcs11.PKCS11Constants");
+        Class<?> sun = Class.forName("sun.security.pkcs11.wrapper.PKCS11Constants");
 
         assert(!jss.equals(sun));
 

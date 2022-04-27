@@ -1,29 +1,19 @@
 package org.mozilla.jss.tests;
 
-import java.security.Security;
-import java.security.Provider;
-
-import java.util.*;
-import java.security.*;
-import javax.crypto.*;
-import java.security.Provider;
-import java.security.Security;
-import java.util.Enumeration;
-import java.util.Properties;
-
 import java.io.File;
 import java.io.FileWriter;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.security.Provider;
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.InitializationValues;
-import org.mozilla.jss.JSSProvider;
-import org.mozilla.jss.util.Password;
-import org.mozilla.jss.util.PasswordCallback;
-import org.mozilla.jss.util.PasswordCallbackInfo;
-import org.mozilla.jss.util.NullPasswordCallback;
-import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +81,7 @@ public class CapabilitiesList {
 
             Set<Object> keySet = p.keySet();
             assert(keySet != null);
-            Iterator it = keySet.iterator();
+            Iterator<Object> it = keySet.iterator();
             assert(it != null);
 
             // In the verbose listing, we want to create a mapping from
@@ -117,18 +107,18 @@ public class CapabilitiesList {
                     implementation = factoryClass + "." + implementation;
 
                     if (mapping.get(implementation) == null) {
-                        mapping.put(implementation, new HashSet());
+                        mapping.put(implementation, new HashSet<String>());
                     }
 
                     mapping.get(implementation).add(withoutPrefix);
                 } else {
-                    mapping.put(entry, new HashSet());
+                    mapping.put(entry, new HashSet<String>());
                 }
             }
 
             // To make the results predictable, sort both the top-level keys
             // and any inner aliases before printing them.
-            ArrayList<String> entries = new ArrayList(mapping.keySet());
+            ArrayList<String> entries = new ArrayList<>(mapping.keySet());
             Collections.sort(entries);
             for (String entry : entries) {
                 String factoryClass = entry.substring(0, entry.indexOf('.'));
@@ -138,7 +128,7 @@ public class CapabilitiesList {
                 fw.write(System.lineSeparator());
 
                 if (mapping.get(entry) != null) {
-                    ArrayList<String> subentries = new ArrayList(mapping.get(entry));
+                    ArrayList<String> subentries = new ArrayList<>(mapping.get(entry));
                     Collections.sort(subentries);
                     for (String subentry : subentries) {
                         fw.write(String.format("\t\t Alias: %s", subentry));
@@ -201,7 +191,7 @@ public class CapabilitiesList {
                 for (int i = 0; i < ps.length; i++) {
                     String fileName = briefFileBase + ps[i].getName() + ".txt";
                     FileWriter fw = new FileWriter(new File(fileName));
-                    for (Enumeration e = ps[i].keys(); e.hasMoreElements();) {
+                    for (Enumeration<Object> e = ps[i].keys(); e.hasMoreElements();) {
                         fw.write(String.format("\t %s", e.nextElement()));
                         fw.write(System.lineSeparator());
                     }
