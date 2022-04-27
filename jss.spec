@@ -2,6 +2,12 @@
 Name:           jss
 ################################################################################
 
+# Development phase:
+# - development (unsupported): alpha<n> where n >= 1
+# - stabilization (unsupported): beta<n> where n >= 1
+# - GA/update (supported): <none>
+%global         phase beta1
+
 %undefine       timestamp
 %undefine       commit_id
 
@@ -12,8 +18,7 @@ License:        MPLv1.1 or GPLv2+ or LGPLv2+
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
 # For official (i.e. supported) releases, use x.y.z-r where r >=1.
 Version:        5.2.0
-Release:        0.2.beta1%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
-%global         _phase -beta1
+Release:        0.2%{?phase:.}%{?phase}%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -22,7 +27,7 @@ Release:        0.2.beta1%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id
 # $ git push origin v4.5.<z>
 # Then go to https://github.com/dogtagpki/jss/releases and download the source
 # tarball.
-Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?_phase}/jss-%{version}%{?_phase}.tar.gz
+Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?phase:-}%{?phase}/jss-%{version}%{?phase:-}%{?phase}.tar.gz
 
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
@@ -113,7 +118,7 @@ This package contains the API documentation for JSS.
 %prep
 ################################################################################
 
-%autosetup -n jss-%{version}%{?_phase} -p 1
+%autosetup -n jss-%{version}%{?phase:-}%{?phase} -p 1
 
 ################################################################################
 %build

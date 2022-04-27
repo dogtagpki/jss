@@ -85,7 +85,13 @@ usage() {
 
 generate_rpm_sources() {
 
-    TARBALL="jss-$VERSION${_PHASE}.tar.gz"
+    PREFIX="jss-$VERSION"
+
+    if [[ "$PHASE" != "" ]]; then
+        PREFIX=$PREFIX-$PHASE
+    fi
+
+    TARBALL="$PREFIX.tar.gz"
 
     if [ "$SOURCE_TAG" != "" ] ; then
 
@@ -96,7 +102,7 @@ generate_rpm_sources() {
         git -C "$SRC_DIR" \
             archive \
             --format=tar.gz \
-            --prefix "jss-$VERSION${_PHASE}/" \
+            --prefix "$PREFIX/" \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
             $SOURCE_TAG
 
@@ -118,7 +124,7 @@ generate_rpm_sources() {
     fi
 
     tar czf "$WORK_DIR/SOURCES/$TARBALL" \
-        --transform "s,^./,jss-$VERSION${_PHASE}/," \
+        --transform "s,^./,$PREFIX/," \
         --exclude .git \
         --exclude bin \
         -C "$SRC_DIR" \
@@ -162,9 +168,6 @@ generate_rpm_spec() {
     if [ "$COMMIT_ID" != "" ] ; then
         sed -i "s/%undefine *commit_id/%global commit_id $COMMIT_ID/g" "$SPEC_FILE"
     fi
-
-    # hard-code phase
-    sed -i "s/%{?_phase}/${_PHASE}/g" "$SPEC_FILE"
 
     # hard-code patch
     if [ "$PATCH" != "" ] ; then
@@ -470,13 +473,15 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 spec=$(<"$SPEC_TEMPLATE")
-regex=$'%global *_phase *([^\n]+)'
+
+regex=$'%global *phase *([^\n]+)'
 if [[ $spec =~ $regex ]] ; then
-    _PHASE="${BASH_REMATCH[1]}"
+    PHASE="${BASH_REMATCH[1]}"
+    RELEASE=$RELEASE.$PHASE
 fi
 
 if [ "$DEBUG" = true ] ; then
-    echo "PHASE: ${_PHASE}"
+    echo "PHASE: $PHASE"
 fi
 
 if [ "$WITH_TIMESTAMP" = true ] ; then
