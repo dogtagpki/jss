@@ -10,13 +10,13 @@ Name:           jss
 # Downstream release number:
 # - development/stabilization (unsupported): 0.<n> where n >= 1
 # - GA/update (supported): <n> where n >= 1
-%global         release_number 0.2
+%global         release_number 0.3
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta1
+%global         phase beta2
 
 %undefine       timestamp
 %undefine       commit_id
@@ -96,6 +96,7 @@ Requires:       slf4j-jdk14
 Requires:       apache-commons-lang3
 
 %if "%{name}" != "jss"
+Obsoletes:      jss < %{version}-%{release}
 Provides:       jss = %{version}-%{release}
 %endif
 
@@ -116,6 +117,11 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS) Javadocs
 Requires:       jss = %{version}-%{release}
+
+%if "%{name}" != "jss"
+Obsoletes:      jss-javadoc < %{version}-%{release}
+Provides:       jss-javadoc = %{version}-%{release}
+%endif
 
 %description javadoc
 This package contains the API documentation for JSS.
