@@ -36,12 +36,20 @@
 
 package org.mozilla.jss.tests;
 
-import org.mozilla.jss.crypto.*;
-import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.pkcs11.PKCS11Constants;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Enumeration;
+
+import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.crypto.Cipher;
+import org.mozilla.jss.crypto.CryptoToken;
+import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.IVParameterSpec;
+import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
+import org.mozilla.jss.crypto.SymmetricKey;
+import org.mozilla.jss.crypto.SymmetricKeyDeriver;
+import org.mozilla.jss.pkcs11.PKCS11Constants;
 
 /**
  * Sym Key deriving tests..
@@ -51,8 +59,8 @@ import java.util.Enumeration;
 public class SymKeyDeriving {
 
       private static final byte[] iv8 = new byte [] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 };
-      private static final byte[] iv16 = new byte [] { 0x1, 0x2, 0x3, 0x4, 
-                    0x5, 0x6, 0x7, 0x8,  
+      private static final byte[] iv16 = new byte [] { 0x1, 0x2, 0x3, 0x4,
+                    0x5, 0x6, 0x7, 0x8,
                     0x9,0xa, 0xb, 0xc,0xd,0xe, 0xf,0x10 };
 
       private static final byte[] derivationData1 = new byte[] { 0x11, 0x11, 0x13,
@@ -94,7 +102,7 @@ public class SymKeyDeriving {
 
         System.out.println("baseKey bytes: ");
         byte[] baseBytes = baseKey.getEncoded();
-        displayByteArray(baseBytes,true); 
+        displayByteArray(baseBytes,true);
 
 
         /*****************************************************************************************************/
@@ -111,8 +119,8 @@ public class SymKeyDeriving {
         byte[] param = longToBytes(bitPosition);
 
         deriver.initDerive(
-                           baseKey, PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY,param,null, 
-                           PKCS11Constants.CKA_ENCRYPT, PKCS11Constants.CKA_DERIVE,(long) 16);
+                           baseKey, PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY,param,null,
+                           PKCS11Constants.CKA_ENCRYPT, PKCS11Constants.CKA_DERIVE,16);
 
 
         SymmetricKey extracted16 = deriver.derive();
@@ -136,7 +144,7 @@ public class SymKeyDeriving {
         SymmetricKeyDeriver extract8 = token.getSymmetricKeyDeriver();
         extract8.initDerive(
                            extracted16, PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY,param,null,
-                           PKCS11Constants.CKA_ENCRYPT, PKCS11Constants.CKA_DERIVE,(long) 8);
+                           PKCS11Constants.CKA_ENCRYPT, PKCS11Constants.CKA_DERIVE,8);
 
 
        SymmetricKey extracted8 = extract8.derive();
@@ -159,7 +167,7 @@ public class SymKeyDeriving {
         SymmetricKeyDeriver concat = keyToken.getSymmetricKeyDeriver();
         concat.initDerive(
                            extracted16,extracted8, PKCS11Constants.CKM_CONCATENATE_BASE_AND_KEY,null,null,
-                           PKCS11Constants.CKM_DES3_ECB, PKCS11Constants.CKA_DERIVE,(long) 0);
+                           PKCS11Constants.CKM_DES3_ECB, PKCS11Constants.CKA_DERIVE,0);
 
         SymmetricKey concated24 =  concat.derive();
 
@@ -181,7 +189,7 @@ public class SymKeyDeriving {
 
        encryptDes3.initDerive(
                            baseKey, /* PKCS11Constants.CKM_DES3_ECB_ENCRYPT_DATA */ 4354L  ,derivationData16 ,null,
-                           PKCS11Constants.CKM_DES3_ECB, PKCS11Constants.CKA_DERIVE,(long) 16);
+                           PKCS11Constants.CKM_DES3_ECB, PKCS11Constants.CKA_DERIVE,16);
 
 
        SymmetricKey encrypted16 = encryptDes3.derive();
@@ -219,20 +227,20 @@ public class SymKeyDeriving {
         /*****************************************************************************************************/
 
        System.out.println("\n Mechanism CKM_DES3_CBC_ENCRYPT_DATA test. \n");
-        
+
        SymmetricKeyDeriver encryptDes3CBC = token.getSymmetricKeyDeriver();
 
        encryptDes3CBC.initDerive(
                            baseKey, /* PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA */ 4355L  ,derivationData16 ,iv8,
-                           PKCS11Constants.CKM_DES3_CBC, PKCS11Constants.CKA_DERIVE,(long) 16);
-        
+                           PKCS11Constants.CKM_DES3_CBC, PKCS11Constants.CKA_DERIVE,16);
+
 
        SymmetricKey encryptedDes3CBC = encryptDes3CBC.derive();
-        
+
        if ( encryptedDes3CBC == null) {
            System.out.println("Failed to derive 16 bytes from encrypted derivation data.");
        }
-        
+
        byte[] encryptedDes3CBCBytes = encryptedDes3CBC.getEncoded();
 
        System.out.println("derived encrypted 16 bytes: " + encryptedDes3CBCBytes.length);
@@ -268,7 +276,7 @@ public class SymKeyDeriving {
        //System.in.read();
        encryptAESECB.initDerive(
                            baseKeyAES, /* PKCS11Constants.CKM_AES_ECB_ENCRYPT_DATA */ 4356L  ,derivationData16 ,null,
-                           PKCS11Constants.CKM_AES_ECB, PKCS11Constants.CKA_DERIVE,(long) 16);
+                           PKCS11Constants.CKM_AES_ECB, PKCS11Constants.CKA_DERIVE,16);
 
 
        SymmetricKey encryptedAESECB = encryptAESECB.derive();
@@ -313,7 +321,7 @@ public class SymKeyDeriving {
        //System.in.read();
        encryptAESCBC.initDerive(
                            baseKeyAES, /* PKCS11Constants.CKM_AES_CBC_ENCRYPT_DATA */ 4357L  ,derivationData16 ,iv16,
-                           PKCS11Constants.CKM_AES_CBC, PKCS11Constants.CKA_DERIVE,(long) 16);
+                           PKCS11Constants.CKM_AES_CBC, PKCS11Constants.CKA_DERIVE,16);
 
 
        SymmetricKey encryptedAESCBC = encryptAESCBC.derive();
@@ -350,14 +358,13 @@ public class SymKeyDeriving {
 
         // get vector of symkeys
 
-        Enumeration<CryptoToken> ect = null; 
-        ect = (Enumeration<CryptoToken>) cm.getAllTokens(); 
-        CryptoToken ct = null; //ct = cm.getTokenByName("ePass Token"); 
-        while (ect.hasMoreElements()) 
-        { 
-          ct = ect.nextElement(); 
-          System.out.println("CryptoToken.name= " + ct.getName()); 
-        } 
+        Enumeration<CryptoToken> ect = cm.getAllTokens();
+        CryptoToken ct = null; //ct = cm.getTokenByName("ePass Token");
+        while (ect.hasMoreElements())
+        {
+          ct = ect.nextElement();
+          System.out.println("CryptoToken.name= " + ct.getName());
+        }
 
         SymmetricKey[] keys = keyToken.getCryptoStore().getSymmetricKeys();
 
@@ -374,7 +381,7 @@ public class SymKeyDeriving {
             mask = 0xfe;
 
         for(int i=0; i < ba.length; i++) {
- 
+
             System.out.print( Integer.toHexString(ba[i]&mask) + " " );
             if( (i % 26) == 25 ) {
                 System.out.println("");
@@ -390,9 +397,9 @@ public class SymKeyDeriving {
     }
 
     public static byte[] concatByteArrays(byte[] a, byte[] b) {
-        byte[] result = new byte[a.length + b.length]; 
-        System.arraycopy(a, 0, result, 0, a.length); 
-        System.arraycopy(b, 0, result, a.length, b.length); 
+        byte[] result = new byte[a.length + b.length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
         return result;
     }
 
@@ -407,7 +414,7 @@ public class SymKeyDeriving {
             if ( cur != null ) {
                 if( name.equals(cur.getNickName())) {
                     System.out.println("Found key: " + name + "\n");
-                    return cur; 
+                    return cur;
                 }
             }
         }

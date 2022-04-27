@@ -52,11 +52,11 @@ import org.mozilla.jss.util.PasswordCallback;
  * SSLClientAuth Server/client test.
  */
 public class SSLClientAuth implements Runnable {
-    
+
     private CryptoManager cm;
     public static final SignatureAlgorithm sigAlg =
             SignatureAlgorithm.RSASignatureWithSHA256Digest;
-    
+
     /**
      * Method that generates a certificate for given credential
      *
@@ -74,40 +74,40 @@ public class SSLClientAuth implements Runnable {
             int serialNumber, PrivateKey privKey, PublicKey pubKey, int rand,
             SEQUENCE extensions) throws Exception {
         AlgorithmIdentifier sigAlgID = new AlgorithmIdentifier( sigAlg.toOID());
-        
+
         Name issuer = new Name();
         issuer.addCountryName("US");
         issuer.addOrganizationName("Mozilla");
         issuer.addOrganizationalUnitName("JSS Testing" + rand);
         issuer.addCommonName(issuerName);
-        
+
         Name subject = new Name();
         subject.addCountryName("US");
         subject.addOrganizationName("Mozilla");
         subject.addOrganizationalUnitName("JSS Testing" + rand);
         subject.addCommonName(subjectName);
-        
+
         Calendar cal = Calendar.getInstance();
         Date notBefore = cal.getTime();
         cal.add(Calendar.YEAR, 1);
         Date notAfter = cal.getTime();
-        
+
         SubjectPublicKeyInfo.Template spkiTemp =
                 new SubjectPublicKeyInfo.Template();
         SubjectPublicKeyInfo spki =
                 (SubjectPublicKeyInfo) ASN1Util.decode(spkiTemp,
                 pubKey.getEncoded());
-        
+
         CertificateInfo info = new CertificateInfo(
                 CertificateInfo.v3, new INTEGER(serialNumber), sigAlgID,
                 issuer, notBefore, notAfter, subject, spki);
         if( extensions != null ) {
             info.setExtensions(extensions);
         }
-        
+
         return new Certificate(info, privKey, sigAlg);
     }
-    
+
     /**
      *
      * @param args
@@ -116,36 +116,36 @@ public class SSLClientAuth implements Runnable {
     public static void main(String[] args) throws Exception {
         (new SSLClientAuth()).doIt(args);
     }
-    
+
     private X509Certificate nssServerCert, nssClientCert;
     private String serverCertNick, clientCertNick;
-    
-    
+
+
     /**
      *
      * @param args
      * @throws java.lang.Exception
      */
     public void doIt(String[] args) throws Exception {
-        
+
         if ( args.length < 2 ) {
             System.out.println("Usage: java org.mozilla.jss.tests." +
                     "SSLClientAuth <dbdir> <passwordFile> [port]" +
                     " [Certificate Serial Number]");
             System.exit(1);
         }
-        
+
         cm = CryptoManager.getInstance();
         CryptoToken tok = cm.getInternalKeyStorageToken();
-        
+
         PasswordCallback cb = new FilePasswordCallback(args[1]);
         tok.login(cb);
-        
+
         if (args.length >= 3) {
             port = Integer.parseInt(args[2]);
             System.out.println("using port:" + port);
         }
-        
+
         if (args.length >= 4) {
             serialNum = Integer.parseInt(args[3]);
         } else {
@@ -158,7 +158,7 @@ public class SSLClientAuth implements Runnable {
         /* we don't have to test all three */
         serverCertNick = "SSLserver-"+serialNum;
         clientCertNick = "SSLclient-"+serialNum;
-        
+
         certs = cm.findCertsByNickname(serverCertNick);
         if (certs.length == 0) {
             generateCerts(cm, serialNum);
@@ -173,17 +173,17 @@ public class SSLClientAuth implements Runnable {
                 ex.printStackTrace();
                 System.exit(1);
             }
-            
+
         }
         configureDefaultSSLoptions();
 
         testSpecificCiphers();
-        
+
         useNickname = false;
         testConnection();
         useNickname = true;
         testConnection();
-        
+
         System.out.println("Exiting main()");
         if( getSuccess() ) {
             System.exit(0);
@@ -191,11 +191,11 @@ public class SSLClientAuth implements Runnable {
             System.exit(1);
         }
     }
-    
+
     private boolean useNickname;
-    
+
     private void generateCerts(CryptoManager cm, int serialNum) {
-        
+
         // RSA Key with default exponent
         int keyLength = 4096;
         try {
@@ -225,7 +225,7 @@ public class SSLClientAuth implements Runnable {
                     serialNum, null);
             nssServerCert = cm.importCertPackage(
                     ASN1Util.encode(serverCert), serverCertNick);
-            
+
             // generate client auth cert
             kpg.initialize(keyLength);
             KeyPair clientPair = kpg.genKeyPair();
@@ -259,7 +259,7 @@ public class SSLClientAuth implements Runnable {
             ex.printStackTrace();
             System.exit(1);
         }
-        
+
     }
     private void configureDefaultSSLoptions() {
         try {
@@ -339,21 +339,21 @@ public class SSLClientAuth implements Runnable {
             System.exit(1);
         }
     }
-    
+
     private void testConnection() throws Exception {
         serverReady = false;
-        
+
         // spawn server
         Thread server = new Thread(this);
         server.start();
-        
+
         // wait for server to open its socket
         synchronized(this) {
             while(!serverReady) {
                 this.wait();
             }
         }
-        
+
         // connect to the server
         System.out.println("client about to connect");
         SSLSocket sock = new SSLSocket("localhost", port);
@@ -367,17 +367,17 @@ public class SSLClientAuth implements Runnable {
         System.out.println("client connected");
         sock.addHandshakeCompletedListener(
                 new HandshakeListener("client",this));
-        
+
         // force the handshake
         sock.forceHandshake();
         String cipher = sock.getStatus().getCipher();
         System.out.println("client forced handshake. ciphersuite: " + cipher);
         sock.close();
-        
+
         // wait for the server to finish
         server.join();
     }
-    
+
     public static class HandshakeListener
             implements SSLHandshakeCompletedListener {
         private String who;
@@ -403,33 +403,33 @@ public class SSLClientAuth implements Runnable {
             }
         }
     }
-    
+
     public synchronized void setFailure() {
         success = false;
     }
-    
+
     public synchronized boolean getSuccess() {
         return success;
     }
-    
+
     private boolean success = true;
-    
+
     public int port = 29752;
     public int serialNum = 0;
-    
+
     public boolean serverReady = false;
-    
+
     /**
      * Server run method.
      */
     @Override
     public void run() {
         try {
-            
+
             // We have to configure the server session ID cache before
             // creating any server sockets.
             SSLServerSocket.configServerSessionIDCache(10, 100, 100, null);
-            
+
             // open the server socket and bind to the port
             System.out.println("Server about to create socket");
             SSLServerSocket serverSock = new SSLServerSocket(port, 5, null, null,
@@ -443,20 +443,20 @@ public class SSLClientAuth implements Runnable {
                 serverSock.setServerCert(nssServerCert);
                 System.out.println("Server specified cert directly");
             }
-            
+
             // tell the client we're ready
             synchronized(this) {
                 serverReady = true;
                 this.notify();
             }
-            
+
             // accept the connection
             System.out.println("Server about to accept");
             SSLSocket sock = (SSLSocket) serverSock.accept();
             System.out.println("Server accepted");
             sock.addHandshakeCompletedListener(
                     new HandshakeListener("server", this));
-            
+
             // try to read some bytes, to allow the handshake to go through
             InputStream is = sock.getInputStream();
             try {
@@ -468,7 +468,7 @@ public class SSLClientAuth implements Runnable {
             }
             sock.close();
             serverSock.close();
-            
+
         } catch(Exception e) {
             synchronized(this) {
                 serverReady = true;
@@ -479,7 +479,7 @@ public class SSLClientAuth implements Runnable {
         }
         System.out.println("Server exiting");
     }
-    
+
     static Extension makeBasicConstraintsExtension() throws Exception {
         SEQUENCE bc = new SEQUENCE();
         bc.addElement( new BOOLEAN(true) ); // cA
@@ -488,15 +488,13 @@ public class SSLClientAuth implements Runnable {
         OCTET_STRING enc = new OCTET_STRING(ASN1Util.encode(bc));
         return new Extension(bcOID, true, enc);
     }
-    
+
     static int nextRandInt(SecureRandom rand) throws Exception {
-        int i;
         byte[] bytes = new byte[4];
         rand.nextBytes(bytes);
-        i =  ((int)bytes[0])<<24 | ((int)bytes[1])<<16 |
-                ((int)bytes[2])<<8 | ((int)bytes[3]);
+        int i =  bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3];
         System.out.println("generated random value:" + i);
         return i;
     }
-    
+
 }

@@ -99,7 +99,7 @@ public class PR {
         // Because a SSLFDProxy instance needs to free other native resources,
         // we can't release the pointer here. Instead, let NativeProxy.close()
         // handle clearing the PRFileDesc pointer.
-        return Close((PRFDProxy) fd, false);
+        return Close(fd, false);
     }
 
     /**
