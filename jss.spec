@@ -2,6 +2,9 @@
 Name:           jss
 ################################################################################
 
+%undefine       timestamp
+%undefine       commit_id
+
 Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -9,7 +12,7 @@ License:        MPLv1.1 or GPLv2+ or LGPLv2+
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
 # For official (i.e. supported) releases, use x.y.z-r where r >=1.
 Version:        5.2.0
-Release:        0.2.beta1%{?_timestamp}%{?_commit_id}%{?dist}
+Release:        0.2.beta1%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
 %global         _phase -beta1
 
 # To generate the source tarball:
