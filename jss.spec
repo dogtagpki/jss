@@ -2,6 +2,8 @@
 Name:           jss
 ################################################################################
 
+%global         product_id dogtag-jss
+
 # Upstream version number:
 %global         major_version 5
 %global         minor_version 2
@@ -88,6 +90,17 @@ BuildRequires:  apache-commons-lang3
 
 BuildRequires:  junit
 
+%description
+Java Security Services (JSS) is a java native interface which provides a bridge
+for java-based applications to use native Network Security Services (NSS).
+This only works with gcj. Other JREs require that JCE providers be signed.
+
+################################################################################
+%package -n %{product_id}
+################################################################################
+
+Summary:        Java Security Services (JSS)
+
 Requires:       nss >= 3.66
 Requires:       %{java_headless}
 Requires:       jpackage-utils
@@ -95,35 +108,30 @@ Requires:       slf4j
 Requires:       slf4j-jdk14
 Requires:       apache-commons-lang3
 
-%if "%{name}" != "jss"
 Obsoletes:      jss < %{version}-%{release}
 Provides:       jss = %{version}-%{release}
-%endif
 
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
 Conflicts:      tomcatjss < 7.6.0
 Conflicts:      pki-base < 10.10.0
 
-%description
+%description -n %{product_id}
 Java Security Services (JSS) is a java native interface which provides a bridge
 for java-based applications to use native Network Security Services (NSS).
 This only works with gcj. Other JREs require that JCE providers be signed.
 
 %if %{with javadoc}
 ################################################################################
-%package javadoc
+%package -n %{product_id}-javadoc
 ################################################################################
 
 Summary:        Java Security Services (JSS) Javadocs
-Requires:       jss = %{version}-%{release}
 
-%if "%{name}" != "jss"
 Obsoletes:      jss-javadoc < %{version}-%{release}
 Provides:       jss-javadoc = %{version}-%{release}
-%endif
 
-%description javadoc
+%description -n %{product_id}-javadoc
 This package contains the API documentation for JSS.
 %endif
 
@@ -180,7 +188,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
     install
 
 ################################################################################
-%files
+%files -n %{product_id}
 ################################################################################
 
 %defattr(-,root,root,-)
@@ -191,7 +199,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 
 %if %{with javadoc}
 ################################################################################
-%files javadoc
+%files -n %{product_id}-javadoc
 ################################################################################
 
 %defattr(-,root,root,-)
