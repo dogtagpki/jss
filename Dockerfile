@@ -5,7 +5,7 @@
 #
 
 ARG OS_VERSION="34"
-ARG COPR_REPO="@pki/10.12"
+ARG COPR_REPO="@pki/10"
 
 ################################################################################
 FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-builder

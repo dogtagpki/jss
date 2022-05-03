@@ -4,7 +4,7 @@ FROM registry.fedoraproject.org/fedora:34
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build \
-        && dnf copr -y enable ${JSS_4_6_REPO:-@pki/10.12} \
+        && dnf copr -y enable ${JSS_4_6_REPO:-@pki/10} \
         && dnf build-dep -y jss pki-core \
         && mkdir -p /home/sandbox \
         && git clone -b v10.11 https://github.com/dogtagpki/pki /home/sandbox/pki \

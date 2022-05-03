@@ -27,7 +27,7 @@ jobs:
     needs: init
     runs-on: ubuntu-latest
     env:
-      COPR_REPO: "@pki/10.12"
+      COPR_REPO: "@pki/10"
     strategy:
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
