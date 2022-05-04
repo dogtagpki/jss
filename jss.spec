@@ -2,6 +2,8 @@
 Name:           jss
 ################################################################################
 
+%global         product_id dogtag-jss
+
 Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -19,7 +21,7 @@ Release:        0.1.alpha1%{?_timestamp}%{?_commit_id}%{?dist}
 # $ git push origin v4.5.<z>
 # Then go to https://github.com/dogtagpki/jss/releases and download the source
 # tarball.
-Source:         https://github.com/dogtagpki/%{name}/archive/v%{version}%{?_phase}/%{name}-%{version}%{?_phase}.tar.gz
+Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?_phase}/jss-%{version}%{?_phase}.tar.gz
 
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
@@ -72,6 +74,17 @@ BuildRequires:  apache-commons-lang3
 
 BuildRequires:  junit
 
+%description
+Java Security Services (JSS) is a java native interface which provides a bridge
+for java-based applications to use native Network Security Services (NSS).
+This only works with gcj. Other JREs require that JCE providers be signed.
+
+################################################################################
+%package -n %{product_id}
+################################################################################
+
+Summary:        Java Security Services (JSS)
+
 Requires:       nss >= 3.44
 Requires:       %{java_headless}
 Requires:       jpackage-utils
@@ -80,33 +93,42 @@ Requires:       glassfish-jaxb-api
 Requires:       slf4j-jdk14
 Requires:       apache-commons-lang3
 
+Obsoletes:      jss < %{version}-%{release}
+Provides:       jss = %{version}-%{release}
+
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
 Conflicts:      tomcatjss < 7.6.0
 Conflicts:      pki-base < 10.10.0
 
-%description
+%description -n %{product_id}
 Java Security Services (JSS) is a java native interface which provides a bridge
 for java-based applications to use native Network Security Services (NSS).
 This only works with gcj. Other JREs require that JCE providers be signed.
 
 ################################################################################
-%package javadoc
+%package -n %{product_id}-javadoc
 ################################################################################
 
 Summary:        Java Security Services (JSS) Javadocs
-Requires:       jss = %{version}-%{release}
 
-%description javadoc
+Requires:       %{product_id} = %{version}-%{release}
+
+Obsoletes:      jss-javadoc < %{version}-%{release}
+Provides:       jss-javadoc = %{version}-%{release}
+
+%description -n %{product_id}-javadoc
 This package contains the API documentation for JSS.
 
 ################################################################################
 %prep
+################################################################################
 
-%autosetup -n %{name}-%{version}%{?_phase} -p 1
+%autosetup -n jss-%{version}%{?_phase} -p 1
 
 ################################################################################
 %build
+################################################################################
 
 %set_build_flags
 
@@ -148,6 +170,7 @@ ctest --output-on-failure
 
 ################################################################################
 %install
+################################################################################
 
 cd %{_vpath_builddir}
 
@@ -160,7 +183,8 @@ cd %{_vpath_builddir}
     install
 
 ################################################################################
-%files
+%files -n %{product_id}
+################################################################################
 
 %defattr(-,root,root,-)
 %doc jss.html
@@ -169,10 +193,11 @@ cd %{_vpath_builddir}
 %{_jnidir}/*
 
 ################################################################################
-%files javadoc
+%files -n %{product_id}-javadoc
+################################################################################
 
 %defattr(-,root,root,-)
-%{_javadocdir}/%{name}-%{version}/
+%{_javadocdir}/jss-%{version}/
 
 ################################################################################
 %changelog
