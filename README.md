@@ -8,7 +8,7 @@ Overview
 JSS supports most of the security standards and encryption technologies supported by NSS.
 JSS also provides a pure Java interface for ASN.1 types and BER/DER encoding.
 
-* Website: http://www.dogtagpki.org/wiki/JSS
+* Website: https://github.com/dogtagpki/jss
 * Issues: https://github.com/dogtagpki/jss/issues
 * Archive: https://github.com/dogtagpki/jss-archive
 * Javadocs: https://dogtagpki.github.io/jss

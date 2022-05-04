@@ -5,7 +5,7 @@ Name:           jss
 %global         product_id dogtag-jss
 
 Summary:        Java Security Services (JSS)
-URL:            http://www.dogtagpki.org/wiki/JSS
+URL:            https://github.com/dogtagpki/jss
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
