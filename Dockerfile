@@ -21,7 +21,7 @@ COPY . /tmp/src/
 WORKDIR /tmp/src
 
 # Build packages
-RUN dnf install -y git rpm-build
+RUN dnf install -y git dnf-plugins-core rpm-build
 RUN dnf builddep -y --spec jss.spec
 RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
 
