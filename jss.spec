@@ -119,10 +119,10 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS) Javadocs
 
-Requires:       %{product_id} = %{version}-%{release}
-
 Obsoletes:      jss-javadoc < %{version}-%{release}
 Provides:       jss-javadoc = %{version}-%{release}
+Provides:       jss-javadoc = %{major_version}.%{minor_version}
+Provides:       %{product_id}-javadoc = %{major_version}.%{minor_version}
 
 %description -n %{product_id}-javadoc
 This package contains the API documentation for JSS.
