@@ -4,13 +4,18 @@ Name:           jss
 
 %global         product_id dogtag-jss
 
+# Upstream version number:
+%global         major_version 4
+%global         minor_version 10
+%global         update_version 0
+
 Summary:        Java Security Services (JSS)
 URL:            https://github.com/dogtagpki/jss
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
 # For official (i.e. supported) releases, use x.y.z-r where r >=1.
-Version:        4.10.0
+Version:        %{major_version}.%{minor_version}.%{update_version}
 Release:        0.1.alpha1%{?_timestamp}%{?_commit_id}%{?dist}
 %global         _phase -alpha1
 
@@ -95,6 +100,8 @@ Requires:       apache-commons-lang3
 
 Obsoletes:      jss < %{version}-%{release}
 Provides:       jss = %{version}-%{release}
+Provides:       jss = %{major_version}.%{minor_version}
+Provides:       %{product_id} = %{major_version}.%{minor_version}
 
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
