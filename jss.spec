@@ -2,13 +2,17 @@
 Name:           jss
 ################################################################################
 
+%global         major_version 4
+%global         minor_version 9
+%global         update_version 3
+
 Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
 # For official (i.e. supported) releases, use x.y.z-r where r >=1.
-Version:        4.9.3
+Version:        %{major_version}.%{minor_version}.%{update_version}
 Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
 #global         _phase -alpha1
 
@@ -80,6 +84,8 @@ Requires:       glassfish-jaxb-api
 Requires:       slf4j-jdk14
 Requires:       apache-commons-lang3
 
+Provides:       jss = %{major_version}.%{minor_version}
+
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
 Conflicts:      tomcatjss < 7.6.0
@@ -95,7 +101,8 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 ################################################################################
 
 Summary:        Java Security Services (JSS) Javadocs
-Requires:       jss = %{version}-%{release}
+
+Provides:       javadoc = %{major_version}.%{minor_version}
 
 %description javadoc
 This package contains the API documentation for JSS.
