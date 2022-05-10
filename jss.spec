@@ -6,19 +6,19 @@ Name:           jss
 
 # Upstream version number:
 %global         major_version 5
-%global         minor_version 2
+%global         minor_version 3
 %global         update_version 0
 
 # Downstream release number:
 # - development/stabilization (unsupported): 0.<n> where n >= 1
 # - GA/update (supported): <n> where n >= 1
-%global         release_number 0.3
+%global         release_number 0.1
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta2
+%global         phase alpha1
 
 %undefine       timestamp
 %undefine       commit_id
@@ -110,6 +110,8 @@ Requires:       apache-commons-lang3
 
 Obsoletes:      jss < %{version}-%{release}
 Provides:       jss = %{version}-%{release}
+Provides:       jss = %{major_version}.%{minor_version}
+Provides:       %{product_id} = %{major_version}.%{minor_version}
 
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
@@ -130,6 +132,8 @@ Summary:        Java Security Services (JSS) Javadocs
 
 Obsoletes:      jss-javadoc < %{version}-%{release}
 Provides:       jss-javadoc = %{version}-%{release}
+Provides:       jss-javadoc = %{major_version}.%{minor_version}
+Provides:       %{product_id}-javadoc = %{major_version}.%{minor_version}
 
 %description -n %{product_id}-javadoc
 This package contains the API documentation for JSS.
