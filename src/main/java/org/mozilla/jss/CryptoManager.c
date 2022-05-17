@@ -58,7 +58,8 @@ static const char* VARIABLE_MAY_NOT_BE_USED DLL_NSS_VERSION     = "NSS_VERSION =
 /* NSPR_version from mozilla/nsprpub/pr/include/prinit.h */
 static const char* VARIABLE_MAY_NOT_BE_USED DLL_NSPR_VERSION    = "NSPR_VERSION = " PR_VERSION;
 
-
+/* One single nss context if caller chooses to intialize jss / nss with an nss context */
+static NSSInitContext *nssInitContext=NULL;
 
 
 static jobject
@@ -186,6 +187,21 @@ finish:
     JSS_DerefJString(env, ocspResponderCertNickname, ocspResponderCertNickname_string);
 
     return result;
+
+}
+
+/*Common shutdown code
+ */
+void ShutdownNSSOrContext()
+{
+    if (NSS_IsInitialized()) {
+        if (nssInitContext!=NULL) {
+            NSS_ShutdownContext(nssInitContext);
+            nssInitContext = NULL;
+        } else {
+            NSS_Shutdown();
+        }
+    }
 
 }
 
@@ -516,6 +532,267 @@ finish:
 
     return;
 }
+
+/* Create a complete version of the initialization method that
+ * launches NSS as a context instead of a full NSS_Init.
+ * this allows the app to assure they don't inherit all the properties
+ * of a previous full init done by the main process.
+ * Allow the caller of JSS to EITHER do a full nit OR do a context init.
+ * Note: This method is modified from a copy of an existing method: "Java_org_mozilla_jss_CryptoManager_initializeAllNative2";
+ *  The changes involved are the following:
+
+ *  1. It calls NSS_InitContext(...) instead of NSS_Initialize(...)
+ *  2. The original method has some code to detect readOnly and calls special read only nss init functions, which don't make sense with a context.
+ *      That logic was therefore removed.
+ *  3. Instead of using PK11_ConfigurePKcS11 call to configure the soft token module string constants, we now use the NSSInitParameters argument to
+ *      NSS_InitContext.
+
+ *  The reason why copy/modify is done instead of making changes to the existing code was to assure perserving existing functionality
+ *  and to allow for future enhancments to this method more easily.
+ *  We need to be aware in case there's any bug fixes in the original code that will need to be applied to this method as well,
+ *  although this code has not changed much over time.
+ */
+JNIEXPORT void  JNICALL
+Java_org_mozilla_jss_CryptoManager_initializeAllNativeWithContext
+    (JNIEnv *env, jclass clazz,
+        jstring configDir,
+        jstring certPrefix,
+        jstring keyPrefix,
+        jstring secmodName,
+        jboolean readOnly,
+        jstring manuString,
+        jstring libraryString,
+        jstring tokString,
+        jstring keyTokString,
+        jstring slotString,
+        jstring keySlotString,
+        jstring fipsString,
+        jstring fipsKeyString,
+        jboolean ocspCheckingEnabled,
+        jstring ocspResponderURL,
+        jstring ocspResponderCertNickname,
+        jboolean initializeJavaOnly,
+        jboolean PKIXVerify,
+        jboolean noCertDB,
+        jboolean noModDB,
+        jboolean forceOpen,
+        jboolean noRootInit,
+        jboolean optimizeSpace,
+        jboolean PK11ThreadSafe,
+        jboolean PK11Reload,
+        jboolean noPK11Finalize,
+        jboolean cooperate)
+{
+    SECStatus rv = SECFailure;
+    const char *szConfigDir = NULL;
+    const char *szCertPrefix = NULL;
+    const char *szKeyPrefix = NULL;
+    const char *szSecmodName = NULL;
+    const char *manuChars = NULL;
+    const char *libraryChars = NULL;
+    const char *tokChars = NULL;
+    const char *keyTokChars = NULL;
+    const char *slotChars = NULL;
+    const char *keySlotChars = NULL;
+    const char *fipsChars = NULL;
+    const char *fipsKeyChars = NULL;
+    PRUint32 initFlags;
+    /* This is thread-safe because initialize is synchronized */
+    static PRBool initialized=PR_FALSE;
+
+    if( configDir == NULL ||
+        manuString == NULL ||
+        libraryString == NULL ||
+        tokString == NULL ||
+        keyTokString == NULL ||
+        slotString == NULL ||
+        keySlotString == NULL ||
+        fipsString == NULL ||
+        fipsKeyString == NULL )
+    {
+        JSS_throw(env, NULL_POINTER_EXCEPTION);
+        goto finish;
+    }
+
+    /* Make sure initialize() completes only once */
+    if(initialized) {
+        JSS_throw(env, ALREADY_INITIALIZED_EXCEPTION);
+        goto finish;
+    }
+
+    /*
+     * Save the JavaVM pointer so we can retrieve the JNI environment
+     * later. This only works if there is only one Java VM.
+     */
+    if( (*env)->GetJavaVM(env, &JSS_javaVM) != 0 ) {
+        JSS_trace(env, JSS_TRACE_ERROR,
+                    "Unable to to access Java virtual machine");
+        PR_ASSERT(PR_FALSE);
+        goto finish;
+    }
+
+    /*
+     * Initialize the errcode translation table.
+     */
+    JSS_initErrcodeTranslationTable();
+
+    /*
+     * The rest of the initialization (the NSS stuff) is skipped if
+     * the initializeJavaOnly flag is set.
+     */
+    if( initializeJavaOnly) {
+        initialized = PR_TRUE;
+        goto finish;
+    }
+
+
+    /*
+     * Set the PKCS #11 strings
+     */
+    manuChars = JSS_RefJString(env, manuString);
+    libraryChars = JSS_RefJString(env, libraryString);
+    tokChars = JSS_RefJString(env, tokString);
+    keyTokChars = JSS_RefJString(env, keyTokString);
+    slotChars = JSS_RefJString(env, slotString);
+    keySlotChars = JSS_RefJString(env, keySlotString);
+    fipsChars = JSS_RefJString(env, fipsString);
+    fipsKeyChars = JSS_RefJString(env, fipsKeyString);
+    if( (*env)->ExceptionOccurred(env) ) {
+        ASSERT_OUTOFMEM(env);
+        goto finish;
+    }
+    PR_ASSERT( strlen(manuChars) == 33 );
+    PR_ASSERT( strlen(libraryChars) == 33 );
+    PR_ASSERT( strlen(tokChars) == 33 );
+    PR_ASSERT( strlen(keyTokChars) == 33 );
+    PR_ASSERT( strlen(slotChars) == 65 );
+    PR_ASSERT( strlen(keySlotChars) == 65 );
+    PR_ASSERT( strlen(fipsChars) == 65 );
+    PR_ASSERT( strlen(fipsKeyChars) == 65 );
+
+    NSSInitParameters initparams;
+    memset( &initparams, 0, sizeof( initparams ) );
+    initparams.length = sizeof( initparams );
+
+    initparams.minPWLen = 0;
+    initparams.manufactureID = (char *) manuChars;
+    initparams.libraryDescription = (char *) libraryChars;
+    initparams.cryptoTokenDescription = (char *) tokChars;
+    initparams.dbTokenDescription = (char *) keyTokChars;
+    initparams.FIPSTokenDescription = (char *) fipsChars;
+    initparams.cryptoSlotDescription =(char *) slotChars;
+    initparams.dbSlotDescription = (char *) keySlotChars;
+    initparams.FIPSSlotDescription = (char *) fipsKeyChars;
+    initparams.passwordRequired = PR_FALSE;
+	
+    szConfigDir = JSS_RefJString(env, configDir);
+    /*
+    * Set up arguments to NSS_InitContext
+    */
+    szCertPrefix = JSS_RefJString(env, certPrefix);
+    szKeyPrefix = JSS_RefJString(env, keyPrefix);
+    szSecmodName = JSS_RefJString(env, secmodName);
+
+    initFlags = 0;
+    if( readOnly ) {
+        initFlags |= NSS_INIT_READONLY;
+    }
+    if( noCertDB ) {
+        initFlags |= NSS_INIT_NOCERTDB;
+    }
+    if( noModDB ) {
+        initFlags |= NSS_INIT_NOMODDB;
+    }
+    if( forceOpen ) {
+        initFlags |= NSS_INIT_FORCEOPEN;
+    }
+    if( noRootInit ) {
+        initFlags |= NSS_INIT_NOROOTINIT;
+    }
+    if( optimizeSpace ) {
+        initFlags |= NSS_INIT_OPTIMIZESPACE;
+    }
+    if( PK11ThreadSafe ) {
+        initFlags |= NSS_INIT_PK11THREADSAFE;
+    }
+    if( PK11Reload ) {
+        initFlags |= NSS_INIT_PK11RELOAD;
+    }
+    if( noPK11Finalize ) {
+        initFlags |= NSS_INIT_NOPK11FINALIZE;
+    }
+    if( cooperate ) {
+        initFlags |= NSS_INIT_COOPERATE;
+    }
+
+    /*
+    * Initialize NSS Context.
+    */
+    nssInitContext = NSS_InitContext(szConfigDir, szCertPrefix, szKeyPrefix,
+            szSecmodName,&initparams, initFlags);
+
+    if( nssInitContext == NULL) {
+        JSS_throwMsgPrErr(env, SECURITY_EXCEPTION,
+            "Unable to initialize security library context");
+        goto finish;
+    }
+
+    /* Register additional OIDs, see Algorithm.c */
+    rv = JSS_RegisterDynamicOids();
+
+    if( rv != SECSuccess ) {
+        JSS_throwMsgPrErr(env, SECURITY_EXCEPTION,
+            "Unable to ad dynamic oids" );
+        goto finish;
+    }
+    /*
+     * Set default password callback.  This is the only place this
+     * should ever be called if you are using Ninja.
+     */
+    PK11_SetPasswordFunc(getPWFromCallback);
+
+    /*
+     * Setup NSS to call the specified OCSP responder
+     */
+    rv = ConfigureOCSP(
+        env,
+        ocspCheckingEnabled,
+        ocspResponderURL,
+        ocspResponderCertNickname );
+
+    if (rv != SECSuccess) {
+        goto finish;
+    }
+
+    /*
+     * Set up policy. We're always domestic now. Thanks to the US Government!
+     */
+    if( NSS_SetDomesticPolicy() != SECSuccess ) {
+        JSS_throwMsg(env, SECURITY_EXCEPTION, "Unable to set security policy");
+        goto finish;
+    }
+
+    if ( PKIXVerify ) {
+        CERT_SetUsePKIXForValidation(PR_TRUE);
+    }
+    initialized = PR_TRUE;
+
+finish:
+    JSS_DerefJString(env, configDir, szConfigDir);
+    JSS_DerefJString(env, certPrefix, szCertPrefix);
+    JSS_DerefJString(env, keyPrefix, szKeyPrefix);
+    JSS_DerefJString(env, secmodName, szSecmodName);
+    JSS_DerefJString(env, manuString, manuChars);
+    JSS_DerefJString(env, libraryString, libraryChars);
+    JSS_DerefJString(env, tokString, tokChars);
+    JSS_DerefJString(env, keyTokString, keyTokChars);
+    JSS_DerefJString(env, slotString, slotChars);
+    JSS_DerefJString(env, keySlotString, keySlotChars);
+    JSS_DerefJString(env, fipsString, fipsChars);
+    JSS_DerefJString(env, fipsKeyString, fipsKeyChars);
+
+}
+
 
 /**********************************************************************
  *
@@ -947,7 +1224,7 @@ JNIEXPORT void JNICALL
 Java_org_mozilla_jss_DatabaseCloser_closeDatabases
     (JNIEnv *env, jobject this)
 {
-    NSS_Shutdown();
+    ShutdownNSSOrContext();
 }
 
 /**********************************************************************
@@ -1048,7 +1325,5 @@ Java_org_mozilla_jss_CryptoManager_getJSSDebug(JNIEnv *env, jobject this)
 JNIEXPORT void JNICALL
 Java_org_mozilla_jss_CryptoManager_shutdownNative(JNIEnv *env, jobject this)
 {
-    if (NSS_IsInitialized()) {
-        NSS_Shutdown();
-    }
+    ShutdownNSSOrContext();
 }

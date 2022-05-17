@@ -228,6 +228,12 @@ macro(jss_tests)
         DEPENDS "Setup_DBs"
     )
     jss_test_java(
+	NAME "Mozilla_JSS_NSS_Context"
+        COMMAND "org.mozilla.jss.tests.JSSContextInitTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${DB_PWD}" 
+        DEPENDS "Setup_DBs"
+    )
+
+    jss_test_java(
         NAME "JSS_Signature_test"
         COMMAND "org.mozilla.jss.tests.SigTest" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
