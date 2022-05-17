@@ -109,6 +109,22 @@ public final class InitializationValues {
      * the databases are opened in read-write mode.
      */
     public boolean readOnly = false;
+    public boolean initializeContext = false;
+
+    /**
+     * Returns boolean value of initializeContext.
+     * <p>The default is <code>"false                     "</code>.
+     *
+     * @return initializeContext.
+     */
+    public boolean getInitializeContext() { return initializeContext; }
+    /**
+     * Sets boolean value of initializeContext.
+     * @param value of initializeContext.
+     */
+    public void setInitializeContext(boolean value) {
+        this.initializeContext = value;
+    }
 
     ////////////////////////////////////////////////////////////////////
     // Manufacturer ID
