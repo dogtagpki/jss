@@ -494,6 +494,27 @@ public final class CryptoManager implements TokenSupplier
         initialize( new InitializationValues(configDir) );
     }
 
+    public static synchronized void initializeWithContext( String configDir )
+        throws  KeyDatabaseException,
+                CertDatabaseException,
+                AlreadyInitializedException,
+                GeneralSecurityException
+    {
+        InitializationValues values = new InitializationValues(configDir);
+        values.initializeContext = true;
+        initialize( values );
+    }
+
+    public static synchronized void initializeWithContext( InitializationValues values )
+        throws
+        KeyDatabaseException,
+        CertDatabaseException,
+        AlreadyInitializedException,
+        GeneralSecurityException
+    {
+        values.initializeContext = true;
+	initialize( values);
+    }
     /**
      * Initialize the security subsystem.  Opens the databases, loads all
      * PKCS #11 modules, initializes the internal random number generator.
@@ -527,8 +548,10 @@ public final class CryptoManager implements TokenSupplier
                     "Must set ocspResponderCertNickname");
             }
         }
-
-        initializeAllNative2(values.configDir,
+        //Right now, allow only the choice of a full NSS init or a NSS context init, which is useful for libraries,
+        //where the main app may have already initialized nss itself.
+	if(values.initializeContext == true) {
+            initializeAllNativeWithContext(values.configDir,
                             values.certPrefix,
                             values.keyPrefix,
                             values.secmodName,
@@ -556,6 +579,37 @@ public final class CryptoManager implements TokenSupplier
                             values.noPK11Finalize,
                             values.cooperate
                             );
+
+        } else {
+            initializeAllNative2(values.configDir,
+                            values.certPrefix,
+                            values.keyPrefix,
+                            values.secmodName,
+                            values.readOnly,
+                            values.getManufacturerID(),
+                            values.getLibraryDescription(),
+                            values.getInternalTokenDescription(),
+                            values.getInternalKeyStorageTokenDescription(),
+                            values.getInternalSlotDescription(),
+                            values.getInternalKeyStorageSlotDescription(),
+                            values.getFIPSSlotDescription(),
+                            values.getFIPSKeyStorageSlotDescription(),
+                            values.ocspCheckingEnabled,
+                            values.ocspResponderURL,
+                            values.ocspResponderCertNickname,
+                            values.initializeJavaOnly,
+                            values.PKIXVerify,
+                            values.noCertDB,
+                            values.noModDB,
+                            values.forceOpen,
+                            values.noRootInit,
+                            values.optimizeSpace,
+                            values.PK11ThreadSafe,
+                            values.PK11Reload,
+                            values.noPK11Finalize,
+                            values.cooperate
+                            );
+        }
 
         instance = new CryptoManager();
         instance.setPasswordCallback(values.passwordCallback);
@@ -606,6 +660,38 @@ public final class CryptoManager implements TokenSupplier
 
     private static native void
     initializeAllNative2(String configDir,
+                        String certPrefix,
+                        String keyPrefix,
+                        String secmodName,
+                        boolean readOnly,
+                        String manufacturerID,
+                        String libraryDescription,
+                        String internalTokenDescription,
+                        String internalKeyStorageTokenDescription,
+                        String internalSlotDescription,
+                        String internalKeyStorageSlotDescription,
+                        String fipsSlotDescription,
+                        String fipsKeyStorageSlotDescription,
+                        boolean ocspCheckingEnabled,
+                        String ocspResponderURL,
+                        String ocspResponderCertNickname,
+                        boolean initializeJavaOnly,
+                        boolean PKIXVerify,
+                        boolean noCertDB,
+                        boolean noModDB,
+                        boolean forceOpen,
+                        boolean noRootInit,
+                        boolean optimizeSpace,
+                        boolean PK11ThreadSafe,
+                        boolean PK11Reload,
+                        boolean noPK11Finalize,
+                        boolean cooperate)
+        throws KeyDatabaseException,
+        CertDatabaseException,
+        AlreadyInitializedException;
+
+    private static native void
+    initializeAllNativeWithContext(String configDir,
                         String certPrefix,
                         String keyPrefix,
                         String secmodName,
