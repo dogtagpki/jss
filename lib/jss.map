@@ -506,3 +506,9 @@ Java_org_mozilla_jss_crypto_JSSOAEPParameterSpec_releaseNativeResources;
     local:
         *;
 };
+JSS_4.9.3 {
+    global:
+Java_org_mozilla_jss_CryptoManager_initializeAllNativeWithContext;
+    local:
+        *;
+};
