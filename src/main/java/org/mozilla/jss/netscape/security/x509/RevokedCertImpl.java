@@ -189,10 +189,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      */
     @Override
     public boolean hasExtensions() {
-        if (extensions == null)
-            return false;
-        else
-            return true;
+        return extensions != null;
     }
 
     /**
@@ -450,7 +447,7 @@ public class RevokedCertImpl extends RevokedCertificate implements Serializable 
      * Serialization read ... X.509 certificates serialize as themselves, and
      * they're parsed when they get read back.
      */
-    private void readObject(ObjectInputStream stream) throws CRLException, X509ExtensionException, IOException {
+    private void readObject(ObjectInputStream stream) throws CRLException, X509ExtensionException {
         decode(stream);
     }
 
