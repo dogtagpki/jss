@@ -11,25 +11,21 @@ public class PrintableCharset extends Charset {
     }
 
     public static boolean isPrintableChar(char c) {
-        if ((c < 'A' || c > 'Z') &&
-                (c < 'a' || c > 'z') &&
-                (c < '0' || c > '9') &&
-                (c != ' ') &&
-                (c != '\'') &&
-                (c != '(') &&
-                (c != ')') &&
-                (c != '+') &&
-                (c != ',') &&
-                (c != '-') &&
-                (c != '.') &&
-                (c != '/') &&
-                (c != ':') &&
-                (c != '=') &&
-                (c != '?')) {
-            return false;
-        } else {
-            return true;
-        }
+        return (c >= 'A' && c <= 'Z')
+                || (c >= 'a' && c <= 'z')
+                || (c >= '0' && c <= '9')
+                || c == ' '
+                || c == '\''
+                || c == '('
+                || c == ')'
+                || c == '+'
+                || c == ','
+                || c == '-'
+                || c == '.'
+                || c == '/'
+                || c == ':'
+                || c == '='
+                || c == '?';
     }
 
     @Override
