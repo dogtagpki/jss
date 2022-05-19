@@ -44,7 +44,7 @@ public class BOOLEAN implements ASN1Value {
 
     /**
      * Creates a <code>BOOLEAN</code> with the given value.
-     * 
+     *
      * @param val Boolean value.
      */
     public BOOLEAN(boolean val) {
@@ -63,11 +63,7 @@ public class BOOLEAN implements ASN1Value {
      */
     @Override
     public String toString() {
-        if (val) {
-            return "true";
-        } else {
-            return "false";
-        }
+        return val ? "true" : "false";
     }
 
     private static final Template templateInstance = new Template();
@@ -105,12 +101,7 @@ public class BOOLEAN implements ASN1Value {
                     throw new InvalidBERException("End-of-file reached while " +
                             "decoding BOOLEAN");
                 }
-
-                if (b == 0x00) {
-                    return new BOOLEAN(false);
-                } else {
-                    return new BOOLEAN(true);
-                }
+                return b == 0x00 ? new BOOLEAN(false) : new BOOLEAN(true);
 
             } catch (InvalidBERException e) {
                 throw new InvalidBERException(e, "BOOLEAN");
