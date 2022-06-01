@@ -29,6 +29,10 @@ Release:        %{release_number}%{?_timestamp}%{?_commit_id}%{?dist}
 # tarball.
 Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?_phase}/jss-%{version}%{?_phase}.tar.gz
 
+# md2man not available on i686
+ExcludeArch: i686
+
+
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
 #     --stdout \
