@@ -102,12 +102,10 @@ public class X509CRLImpl extends X509CRL {
     private X500Name issuer;
     private Date thisUpdate = null;
     private Date nextUpdate = null;
-    //    private static final Hashtable revokedCerts = new Hashtable();
     private Hashtable<BigInteger, RevokedCertificate> revokedCerts = new Hashtable<>();
-    //    private static CRLExtensions    extensions = null;
     private CRLExtensions extensions = null;
     private boolean entriesIncluded = true;
-    private final static boolean isExplicit = true;
+    private static final boolean IS_EXPLICIT = true;
 
     private boolean readOnly = false;
 
@@ -352,7 +350,7 @@ public class X509CRLImpl extends X509CRL {
             }
 
             if (extensions != null)
-                extensions.encode(tmp, isExplicit);
+                extensions.encode(tmp, IS_EXPLICIT);
 
             seq.write(DerValue.tag_Sequence, tmp);
 
@@ -516,7 +514,7 @@ public class X509CRLImpl extends X509CRL {
             signature = sigEngine.sign();
             tmp.putBitString(signature);
 
-            // Wrap the signed data in a SEQUENCE { data, algorithm, sig }
+            // Wrap the signed data in a SEQUENCE { data, algorithm, sig } NOSONAR (not a real code block)
             out.write(DerValue.tag_Sequence, tmp);
             signedCRL = out.toByteArray();
             readOnly = true;
@@ -576,11 +574,10 @@ public class X509CRLImpl extends X509CRL {
     public boolean isRevoked(Certificate cert) {
         if (cert == null)
             return false;
-        if (cert instanceof X509Certificate) {
-            return isRevoked(((X509Certificate) cert).getSerialNumber());
-        } else {
-            return false;
+        if (cert instanceof X509Certificate x509Certificate) {
+            return isRevoked(x509Certificate.getSerialNumber());
         }
+        return false;
     }
 
     /**
@@ -687,26 +684,17 @@ public class X509CRLImpl extends X509CRL {
     public Set<RevokedCertificate> getRevokedCertificates() {
         if (revokedCerts == null || revokedCerts.isEmpty())
             return null;
-        else {
-            Set<RevokedCertificate> certSet = new LinkedHashSet<>(revokedCerts.values());
-            return certSet;
-        }
+        Set<RevokedCertificate> certSet = new LinkedHashSet<>(revokedCerts.values());
+        return certSet;
     }
 
     @SuppressWarnings("unchecked")
     public Hashtable<BigInteger, RevokedCertificate> getListOfRevokedCertificates() {
-        if (revokedCerts == null) {
-            return null;
-        } else {
-            return (Hashtable<BigInteger, RevokedCertificate>) revokedCerts.clone();
-        }
+        return revokedCerts == null ? null : (Hashtable<BigInteger, RevokedCertificate>) revokedCerts.clone();
     }
 
     public int getNumberOfRevokedCertificates() {
-        if (revokedCerts == null)
-            return -1;
-        else
-            return revokedCerts.size();
+        return revokedCerts == null ? -1 : revokedCerts.size();
     }
 
     /**
@@ -913,8 +901,7 @@ public class X509CRLImpl extends X509CRL {
             Enumeration<Extension> e = exts.getElements();
             while (e.hasMoreElements()) {
                 Extension ext = e.nextElement();
-                if (ext instanceof CRLNumberExtension) {
-                    CRLNumberExtension numExt = (CRLNumberExtension) ext;
+                if (ext instanceof CRLNumberExtension numExt) {
                     return (BigInteger) numExt.get(CRLNumberExtension.NUMBER);
                 }
             }
@@ -931,8 +918,7 @@ public class X509CRLImpl extends X509CRL {
             Enumeration<Extension> e = exts.getElements();
             while (e.hasMoreElements()) {
                 Extension ext = e.nextElement();
-                if (ext instanceof DeltaCRLIndicatorExtension) {
-                    DeltaCRLIndicatorExtension numExt = (DeltaCRLIndicatorExtension) ext;
+                if (ext instanceof DeltaCRLIndicatorExtension numExt) {
                     return (BigInteger) numExt.get(DeltaCRLIndicatorExtension.NUMBER);
                 }
             }
@@ -985,7 +971,7 @@ public class X509CRLImpl extends X509CRL {
             throw new CRLException("cannot over-write existing CRL");
 
         readOnly = true;
-        DerValue seq[] = new DerValue[3];
+        DerValue[] seq = new DerValue[3];
 
         seq[0] = val.data.getDerValue();
         seq[1] = val.data.getDerValue();
@@ -1064,8 +1050,7 @@ public class X509CRLImpl extends X509CRL {
 
         // revokedCertificates (optional)
         nextByte = (byte) derStrm.peekByte();
-        if ((nextByte == DerValue.tag_SequenceOf)
-                && (!((nextByte & 0x0c0) == 0x080))) {
+        if ((nextByte == DerValue.tag_SequenceOf) && ((nextByte & 0x0c0) != 0x080)) {
             if (includeEntries) {
                 DerValue[] badCerts = derStrm.getSequence(4);
                 for (int i = 0; i < badCerts.length; i++) {
