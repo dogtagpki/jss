@@ -21,7 +21,7 @@ else
    LIB_DIR="/usr/lib"
 fi
 
-SYSCONFIG_DIR="/etc"
+SYSCONF_DIR="/etc"
 SHARE_DIR="/usr/share"
 
 CMAKE="cmake"
@@ -55,7 +55,7 @@ usage() {
     echo "    --prefix-dir=<path>    Prefix directory (default: $PREFIX_DIR)."
     echo "    --include-dir=<path>   Include directory (default: $INCLUDE_DIR)."
     echo "    --lib-dir=<path>       Library directory (default: $LIB_DIR)."
-    echo "    --sysconfig-dir=<path> System configuration directory (default: $SYSCONFIG_DIR)."
+    echo "    --sysconf-dir=<path>   System configuration directory (default: $SYSCONF_DIR)."
     echo "    --share-dir=<path>     Share directory (default: $SHARE_DIR)."
     echo "    --cmake=<path>         Path to CMake executable"
     echo "    --java-home=<path>     Java home"
@@ -213,8 +213,8 @@ while getopts v-: arg ; do
         lib-dir=?*)
             LIB_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
-        sysconfig-dir=?*)
-            SYSCONFIG_DIR=$(readlink -f "$LONG_OPTARG")
+        sysconf-dir=?*)
+            SYSCONF_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
         share-dir=?*)
             SHARE_DIR=$(readlink -f "$LONG_OPTARG")
@@ -272,7 +272,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        name* | work-dir* | prefix-dir* | include-dir* | lib-dir* | sysconfig-dir* | share-dir* | cmake* | \
+        name* | work-dir* | prefix-dir* | include-dir* | lib-dir* | sysconf-dir* | share-dir* | cmake* | \
         java-home* | jni-dir* | install-dir* | \
         source-tag* | spec* | version* | release* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
@@ -309,7 +309,7 @@ if [ "$DEBUG" = true ] ; then
     echo "PREFIX_DIR: $PREFIX_DIR"
     echo "INCLUDE_DIR: $INCLUDE_DIR"
     echo "LIB_DIR: $LIB_DIR"
-    echo "SYSCONFIG_DIR: $SYSCONFIG_DIR"
+    echo "SYSCONF_DIR: $SYSCONF_DIR"
     echo "SHARE_DIR: $SHARE_DIR"
     echo "CMAKE: $CMAKE"
     echo "JAVA_HOME: $JAVA_HOME"
@@ -366,7 +366,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     OPTIONS+=(-DINCLUDE_INSTALL_DIR:PATH=$INCLUDE_DIR)
     OPTIONS+=(-DLIB_INSTALL_DIR:PATH=$LIB_DIR)
-    OPTIONS+=(-DSYSCONF_INSTALL_DIR:PATH=$SYSCONFIG_DIR)
+    OPTIONS+=(-DSYSCONF_INSTALL_DIR:PATH=$SYSCONF_DIR)
     OPTIONS+=(-DSHARE_INSTALL_PREFIX:PATH=$SHARE_DIR)
 
     OPTIONS+=(-DLIB_SUFFIX=64)

@@ -167,7 +167,7 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
     --prefix-dir=%{_prefix} \
     --include-dir=%{_includedir} \
     --lib-dir=%{_libdir} \
-    --sysconfig-dir=%{_sysconfigdir} \
+    --sysconf-dir=%{_sysconfdir} \
     --share-dir=%{_datadir} \
     --cmake=%{__cmake} \
     --java-home=%{java_home} \
