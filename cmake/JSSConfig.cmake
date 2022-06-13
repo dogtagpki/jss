@@ -270,11 +270,11 @@ macro(jss_config_java)
     list(APPEND JSS_JAVAC_FLAGS "-sourcepath")
     list(APPEND JSS_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/src/main/java")
 
-    # Ensure we're compatible with JDK 11
+    # Ensure we're compatible with JDK 17
     list(APPEND JSS_JAVAC_FLAGS "-target")
-    list(APPEND JSS_JAVAC_FLAGS "11")
+    list(APPEND JSS_JAVAC_FLAGS "17")
     list(APPEND JSS_JAVAC_FLAGS "-source")
-    list(APPEND JSS_JAVAC_FLAGS "11")
+    list(APPEND JSS_JAVAC_FLAGS "17")
 
     # Handle passed-in javac flags as well; assume they are valid.
     separate_arguments(PASSED_JAVAC_FLAGS UNIX_COMMAND "$ENV{JAVACFLAGS}")
@@ -295,11 +295,11 @@ macro(jss_config_java)
     list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
     list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/src/main/java")
 
-    # Ensure we're compatible with JDK 11
+    # Ensure we're compatible with JDK 17
     list(APPEND JSS_TEST_JAVAC_FLAGS "-target")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "11")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "17")
     list(APPEND JSS_TEST_JAVAC_FLAGS "-source")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "11")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "17")
 
     # Handle passed-in javac flags as well; assume they are valid.
     separate_arguments(PASSED_JAVAC_FLAGS UNIX_COMMAND "$ENV{JAVACFLAGS}")

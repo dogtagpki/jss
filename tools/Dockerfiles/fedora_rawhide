@@ -4,8 +4,8 @@ FROM registry.fedoraproject.org/fedora:rawhide
 RUN true \
         && dnf update -y --refresh \
         && dnf install -y dnf-plugins-core gcc make rpm-build cmake \
-                          java-11-openjdk nss-tools \
-                          apache-commons-lang3 gcc-c++ java-11-openjdk-devel \
+                          java-17-openjdk nss-tools \
+                          apache-commons-lang3 gcc-c++ java-17-openjdk-devel \
                           jpackage-utils slf4j nss zlib-devel nss-devel \
                           nspr-devel slf4j-jdk14 junit \
         && mkdir -p /home/sandbox \
@@ -21,7 +21,7 @@ COPY . /home/sandbox/jss
 # Perform the actual RPM build
 WORKDIR /home/sandbox/jss
 CMD true \
-        && export JAVA_HOME=/usr/lib/jvm/jre-11-openjdk \
+        && export JAVA_HOME=/usr/lib/jvm/jre-17-openjdk \
         && export WITH_INTERNET=1 \
         && rm -rf build \
         && mkdir build \

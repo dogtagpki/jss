@@ -42,12 +42,19 @@ jobs:
       docker exec -u 0 runner apt-get install -y \
           cmake zip unzip \
           g++ libnss3-dev libnss3-tools \
-          openjdk-11-jdk libcommons-lang3-java libslf4j-java junit4
+          openjdk-17-jdk libcommons-lang3-java libslf4j-java junit4
     condition: or(startsWith(variables.image, 'debian_'), startsWith(variables.image, 'ubuntu_'))
     displayName: Install Debian/Ubuntu dependencies
 
   - script: ./build.sh --with-tests
-    displayName: Build JSS binaries, Javadoc, and run tests
+    condition: or(startsWith(variables.image, 'fedora_'), startsWith(variables.image, 'centos_'))
+    displayName: Build JSS binaries, Javadoc, and run tests on Fedora/CentOS
+
+  - script: ./build.sh --with-tests
+    condition: or(startsWith(variables.image, 'debian_'), startsWith(variables.image, 'ubuntu_'))
+    displayName: Build JSS binaries, Javadoc, and run tests on Debian/Unbuntu
+    env:
+      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
 
 - job: SymbolTest
   pool:
