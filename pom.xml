@@ -45,7 +45,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <release>11</release>
+                    <release>17</release>
                 </configuration>
             </plugin>
         </plugins>
@@ -55,6 +55,7 @@
         <sonar.projectKey>dogtagpki_jss</sonar.projectKey>
         <sonar.organization>dogtagpki</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
 </project>

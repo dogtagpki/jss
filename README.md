@@ -27,7 +27,7 @@ This project has the following dependencies:
     - Recommended version: 3.48 and above
     - A c and c++ compiler such as [gcc](ttps://gcc.gnu.org/)
     - [zlib](https://zlib.net/)
- - [OpenJDK 1.8.0 or newer](https://openjdk.java.net/)
+ - [OpenJDK 17 or newer](https://openjdk.java.net/)
  - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [SLF4J](https://www.slf4j.org/)
