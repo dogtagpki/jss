@@ -12,7 +12,6 @@ import java.security.PublicKey;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.X509ExtendedTrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.mozilla.jss.nss.BadCertHandler;
@@ -564,7 +563,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // from Runnable, so we can reuse it here as well. We can create
             // it ahead of time though. In this case, checkNeedCertValidation()
             // is never called.
-            ssl_fd.certAuthHandler = new CertValidationTask(ssl_fd);
+            ssl_fd.certAuthHandler = new CertValidationTask(ssl_fd, this);
 
             if (SSL.ConfigSyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
                 throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
@@ -820,7 +819,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: checkNeedCertValidation() - creating task");
 
         // OK, time to create our runnable task.
-        task = new CertValidationTask(ssl_fd);
+        task = new CertValidationTask(ssl_fd, this);
 
         // Update our handshake state so we know what to do next.
         handshake_state = SSLEngineResult.HandshakeStatus.NEED_TASK;
@@ -1700,9 +1699,23 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
 
-    private class CertValidationTask extends CertAuthHandler {
-        public CertValidationTask(SSLFDProxy fd) {
+    // This must be static to avoid the following cycle:
+    // SSLFD (JNI)-> CertValidationTask -> JSSEngineReferenceImpl ->...
+    private static class CertValidationTask extends CertAuthHandler {
+
+        protected final JSSSession session;
+        protected final boolean as_server;
+        protected final boolean need_client_auth;
+        protected final X509TrustManager[] trust_managers;
+
+
+        public CertValidationTask(SSLFDProxy fd,
+                                  JSSEngineReferenceImpl engine) {
             super(fd);
+            this.session = engine.session;
+            this.as_server = engine.as_server;
+            this.need_client_auth = engine.need_client_auth;
+            this.trust_managers = engine.trust_managers;
         }
 
         public String findAuthType(SSLFDProxy ssl_fd, PK11Cert[] chain) throws Exception {
@@ -1784,7 +1797,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             try {
                 chain = SSL.PeerCertificateChain(fd);
                 String authType = findAuthType(fd, chain);
-                debug("CertAuthType: " + authType);
+                logger.debug("CertAuthType: " + authType);
 
                 if (chain == null || chain.length == 0) {
                     // When the chain is NULL, we'd always fail in the
@@ -1796,42 +1809,29 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                         // Since we're a server validating the client's
                         // chain (and they didn't provide one), we should
                         // ignore it instead of forcing the problem.
-                        debug("No client certificate chain and client cert not needed.");
+                        logger.debug("No client certificate chain and client cert not needed.");
                         return 0;
                     }
                 }
 
                 for (X509TrustManager tm : trust_managers) {
-                    // X509ExtendedTrustManager lets the TM access the
-                    // SSLEngine while validating certificates. Otherwise,
-                    // the X509TrustManager doesn't have access to that
-                    // parameter. Facilitate it if possible.
-                    if (tm instanceof X509ExtendedTrustManager) {
-                        X509ExtendedTrustManager etm = (X509ExtendedTrustManager) tm;
-                        if (as_server) {
-                            etm.checkClientTrusted(chain, authType, JSSEngineReferenceImpl.this);
-                        } else {
-                            etm.checkServerTrusted(chain, authType, JSSEngineReferenceImpl.this);
-                        }
+                    if (as_server) {
+                        tm.checkClientTrusted(chain, authType);
                     } else {
-                        if (as_server) {
-                            tm.checkClientTrusted(chain, authType);
-                        } else {
-                            tm.checkServerTrusted(chain, authType);
-                        }
+                        tm.checkServerTrusted(chain, authType);
                     }
                 }
             } catch (Exception excpt) {
-                return assignException(excpt, chain);
+                return logException(excpt, chain);
             }
 
             return 0;
         }
 
-        private int assignException(Exception excpt, PK11Cert[] chain) {
+        private int logException(Exception excpt, PK11Cert[] chain) {
             int nss_code = Cert.MatchExceptionToNSSError(excpt);
 
-            if (seen_exception) {
+            if (!logger.isDebugEnabled()) {
                 return nss_code;
             }
 
@@ -1858,13 +1858,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
             msg += "exception message: " + excpt.getMessage();
 
-            seen_exception = true;
-            ssl_exception = new SSLException(msg, excpt);
+            logger.debug(msg, excpt);
             return nss_code;
         }
     }
 
-    private class BypassBadHostname extends BadCertHandler {
+    private static class BypassBadHostname extends BadCertHandler {
         public BypassBadHostname(SSLFDProxy fd, int error) {
             super(fd, error);
         }
