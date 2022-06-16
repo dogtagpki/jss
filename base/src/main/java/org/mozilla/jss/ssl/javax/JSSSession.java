@@ -1,6 +1,7 @@
 package org.mozilla.jss.ssl.javax;
 
 import java.lang.AutoCloseable;
+import java.lang.ref.WeakReference;
 import java.security.cert.Certificate;
 import javax.security.cert.X509Certificate;
 import java.security.Principal;
@@ -14,7 +15,7 @@ import org.mozilla.jss.ssl.*;
 
 public class JSSSession implements SSLSession, AutoCloseable {
     private static final int MAX_TLS_RECORD_PAYLOAD = (1 << 14);
-    private JSSEngine parent;
+    private WeakReference<JSSEngine> parent;
 
     private int applicationBufferSize;
     private int packetBufferSize;
@@ -42,7 +43,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
     private boolean closed;
 
     protected JSSSession(JSSEngine engine, int buffer_size) {
-        this.parent = engine;
+        this.parent = new WeakReference<>(engine);
 
         applicationBufferSize = Math.min(buffer_size, MAX_TLS_RECORD_PAYLOAD);
         packetBufferSize = buffer_size;
@@ -51,11 +52,15 @@ public class JSSSession implements SSLSession, AutoCloseable {
     }
 
     public JSSEngine getEngine() {
-        return parent;
+        return parent.get();
     }
 
     public SSLChannelInfo getChannelInfo() {
-        SSLFDProxy ssl_fd = parent.getSSLFDProxy();
+        JSSEngine jssEngine = parent.get();
+        if (jssEngine == null) {
+          return null;
+        }
+        SSLFDProxy ssl_fd = jssEngine.getSSLFDProxy();
         if (ssl_fd != null && ssl_fd.handshakeComplete) {
             return SSL.GetChannelInfo(ssl_fd);
         }
@@ -64,8 +69,14 @@ public class JSSSession implements SSLSession, AutoCloseable {
     }
 
     public SSLPreliminaryChannelInfo getPreliminaryChannelInfo() {
-        if (parent.getSSLFDProxy() != null) {
-            return SSL.GetPreliminaryChannelInfo(parent.getSSLFDProxy());
+        JSSEngine jssEngine = parent.get();
+        if (jssEngine == null) {
+          return null;
+        }
+
+        SSLFDProxy ssl_fd = jssEngine.getSSLFDProxy();
+        if (ssl_fd != null) {
+            return SSL.GetPreliminaryChannelInfo(ssl_fd);
         }
 
         return null;
@@ -149,8 +160,14 @@ public class JSSSession implements SSLSession, AutoCloseable {
 
     @Override
     public void invalidate() {
-        if (parent.getSSLFDProxy() != null) {
-             SSL.InvalidateSession(parent.getSSLFDProxy());
+        JSSEngine jssEngine = parent.get();
+        if (jssEngine == null) {
+          return;
+        }
+
+        SSLFDProxy ssl_fd = jssEngine.getSSLFDProxy();
+        if (ssl_fd != null) {
+             SSL.InvalidateSession(ssl_fd);
         }
     }
 
