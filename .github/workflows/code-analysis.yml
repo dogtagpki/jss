@@ -6,7 +6,7 @@ jobs:
     name: Code analysis
     runs-on: ubuntu-latest
     env:
-      HAVE_SONAR_SECRET: ${{ secrets.SONAR_TOKEN  != '' }}
+      HAVE_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN  != '' }}
     steps:
       - name: Stop if no Sonar secret
         if:  ${{ env.HAVE_SONAR_TOKEN == 'false' }}
