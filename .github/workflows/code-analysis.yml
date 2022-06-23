@@ -39,3 +39,18 @@ jobs:
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.c.file.suffixes= -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=-
 
+  get-pr-ref:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+    name: Sonar cloud PR fork analyses deferring
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+
+      - name: Upload pr as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: pr/
