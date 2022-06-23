@@ -2,9 +2,16 @@ name: Code Analysis
 on: [push, pull_request]
 jobs:
   build:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     name: Code analysis
     runs-on: ubuntu-latest
+    env:
+      HAVE_SONAR_SECRET: ${{ secrets.SONAR_TOKEN  != '' }}
     steps:
+      - name: Stop if no Sonar secret
+        if:  ${{ env.HAVE_SONAR_TOKEN == 'false' }}
+        run: exit 1
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
