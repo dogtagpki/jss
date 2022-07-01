@@ -6,8 +6,6 @@ jobs:
   build-test:
     name: Build Test
     runs-on: ubuntu-latest
-    env:
-      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
     strategy:
       matrix:
         os:
@@ -22,10 +20,16 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v2
 
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+
     - name: Install Fedora/CentOS dependencies
       if: ${{ startsWith(matrix.os, 'fedora:') || startsWith(matrix.os, 'centos:') }}
       run: |
-        dnf install -y dnf-plugins-core rpm-build
+        dnf install -y dnf-plugins-core rpm-build maven
         dnf builddep -y --spec jss.spec
 
     - name: Install Debian/Ubuntu dependencies
@@ -35,10 +39,26 @@ jobs:
         apt-get install -y \
             cmake zip unzip \
             g++ libnss3-dev libnss3-tools \
-            openjdk-17-jdk libcommons-lang3-java libslf4j-java junit4
+            openjdk-17-jdk libcommons-lang3-java libslf4j-java junit4 \
+            maven
 
-    - name: Build JSS binaries, Javadoc, and run tests
+    - name: Build JSS with CMake
       run: ./build.sh --with-tests
+
+    - name: Build JSS with Maven
+      run: mvn install
+
+    - name: Compare jss.jar
+      run: |
+        jar tvf ~/build/jss/jss.jar | awk '{print $8;}' | sort | tee cmake.out
+        jar tvf target/jss-5.3.0-SNAPSHOT.jar | awk '{print $8;}' | grep -v '^META-INF/maven/' | sort > maven.out
+        diff cmake.out maven.out
+
+    - name: Build examples
+      run: mvn compile
+      working-directory: examples
+
+    # TODO: Run examples
 
   # Compare JNI symbols in the code and in the version script.
   # If there are JNI symbols in the code but not in the version script -> fail.
