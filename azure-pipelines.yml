@@ -61,7 +61,7 @@ jobs:
     vmImage: ubuntu-latest
   steps:
   - script: |
-      grep -iroh '^Java_org_mozilla[^(;]*' src/main/java/ | sort -u > /tmp/functions.txt
+      grep -iroh '^Java_org_mozilla[^(;]*' native/src/main/native/ | sort -u > /tmp/functions.txt
       cat /tmp/functions.txt
     displayName: Get JNI symbols in the code
 

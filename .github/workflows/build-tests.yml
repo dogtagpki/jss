@@ -46,17 +46,13 @@ jobs:
       run: ./build.sh --with-tests
 
     - name: Build JSS with Maven
-      run: mvn install
+      run: mvn package
 
     - name: Compare jss.jar
       run: |
         jar tvf ~/build/jss/jss.jar | awk '{print $8;}' | sort | tee cmake.out
-        jar tvf target/jss-5.3.0-SNAPSHOT.jar | awk '{print $8;}' | grep -v '^META-INF/maven/' | sort > maven.out
+        jar tvf base/target/jss-5.3.0-SNAPSHOT.jar | awk '{print $8;}' | grep -v '^META-INF/maven/' | sort > maven.out
         diff cmake.out maven.out
-
-    - name: Build examples
-      run: mvn compile
-      working-directory: examples
 
     # TODO: Run examples
 
@@ -73,7 +69,7 @@ jobs:
 
       - name: Get JNI symbols in the code
         run: |
-          grep -iroh '^Java_org_mozilla[^(;]*' src/main/java/ | sort -u > /tmp/functions.txt
+          grep -iroh '^Java_org_mozilla[^(;]*' native/src/main/native/ | sort -u > /tmp/functions.txt
           cat /tmp/functions.txt
 
       - name: Get JNI symbols in the version script
