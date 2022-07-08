@@ -89,7 +89,7 @@ jobs:
           docker exec pki bash -c "dnf install -y /root/build/pki/RPMS/*.rpm"
 
   ca-test:
-    name: Installing CA
+    name: Testing CA
     needs: [init, build]
     runs-on: ubuntu-latest
     env:
@@ -124,11 +124,19 @@ jobs:
 
       - name: Install CA
         run: |
-          docker exec pki pkispawn -f /usr/share/pki/server/examples/installation/ca.cfg -s CA -v
+          docker exec pki pkispawn \
+              -f /usr/share/pki/server/examples/installation/ca.cfg \
+              -s CA \
+              -D pki_cert_id_generator=random \
+              -D pki_request_id_generator=random \
+              -v
+
           # set buffer size to 0 so that revocation takes effect immediately
           docker exec pki pki-server ca-config-set auths.revocationChecking.bufferSize 0
+
           # enable signed audit log
           docker exec pki pki-server ca-config-set log.instance.SignedAudit.logSigning true
+
           # restart PKI server
           docker exec pki pki-server restart --wait
 
@@ -141,27 +149,27 @@ jobs:
           docker exec pki pki client-cert-import ca_signing --ca-cert ca_signing.crt
           docker exec pki pki info
 
-      - name: Test CA certs
+      - name: Check CA certs
         run: |
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-signing-cert.sh
           docker exec pki /usr/share/pki/tests/ca/bin/test-subsystem-cert.sh
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-certs.sh
 
-      - name: Test CA admin
+      - name: Check CA admin
         run: |
           docker exec pki pki client-cert-import \
               --pkcs12 /root/.dogtag/pki-tomcat/ca_admin_cert.p12 \
               --pkcs12-password Secret.123
           docker exec pki pki -n caadmin ca-user-show caadmin
 
-      - name: Test CA agent
+      - name: Check CA agent
         run: |
           docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-create.sh
           docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-cert-create.sh
           docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-cert-revoke.sh
           docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-cert-unrevoke.sh
 
-      - name: Test CA auditor
+      - name: Check CA auditor
         run: |
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-create.sh
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-cert.sh
