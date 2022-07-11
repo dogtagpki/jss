@@ -68,7 +68,7 @@ macro(jss_build_globs)
         list(APPEND C_SOURCES "${_C_SOURCE}")
     endforeach()
 
-    file(GLOB_RECURSE _C_SOURCES native/src/main/native/*.c)
+    file(GLOB_RECURSE _C_SOURCES native/src/test/native/*.c)
     foreach(_C_SOURCE ${_C_SOURCES})
         list(APPEND C_TEST_SOURCES "${_C_SOURCE}")
     endforeach()
