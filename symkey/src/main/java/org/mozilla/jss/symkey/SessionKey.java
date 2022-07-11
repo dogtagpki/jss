@@ -36,30 +36,32 @@ public class SessionKey {
     private static void loadLibrary() {
 
         try {
-            logger.debug("SessionKey: loading JSS symkey library from java.library.path");
             System.loadLibrary("jss-symkey");
+            logger.debug("SessionKey: Loaded JSS symkey library from java.library.path");
             return;
 
         } catch (UnsatisfiedLinkError e) {
-            logger.warn("Unable to load JSS symkey library from java.library.path: " + e.getMessage());
+            logger.debug("SessionKey: Unable to load JSS symkey library from java.library.path: " + e.getMessage());
         }
 
+        String path = "/usr/lib64/jss/libjss-symkey.so";
         try {
-            logger.debug("SessionKey: loading 64-bit JSS symkey library");
-            System.load("/usr/lib64/jss/libjss-symkey.so");
+            System.load(path);
+            logger.debug("SessionKey: Loaded JSS symkey library from " + path);
             return;
 
         } catch (UnsatisfiedLinkError e) {
-            logger.warn("Unable to load 64-bit JSS symkey library: " + e.getMessage());
+            logger.debug("SessionKey: Unable to load JSS symkey library from " + path + ": " + e.getMessage());
         }
 
+        path = "/usr/lib/jss/libjss-symkey.so";
         try {
-            logger.debug("SessionKey: loading 32-bit JSS symkey library");
-            System.load("/usr/lib/java/libjss-symkey.so");
+            System.load(path);
+            logger.debug("SessionKey: Loaded JSS symkey library from " + path);
             return;
 
         } catch (UnsatisfiedLinkError e) {
-            logger.warn("Unable to load 32-bit JSS symkey library: " + e.getMessage());
+            logger.debug("SessionKey: Unable to load JSS symkey library from " + path + ": " + e.getMessage());
         }
 
         logger.error("Unable to load JSS symkey library");

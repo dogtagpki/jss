@@ -52,30 +52,42 @@ public final class CryptoManager implements TokenSupplier
     public static Logger logger = LoggerFactory.getLogger(CryptoManager.class);
 
     static {
+        loadLibrary();
+    }
 
-        logger.debug("CryptoManager: loading JSS library");
+    private static void loadLibrary() {
 
         try {
             System.loadLibrary("jss");
-            logger.debug("CryptoManager: loaded JSS library from java.library.path");
+            logger.debug("CryptoManager: Loaded JSS library from java.library.path");
+            return;
 
         } catch (UnsatisfiedLinkError e) {
-
-            try {
-                System.load("/usr/lib64/jss/libjss.so");
-                logger.debug("CryptoManager: loaded JSS library from /usr/lib64/jss/libjss.so");
-
-            } catch (UnsatisfiedLinkError e1) {
-                try {
-                    System.load("/usr/lib/jss/libjss.so");
-                    logger.debug("CryptoManager: loaded JSS library from /usr/lib/jss/libjss.so");
-                } catch (UnsatisfiedLinkError e2) {
-                    logger.warn("Unable to load jss via loadLibrary: " + e.toString());
-                    logger.warn("Unable to load /usr/lib64/jss/libjss.so: " + e1.toString());
-                    throw e2;
-                }
-            }
+            logger.debug("CryptoManager: Unable to load JSS library from java.library.path: " + e.getMessage());
         }
+
+        String path = "/usr/lib64/jss/libjss.so";
+        try {
+            System.load(path);
+            logger.debug("CryptoManager: Loaded JSS library from " + path);
+            return;
+
+        } catch (UnsatisfiedLinkError e) {
+            logger.debug("CryptoManager: Unable to load JSS library from " + path + ": " + e.getMessage());
+        }
+
+        path = "/usr/lib/jss/libjss.so";
+        try {
+            System.load(path);
+            logger.debug("CryptoManager: Loaded JSS library from " + path);
+            return;
+
+        } catch (UnsatisfiedLinkError e) {
+            logger.debug("CryptoManager: Unable to load JSS library from " + path + ": " + e.getMessage());
+        }
+
+        logger.error("Unable to load JSS library");
+        System.exit(-1);
     }
 
     /**

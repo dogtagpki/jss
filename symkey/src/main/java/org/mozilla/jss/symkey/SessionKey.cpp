@@ -3089,8 +3089,6 @@ Java_org_mozilla_jss_symkey_SessionKey_GetSymKeyByName
     char *keyNameChars = NULL;
     PK11SlotInfo *slot = NULL;
 
-    PR_fprintf(PR_STDOUT,"In SessionKey GetSymKeyByName!\n");
-
     if (keyName) {
         keyNameChars = (char *)(env)->GetStringUTFChars(keyName,NULL);
     }
@@ -3104,7 +3102,6 @@ Java_org_mozilla_jss_symkey_SessionKey_GetSymKeyByName
             slot = ReturnSlot(tokenNameChars);
         }
 
-        PR_fprintf(PR_STDOUT,"SessionKey: GetSymKeyByName slot %p  name %s tokenName %s keyName %s \n",slot, PK11_GetSlotName(slot), PK11_GetTokenName(slot),keyNameChars);
         (env)->ReleaseStringUTFChars(tokenName, (const char *)tokenNameChars);
     } else {
         slot = PK11_GetInternalKeySlot();
@@ -3115,7 +3112,6 @@ Java_org_mozilla_jss_symkey_SessionKey_GetSymKeyByName
 
     key = ReturnSymKey( slot, keyNameChars);
 
-    PR_fprintf(PR_STDOUT,"SessionKey: GetSymKeyByName returned key %p \n",key);
     if (key == NULL) {
         goto finish;
     }
