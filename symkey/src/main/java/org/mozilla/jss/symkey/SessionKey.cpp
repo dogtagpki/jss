@@ -42,9 +42,12 @@ extern "C"
 #include <cstdarg>
 #include <string>
 
+#define PLAIN_CONSTRUCTOR "<init>"
+
 // DRM_PROTO begins
 #define PK11SYMKEY_CLASS_NAME "org/mozilla/jss/pkcs11/PK11SymKey"
 #define PK11SYMKEY_CONSTRUCTOR_SIG "([B)V"
+#define PK11SYMKEY_CONSTRUCTOR_1_SIG "([BLjava/lang/String;)V"
 #define ALL_SYMKEY_OPS  (CKF_ENCRYPT | CKF_DECRYPT | CKF_WRAP | CKF_UNWRAP)
 // DRM_PROTO ends
 
@@ -129,6 +132,8 @@ JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey, PRFileDesc *debug_fd)
     jmethodID constructor;
     jbyteArray ptrArray;
     jobject Key=NULL;
+    char *nickname = NULL;
+    jstring jnickname = NULL;
 
     if (debug_fd)
         PR_fprintf(debug_fd, "DRMproto in JSS_PK11_wrapSymKey\n");
@@ -147,10 +152,16 @@ JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey, PRFileDesc *debug_fd)
         goto finish;
     }
 
+    nickname = PK11_GetSymKeyNickname(*symKey);
+
+    if (nickname) {
+        jnickname = (env)->NewStringUTF(nickname);
+    }
+
     /* find the constructor */
     constructor = (env)->GetMethodID(keyClass,
-        "<init>"/*PLAIN_CONSTRUCTOR*/,
-        PK11SYMKEY_CONSTRUCTOR_SIG);
+        PLAIN_CONSTRUCTOR,
+        PK11SYMKEY_CONSTRUCTOR_1_SIG);
     if (debug_fd)
         PR_fprintf(debug_fd, "DRMproto in JSS_PK11_wrapSymKey called GetMethodID\n");
     if(constructor == NULL)
@@ -173,7 +184,7 @@ JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey, PRFileDesc *debug_fd)
     }
 
     /* call the constructor */
-    Key = (env)->NewObject( keyClass, constructor, ptrArray);
+    Key = (env)->NewObject(keyClass, constructor, ptrArray, jnickname);
     if (debug_fd)
         PR_fprintf(debug_fd, "DRMproto in JSS_PK11_wrapSymKey called NewObject\n");
 
@@ -183,6 +194,10 @@ finish:
         if (debug_fd)
             PR_fprintf(debug_fd, "DRMproto in JSS_PK11_wrapSymKey NewObject returns NULL\n");
         PK11_FreeSymKey(*symKey);
+    }
+    if (nickname != NULL) {
+        PORT_Free(nickname);
+        nickname = NULL;
     }
     *symKey = NULL;
     return Key;
