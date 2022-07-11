@@ -84,6 +84,9 @@ set_target_properties(${SYMKEY_SHARED_LIBRARY}
             jss-symkey
 )
 
+target_link_libraries(${SYMKEY_SHARED_LIBRARY}
+    smime3 ssl3 nss3 nssutil3 plc4 plds4 nspr4 pthread dl)
+
 install(
     TARGETS
         ${SYMKEY_SHARED_LIBRARY}
