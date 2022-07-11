@@ -387,7 +387,7 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_DeleteKey(JNIEnv * env, jclass th
 extern "C" JNIEXPORT jstring
 JNICALL Java_org_mozilla_jss_symkey_SessionKey_ListSymmetricKeys(JNIEnv * env, jclass this2, jstring tokenName)
 {
-    char *tokenNameChars;
+    char *tokenNameChars = NULL;
     jstring retval = NULL;
     PK11SymKey *symKey     = NULL;
     PK11SymKey *nextSymKey = NULL;
@@ -395,21 +395,27 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_ListSymmetricKeys(JNIEnv * env, j
     pwdata.source   = secuPWData::PW_NONE;
     pwdata.data     = (char *) NULL;
     PK11SlotInfo *slot = NULL;
+    char *result;
 
-    tokenNameChars = (char *)(env)->GetStringUTFChars(tokenName, NULL);
-    char *result= (char *)malloc(1);
+    result = (char *) malloc(1);
     result[0] = '\0';
-    if( tokenNameChars == NULL )
-    {
-        goto finish;
-    }
-    if(strcmp( tokenNameChars, "internal" ) == 0 )
-    {
+
+    if (tokenName) {
+
+        tokenNameChars = (char *) (env)->GetStringUTFChars(tokenName, NULL);
+
+        if (tokenNameChars == NULL) {
+            goto finish;
+        }
+
+        if (strcmp(tokenNameChars, "internal") == 0) {
+            slot = PK11_GetInternalKeySlot();
+        } else {
+            slot = PK11_FindSlotByName(tokenNameChars);
+        }
+
+    } else {
         slot = PK11_GetInternalKeySlot();
-    }
-    else if( tokenNameChars != NULL )
-    {
-        slot = PK11_FindSlotByName( tokenNameChars );
     }
 
     /* Initialize the symmetric key list. */
@@ -439,7 +445,7 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_ListSymmetricKeys(JNIEnv * env, j
         count++;
     }
 
-    finish:
+finish:
     if (slot)
     {
         PK11_FreeSlot(slot);
