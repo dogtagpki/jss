@@ -92,7 +92,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dogtagpki_jss 
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dogtagpki_jss -pl '!native' 
           -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
           -Dsonar.pullrequest.key=${{ needs.retrieve-pr.outputs.pr-number }}
           -Dsonar.pullrequest.branch=${{ github.event.workflow_run.head_branch }}
