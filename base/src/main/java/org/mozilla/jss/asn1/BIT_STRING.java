@@ -122,7 +122,7 @@ public class BIT_STRING implements ASN1Value {
         BitSet bs = new BitSet();
         int numBits = (bits.length * 8) - padCount;
         for (int i = 0; i < numBits; i++) {
-            if ((bits[i / 8] & (0x80 >>> (i % 8))) != 0) {
+            if ((bits[i / 8] & (0x80 >>> (i % 8))) != 0) { //NOSONAR -  int promotion bug is prevented by the applied mask
                 bs.set(i);
             } else {
                 bs.clear(i);
@@ -143,7 +143,7 @@ public class BIT_STRING implements ASN1Value {
         // all elements are set to false by default
 
         for (int i = 0; i < array.length; i++) {
-            if ((bits[i / 8] & (0x80 >>> (i % 8))) != 0) {
+            if ((bits[i / 8] & (0x80 >>> (i % 8))) != 0) { //NOSONAR -  int promotion bug is prevented by the applied mask
                 array[i] = true;
             }
         }
@@ -198,7 +198,7 @@ public class BIT_STRING implements ASN1Value {
                 padBits = 0;
             } else {
                 for (padBits = 0; padBits < 8; ++padBits) {
-                    if ((bits[numBytes - 1] & (1 << padBits)) != 0) {
+                    if ((bits[numBytes - 1] & (1 << padBits)) != 0) { //NOSONAR -  int promotion bug is prevented by the applied mask
                         break;
                     }
                 }
