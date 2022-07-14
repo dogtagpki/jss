@@ -753,7 +753,9 @@ Java_org_mozilla_jss_pkcs11_PK11Cert_getSubjectDNString
     ascii = CERT_NameToAscii(&cert->subject);
 
     if( ascii ) {
-        return (*env)->NewStringUTF(env, ascii);
+        jstring newString = (*env)->NewStringUTF(env, ascii);
+        PORT_Free(ascii);
+        return newString;
     } else {
         return NULL;
     }
@@ -776,7 +778,9 @@ Java_org_mozilla_jss_pkcs11_PK11Cert_getIssuerDNString
     ascii = CERT_NameToAscii(&cert->issuer);
 
     if( ascii ) {
-        return (*env)->NewStringUTF(env, ascii);
+        jstring newString = (*env)->NewStringUTF(env, ascii);
+        PORT_Free(ascii);
+        return newString;
     } else {
         return NULL;
     }
