@@ -136,12 +136,12 @@ public class UTF8Converter {
 					utf8[utf++] = (byte) (0x80 | ((ucs4>>6) & 0x3f) );
 					utf8[utf++] = (byte) (0x80 | (ucs4 & 0x3f) );
 				} else if(ucs4 < 0x00200000) {
-					// 001 0000 - 001f ffff
+					// 0001 0000 - 001f ffff
 					utf8[utf++] = (byte) (0xf0 | ucs4>>18);
 					utf8[utf++] = (byte) (0x80 | ((ucs4>>12) & 0x3f) );
 					utf8[utf++] = (byte) (0x80 | ((ucs4>>6) & 0x3f) );
 					utf8[utf++] = (byte) (0x80 | (ucs4 & 0x3f) );
-				} else if(ucs4 < 0x00200000) {
+				} else if(ucs4 < 0x00400000) {
 					// 0020 0000 - 03ff ffff
 					utf8[utf++] = (byte) (0xf8 | ucs4>>24);
 					utf8[utf++] = (byte) (0x80 | ((ucs4>>18) & 0x3f) );
