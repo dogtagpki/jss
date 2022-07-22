@@ -104,11 +104,11 @@ generate_rpm_sources() {
             --format=tar.gz \
             --prefix "$PREFIX/" \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
-            $SOURCE_TAG
+            "$SOURCE_TAG"
 
         if [ "$SOURCE_TAG" != "HEAD" ] ; then
 
-            TAG_ID="$(git -C "$SRC_DIR" rev-parse $SOURCE_TAG)"
+            TAG_ID="$(git -C "$SRC_DIR" rev-parse "$SOURCE_TAG")"
             HEAD_ID="$(git -C "$SRC_DIR" rev-parse HEAD)"
 
             if [ "$TAG_ID" != "$HEAD_ID" ] ; then
@@ -142,7 +142,7 @@ generate_patch() {
     git -C "$SRC_DIR" \
         format-patch \
         --stdout \
-        $SOURCE_TAG \
+        "$SOURCE_TAG" \
         > "$WORK_DIR/SOURCES/$PATCH"
 }
 
@@ -351,8 +351,8 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     OPTIONS=()
 
-    OPTIONS+=(-S $SRC_DIR)
-    OPTIONS+=(-B $WORK_DIR)
+    OPTIONS+=(-S "$SRC_DIR")
+    OPTIONS+=(-B "$WORK_DIR")
 
     # Set environment variables for CMake
     # (see /usr/lib/rpm/macros.d/macros.cmake)
@@ -362,24 +362,24 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     OPTIONS+=(-DCMAKE_Fortran_FLAGS_RELEASE:STRING=-DNDEBUG)
     OPTIONS+=(-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON)
     OPTIONS+=(-DCMAKE_INSTALL_DO_STRIP:BOOL=OFF)
-    OPTIONS+=(-DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_DIR)
+    OPTIONS+=(-DCMAKE_INSTALL_PREFIX:PATH="$PREFIX_DIR")
 
-    OPTIONS+=(-DINCLUDE_INSTALL_DIR:PATH=$INCLUDE_DIR)
-    OPTIONS+=(-DLIB_INSTALL_DIR:PATH=$LIB_DIR)
-    OPTIONS+=(-DSYSCONF_INSTALL_DIR:PATH=$SYSCONF_DIR)
-    OPTIONS+=(-DSHARE_INSTALL_PREFIX:PATH=$SHARE_DIR)
+    OPTIONS+=(-DINCLUDE_INSTALL_DIR:PATH="$INCLUDE_DIR")
+    OPTIONS+=(-DLIB_INSTALL_DIR:PATH="$LIB_DIR")
+    OPTIONS+=(-DSYSCONF_INSTALL_DIR:PATH="$SYSCONF_DIR")
+    OPTIONS+=(-DSHARE_INSTALL_PREFIX:PATH="$SHARE_DIR")
 
     OPTIONS+=(-DLIB_SUFFIX=64)
     OPTIONS+=(-DBUILD_SHARED_LIBS:BOOL=ON)
 
     if [ "$JAVA_HOME" != "" ] ; then
-        OPTIONS+=(-DJAVA_HOME=$JAVA_HOME)
+        OPTIONS+=(-DJAVA_HOME="$JAVA_HOME")
     fi
 
-    OPTIONS+=(-DLIB_DIR=$LIB_DIR)
-    OPTIONS+=(-DJNI_DIR=$JNI_DIR )
+    OPTIONS+=(-DLIB_DIR="$LIB_DIR")
+    OPTIONS+=(-DJNI_DIR="$JNI_DIR" )
 
-    OPTIONS+=(-DVERSION=$VERSION)
+    OPTIONS+=(-DVERSION="$VERSION")
 
     if [ "$WITHOUT_JAVADOC" = true ] ; then
         OPTIONS+=(-DWITH_JAVADOC=FALSE)
@@ -441,7 +441,7 @@ if [ "$BUILD_TARGET" = "install" ] ; then
     fi
 
     OPTIONS+=(CMAKE_NO_VERBOSE=1)
-    OPTIONS+=(DESTDIR=$INSTALL_DIR)
+    OPTIONS+=(DESTDIR="$INSTALL_DIR")
     OPTIONS+=(INSTALL="install -p")
     OPTIONS+=(--no-print-directory)
 

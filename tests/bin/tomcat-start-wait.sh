@@ -3,7 +3,7 @@
 NAME=$1
 URL=$2
 
-if [ "$NAME" == "" -o "$URL" == "" ]
+if [ "$NAME" == "" ] || [ "$URL" == "" ]
 then
     echo "Usage: tomcat-start-wait.sh <name> <URL>"
     exit 1
@@ -20,17 +20,15 @@ while :
 do
     sleep 1
 
-    docker exec $NAME curl -IkSs $URL
-
-    if [ $? -eq 0 ]
+    if [ ! "$(docker exec "$NAME" curl -IkSs "$URL")" ]
     then
         break
     fi
 
     current_time=$(date +%s)
-    elapsed_time=$(expr $current_time - $start_time)
+    elapsed_time=$(("$current_time" - "$start_time"))
 
-    if [ $elapsed_time -ge $MAX_WAIT ]
+    if [ "$elapsed_time" -ge "$MAX_WAIT" ]
     then
         echo "Tomcat did not start after ${MAX_WAIT}s"
         exit 1
