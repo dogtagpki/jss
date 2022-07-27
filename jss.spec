@@ -83,8 +83,8 @@ BuildRequires:  gcc-c++
 
 # TODO: Remove version upper bound once the issues with NSS 3.81 are resolved:
 # https://github.com/dogtagpki/jss/issues/882
-BuildRequires:  nss-devel >= 3.66, nss < 3.81
-BuildRequires:  nss-tools >= 3.66, nss < 3.81
+BuildRequires:  nss-devel >= 3.66, nss-devel < 3.81
+BuildRequires:  nss-tools >= 3.66, nss-tools < 3.81
 
 BuildRequires:  %{java_devel}
 BuildRequires:  jpackage-utils
