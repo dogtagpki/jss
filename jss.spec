@@ -80,12 +80,8 @@ BuildRequires:  zip
 BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
-
-# TODO: Remove version upper bound once the issues with NSS 3.81 are resolved:
-# https://github.com/dogtagpki/jss/issues/882
-BuildRequires:  nss-devel >= 3.66, nss-devel < 3.81
-BuildRequires:  nss-tools >= 3.66, nss-tools < 3.81
-
+BuildRequires:  nss-devel >= 3.66
+BuildRequires:  nss-tools >= 3.66
 BuildRequires:  %{java_devel}
 BuildRequires:  jpackage-utils
 BuildRequires:  slf4j
@@ -105,10 +101,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS)
 
-# TODO: Remove version upper bound once the issues with NSS 3.81 are resolved:
-# https://github.com/dogtagpki/jss/issues/882
-Requires:       nss >= 3.66, nss < 3.81
-
+Requires:       nss >= 3.66
 Requires:       %{java_headless}
 Requires:       jpackage-utils
 Requires:       slf4j
