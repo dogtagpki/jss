@@ -70,7 +70,7 @@ In Distributions
 ----------------
 
 JSS is currently shipped in Fedora-based distributions under the package
-name `jss`; to install issue `sudo dnf install jss`.
+name `dogtag-jss`; to install issue `sudo dnf install dogtag-jss`.
 
 JSS is also shipped in Debian-based distributions under the package
 name `libjss-java`; to install, issue `sudo apt-get install libjss-java`.
