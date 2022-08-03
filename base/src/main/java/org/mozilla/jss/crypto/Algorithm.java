@@ -271,4 +271,6 @@ public class Algorithm {
     protected static final int SEC_OID_AES_128_KEY_WRAP_KWP = 81;
     protected static final int SEC_OID_AES_192_KEY_WRAP_KWP = 82;
     protected static final int SEC_OID_AES_256_KEY_WRAP_KWP = 83;
+
+    protected static final int SEC_OID_HMAC_SHA1 = 84;
 }
