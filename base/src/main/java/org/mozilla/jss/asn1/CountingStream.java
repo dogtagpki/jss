@@ -31,7 +31,7 @@ class CountingStream extends InputStream {
     }
 
     @Override
-    public void mark(int readlimit) {
+    public synchronized void mark(int readlimit) {
         source.mark(readlimit);
         markpos = count;
         if (DEBUG) {
@@ -81,7 +81,7 @@ class CountingStream extends InputStream {
     }
 
     @Override
-    public void reset() throws IOException {
+    public synchronized void reset() throws IOException {
         source.reset();
         if (DEBUG) {
             System.out.println("reset from " + count + " to " + markpos);
