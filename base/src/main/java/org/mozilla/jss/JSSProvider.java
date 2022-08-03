@@ -296,6 +296,9 @@ public final class JSSProvider extends java.security.Provider {
         put("KeyGenerator.RC2", kg_spi + "$RC2");
         put("KeyGenerator.HmacSHA1", kg_spi + "$HmacSHA1");
         put("KeyGenerator.PBAHmacSHA1", kg_spi + "$PBAHmacSHA1");
+        put("KeyGenerator.PBESHA256Hmac", kg_spi + "$PBESHA256Hmac");
+        put("KeyGenerator.PBESHA384Hmac", kg_spi + "$PBESHA384Hmac");
+        put("KeyGenerator.PBESHA512Hmac", kg_spi + "$PBESHA512Hmac");
         put("KeyGenerator.HmacSHA256", kg_spi + "$HmacSHA256");
         put("KeyGenerator.HmacSHA384", kg_spi + "$HmacSHA384");
         put("KeyGenerator.HmacSHA512", kg_spi + "$HmacSHA512");

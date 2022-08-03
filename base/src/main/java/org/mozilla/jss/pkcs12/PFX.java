@@ -153,7 +153,8 @@ public class PFX implements ASN1Value {
             MacData testMac = new MacData(password,
                     macData.getMacSalt().toByteArray(),
                     macData.getMacIterationCount().intValue(),
-                    encodedAuthSafes);
+                    encodedAuthSafes,
+                    macData.getMac().getDigestAlgorithm());
 
             if (testMac.getMac().equals(macDataMac)) {
                 return true;
