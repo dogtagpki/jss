@@ -154,6 +154,9 @@ public class MacData implements ASN1Value {
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA256_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA256);
             }
+            if(kg == null) {
+                throw new NoSuchAlgorithmException("Algorithm (oid:" + algID.getOID().toDottedString() + ") not managed for digest");
+            }
             kg.setCharToByteConverter(new PasswordConverter());
             kg.initialize(params);
             SymmetricKey key = kg.generate();
