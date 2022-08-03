@@ -115,6 +115,21 @@ public class JSSKeyGeneratorSpi extends javax.crypto.KeyGeneratorSpi {
             super(KeyGenAlgorithm.PBA_SHA1_HMAC);
         }
     }
+    public static class PBESHA256Hmac extends JSSKeyGeneratorSpi {
+        public PBESHA256Hmac() {
+            super(KeyGenAlgorithm.PBE_SHA256_HMAC);
+        }
+    }
+    public static class PBESHA384Hmac extends JSSKeyGeneratorSpi {
+        public PBESHA384Hmac() {
+            super(KeyGenAlgorithm.PBE_SHA384_HMAC);
+        }
+    }
+    public static class PBESHA512Hmac extends JSSKeyGeneratorSpi {
+        public PBESHA512Hmac() {
+            super(KeyGenAlgorithm.PBE_SHA512_HMAC);
+        }
+    }
     public static class HmacSHA256 extends JSSKeyGeneratorSpi {
         public HmacSHA256() {
             super(KeyGenAlgorithm.SHA256_HMAC);
