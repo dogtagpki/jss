@@ -83,22 +83,48 @@ public class MacData implements ASN1Value {
 
     /**
      * Creates a MacData by computing a HMAC on the given bytes. An HMAC
-	 *	is a message authentication code, which is a keyed digest. It proves
-	 *	not only that data has not been tampered with, but also that the
-	 *	entity that created the HMAC possessed the symmetric key.
-	 *
-	 * @param password The password used to generate a key using a
-	 *		PBE mechanism.
-	 * @param macSalt The salt used as input to the PBE key generation
-	 *		mechanism. If null is passed in, new random salt will be created.
+     * is a message authentication code, which is a keyed digest. It proves
+     * not only that data has not been tampered with, but also that the
+     * entity that created the HMAC possessed the symmetric key.
+     *
+     * @param password The password used to generate a key using a PBE mechanism.
+     * @param macSalt The salt used as input to the PBE key generation mechanism.
+     *      If null is passed in, new random salt will be created.
      * @param iterations The iteration count for creating the PBE key.
-	 * @param toBeMACed The data on which the HMAC will be computed.
+     * @param toBeMACed The data on which the HMAC will be computed.
      * @exception NotInitializedException If the crypto subsystem
      *      has not been initialized yet.
      * @exception TokenException If an error occurs on a crypto token.
-	 */
+     */
     public MacData( Password password, byte[] macSalt,
                     int iterations, byte[] toBeMACed )
+        throws NotInitializedException,
+            DigestException, TokenException, CharConversionException
+    {
+        this(password, macSalt, iterations, toBeMACed, null);
+    }
+
+
+    /**
+     * Creates a MacData by computing a HMAC on the given bytes. An HMAC
+     * is a message authentication code, which is a keyed digest. It proves
+     * not only that data has not been tampered with, but also that the
+     * entity that created the HMAC possessed the symmetric key.
+     *
+     * @param password The password used to generate a key using a PBE mechanism.
+     * @param macSalt The salt used as input to the PBE key generation mechanism.
+     *      If null is passed in, new random salt will be created.
+     * @param iterations The iteration count for creating the PBE key.
+     * @param toBeMACed The data on which the HMAC will be computed.
+     * @param algID The algorithm used to compute the HMAC, If null the
+     *      SHA1 will be used.
+     * @exception NotInitializedException If the crypto subsystem
+     *      has not been initialized yet.
+     * @exception TokenException If an error occurs on a crypto token.
+     */
+    public MacData( Password password, byte[] macSalt,
+                    int iterations, byte[] toBeMACed,
+                    AlgorithmIdentifier algID)
         throws NotInitializedException,
             DigestException, TokenException, CharConversionException
     {
@@ -115,24 +141,45 @@ public class MacData implements ASN1Value {
 
         try {
             // generate key from password and salt
-            KeyGenerator kg = token.getKeyGenerator(KeyGenAlgorithm.PBA_SHA1_HMAC);
+            if(algID == null) {
+                algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
+            }
+            KeyGenerator kg = null;
+            JSSMessageDigest digest = null;
+            if(DigestAlgorithm.SHA1.toOID().equals(algID.getOID())){
+                kg = token.getKeyGenerator(KeyGenAlgorithm.PBA_SHA1_HMAC);
+                digest = token.getDigestContext(HMACAlgorithm.SHA1);
+            }
+            if(DigestAlgorithm.SHA256.toOID().equals(algID.getOID())){
+                kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA256_HMAC);
+                digest = token.getDigestContext(HMACAlgorithm.SHA256);
+            }
+            if(DigestAlgorithm.SHA384.toOID().equals(algID.getOID())){
+                kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA384_HMAC);
+                digest = token.getDigestContext(HMACAlgorithm.SHA384);
+            }
+            if(DigestAlgorithm.SHA512.toOID().equals(algID.getOID())){
+                kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA512_HMAC);
+                digest = token.getDigestContext(HMACAlgorithm.SHA512);
+            }
+            if(kg == null || digest == null) {
+                throw new NoSuchAlgorithmException("Algorithm (oid:" + algID.getOID().toDottedString() + ") not managed for digest");
+            }
             kg.setCharToByteConverter(new PasswordConverter());
             kg.initialize(params);
             SymmetricKey key = kg.generate();
 
             // perform the digesting
-            JSSMessageDigest digest = token.getDigestContext(HMACAlgorithm.SHA1);
             digest.initHMAC(key);
             byte[] digestBytes = digest.digest(toBeMACed);
 
             // put everything into a DigestInfo
-            AlgorithmIdentifier algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
             this.mac = new DigestInfo(algID, new OCTET_STRING(digestBytes));
             this.macSalt = new OCTET_STRING(macSalt);
             this.macIterationCount = new INTEGER(iterations);
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-1 HMAC algorithm not found on internal " +
+            throw new RuntimeException("HMAC algorithm not found on internal " +
                     "token: " + e.getMessage(), e);
 
         } catch (InvalidAlgorithmParameterException e) {

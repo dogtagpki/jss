@@ -10,6 +10,7 @@ import java.security.InvalidKeyException;
 import java.security.spec.AlgorithmParameterSpec;
 
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.KBKDFParameterSpec;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
 import org.mozilla.jss.crypto.KeyGenerator;
@@ -179,7 +180,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
             try {
                 pwbytes = charToByte.convert( kgp.getPassword().getChars() );
                 return generatePBE(
-                    token, algorithm, kgp.getEncryptionAlgorithm(),
+                    token, algorithm, kgp.getEncryptionAlgorithm(), kgp.getHashAlgorithm(),
                     pwbytes, kgp.getSalt(), kgp.getIterations());
             } finally {
                 if( pwbytes!=null ) {
@@ -329,7 +330,7 @@ public final class PK11KeyGenerator implements KeyGenerator {
     private static native SymmetricKey
     generatePBE(
         PK11Token token, KeyGenAlgorithm algorithm, EncryptionAlgorithm encAlg,
-        byte[] pass, byte[] salt, int iterationCount)
+        HMACAlgorithm hashAlg, byte[] pass, byte[] salt, int iterationCount)
         throws TokenException;
 
     /**
