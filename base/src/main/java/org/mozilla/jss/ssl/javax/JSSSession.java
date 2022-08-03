@@ -13,6 +13,7 @@ import org.mozilla.jss.pkcs11.*;
 import org.mozilla.jss.ssl.*;
 
 public class JSSSession implements SSLSession, AutoCloseable {
+    private static final int MAX_TLS_RECORD_PAYLOAD = (1 << 14);
     private JSSEngine parent;
 
     private int applicationBufferSize;
@@ -43,7 +44,7 @@ public class JSSSession implements SSLSession, AutoCloseable {
     protected JSSSession(JSSEngine engine, int buffer_size) {
         this.parent = engine;
 
-        applicationBufferSize = buffer_size;
+        applicationBufferSize = Math.min(buffer_size, MAX_TLS_RECORD_PAYLOAD);
         packetBufferSize = buffer_size;
 
         this.appDataMap = new HashMap<>();
