@@ -127,6 +127,13 @@ public class KeyGenAlgorithm extends Algorithm {
             null,
             PBEKeyGenParams.class);
 
+    public static final KeyGenAlgorithm PBE_SHA256_HMAC = new KeyGenAlgorithm(
+            SEC_OID_SHA256,
+            "PBE/SHA256/HMAC",
+            new AnyKeyStrengthValidator(),
+            null,
+            PBEKeyGenParams.class);
+
     @Deprecated(since="5.0.1", forRemoval=true)
     public static final KeyGenAlgorithm SHA1_HMAC = new KeyGenAlgorithm(
             CKM_SHA_1_HMAC,
