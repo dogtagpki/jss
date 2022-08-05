@@ -220,23 +220,23 @@ constructSHAPBEKey(JNIEnv *env, CK_MECHANISM_TYPE mech, PK11SlotInfo *slot, SECI
     params = PK11_CreatePBEParams(salt, pwitem,
         iterationCount);
     switch(mech){
-		case CKM_SHA256:
-			key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA256_HMAC_KEY_GEN, params, 0, NULL);
-			break;
-		case CKM_SHA384:
-			key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN, params, 0, NULL);
-			break;
-		case CKM_SHA512:
-			key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN, params, 0, NULL);
-			break;
-		default:
-	        JSS_throwMsg(env, TOKEN_EXCEPTION,
-	            "constructSHAPBEKey:"
-	            " mech not recognised");
-	        goto finish;
+        case CKM_SHA256:
+            key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA256_HMAC_KEY_GEN, params, 0, NULL);
+            break;
+        case CKM_SHA384:
+            key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN, params, 0, NULL);
+            break;
+        case CKM_SHA512:
+            key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN, params, 0, NULL);
+            break;
+        default:
+            JSS_throwMsg(env, TOKEN_EXCEPTION,
+                "constructSHAPBEKey:"
+                " mech not recognised");
+            goto finish;
     }
-	PK11_DestroyPBEParams(params);
-	params = NULL;
+    PK11_DestroyPBEParams(params);
+    params = NULL;
 
     if( key == NULL ) {
         JSS_throwMsg(env, TOKEN_EXCEPTION,
