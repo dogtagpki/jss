@@ -30,6 +30,7 @@ import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.crypto.Cipher;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
+import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.crypto.IVParameterSpec;
 import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
@@ -40,6 +41,8 @@ import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.PBEParameter;
+import org.mozilla.jss.pkix.primitive.PBES2Params;
+import org.mozilla.jss.pkix.primitive.PBKDF2Params;
 import org.mozilla.jss.util.Password;
 
 /**
@@ -198,12 +201,11 @@ public class EncryptedContentInfo implements ASN1Value {
                 pbeAlg.toOID(), pbeParam);
 
         // create EncryptedContentInfo
-        EncryptedContentInfo encCI = new EncryptedContentInfo(
+        return new EncryptedContentInfo(
                 ContentInfo.DATA,
                 encAlgID,
                 new OCTET_STRING(encrypted) );
 
-        return encCI;
 
       } catch( IllegalBlockSizeException e ) {
         throw new RuntimeException("IllegalBlockSizeException in EncryptedContentInfo"
@@ -236,28 +238,59 @@ public class EncryptedContentInfo implements ASN1Value {
         }
 
         // get the key gen parameters
-        AlgorithmIdentifier algid = contentEncryptionAlgorithm;
-        KeyGenAlgorithm kgAlg = KeyGenAlgorithm.fromOID( algid.getOID() );
+        KeyGenAlgorithm kgAlg = KeyGenAlgorithm.fromOID( contentEncryptionAlgorithm.getOID() );
         if( !(kgAlg instanceof PBEAlgorithm) ) {
             throw new NoSuchAlgorithmException("KeyGenAlgorithm is not a"+
                 " PBE algorithm");
         }
-        ASN1Value params = algid.getParameters();
+        ASN1Value params = contentEncryptionAlgorithm.getParameters();
         if( params == null ) {
             throw new InvalidAlgorithmParameterException(
                 "PBE algorithms require parameters");
         }
-        PBEParameter pbeParams;
-        if( params instanceof PBEParameter) {
-            pbeParams = (PBEParameter) params;
-        } else {
-            byte[] encodedParams = ASN1Util.encode(params);
-            pbeParams = (PBEParameter)
-                ASN1Util.decode( PBEParameter.getTemplate(), encodedParams );
+        byte[] salt = null;
+        int iterations = 0;
+        EncryptionAlgorithm encAlg = null;
+        AlgorithmParameterSpec algParams = null;
+        HMACAlgorithm hashAlg = null;
+        if(!kgAlg.toOID().equals(PBEAlgorithm.PBE_PKCS5_PBES2.toOID())) {
+            PBEParameter pbeParams;
+            if( params instanceof PBEParameter) {
+                pbeParams = (PBEParameter) params;
+            } else {
+                byte[] encodedParams = ASN1Util.encode(params);
+                pbeParams = (PBEParameter)
+                    ASN1Util.decode( PBEParameter.getTemplate(), encodedParams );
+            }
+            salt = pbeParams.getSalt();
+            iterations = pbeParams.getIterations();
+            encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
         }
-        PBEKeyGenParams kgp = new PBEKeyGenParams(pass,
-                    pbeParams.getSalt(), pbeParams.getIterations() );
+        else {
+            byte[] encodedParams = ASN1Util.encode(params);
+            PBES2Params pbe2Params = (PBES2Params)
+                    ASN1Util.decode( PBES2Params.getTemplate(), encodedParams);
+            AlgorithmIdentifier keyDerivationFunc = pbe2Params.getKeyDerivationFunc();
+            AlgorithmIdentifier encryptionScheme = pbe2Params.getEncryptionScheme();
+            if(!keyDerivationFunc.getOID().equals(PBEAlgorithm.PBE_PKCS5_PBKDF2.toOID())) {
+                throw new InvalidAlgorithmParameterException("PBEs2 requires a PBKDF2 keyDerivationFunc"
+                    + keyDerivationFunc.getOID().toDottedString());
+            }
+            byte[] encodedPBKParams = ASN1Util.encode(keyDerivationFunc.getParameters());
+            PBKDF2Params pbkParams = (PBKDF2Params) ASN1Util.decode(
+                    PBKDF2Params.getTemplate(), encodedPBKParams);
+            salt = pbkParams.getSalt();
+            iterations = pbkParams.getIterations();
 
+            encAlg = EncryptionAlgorithm.fromOID(encryptionScheme.getOID());
+            hashAlg = HMACAlgorithm.fromOID(pbkParams.getPrf().getOID());
+            OCTET_STRING iv = (OCTET_STRING) ASN1Util.decode(OCTET_STRING.getTemplate(), ASN1Util.encode(encryptionScheme.getParameters()));
+            algParams = new IVParameterSpec(iv.toByteArray());
+        }
+
+
+        PBEKeyGenParams kgp = new PBEKeyGenParams(pass.getChars(),
+                    salt, iterations, encAlg, hashAlg);
         try {
             // compute the key and IV
             CryptoToken token =
@@ -270,25 +303,26 @@ public class EncryptedContentInfo implements ASN1Value {
             SymmetricKey key = kg.generate();
 
             // compute algorithm parameters
-            EncryptionAlgorithm encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
-            AlgorithmParameterSpec algParams = null;
-            Class<?> [] paramClasses = encAlg.getParameterClasses();
-            for (int i = 0; i < paramClasses.length; i ++) {
-                if ( paramClasses[i].equals(
-                          javax.crypto.spec.IvParameterSpec.class ) ) {
-                    algParams = new IVParameterSpec( kg.generatePBE_IV() );
-                    break;
-                } else if ( paramClasses[i].equals(RC2ParameterSpec.class ) ) {
-                    algParams = new RC2ParameterSpec(key.getStrength(),
-                                                     kg.generatePBE_IV());
-                    break;
+            if(algParams == null) {
+                Class<?> [] paramClasses = encAlg.getParameterClasses();
+                for (int i = 0; i < paramClasses.length; i ++) {
+                    if ( paramClasses[i].equals(
+                              javax.crypto.spec.IvParameterSpec.class ) ) {
+                        algParams = new IVParameterSpec( kg.generatePBE_IV() );
+                        break;
+                    } else if ( paramClasses[i].equals(RC2ParameterSpec.class ) ) {
+                        algParams = new RC2ParameterSpec(key.getStrength(),
+                                                         kg.generatePBE_IV());
+                        break;
+                    }
                 }
             }
-
             // perform the decryption
             Cipher cipher = token.getCipherContext( encAlg );
             cipher.initDecrypt(key, algParams);
-            return Cipher.unPad(cipher.doFinal( encryptedContent.toByteArray() ));
+
+            byte[] ec = encryptedContent.toByteArray();
+            return cipher.doFinal( ec );
 
         } finally {
             kgp.clear();
