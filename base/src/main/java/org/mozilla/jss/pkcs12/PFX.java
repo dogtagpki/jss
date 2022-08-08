@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.DigestException;
 
+import org.mozilla.jss.ContentInfo;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ANY;
@@ -29,7 +30,6 @@ import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.crypto.PBEAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.cert.Certificate;
 import org.mozilla.jss.pkix.primitive.Attribute;

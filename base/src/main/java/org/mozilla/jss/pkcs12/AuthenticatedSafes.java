@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
 
+import org.mozilla.jss.ContentInfo;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;
@@ -26,7 +27,6 @@ import org.mozilla.jss.crypto.IllegalBlockSizeException;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.crypto.PBEAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
-import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.EncryptedContentInfo;
 import org.mozilla.jss.pkcs7.EncryptedData;
 import org.mozilla.jss.util.Password;

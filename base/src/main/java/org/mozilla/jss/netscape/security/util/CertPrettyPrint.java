@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
+import org.mozilla.jss.ContentInfo;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.netscape.security.x509.CertificateExtensions;
@@ -33,7 +34,6 @@ import org.mozilla.jss.netscape.security.x509.Extension;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.mozilla.jss.netscape.security.x509.X509CertInfo;
 import org.mozilla.jss.netscape.security.x509.X509Key;
-import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.SignedData;
 
 /**

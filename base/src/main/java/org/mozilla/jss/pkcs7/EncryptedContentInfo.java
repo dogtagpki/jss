@@ -16,6 +16,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.BadPaddingException;
 import javax.crypto.spec.RC2ParameterSpec;
 
+import org.mozilla.jss.ContentInfo;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ASN1Template;

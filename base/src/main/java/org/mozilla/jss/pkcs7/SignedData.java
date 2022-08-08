@@ -5,6 +5,8 @@
 package org.mozilla.jss.pkcs7;
 
 import java.io.*;
+
+import org.mozilla.jss.ContentInfo;
 import org.mozilla.jss.asn1.*;
 import org.mozilla.jss.pkix.primitive.*;
 import org.mozilla.jss.pkix.cert.Certificate;

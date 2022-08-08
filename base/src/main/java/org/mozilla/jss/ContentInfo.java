@@ -1,7 +1,8 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package org.mozilla.jss.pkix.cms;
+
+package org.mozilla.jss;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,12 @@ import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkcs7.DigestedData;
+import org.mozilla.jss.pkcs7.EncryptedData;
+import org.mozilla.jss.pkcs7.EnvelopedData;
+import org.mozilla.jss.pkcs7.SignedAndEnvelopedData;
+import org.mozilla.jss.pkcs7.SignedData;
+import org.mozilla.jss.pkcs7.EncryptedData.Template;
 
 /**
  * A PKCS #7 ContentInfo structure.
@@ -66,7 +73,7 @@ public class ContentInfo implements ASN1Value {
                 this.content = (ANY) ASN1Util.decode(ANY.getTemplate(),
                                     ASN1Util.encode(content) );
               } catch(InvalidBERException e) {
-                  throw new RuntimeException("Unable to convert "+
+                  throw new RuntimeException("Unable to convert " +
                     "ASN1Value to ANY: " + e.getMessage(), e);
               }
             }
