@@ -13,7 +13,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Hashtable;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
@@ -47,11 +48,11 @@ import org.mozilla.jss.crypto.AlreadyInitializedException;
 public class SSLClient {
     boolean handshakeEventHappened = false;
     boolean doClientAuth = false;
-    Hashtable<String, String> args;
+    HashMap<String, String> args;
     PrintStream results;
     String versionStr;
 
-    String argNames[] = {
+    String[] argNames = {
             "filename",
             "port",
             "ipaddr",
@@ -66,7 +67,7 @@ public class SSLClient {
             "certSerialNum",
     };
 
-    String values[] = {
+    String[] values = {
             "/index", // filename
             "443", // port to connect to
             "", // ipaddr (use hostname instead)
@@ -85,7 +86,6 @@ public class SSLClient {
     String failed = "FAILED";
 
     private static String htmlHeader = "SSL Client Tester";
-    private static String htmlTail = "\n";
 
     /* simple helper functions */
 
@@ -120,7 +120,6 @@ public class SSLClient {
                     "$Id$ " +
                             versionStr);
 
-            SSLSocket s;
             String hostname;
             int port;
 
@@ -137,7 +136,7 @@ public class SSLClient {
             if (isInvalid(portstr)) {
                 port = 443;
             } else {
-                port = Integer.valueOf(portstr).intValue();
+                port = Integer.parseInt(portstr);
             }
 
             String addrstr = getArgument("ipaddr");
@@ -167,150 +166,157 @@ public class SSLClient {
             SSLClientCertificateSelectionCallback certSelectionCallback = new TestClientCertificateSelectionCallback();
             Socket js = new Socket(InetAddress.getByName(hostname), port);
             //s = new SSLSocket(hostname, port, null, 0,
-            s = new SSLSocket(js, hostname,
+            try(SSLSocket s = new SSLSocket(js, hostname,
                     approvalCallback,
-                    certSelectionCallback);
+                    certSelectionCallback)) {
 
-            s.forceHandshake();
-            results.println("Connected.");
+                s.forceHandshake();
+                results.println("Connected.");
 
-            // select the cert for client auth
-            // You will have to provide a certificate with this
-            // name if you expect client auth to work.
+                // select the cert for client auth
+                // You will have to provide a certificate with this
+                // name if you expect client auth to work.
 
-            //s.setClientCertNickname("JavaSSLTestClientCert");
+                //s.setClientCertNickname("JavaSSLTestClientCert");
 
-            // Setup a handshake callback. This listener will get invoked
-            // When the SSL handshake is completed on this socket.
+                // Setup a handshake callback. This listener will get invoked
+                // When the SSL handshake is completed on this socket.
 
-            listener = new ClientHandshakeCB(this);
-            s.addHandshakeCompletedListener(listener);
+                listener = new ClientHandshakeCB(this);
+                s.addHandshakeCompletedListener(listener);
 
-            //s.forceHandshake();
+                //s.forceHandshake();
 
-            OutputStream o = s.getOutputStream();
+                OutputStream o = s.getOutputStream();
 
-            PrintOutputStreamWriter out = new PrintOutputStreamWriter(o);
+                PrintOutputStreamWriter out = new PrintOutputStreamWriter(o);
 
-            results.println("Sending: " + msg + " to " + hostname +
-                    ", " + port);
+                results.println("Sending: " + msg + " to " + hostname +
+                        ", " + port);
 
-            // send HTTP GET message across SSL connection
-            out.println(msg + "\r");
+                // send HTTP GET message across SSL connection
+                out.println(msg + "\r");
 
-            InputStream in = s.getInputStream();
-            byte[] bytes = new byte[4096];
-            int totalBytes = 0;
-            int numReads = 0;
-            String lastBytes = null;
+                InputStream in = s.getInputStream();
+                byte[] bytes = new byte[4096];
+                int totalBytes = 0;
+                int numReads = 0;
+                String lastBytes = null;
 
-            // now try to read data back from the SSL connection
-            try {
-                for (;;) {
-                    results.println("Calling Read.");
-                    int n = in.read(bytes, 0, bytes.length);
-                    if (n == -1) {
-                        results.println("EOF found.");
-                        break;
+                // now try to read data back from the SSL connection
+                try {
+                    for (;;) {
+                        results.println("Calling Read.");
+                        int n = in.read(bytes, 0, bytes.length);
+                        if (n == -1) {
+                            results.println("EOF found.");
+                            break;
+                        }
+
+                        if (n == 0) {
+                            results.println("Zero bytes read?");
+                            break;
+                        }
+                        numReads++;
+
+                        if (totalBytes == 0) {
+                            // don't print forever...
+                            String data = new String(bytes, 0, 30, StandardCharsets.ISO_8859_1);
+                            results.println("Read " + n + " bytes of data");
+                            results.println("First 30 bytes: " + escapeHTML(data));
+                        }
+
+                        totalBytes += n;
+                        lastBytes = new String(bytes, n - 31, 30, StandardCharsets.ISO_8859_1);
                     }
+                } catch (IOException e) {
+                    results.println(
+                            "IOException while reading from pipe?  Actually got " +
+                                    totalBytes + " bytes total");
+                    e.printStackTrace(results);
+                    results.println("");
+                    throw e;
+                } finally {
+                    results.println("Last 30 bytes: " + lastBytes);
+                    results.println("Number of read() calls: " + numReads);
 
-                    if (n == 0) {
-                        results.println("Zero bytes read?");
-                        break;
-                    }
-                    numReads++;
+                    /*
+                     * if you want to test sslimpl.c's nsn_ThrowError(), try
+                     * uncommenting the following line.  This will cause the
+                     * getStatus() call to fail.
+                     */
 
-                    if (totalBytes == 0) {
-                        // don't print forever...
-                        String data = new String(bytes, 0, 30, "8859_1");
-                        results.println("Read " + n + " bytes of data");
-                        results.println("First 30 bytes: " + escapeHTML(data));
-                    }
+                    // in.close();
 
-                    totalBytes += n;
-                    lastBytes = new String(bytes, n - 31, 30, "8859_1");
+                    results.println("Diagnostics");
+                    String tmp;
+                    SSLSecurityStatus status = s.getStatus();
+
+                    results.println("Total bytes read: " + totalBytes);
+                    results.println("Security status of session:");
+                    results.println(status.toString());
+
+                    // now, for the regression testing stuff
+
+                    if (testRegression) {
+                        results.println("Regression Tests");
+
+                        results.println("Handshake callback event happened: " +
+                                ((handshakeEventHappened) ? okay : failed));
+
+                        tmp = getArgument("filesize");
+                        if (!isInvalid(tmp)) {
+                            results.println("filesize: " + cmp(tmp, totalBytes));
+                        }
+                        tmp = getArgument("status");
+                        if (!isInvalid(tmp)) {
+                            results.println("status: " +
+                                    cmp(tmp, status.getSecurityStatus()));
+                        }
+                        tmp = getArgument("sessionKeySize");
+                        if (!isInvalid(tmp)) {
+                            results.println("sessionKeySize: " +
+                                    cmp(tmp, status.getSessionKeySize()));
+                        }
+                        tmp = getArgument("sessionSecretSize");
+                        if (!isInvalid(tmp)) {
+                            results.println("sessionSecretSize: " +
+                                    cmp(tmp, status.getSessionSecretSize()));
+                        }
+                        tmp = getArgument("cipher");
+                        if (!isInvalid(tmp)) {
+                            results.println("cipher: " +
+                                    cmp(tmp, status.getCipher()));
+                        }
+                        tmp = getArgument("issuer");
+                        if (!isInvalid(tmp)) {
+                            results.println("issuer: " +
+                                    cmp(tmp, status.getRemoteIssuer()));
+                        }
+                        tmp = getArgument("subject");
+                        if (!isInvalid(tmp)) {
+                            results.println("subject: " +
+                                    cmp(tmp, status.getRemoteSubject()));
+                        }
+                        tmp = getArgument("certSerialNum");
+                        if (!isInvalid(tmp)) {
+                            String serialNum = status.getSerialNumber();
+                            results.println("certSerialNum: " +
+                                    cmp(tmp, serialNum));
+                        }
+                    } // if false
                 }
-            } catch (IOException e) {
-                results.println(
-                        "IOException while reading from pipe?  Actually got " +
-                                totalBytes + " bytes total");
-                e.printStackTrace(results);
-                results.println("");
-                throw e;
-            } finally {
-                results.println("Last 30 bytes: " + lastBytes);
-                results.println("Number of read() calls: " + numReads);
-
-                /*
-                 * if you want to test sslimpl.c's nsn_ThrowError(), try
-                 * uncommenting the following line.  This will cause the
-                 * getStatus() call to fail.
-                 */
-
-                // in.close();
-
-                results.println("Diagnostics");
-                String tmp;
-                SSLSecurityStatus status = s.getStatus();
-
-                results.println("Total bytes read: " + totalBytes);
-                results.println("Security status of session:");
-                results.println(status.toString());
-
-                // now, for the regression testing stuff
-
-                if (testRegression) {
-                    results.println("Regression Tests");
-
-                    results.println("Handshake callback event happened: " +
-                            ((handshakeEventHappened) ? okay : failed));
-
-                    if (!isInvalid(tmp = getArgument("filesize"))) {
-                        results.println("filesize: " + cmp(tmp, totalBytes));
-                    }
-                    if (!isInvalid(tmp = getArgument("status"))) {
-                        results.println("status: " +
-                                cmp(tmp, status.getSecurityStatus()));
-                    }
-                    if (!isInvalid(tmp = getArgument("sessionKeySize"))) {
-                        results.println("sessionKeySize: " +
-                                cmp(tmp, status.getSessionKeySize()));
-                    }
-                    if (!isInvalid(tmp = getArgument("sessionSecretSize"))) {
-                        results.println("sessionSecretSize: " +
-                                cmp(tmp, status.getSessionSecretSize()));
-                    }
-                    if (!isInvalid(tmp = getArgument("cipher"))) {
-                        results.println("cipher: " +
-                                cmp(tmp, status.getCipher()));
-                    }
-                    if (!isInvalid(tmp = getArgument("issuer"))) {
-                        results.println("issuer: " +
-                                cmp(tmp, status.getRemoteIssuer()));
-                    }
-                    if (!isInvalid(tmp = getArgument("subject"))) {
-                        results.println("subject: " +
-                                cmp(tmp, status.getRemoteSubject()));
-                    }
-                    if (!isInvalid(tmp = getArgument("certSerialNum"))) {
-                        String serialNum = status.getSerialNumber();
-                        results.println("certSerialNum: " +
-                                cmp(tmp, serialNum));
-                    }
-                } // if false
+                // Got here, so no exception thrown above.
+                // Try to clean up.
+                o.close();
+                o = null;
+                in.close();
+                in = null;
+                if (listener != null) {
+                    s.removeHandshakeCompletedListener(listener);
+                    listener = null;
+                }
             }
-            // Got here, so no exception thrown above.
-            // Try to clean up.
-            o.close();
-            o = null;
-            in.close();
-            in = null;
-            if (listener != null) {
-                s.removeHandshakeCompletedListener(listener);
-                listener = null;
-            }
-            s.close();
-            s = null;
 
         } catch (Exception e) {
             results.println("***** TEST FAILED *****");
@@ -326,7 +332,7 @@ public class SSLClient {
      * (&lt; becomes `&amp;lt;', etc.)
      */
     private String escapeHTML(String s) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         // this is inefficient, but I don't care
         for (int i = 0; i < s.length(); i++) {
@@ -351,7 +357,7 @@ public class SSLClient {
     }
 
     public SSLClient(PrintStream ps, String verStr, String[] argv) {
-        this.args = new Hashtable<>();
+        this.args = new HashMap<>();
         this.results = ps;
         this.versionStr = verStr;
 
@@ -375,7 +381,7 @@ public class SSLClient {
             0
     };
 
-    public static void main(String argv[]) throws Exception {
+    public static void main(String[] argv) throws Exception {
         int i;
 
         try {
