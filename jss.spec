@@ -4,7 +4,7 @@ Name:           jss
 
 %global         major_version 4
 %global         minor_version 9
-%global         update_version 4
+%global         update_version 5
 
 Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
