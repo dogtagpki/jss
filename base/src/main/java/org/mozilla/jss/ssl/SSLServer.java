@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import org.mozilla.jss.CertDatabaseException;
 import org.mozilla.jss.CryptoManager;
@@ -39,11 +40,11 @@ import org.mozilla.jss.KeyDatabaseException;
 public class SSLServer {
     boolean handshakeEventHappened = false;
     boolean doClientAuth = false;
-    Hashtable<String, String> args;
+    HashMap<String, String> args;
     PrintStream results;
     String versionStr;
 
-    String argNames[] = {
+    String[] argNames = {
             "filename",
             "port",
             "filesize",
@@ -51,7 +52,7 @@ public class SSLServer {
             "nickname"
     };
 
-    String values[] = {
+    String[] values = {
             "data1k.txt", // filename
             "2000", // port
             "1024", // filesize
@@ -60,7 +61,6 @@ public class SSLServer {
     };
 
     private static String htmlHeader = "SSL Server Tester";
-    private static String htmlTail = "\n";
 
     /* simple helper functions */
     private boolean isInvalid(String s) {
@@ -76,7 +76,6 @@ public class SSLServer {
 
     public void run() {
         try {
-            SSLServerSocket l;
             SSLSocket s;
             int port;
             String tmpStr;
@@ -89,7 +88,7 @@ public class SSLServer {
             if (isInvalid(portStr)) {
                 port = 443;
             } else {
-                port = Integer.valueOf(portStr).intValue();
+                port = Integer.parseInt(portStr);
             }
 
             results.println("here");
@@ -101,28 +100,25 @@ public class SSLServer {
                         tmpStr.equals("0"));
             }
 
-            l = new SSLServerSocket(port);
-            results.println("Listening " + l.toString());
+            try(SSLServerSocket l = new SSLServerSocket(port)) {
+                results.println("Listening " + l.toString());
 
-            // select the server's cert/key
-            nickname = getArgument("nickname");
-            results.println("Getting Cert:" + nickname + "");
-            l.setServerCertNickname(nickname);
+                // select the server's cert/key
+                nickname = getArgument("nickname");
+                results.println("Getting Cert:" + nickname + "");
+                l.setServerCertNickname(nickname);
 
-            if (doClientAuth) {
-                l.requestClientAuth(true);
+                if (doClientAuth) {
+                    l.requestClientAuth(true);
+                }
+
+                // wait for and accept a connection.
+                s = (SSLSocket) l.accept();
+                results.println("Accepted.");
+
+                // handleConnection will close s, as appropriate.
+                handleConnection(s);
             }
-
-            // wait for and accept a connection.
-            s = (SSLSocket) l.accept();
-            results.println("Accepted.");
-
-            handleConnection(s);
-            // handleConnection will close s, as appropriate.
-            s = null;
-
-            l.close();
-            l = null;
 
         } catch (Exception e) {
             results.println("***** TEST FAILED *****");
@@ -133,7 +129,7 @@ public class SSLServer {
         results.println("END OF TEST");
     }
 
-    public void handleConnection(SSLSocket s) throws Exception {
+    public void handleConnection(SSLSocket s) throws IOException {
         SSLHandshakeCompletedListener listener = null;
 
         listener = new ServerHandshakeCB(this);
@@ -191,7 +187,7 @@ public class SSLServer {
         String msg = null;
 
         if (totalBytes > 0) {
-            msg = new String(bytes, 0, totalBytes, "8859_1");
+            msg = new String(bytes, 0, totalBytes, StandardCharsets.ISO_8859_1);
             results.println("Request received:");
             results.println(msg);
             results.println("");
@@ -206,7 +202,6 @@ public class SSLServer {
 
         OutputStream os = s.getOutputStream();
         PrintOutputStreamWriter out = new PrintOutputStreamWriter(os);
-        os = null; // don't keep this reference lying around
 
         String reply = "HTTP/1.0 200 OK\r\n" +
                 "Server: Netscape-Enterprise/2.0a\r\n" +
@@ -219,22 +214,18 @@ public class SSLServer {
         // Got here, so no exception thrown above.
         // Try to clean up.
         in.close();
-        in = null;
 
         if (listener != null) {
             s.removeHandshakeCompletedListener(listener);
-            listener = null;
         }
 
         out.close();
-        out = null;
 
         s.close();
-        s = null;
     }
 
     public SSLServer(PrintStream ps, String verStr) {
-        this.args = new Hashtable<>();
+        this.args = new HashMap<>();
         this.results = ps;
         this.versionStr = verStr;
 
