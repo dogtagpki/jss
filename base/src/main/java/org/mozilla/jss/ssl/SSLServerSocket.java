@@ -188,7 +188,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * @param timeout The timeout time in milliseconds.
      */
     @Override
-    public void setSoTimeout(int timeout) {
+    public synchronized void setSoTimeout(int timeout) {
         base.setTimeout(timeout);
     }
 
@@ -198,7 +198,7 @@ public class SSLServerSocket extends java.net.ServerSocket {
      * @return The timeout time in milliseconds.
      */
     @Override
-    public int getSoTimeout() {
+    public synchronized int getSoTimeout() {
         return base.getTimeout();
     }
 
