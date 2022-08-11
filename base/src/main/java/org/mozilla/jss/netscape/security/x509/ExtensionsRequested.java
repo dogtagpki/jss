@@ -35,8 +35,8 @@ public class ExtensionsRequested implements CertAttrSet {
     public static final String KUE_DIGITAL_SIGNATURE = "kue_digital_signature";
     public static final String KUE_KEY_ENCIPHERMENT = "kue_key_encipherment";
 
-    private String kue_digital_signature = "false";
-    private String kue_key_encipherment = "false";
+    private String kueDigitalSignature = "false";
+    private String kueKeyEncipherment = "false";
 
     private Vector<Extension> exts = new Vector<>();
 
@@ -73,10 +73,10 @@ public class ExtensionsRequested implements CertAttrSet {
     public Object get(String name)
             throws CertificateException, IOException {
         if (name.equalsIgnoreCase(KUE_DIGITAL_SIGNATURE)) {
-            return kue_digital_signature;
+            return kueDigitalSignature;
         }
         if (name.equalsIgnoreCase(KUE_KEY_ENCIPHERMENT)) {
-            return kue_key_encipherment;
+            return kueKeyEncipherment;
         }
 
         throw new IOException("Unsupported attribute queried");
@@ -146,12 +146,12 @@ public class ExtensionsRequested implements CertAttrSet {
             // encapsulated in an octet string, as in the first
             // example above
 
-            byte[] octet_string = dv.getOctetString();
+            byte[] octetString = dv.getOctetString();
 
             // Make a new input stream from the byte array,
             // and re-parse it as a sequence.
 
-            dv = new DerValue(octet_string);
+            dv = new DerValue(octetString);
 
             stream = dv.toDerInputStream();
             stream.getSequence(2); // consume stream
@@ -160,18 +160,16 @@ public class ExtensionsRequested implements CertAttrSet {
         // now, the stream will be in the correct format
         stream.reset();
 
-        while (true) {
-            DerValue ext_dv = null;
-            try {
-                ext_dv = stream.getDerValue();
-            } catch (IOException ex) {
-                break;
-            }
-
-            Extension ext = new Extension(ext_dv);
+        DerValue extDv = null;
+        // stream.available() will return the remaining bytes in the stream precisely
+        // (since it's a ByteArrayInputStream). DER values are at least 2 bytes long:
+        // (see https://letsencrypt.org/docs/a-warm-welcome-to-asn1-and-der/)
+        // IOException will raise only for malformed DER values
+        while (stream.available() >= 2) {
+            extDv = stream.getDerValue();
+            Extension ext = new Extension(extDv);
             exts.addElement(ext);
         }
-
     }
 
     public Vector<Extension> getExtensions() {
