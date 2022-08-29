@@ -409,21 +409,9 @@ macro(jss_config_symbols)
         message(WARNING "Your NSS version doesn't support NIST SP800-108 KBKDF; some features of JSS won't work.")
     endif()
 
-    try_compile(CK_HAVE_COMPILING_OAEP
-                ${CMAKE_BINARY_DIR}/results
-                ${CMAKE_SOURCE_DIR}/tools/tests/oaep.c
-                CMAKE_FLAGS
-                    "-DINCLUDE_DIRECTORIES=${CMAKE_REQUIRED_INCLUDES}"
-                    "-DREQUIRED_FLAGS=${CMAKE_REQUIRED_FLAGS}"
-                LINK_OPTIONS ${JSS_LD_FLAGS}
-                OUTPUT_VARIABLE COMP_OUT)
-    if (CK_HAVE_COMPILING_OAEP)
-        set(HAVE_NSS_OAEP TRUE)
-    else()
-        message(WARNING "Your NSS version doesn't support RSA-OAEP key wra/unwrap; some features of JSS won't work.")
-        message(WARNING "Compile output: ${COMP_OUT}")
-    endif()
-
+    # Assume OAEP support and set the define required.
+    set(HAVE_NSS_OAEP TRUE)
+    message(WARNING "Assuming OAEP support.")
 
     if(HAVE_NSS_CMAC)
         try_run(CK_HAVE_WORKING_CMAC
