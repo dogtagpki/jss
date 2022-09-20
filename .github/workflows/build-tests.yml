@@ -6,6 +6,7 @@ jobs:
   build-test:
     name: Build Test
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
         os:
