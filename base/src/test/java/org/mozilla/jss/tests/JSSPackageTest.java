@@ -8,7 +8,7 @@ public class JSSPackageTest {
 
     public static void main(String[] args) {
         try {
-            Package pkg = Package.getPackage("org.mozilla.jss");
+            Package pkg = ClassLoader.getSystemClassLoader().getDefinedPackage("org.mozilla.jss");
             if (pkg != null) {
                 System.out.println("\n---------------------------------------------------------");
                 System.out.println("Checking jss jar and library version");
