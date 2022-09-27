@@ -269,8 +269,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      *
      * @param rdns an array of RDN.
      */
-    public X500Name(RDN[] rdns)
-            throws IOException {
+    public X500Name(RDN[] rdns) {
         names = rdns.clone();
     }
 
@@ -279,8 +278,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      *
      * @param rdnVector a vector of rdns.
      */
-    public X500Name(Vector<RDN> rdnVector)
-            throws IOException {
+    public X500Name(Vector<RDN> rdnVector) {
         int size = rdnVector.size();
         names = new RDN[size];
         for (int i = 0; i < size; i++) {
@@ -305,9 +303,7 @@ public class X500Name implements Principal, GeneralNameInterface {
         if (getClass() != obj.getClass())
             return false;
         X500Name other = (X500Name) obj;
-        if (!Arrays.equals(names, other.names))
-            return false;
-        return true;
+        return Arrays.equals(names, other.names);
     }
 
     /**
@@ -325,6 +321,9 @@ public class X500Name implements Principal, GeneralNameInterface {
      * encoding restrictions.
      */
     private String getString(DerValue attribute) throws IOException {
+        if (attribute == null)
+            throw new IOException("Null attribute not valid");
+
         String value = attribute.getAsString();
 
         if (value == null)
@@ -519,7 +518,7 @@ public class X500Name implements Principal, GeneralNameInterface {
     }
 
     private String dn; // RFC 1779 style DN, or null
-    private RDN names[]; // RDNs
+    private RDN[] names; // RDNs
 
     /**
      * Find the first instance of this attribute in a "top down"
@@ -572,7 +571,7 @@ public class X500Name implements Principal, GeneralNameInterface {
         // more and order matters.  We scan them in order, which
         // conventionally is big-endian.
         //
-        DerValue nameseq[] = in.getSequence(5);
+        DerValue[] nameseq = in.getSequence(5);
         int i;
 
         if (nameseq.length != 0) {
@@ -721,7 +720,7 @@ public class X500Name implements Principal, GeneralNameInterface {
      * expect to deal with often
      */
 
-    private static final int ipAddress_data[] = // SKIP
+    private static final int[] ipAddress_data = // SKIP
             { 1, 3, 6, 1, 4, 1, 42, 2, 11, 2, 1 };
 
     /** OID for "IP=" IP address attributes, used with SKIP. */
