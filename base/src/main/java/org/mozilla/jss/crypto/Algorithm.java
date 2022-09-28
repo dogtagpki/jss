@@ -70,9 +70,8 @@ public class Algorithm {
     public OBJECT_IDENTIFIER toOID() throws NoSuchAlgorithmException {
         if (oid == null) {
             throw new NoSuchAlgorithmException();
-        } else {
-            return oid;
         }
+        return oid;
     }
 
     /**
@@ -87,11 +86,7 @@ public class Algorithm {
      */
     @Deprecated
     public Class<?> getParameterClass() {
-        if (parameterClasses.length == 0) {
-            return null;
-        } else {
-            return parameterClasses[0];
-        }
+        return parameterClasses.length == 0 ? null : parameterClasses[0];
     }
 
     /**

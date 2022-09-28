@@ -3,10 +3,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.primitive;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
+
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.NULL;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 
 public class AlgorithmIdentifier implements ASN1Value {
 
@@ -30,7 +38,7 @@ public class AlgorithmIdentifier implements ASN1Value {
 
     /**
      * Creates an <i>AlgorithmIdentifier</i>.
-     * 
+     *
      * @param parameters The algorithm parameters. A value of <code>null</code>
      *      will be encoded with an ASN.1 <code>NULL</code>.
      */
@@ -111,12 +119,11 @@ public static class Template implements ASN1Template {
             return new AlgorithmIdentifier(
                 algOID  // OID
             );
-        } else {
-            return new AlgorithmIdentifier(
-                (OBJECT_IDENTIFIER)seq.elementAt(0),  // OID
-                seq.elementAt(1)                      // parameters
-            );
         }
+        return new AlgorithmIdentifier(
+            (OBJECT_IDENTIFIER)seq.elementAt(0),  // OID
+            seq.elementAt(1)                      // parameters
+        );
     }
 } // end of Template
 

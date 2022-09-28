@@ -31,7 +31,7 @@ public class ANY implements ASN1Value {
      * Creates an ANY value, which is just a generic ASN.1 value.
      * This method is provided for efficiency if the tag is already known,
      * so that we don't have to parse the encoding for it.
-     * 
+     *
      * @param tag The tag of this value. It must be the same as the actual tag
      *            contained in the encoding.
      * @param encoded The complete BER encoding of this value, including
@@ -44,7 +44,7 @@ public class ANY implements ASN1Value {
 
     /**
      * Creates an ANY value, which is just a generic ASN.1 value.
-     * 
+     *
      * @param encoded The complete BER encoding of this value, including
      *            tag, form, length, and contents.
      * @throws InvalidBERException If there is an invalid BER encoding.
@@ -253,13 +253,12 @@ public class ANY implements ASN1Value {
 
                     return new ANY(head.getTag(), recording.toByteArray());
 
-                } else {
-                    // definite length encoding
-                    byte[] data = new byte[(int) head.getTotalLength()];
-
-                    ASN1Util.readFully(data, istream);
-                    return new ANY(head.getTag(), data);
                 }
+                // definite length encoding
+                byte[] data = new byte[(int) head.getTotalLength()];
+
+                ASN1Util.readFully(data, istream);
+                return new ANY(head.getTag(), data);
 
             } catch (InvalidBERException e) {
                 throw new InvalidBERException(e, "ANY");

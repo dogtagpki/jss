@@ -181,11 +181,7 @@ public class Base64InputStream extends FilterInputStream {
             int cur = read(count == 0);
             if (cur == -1) {
                 // end-of-file
-                if (count == 0) {
-                    return -1;
-                } else {
-                    return count;
-                }
+                return count == 0 ? -1 : count;
             }
             if (cur == WOULD_BLOCK) {
                 assert (count > 0);
