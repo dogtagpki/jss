@@ -174,20 +174,18 @@ public class AuthenticatedSafes implements ASN1Value {
                                                 SafeBag.getTemplate() );
                 return (SEQUENCE) ASN1Util.decode(seqt, decrypted);
             } catch(InvalidBERException e) {
-              if( ACCEPT_SECURITY_DYNAMICS ) {
-                // try the security dynamics approach
-                ContentInfo.Template cit = ContentInfo.getTemplate();
-                ci = (ContentInfo) ASN1Util.decode(cit, decrypted);
-                if( ! ci.getContentType().equals(ContentInfo.DATA) ) {
-                    throw new InvalidBERException("");
+                if( ACCEPT_SECURITY_DYNAMICS ) {
+                  // try the security dynamics approach
+                  ContentInfo.Template cit = ContentInfo.getTemplate();
+                  ci = (ContentInfo) ASN1Util.decode(cit, decrypted);
+                  if( ! ci.getContentType().equals(ContentInfo.DATA) ) {
+                      throw new InvalidBERException("");
+                  }
+                  OCTET_STRING os = (OCTET_STRING) ci.getInterpretedContent();
+                  SEQUENCE.OF_Template seqt = new SEQUENCE.OF_Template(SafeBag.getTemplate());
+                  return (SEQUENCE) ASN1Util.decode(seqt, os.toByteArray());
                 }
-                OCTET_STRING os = (OCTET_STRING) ci.getInterpretedContent();
-                SEQUENCE.OF_Template seqt = new SEQUENCE.OF_Template(
-                                                    SafeBag.getTemplate() );
-                return (SEQUENCE) ASN1Util.decode(seqt, os.toByteArray());
-              } else {
                 throw e;
-              }
             }
 
         } else if( ci.getContentType().equals(ContentInfo.DATA) )  {

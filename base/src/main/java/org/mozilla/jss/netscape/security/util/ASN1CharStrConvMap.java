@@ -91,9 +91,8 @@ public class ASN1CharStrConvMap {
             if (currentCharset != charset) {
                 throw new IllegalArgumentException(
                         "a DER tag to converter entry already exists.");
-            } else {
-                return;
             }
+            return;
         }
 
         charsets.put(tag, charset);

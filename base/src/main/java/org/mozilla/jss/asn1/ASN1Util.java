@@ -116,12 +116,11 @@ public class ASN1Util {
             byte curve[] = Arrays.copyOfRange(X509PubKeyBytes, curveBeginIndex,
                     curveBeginIndex + curveByteArraySize + 2);
             return curve;
-        } else {
-            /* actual curve without tag and size */
-            byte curve[] = Arrays.copyOfRange(X509PubKeyBytes, curveBeginIndex + 2,
-                    curveBeginIndex + 2 + curveByteArraySize);
-            return curve;
         }
+        /* actual curve without tag and size */
+        byte curve[] = Arrays.copyOfRange(X509PubKeyBytes, curveBeginIndex + 2,
+                curveBeginIndex + 2 + curveByteArraySize);
+        return curve;
     }
 
     /**
@@ -129,7 +128,7 @@ public class ASN1Util {
      * from OID byte array
      * the OID byte array is expected to be without the OID Tag (6) and size
      * (together 2 bytes)
-     * 
+     *
      * @param oidBA OID byte array.
      * @return OID description.
      */

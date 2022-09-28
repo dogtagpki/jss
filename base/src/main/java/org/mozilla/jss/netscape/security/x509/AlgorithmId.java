@@ -301,9 +301,8 @@ public class AlgorithmId implements Serializable, DerEncoder {
                 } catch (Exception e) {
                     throw new IOException(e);
                 }
-            } else {
-                this.algParams = AlgorithmParameters.getInstance(this.algid.toString());
             }
+            this.algParams = AlgorithmParameters.getInstance(this.algid.toString());
         } catch (NoSuchAlgorithmException e) {
             /*
              * This algorithm parameter type is not supported, so we cannot
@@ -671,10 +670,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * @throws IOException If an error occurred.
      */
     public byte[] getEncodedParams() throws IOException {
-        if (params == null)
-            return null;
-        else
-            return params.toByteArray();
+        return params == null ? null : params.toByteArray();
     }
 
     /**
