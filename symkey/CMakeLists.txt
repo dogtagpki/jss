@@ -96,6 +96,6 @@ install(
 
 install(
     CODE "execute_process(
-        COMMAND ln -sf ${JNI_DIR}/jss-symkey.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss-symkey.jar
+        COMMAND ln -sf ../../../${JNI_DIR}/jss-symkey.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss-symkey.jar
     )"
 )

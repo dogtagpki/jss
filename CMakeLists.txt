@@ -104,7 +104,7 @@ install(
 
 install(
     CODE "execute_process(
-        COMMAND ln -sf ${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
+        COMMAND ln -sf ../../../${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
     )"
 )
 
