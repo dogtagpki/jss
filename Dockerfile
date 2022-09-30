@@ -8,7 +8,16 @@ ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
 ARG COPR_REPO="@pki/master"
 
 ################################################################################
-FROM $BASE_IMAGE AS jss-builder
+FROM $BASE_IMAGE AS jss-base
+
+RUN dnf install -y systemd \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
+
+CMD [ "/usr/sbin/init" ]
+
+################################################################################
+FROM jss-base AS jss-builder
 
 ARG COPR_REPO
 ARG BUILD_OPTS
@@ -26,7 +35,7 @@ RUN dnf builddep -y --spec jss.spec
 RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
 
 ################################################################################
-FROM $BASE_IMAGE AS jss-runner
+FROM jss-base AS jss-runner
 
 ARG COPR_REPO
 
@@ -40,8 +49,5 @@ COPY --from=jss-builder /tmp/build/RPMS /tmp/RPMS/
 
 # Install packages
 RUN dnf localinstall -y /tmp/RPMS/*; rm -rf /tmp/RPMS
-
-# Install systemd to run the container
-RUN dnf install -y systemd
 
 CMD [ "/usr/sbin/init" ]
