@@ -4,11 +4,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-ARG OS_VERSION="latest"
+ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
 ARG COPR_REPO="@pki/master"
 
 ################################################################################
-FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-builder
+FROM $BASE_IMAGE AS jss-builder
 
 ARG COPR_REPO
 ARG BUILD_OPTS
@@ -26,7 +26,7 @@ RUN dnf builddep -y --spec jss.spec
 RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
 
 ################################################################################
-FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-runner
+FROM $BASE_IMAGE AS jss-runner
 
 ARG COPR_REPO
 
