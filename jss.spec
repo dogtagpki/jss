@@ -6,9 +6,12 @@ Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 
+# For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
+# For official (i.e. supported) releases, use x.y.z-r where r >=1.
+%global         release_number 1
 Version:        4.6.4
-Release:        1%{?_timestamp}%{?_commit_id}%{?dist}
-# global         _phase -a1
+Release:        %{release_number}%{?_timestamp}%{?_commit_id}%{?dist}
+#global         _phase
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
