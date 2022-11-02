@@ -154,7 +154,7 @@ public class MacData implements ASN1Value {
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA256_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA256);
             }
-            if(kg == null) {
+            if(kg == null || digest == null) {
                 throw new NoSuchAlgorithmException("Algorithm (oid:" + algID.getOID().toDottedString() + ") not managed for digest");
             }
             kg.setCharToByteConverter(new PasswordConverter());
@@ -171,7 +171,7 @@ public class MacData implements ASN1Value {
             this.macIterationCount = new INTEGER(iterations);
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-1 HMAC algorithm not found on internal " +
+            throw new RuntimeException("HMAC algorithm not found on internal " +
                     "token: " + e.getMessage(), e);
 
         } catch (InvalidAlgorithmParameterException e) {

@@ -32,7 +32,7 @@ public class PBEKeyGenParams implements AlgorithmParameterSpec, KeySpec {
      * @param iterations The iteration count for the PBE algorithm.
      */
     public PBEKeyGenParams(Password pass, byte[] salt, int iterations) {
-        if (pass == null) {
+        if (pass == null || salt == null) {
             throw new NullPointerException();
         }
         this.pass = (Password) pass.clone();
