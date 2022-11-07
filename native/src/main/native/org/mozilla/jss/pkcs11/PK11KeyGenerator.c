@@ -183,6 +183,73 @@ print_secitem(SECItem *item) {
     }
 }
 
+
+/***********************************************************************
+ *
+ * c o n s t r u c t S H A P B E K e y
+ *
+ * Constructs a PBE key using CKM_SHA*.  This should
+ * be supported by NSS automatically, but isn't.
+ *
+ * RETURNS
+ *      A symmetric key from the given password, salt, and iteration count,
+ *      or NULL if an exception was thrown.
+ * THROWS
+ *      TokenException if an error occurs.
+ */
+static PK11SymKey*
+constructSHAPBEKey(JNIEnv *env, CK_MECHANISM_TYPE mech, PK11SlotInfo *slot, SECItem *pwitem, SECItem *salt,
+        int iterationCount)
+{
+    PK11SymKey *key=NULL;
+    SECItem *params=NULL;
+
+    if( pwitem == NULL ) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION,
+            "constructSHAPBEKey:"
+            " pwitem NULL");
+        goto finish;
+    }
+    if( salt == NULL ) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION,
+            "constructSHAPBEKey:"
+            " salt NULL");
+        goto finish;
+    }
+
+    params = PK11_CreatePBEParams(salt, pwitem,
+        iterationCount);
+    switch(mech){
+		case CKM_SHA256:
+			key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA256_HMAC_KEY_GEN, params, 0, NULL);
+			break;
+		case CKM_SHA384:
+			key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN, params, 0, NULL);
+			break;
+		case CKM_SHA512:
+			key = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN, params, 0, NULL);
+			break;
+		default:
+	        JSS_throwMsg(env, TOKEN_EXCEPTION,
+	            "constructSHAPBEKey:"
+	            " mech not recognised");
+	        goto finish;
+    }
+	PK11_DestroyPBEParams(params);
+	params = NULL;
+
+    if( key == NULL ) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION,
+            "PK11_KeyGen:"
+            " failed to generate key");
+        goto finish;
+    }
+
+finish:
+    return key;
+}
+
+
 /***********************************************************************
  *
  * c o n s t r u c t S H A 1 P B A K e y
@@ -257,7 +324,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(
     SECAlgorithmID *algid=NULL;
     SECItem *salt=NULL;
     SECItem *pwitem=NULL;
-    SECItem *params=NULL;
     jobject keyObj=NULL;
     CK_MECHANISM_TYPE mech=CKM_INVALID_MECHANISM;
 
@@ -287,66 +353,55 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(
     	mech = JSS_getPK11MechFromAlg(env, alg);
     }
 
-    switch(mech){
-    case CKM_PBA_SHA1_WITH_SHA1_HMAC:
+    if( mech == CKM_PBA_SHA1_WITH_SHA1_HMAC ) {
         /* special case, construct key by hand. Bug #336587 */
         skey = constructSHA1PBAKey(env, slot, pwitem, salt, iterationCount);
-        break;
-    case CKM_SHA256:
-    	params = PK11_CreatePBEParams(salt, pwitem,
-            iterationCount);
-    	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA256_HMAC_KEY_GEN, params, 0, NULL);
-    	PK11_DestroyPBEParams(params);
-    	params = NULL;
-    	break;
-    case CKM_SHA384:
-    	params = PK11_CreatePBEParams(salt, pwitem,
-            iterationCount);
-    	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN, params, 0, NULL);
-    	PK11_DestroyPBEParams(params);
-    	params = NULL;
-    	break;
-    case CKM_SHA512:
-    	params = PK11_CreatePBEParams(salt, pwitem,
-            iterationCount);
-    	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN, params, 0, NULL);
-    	PK11_DestroyPBEParams(params);
-    	params = NULL;
-    	break;
-    default:
-    	/* get the algorithm info */
-    	oidTag = JSS_getOidTagFromAlg(env, alg);
-    	PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
-
-    	SECOidTag encAlgOidTag = JSS_getOidTagFromAlg(env, encAlg);
-    	SECOidTag hashAlgOidTag = JSS_getOidTagFromAlg(env, hashAlg);
-    	PR_ASSERT(encAlgOidTag != SEC_OID_UNKNOWN);
-    	PR_ASSERT(hashAlgOidTag != SEC_OID_UNKNOWN);
-
-    	/* create algid */
-    	algid = PK11_CreatePBEV2AlgorithmID(
-    		oidTag,
-    		encAlgOidTag,
-			hashAlgOidTag,
-    		0,
-    		iterationCount,
-    		salt);
-
-    	if( algid == NULL ) {
-    		JSS_throwMsg(env, TOKEN_EXCEPTION,
-    				"Unable to process PBE parameters");
-    		goto finish;
-    	}
-
-    	/* generate the key */
-    	skey = PK11_PBEKeyGen(slot, algid, pwitem, PR_FALSE /*faulty3DES*/,
-    					NULL /*wincx*/);
-    	if( skey == NULL ) {
-    		JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to generate PBE key");
-    		goto finish;
+        if( skey==NULL ) {
+            /* exception was thrown */
+            goto finish;
         }
     }
 
+    if( mech == CKM_SHA256 || mech == CKM_SHA384 || mech == CKM_SHA512  ) {
+    	skey = constructSHAPBEKey(env, mech, slot, pwitem, salt, iterationCount);
+        if( skey==NULL ) {
+            goto finish;
+        }
+    }
+
+    if( skey == NULL ) {
+    	/* get the algorithm info */
+		oidTag = JSS_getOidTagFromAlg(env, alg);
+		PR_ASSERT(oidTag != SEC_OID_UNKNOWN);
+
+		SECOidTag encAlgOidTag = JSS_getOidTagFromAlg(env, encAlg);
+		SECOidTag hashAlgOidTag = JSS_getOidTagFromAlg(env, hashAlg);
+		PR_ASSERT(encAlgOidTag != SEC_OID_UNKNOWN);
+		PR_ASSERT(hashAlgOidTag != SEC_OID_UNKNOWN);
+
+		/* create algid */
+		algid = PK11_CreatePBEV2AlgorithmID(
+			oidTag,
+			encAlgOidTag,
+			hashAlgOidTag,
+			0,
+			iterationCount,
+			salt);
+
+		if( algid == NULL ) {
+			JSS_throwMsg(env, TOKEN_EXCEPTION,
+					"Unable to process PBE parameters");
+			goto finish;
+		}
+
+		/* generate the key */
+		skey = PK11_PBEKeyGen(slot, algid, pwitem, PR_FALSE /*faulty3DES*/,
+						NULL /*wincx*/);
+		if( skey == NULL ) {
+			JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to generate PBE key");
+			goto finish;
+		}
+    }
 
     /* wrap the key. This sets skey to NULL. */
     if( skey!=NULL ) {
