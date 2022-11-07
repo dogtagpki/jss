@@ -299,6 +299,20 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(
     	PK11_DestroyPBEParams(params);
     	params = NULL;
     	break;
+    case SEC_OID_SHA384:
+    	params = PK11_CreatePBEParams(salt, pwitem,
+            iterationCount);
+    	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN, params, 0, NULL);
+    	PK11_DestroyPBEParams(params);
+    	params = NULL;
+    	break;
+    case SEC_OID_SHA512:
+    	params = PK11_CreatePBEParams(salt, pwitem,
+            iterationCount);
+    	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN, params, 0, NULL);
+    	PK11_DestroyPBEParams(params);
+    	params = NULL;
+    	break;
     default:
     	/* get the algorithm info */
     	oidTag = JSS_getOidTagFromAlg(env, alg);
