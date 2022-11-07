@@ -292,21 +292,21 @@ Java_org_mozilla_jss_pkcs11_PK11KeyGenerator_generatePBE(
         /* special case, construct key by hand. Bug #336587 */
         skey = constructSHA1PBAKey(env, slot, pwitem, salt, iterationCount);
         break;
-    case SEC_OID_SHA256:
+    case CKM_SHA256:
     	params = PK11_CreatePBEParams(salt, pwitem,
             iterationCount);
     	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA256_HMAC_KEY_GEN, params, 0, NULL);
     	PK11_DestroyPBEParams(params);
     	params = NULL;
     	break;
-    case SEC_OID_SHA384:
+    case CKM_SHA384:
     	params = PK11_CreatePBEParams(salt, pwitem,
             iterationCount);
     	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN, params, 0, NULL);
     	PK11_DestroyPBEParams(params);
     	params = NULL;
     	break;
-    case SEC_OID_SHA512:
+    case CKM_SHA512:
     	params = PK11_CreatePBEParams(salt, pwitem,
             iterationCount);
     	skey = PK11_KeyGen(NULL, CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN, params, 0, NULL);
