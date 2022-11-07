@@ -154,6 +154,14 @@ public class MacData implements ASN1Value {
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA256_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA256);
             }
+            if(DigestAlgorithm.SHA384.toOID().equals(algID.getOID())){
+                kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA384_HMAC);
+                digest = token.getDigestContext(HMACAlgorithm.SHA384);
+            }
+            if(DigestAlgorithm.SHA512.toOID().equals(algID.getOID())){
+                kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA512_HMAC);
+                digest = token.getDigestContext(HMACAlgorithm.SHA512);
+            }
             if(kg == null || digest == null) {
                 throw new NoSuchAlgorithmException("Algorithm (oid:" + algID.getOID().toDottedString() + ") not managed for digest");
             }
