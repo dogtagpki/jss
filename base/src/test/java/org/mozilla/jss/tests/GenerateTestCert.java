@@ -303,8 +303,13 @@ public class GenerateTestCert {
         int rand,
         SEQUENCE extensions) throws Exception {
 
-        AlgorithmIdentifier sigAlgID = new AlgorithmIdentifier(sigAlg.toOID());
-
+        AlgorithmIdentifier sigAlgID = null;
+        if(keyType.equals("RSA")) {
+            sigAlgID = new AlgorithmIdentifier(sigAlg.toOID(), null);
+        }
+        else {
+            sigAlgID = new AlgorithmIdentifier(sigAlg.toOID());
+        }
         Name issuer = new Name();
         issuer.addCountryName("US");
         issuer.addOrganizationName("Mozilla");
