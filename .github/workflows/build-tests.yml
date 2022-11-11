@@ -83,3 +83,34 @@ jobs:
           diff /tmp/functions.txt /tmp/version.txt || true
           comm -23 --check-order /tmp/functions.txt /tmp/version.txt > /tmp/diff.txt
           test ! -s /tmp/diff.txt
+
+  rpminspect:
+    name: RPMInspect
+    runs-on: ubuntu-latest
+    container: 'fedora:latest'
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+
+    - name: Install Fedora dependencies
+      run: |
+        dnf install -y dnf-plugins-core rpm-build maven
+        dnf builddep -y --spec jss.spec
+
+    - name: Build JSS RPMs with CMake
+      run: ./build.sh --work-dir=build rpm
+
+    - name: Install RPMInspect
+      run: |
+        dnf install -y dnf-plugins-core
+        dnf copr enable -y copr.fedorainfracloud.org/dcantrell/rpminspect
+        dnf install -y rpminspect rpminspect-data-fedora
+
+    - name: Run RPMInspect on SRPM and RPMs
+      run: ./tests/bin/rpminspect.sh
