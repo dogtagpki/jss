@@ -127,6 +127,7 @@ generate_rpm_sources() {
         --transform "s,^./,$PREFIX/," \
         --exclude .git \
         --exclude bin \
+        --exclude build \
         -C "$SRC_DIR" \
         .
 }
