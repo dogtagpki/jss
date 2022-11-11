@@ -73,7 +73,7 @@ public class SSLClientAuth implements Runnable {
     public static Certificate makeCert(String issuerName, String subjectName,
             int serialNumber, PrivateKey privKey, PublicKey pubKey, int rand,
             SEQUENCE extensions) throws Exception {
-        AlgorithmIdentifier sigAlgID = new AlgorithmIdentifier( sigAlg.toOID());
+        AlgorithmIdentifier sigAlgID = new AlgorithmIdentifier( sigAlg.toOID(), null);
 
         Name issuer = new Name();
         issuer.addCountryName("US");
