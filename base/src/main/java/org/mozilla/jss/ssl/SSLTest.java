@@ -58,47 +58,44 @@ public class SSLTest {
 
         int port = Integer.valueOf(params.get("port"));
 
-        Socket s = new Socket(params.get("host"), port);
 
-        SSLSocket ss = new SSLSocket(s, params.get("remotehost"),
-            null, null);
+        try(Socket s = new Socket(params.get("host"), port);
+                SSLSocket ss = new SSLSocket(s, params.get("remotehost"), null, null)) {
 
-        ss.setSoTimeout(5000);
+            ss.setSoTimeout(5000);
 
-        OutputStream os = ss.getOutputStream();
-        String writeString = "GET / HTTP/1.0\n\n";
-        byte[] writeBytes = writeString.getBytes("8859_1");
-        os.write(writeBytes);
+            OutputStream os = ss.getOutputStream();
+            String writeString = "GET / HTTP/1.0\n\n";
+            byte[] writeBytes = writeString.getBytes("8859_1");
+            os.write(writeBytes);
 
-        InputStream is = ss.getInputStream();
-        int numRead = 0;
-        byte[] inbuf = new byte[256];
-        while( (numRead = is.read(inbuf)) != -1 ) {
-            System.out.print( new String(inbuf, 0, numRead, "UTF-8"));
+            InputStream is = ss.getInputStream();
+            int numRead = 0;
+            byte[] inbuf = new byte[256];
+            while( (numRead = is.read(inbuf)) != -1 ) {
+                System.out.print( new String(inbuf, 0, numRead, "UTF-8"));
+            }
+
+            ss.setKeepAlive(true);
+            ss.setReceiveBufferSize(32000);
+            ss.setSendBufferSize(8000);
+            ss.setSoLinger(true, 10);
+            ss.setTcpNoDelay(true);
+
+            System.out.println("remote addr is " + ss.getInetAddress().toString());
+            System.out.println("remote port is " + ss.getPort());
+            System.out.println("local addr is " + ss.getLocalAddress().toString());
+            System.out.println("local port is " + ss.getLocalPort());
+            System.out.println("keepalive is " + ss.getKeepAlive());
+            System.out.println("receive buffer size is " + ss.getReceiveBufferSize());
+            System.out.println("send buffer size is " + ss.getSendBufferSize());
+            System.out.println("solinger is " + ss.getSoLinger());
+            System.out.println("sotimeout is " + ss.getSoTimeout());
+            System.out.println("tcpNoDelay is " + ss.getTcpNoDelay());
+
+            ss.shutdownInput();
+            ss.shutdownOutput();
         }
-
-        ss.setKeepAlive(true);
-        ss.setReceiveBufferSize(32000);
-        ss.setSendBufferSize(8000);
-        ss.setSoLinger(true, 10);
-        ss.setTcpNoDelay(true);
-
-        System.out.println("remote addr is " + ss.getInetAddress().toString());
-        System.out.println("remote port is " + ss.getPort());
-        System.out.println("local addr is " + ss.getLocalAddress().toString());
-        System.out.println("local port is " + ss.getLocalPort());
-        System.out.println("keepalive is " + ss.getKeepAlive());
-        System.out.println("receive buffer size is " + ss.getReceiveBufferSize());
-        System.out.println("send buffer size is " + ss.getSendBufferSize());
-        System.out.println("solinger is " + ss.getSoLinger());
-        System.out.println("sotimeout is " + ss.getSoTimeout());
-        System.out.println("tcpNoDelay is " + ss.getTcpNoDelay());
-
-        ss.shutdownInput();
-        ss.shutdownOutput();
-
-        ss.close();
-
       } catch(Exception e) {
             e.printStackTrace();
       }
