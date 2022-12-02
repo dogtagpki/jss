@@ -7,7 +7,6 @@ docker run \
     --privileged \
     --tmpfs /tmp \
     --tmpfs /run \
-    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -v ${GITHUB_WORKSPACE}:${SHARED} \
     -i \
     ${IMAGE}
