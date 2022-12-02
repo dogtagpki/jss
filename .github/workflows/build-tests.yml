@@ -19,7 +19,7 @@ jobs:
     container: ${{ matrix.os }}
     steps:
     - name: Clone repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Java
       uses: actions/setup-java@v3
@@ -66,7 +66,7 @@ jobs:
       JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get JNI symbols in the code
         run: |
@@ -90,7 +90,7 @@ jobs:
     container: 'fedora:latest'
     steps:
     - name: Clone repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Java
       uses: actions/setup-java@v3
