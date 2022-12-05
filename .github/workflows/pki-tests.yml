@@ -83,7 +83,7 @@ jobs:
       - name: Build PKI
         run: |
           docker exec pki dnf install -y git rpm-build
-          docker exec pki git clone https://github.com/dogtagpki/pki
+          docker exec pki git clone -b v11.3 https://github.com/dogtagpki/pki
           docker exec pki dnf build-dep -y --spec pki/pki.spec
           docker exec pki pki/build.sh --with-timestamp --with-commit-id rpm
           docker exec pki bash -c "dnf install -y /root/build/pki/RPMS/*.rpm"

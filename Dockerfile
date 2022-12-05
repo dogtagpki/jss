@@ -5,7 +5,7 @@
 #
 
 ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
-ARG COPR_REPO="@pki/master"
+ARG COPR_REPO="@pki/11.3"
 
 ################################################################################
 FROM $BASE_IMAGE AS jss-base

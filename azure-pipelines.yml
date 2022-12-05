@@ -51,7 +51,7 @@ jobs:
 
   - script: |
       docker exec runner dnf install -y dnf-plugins-core rpm-build
-      docker exec runner dnf copr enable -y @pki/master
+      docker exec runner dnf copr enable -y @pki/11.3
       docker cp . runner:/root/src
       docker exec -w /root/src runner dnf builddep -y --spec jss.spec
     displayName: Install build dependencies
