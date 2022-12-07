@@ -75,9 +75,11 @@ public class ContentInfo {
      * Make a contentInfo of type data.
      */
     public ContentInfo(byte[] bytes) {
-        DerValue octetString = new DerValue(DerValue.tag_OctetString, bytes);
         this.contentType = DATA_OID;
-        this.content = octetString;
+        if (bytes!=null && bytes.length > 0) {
+            DerValue octetString = new DerValue(DerValue.tag_OctetString, bytes);
+            this.content = octetString;
+        }
     }
 
     public ContentInfo(DerInputStream derin)
@@ -113,7 +115,7 @@ public class ContentInfo {
 
     public byte[] getData() throws IOException {
         if (contentType.equals(DATA_OID)) {
-            return content.getOctetString();
+            return content!= null ? content.getOctetString() : new byte[0];
         }
         throw new IOException("content type is not DATA: " + contentType);
     }
@@ -123,16 +125,16 @@ public class ContentInfo {
         DerOutputStream seq;
         DerValue taggedContent;
 
-        contentDerCode = new DerOutputStream();
-        content.encode(contentDerCode);
-        // Add the [0] EXPLICIT tag in front of the content encoding
-        taggedContent = new DerValue((byte) 0xA0,
-                     contentDerCode.toByteArray());
-
         seq = new DerOutputStream();
         seq.putOID(contentType);
-        seq.putDerValue(taggedContent);
-
+        if( content!=null) {
+            contentDerCode = new DerOutputStream();
+            content.encode(contentDerCode);
+            // Add the [0] EXPLICIT tag in front of the content encoding
+            taggedContent = new DerValue((byte) 0xA0,
+                         contentDerCode.toByteArray());
+            seq.putDerValue(taggedContent);
+        }
         out.write(DerValue.tag_Sequence, seq);
     }
 
@@ -141,6 +143,9 @@ public class ContentInfo {
      * the content field.
      */
     public byte[] getContentBytes() throws IOException {
+        if(content == null) {
+            return new byte[0];
+        }
         DerInputStream dis = new DerInputStream(content.toByteArray());
         return dis.getOctetString();
     }
@@ -150,7 +155,9 @@ public class ContentInfo {
         String out = "";
 
         out += "Content Info Sequence\n\tContent type: " + contentType + "\n";
-        out += "\tContent: " + content;
+        if (content != null) {
+            out += "\tContent: " + content;
+        }
         return out;
     }
 }
