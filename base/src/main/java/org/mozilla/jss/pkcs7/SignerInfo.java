@@ -236,6 +236,12 @@ public class SignerInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
+     * Empty constructor needed by sub classes
+     */
+    protected SignerInfo( ) {
+    }
+
+    /**
      * Low-level default constructor.  All fields are initialized to null.
      * Before this SignerInfo can be processed or used in any way, all of
      * the fields except <code>authenticatedAttributes</code> and

@@ -43,5 +43,4 @@ public class ContentInfo extends org.mozilla.jss.pkcs7.ContentInfo {
     public ContentInfo(SignedData sd) {
         super(sd);
     }
-
 }

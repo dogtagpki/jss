@@ -16,7 +16,6 @@ import java.security.SignatureException;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.asn1.ANY;
-import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.INTEGER;
@@ -47,7 +46,7 @@ import org.mozilla.jss.pkix.primitive.Attribute;
 /**
  * A CMS <i>SignerInfo</i>.
  */
-public class SignerInfo implements ASN1Value {
+public class SignerInfo extends org.mozilla.jss.pkcs7.SignerInfo {
 
     ////////////////////////////////////////////////
     // PKCS #9 attributes
@@ -97,6 +96,7 @@ public class SignerInfo implements ASN1Value {
      * @exception NoSuchAlgorithmException If the algorithm is not
      *  recognized by JSS.
      */
+    @Override
     public DigestAlgorithm getDigestAlgorithm()
         throws NoSuchAlgorithmException
     {
@@ -107,6 +107,7 @@ public class SignerInfo implements ASN1Value {
     /**
      * Retrieves the DigestAlgorithmIdentifier used in this SignerInfo.
      */
+    @Override
     public AlgorithmIdentifier getDigestAlgorithmIdentifer() {
         return digestAlgorithm;
     }
@@ -133,6 +134,7 @@ public class SignerInfo implements ASN1Value {
      * @exception NoSuchAlgorithmException If the algorithm is not recognized
      *  by JSS.
      */
+    @Override
     public SignatureAlgorithm getDigestEncryptionAlgorithm()
         throws NoSuchAlgorithmException
     {
@@ -143,6 +145,7 @@ public class SignerInfo implements ASN1Value {
     /**
      * Returns the DigestEncryptionAlgorithmIdentifier used in this SignerInfo.
      */
+    @Override
     public AlgorithmIdentifier getDigestEncryptionAlgorithmIdentifier() {
         return digestEncryptionAlgorithm;
     }
@@ -150,6 +153,7 @@ public class SignerInfo implements ASN1Value {
     /**
      * Retrieves the encrypted digest.
      */
+    @Override
     public byte[] getEncryptedDigest() {
         return encryptedDigest.toByteArray();
     }
@@ -352,6 +356,7 @@ public class SignerInfo implements ASN1Value {
      * @exception ObjectNotFoundException If no certificate
      *       matching the issuer name and serial number can be found.
      */
+    @Override
     public void verify(byte[] messageDigest, OBJECT_IDENTIFIER contentType)
         throws NotInitializedException, NoSuchAlgorithmException,
         InvalidKeyException, TokenException, SignatureException,
@@ -405,6 +410,7 @@ public class SignerInfo implements ASN1Value {
      *  SignerInfo.
      * @param pubkey The public key to use to verify the signature.
      */
+    @Override
     public void verify(byte[] messageDigest, OBJECT_IDENTIFIER contentType,
         PublicKey pubkey)
         throws NotInitializedException, NoSuchAlgorithmException,
@@ -731,37 +737,36 @@ public class SignerInfo implements ASN1Value {
 
     /**
      * A template for decoding a SignerInfo blob
-     *
      */
-    public static class Template implements ASN1Template {
+    public static class Template extends org.mozilla.jss.pkcs7.SignerInfo.Template {
 
-        SEQUENCE.Template seqt;
+        SEQUENCE.Template seqts;
 
         public Template() {
-            seqt = new SEQUENCE.Template();
+            seqts = new SEQUENCE.Template();
 
             // serial number
-            seqt.addElement(INTEGER.getTemplate()); // vn
+            seqts.addElement(INTEGER.getTemplate()); // vn
 
             // issuerAndSerialNumber
-            seqt.addElement(SignerIdentifier.getTemplate()); // signerId
+            seqts.addElement(SignerIdentifier.getTemplate()); // signerId
 
             // digestAlgorithm
-            seqt.addElement(AlgorithmIdentifier.getTemplate()); // digest alg
+            seqts.addElement(AlgorithmIdentifier.getTemplate()); // digest alg
 
             // signedAttributes
-            seqt.addOptionalElement(
+            seqts.addOptionalElement(
                         new Tag(0),
                         new SET.OF_Template(Attribute.getTemplate()));
 
             // digestEncryptionAlgorithm
-            seqt.addElement(AlgorithmIdentifier.getTemplate());  // dig encr alg
+            seqts.addElement(AlgorithmIdentifier.getTemplate());  // dig encr alg
 
             // encryptedDigest
-            seqt.addElement(OCTET_STRING.getTemplate()); // encr digest
+            seqts.addElement(OCTET_STRING.getTemplate()); // encr digest
 
             // unsigned attributes
-            seqt.addOptionalElement(
+            seqts.addOptionalElement(
                     new Tag(1),
                     new SET.OF_Template(Attribute.getTemplate()));
 
@@ -783,7 +788,7 @@ public class SignerInfo implements ASN1Value {
         public ASN1Value decode(Tag implicitTag, InputStream istream)
             throws IOException, InvalidBERException
             {
-                SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag,istream);
+                SEQUENCE seq = (SEQUENCE) seqts.decode(implicitTag,istream);
                 assert(seq.size() == 7);
 
                 return new SignerInfo(

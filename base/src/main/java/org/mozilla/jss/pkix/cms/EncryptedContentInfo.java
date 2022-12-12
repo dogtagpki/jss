@@ -16,7 +16,6 @@ import javax.crypto.BadPaddingException;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.EXPLICIT;
@@ -44,7 +43,7 @@ import org.mozilla.jss.util.Password;
  * The PKCS #7 type <i>EncryptedContentInfo</i>, which encapsulates
  * encrypted data.
  */
-public class EncryptedContentInfo implements ASN1Value {
+public class EncryptedContentInfo extends org.mozilla.jss.pkcs7.EncryptedContentInfo {
 
     ///////////////////////////////////////////////////////////////////////
     // members and member access
@@ -217,6 +216,7 @@ public class EncryptedContentInfo implements ASN1Value {
      * @return The decrypted contents of the EncryptedContentInfo. The contents
      *      are first unpadded using the PKCS padding mechanism.
      */
+    @Override
     public byte[]
     decrypt(Password pass, KeyGenerator.CharToByteConverter charToByteConverter)
         throws IllegalStateException,NotInitializedException,
@@ -311,7 +311,7 @@ public class EncryptedContentInfo implements ASN1Value {
      *
      */
 
-    public static class Template implements ASN1Template {
+    public static class Template extends org.mozilla.jss.pkcs7.EncryptedContentInfo.Template {
 
         @Override
         public boolean tagMatch(Tag tag) {

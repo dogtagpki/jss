@@ -81,6 +81,13 @@ public class EncryptedContentInfo implements ASN1Value {
     ///////////////////////////////////////////////////////////////////////
 
     /**
+     * Does not create an ASN1 object.
+     * This is needed in case of extension
+     */
+    protected EncryptedContentInfo() {
+    }
+
+    /**
      * Create a EnvelopedData ASN1 object.
      */
     public EncryptedContentInfo(
