@@ -17,9 +17,9 @@ jobs:
           echo "Running CI against Fedora $current"
           if [ "${{ secrets.MATRIX }}" == "" ]
           then
-              echo "::set-output name=matrix::{\"os\":[\"$current\"]}"
+              echo "matrix={\"os\":[\"$current\"]}" >> $GITHUB_OUTPUT
           else
-              echo "::set-output name=matrix::${{ secrets.MATRIX }}"
+              echo "matrix=${{ secrets.MATRIX }}" >> $GITHUB_OUTPUT
           fi
 
   build:
