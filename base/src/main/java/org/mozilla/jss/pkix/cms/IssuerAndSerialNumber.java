@@ -4,126 +4,16 @@
 
 package org.mozilla.jss.pkix.cms;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import org.mozilla.jss.asn1.ASN1Template;
-import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.INTEGER;
-import org.mozilla.jss.asn1.InvalidBERException;
-import org.mozilla.jss.asn1.SEQUENCE;
-import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.pkix.primitive.Name;
 
 /**
  * An issuer name and serial number, used to uniquely identify a certificate.
  */
-public class IssuerAndSerialNumber implements ASN1Value {
+public class IssuerAndSerialNumber extends org.mozilla.jss.pkcs7.IssuerAndSerialNumber {
 
-    ///////////////////////////////////////////////////////////////////////
-    // Members
-    ///////////////////////////////////////////////////////////////////////
-    private Name issuer;
-    private INTEGER serialNumber;
-    private SEQUENCE sequence;
-
-    ///////////////////////////////////////////////////////////////////////
-    // Construction
-    ///////////////////////////////////////////////////////////////////////
-
-    /**
-     * Constructs an IssuerAndSerialNumber from its components.
-     *
-     * @param issuer Must not be null.
-     * @param serialNumber must not be null.
-     */
     public IssuerAndSerialNumber(Name issuer, INTEGER serialNumber) {
-        if(issuer==null || serialNumber==null) {
-            throw new IllegalArgumentException();
-        }
-        sequence = new SEQUENCE();
-        this.issuer = issuer;
-        sequence.addElement(issuer);
-        this.serialNumber = serialNumber;
-        sequence.addElement(serialNumber);
+        super(issuer, serialNumber);
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    // accessors
-    ///////////////////////////////////////////////////////////////////////
-    public Name getIssuer() {
-        return issuer;
-    }
-
-    public INTEGER getSerialNumber() {
-        return serialNumber;
-    }
-
-    ///////////////////////////////////////////////////////////////////////
-    // DER encoding
-    ///////////////////////////////////////////////////////////////////////
-    static Tag TAG = SEQUENCE.TAG;
-    @Override
-    public Tag getTag() {
-        return TAG;
-    }
-
-    @Override
-    public void encode(OutputStream ostream) throws IOException {
-        encode(TAG, ostream);
-    }
-
-    @Override
-    public void encode(Tag implicitTag, OutputStream ostream)
-        throws IOException
-    {
-        sequence.encode(implicitTag, ostream);
-    }
-
-    /**
-     * Returns a singleton template instance.
-     */
-    public static Template getTemplate() {
-        return templateInstance;
-    }
-    private static Template templateInstance = new Template();
-
-    /**
-     * A template for decoding an IssuerAndSerialNumber from its BER encoding.
-     */
-    public static class Template implements ASN1Template {
-        private SEQUENCE.Template seqt;
-
-        public Template() {
-            seqt = new SEQUENCE.Template();
-            seqt.addElement( Name.getTemplate() );
-            seqt.addElement( INTEGER.getTemplate() );
-        }
-
-        @Override
-        public boolean tagMatch(Tag tag) {
-            return TAG.equals(tag);
-        }
-
-        @Override
-        public ASN1Value decode(InputStream istream)
-            throws InvalidBERException, IOException
-        {
-            return decode(TAG, istream);
-        }
-
-        @Override
-        public ASN1Value decode(Tag implicitTag, InputStream istream)
-            throws InvalidBERException, IOException
-        {
-            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
-
-            assert(seq.size() == 2);
-
-            return new IssuerAndSerialNumber(
-                            (Name)      seq.elementAt(0),
-                            (INTEGER)   seq.elementAt(1) );
-        }
-    }
 }

@@ -4,131 +4,16 @@
 
 package org.mozilla.jss.pkix.cms;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import org.mozilla.jss.asn1.ASN1Template;
-import org.mozilla.jss.asn1.ASN1Value;
 import org.mozilla.jss.asn1.INTEGER;
-import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.OCTET_STRING;
-import org.mozilla.jss.asn1.SEQUENCE;
-import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 
-public class DigestedData implements ASN1Value {
+public class DigestedData extends org.mozilla.jss.pkcs7.DigestedData {
 
-    ///////////////////////////////////////////////////////////////////////
-    // members and member access
-    ///////////////////////////////////////////////////////////////////////
-    private INTEGER version;
-    private AlgorithmIdentifier digestAlgorithm;
-    private ContentInfo contentInfo;
-    private OCTET_STRING digest;
-    private SEQUENCE sequence;  // for DER encoding
-
-    public INTEGER getVersion() {
-        return version;
+    public DigestedData(INTEGER version, AlgorithmIdentifier digestAlgorithm, ContentInfo contentInfo,
+            OCTET_STRING digest) {
+        super(version, digestAlgorithm, contentInfo, digest);
     }
 
-    public AlgorithmIdentifier getDigestAlgorithm() {
-        return digestAlgorithm;
-    }
-
-    public ContentInfo getContentInfo() {
-        return contentInfo;
-    }
-
-    public OCTET_STRING getDigest() {
-        return digest;
-    }
-
-    ///////////////////////////////////////////////////////////////////////
-    // constructors
-    ///////////////////////////////////////////////////////////////////////
-
-    public DigestedData(INTEGER version, AlgorithmIdentifier digestAlgorithm,
-                ContentInfo contentInfo, OCTET_STRING digest)
-    {
-        if( version==null || digestAlgorithm==null || contentInfo==null ||
-                digest==null ) {
-            throw new IllegalArgumentException("DigestedData constructor"
-                +" parameter is null");
-        }
-
-        this.version = version;
-        this.digestAlgorithm = digestAlgorithm;
-        this.contentInfo = contentInfo;
-        this.digest = digest;
-
-        sequence = new SEQUENCE();
-        sequence.addElement(version);
-        sequence.addElement(digestAlgorithm);
-        sequence.addElement(contentInfo);
-        sequence.addElement(digest);
-    }
-
-    ///////////////////////////////////////////////////////////////////////
-    // DER encoding
-    ///////////////////////////////////////////////////////////////////////
-
-    private static final Tag TAG = SEQUENCE.TAG;
-
-    @Override
-    public Tag getTag() {
-        return TAG;
-    }
-
-    @Override
-    public void encode(OutputStream ostream) throws IOException {
-        sequence.encode(ostream);
-    }
-
-    @Override
-    public void encode(Tag implicitTag, OutputStream ostream)
-            throws IOException {
-        sequence.encode(implicitTag, ostream);
-    }
-
-    /**
-     * A Template for decoding BER-encoded DigestData items.
-     */
-    public static class Template implements ASN1Template {
-
-        private SEQUENCE.Template seqt;
-
-        public Template() {
-            seqt = new SEQUENCE.Template();
-
-            seqt.addElement( INTEGER.getTemplate() );
-            seqt.addElement( AlgorithmIdentifier.getTemplate() );
-            seqt.addElement( ContentInfo.getTemplate() );
-            seqt.addElement( OCTET_STRING.getTemplate() );
-        }
-
-        @Override
-        public boolean tagMatch(Tag tag) {
-            return TAG.equals(tag);
-        }
-
-        @Override
-        public ASN1Value decode(InputStream istream)
-                throws InvalidBERException, IOException {
-            return decode(TAG, istream);
-        }
-
-        @Override
-        public ASN1Value decode(Tag implicitTag, InputStream istream)
-                throws InvalidBERException, IOException {
-
-            SEQUENCE seq = (SEQUENCE) seqt.decode(implicitTag, istream);
-
-            return new DigestedData(
-                            (INTEGER) seq.elementAt(0),
-                            (AlgorithmIdentifier) seq.elementAt(1),
-                            (ContentInfo) seq.elementAt(2),
-                            (OCTET_STRING) seq.elementAt(3) );
-        }
-    }
 }

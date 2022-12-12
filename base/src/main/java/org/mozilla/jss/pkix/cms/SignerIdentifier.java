@@ -110,7 +110,7 @@ public class SignerIdentifier implements ASN1Value {
             return Tag.get(0);
         } else {
             assert( type == ISSUER_AND_SERIALNUMBER );
-            return IssuerAndSerialNumber.TAG;
+            return issuerAndSerialNumber.getTag();
         }
     }
 
