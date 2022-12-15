@@ -21,6 +21,55 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Cache Docker layers
+        id: cache-buildx
+        uses: actions/cache@v3
+        with:
+          key: buildx-${{ matrix.os }}-${{ hashFiles('jss.spec') }}
+          path: /tmp/.buildx-cache
+
+      - name: Build jss-deps image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-deps
+          target: jss-deps
+          cache-to: type=local,dest=/tmp/.buildx-cache
+        if: steps.cache-buildx.outputs.cache-hit != 'true'
+
+      - name: Build jss-builder-deps image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-builder-deps
+          target: jss-builder-deps
+          cache-to: type=local,dest=/tmp/.buildx-cache
+        if: steps.cache-buildx.outputs.cache-hit != 'true'
+
+      - name: Build jss-builder image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-builder
+          target: jss-builder
+          cache-from: type=local,src=/tmp/.buildx-cache
+          outputs: type=docker,dest=jss-builder.tar
+
+      - name: Store jss-builder image
+        uses: actions/cache@v3
+        with:
+          key: jss-builder-${{ matrix.os }}-${{ github.sha }}
+          path: jss-builder.tar
+
       - name: Build jss-runner image
         uses: docker/build-push-action@v3
         with:
