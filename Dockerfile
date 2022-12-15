@@ -17,37 +17,49 @@ RUN dnf install -y systemd \
 CMD [ "/usr/sbin/init" ]
 
 ################################################################################
-FROM jss-base AS jss-builder
+FROM jss-base AS jss-deps
 
 ARG COPR_REPO
-ARG BUILD_OPTS
 
 # Enable COPR repo if specified
 RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
 
-# Import source
-COPY . /tmp/src/
-WORKDIR /tmp/src
-
-# Build packages
-RUN dnf install -y git rpm-build
-RUN dnf builddep -y --spec jss.spec
-RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
+# Install JSS runtime dependencies
+RUN dnf install -y dogtag-jss \
+    && dnf remove -y dogtag-* --noautoremove \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
 
 ################################################################################
-FROM jss-base AS jss-runner
+FROM jss-deps AS jss-builder-deps
 
-ARG COPR_REPO
+# Install build tools
+RUN dnf install -y rpm-build
 
-EXPOSE 389 8080 8443
+# Import JSS sources
+COPY jss.spec /root/jss/
+WORKDIR /root/jss
 
-# Enable COPR repo if specified
-RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
+# Install JSS build dependencies
+RUN dnf builddep -y --spec jss.spec
 
-# Import packages
-COPY --from=jss-builder /tmp/build/RPMS /tmp/RPMS/
+################################################################################
+FROM jss-builder-deps AS jss-builder
 
-# Install packages
-RUN dnf localinstall -y /tmp/RPMS/*; rm -rf /tmp/RPMS
+# Import JSS source
+COPY . /root/jss/
 
-CMD [ "/usr/sbin/init" ]
+# Build JSS packages
+RUN ./build.sh --work-dir=build rpm
+
+################################################################################
+FROM jss-deps AS jss-runner
+
+# Import JSS packages
+COPY --from=jss-builder /root/jss/build/RPMS /tmp/RPMS/
+
+# Install JSS packages
+RUN dnf localinstall -y /tmp/RPMS/* \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf \
+    && rm -rf /tmp/RPMS

@@ -28,7 +28,6 @@ jobs:
           build-args: |
             BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
             COPR_REPO=${{ needs.init.outputs.repo }}
-            BUILD_OPTS=--with-timestamp --with-commit-id
           tags: jss-runner
           target: jss-runner
           cache-from: type=local,src=/tmp/.buildx-cache
