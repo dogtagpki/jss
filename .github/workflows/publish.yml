@@ -38,8 +38,8 @@ jobs:
       - name: Publish jss-builder image
         run: |
           docker load --input jss-builder.tar
-          docker tag jss-builder ghcr.io/${{ github.repository_owner }}/jss-builder
-          docker push ghcr.io/${{ github.repository_owner }}/jss-builder
+          docker tag jss-builder ghcr.io/${{ github.repository_owner }}/jss-builder:latest
+          docker push ghcr.io/${{ github.repository_owner }}/jss-builder:latest
 
       - name: Retrieve jss-runner image
         uses: actions/cache@v3
@@ -50,5 +50,5 @@ jobs:
       - name: Publish jss-runner image
         run: |
           docker load --input jss-runner.tar
-          docker tag jss-runner ghcr.io/${{ github.repository_owner }}/jss-runner
-          docker push ghcr.io/${{ github.repository_owner }}/jss-runner
+          docker tag jss-runner ghcr.io/${{ github.repository_owner }}/jss-runner:latest
+          docker push ghcr.io/${{ github.repository_owner }}/jss-runner:latest
