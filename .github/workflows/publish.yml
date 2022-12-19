@@ -1,0 +1,54 @@
+name: Publish JSS
+
+on:
+  workflow_run:
+    workflows: [ 'Build JSS' ]
+    branches:
+      - master
+    types:
+      - completed
+
+jobs:
+  init:
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
+    if: github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
+
+  publish:
+    name: Publishing JSS
+    needs: init
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Retrieve jss-builder image
+        uses: actions/cache@v3
+        with:
+          key: jss-builder-${{ matrix.os }}-${{ github.sha }}
+          path: jss-builder.tar
+
+      - name: Publish jss-builder image
+        run: |
+          docker load --input jss-builder.tar
+          docker tag jss-builder ghcr.io/${{ github.repository_owner }}/jss-builder
+          docker push ghcr.io/${{ github.repository_owner }}/jss-builder
+
+      - name: Retrieve jss-runner image
+        uses: actions/cache@v3
+        with:
+          key: jss-runner-${{ matrix.os }}-${{ github.sha }}
+          path: jss-runner.tar
+
+      - name: Publish jss-runner image
+        run: |
+          docker load --input jss-runner.tar
+          docker tag jss-runner ghcr.io/${{ github.repository_owner }}/jss-runner
+          docker push ghcr.io/${{ github.repository_owner }}/jss-runner
