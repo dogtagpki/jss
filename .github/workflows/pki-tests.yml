@@ -54,18 +54,41 @@ jobs:
       - name: Load jss-runner image
         run: docker load --input jss-runner.tar
 
-      - name: Run container
+      - name: Run JSS container
         run: |
           IMAGE=jss-runner \
           NAME=pki \
           HOSTNAME=pki.example.com \
           tests/bin/runner-init.sh
 
-      - name: Build PKI
+      - name: Import JSS packages from jss-builder
+        run: |
+          docker pull ghcr.io/dogtagpki/jss-builder:latest
+          docker create --name=jss-builder ghcr.io/dogtagpki/jss-builder:latest
+          docker cp jss-builder:/root/jss/build/RPMS/. /tmp/RPMS/
+
+      - name: Import Tomcat JSS packages from tomcatjss-builder
+        run: |
+          docker pull ghcr.io/dogtagpki/tomcatjss-builder:latest
+          docker create --name=tomcatjss-builder ghcr.io/dogtagpki/tomcatjss-builder:latest
+          docker cp tomcatjss-builder:/root/tomcatjss/build/RPMS/. /tmp/RPMS/
+
+      - name: Import LDAP SDK packages from ldapjdk-builder
+        run: |
+          docker pull ghcr.io/dogtagpki/ldapjdk-builder:latest
+          docker create --name=ldapjdk-builder ghcr.io/dogtagpki/ldapjdk-builder:latest
+          docker cp ldapjdk-builder:/root/ldapjdk/build/RPMS/. /tmp/RPMS/
+
+      - name: Install build dependencies
         run: |
           docker exec pki dnf install -y git rpm-build
           docker exec pki git clone https://github.com/dogtagpki/pki
-          docker exec pki dnf build-dep -y --spec pki/pki.spec
+          docker exec pki dnf builddep -y --skip-unavailable --spec pki/pki.spec
+          docker cp /tmp/RPMS/. pki:/root/RPMS/
+          docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
+
+      - name: Build and install PKI
+        run: |
           docker exec pki pki/build.sh --with-timestamp --with-commit-id rpm
           docker exec pki bash -c "dnf install -y /root/build/pki/RPMS/*.rpm"
 

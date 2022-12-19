@@ -5,12 +5,12 @@
 #
 
 ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
-ARG COPR_REPO="@pki/master"
+ARG COPR_REPO=""
 
 ################################################################################
 FROM $BASE_IMAGE AS jss-base
 
-RUN dnf install -y systemd \
+RUN dnf install -y dnf-plugins-core systemd \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
@@ -22,7 +22,7 @@ FROM jss-base AS jss-deps
 ARG COPR_REPO
 
 # Enable COPR repo if specified
-RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
+RUN if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
 
 # Install JSS runtime dependencies
 RUN dnf install -y dogtag-jss \
