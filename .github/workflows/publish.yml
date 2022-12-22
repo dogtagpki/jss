@@ -29,17 +29,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Retrieve jss-builder image
+      - name: Retrieve jss-dist image
         uses: actions/cache@v3
         with:
-          key: jss-builder-${{ matrix.os }}-${{ github.sha }}
-          path: jss-builder.tar
+          key: jss-dist-${{ matrix.os }}-${{ github.sha }}
+          path: jss-dist.tar
 
-      - name: Publish jss-builder image
+      - name: Publish jss-dist image
         run: |
-          docker load --input jss-builder.tar
-          docker tag jss-builder ghcr.io/${{ github.repository_owner }}/jss-builder:latest
-          docker push ghcr.io/${{ github.repository_owner }}/jss-builder:latest
+          docker load --input jss-dist.tar
+          docker tag jss-dist ghcr.io/${{ github.repository_owner }}/jss-dist:latest
+          docker push ghcr.io/${{ github.repository_owner }}/jss-dist:latest
 
       - name: Retrieve jss-runner image
         uses: actions/cache@v3

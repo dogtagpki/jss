@@ -53,10 +53,16 @@ COPY . /root/jss/
 RUN ./build.sh --work-dir=build rpm
 
 ################################################################################
+FROM alpine:latest AS jss-dist
+
+# Import JSS packages
+COPY --from=jss-builder /root/jss/build/RPMS /root/RPMS/
+
+################################################################################
 FROM jss-deps AS jss-runner
 
 # Import JSS packages
-COPY --from=jss-builder /root/jss/build/RPMS /tmp/RPMS/
+COPY --from=jss-dist /root/RPMS /tmp/RPMS/
 
 # Install JSS packages
 RUN dnf localinstall -y /tmp/RPMS/* \
