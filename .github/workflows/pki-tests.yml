@@ -61,23 +61,19 @@ jobs:
           HOSTNAME=pki.example.com \
           tests/bin/runner-init.sh
 
-      - name: Import JSS packages from jss-builder
+      - name: Import Tomcat JSS packages
         run: |
-          docker pull ghcr.io/dogtagpki/jss-builder:latest
-          docker create --name=jss-builder ghcr.io/dogtagpki/jss-builder:latest
-          docker cp jss-builder:/root/jss/build/RPMS/. /tmp/RPMS/
+          docker pull ghcr.io/dogtagpki/tomcatjss-dist:latest
+          docker create --name=tomcatjss-dist ghcr.io/dogtagpki/tomcatjss-dist:latest
+          docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f tomcatjss-dist
 
-      - name: Import Tomcat JSS packages from tomcatjss-builder
+      - name: Import LDAP SDK packages
         run: |
-          docker pull ghcr.io/dogtagpki/tomcatjss-builder:latest
-          docker create --name=tomcatjss-builder ghcr.io/dogtagpki/tomcatjss-builder:latest
-          docker cp tomcatjss-builder:/root/tomcatjss/build/RPMS/. /tmp/RPMS/
-
-      - name: Import LDAP SDK packages from ldapjdk-builder
-        run: |
-          docker pull ghcr.io/dogtagpki/ldapjdk-builder:latest
-          docker create --name=ldapjdk-builder ghcr.io/dogtagpki/ldapjdk-builder:latest
-          docker cp ldapjdk-builder:/root/ldapjdk/build/RPMS/. /tmp/RPMS/
+          docker pull ghcr.io/dogtagpki/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist ghcr.io/dogtagpki/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
 
       - name: Install build dependencies
         run: |
