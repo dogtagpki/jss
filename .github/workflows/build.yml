@@ -70,6 +70,24 @@ jobs:
           key: jss-builder-${{ matrix.os }}-${{ github.sha }}
           path: jss-builder.tar
 
+      - name: Build jss-dist image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-dist
+          target: jss-dist
+          cache-from: type=local,src=/tmp/.buildx-cache
+          outputs: type=docker,dest=jss-dist.tar
+
+      - name: Store jss-dist image
+        uses: actions/cache@v3
+        with:
+          key: jss-dist-${{ matrix.os }}-${{ github.sha }}
+          path: jss-dist.tar
+
       - name: Build jss-runner image
         uses: docker/build-push-action@v3
         with:
