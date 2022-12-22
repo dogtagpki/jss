@@ -124,7 +124,7 @@ public class JSSOAEPParameterSpec extends NativeEnclosure implements AlgorithmPa
     }
 
     public void setMaskGenAlgorithmType(AlgorithmParameterSpec algo) throws IllegalArgumentException {
-        if (!(algo instanceof MGF1ParameterSpec) || algo == null) {
+        if ( !(algo instanceof MGF1ParameterSpec)) {
             String msg = "Unknown mask generation algorithm parameter ";
             msg += "specification: " + algo;
             throw new IllegalArgumentException(msg);

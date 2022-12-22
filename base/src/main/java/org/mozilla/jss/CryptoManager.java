@@ -408,9 +408,7 @@ public final class CryptoManager implements TokenSupplier
                 JSSProvider jssProvider = (JSSProvider) p;
                 assert jssProvider.getCryptoManager() != null;
 
-                if (instance == null) {
-                    instance = jssProvider.getCryptoManager();
-                }
+                instance = jssProvider.getCryptoManager();
 
                 return instance;
             }
