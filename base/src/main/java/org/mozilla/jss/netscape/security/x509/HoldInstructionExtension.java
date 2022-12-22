@@ -145,7 +145,7 @@ public class HoldInstructionExtension extends Extension
     public HoldInstructionExtension(String oidStr)
             throws IOException {
         ObjectIdentifier oid = new ObjectIdentifier(oidStr);
-        if (oid == null || getHoldInstructionCodeFromOID(oid) == 0)
+        if (getHoldInstructionCodeFromOID(oid) == 0)
             throw new IOException("Invalid hold instruction code");
         holdInstructionCodeOID = oid;
         this.extensionId = PKIXExtensions.HoldInstructionCode_Id;
@@ -196,7 +196,7 @@ public class HoldInstructionExtension extends Extension
     public HoldInstructionExtension(Boolean critical, String oidStr)
             throws IOException {
         ObjectIdentifier oid = new ObjectIdentifier(oidStr);
-        if (oid == null || getHoldInstructionCodeFromOID(oid) == 0)
+        if (getHoldInstructionCodeFromOID(oid) == 0)
             throw new IOException("Invalid hold instruction code");
         holdInstructionCodeOID = oid;
         this.extensionId = PKIXExtensions.HoldInstructionCode_Id;

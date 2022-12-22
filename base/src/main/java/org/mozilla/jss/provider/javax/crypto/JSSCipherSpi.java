@@ -153,7 +153,7 @@ public class JSSCipherSpi extends javax.crypto.CipherSpi {
                     params = generateAlgParams(encAlg, blockSize);
                 }
                 cipher.initEncrypt(symkey, params);
-            } else if( opmode == Cipher.DECRYPT_MODE ) {
+            } else {
                 if( params == noAlgParams) {
                     params = null;
                 }
