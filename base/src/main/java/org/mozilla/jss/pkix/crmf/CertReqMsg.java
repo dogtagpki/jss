@@ -271,9 +271,7 @@ public class CertReqMsg implements ASN1Value {
             fis.read(bytes);
         }
 
-        for(int i=0; i < 1; i++) {
-            seq = (SEQUENCE) seqt.decode(new ByteArrayInputStream(bytes));
-        }
+        seq = (SEQUENCE) seqt.decode(new ByteArrayInputStream(bytes));
 
         System.out.println("Decoded "+seq.size()+" messages");
 

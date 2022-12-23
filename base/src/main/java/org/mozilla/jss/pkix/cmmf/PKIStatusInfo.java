@@ -173,7 +173,7 @@ public class PKIStatusInfo implements ASN1Value {
             } else {
                 BitSet bs = failInfo.toBitSet();
                 int failinfo = 0;
-                for(int i = 0, bit = 0x80000000; bit > 0; i++, bit >>>= 1 ) {
+                for(int i = 0, bit = 0x80000000; bit != 0; i++, bit >>>= 1 ) {
                     if( bs.get(i) ) {
                         failinfo |= bit;
                     }

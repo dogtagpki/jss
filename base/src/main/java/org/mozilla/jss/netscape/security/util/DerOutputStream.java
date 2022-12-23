@@ -563,14 +563,14 @@ public class DerOutputStream
         buffer[offset + 1] = (byte) ((byte) lower + (byte) '0');
     }
 
-    private static Calendar GMTGregorianCalendar = null;
+    private Calendar gmtGregorianCalendar = null;
 
     private Calendar getGMTGregorianCalendar() {
-        if (GMTGregorianCalendar == null) {
+        if (gmtGregorianCalendar == null) {
             TimeZone tz = TimeZone.getTimeZone("GMT");
-            GMTGregorianCalendar = new GregorianCalendar(tz);
+            gmtGregorianCalendar = new GregorianCalendar(tz);
         }
-        return (Calendar) GMTGregorianCalendar.clone();
+        return (Calendar) gmtGregorianCalendar.clone();
     }
 
     public byte[] getDateBytes(Date d, boolean UTC) {

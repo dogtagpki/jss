@@ -29,6 +29,8 @@ import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.NativeEnclosure;
 import org.mozilla.jss.util.NativeProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class PK11KeyWrapper implements KeyWrapper {
 
@@ -45,6 +47,8 @@ public final class PK11KeyWrapper implements KeyWrapper {
     private static final int UNINITIALIZED=0;
     private static final int WRAP=1;
     private static final int UNWRAP=2;
+
+    public static final Logger logger = LoggerFactory.getLogger(PK11KeyWrapper.class);
 
     private PK11KeyWrapper() { }
 
@@ -291,29 +295,38 @@ public final class PK11KeyWrapper implements KeyWrapper {
 
         assert( pubKey!=null && privKey==null && symKey==null );
         NativeProxy params = null;
-        long params_size = 0;
+        long paramsSize = 0;
         if (parameters != null) {
             try {
                 ((NativeEnclosure) parameters).open();
                 params = ((NativeEnclosure) parameters).mPointer;
-                params_size = ((NativeEnclosure) parameters).mPointerSize;
+                paramsSize = ((NativeEnclosure) parameters).mPointerSize;
             } catch (Exception e) {
                 throw new TokenException(e.getMessage(), e);
             }
         }
-
+        byte[] sk = null;
+        TokenException te = null;
         try {
-            return nativeWrapSymWithPub(token, toBeWrapped, pubKey,
-                                        algorithm, params, params_size);
-        } finally {
-            if (parameters != null) {
-                try {
-                    ((NativeEnclosure) parameters).close();
-                } catch (Exception e) {
-                    throw new TokenException(e.getMessage(), e);
+            sk = nativeWrapSymWithPub(token, toBeWrapped, pubKey,
+                                        algorithm, params, paramsSize);
+        } catch (TokenException e) {
+            te = e;
+        }
+        if (parameters != null) {
+            try {
+                ((NativeEnclosure) parameters).close();
+            } catch (Exception e) {
+                if (te == null) {
+                    te =  new TokenException(e.getMessage(), e);
                 }
+                logger.error("Error closing paramter enclosure.", e);
             }
         }
+        if (te != null) {
+            throw te;
+        }
+        return sk;
     }
 
     /**
@@ -622,19 +635,29 @@ public final class PK11KeyWrapper implements KeyWrapper {
             }
         }
 
+        SymmetricKey sk = null;
+        TokenException te = null;
         try {
-            return nativeUnwrapSymWithPriv(token, privKey, wrapped,
+            sk =  nativeUnwrapSymWithPriv(token, privKey, wrapped,
                     algorithm, algFromType(type), keyLen, params,
                     params_size, usageEnum);
-        } finally {
-            if (parameters != null) {
-                try {
-                    ((NativeEnclosure) parameters).close();
-                } catch (Exception e) {
-                    throw new TokenException(e.getMessage(), e);
+        } catch (TokenException e) {
+            te = e;
+        }
+        if (parameters != null) {
+            try {
+                ((NativeEnclosure) parameters).close();
+            } catch (Exception e) {
+                if (te == null) {
+                    te = new TokenException(e.getMessage(), e);
                 }
+                logger.error("Error closing paramter enclosure.", e);
             }
         }
+        if (te != null) {
+            throw te;
+        }
+        return sk;
     }
 
     private static Algorithm

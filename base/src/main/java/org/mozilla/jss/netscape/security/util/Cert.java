@@ -126,7 +126,7 @@ public class Cert {
         mime64 = stripCertBrackets(mime64.trim());
         String newval = normalizeCertStr(mime64);
         // byte rawPub[] = mDecoder.decodeBuffer(newval);
-        byte rawPub[] = Utils.base64decode(newval);
+        byte[] rawPub = Utils.base64decode(newval);
         X509CertImpl cert = null;
 
         try {
@@ -141,7 +141,7 @@ public class Cert {
         mime64 = stripCertBrackets(mime64.trim());
         String newval = normalizeCertStr(mime64);
         // byte rawPub[] = mDecoder.decodeBuffer(newval);
-        byte rawPub[] = Utils.base64decode(newval);
+        byte[] rawPub = Utils.base64decode(newval);
         PKCS7 p7 = null;
 
         try {
@@ -157,7 +157,7 @@ public class Cert {
         mime64 = stripCRLBrackets(mime64.trim());
         String newval = normalizeCertStr(mime64);
         // byte rawPub[] = mDecoder.decodeBuffer(newval);
-        byte rawPub[] = Utils.base64decode(newval);
+        byte[] rawPub = Utils.base64decode(newval);
         X509CRL crl = null;
 
         try {
@@ -171,7 +171,7 @@ public class Cert {
             throws IOException {
         mime64 = stripCRLBrackets(mime64.trim());
 
-        byte rawPub[] = Utils.base64decode(mime64);
+        byte[] rawPub = Utils.base64decode(mime64);
         X509CRL crl = null;
 
         try {
@@ -183,35 +183,32 @@ public class Cert {
     }
 
     public static String normalizeCertStr(String s) {
-        StringBuffer val = new StringBuffer();
-
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '\n') {
-                continue;
-            } else if (s.charAt(i) == '\r') {
-                continue;
-            } else if (s.charAt(i) == '"') {
-                continue;
-            } else if (s.charAt(i) == ' ') {
-                continue;
+        StringBuilder val = new StringBuilder();
+        if (s != null) {
+            for (int i = 0; i < s.length(); i++) {
+                if (s.charAt(i) == '\n' ||
+                        s.charAt(i) == '\r' ||
+                        s.charAt(i) == '"' ||
+                        s.charAt(i) == ' ') {
+                    continue;
+                }
+                val.append(s.charAt(i));
             }
-            val.append(s.charAt(i));
         }
         return val.toString();
     }
 
     public static String normalizeCertStrAndReq(String s) {
-        StringBuffer val = new StringBuffer();
-
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '\n') {
-                continue;
-            } else if (s.charAt(i) == '\r') {
-                continue;
-            } else if (s.charAt(i) == '"') {
-                continue;
+        StringBuilder val = new StringBuilder();
+        if (s != null) {
+            for (int i = 0; i < s.length(); i++) {
+                if (s.charAt(i) == '\n' ||
+                        s.charAt(i) == '\r' ||
+                        s.charAt(i) == '"') {
+                    continue;
+                }
+                val.append(s.charAt(i));
             }
-            val.append(s.charAt(i));
         }
         return val.toString();
     }
