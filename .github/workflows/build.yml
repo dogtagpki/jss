@@ -12,8 +12,6 @@ jobs:
     name: Building JSS
     needs: init
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -25,7 +23,7 @@ jobs:
         id: cache-buildx
         uses: actions/cache@v3
         with:
-          key: buildx-${{ matrix.os }}-${{ hashFiles('jss.spec') }}
+          key: buildx-${{ hashFiles('jss.spec') }}
           path: /tmp/.buildx-cache
 
       - name: Build jss-deps image
@@ -33,7 +31,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-deps
           target: jss-deps
@@ -45,7 +43,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-builder-deps
           target: jss-builder-deps
@@ -57,7 +55,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-builder
           target: jss-builder
@@ -67,7 +65,7 @@ jobs:
       - name: Store jss-builder image
         uses: actions/cache@v3
         with:
-          key: jss-builder-${{ matrix.os }}-${{ github.sha }}
+          key: jss-builder-${{ github.sha }}
           path: jss-builder.tar
 
       - name: Build jss-dist image
@@ -75,7 +73,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-dist
           target: jss-dist
@@ -85,7 +83,7 @@ jobs:
       - name: Store jss-dist image
         uses: actions/cache@v3
         with:
-          key: jss-dist-${{ matrix.os }}-${{ github.sha }}
+          key: jss-dist-${{ github.sha }}
           path: jss-dist.tar
 
       - name: Build jss-runner image
@@ -93,7 +91,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=registry.fedoraproject.org/fedora:${{ matrix.os }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-runner
           target: jss-runner
@@ -103,5 +101,5 @@ jobs:
       - name: Store jss-runner image
         uses: actions/cache@v3
         with:
-          key: jss-runner-${{ matrix.os }}-${{ github.sha }}
+          key: jss-runner-${{ github.sha }}
           path: jss-runner.tar
