@@ -4,17 +4,19 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-ARG OS_VERSION="34"
-ARG COPR_REPO="@pki/10.13"
+ARG BASE_IMAGE="registry.fedoraproject.org/fedora:34"
+ARG COPR_REPO=""
 
 ################################################################################
-FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-builder
+FROM $BASE_IMAGE AS jss-builder
 
 ARG COPR_REPO
 ARG BUILD_OPTS
 
+RUN dnf install -y dnf-plugins-core
+
 # Enable COPR repo if specified
-RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
+RUN if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
 
 # Import source
 COPY . /tmp/src/
@@ -26,14 +28,16 @@ RUN dnf builddep -y --spec jss.spec
 RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
 
 ################################################################################
-FROM registry.fedoraproject.org/fedora:$OS_VERSION AS jss-runner
+FROM $BASE_IMAGE AS jss-runner
 
 ARG COPR_REPO
 
 EXPOSE 389 8080 8443
 
+RUN dnf install -y dnf-plugins-core
+
 # Enable COPR repo if specified
-RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
+RUN if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
 
 # Import packages
 COPY --from=jss-builder /tmp/build/RPMS /tmp/RPMS/

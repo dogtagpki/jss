@@ -4,32 +4,14 @@ on: [push, pull_request]
 
 jobs:
   init:
-    name: Initializing Workflow
-    runs-on: ubuntu-latest
-    container: fedora:34
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Set up test matrix
-        id: set-matrix
-        run: |
-          export current=$(cat /etc/fedora-release | awk '{ print $3 }')
-          echo "Running CI against Fedora $current"
-          if [ "${{ secrets.MATRIX }}" == "" ]
-          then
-              echo "matrix={\"os\":[\"$current\"]}" >> $GITHUB_OUTPUT
-          else
-              echo "matrix=${{ secrets.MATRIX }}" >> $GITHUB_OUTPUT
-          fi
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
 
   build:
     name: Building JSS
     needs: init
     runs-on: ubuntu-latest
-    env:
-      COPR_REPO: "@pki/10.13"
-    strategy:
-      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -42,8 +24,8 @@ jobs:
         with:
           context: .
           build-args: |
-            OS_VERSION=${{ matrix.os }}
-            COPR_REPO=${{ env.COPR_REPO }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
             BUILD_OPTS=--with-timestamp --with-commit-id
           tags: jss-runner
           target: jss-runner
@@ -52,18 +34,15 @@ jobs:
       - name: Upload runner image
         uses: actions/upload-artifact@v3
         with:
-          name: jss-runner-${{ matrix.os }}
+          name: jss-runner
           path: /tmp/jss-runner.tar
 
   ca-test:
-    name: Installing CA
+    name: Testing CA
     needs: [init, build]
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss
-      COPR_REPO: "@pki/10.13"
-    strategy:
-      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -71,7 +50,7 @@ jobs:
       - name: Download runner image
         uses: actions/download-artifact@v3
         with:
-          name: jss-runner-${{ matrix.os }}
+          name: jss-runner
           path: /tmp
 
       - name: Load runner image
@@ -121,6 +100,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: ca-${{ matrix.os }}
+          name: ca
           path: |
             /tmp/artifacts/pki
