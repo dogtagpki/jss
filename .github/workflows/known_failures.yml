@@ -9,7 +9,6 @@ jobs:
       matrix:
         image:
           - 'fedora_rawhide'
-          - 'fedora_sandbox'
 
     steps:
     - name: Clone the repository
