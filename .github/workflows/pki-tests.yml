@@ -31,6 +31,70 @@ jobs:
           wait-interval: 30
         if: github.event_name == 'pull_request'
 
+  pki-build-test:
+    name: Building PKI
+    needs: [init, build]
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/jss
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Retrieve jss-runner image
+        uses: actions/cache@v3
+        with:
+          key: jss-runner-${{ github.sha }}
+          path: jss-runner.tar
+
+      - name: Load jss-runner image
+        run: docker load --input jss-runner.tar
+
+      - name: Run container
+        run: |
+          IMAGE=jss-runner \
+          NAME=pki \
+          HOSTNAME=pki.example.com \
+          tests/bin/runner-init.sh
+
+      - name: Import Tomcat JSS packages
+        run: |
+          docker pull quay.io/dogtagpki/tomcatjss-dist:7.7
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:7.7
+          docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f tomcatjss-dist
+
+      - name: Import LDAP SDK packages
+        run: |
+          docker pull quay.io/dogtagpki/ldapjdk-dist:4.23
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:4.23
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import IDM Console Framework packages
+        run: |
+          docker pull quay.io/dogtagpki/idm-console-framework-dist:1.3
+          docker create --name=idm-console-framework-dist quay.io/dogtagpki/idm-console-framework-dist:1.3
+          docker cp idm-console-framework-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f idm-console-framework-dist
+
+      - name: Install build dependencies
+        run: |
+          docker cp /tmp/RPMS/. pki:/root/RPMS/
+          docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
+
+          docker exec pki dnf install -y git rpm-build
+          docker exec pki git clone \
+              -b v10.13 \
+              --single-branch \
+              https://github.com/dogtagpki/pki
+          docker exec pki dnf build-dep -y --spec pki/pki.spec
+
+      - name: Build and install PKI
+        run: |
+          docker exec pki pki/build.sh rpm
+          docker exec pki bash -c "dnf install -y /root/build/pki/RPMS/*.rpm"
+
   ca-test:
     name: Testing CA
     needs: [init, build]
