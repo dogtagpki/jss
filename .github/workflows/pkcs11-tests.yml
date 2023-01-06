@@ -3,13 +3,15 @@ name: PKCS11 Tests
 on: [push, pull_request]
 
 jobs:
+  init:
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
+
   build:
     name: Building JSS
+    needs: init
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os:
-          - 34
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -22,7 +24,7 @@ jobs:
         with:
           context: .
           build-args: |
-            OS_VERSION=${{ matrix.os }}
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
             BUILD_OPTS=--with-timestamp --with-commit-id
           tags: jss-runner
           target: jss-runner
@@ -31,19 +33,15 @@ jobs:
       - name: Store runner image
         uses: actions/cache@v3
         with:
-          key: pkcs11-runner-fedora:${{ matrix.os }}-${{ github.run_id }}
+          key: pkcs11-runner-${{ github.run_id }}
           path: pkcs11-runner.tar
 
   pkcs11-constants-test:
     name: Testing PKCS11 Constants
-    needs: build
+    needs: [init, build]
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss
-    strategy:
-      matrix:
-        os:
-          - 34
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -51,7 +49,7 @@ jobs:
       - name: Retrieve runner image
         uses: actions/cache@v3
         with:
-          key: pkcs11-runner-fedora:${{ matrix.os }}-${{ github.run_id }}
+          key: pkcs11-runner-${{ github.run_id }}
           path: pkcs11-runner.tar
 
       - name: Load runner image

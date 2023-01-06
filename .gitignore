@@ -2,6 +2,7 @@
 /bin
 *.OBJ/
 build/
+native/
 src/*.a
 src/*.o
 target/
