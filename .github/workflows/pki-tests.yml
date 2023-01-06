@@ -33,6 +33,43 @@ jobs:
           wait-interval: 30
         if: github.event_name == 'pull_request'
 
+  pki-build-test:
+    name: Building PKI
+    needs: [init, build]
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/jss
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Retrieve jss-runner image
+        uses: actions/cache@v3
+        with:
+          key: jss-runner-${{ github.sha }}
+          path: jss-runner.tar
+
+      - name: Load jss-runner image
+        run: docker load --input jss-runner.tar
+
+      - name: Run container
+        run: |
+          IMAGE=jss-runner \
+          NAME=pki \
+          HOSTNAME=pki.example.com \
+          tests/bin/runner-init.sh
+
+      - name: Build PKI
+        run: |
+          docker exec pki dnf install -y git dnf-plugins-core rpm-build
+          docker exec pki git clone \
+              -b v10 \
+              --single-branch \
+              https://github.com/dogtagpki/pki
+          docker exec pki dnf build-dep -y --spec pki/pki.spec
+          docker exec pki pki/build.sh --with-timestamp --with-commit-id rpm
+          docker exec pki bash -c "dnf install -y /root/build/pki/RPMS/*.rpm"
+
   ca-test:
     name: Installing CA
     needs: [init, build]
