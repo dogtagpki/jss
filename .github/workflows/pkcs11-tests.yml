@@ -9,32 +9,27 @@ jobs:
     secrets: inherit
 
   build:
-    name: Building JSS
+    name: Waiting for build
     needs: init
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build runner image
-        uses: docker/build-push-action@v3
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.2.0
         with:
-          context: .
-          build-args: |
-            BASE_IMAGE=${{ needs.init.outputs.base-image }}
-            BUILD_OPTS=--with-timestamp --with-commit-id
-          tags: jss-runner
-          target: jss-runner
-          outputs: type=docker,dest=pkcs11-runner.tar
+          ref: ${{ github.ref }}
+          check-name: 'Building JSS'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+        if: github.event_name == 'push'
 
-      - name: Store runner image
-        uses: actions/cache@v3
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.2.0
         with:
-          key: pkcs11-runner-${{ github.run_id }}
-          path: pkcs11-runner.tar
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-name: 'Building JSS'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+        if: github.event_name == 'pull_request'
 
   pkcs11-constants-test:
     name: Testing PKCS11 Constants
@@ -46,14 +41,14 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Retrieve runner image
+      - name: Retrieve jss-runner image
         uses: actions/cache@v3
         with:
-          key: pkcs11-runner-${{ github.run_id }}
-          path: pkcs11-runner.tar
+          key: jss-runner-${{ github.sha }}
+          path: jss-runner.tar
 
-      - name: Load runner image
-        run: docker load --input pkcs11-runner.tar
+      - name: Load jss-runner image
+        run: docker load --input jss-runner.tar
 
       - name: Run container
         run: |
