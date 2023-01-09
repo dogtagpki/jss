@@ -19,6 +19,40 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Build jss-builder image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-builder
+          target: jss-builder
+          outputs: type=docker,dest=jss-builder.tar
+
+      - name: Store jss-builder image
+        uses: actions/cache@v3
+        with:
+          key: jss-builder-${{ github.sha }}
+          path: jss-builder.tar
+
+      - name: Build jss-dist image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-dist
+          target: jss-dist
+          outputs: type=docker,dest=jss-dist.tar
+
+      - name: Store jss-dist image
+        uses: actions/cache@v3
+        with:
+          key: jss-dist-${{ github.sha }}
+          path: jss-dist.tar
+
       - name: Build jss-runner image
         uses: docker/build-push-action@v3
         with:
@@ -26,7 +60,6 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ needs.init.outputs.base-image }}
             COPR_REPO=${{ needs.init.outputs.repo }}
-            BUILD_OPTS=--with-timestamp --with-commit-id
           tags: jss-runner
           target: jss-runner
           outputs: type=docker,dest=jss-runner.tar
