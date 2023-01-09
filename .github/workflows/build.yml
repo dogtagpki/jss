@@ -19,6 +19,37 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Cache Docker layers
+        id: cache-buildx
+        uses: actions/cache@v3
+        with:
+          key: buildx-${{ hashFiles('jss.spec') }}
+          path: /tmp/.buildx-cache
+
+      - name: Build jss-deps image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-deps
+          target: jss-deps
+          cache-to: type=local,dest=/tmp/.buildx-cache
+        if: steps.cache-buildx.outputs.cache-hit != 'true'
+
+      - name: Build jss-builder-deps image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: jss-builder-deps
+          target: jss-builder-deps
+          cache-to: type=local,dest=/tmp/.buildx-cache
+        if: steps.cache-buildx.outputs.cache-hit != 'true'
+
       - name: Build jss-builder image
         uses: docker/build-push-action@v3
         with:
@@ -28,6 +59,7 @@ jobs:
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-builder
           target: jss-builder
+          cache-from: type=local,src=/tmp/.buildx-cache
           outputs: type=docker,dest=jss-builder.tar
 
       - name: Store jss-builder image
@@ -45,6 +77,7 @@ jobs:
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-dist
           target: jss-dist
+          cache-from: type=local,src=/tmp/.buildx-cache
           outputs: type=docker,dest=jss-dist.tar
 
       - name: Store jss-dist image
@@ -62,6 +95,7 @@ jobs:
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: jss-runner
           target: jss-runner
+          cache-from: type=local,src=/tmp/.buildx-cache
           outputs: type=docker,dest=jss-runner.tar
 
       - name: Store jss-runner image
