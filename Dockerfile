@@ -5,43 +5,67 @@
 #
 
 ARG BASE_IMAGE="registry.fedoraproject.org/fedora:34"
-ARG COPR_REPO="@pki/10"
+ARG COPR_REPO=""
 
 ################################################################################
-FROM $BASE_IMAGE AS jss-builder
+FROM $BASE_IMAGE AS jss-base
 
-ARG COPR_REPO
-ARG BUILD_OPTS
-
-# Enable COPR repo if specified
-RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
-
-# Import source
-COPY . /tmp/src/
-WORKDIR /tmp/src
-
-# Build packages
-RUN dnf install -y git dnf-plugins-core rpm-build
-RUN dnf builddep -y --spec jss.spec
-RUN ./build.sh $BUILD_OPTS --work-dir=../build rpm
-
-################################################################################
-FROM $BASE_IMAGE AS jss-runner
-
-ARG COPR_REPO
-
-EXPOSE 389 8080 8443
-
-# Enable COPR repo if specified
-RUN if [ -n "$COPR_REPO" ]; then dnf install -y dnf-plugins-core; dnf copr enable -y $COPR_REPO; fi
-
-# Import packages
-COPY --from=jss-builder /tmp/build/RPMS /tmp/RPMS/
-
-# Install packages
-RUN dnf localinstall -y /tmp/RPMS/*; rm -rf /tmp/RPMS
-
-# Install systemd to run the container
-RUN dnf install -y systemd
+RUN dnf install -y dnf-plugins-core systemd \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
 
 CMD [ "/usr/sbin/init" ]
+
+################################################################################
+FROM jss-base AS jss-deps
+
+ARG COPR_REPO
+
+# Enable COPR repo if specified
+RUN if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
+
+# Install JSS runtime dependencies
+RUN dnf install -y jss \
+    && dnf remove -y jss-* --noautoremove \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
+
+################################################################################
+FROM jss-deps AS jss-builder-deps
+
+# Install build tools
+RUN dnf install -y rpm-build
+
+# Import JSS sources
+COPY jss.spec /root/jss/
+WORKDIR /root/jss
+
+# Install JSS build dependencies
+RUN dnf builddep -y --skip-unavailable --spec jss.spec
+
+###############################################################################
+FROM jss-builder-deps AS jss-builder
+
+# Import JSS source
+COPY . /root/jss/
+
+# Build JSS packages
+RUN ./build.sh --work-dir=build rpm
+
+################################################################################
+FROM alpine:latest AS jss-dist
+
+# Import JSS packages
+COPY --from=jss-builder /root/jss/build/RPMS /root/RPMS/
+
+################################################################################
+FROM jss-deps AS jss-runner
+
+# Import JSS packages
+COPY --from=jss-dist /root/RPMS /tmp/RPMS/
+
+# Install runtime packages
+RUN dnf localinstall -y /tmp/RPMS/* \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf \
+    && rm -rf /tmp/RPMS
