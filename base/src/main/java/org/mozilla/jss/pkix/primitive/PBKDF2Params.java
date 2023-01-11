@@ -85,7 +85,7 @@ public class PBKDF2Params implements ASN1Value {
      */
     public PBKDF2Params(OCTET_STRING salt, AlgorithmIdentifier otherSource,
             INTEGER iterations, INTEGER keyLength, AlgorithmIdentifier prf) {
-        this( salt.toByteArray(), otherSource, iterations.intValue(),
+        this( salt == null ? null : salt.toByteArray(), otherSource, iterations.intValue(),
                 keyLength != null ? keyLength.intValue() : 0, prf);
     }
 
