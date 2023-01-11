@@ -150,15 +150,15 @@ public class MacData implements ASN1Value {
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBA_SHA1_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA1);
             }
-            if(DigestAlgorithm.SHA256.toOID().equals(algID.getOID())){
+            if(digest == null && DigestAlgorithm.SHA256.toOID().equals(algID.getOID())){
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA256_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA256);
             }
-            if(DigestAlgorithm.SHA384.toOID().equals(algID.getOID())){
+            if(digest == null && DigestAlgorithm.SHA384.toOID().equals(algID.getOID())){
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA384_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA384);
             }
-            if(DigestAlgorithm.SHA512.toOID().equals(algID.getOID())){
+            if(digest == null && DigestAlgorithm.SHA512.toOID().equals(algID.getOID())){
                 kg = token.getKeyGenerator(KeyGenAlgorithm.PBE_SHA512_HMAC);
                 digest = token.getDigestContext(HMACAlgorithm.SHA512);
             }
