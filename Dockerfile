@@ -69,3 +69,13 @@ RUN dnf localinstall -y /tmp/RPMS/* \
     && dnf clean all \
     && rm -rf /var/cache/dnf \
     && rm -rf /tmp/RPMS
+################################################################################
+FROM postgres AS postgres-ssl
+
+# Copy certificates
+COPY sslserver.key /var/lib/postgresql/server.key
+COPY sslserver.crt /var/lib/postgresql/server.crt
+RUN chown postgres:postgres /var/lib/postgresql/server.crt && \
+    chown postgres:postgres /var/lib/postgresql/server.key && \
+    chmod 600 /var/lib/postgresql/server.key
+
