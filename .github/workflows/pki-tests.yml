@@ -59,22 +59,22 @@ jobs:
 
       - name: Import Tomcat JSS packages
         run: |
-          docker pull ghcr.io/dogtagpki/tomcatjss-dist:7
-          docker create --name=tomcatjss-dist ghcr.io/dogtagpki/tomcatjss-dist:7
+          docker pull quay.io/dogtagpki/tomcatjss-dist:7
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:7
           docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f tomcatjss-dist
 
       - name: Import LDAP SDK packages
         run: |
-          docker pull ghcr.io/dogtagpki/ldapjdk-dist:4
-          docker create --name=ldapjdk-dist ghcr.io/dogtagpki/ldapjdk-dist:4
+          docker pull quay.io/dogtagpki/ldapjdk-dist:4
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:4
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 
       - name: Import IDM Console Framework packages
         run: |
-          docker pull ghcr.io/dogtagpki/idm-console-framework-dist:1
-          docker create --name=idm-console-framework-dist ghcr.io/dogtagpki/idm-console-framework-dist:1
+          docker pull quay.io/dogtagpki/idm-console-framework-dist:1
+          docker create --name=idm-console-framework-dist quay.io/dogtagpki/idm-console-framework-dist:1
           docker cp idm-console-framework-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f idm-console-framework-dist
 
