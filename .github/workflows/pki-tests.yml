@@ -59,15 +59,15 @@ jobs:
 
       - name: Import Tomcat JSS packages
         run: |
-          docker pull ghcr.io/dogtagpki/tomcatjss-dist:latest
-          docker create --name=tomcatjss-dist ghcr.io/dogtagpki/tomcatjss-dist:latest
+          docker pull quay.io/dogtagpki/tomcatjss-dist:latest
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:latest
           docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f tomcatjss-dist
 
       - name: Import LDAP SDK packages
         run: |
-          docker pull ghcr.io/dogtagpki/ldapjdk-dist:latest
-          docker create --name=ldapjdk-dist ghcr.io/dogtagpki/ldapjdk-dist:latest
+          docker pull quay.io/dogtagpki/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 
