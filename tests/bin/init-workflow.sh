@@ -30,11 +30,6 @@ echo "repo=$REPO" >> $GITHUB_OUTPUT
 ################################################################################
 # Container registry
 
-if [ "$REGISTRY" == "" ]
-then
-    REGISTRY="ghcr.io"
-fi
-
 echo "REGISTRY: $REGISTRY"
 echo "registry=$REGISTRY" >> $GITHUB_OUTPUT
 
