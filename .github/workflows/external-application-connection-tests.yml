@@ -31,7 +31,147 @@ jobs:
           wait-interval: 30
         if: github.event_name == 'pull_request'
 
+  
   postgresql-test:
+    name: Testing connection to postrgresql
+    needs: [init, build]
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/jss
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Retrieve jss-builder image
+        uses: actions/cache@v3
+        with:
+          key: jss-builder-${{ github.sha }}
+          path: jss-builder.tar
+
+      - name: Load jss-builder image
+        run: docker load --input jss-builder.tar
+
+      - name: Create network
+        run: docker network create example
+
+      - name: Run container
+        run: |
+          tests/bin/runner-init.sh
+        env:
+          IMAGE: jss-builder
+          NAME: jss
+          HOSTNAME: jss.example.com
+  
+      - name: Connect JSS container to network
+        run: docker network connect example jss --alias jss.example.com
+
+      - name: Set up jss and  database drivers
+        run: |
+          docker exec jss dnf install -y postgresql-jdbc
+          docker exec -t jss sh -c 'dnf install -y /root/jss/build/RPMS/*.rpm'
+
+      - name: Create postgresql certificates
+        run: |
+          docker exec jss dnf install -y dogtag-pki
+          docker exec jss pki nss-cert-request --subject "CN=postgresql.example.com" \
+              --csr /root/sslserver.csr --ext /usr/share/pki/server/certs/sslserver.conf
+          docker exec jss pki nss-cert-issue --csr /root/sslserver.csr \
+              --ext /usr/share/pki/server/certs/sslserver.conf  --cert /root/sslserver.crt
+          docker exec jss pki nss-cert-import --cert /root/sslserver.crt --trust "TC,C,C" postgres
+          docker exec jss pk12util -o /root/ssl.p12 -n postgres -d /root/.dogtag/nssdb/ -W myPassword
+          docker cp jss:/root/ssl.p12 ssl.p12
+          openssl pkcs12 -in ssl.p12 -nokeys -out sslserver.crt -password pass:myPassword
+          openssl pkcs12 -in ssl.p12 -nocerts -noenc -out sslserver.key -password pass:myPassword
+          
+      - name: Create postgresql Docker file
+        run: |
+          cat > Dockerfile-Postgresql <<EOF
+          FROM postgres AS postgres-ssl
+
+          # Copy certificates
+          COPY sslserver.key /var/lib/postgresql/server.key
+          COPY sslserver.crt /var/lib/postgresql/server.crt
+          RUN chown postgres:postgres /var/lib/postgresql/server.crt && \
+              chown postgres:postgres /var/lib/postgresql/server.key && \
+              chmod 600 /var/lib/postgresql/server.key
+          EOF
+
+      - name: Build postgrsql image with certificates
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          tags: postgres-ssl
+          target: postgres-ssl
+          file: Dockerfile-Postgresql 
+
+      - name: Deploy postgresql
+        run: |
+          docker run -d --name postgresql \
+              --hostname postgresql.example.com \
+              -e POSTGRES_PASSWORD=mysecretpassword \
+              -e POSTGRES_USER=jss \
+              postgres-ssl -c ssl=on \
+              -c ssl_cert_file=/var/lib/postgresql/server.crt \
+              -c ssl_key_file=/var/lib/postgresql/server.key
+
+      - name: Connect DB container to network
+        run: docker network connect example postgresql --alias postgresql.example.com
+
+      - name: Build the tests
+        run: docker exec jss ./build.sh --work-dir=./build
+
+      - name: Test connection with java
+        run: |
+          docker exec jss mkdir /root/.postgresql
+          docker exec jss cp /root/sslserver.crt /root/.postgresql/root.crt
+          docker exec -t jss sh -c 'java -cp \
+               "/usr/share/java/*:/usr/share/java/ongres-stringprep/*:/usr/share/java/ongres-scram/*:usr/lib/java/jss.jar:/usr/share/java/slf4j/*:/root/jss/build/classes/tests" \
+              org.mozilla.jss.tests.JSSConnectionPostgres jss mysecretpassword \
+              '"'"'jdbc:postgresql://postgresql.example.com:5432/jss?ssl=true&sslmode=verify-full'"'" | tee output-java
+          grep "Connection DONE" output-java
+
+      - name: Create JSS DB and configuration files
+        run: |
+          cat > java.security <<EOF
+          security.provider.1=org.mozilla.jss.JSSProvider /root/jss/jss.cfg
+          security.provider.2=sun.security.provider.Sun
+          security.provider.3=sun.security.ssl.SunJSSE
+          security.provider.4=sun.security.rsa.SunRsaSign
+          security.provider.5=sun.security.ec.SunEC
+          security.provider.6=com.sun.net.ssl.internal.ssl.Provider
+          security.provider.7=com.sun.crypto.provider.SunJCE
+          security.provider.8=sun.security.jgss.SunProvider
+          security.provider.9=com.sun.security.sasl.Provider
+          security.provider.10=org.jcp.xml.dsig.internal.dom.XMLDSigRI
+          security.provider.11=sun.security.smartcardio.SunPCSC
+          EOF
+          cat java.security
+          docker cp java.security jss:/root/jss/java.security
+          cat > jss.cfg <<EOF
+          nss.config_dir=/root/.dogtag/nssdb
+          jss.password=m1oZilla
+          jss.experimental.sslengine=true
+          EOF
+          cat jss.cfg
+          docker cp jss.cfg jss:/root/jss/jss.cfg
+          echo "m1oZilla" > password_file
+          docker cp password_file jss:/root/jss
+
+      - name: Test connection with JSS
+        run: |
+          docker exec -t jss sh -c 'java -cp \
+              "/usr/share/java/*:/usr/share/java/ongres-stringprep/*:/usr/share/java/ongres-scram/*:/usr/lib/java/jss.jar:/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/root/jss/build/classes/tests" \
+              -Djava.security.properties==/root/jss/java.security \
+              org.mozilla.jss.tests.JSSConnectionPostgres jss mysecretpassword \
+              '"'"'jdbc:postgresql://postgresql.example.com:5432/jss?ssl=true&sslmode=verify-full'"'" | tee output-jss
+          grep "JSS CryptoManager" output-jss
+
+      - name: Verify the output match
+        run: |
+          grep -v  "CryptoManager" output-jss > output-jss-clean
+          diff output-jss-clean output-java
+            
+  postgresql-acme-test:
     name: Testing to postrgresql backend
     needs: [init, build]
     runs-on: ubuntu-latest
