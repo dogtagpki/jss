@@ -152,8 +152,8 @@ JSS_PK11_generateKeyPairWithOpFlags(JNIEnv *env, CK_MECHANISM_TYPE mechanism,
 
     if( *privk == NULL ) {
         int errLength;
-        char *errBuf;
-        char *msgBuf;
+        char *errBuf = NULL;
+        char *msgBuf = NULL;
 
         errLength = PR_GetErrorTextLength();
         if(errLength > 0) {
