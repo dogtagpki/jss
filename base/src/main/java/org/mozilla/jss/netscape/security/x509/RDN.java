@@ -299,7 +299,7 @@ public class RDN {
         try {
             s = toLdapDNString();
         } catch (IOException e) {
-            return null;
+            return "";
         }
         return s;
     }
