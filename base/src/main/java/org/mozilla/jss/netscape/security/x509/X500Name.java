@@ -503,7 +503,7 @@ public class X500Name implements Principal, GeneralNameInterface {
         try {
             s = toLdapDNString();
         } catch (IOException e) {
-            return null;
+            return "";
         }
         return s;
     }

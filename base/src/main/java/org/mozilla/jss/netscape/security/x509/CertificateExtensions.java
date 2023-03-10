@@ -283,7 +283,7 @@ public class CertificateExtensions extends Vector<Extension>
     }
 
     @Override
-    public int hashCode() {
+    public synchronized int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((map == null) ? 0 : map.hashCode());
@@ -291,7 +291,7 @@ public class CertificateExtensions extends Vector<Extension>
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public synchronized boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (!super.equals(obj))

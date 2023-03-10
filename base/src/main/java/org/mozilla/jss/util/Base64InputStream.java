@@ -206,7 +206,7 @@ public class Base64InputStream extends FilterInputStream {
     }
 
     @Override
-    public void mark(int readlimit) {
+    public synchronized void mark(int readlimit) {
         in.mark(readlimit);
         savedPrev = prev;
         savedState = state;
@@ -218,7 +218,7 @@ public class Base64InputStream extends FilterInputStream {
     }
 
     @Override
-    public void reset() throws IOException {
+    public synchronized void reset() throws IOException {
         in.reset();
         prev = savedPrev;
         state = savedState;

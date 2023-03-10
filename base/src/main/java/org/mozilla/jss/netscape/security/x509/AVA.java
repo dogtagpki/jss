@@ -285,7 +285,7 @@ public final class AVA implements DerEncoder {
             // (before Ldap escaping) here.
             s = toLdapDNString();
         } catch (IOException e) {
-            return null;
+            return "";
         }
         return s;
     }

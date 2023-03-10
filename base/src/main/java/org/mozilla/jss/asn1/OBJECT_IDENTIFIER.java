@@ -142,7 +142,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
     /**
      * Creates an OBJECT_IDENTIFIER from an array of longs, which constitute
      * the numbers that make up the OBJECT IDENTIFIER.
-     * 
+     *
      * @param numbers Numbers.
      */
     public OBJECT_IDENTIFIER(long[] numbers) {
@@ -157,7 +157,6 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * off, it just checks for null.
      */
     private static void checkLongArray(long[] numbers) {
-        assert (numbers != null);
         if (numbers == null) {
             throw new NullPointerException();
         }
@@ -224,7 +223,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * { 1 3 5 6 },
      * then calling <code>oid.subBranch(4)</code> would return a new
      * OBJECT_IDENTIFIER with the value { 1 3 5 6 4 }.
-     * 
+     *
      * @param num Number.
      * @return New sub-branch.
      */
@@ -242,7 +241,7 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
      * then calling <code>oid.subBranch(new long[]{ 4, 3})</code>
      * would return a new
      * OBJECT_IDENTIFIER with the value { 1 3 5 6 4 3}.
-     * 
+     *
      * @param newNums New numbers.
      * @return New sub-branch.
      */

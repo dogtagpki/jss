@@ -280,7 +280,7 @@ public class GenericASN1Extension extends Extension
      */
     @Override
     public String toString() {
-        return (null);
+        return "";
     }
 
     /**
