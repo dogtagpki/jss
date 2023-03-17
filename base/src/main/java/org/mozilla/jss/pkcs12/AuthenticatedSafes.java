@@ -164,10 +164,7 @@ public class AuthenticatedSafes implements ASN1Value {
                 getEncryptedContentInfo();
 
             // this should be a BER-encoded SafeContents
-            // The password converter doed not work in many cases so it is removed
-            // but it needs invetigation for the few cases where it is needed.
-            byte[] decrypted = encCI.decrypt(password, // new PasswordConverter());
-                                    null);
+            byte[] decrypted = encCI.decrypt(password, null);
 
             try {
                 SEQUENCE.OF_Template seqt = new SEQUENCE.OF_Template(
