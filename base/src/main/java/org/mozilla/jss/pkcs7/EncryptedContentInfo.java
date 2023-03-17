@@ -39,6 +39,7 @@ import org.mozilla.jss.crypto.PBEAlgorithm;
 import org.mozilla.jss.crypto.PBEKeyGenParams;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.pkcs12.PasswordConverter;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.PBEParameter;
 import org.mozilla.jss.pkix.primitive.PBES2Params;
@@ -253,6 +254,7 @@ public class EncryptedContentInfo implements ASN1Value {
         EncryptionAlgorithm encAlg = null;
         AlgorithmParameterSpec algParams = null;
         HMACAlgorithm hashAlg = null;
+        KeyGenerator.CharToByteConverter passwordConverter = charToByteConverter;
         if(!kgAlg.toOID().equals(PBEAlgorithm.PBE_PKCS5_PBES2.toOID())) {
             PBEParameter pbeParams;
             if( params instanceof PBEParameter) {
@@ -265,6 +267,8 @@ public class EncryptedContentInfo implements ASN1Value {
             salt = pbeParams.getSalt();
             iterations = pbeParams.getIterations();
             encAlg = ((PBEAlgorithm)kgAlg).getEncryptionAlg();
+            if(passwordConverter == null)
+                passwordConverter = new PasswordConverter();
         }
         else {
             byte[] encodedParams = ASN1Util.encode(params);
@@ -296,8 +300,8 @@ public class EncryptedContentInfo implements ASN1Value {
             CryptoToken token =
                 CryptoManager.getInstance().getInternalCryptoToken();
             KeyGenerator kg = token.getKeyGenerator( kgAlg );
-            if( charToByteConverter != null ) {
-                kg.setCharToByteConverter( charToByteConverter );
+            if( passwordConverter != null ) {
+                kg.setCharToByteConverter( passwordConverter );
             }
             kg.initialize( kgp );
             SymmetricKey key = kg.generate();
