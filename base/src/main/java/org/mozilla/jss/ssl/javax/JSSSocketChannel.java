@@ -180,7 +180,9 @@ public class JSSSocketChannel extends SocketChannel {
                         // instead. Use an linear backoff in case
                         // the remote server is really slow.
                         Thread.sleep(handshakeAttempts * 10);
-                    } catch (Exception e) {}
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
 
                 if (handshakeAttempts > maxHandshakeAttempts) {

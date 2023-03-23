@@ -205,7 +205,6 @@ public class UTF8Converter {
 	public static void wipeBytes(byte[] array) {
 		int i;
 
-		assert(array != null);
 		if(array == null) {
 			return;
 		}

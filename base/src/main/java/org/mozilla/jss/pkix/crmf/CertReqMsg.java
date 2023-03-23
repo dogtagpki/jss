@@ -115,7 +115,6 @@ public class CertReqMsg implements ASN1Value {
 
     public void verify(CryptoToken token) throws SignatureException,
 		InvalidKeyFormatException, NoSuchAlgorithmException,
-		org.mozilla.jss.NotInitializedException,
 		TokenException, java.security.InvalidKeyException, IOException{
 		ProofOfPossession.Type type = pop.getType();
 		if (type == ProofOfPossession.SIGNATURE) {
@@ -138,26 +137,15 @@ public class CertReqMsg implements ASN1Value {
 			Signature sig = token.getSignatureContext(sigAlg);
 			sig.initVerify(pubkey);
 			sig.update(toBeVerified);
-			if( sig.verify(sig_from.getBits()) ) {
-				//System.out.println("worked!!");
-				return; // success
-			} else {
+			if( !sig.verify(sig_from.getBits()) ) {
 				throw new SignatureException(
 					"Signed request information does not "+
 					"match signature in POP");
 			}
 
-		} else if (type == ProofOfPossession.KEY_ENCIPHERMENT) {
-			POPOPrivKey keyEnc = pop.getKeyEncipherment();
-			POPOPrivKey.Type ptype = keyEnc.getType();
-			if (ptype == POPOPrivKey.THIS_MESSAGE) {
-				//BIT_STRING thisMessage = keyEnc.getThisMessage();
-				//This should be the same as from the archive control
-				//It's verified by DRM.
-
-			} else if (ptype == POPOPrivKey.SUBSEQUENT_MESSAGE) {
-				new ChallengeResponseException("requested");
-			}
+	        // If condition removed because no operation performed. The identified
+		// exception was not thrown.
+		// } else if (type == ProofOfPossession.KEY_ENCIPHERMENT) {
 		}
 	}
 
