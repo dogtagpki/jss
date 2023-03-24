@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 
 import org.mozilla.jss.netscape.security.provider.RSAPublicKey;
 import org.mozilla.jss.netscape.security.x509.X509Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class will display the certificate content in predefined
@@ -34,6 +36,8 @@ import org.mozilla.jss.netscape.security.x509.X509Key;
  * @version $Revision$, $Date$
  */
 public class PubKeyPrettyPrint {
+
+    public static final Logger logger = LoggerFactory.getLogger(PubKeyPrettyPrint.class);
 
     /*==========================================================
      * variables
@@ -115,7 +119,7 @@ public class PubKeyPrettyPrint {
             }
 
         } catch(InvalidKeyException e){
-            e.printStackTrace();
+            logger.debug("Impossible convert public certificate to string", e);
         }
 
         return sb.toString();

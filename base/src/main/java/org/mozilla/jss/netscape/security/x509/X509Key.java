@@ -376,7 +376,6 @@ public class X509Key implements PublicKey {
         try {
             decode(stream);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
             throw new IOException("deserialized key is invalid: " + e.getMessage());
         }
     }

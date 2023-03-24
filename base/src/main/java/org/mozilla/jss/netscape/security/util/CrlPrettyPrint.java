@@ -28,6 +28,8 @@ import org.mozilla.jss.netscape.security.x509.CRLExtensions;
 import org.mozilla.jss.netscape.security.x509.Extension;
 import org.mozilla.jss.netscape.security.x509.RevokedCertificate;
 import org.mozilla.jss.netscape.security.x509.X509CRLImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class will display the certificate content in predefined
@@ -41,7 +43,9 @@ public class CrlPrettyPrint {
     /*==========================================================
      * constants
      *==========================================================*/
-    private final static String CUSTOM_LOCALE = "Custom";
+    private static final String CUSTOM_LOCALE = "Custom";
+
+    private static final Logger logger = LoggerFactory.getLogger(CrlPrettyPrint.class);
 
     /*==========================================================
      * variables
@@ -263,7 +267,7 @@ public class CrlPrettyPrint {
         } catch (Exception e) {
             sb.append("\n\n" + pp.indent(4) + resource.getString(
                     PrettyPrintResources.TOKEN_DECODING_ERROR) + "\n\n");
-            e.printStackTrace();
+            logger.debug("Problem converting to string", e);
         }
 
         return sb.toString();

@@ -30,9 +30,10 @@ import java.util.Vector;
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.SEQUENCE;
-
 import org.mozilla.jss.netscape.security.util.BitArray;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An extension that tells applications where to find the CRL for
@@ -67,6 +68,8 @@ public class CRLDistributionPointsExtension extends Extension
      *
      */
     private static final long serialVersionUID = 8551761833349709229L;
+
+    private static final Logger logger = LoggerFactory.getLogger(CRLDistributionPointsExtension.class);
     // vector of CRLDistributionPoint
     private SEQUENCE distributionPoints = new SEQUENCE();
 
@@ -98,9 +101,7 @@ public class CRLDistributionPointsExtension extends Extension
                 throw new IOException("Invalid BER-encoding: " + e, e);
             }
         } catch (IOException e) {
-            System.out.println("Big error");
-            System.out.println(e);
-            e.printStackTrace();
+            logger.error("Error decoding CRLDistributionPoints", e);
             //throw e;
         }
     }

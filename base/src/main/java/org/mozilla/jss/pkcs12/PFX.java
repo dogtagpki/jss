@@ -165,7 +165,6 @@ public class PFX implements ASN1Value {
             }
 
         } catch (java.security.DigestException e) {
-            e.printStackTrace();
             reason.append("A DigestException occurred");
             return false;
 

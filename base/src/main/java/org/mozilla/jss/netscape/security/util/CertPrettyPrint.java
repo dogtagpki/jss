@@ -35,6 +35,8 @@ import org.mozilla.jss.netscape.security.x509.X509CertInfo;
 import org.mozilla.jss.netscape.security.x509.X509Key;
 import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.SignedData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class will display the certificate content in predefined
@@ -48,7 +50,9 @@ public class CertPrettyPrint {
     /*==========================================================
      * constants
      *==========================================================*/
-    private final static String CUSTOM_LOCALE = "Custom";
+    private static final String CUSTOM_LOCALE = "Custom";
+
+    private static final Logger logger = LoggerFactory.getLogger(CertPrettyPrint.class);
 
     /*==========================================================
      * variables
@@ -335,7 +339,7 @@ public class CertPrettyPrint {
 
             sb.append(certFingerprints.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Problem converting to string", e);
         }
 
         return sb.toString();

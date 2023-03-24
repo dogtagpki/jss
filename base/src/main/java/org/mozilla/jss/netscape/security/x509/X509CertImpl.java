@@ -1073,7 +1073,7 @@ public class X509CertImpl extends X509Certificate
                 try {
                     out.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.debug("Error getting DER encoding", e);
                 }
             }
         }
