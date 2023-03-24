@@ -30,6 +30,8 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 import org.mozilla.jss.netscape.security.x509.CertAttrSet;
 import org.mozilla.jss.netscape.security.x509.Extension;
 import org.mozilla.jss.netscape.security.x509.OIDMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This represents the extended key usage extension.
@@ -40,6 +42,8 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
      *
      */
     private static final long serialVersionUID = 765403075764697489L;
+    private static final Logger logger = LoggerFactory.getLogger(ExtendedKeyUsageExtension.class);
+
     public static final String OID = "2.5.29.37";
     public static final String NAME = OIDMap.EXT_KEY_USAGE_NAME;
     public static final String OID_OCSPSigning = "1.3.6.1.5.5.7.3.9";
@@ -221,7 +225,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
                     temp.putOID(oidList.nextElement());
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                logger.error("Problem encoding", ex);
             }
         }
 

@@ -37,7 +37,12 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Utils {
+
+    private static final Logger logger = LoggerFactory.getLogger(Utils.class);
     /**
      * Checks if this is NT.
      */
@@ -89,7 +94,7 @@ public class Utils {
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("The command canot be executed: " + cmd, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -226,31 +231,14 @@ public class Utils {
     }
 
     public static void copy(String orig, String dest) throws Exception {
-        BufferedReader in = null;
-        PrintWriter out = null;
-        try {
-            in = new BufferedReader(new FileReader(orig));
-            out = new PrintWriter(
-                    new BufferedWriter(new FileWriter(dest)));
+        try (BufferedReader in = new BufferedReader(new FileReader(orig));
+                PrintWriter out = new PrintWriter(
+                    new BufferedWriter(new FileWriter(dest)))) {
             String line = "";
             while (in.ready()) {
                 line = in.readLine();
                 if (line != null)
                     out.println(line);
-            }
-        } catch (Exception ee) {
-            ee.printStackTrace();
-            throw ee;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (out != null) {
-                out.close();
             }
         }
     }

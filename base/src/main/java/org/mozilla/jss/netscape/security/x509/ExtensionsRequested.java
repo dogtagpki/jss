@@ -45,9 +45,8 @@ public class ExtensionsRequested implements CertAttrSet {
 
         try {
             decode(is);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException(e.getMessage());
+        } catch (CertificateException | IOException e) {
+            throw new IOException("Error decoding extensions: " + e.getMessage());
         }
     }
 

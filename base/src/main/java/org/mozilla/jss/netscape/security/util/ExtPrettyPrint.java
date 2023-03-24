@@ -78,6 +78,8 @@ import org.mozilla.jss.netscape.security.x509.SubjectAlternativeNameExtension;
 import org.mozilla.jss.netscape.security.x509.SubjectDirAttributesExtension;
 import org.mozilla.jss.netscape.security.x509.SubjectKeyIdentifierExtension;
 import org.mozilla.jss.netscape.security.x509.UserNotice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class will display the certificate content in predefined
@@ -87,6 +89,8 @@ import org.mozilla.jss.netscape.security.x509.UserNotice;
  * @version $Revision$, $Date$
  */
 public class ExtPrettyPrint {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExtPrettyPrint.class);
 
     /*==========================================================
      * variables
@@ -538,7 +542,7 @@ public class ExtPrettyPrint {
             }
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting key usage", e);
             return sb.toString();
         }
 
@@ -587,7 +591,7 @@ public class ExtPrettyPrint {
             }
             return sb.toString();
         } catch (CertificateException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting certificate type", e);
             return "";
         }
 
@@ -618,7 +622,7 @@ public class ExtPrettyPrint {
             }
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting subject identifier", e);
             return "";
         }
     }
@@ -669,7 +673,7 @@ public class ExtPrettyPrint {
             }
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting authority key identifier", e);
             return "";
         }
     }
@@ -771,7 +775,7 @@ public class ExtPrettyPrint {
 
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting basic constraints", e);
             return "";
         }
     }
@@ -804,7 +808,7 @@ public class ExtPrettyPrint {
 
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting CRL number extensions", e);
             return "";
         }
     }
@@ -837,7 +841,7 @@ public class ExtPrettyPrint {
 
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting delta CRL extensions", e);
             return "";
         }
     }
@@ -921,7 +925,7 @@ public class ExtPrettyPrint {
 
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting subject alternative name", e);
             return "";
         }
     }
@@ -1319,7 +1323,7 @@ public class ExtPrettyPrint {
 
             return sb.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Problem getting certificate issuer", e);
             return "";
         }
     }

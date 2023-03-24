@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the mapping from OID and name to classes and vice
@@ -37,6 +39,8 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  * @version 1.12
  */
 public class OIDMap {
+
+    private static final Logger logger = LoggerFactory.getLogger(OIDMap.class);
 
     /**
      * Location for where the OID/Classes maps are stored on
@@ -177,7 +181,7 @@ public class OIDMap {
                     try {
                         fis.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.debug("Error closing " + EXTENSIONS_OIDS, e);
                     }
                 }
             }
@@ -213,7 +217,7 @@ public class OIDMap {
                     try {
                         fis.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.debug("Error closing " + EXTENSIONS_CLASSES, e);
                     }
                 }
             }

@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -31,7 +32,6 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.lang.reflect.InvocationTargetException;
 
 import org.mozilla.jss.netscape.security.util.BigInt;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
@@ -326,7 +326,6 @@ public class PKCS8Key implements PrivateKey {
                 throw new InvalidKeyException("excess key data");
 
         } catch (IOException e) {
-            // e.printStackTrace ();
             throw new InvalidKeyException("IOException : " +
                       e.getMessage());
         }
@@ -352,7 +351,6 @@ public class PKCS8Key implements PrivateKey {
         try {
             decode(stream);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
             throw new IOException("deserialized key is invalid: " +
                     e.getMessage());
         }

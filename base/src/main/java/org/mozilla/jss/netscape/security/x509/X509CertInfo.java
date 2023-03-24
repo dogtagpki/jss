@@ -33,6 +33,8 @@ import java.util.Vector;
 import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The X509CertInfo class represents X.509 certificate information.
@@ -69,6 +71,8 @@ public class X509CertInfo implements CertAttrSet, Serializable {
      *
      */
     private static final long serialVersionUID = -5094073467876311577L;
+
+    private static final Logger logger = LoggerFactory.getLogger(X509CertInfo.class);
     /**
      * Identifier for this attribute, to be used with the
      * get, set, delete methods of Certificate, x509 type.
@@ -271,9 +275,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
             byte[] dup = new byte[rawCertInfo.length];
             System.arraycopy(rawCertInfo, 0, dup, 0, dup.length);
             return dup;
-        } catch (IOException e) {
-            throw new CertificateEncodingException(e);
-        } catch (CertificateException e) {
+        } catch (CertificateException | IOException e) {
             throw new CertificateEncodingException(e);
         }
     }
@@ -380,7 +382,7 @@ public class X509CertInfo implements CertAttrSet, Serializable {
                         try {
                             out.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            logger.debug("Error closing stream", e);
                         }
                     }
                 }
