@@ -744,10 +744,10 @@ public class PKCS9Attribute implements DerEncoder {
         case 14: // ExtensionRequest attribute
             value =
                     new CertificateExtensions(elems[0].toDerInputStream());
+            break;
 
-            // break unnecessary
-
-        default: // can't happen
+        default:
+            throw new IOException("Invalid PKCS9 attribute index: " + index);
         }
 
     }
@@ -859,9 +859,10 @@ public class PKCS9Attribute implements DerEncoder {
                 } catch (CertificateException e) {
                     throw new IOException("PKCS9 extension attributes not encoded");
                 }
+                break;
 
-                // break unnecessary
-            default: // can't happen
+            default:
+                throw new IOException("Invalid PKCS9 attribute index: " + index);
             }
 
             derOut.write(DerValue.tag_Sequence, temp.toByteArray());

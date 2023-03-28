@@ -1,12 +1,21 @@
 package org.mozilla.jss.ssl.javax;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketOption;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
-import java.util.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.WritableByteChannel;
+import java.util.Collection;
+import java.util.EventListener;
+import java.util.Set;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
 
 /**
  * SSL-enabled SocketChannel following the javax.net.ssl.SSLSocket interface.
@@ -277,6 +286,7 @@ public class JSSSocketChannel extends SocketChannel {
                 switch (result.getStatus()) {
                     case CLOSED:
                         shutdownInput();
+                        break;
                     case OK:
                     case BUFFER_UNDERFLOW:
                         break; // CLOSED, OK and BUFFER_UNDERFLOW are expected
