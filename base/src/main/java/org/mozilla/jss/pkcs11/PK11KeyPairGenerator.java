@@ -21,7 +21,6 @@ import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
 import org.mozilla.jss.crypto.PQGParams;
 import org.mozilla.jss.crypto.Policy;
-import org.mozilla.jss.crypto.RSAParameterSpec;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.ECCurve;
 import org.slf4j.Logger;
@@ -348,7 +347,7 @@ public final class PK11KeyPairGenerator
     {
         if(algorithm == KeyPairAlgorithm.RSA) {
             params =
-                new RSAParameterSpec(strength, DEFAULT_RSA_PUBLIC_EXPONENT);
+                new RSAKeyGenParameterSpec(strength, DEFAULT_RSA_PUBLIC_EXPONENT);
         } else if(algorithm == KeyPairAlgorithm.DSA) {
             if(strength==512) {
                 params = PQG512;

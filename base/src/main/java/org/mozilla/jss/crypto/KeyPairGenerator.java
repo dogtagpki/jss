@@ -66,14 +66,14 @@ public class KeyPairGenerator {
      * @exception InvalidAlgorithmParameterException If the parameters are
      *      inappropriate for the type of key pair that is being generated,
      *      or they are not supported by this generator.
-     * @see org.mozilla.jss.crypto.RSAParameterSpec
+     * @see java.security.spec.RSAKeyGenParameterSpec
      * @see java.security.spec.DSAParameterSpec
      */
 	public void initialize(AlgorithmParameterSpec params, SecureRandom random)
             throws InvalidAlgorithmParameterException
-    {
+            {
 		engine.initialize(params, random);
-	}
+	    }
 
     /**
      * Initializes the generator with algorithm-specific parameters.
@@ -82,7 +82,7 @@ public class KeyPairGenerator {
      * @exception InvalidAlgorithmParameterException If the parameters are
      *      inappropriate for the type of key pair that is being generated,
      *      or they are not supported by this generator.
-     * @see org.mozilla.jss.crypto.RSAParameterSpec
+     * @see java.security.spec.RSAKeyGenParameterSpec
      * @see java.security.spec.DSAParameterSpec
      */
 	public void initialize(AlgorithmParameterSpec params)

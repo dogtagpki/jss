@@ -3,12 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.crypto;
 
-import java.security.spec.RSAKeyGenParameterSpec;
 import java.math.BigInteger;
+import java.security.spec.RSAKeyGenParameterSpec;
 
 /**
  * This class specifies the parameters used for generating an RSA key pair.
+ * @deprecated This class has been deprecated in favour of the one provided java
+ *             {@link RSAKeyGenParameterSpec}.
  */
+@Deprecated(since = "5.4", forRemoval = true)
 public class RSAParameterSpec extends RSAKeyGenParameterSpec {
 
     /**
@@ -23,6 +26,10 @@ public class RSAParameterSpec extends RSAKeyGenParameterSpec {
 
     /**
      * Returns the size of the modulus in bits.
+     *
+     * @deprecated This method has been deprecated in favour of the one provided by the superclass
+     *             {@link RSAKeyGenParameterSpec#getKeysize()}.
      */
+    @Deprecated(since = "5.4", forRemoval = true)
     public int getKeySize() { return getKeysize(); }
 }

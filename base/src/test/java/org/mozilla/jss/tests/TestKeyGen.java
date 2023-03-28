@@ -22,12 +22,12 @@ import java.math.BigInteger;
 import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
-import org.mozilla.jss.crypto.RSAParameterSpec;
 import org.mozilla.jss.pkcs11.PK11KeyPairGenerator;
 import org.mozilla.jss.util.Base64OutputStream;
 
@@ -65,7 +65,7 @@ public class TestKeyGen {
         RSAPublicKey rsaPubKey;
         DSAPublicKey dsaPubKey;
         DSAParams dsaParams;
-        RSAParameterSpec rsaParams;
+        RSAKeyGenParameterSpec rsaParams;
 
         java.security.KeyPairGenerator kpg =
             java.security.KeyPairGenerator.getInstance("RSA", "Mozilla-JSS");
@@ -114,7 +114,7 @@ public class TestKeyGen {
         System.out.println("Generating 512-bit RSA KeyPair with public exponent=3!");
         for (int cntr=0; cntr<5; cntr++ ) {
             try {
-                rsaParams = new RSAParameterSpec(512, BigInteger.valueOf(3));
+                rsaParams = new RSAKeyGenParameterSpec(512, BigInteger.valueOf(3));
                 kpg.initialize(rsaParams);
                 keyPair = kpg.genKeyPair();
                 assert( keyPair.getPublic() instanceof RSAPublicKey);
