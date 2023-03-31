@@ -25,6 +25,7 @@ import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.KeyGenAlgorithm;
+import org.mozilla.jss.crypto.KeyGenerator;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapper;
 import org.mozilla.jss.crypto.PBEAlgorithm;
@@ -130,45 +131,51 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
     engineGenerateSecret(KeySpec spec) throws InvalidKeySpecException
     {
       try {
-        if( spec instanceof PBEKeySpec ||
+        if (spec instanceof PBEKeySpec ||
             spec instanceof PBEKeyGenParams) {
 
             PBEKeyGenParams params;
-            if( spec instanceof PBEKeySpec ) {
-                params = makePBEKeyGenParams((PBEKeySpec)spec);
+            if (spec instanceof PBEKeySpec pbeSpec) {
+                params = makePBEKeyGenParams(pbeSpec);
             } else {
-                params = (org.mozilla.jss.crypto.PBEKeyGenParams) spec;
+                params = (PBEKeyGenParams) spec;
             }
-            org.mozilla.jss.crypto.KeyGenerator gen =token.getKeyGenerator(alg);
+            KeyGenerator gen = token.getKeyGenerator(alg);
             gen.initialize(params);
             SymmetricKey symk = gen.generate();
             params.clear();
             return new SecretKeyFacade(symk);
-        } else if (spec instanceof DESedeKeySpec) {
+        }
+
+        if (spec instanceof DESedeKeySpec desedeSpec) {
             if( alg != KeyGenAlgorithm.DES3 ) {
                 throw new InvalidKeySpecException(
                     "Incorrect KeySpec type (" + spec.getClass().getName() +
                     ") for algorithm (" + alg.toString() + ")");
             }
             return generateKeyFromBits(
-                ((DESedeKeySpec)spec).getKey(), SymmetricKey.Type.DES3 );
-        } else if (spec instanceof DESKeySpec) {
+                    desedeSpec.getKey(), SymmetricKey.Type.DES3);
+        }
+
+        if (spec instanceof DESKeySpec desKeySpec) {
             if( alg != KeyGenAlgorithm.DES ) {
                 throw new InvalidKeySpecException(
                     "Incorrect KeySpec type (" + spec.getClass().getName() +
                     ") for algorithm (" + alg.toString() + ")");
             }
             return generateKeyFromBits(
-                ((DESKeySpec)spec).getKey(), SymmetricKey.Type.DES );
-        } else if( spec instanceof SecretKeySpec ) {
-            SecretKeySpec kspec = (SecretKeySpec) spec;
+                    desKeySpec.getKey(), SymmetricKey.Type.DES );
+        }
+
+        if (spec instanceof SecretKeySpec kspec) {
             SymmetricKey.Type type =
                 SymmetricKey.Type.fromName( kspec.getAlgorithm());
             return generateKeyFromBits( kspec.getEncoded(), type);
-        } else {
-            throw new InvalidKeySpecException(
-                "Unsupported KeySpec: " + spec.getClass().getName());
         }
+
+        throw new InvalidKeySpecException(
+                "Unsupported KeySpec: " + spec.getClass().getName());
+
       } catch(TokenException te) {
             throw new TokenRuntimeException(te.getMessage());
       } catch(InvalidAlgorithmParameterException iape) {
@@ -229,10 +236,10 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
     public SecretKey engineTranslateKey(SecretKey key)
         throws InvalidKeyException
     {
-        if( key instanceof SecretKeyFacade ) {
+        if( key instanceof SecretKeyFacade skFacade) {
             // try cloning the key
             try {
-                SymmetricKey oldkey = ((SecretKeyFacade)key).key;
+                SymmetricKey oldkey = skFacade.key;
                 CryptoToken owningToken = oldkey.getOwningToken();
                 org.mozilla.jss.crypto.KeyGenerator keygen =
                     token.getKeyGenerator(oldkey.getType().getKeyGenAlg());
@@ -386,6 +393,9 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
+    /**
+     * @deprecated Since 5.0.1.
+     */
     @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBE_SHA1_DES_CBC extends JSSSecretKeyFactorySpi {
         public PBE_SHA1_DES_CBC() {
@@ -393,6 +403,9 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
+    /**
+     * @deprecated Since 5.0.1.
+     */
     @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBE_SHA1_DES3_CBC extends JSSSecretKeyFactorySpi {
         public PBE_SHA1_DES3_CBC() {
@@ -400,6 +413,9 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
+    /**
+     * @deprecated Since 5.0.1.
+     */
     @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBE_SHA1_RC4_128 extends JSSSecretKeyFactorySpi {
         public PBE_SHA1_RC4_128() {
@@ -407,6 +423,9 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
+    /**
+     * @deprecated Since 5.0.1.
+     */
     @Deprecated(since="5.0.1", forRemoval=true)
     public static class HmacSHA1 extends JSSSecretKeyFactorySpi {
         public HmacSHA1() {
@@ -414,6 +433,9 @@ public class JSSSecretKeyFactorySpi extends SecretKeyFactorySpi {
         }
     }
 
+    /**
+     * @deprecated Since 5.0.1.
+     */
     @Deprecated(since="5.0.1", forRemoval=true)
     public static class PBAHmacSHA1 extends JSSSecretKeyFactorySpi {
         public PBAHmacSHA1() {

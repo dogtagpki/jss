@@ -37,12 +37,12 @@ import org.slf4j.LoggerFactory;
 
 public class JSSTrustManager implements X509TrustManager {
 
-    final static Logger logger = LoggerFactory.getLogger(JSSTrustManager.class);
+    public static final Logger logger = LoggerFactory.getLogger(JSSTrustManager.class);
 
-    final static String SERVER_AUTH_OID = "1.3.6.1.5.5.7.3.1";
-    final static String CLIENT_AUTH_OID = "1.3.6.1.5.5.7.3.2";
+    public static final String SERVER_AUTH_OID = "1.3.6.1.5.5.7.3.1";
+    public static final String CLIENT_AUTH_OID = "1.3.6.1.5.5.7.3.2";
 
-    public boolean allowMissingExtendedKeyUsage = false;
+    private boolean allowMissingExtendedKeyUsage = false;
 
     public void configureAllowMissingExtendedKeyUsage(boolean allow) {
         allowMissingExtendedKeyUsage = allow;
