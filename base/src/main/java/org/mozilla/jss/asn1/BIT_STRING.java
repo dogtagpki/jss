@@ -45,7 +45,7 @@ public class BIT_STRING implements ASN1Value {
 
     /**
      * Constructs a BIT_STRING from a BitSet.
-     * 
+     *
      * @param bs A BitSet.
      * @param numBits The number of bits to copy from the BitSet.
      *            This is necessary because the size of a BitSet is always padded
@@ -77,7 +77,7 @@ public class BIT_STRING implements ASN1Value {
      * zeroes be removed when the bitstring is used to hold flags, but
      * not when it is used to hold binary data (such as a public key).
      * The default is <code>false</code>.
-     * 
+     *
      * @return True if trailing zeroes are to be removed.
      */
     public boolean getRemoveTrailingZeroes() {
@@ -91,7 +91,7 @@ public class BIT_STRING implements ASN1Value {
      * not when it is used to hold binary data (such as a public key).
      * The default is <code>false</code>. If this bit string is used to hold
      * flags, you should set this to <code>true</code>.
-     * 
+     *
      * @param removeTrailingZeroes True if trailing zeroes are to be removed.
      */
     public void setRemoveTrailingZeroes(boolean removeTrailingZeroes) {
@@ -103,7 +103,7 @@ public class BIT_STRING implements ASN1Value {
      * at the end. The array may be empty (but not null), in which case
      * <code>padCount</code> must be zero. The array is referenced,
      * not cloned.
-     * 
+     *
      * @return BIT STRING as byte array.
      */
     public byte[] getBits() {
@@ -115,7 +115,7 @@ public class BIT_STRING implements ASN1Value {
      * will not accurately reflect the number of bits in the BIT STRING,
      * because the size of a BitSet is always rounded up to the next multiple
      * of 64. The extra bits will be set to 0.
-     * 
+     *
      * @return BIT STRING as BitSet.
      */
     public BitSet toBitSet() {
@@ -135,7 +135,7 @@ public class BIT_STRING implements ASN1Value {
      * Copies this BIT STRING into a boolean array. Each element of the array
      * represents one bit with <code>true</code> for 1 and <code>false</code>
      * for 0.
-     * 
+     *
      * @return BIT STRING as boolean array.
      */
     public boolean[] toBooleanArray() {
@@ -153,7 +153,7 @@ public class BIT_STRING implements ASN1Value {
     /**
      * Returns the number of padding bits at the end of the array.
      * Must be in the range <code>[0,7]</code>.
-     * 
+     *
      * @return Number of padding.
      */
     public int getPadCount() {
@@ -211,7 +211,7 @@ public class BIT_STRING implements ASN1Value {
 
         }
 
-        ASN1Header head = new ASN1Header(implicitTag, FORM, numBytes + 1);
+        ASN1Header head = new ASN1Header(implicitTag, FORM, numBytes + 1L);
 
         head.encode(ostream);
 

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * The portion of a BER encoding that precedes the contents octets. Consists
@@ -138,7 +138,7 @@ public class ASN1Header {
             // read all octets into a Vector of Bytes
             //
             byte next;
-            Vector<Byte> bV = new Vector<>();
+            ArrayList<Byte> bV = new ArrayList<>();
 
             // last byte has MSB == 0.
             do {
@@ -149,9 +149,9 @@ public class ASN1Header {
                 }
                 encoding.write(inInt);
                 next = (byte) inInt;
-                bV.addElement(Byte.valueOf(next));
+                bV.add(Byte.valueOf(next));
             } while ((next & 0x80) == 0x80);
-            assert (bV.size() > 0);
+            assert (!bV.isEmpty());
 
             //
             // Copy Vector of 7-bit bytes into array of 8-bit bytes.
@@ -176,7 +176,7 @@ public class ASN1Header {
                 assert (a < bA.length);
 
                 // MSB is not part of the number
-                byte b = (byte) (bV.elementAt(v).byteValue() & 0x7f);
+                byte b = (byte) (bV.get(v).byteValue() & 0x7f);
                 bA[a] |= b << shift;
                 if (shift > 1) {
                     // The byte from the Vector falls across a byte boundary
@@ -246,7 +246,6 @@ public class ASN1Header {
     public ASN1Header(Tag tag, Form form, long contentLength) {
         this.tag = tag;
         this.form = form;
-        assert (contentLength >= 0);
         this.contentLength = contentLength;
     }
 
@@ -331,9 +330,6 @@ public class ASN1Header {
      * @return Byte array.
      */
     public static byte[] unsignedBigIntToByteArray(BigInteger bi) {
-        // make sure it is not negative
-        assert (bi.compareTo(BigInteger.valueOf(0)) != -1);
-
         // find minimal number of bytes to hold this value
         int bitlen = bi.bitLength(); // minimal number of bits, without sign
         int bytelen;
@@ -346,7 +342,7 @@ public class ASN1Header {
 
         byte[] withSign = bi.toByteArray();
 
-        if (bytelen == withSign.length) {
+        if (bytelen == withSign.length || bi.signum() < 0) {
             return withSign;
         }
         // trim off extra byte at the beginning
