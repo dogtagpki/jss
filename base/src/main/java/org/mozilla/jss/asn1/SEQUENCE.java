@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * An ASN.1 SEQUENCE. This class is an ordered collection of ASN.1 values.
@@ -38,19 +38,6 @@ public class SEQUENCE extends SET {
         BERencode(implicitTag, ostream);
     }
 
-    // SET.Element and SEQUENCE.Element are identical types.  We could
-    // have just reused SET.Element, but that would have been a bit
-    // confusing for users.
-    private static class Element extends SET.Element {
-        public Element(ASN1Value val) {
-            super(val);
-        }
-
-        public Element(Tag implicitTag, ASN1Value val) {
-            super(implicitTag, val);
-        }
-    }
-
     /**
      * A class for constructing a <code>SEQUENCE</code> from its BER encoding.
      * It is an ordered collection of sub-templates. Each sub-template can be
@@ -58,14 +45,14 @@ public class SEQUENCE extends SET {
      */
     public static class Template implements ASN1Template {
 
-        private Vector<Element> elements = new Vector<>();
+        private ArrayList<Element> elements = new ArrayList<>();
 
         private void addElement(Element el) {
-            elements.addElement(el);
+            elements.add(el);
         }
 
         private void insertElementAt(Element e, int index) {
-            elements.insertElementAt(e, index);
+            elements.add(index, e);
         }
 
         /**
@@ -288,7 +275,7 @@ public class SEQUENCE extends SET {
          * @return Tag.
          */
         public Tag implicitTagAt(int index) {
-            return elements.elementAt(index).getImplicitTag();
+            return elements.get(index).getImplicitTag();
         }
 
         /**
@@ -298,7 +285,7 @@ public class SEQUENCE extends SET {
          * @return Sub-template.
          */
         public ASN1Template templateAt(int index) {
-            return elements.elementAt(index).getTemplate();
+            return elements.get(index).getTemplate();
         }
 
         /**
@@ -308,7 +295,7 @@ public class SEQUENCE extends SET {
          * @return True if the sub-template is optional.
          */
         public boolean isOptionalAt(int index) {
-            return elements.elementAt(index).isOptional();
+            return elements.get(index).isOptional();
         }
 
         /**
@@ -319,7 +306,7 @@ public class SEQUENCE extends SET {
          * @return Default value.
          */
         public ASN1Value defaultAt(int index) {
-            return elements.elementAt(index).getDefault();
+            return elements.get(index).getDefault();
         }
 
         /**
@@ -333,7 +320,7 @@ public class SEQUENCE extends SET {
          * Removes all sub-templates from this SEQUENCE template.
          */
         public void removeAllElements() {
-            elements.removeAllElements();
+            elements.clear();
         }
 
         /**
@@ -342,7 +329,7 @@ public class SEQUENCE extends SET {
          * @param index Index.
          */
         public void removeElementAt(int index) {
-            elements.removeElementAt(index);
+            elements.remove(index);
         }
 
         Tag getTag() {
@@ -403,14 +390,13 @@ public class SEQUENCE extends SET {
 
                     // skip over items that don't match.  Hopefully they are
                     // optional or have a default.  Otherwise, it's an error.
-                    Element e = elements.elementAt(index);
+                    Element e = elements.get(index);
                     if ((lookAhead == null) || lookAhead.isEOC() ||
                             !e.tagMatch(lookAhead.getTag())) {
                         if (e.isRepeatable()) {
                             repeatableElement = true;
                         } else if (e.isOptional()) {
                             // put an empty entry into the SEQUENCE
-                            SEQUENCE.Element se = new SEQUENCE.Element(null, null);
                             seq.addElement(null);
                         } else if (e.getDefault() != null) {
                             // use the default
