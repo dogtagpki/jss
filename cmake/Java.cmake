@@ -24,7 +24,7 @@ function(javac target)
 
     foreach (arg ${ARGN})
 
-        if (arg MATCHES "(SOURCE_DIR|SOURCES|EXCLUDE|CLASSPATH|OUTPUT_DIR|DEPENDS)")
+        if (arg MATCHES "(SOURCE_DIR|SOURCES|EXCLUDE|CLASSPATH|OUTPUT_DIR|HEADER_DIR|DEPENDS)")
             set(param ${arg})
 
         else ()
@@ -44,12 +44,15 @@ function(javac target)
             elseif (param STREQUAL "OUTPUT_DIR")
                 set(output_dir ${arg})
 
+            elseif (param STREQUAL "HEADER_DIR")
+                set(header_dir ${arg})
+
             elseif (param STREQUAL "DEPENDS")
                 list(APPEND depends ${arg})
 
             endif(param STREQUAL "SOURCE_DIR")
 
-        endif(arg MATCHES "(SOURCE_DIR|SOURCES|EXCLUDE|CLASSPATH|OUTPUT_DIR|DEPENDS)")
+        endif(arg MATCHES "(SOURCE_DIR|SOURCES|EXCLUDE|CLASSPATH|OUTPUT_DIR|HEADER_DIR|DEPENDS)")
 
     endforeach(arg)
 
@@ -72,6 +75,19 @@ function(javac target)
 
     file(MAKE_DIRECTORY ${output_dir})
 
+    set(javac_options ${CMAKE_JAVA_COMPILE_FLAGS})
+    list(APPEND javac_options -encoding UTF-8)
+    list(APPEND javac_options -cp ${native_classpath})
+    list(APPEND javac_options -d ${output_dir})
+
+    if (DEFINED header_dir)
+        list(APPEND javac_options -h ${header_dir})
+    endif()
+
+    list(APPEND javac_options -source 17)
+    list(APPEND javac_options -target 17)
+    list(APPEND javac_options @${file_list})
+
     add_custom_command(
         TARGET ${target}
         COMMAND ${CMAKE_COMMAND}
@@ -80,14 +96,9 @@ function(javac target)
             -Dfiles="${sources}"
             -Dexclude="${exclude}"
             -P ${CMAKE_MODULE_PATH}/JavaFileList.cmake
-        COMMAND ${Java_JAVAC_EXECUTABLE}
-            ${CMAKE_JAVA_COMPILE_FLAGS}
-            -encoding UTF-8
-            -cp ${native_classpath}
-            -d ${output_dir}
-            -source 17
-            -target 17
-            @${file_list}
+        COMMAND
+            ${Java_JAVAC_EXECUTABLE}
+            ${javac_options}
         WORKING_DIRECTORY
             ${source_dir}
     )

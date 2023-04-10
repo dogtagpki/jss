@@ -8,6 +8,8 @@ javac(symkey-classes
         ${CLASSES_OUTPUT_DIR}
     OUTPUT_DIR
         ${CMAKE_CURRENT_BINARY_DIR}/classes
+    HEADER_DIR
+        ${CMAKE_CURRENT_BINARY_DIR}/include
     DEPENDS
         generate_java
 )
@@ -38,17 +40,13 @@ set(SYMKEY_PUBLIC_INCLUDE_DIRS
 )
 
 set(SYMKEY_PRIVATE_INCLUDE_DIRS
-    ${CMAKE_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/include
     ${JNI_INCLUDE_DIRS}
     ${NSPR_INCLUDE_DIRS}
     ${NSS_INCLUDE_DIRS}
 )
 
 set(SYMKEY_SHARED_LIBRARY symkey_library CACHE INTERNAL "symkey shared library")
-
-set(symkey_library_HDRS
-    src/main/java/org/mozilla/jss/symkey/SessionKey.h
-)
 
 set(symkey_library_SRCS
     src/main/java/org/mozilla/jss/symkey/Buffer.cpp
@@ -60,20 +58,7 @@ set(symkey_library_SRCS
 
 include_directories(${SYMKEY_PRIVATE_INCLUDE_DIRS})
 
-# TODO: merge into javac() above
-add_custom_command(
-    OUTPUT
-        ${symkey_library_HDRS}
-    COMMAND
-        ${Java_JAVAC_EXECUTABLE}
-            -classpath ${JAVAC_CLASSPATH}:${CLASSES_OUTPUT_DIR}
-            -h ${CMAKE_CURRENT_BINARY_DIR}
-            -d ${CMAKE_CURRENT_BINARY_DIR}/classes
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/main/java/org/mozilla/jss/symkey/SessionKey.java
-)
-
 add_library(${SYMKEY_SHARED_LIBRARY} SHARED
-    ${symkey_library_HDRS}
     ${symkey_library_SRCS})
 
 add_dependencies(${SYMKEY_SHARED_LIBRARY} symkey-jar)
