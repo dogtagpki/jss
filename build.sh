@@ -40,7 +40,7 @@ WITH_TIMESTAMP=
 WITH_COMMIT_ID=
 DIST=
 
-WITHOUT_JAVADOC=
+WITH_JAVADOC=true
 WITH_TESTS=
 
 VERBOSE=
@@ -176,7 +176,7 @@ generate_rpm_spec() {
     fi
 
     # hard-code Javadoc option
-    if [ "$WITHOUT_JAVADOC" = true ] ; then
+    if [ "$WITH_JAVADOC" = false ] ; then
         # convert bcond_without into bcond_with such that Javadoc package is not built by default
         sed -i "s/%\(bcond_without *javadoc\)\$/# \1\n%bcond_with javadoc/g" "$SPEC_FILE"
     fi
@@ -254,7 +254,7 @@ while getopts v-: arg ; do
             DIST="$LONG_OPTARG"
             ;;
         without-javadoc)
-            WITHOUT_JAVADOC=true
+            WITH_JAVADOC=false
             ;;
         with-tests)
             WITH_TESTS=true
@@ -382,7 +382,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     OPTIONS+=(-DVERSION="$VERSION")
 
-    if [ "$WITHOUT_JAVADOC" = true ] ; then
+    if [ "$WITH_JAVADOC" = false ] ; then
         OPTIONS+=(-DWITH_JAVADOC=FALSE)
     fi
 
@@ -399,7 +399,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     make "${OPTIONS[@]}" all
 
-    if [ "$WITHOUT_JAVADOC" != true ] ; then
+    if [ "$WITH_JAVADOC" = true ] ; then
         make "${OPTIONS[@]}" javadoc
     fi
 
@@ -415,7 +415,12 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     echo "- shared libraries:"
     echo "    $WORK_DIR/libjss.so"
     echo "    $WORK_DIR/symkey/libjss-symkey.so"
-    echo "- documentation: $WORK_DIR/docs"
+
+    if [ "$WITH_JAVADOC" = true ] ; then
+        echo "- documentation:"
+        echo "    $WORK_DIR/docs"
+    fi
+
     echo
     echo "To run the tests: $0 --with-tests"
     echo "To install the build: $0 install"
