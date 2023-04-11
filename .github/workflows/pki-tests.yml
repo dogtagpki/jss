@@ -36,6 +36,11 @@ jobs:
     needs: [init, build]
     uses: ./.github/workflows/pki-build-test.yml
 
+  pki-tools-test:
+    name: Testing PKI tools
+    needs: [init, build]
+    uses: ./.github/workflows/pki-tools-test.yml
+
   pki-ca-test:
     name: Testing PKI CA
     needs: [init, build]
