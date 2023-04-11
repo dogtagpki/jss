@@ -51,8 +51,24 @@ jobs:
 
     - name: Compare jss.jar
       run: |
-        jar tvf ~/build/jss/jss.jar | awk '{print $8;}' | sort | tee cmake.out
-        jar tvf base/target/jss-5.4.0-SNAPSHOT.jar | awk '{print $8;}' | grep -v '^META-INF/maven/' | sort > maven.out
+        jar tvf ~/build/jss/jss.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee cmake.out
+        jar tvf base/target/jss-5.4.0-SNAPSHOT.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | grep -v '^META-INF/maven/' \
+            | tee maven.out
+        diff cmake.out maven.out
+
+    - name: Compare jss-symkey.jar
+      run: |
+        jar tvf ~/build/jss/symkey/jss-symkey.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee cmake.out
+        jar tvf symkey/target/jss-symkey-5.4.0-SNAPSHOT.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | grep -v '^META-INF/maven/' \
+            | tee maven.out
         diff cmake.out maven.out
 
     # TODO: Run examples

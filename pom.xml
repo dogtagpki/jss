@@ -13,12 +13,16 @@
         <revision>5.4.0-SNAPSHOT</revision>
         <sonar.organization>dogtagpki</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.c.file.suffixes>-</sonar.c.file.suffixes>
+        <sonar.cpp.file.suffixes>-</sonar.cpp.file.suffixes>
+        <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
         <module>base</module>
         <module>native</module>
+        <module>symkey</module>
         <module>examples</module>
     </modules>
 
