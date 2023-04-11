@@ -1,0 +1,181 @@
+name: Testing TPS
+
+on: workflow_call
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/pki
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Retrieve jss-runner image
+        uses: actions/cache@v3
+        with:
+          key: jss-runner-${{ github.sha }}
+          path: jss-runner.tar
+
+      - name: Load jss-runner image
+        run: docker load --input jss-runner.tar
+
+      - name: Create network
+        run: docker network create example
+
+      - name: Run container
+        run: |
+          IMAGE=jss-runner \
+          NAME=pki \
+          HOSTNAME=pki.example.com \
+          tests/bin/runner-init.sh
+
+      - name: Import Tomcat JSS packages
+        run: |
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:latest
+          docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f tomcatjss-dist
+
+      - name: Import LDAP SDK packages
+        run: |
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker create --name=pki-dist quay.io/dogtagpki/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
+      - name: Install packages
+        run: |
+          docker exec pki dnf install -y 389-ds-base
+          docker cp /tmp/RPMS/. pki:/root/RPMS/
+          docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
+
+      - name: Install DS
+        run: docker exec pki ${SHARED}/tests/bin/ds-create.sh
+
+      - name: Install CA
+        run: |
+          docker exec pki pkispawn \
+              -f /usr/share/pki/server/examples/installation/ca.cfg \
+              -s CA \
+              -D pki_cert_id_generator=random \
+              -D pki_request_id_generator=random \
+              -v
+
+          docker exec pki pki-server cert-find
+
+      - name: Install TKS
+        run: |
+          docker exec pki pkispawn \
+              -f /usr/share/pki/server/examples/installation/tks.cfg \
+              -s TKS \
+              -v
+
+          docker exec pki pki-server cert-find
+
+      - name: Install TPS
+        run: |
+          docker exec pki pkispawn \
+              -f /usr/share/pki/server/examples/installation/tps.cfg \
+              -s TPS \
+              -v
+
+      - name: Check TPS admin
+        run: |
+          docker exec pki pki-server cert-export ca_signing --cert-file ca_signing.crt
+          docker exec pki pki client-cert-import ca_signing --ca-cert ca_signing.crt
+          docker exec pki pki pkcs12-import \
+              --pkcs12 /root/.dogtag/pki-tomcat/ca_admin_cert.p12 \
+              --pkcs12-password Secret.123
+          docker exec pki pki -n caadmin tps-user-show tpsadmin
+
+      - name: Set up TPS authentication
+        run: |
+          # import sample TPS users
+          docker exec pki ldapadd \
+              -D "cn=Directory Manager" \
+              -w Secret.123 \
+              -f /usr/share/pki/tps/auth/ds/create.ldif
+          docker exec pki ldapadd \
+              -D "cn=Directory Manager" \
+              -w Secret.123 \
+              -f /usr/share/pki/tps/auth/ds/example.ldif
+
+          # configure TPS to use the sample TPS users
+          docker exec pki pki-server tps-config-set \
+              auths.instance.ldap1.ldap.basedn \
+              ou=people,dc=example,dc=com
+
+          # restart TPS subsystem
+          docker exec pki pki-server tps-redeploy --wait
+
+      - name: Add token
+        run: |
+          hexdump -v -n "10" -e '1/1 "%02x"' /dev/urandom > cuid
+          CUID=$(cat cuid)
+          docker exec pki pki -n caadmin tps-token-add $CUID | tee output
+
+          echo "UNFORMATTED" > expected
+          sed -n 's/\s*Status:\s\+\(\S\+\)\s*/\1/p' output > actual
+          diff expected actual
+
+          docker exec pki pki -n caadmin tps-cert-find --token $CUID
+
+      - name: Format token
+        run: |
+          CUID=$(cat cuid)
+          docker exec pki /usr/share/pki/tps/bin/pki-tps-format \
+              --user=testuser \
+              --password=Secret.123 \
+              $CUID
+
+          echo "FORMATTED" > expected
+          docker exec pki pki -n caadmin tps-token-show $CUID | tee output
+          sed -n 's/\s*Status:\s\+\(\S\+\)\s*/\1/p' output > actual
+          diff expected actual
+
+          docker exec pki pki -n caadmin tps-cert-find --token $CUID
+
+      - name: Enroll token
+        run: |
+          CUID=$(cat cuid)
+          docker exec pki /usr/share/pki/tps/bin/pki-tps-enroll \
+              --user=testuser \
+              --password=Secret.123 \
+              $CUID
+
+          echo "ACTIVE" > expected
+          docker exec pki pki -n caadmin tps-token-show $CUID | tee output
+          sed -n 's/\s*Status:\s\+\(\S\+\)\s*/\1/p' output > actual
+          diff expected actual
+
+          docker exec pki pki -n caadmin tps-cert-find --token $CUID
+
+      - name: Gather artifacts
+        if: always()
+        run: |
+          tests/bin/ds-artifacts-save.sh --output=/tmp/artifacts/pki ds
+          tests/bin/pki-artifacts-save.sh pki
+        continue-on-error: true
+
+      - name: Remove TPS
+        run: docker exec pki pkidestroy -i pki-tomcat -s TPS -v
+
+      - name: Remove TKS
+        run: docker exec pki pkidestroy -i pki-tomcat -s TKS -v
+
+      - name: Remove CA
+        run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: pki-tps-test
+          path: |
+            /tmp/artifacts/pki

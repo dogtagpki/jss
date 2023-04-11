@@ -45,3 +45,8 @@ jobs:
     name: Testing PKI CA
     needs: [init, build]
     uses: ./.github/workflows/pki-ca-test.yml
+
+  pki-tps-test:
+    name: Testing PKI TPS
+    needs: [init, build]
+    uses: ./.github/workflows/pki-tps-test.yml
