@@ -28,8 +28,29 @@ jobs:
           HOSTNAME=pki.example.com \
           tests/bin/runner-init.sh
 
-      - name: Install DS and PKI packages
-        run: docker exec pki dnf install -y 389-ds-base pki-ca pki-tests
+      - name: Import Tomcat JSS packages
+        run: |
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:latest
+          docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f tomcatjss-dist
+
+      - name: Import LDAP SDK packages
+        run: |
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker create --name=pki-dist quay.io/dogtagpki/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
+      - name: Install packages
+        run: |
+          docker exec pki dnf install -y 389-ds-base
+          docker cp /tmp/RPMS/. pki:/root/RPMS/
+          docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
 
       - name: Install DS
         run: docker exec pki ${SHARED}/tests/bin/ds-create.sh
