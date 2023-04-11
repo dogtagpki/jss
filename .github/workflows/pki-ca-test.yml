@@ -1,0 +1,108 @@
+name: Testing PKI CA
+
+on: workflow_call
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/jss
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Retrieve jss-runner image
+        uses: actions/cache@v3
+        with:
+          key: jss-runner-${{ github.sha }}
+          path: jss-runner.tar
+
+      - name: Load jss-runner image
+        run: docker load --input jss-runner.tar
+
+      - name: Run container
+        run: |
+          IMAGE=jss-runner \
+          NAME=pki \
+          HOSTNAME=pki.example.com \
+          tests/bin/runner-init.sh
+
+      - name: Install DS and PKI packages
+        run: docker exec pki dnf install -y 389-ds-base pki-ca pki-tests
+
+      - name: Install DS
+        run: docker exec pki ${SHARED}/tests/bin/ds-create.sh
+
+      - name: Install CA
+        run: |
+          docker exec pki pkispawn \
+              -f /usr/share/pki/server/examples/installation/ca.cfg \
+              -s CA \
+              -D pki_cert_id_generator=random \
+              -D pki_request_id_generator=random \
+              -v
+
+          # set buffer size to 0 so that revocation takes effect immediately
+          docker exec pki pki-server ca-config-set auths.revocationChecking.bufferSize 0
+
+          # enable signed audit log
+          docker exec pki pki-server ca-config-set log.instance.SignedAudit.logSigning true
+
+          # restart PKI server
+          docker exec pki pki-server restart --wait
+
+      - name: Run PKI healthcheck
+        run: docker exec pki pki-healthcheck --debug
+
+      - name: Initialize PKI client
+        run: |
+          docker exec pki pki-server cert-export ca_signing --cert-file ca_signing.crt
+          docker exec pki pki client-cert-import ca_signing --ca-cert ca_signing.crt
+          docker exec pki pki info
+
+      - name: Check CA certs
+        run: |
+          docker exec pki /usr/share/pki/tests/ca/bin/test-ca-signing-cert.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/test-subsystem-cert.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/test-ca-certs.sh
+
+      - name: Check CA admin
+        run: |
+          docker exec pki pki client-cert-import \
+              --pkcs12 /root/.dogtag/pki-tomcat/ca_admin_cert.p12 \
+              --pkcs12-password Secret.123
+          docker exec pki pki -n caadmin ca-user-show caadmin
+
+      - name: Check CA agent
+        run: |
+          docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-create.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-cert-create.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-cert-revoke.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/ca-agent-cert-unrevoke.sh
+
+      - name: Check CA auditor
+        run: |
+          docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-create.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-cert.sh
+          docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-logs.sh
+
+      - name: Gather artifacts
+        if: always()
+        run: |
+          tests/bin/ds-artifacts-save.sh pki
+          tests/bin/pki-artifacts-save.sh pki
+
+      - name: Remove CA
+        run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
+
+      - name: Remove DS
+        run: docker exec pki ${SHARED}/tests/bin/ds-remove.sh
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: pki-ca-test
+          path: |
+            /tmp/artifacts/pki
