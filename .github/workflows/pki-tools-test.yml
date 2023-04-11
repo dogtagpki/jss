@@ -1,0 +1,76 @@
+name: Testing PKI tools
+
+on: workflow_call
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/pki
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Retrieve jss-runner image
+        uses: actions/cache@v3
+        with:
+          key: jss-runner-${{ github.sha }}
+          path: jss-runner.tar
+
+      - name: Load jss-runner image
+        run: docker load --input jss-runner.tar
+
+      - name: Run container
+        run: |
+          IMAGE=jss-runner \
+          NAME=pki \
+          HOSTNAME=pki.example.com \
+          tests/bin/runner-init.sh
+
+      - name: Import Tomcat JSS packages
+        run: |
+          docker pull quay.io/dogtagpki/tomcatjss-dist:latest
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:latest
+          docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f tomcatjss-dist
+
+      - name: Import LDAP SDK packages
+        run: |
+          docker pull quay.io/dogtagpki/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker pull quay.io/dogtagpki/pki-dist:latest
+          docker create --name=pki-dist quay.io/dogtagpki/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
+      - name: Install packages
+        run: |
+          docker cp /tmp/RPMS/. pki:/root/RPMS/
+          docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
+
+      - name: Check AES key
+        run: |
+          # create key
+          docker exec pki pki nss-key-create --key-type AES aes
+          docker exec pki pki nss-key-find | tee output
+
+          # check key nickname
+          sed -n 's/\s*Nickname:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "aes" > expected
+          diff expected actual
+
+          # check key type
+          sed -n 's/\s*Type:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "AES" > expected
+          diff expected actual
+
+          # check key algorithm
+          sed -n 's/\s*Algorithm:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "AES" > expected
+          diff expected actual
