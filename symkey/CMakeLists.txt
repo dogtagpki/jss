@@ -34,8 +34,8 @@ install(
 set(SYMKEY_JAR ${CMAKE_BINARY_DIR}/jss-symkey.jar CACHE INTERNAL "symkey jar file")
 
 set(SYMKEY_PUBLIC_INCLUDE_DIRS
-    ${CMAKE_CURRENT_BINARY_DIR}/src/main/java/org/mozilla/jss/symkey
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/java/org/mozilla/jss/symkey
+    ${CMAKE_CURRENT_BINARY_DIR}/src/main/native/org/mozilla/jss/symkey
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/native/org/mozilla/jss/symkey
     CACHE INTERNAL "symkey public include directories"
 )
 
@@ -49,11 +49,11 @@ set(SYMKEY_PRIVATE_INCLUDE_DIRS
 set(SYMKEY_SHARED_LIBRARY symkey_library CACHE INTERNAL "symkey shared library")
 
 set(symkey_library_SRCS
-    src/main/java/org/mozilla/jss/symkey/Buffer.cpp
-    src/main/java/org/mozilla/jss/symkey/EncryptData.cpp
-    src/main/java/org/mozilla/jss/symkey/SessionKey.cpp
-    src/main/java/org/mozilla/jss/symkey/SymKey.cpp
-    src/main/java/org/mozilla/jss/symkey/NistSP800_108KDF.cpp
+    src/main/native/org/mozilla/jss/symkey/Buffer.cpp
+    src/main/native/org/mozilla/jss/symkey/EncryptData.cpp
+    src/main/native/org/mozilla/jss/symkey/SessionKey.cpp
+    src/main/native/org/mozilla/jss/symkey/SymKey.cpp
+    src/main/native/org/mozilla/jss/symkey/NistSP800_108KDF.cpp
 )
 
 include_directories(${SYMKEY_PRIVATE_INCLUDE_DIRS})
