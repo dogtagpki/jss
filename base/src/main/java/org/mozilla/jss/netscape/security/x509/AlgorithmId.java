@@ -1070,10 +1070,10 @@ public class AlgorithmId implements Serializable, DerEncoder {
      * Supported signing algorithms for a RSA key.
      */
     public static final String[] RSA_SIGNING_ALGORITHMS = new String[]
-    { "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS" };
+    { "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA", "SHA256withRSA/PSS", "SHA384withRSA/PSS", "SHA512withRSA/PSS" };
 
     public static final String[] EC_SIGNING_ALGORITHMS = new String[]
-    { "SHA256withEC", "SHA384withEC", "SHA512withEC" };
+    { "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC" };
 
     /**
      * All supported signing algorithms.
