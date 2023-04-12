@@ -11,8 +11,8 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>jss-symkey</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>libjss-symkey</artifactId>
+    <packaging>so</packaging>
 
     <dependencies>
 
@@ -27,16 +27,48 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>1.0-alpha-11</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                    <compilerArgs>
-                        <arg>-proc:none</arg>
-                        <arg>-h</arg><arg>${project.build.directory}/include/_jni</arg>
-                    </compilerArgs>
+                    <compilerProvider>generic-classic</compilerProvider>
+                    <compilerExecutable>/usr/bin/c++</compilerExecutable>
+                    <linkerExecutable>/usr/bin/c++</linkerExecutable>
+                    <sources>
+                        <source>
+                            <directory>${basedir}/src/main/native</directory>
+                            <includes>
+                                <include>**/*.cpp</include>
+                            </includes>
+                        </source>
+                    </sources>
+                    <compilerStartOptions>
+                        <compilerStartOption>-Dsymkey_library_EXPORTS</compilerStartOption>
+                        <compilerStartOption>-I${basedir}/../base/target/include</compilerStartOption>
+                        <compilerStartOption>-I${JAVA_HOME}/include</compilerStartOption>
+                        <compilerStartOption>-I${JAVA_HOME}/include/linux</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nspr</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nspr4</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nss</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nss3</compilerStartOption>
+                        <compilerStartOption>-fPIC</compilerStartOption>
+                    </compilerStartOptions>
+                    <linkerStartOptions>
+                        <linkerStartOption>-fPIC</linkerStartOption>
+                        <linkerStartOption>-shared</linkerStartOption>
+                        <linkerStartOption>-Wl,-soname,libjss-symkey.so</linkerStartOption>
+                        <linkerStartOption>-lsmime3</linkerStartOption>
+                        <linkerStartOption>-lssl3</linkerStartOption>
+                        <linkerStartOption>-lnss3</linkerStartOption>
+                        <linkerStartOption>-lnssutil3</linkerStartOption>
+                        <linkerStartOption>-lplc4</linkerStartOption>
+                        <linkerStartOption>-lplds4</linkerStartOption>
+                        <linkerStartOption>-lnspr4</linkerStartOption>
+                        <linkerStartOption>-lpthread</linkerStartOption>
+                        <linkerStartOption>-ldl</linkerStartOption>
+                    </linkerStartOptions>
+                    <linkerFinalName>libjss-symkey</linkerFinalName>
                 </configuration>
             </plugin>
         </plugins>

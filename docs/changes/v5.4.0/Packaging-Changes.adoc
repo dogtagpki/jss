@@ -1,0 +1,6 @@
+= Packaging Changes =
+
+== Merge jss-symkey.jar into jss.jar ==
+
+The symkey Java library in `jss-symkey.jar` has been merged into `jss.jar`.
+The symkey native library will remain in `libjss-symkey.so`.
