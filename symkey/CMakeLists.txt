@@ -1,38 +1,5 @@
 project(symkey)
 
-javac(symkey-classes
-    SOURCES
-        src/main/java/*.java
-    CLASSPATH
-        ${JAVAC_CLASSPATH}
-        ${CLASSES_OUTPUT_DIR}
-    OUTPUT_DIR
-        ${CMAKE_CURRENT_BINARY_DIR}/classes
-    HEADER_DIR
-        ${CMAKE_CURRENT_BINARY_DIR}/include
-    DEPENDS
-        generate_java
-)
-
-# TODO: merge into jss.jar
-jar(symkey-jar
-    CREATE
-        ${CMAKE_CURRENT_BINARY_DIR}/jss-symkey.jar
-    INPUT_DIR
-        ${CMAKE_CURRENT_BINARY_DIR}/classes
-    DEPENDS
-        symkey-classes
-)
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/jss-symkey.jar
-    DESTINATION
-        ${JNI_DIR}
-)
-
-set(SYMKEY_JAR ${CMAKE_BINARY_DIR}/jss-symkey.jar CACHE INTERNAL "symkey jar file")
-
 set(SYMKEY_PUBLIC_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/src/main/native/org/mozilla/jss/symkey
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main/native/org/mozilla/jss/symkey
@@ -61,7 +28,7 @@ include_directories(${SYMKEY_PRIVATE_INCLUDE_DIRS})
 add_library(${SYMKEY_SHARED_LIBRARY} SHARED
     ${symkey_library_SRCS})
 
-add_dependencies(${SYMKEY_SHARED_LIBRARY} symkey-jar)
+add_dependencies(${SYMKEY_SHARED_LIBRARY} generate_jar)
 
 set_target_properties(${SYMKEY_SHARED_LIBRARY}
     PROPERTIES
@@ -77,10 +44,4 @@ install(
         ${SYMKEY_SHARED_LIBRARY}
     LIBRARY DESTINATION
         ${LIB_DIR}/jss
-)
-
-install(
-    CODE "execute_process(
-        COMMAND ln -sf ../../../${JNI_DIR}/jss-symkey.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss-symkey.jar
-    )"
 )
