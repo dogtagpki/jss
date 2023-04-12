@@ -11,7 +11,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>jss-native</artifactId>
+    <artifactId>libjss</artifactId>
     <packaging>so</packaging>
 
     <dependencies>
