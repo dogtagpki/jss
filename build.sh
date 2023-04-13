@@ -411,7 +411,6 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     echo "Build artifacts:"
     echo "- Java archives:"
     echo "    $WORK_DIR/jss.jar"
-    echo "    $WORK_DIR/symkey/jss-symkey.jar"
     echo "- shared libraries:"
     echo "    $WORK_DIR/libjss.so"
     echo "    $WORK_DIR/symkey/libjss-symkey.so"
