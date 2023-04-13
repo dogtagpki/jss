@@ -5,6 +5,7 @@ build/
 src/*.a
 src/*.o
 target/
+.flattened-pom.xml
 
 # These files are automatically generated from their .in equivalents
 org/mozilla/jss/util/jssver.h
