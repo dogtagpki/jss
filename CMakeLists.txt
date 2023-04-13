@@ -84,11 +84,32 @@ jss_tests()
 
 add_subdirectory(symkey)
 
+add_custom_target(
+    java ALL
+    DEPENDS generate_java generate_jar
+)
+
+add_custom_target(
+    native ALL
+    DEPENDS generate_c generate_so symkey_library
+)
+
 install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/jss.jar
     DESTINATION
         ${JNI_DIR}
+)
+
+install(
+    CODE "
+        MESSAGE(
+            \"-- Installing: \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar\"
+        )
+        execute_process(
+            COMMAND ln -sf ../../../${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
+        )
+    "
 )
 
 install(
@@ -100,12 +121,6 @@ install(
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE
-)
-
-install(
-    CODE "execute_process(
-        COMMAND ln -sf ../../../${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
-    )"
 )
 
 if(WITH_JAVADOC)

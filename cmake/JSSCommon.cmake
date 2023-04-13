@@ -103,7 +103,7 @@ macro(jss_build_java)
     )
 
     add_custom_target(
-        generate_java ALL
+        generate_java
         DEPENDS ${JNI_OUTPUTS} ${TESTS_JNI_OUTPUTS}
     )
 endmacro()
@@ -163,7 +163,7 @@ macro(jss_build_c)
     # Combine all C targets here into a single pseudo-target for parallel
     # builds.
     add_custom_target(
-        generate_c ALL
+        generate_c
         DEPENDS ${C_OUTPUTS}
     )
 
@@ -182,7 +182,7 @@ macro(jss_build_c)
 
     # Add a target for anything depending on the library existing.
     add_custom_target(
-        generate_so ALL
+        generate_so
         DEPENDS ${JSS_SO_PATH} ${JSS_TESTS_SO_PATH}
     )
 endmacro()
@@ -216,7 +216,7 @@ macro(jss_build_jars)
     )
 
     add_custom_target(
-        generate_jar ALL
+        generate_jar
         DEPENDS "${JSS_JAR_PATH}" "${JSS_TESTS_JAR_PATH}"
     )
 endmacro()

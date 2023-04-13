@@ -28,7 +28,7 @@ include_directories(${SYMKEY_PRIVATE_INCLUDE_DIRS})
 add_library(${SYMKEY_SHARED_LIBRARY} SHARED
     ${symkey_library_SRCS})
 
-add_dependencies(${SYMKEY_SHARED_LIBRARY} generate_jar)
+add_dependencies(${SYMKEY_SHARED_LIBRARY} generate_so)
 
 set_target_properties(${SYMKEY_SHARED_LIBRARY}
     PROPERTIES
@@ -40,8 +40,12 @@ target_link_libraries(${SYMKEY_SHARED_LIBRARY}
     smime3 ssl3 nss3 nssutil3 plc4 plds4 nspr4 pthread dl)
 
 install(
-    TARGETS
-        ${SYMKEY_SHARED_LIBRARY}
-    LIBRARY DESTINATION
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/libjss-symkey.so
+    DESTINATION
         ${LIB_DIR}/jss
+    PERMISSIONS
+        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE
 )
