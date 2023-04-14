@@ -40,6 +40,8 @@ WITH_TIMESTAMP=
 WITH_COMMIT_ID=
 DIST=
 
+WITH_JAVA=true
+WITH_NATIVE=true
 WITH_JAVADOC=true
 WITH_TESTS=
 
@@ -68,6 +70,8 @@ usage() {
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
+    echo "    --without-java         Do not build Java binaries."
+    echo "    --without-native       Do not build native binaries."
     echo "    --without-javadoc      Do not build Javadoc package."
     echo "    --with-tests           Run unit tests."
     echo " -v,--verbose              Run in verbose mode."
@@ -253,6 +257,12 @@ while getopts v-: arg ; do
         dist=?*)
             DIST="$LONG_OPTARG"
             ;;
+        without-java)
+            WITH_JAVA=false
+            ;;
+        without-native)
+            WITH_NATIVE=false
+            ;;
         without-javadoc)
             WITH_JAVADOC=false
             ;;
@@ -382,6 +392,14 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     OPTIONS+=(-DVERSION="$VERSION")
 
+    if [ "$WITH_JAVA" = false ] ; then
+        OPTIONS+=(-DWITH_JAVA=FALSE)
+    fi
+
+    if [ "$WITH_NATIVE" = false ] ; then
+        OPTIONS+=(-DWITH_NATIVE=FALSE)
+    fi
+
     if [ "$WITH_JAVADOC" = false ] ; then
         OPTIONS+=(-DWITH_JAVADOC=FALSE)
     fi
@@ -397,7 +415,13 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     OPTIONS+=(CMAKE_NO_VERBOSE=1)
     OPTIONS+=(--no-print-directory)
 
-    make "${OPTIONS[@]}" all
+    if [ "$WITH_JAVA" = true ] ; then
+        make "${OPTIONS[@]}" java
+    fi
+
+    if [ "$WITH_NATIVE" = true ] ; then
+        make "${OPTIONS[@]}" native
+    fi
 
     if [ "$WITH_JAVADOC" = true ] ; then
         make "${OPTIONS[@]}" javadoc
@@ -409,11 +433,17 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     echo
     echo "Build artifacts:"
-    echo "- Java archives:"
-    echo "    $WORK_DIR/jss.jar"
-    echo "- shared libraries:"
-    echo "    $WORK_DIR/libjss.so"
-    echo "    $WORK_DIR/symkey/libjss-symkey.so"
+
+    if [ "$WITH_JAVA" = true ] ; then
+        echo "- Java binaries:"
+        echo "    $WORK_DIR/jss.jar"
+    fi
+
+    if [ "$WITH_NATIVE" = true ] ; then
+        echo "- native binaries:"
+        echo "    $WORK_DIR/libjss.so"
+        echo "    $WORK_DIR/symkey/libjss-symkey.so"
+    fi
 
     if [ "$WITH_JAVADOC" = true ] ; then
         echo "- documentation:"
