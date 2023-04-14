@@ -43,6 +43,8 @@ if (DEFINED ENV{WITH_INTERNET})
 endif()
 option(TEST_WITH_INTERNET "When enabled, runs various tests which require an internet connection. " ${TEST_WITH_INTERNET_ENV})
 
+option(WITH_JAVA "Build Java binaries." TRUE)
+option(WITH_NATIVE "Build native binaries." TRUE)
 option(WITH_JAVADOC "Build Javadoc package." TRUE)
 
 # Find NSPR and NSS Libraries.
@@ -94,34 +96,38 @@ add_custom_target(
     DEPENDS generate_c generate_so symkey_library
 )
 
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/jss.jar
-    DESTINATION
-        ${JNI_DIR}
-)
+if(WITH_JAVA)
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/jss.jar
+        DESTINATION
+            ${JNI_DIR}
+    )
 
-install(
-    CODE "
-        MESSAGE(
-            \"-- Installing: \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar\"
-        )
-        execute_process(
-            COMMAND ln -sf ../../../${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
-        )
-    "
-)
+    install(
+        CODE "
+            MESSAGE(
+                \"-- Installing: \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar\"
+            )
+            execute_process(
+                COMMAND ln -sf ../../../${JNI_DIR}/jss.jar \$ENV{DESTDIR}${LIB_DIR}/jss/jss.jar
+            )
+        "
+    )
+endif(WITH_JAVA)
 
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/libjss.so
-    DESTINATION
-        ${LIB_DIR}/jss
-    PERMISSIONS
-        OWNER_READ OWNER_WRITE OWNER_EXECUTE
-        GROUP_READ GROUP_EXECUTE
-        WORLD_READ WORLD_EXECUTE
-)
+if(WITH_NATIVE)
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/libjss.so
+        DESTINATION
+            ${LIB_DIR}/jss
+        PERMISSIONS
+            OWNER_READ OWNER_WRITE OWNER_EXECUTE
+            GROUP_READ GROUP_EXECUTE
+            WORLD_READ WORLD_EXECUTE
+    )
+endif(WITH_NATIVE)
 
 if(WITH_JAVADOC)
     install(
