@@ -53,7 +53,7 @@ public class Certificate implements ASN1Value
     SEQUENCE sequence;
 
     Certificate(CertificateInfo info, byte[] infoEncoding,
-            AlgorithmIdentifier algId, byte[] signature) throws IOException
+            AlgorithmIdentifier algId, byte[] signature)
     {
         this.info = info;
         this.infoEncoding = infoEncoding;
@@ -118,7 +118,6 @@ public class Certificate implements ASN1Value
         infoEncoding = ASN1Util.encode(info);
 
         // sign the info encoding
-        CryptoManager cm = CryptoManager.getInstance();
         CryptoToken token = priv.getOwningToken();
         Signature sig = token.getSignatureContext(signingAlg);
         sig.initSign(priv);
@@ -137,9 +136,8 @@ public class Certificate implements ASN1Value
      * that the certificate is valid at any specific time.
      */
     public void verify()
-        throws InvalidKeyException, NotInitializedException,
-        NoSuchAlgorithmException, CertificateException,
-        SignatureException, InvalidKeyFormatException
+        throws InvalidKeyException, NoSuchAlgorithmException,
+        CertificateException, SignatureException, InvalidKeyFormatException
     {
         verify( info.getSubjectPublicKeyInfo().toPublicKey() );
     }
@@ -221,7 +219,6 @@ public class Certificate implements ASN1Value
 
         public Template() {
             seqt = new SEQUENCE.Template();
-            //seqt.addElement( CertificateInfo.getTemplate() );
             seqt.addElement( new ANY.Template() );
             seqt.addElement( AlgorithmIdentifier.getTemplate() );
             seqt.addElement( BIT_STRING.getTemplate() );
@@ -267,7 +264,7 @@ public class Certificate implements ASN1Value
         }
     }
 
-    public static void main(String argv[]) {
+    public static void main(String[] argv) {
 
       try {
 

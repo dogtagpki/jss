@@ -52,10 +52,15 @@ public class CertificateInfo implements ASN1Value {
 
         @Override
         public boolean equals(Object obj) {
-            if(obj == null || !(obj instanceof Version)) {
+            if(!(obj instanceof Version)) {
                 return false;
             }
             return ((Version)obj).versionNumber == versionNumber;
+        }
+
+        @Override
+        public int hashCode() {
+            return versionNumber;
         }
 
         public int getNumber() {
@@ -391,7 +396,7 @@ public class CertificateInfo implements ASN1Value {
         return templateInstance;
     }
 
-    public void print(PrintStream ps) throws IOException, InvalidBERException {
+    public void print(PrintStream ps) throws InvalidBERException {
         ps.println("CertificateInfo:");
         ps.println("Version: "+version);
         ps.println("Serial Number: "+serialNumber);
