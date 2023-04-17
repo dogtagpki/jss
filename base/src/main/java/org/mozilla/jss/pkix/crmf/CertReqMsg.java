@@ -120,7 +120,7 @@ public class CertReqMsg implements ASN1Value {
 		if (type == ProofOfPossession.SIGNATURE) {
 			POPOSigningKey sigkey = pop.getSignature();
 			AlgorithmIdentifier alg = sigkey.getAlgorithmIdentifier();
-			BIT_STRING sig_from = sigkey.getSignature();
+			BIT_STRING sigFrom = sigkey.getSignature();
 			ByteArrayOutputStream bo = new ByteArrayOutputStream();
 			certReq.encode(bo);
 			byte[] toBeVerified = bo.toByteArray();
@@ -137,7 +137,7 @@ public class CertReqMsg implements ASN1Value {
 			Signature sig = token.getSignatureContext(sigAlg);
 			sig.initVerify(pubkey);
 			sig.update(toBeVerified);
-			if( !sig.verify(sig_from.getBits()) ) {
+			if( !sig.verify(sigFrom.getBits()) ) {
 				throw new SignatureException(
 					"Signed request information does not "+
 					"match signature in POP");
@@ -240,7 +240,7 @@ public class CertReqMsg implements ASN1Value {
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
       try {
         if( args.length < 1 ) {
@@ -256,7 +256,7 @@ public class CertReqMsg implements ASN1Value {
 
         try (FileInputStream fis = new FileInputStream(args[0])) {
             bytes = new byte[fis.available()];
-            fis.read(bytes);
+            while(fis.read(bytes)>0);
         }
 
         seq = (SEQUENCE) seqt.decode(new ByteArrayInputStream(bytes));

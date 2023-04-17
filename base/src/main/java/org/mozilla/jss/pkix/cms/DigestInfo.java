@@ -7,6 +7,7 @@ package org.mozilla.jss.pkix.cms;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import org.mozilla.jss.asn1.ASN1Template;
 import org.mozilla.jss.asn1.ASN1Value;
@@ -51,7 +52,7 @@ public class DigestInfo implements ASN1Value {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj==null || !(obj instanceof DigestInfo)) {
+        if(!(obj instanceof DigestInfo)) {
             return false;
         }
         DigestInfo di = (DigestInfo)obj;
@@ -59,6 +60,10 @@ public class DigestInfo implements ASN1Value {
         return byteArraysAreSame(di.digest.toByteArray(), digest.toByteArray());
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(digest.toByteArray());
+    }
     /**
      * Compares two non-null byte arrays.  Returns true if they are identical,
      * false otherwise.

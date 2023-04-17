@@ -120,7 +120,7 @@ public class CertRepContent implements ASN1Value {
         encoding.encode(implicitTag, ostream);
     }
 
-    public static void main(String argv[]) {
+    public static void main(String[] argv) {
 
         if(argv.length != 2) {
             System.out.println("Usage: CertRepContent <certfile> <outputfile>");
@@ -134,24 +134,26 @@ public class CertRepContent implements ASN1Value {
 
         byte[][] certs = new byte[2][];
         certs[0] = new byte[ certfile.available() ];
-        certfile.read(certs[0]);
-        certs[1] = certs[0];
+        while(certfile.read(certs[0]) > 0)
+        {
+            certs[1] = certs[0];
 
-        PKIStatusInfo status = new PKIStatusInfo(PKIStatusInfo.rejection,
-                    PKIStatusInfo.badRequest | PKIStatusInfo.badTime );
+            PKIStatusInfo status = new PKIStatusInfo(PKIStatusInfo.rejection,
+                        PKIStatusInfo.badRequest | PKIStatusInfo.badTime );
 
-        status.addFreeText("And your mother dresses you funny");
-        status.addFreeText("so there");
+            status.addFreeText("And your mother dresses you funny");
+            status.addFreeText("so there");
 
-        CertifiedKeyPair ckp = new CertifiedKeyPair(
-                                new CertOrEncCert( certs[0] ) );
-        CertResponse resp = new CertResponse( new INTEGER(54), status, ckp);
+            CertifiedKeyPair ckp = new CertifiedKeyPair(
+                                    new CertOrEncCert( certs[0] ) );
+            CertResponse resp = new CertResponse( new INTEGER(54), status, ckp);
 
-        CertRepContent content = new CertRepContent(certs);
-        content.addCertResponse(resp);
+            CertRepContent content = new CertRepContent(certs);
+            content.addCertResponse(resp);
 
-        content.encode(fos);
-        System.out.println("Success!");
+            content.encode(fos);
+            System.out.println("Success!");
+        }
 
       } catch( Exception e ) {
         e.printStackTrace();

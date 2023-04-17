@@ -3,14 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.jss.pkix.primitive;
 
-import org.mozilla.jss.asn1.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import java.security.PublicKey;
 import java.security.NoSuchAlgorithmException;
-import org.mozilla.jss.crypto.PrivateKey;
+import java.security.PublicKey;
+
+import org.mozilla.jss.asn1.ASN1Template;
+import org.mozilla.jss.asn1.ASN1Util;
+import org.mozilla.jss.asn1.ASN1Value;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.InvalidBERException;
+import org.mozilla.jss.asn1.SEQUENCE;
+import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.crypto.InvalidKeyFormatException;
+import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.pkcs11.PK11PubKey;
 
 /**
@@ -38,7 +45,7 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
     public byte[] getEncoded() {
         return ASN1Util.encode(this);
     }
-        
+
 
     public AlgorithmIdentifier getAlgorithmIdentifier() {
         return algorithm;
@@ -59,7 +66,7 @@ public class SubjectPublicKeyInfo extends java.security.spec.X509EncodedKeySpec
     }
 
     public SubjectPublicKeyInfo(PublicKey pubk)
-            throws InvalidBERException, IOException
+            throws InvalidBERException
     {
         super( new byte[] {0});
         SubjectPublicKeyInfo spki = (SubjectPublicKeyInfo)
