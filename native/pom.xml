@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.dogtagpki</groupId>
+        <groupId>org.dogtagpki.jss</groupId>
         <artifactId>jss-parent</artifactId>
         <version>${revision}</version>
     </parent>
@@ -18,7 +18,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jss</artifactId>
+            <artifactId>jss-base</artifactId>
             <version>${project.version}</version>
         </dependency>
 
