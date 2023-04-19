@@ -54,7 +54,7 @@ jobs:
         jar tvf ~/build/jss/jss.jar | awk '{print $8;}' | sort \
             | grep -v '/$' \
             | tee cmake.out
-        jar tvf base/target/jss-5.4.0-SNAPSHOT.jar | awk '{print $8;}' | sort \
+        jar tvf base/target/jss-base-5.4.0-SNAPSHOT.jar | awk '{print $8;}' | sort \
             | grep -v '/$' \
             | grep -v '^META-INF/maven/' \
             | tee maven.out

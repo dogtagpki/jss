@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.dogtagpki</groupId>
+    <groupId>org.dogtagpki.jss</groupId>
     <artifactId>jss-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -18,6 +18,13 @@
         <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <modules>
+        <module>base</module>
+        <module>native</module>
+        <module>symkey</module>
+        <module>examples</module>
+    </modules>
 
     <build>
       <plugins>
@@ -49,11 +56,22 @@
       </plugins>
     </build>
 
-    <modules>
-        <module>base</module>
-        <module>native</module>
-        <module>symkey</module>
-        <module>examples</module>
-    </modules>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/OWNER/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/OWNER/REPOSITORY</url>
+        </repository>
+    </distributionManagement>
 
 </project>
