@@ -446,6 +446,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     if [ "$WITH_JAVA" = true ] ; then
         echo "- Java binaries:"
         echo "    $WORK_DIR/jss.jar"
+        echo "    $WORK_DIR/jss-tests.jar"
     fi
 
     if [ "$WITH_NATIVE" = true ] ; then
