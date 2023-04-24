@@ -168,6 +168,48 @@ export CFLAGS
 # Check if we're in FIPS mode
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
+# disable native modules since they will be built by CMake
+%pom_disable_module native
+%pom_disable_module symkey
+
+# do not ship examples
+%pom_disable_module examples
+
+# flatten-maven-plugin is not available in RPM
+%pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
+
+# build Java code, run Java tests, and build Javadoc with Maven
+%mvn_build %{!?with_tests:-f} %{!?with_javadoc:-j}
+
+# create links to Maven-built classes for CMake
+mkdir -p %{_vpath_builddir}/classes/jss
+ln -sf ../../../base/target/classes/org %{_vpath_builddir}/classes/jss
+%if %{with tests}
+mkdir -p %{_vpath_builddir}/classes/tests
+ln -sf ../../../base/target/test-classes/org %{_vpath_builddir}/classes/tests
+%endif
+
+# create links to Maven-built JAR files for CMake
+ln -sf ../base/target/jss.jar %{_vpath_builddir}
+%if %{with tests}
+ln -sf ../base/target/jss-tests.jar %{_vpath_builddir}
+%endif
+
+# create links to Maven-built headers for CMake
+mkdir -p %{_vpath_builddir}/include/jss
+ln -sf ../../../base/target/include/_jni %{_vpath_builddir}/include/jss/_jni
+
+# mark Maven-built targets so that CMake will not rebuild them
+mkdir -p %{_vpath_builddir}/.targets
+touch %{_vpath_builddir}/.targets/finished_generate_java
+%if %{with tests}
+touch %{_vpath_builddir}/.targets/finished_tests_generate_java
+%endif
+%if %{with javadoc}
+touch %{_vpath_builddir}/.targets/finished_generate_javadocs
+%endif
+
+# build native code and run native tests with CMake
 ./build.sh \
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
@@ -180,7 +222,8 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
     --version=%{version} \
-    %{!?with_javadoc:--without-javadoc} \
+    --without-java \
+    --without-javadoc \
     %{?with_tests:--with-tests} \
     dist
 
@@ -188,29 +231,40 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 %install
 ################################################################################
 
+# install Java binaries and Javadoc
+%mvn_install
+
+# link jss.jar to jss-base.jar
+ln -sf jss-base.jar %{buildroot}%{_javadir}/jss/jss.jar
+
+mkdir -p %{buildroot}%{_jnidir}
+ln -sf ../../..%{_javadir}/jss/jss-base.jar %{buildroot}%{_jnidir}/jss.jar
+
+mkdir -p %{buildroot}%{_libdir}/jss
+ln -sf ../../..%{_javadir}/jss/jss-base.jar %{buildroot}%{_libdir}/jss/jss.jar
+
+# install native binaries
 ./build.sh \
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
     --install-dir=%{buildroot} \
+    --without-java \
     install
 
 ################################################################################
-%files -n %{product_id}
+%files -n %{product_id} -f .mfiles
 ################################################################################
 
-%defattr(-,root,root,-)
 %doc jss.html
 %license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
 %{_libdir}/*
 %{_jnidir}/*
+%{_datadir}/java/%{name}/jss.jar
 
 %if %{with javadoc}
 ################################################################################
-%files -n %{product_id}-javadoc
+%files -n %{product_id}-javadoc -f .mfiles-javadoc
 ################################################################################
-
-%defattr(-,root,root,-)
-%{_javadocdir}/jss/
 %endif
 
 ################################################################################
