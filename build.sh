@@ -428,7 +428,16 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     fi
 
     if [ "$WITH_TESTS" = true ] ; then
-        ctest --output-on-failure
+
+        OPTIONS=()
+
+        if [ "$VERBOSE" = true ] ; then
+            OPTIONS+=(--verbose)
+        fi
+
+        OPTIONS+=(--output-on-failure)
+
+        ctest "${OPTIONS[@]}"
     fi
 
     echo
