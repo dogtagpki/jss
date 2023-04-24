@@ -60,5 +60,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>jss</finalName>
     </build>
 </project>

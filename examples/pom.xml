@@ -33,6 +33,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>jss-examples</finalName>
     </build>
 
 </project>
