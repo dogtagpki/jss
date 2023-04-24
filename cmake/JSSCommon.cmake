@@ -198,12 +198,6 @@ macro(jss_build_jars)
         DEPENDS generate_java
     )
 
-    add_custom_command(
-        OUTPUT "${JSS_TESTS_JAR_PATH}"
-        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
-        DEPENDS generate_java
-    )
-
     add_custom_target(
         generate_build_jar
         DEPENDS "${JSS_BUILD_JAR_PATH}"
@@ -217,8 +211,21 @@ macro(jss_build_jars)
 
     add_custom_target(
         generate_jar
-        DEPENDS "${JSS_JAR_PATH}" "${JSS_TESTS_JAR_PATH}"
+        DEPENDS "${JSS_JAR_PATH}"
     )
+
+    if(WITH_TESTS)
+        add_custom_target(
+            generate_tests_jar
+            DEPENDS generate_java)
+
+        add_custom_command(
+            TARGET generate_tests_jar
+            COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
+        )
+
+        add_dependencies(generate_jar generate_tests_jar)
+    endif(WITH_TESTS)
 endmacro()
 
 # Build javadocs from the source files

@@ -43,7 +43,7 @@ DIST=
 WITH_JAVA=true
 WITH_NATIVE=true
 WITH_JAVADOC=true
-WITH_TESTS=
+WITH_TESTS=false
 
 VERBOSE=
 DEBUG=
@@ -404,6 +404,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
         OPTIONS+=(-DWITH_JAVADOC=FALSE)
     fi
 
+    if [ "$WITH_TESTS" = false ] ; then
+        OPTIONS+=(-DWITH_TESTS=FALSE)
+    fi
+
     $CMAKE "${OPTIONS[@]}"
 
     OPTIONS=()
@@ -446,7 +450,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     if [ "$WITH_JAVA" = true ] ; then
         echo "- Java binaries:"
         echo "    $WORK_DIR/jss.jar"
-        echo "    $WORK_DIR/jss-tests.jar"
+
+        if [ "$WITH_TESTS" = true ] ; then
+            echo "    $WORK_DIR/jss-tests.jar"
+        fi
     fi
 
     if [ "$WITH_NATIVE" = true ] ; then

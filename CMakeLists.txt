@@ -46,6 +46,7 @@ option(TEST_WITH_INTERNET "When enabled, runs various tests which require an int
 option(WITH_JAVA "Build Java binaries." TRUE)
 option(WITH_NATIVE "Build native binaries." TRUE)
 option(WITH_JAVADOC "Build Javadoc package." TRUE)
+option(WITH_TESTS "Run unit tests." TRUE)
 
 # Find NSPR and NSS Libraries.
 find_package(NSPR REQUIRED)
