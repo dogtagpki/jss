@@ -235,6 +235,7 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
 %mvn_install
 
 # link jss.jar to jss-base.jar
+mkdir -p %{buildroot}%{_javadir}/jss
 ln -sf jss-base.jar %{buildroot}%{_javadir}/jss/jss.jar
 
 mkdir -p %{buildroot}%{_jnidir}
@@ -252,14 +253,14 @@ ln -sf ../../..%{_javadir}/jss/jss-base.jar %{buildroot}%{_libdir}/jss/jss.jar
     install
 
 ################################################################################
-%files -n %{product_id} -f .mfiles
+%files -n %{product_id}
 ################################################################################
 
 %doc jss.html
 %license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
 %{_libdir}/*
 %{_jnidir}/*
-%{_datadir}/java/%{name}/jss.jar
+%{_datadir}/*
 
 %if %{with javadoc}
 ################################################################################
