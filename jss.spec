@@ -234,15 +234,16 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
 # install Java binaries and Javadoc
 %mvn_install
 
-# link jss.jar to jss-base.jar
+# install jss.jar
 mkdir -p %{buildroot}%{_javadir}/jss
-ln -sf jss-base.jar %{buildroot}%{_javadir}/jss/jss.jar
+cp base/target/jss.jar %{buildroot}%{_javadir}/jss/jss.jar
 
+# create links for backward compatibility
 mkdir -p %{buildroot}%{_jnidir}
-ln -sf ../../..%{_javadir}/jss/jss-base.jar %{buildroot}%{_jnidir}/jss.jar
+ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_jnidir}/jss.jar
 
 mkdir -p %{buildroot}%{_libdir}/jss
-ln -sf ../../..%{_javadir}/jss/jss-base.jar %{buildroot}%{_libdir}/jss/jss.jar
+ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
 
 # install native binaries
 ./build.sh \
@@ -253,14 +254,16 @@ ln -sf ../../..%{_javadir}/jss/jss-base.jar %{buildroot}%{_libdir}/jss/jss.jar
     install
 
 ################################################################################
-%files -n %{product_id}
+%files -n %{product_id} -f .mfiles
 ################################################################################
 
 %doc jss.html
 %license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
-%{_libdir}/*
-%{_jnidir}/*
-%{_datadir}/*
+%{_javadir}/jss/jss.jar
+%{_jnidir}/jss.jar
+%{_libdir}/jss/jss.jar
+%{_libdir}/jss/libjss.so
+%{_libdir}/jss/libjss-symkey.so
 
 %if %{with javadoc}
 ################################################################################
