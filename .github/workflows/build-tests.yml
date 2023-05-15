@@ -41,7 +41,7 @@ jobs:
             cmake zip unzip \
             g++ libnss3-dev libnss3-tools \
             openjdk-17-jdk libcommons-lang3-java libslf4j-java junit4 \
-            maven
+            junit5 libopentest4j-java maven
 
     - name: Build JSS with CMake
       run: ./build.sh --with-tests
@@ -132,6 +132,7 @@ jobs:
       run: |
         dnf install -y dnf-plugins-core
         dnf builddep -y nspr nss jss
+        dnf builddep -y jss.spec
         dnf install -y mercurial \
             python-unversioned-command \
             gyp \
