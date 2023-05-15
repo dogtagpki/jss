@@ -91,7 +91,8 @@ BuildRequires:  maven-local
 BuildRequires:  mvn(org.apache.commons:commons-lang3)
 BuildRequires:  mvn(org.slf4j:slf4j-api)
 BuildRequires:  mvn(org.slf4j:slf4j-jdk14)
-BuildRequires:  mvn(junit:junit)
+BuildRequires:  mvn(org.junit.jupiter:junit-jupiter-engine)
+BuildRequires:  mvn(org.junit.vintage:junit-vintage-engine)
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
