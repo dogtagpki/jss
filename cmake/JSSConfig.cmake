@@ -232,6 +232,30 @@ macro(jss_config_java)
         NAMES junit4 junit
     )
     find_jar(
+        JUNIT5_API_JAR
+        NAMES junit-jupiter-api junit5/junit-jupiter-api
+    )
+    find_jar(
+	    JUNIT5_ENGINE_JAR
+        NAMES junit-jupiter-engine junit5/junit-jupiter-engine
+    )
+    find_jar(
+	    JUNIT5_PLATFORM_COMMONS_JAR
+        NAMES junit-platform-commons junit5/junit-platform-commons
+    )
+    find_jar(
+	    JUNIT5_PLATFORM_ENGINE_JAR
+        NAMES junit-platform-engine junit5/junit-platform-engine
+    )
+    find_jar(
+	    JUNIT5_PLATFORM_LAUNCHER_JAR
+        NAMES junit-platform-launcher junit5/junit-platform-launcher
+    )
+    find_jar(
+	    OPENTEST4J_JAR
+        NAMES opentest4j opentest4j/opentest4j
+    )
+    find_jar(
         HAMCREST_JAR
         NAMES hamcrest/core hamcrest-core hamcrest/hamcrest
     )
@@ -253,13 +277,37 @@ macro(jss_config_java)
         message(FATAL_ERROR "Test dependency junit4.jar not found by find_jar! Tests will not compile.")
     endif()
 
+    if(JUNIT5_API_JAR STREQUAL "JUNIT5_API_JAR-NOTFOUND")
+        message(FATAL_ERROR "Test dependency JUnit 5 API not found by find_jar! Tests will not compile.")
+    endif()
+
+    if(JUNIT5_ENGINE_JAR STREQUAL "JUNIT5_ENGINE_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 engine not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(JUNIT5_PLATFORM_COMMONS_JAR STREQUAL "JUNIT5_PLATFORM_COMMONS_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 platform commons not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(JUNIT5_PLATFORM_ENGINE_JAR STREQUAL "JUNIT5_PLATFORM_ENGINE_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 platform engine not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(JUNIT5_PLATFORM_LAUNCHER_JAR STREQUAL "JUNIT5_PLATFORM_LAUNCHER_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 platform launcher not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(OPENTEST4J_JAR STREQUAL "OPENTEST4J_JAR-NOTFOUND")
+        message(WARNING "Test dependency opentest4j not found by find_jar! Tests could not execute.")
+    endif()
+
     if(HAMCREST_JAR STREQUAL "HAMCREST_JAR-NOTFOUND")
         message(WARNING "Test dependency hamcrest/core.jar not found by find_jar! Tests might not run properly.")
     endif()
 
     # Set class paths
     set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}")
-    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${HAMCREST_JAR}")
+    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT4_JAR}:${JUNIT5_API_JAR}:${JUNIT5_ENGINE_JAR}:${JUNIT5_PLATFORM_COMMONS_JAR}:${JUNIT5_PLATFORM_ENGINE_JAR}:${JUNIT5_PLATFORM_LAUNCHER_JAR}:${OPENTEST4J_JAR}:${HAMCREST_JAR}")
 
     message(STATUS "javac classpath: ${JAVAC_CLASSPATH}")
     message(STATUS "tests classpath: ${TEST_CLASSPATH}")
@@ -291,7 +339,7 @@ macro(jss_config_java)
 
     # Set compile flags for JSS test suite
     list(APPEND JSS_TEST_JAVAC_FLAGS "-classpath")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT4_JAR}:${CLASSES_OUTPUT_DIR}")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT4_JAR}:${JUNIT5_API_JAR}:${JUNIT5_PLATFORM_COMMONS_JAR}:${JUNIT5_PLATFORM_ENGINE_JAR}:${JUNIT5_PLATFORM_LAUNCHER_JAR}:${CLASSES_OUTPUT_DIR}")
     list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
     list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/base/src/main/java:${PROJECT_SOURCE_DIR}/base/src/test/java")
 

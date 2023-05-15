@@ -439,7 +439,7 @@ macro(jss_tests)
     )
     jss_test_java(
         NAME "JUnit_PrintableConverterTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.PrintableConverterTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.PrintableConverterTest"
     )
 
     if(TEST_WITH_INTERNET)

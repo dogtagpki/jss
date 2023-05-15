@@ -1,7 +1,7 @@
 package org.mozilla.jss.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.x509.PrintableConverter;
 
@@ -19,7 +19,7 @@ public class PrintableConverterTest {
         byte[] actual = ConverterTestUtil.convert(new PrintableConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -34,11 +34,11 @@ public class PrintableConverterTest {
             byte[] actual = ConverterTestUtil.convert(new PrintableConverter(), string);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IllegalArgumentException);
+            Assertions.assertTrue(e instanceof IllegalArgumentException);
         }
     }
 
@@ -54,7 +54,7 @@ public class PrintableConverterTest {
         byte[] actual = ConverterTestUtil.convert(new PrintableConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -69,11 +69,11 @@ public class PrintableConverterTest {
             byte[] actual = ConverterTestUtil.convert(new PrintableConverter(), string);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IllegalArgumentException);
+            Assertions.assertTrue(e instanceof IllegalArgumentException);
         }
     }
 
@@ -89,11 +89,11 @@ public class PrintableConverterTest {
             byte[] actual = ConverterTestUtil.convert(new PrintableConverter(), string);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IllegalArgumentException);
+            Assertions.assertTrue(e instanceof IllegalArgumentException);
         }
     }
 }
