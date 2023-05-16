@@ -108,7 +108,7 @@ public final class JSSProvider extends java.security.Provider {
                     int lineNumber = stackTrace[i + 1].getLineNumber();
                     String methodName = stackTrace[i + 1].getMethodName();
                     String className = stackTrace[i + 1].getClassName();
-                    logger.warn(
+                    logger.debug(
                             "The {} algorithm used in {}::{}:{} is deprecated. Use a more secure algorithm.",
                             algorithm,
                             className,
