@@ -2,8 +2,8 @@ package org.mozilla.jss.tests;
 
 import java.io.IOException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 
 public class PrintableStringTest {
@@ -22,7 +22,7 @@ public class PrintableStringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class PrintableStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -53,11 +53,11 @@ public class PrintableStringTest {
             byte[] actual = StringTestUtil.encode(tag, string);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 
@@ -73,7 +73,7 @@ public class PrintableStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(expected, output);
+        Assertions.assertEquals(expected, output);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class PrintableStringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class PrintableStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -119,11 +119,11 @@ public class PrintableStringTest {
             byte[] actual = StringTestUtil.encode(tag, string);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 
@@ -141,11 +141,11 @@ public class PrintableStringTest {
             String output = StringTestUtil.decode(tag, data);
             System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 
@@ -161,11 +161,11 @@ public class PrintableStringTest {
             byte[] actual = StringTestUtil.encode(tag, string);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 
@@ -183,11 +183,11 @@ public class PrintableStringTest {
             String output = StringTestUtil.decode(tag, data);
             System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 
@@ -203,11 +203,11 @@ public class PrintableStringTest {
             byte[] actual = StringTestUtil.encode(tag, StringTestUtil.MULTIBYTE_CHARS);
             System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 
@@ -225,11 +225,11 @@ public class PrintableStringTest {
             String output = StringTestUtil.decode(tag, data);
             System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             System.out.println(" - actual  : " + e.getClass().getSimpleName());
-            Assert.assertTrue(e instanceof IOException);
+            Assertions.assertTrue(e instanceof IOException);
         }
     }
 

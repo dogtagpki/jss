@@ -120,27 +120,27 @@ macro(jss_tests)
     endif()
     jss_test_java(
         NAME "JUnit_BMPStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.BMPStringTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.BMPStringTest"
     )
     jss_test_java(
         NAME "JUnit_IA5StringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.IA5StringTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.IA5StringTest"
     )
     jss_test_java(
         NAME "JUnit_PrintableStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.PrintableStringTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.PrintableStringTest"
     )
     jss_test_java(
         NAME "JUnit_TeletexStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.TeletexStringTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.TeletexStringTest"
     )
     jss_test_java(
         NAME "JUnit_UniversalStringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.UniversalStringTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.UniversalStringTest"
     )
     jss_test_java(
         NAME "JUnit_UTF8StringTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.UTF8StringTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.UTF8StringTest"
     )
     jss_test_exec(
         NAME "buffer_size_1"
@@ -154,11 +154,11 @@ macro(jss_tests)
     )
     jss_test_java(
         NAME "JUnit_CertificateChainTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.CertificateChainTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.CertificateChainTest"
     )
     jss_test_java(
         NAME "JUnit_ChainSortingTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.ChainSortingTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.ChainSortingTest"
     )
     jss_test_java(
         NAME "Generate_known_RSA_cert_pair"
@@ -431,11 +431,11 @@ macro(jss_tests)
 
     jss_test_java(
         NAME "JUnit_GenericValueConverterTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.GenericValueConverterTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.GenericValueConverterTest"
     )
     jss_test_java(
         NAME "JUnit_IA5StringConverterTest"
-        COMMAND "org.junit.runner.JUnitCore" "org.mozilla.jss.tests.IA5StringConverterTest"
+        COMMAND "org.mozilla.jss.tests.TestRunner" "org.mozilla.jss.tests.IA5StringConverterTest"
     )
     jss_test_java(
         NAME "JUnit_PrintableConverterTest"

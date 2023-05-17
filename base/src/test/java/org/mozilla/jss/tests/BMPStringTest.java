@@ -1,7 +1,7 @@
 package org.mozilla.jss.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 
 public class BMPStringTest {
@@ -20,7 +20,7 @@ public class BMPStringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class BMPStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class BMPStringTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class BMPStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class BMPStringTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class BMPStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class BMPStringTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class BMPStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -156,7 +156,7 @@ public class BMPStringTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -172,7 +172,7 @@ public class BMPStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -190,7 +190,7 @@ public class BMPStringTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class BMPStringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test

@@ -3,8 +3,8 @@ package org.mozilla.jss.tests;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.x509.CertificateChain;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.slf4j.Logger;
@@ -91,7 +91,7 @@ public class CertificateChainTest {
 
         CertificateChain chain = new CertificateChain();
 
-        Assert.assertEquals(0, chain.getCertificates().size());
+        Assertions.assertEquals(0, chain.getCertificates().size());
     }
 
     @Test
@@ -100,10 +100,10 @@ public class CertificateChainTest {
         try {
             new CertificateChain((X509Certificate) null);
 
-            Assert.fail("Creating CertificateChain with null cert should fail");
+            Assertions.fail("Creating CertificateChain with null cert should fail");
 
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Missing input certificate", e.getMessage());
+            Assertions.assertEquals("Missing input certificate", e.getMessage());
         }
     }
 
@@ -112,8 +112,8 @@ public class CertificateChainTest {
 
         CertificateChain chain = new CertificateChain(rootCA);
 
-        Assert.assertEquals(1, chain.getCertificates().size());
-        Assert.assertEquals(rootCA, chain.getCertificates().get(0));
+        Assertions.assertEquals(1, chain.getCertificates().size());
+        Assertions.assertEquals(rootCA, chain.getCertificates().get(0));
     }
 
     @Test
@@ -122,10 +122,10 @@ public class CertificateChainTest {
         try {
             new CertificateChain((X509Certificate[]) null);
 
-            Assert.fail("Creating CertificateChain with null cert array should fail");
+            Assertions.fail("Creating CertificateChain with null cert array should fail");
 
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Missing input certificates", e.getMessage());
+            Assertions.assertEquals("Missing input certificates", e.getMessage());
         }
     }
 
@@ -134,7 +134,7 @@ public class CertificateChainTest {
 
         CertificateChain chain = new CertificateChain(new X509Certificate[] {});
 
-        Assert.assertEquals(0, chain.getCertificates().size());
+        Assertions.assertEquals(0, chain.getCertificates().size());
     }
 
     @Test
@@ -142,8 +142,8 @@ public class CertificateChainTest {
 
         CertificateChain chain = new CertificateChain(new X509Certificate[] { rootCA });
 
-        Assert.assertEquals(1, chain.getCertificates().size());
-        Assert.assertEquals(rootCA, chain.getCertificates().get(0));
+        Assertions.assertEquals(1, chain.getCertificates().size());
+        Assertions.assertEquals(rootCA, chain.getCertificates().get(0));
     }
 
     @Test
@@ -151,9 +151,9 @@ public class CertificateChainTest {
 
         CertificateChain chain = new CertificateChain(new X509Certificate[] { rootCA, subCA });
 
-        Assert.assertEquals(2, chain.getCertificates().size());
-        Assert.assertEquals(rootCA, chain.getCertificates().get(0));
-        Assert.assertEquals(subCA, chain.getCertificates().get(1));
+        Assertions.assertEquals(2, chain.getCertificates().size());
+        Assertions.assertEquals(rootCA, chain.getCertificates().get(0));
+        Assertions.assertEquals(subCA, chain.getCertificates().get(1));
     }
 
     @Test
@@ -161,18 +161,18 @@ public class CertificateChainTest {
 
         CertificateChain chain = new CertificateChain(new X509Certificate[] { rootCA, subCA, admin });
 
-        Assert.assertEquals(3, chain.getCertificates().size());
+        Assertions.assertEquals(3, chain.getCertificates().size());
 
-        Assert.assertEquals(rootCA, chain.getFirstCertificate());
+        Assertions.assertEquals(rootCA, chain.getFirstCertificate());
 
-        Assert.assertEquals(rootCA, chain.getCertificate(0));
-        Assert.assertEquals(subCA, chain.getCertificate(1));
-        Assert.assertEquals(admin, chain.getCertificate(2));
+        Assertions.assertEquals(rootCA, chain.getCertificate(0));
+        Assertions.assertEquals(subCA, chain.getCertificate(1));
+        Assertions.assertEquals(admin, chain.getCertificate(2));
 
         try {
             chain.getCertificate(3);
 
-            Assert.fail("Getting cert #3 should fail");
+            Assertions.fail("Getting cert #3 should fail");
 
         } catch (IndexOutOfBoundsException e) {
             // failed as expected
@@ -180,11 +180,11 @@ public class CertificateChainTest {
 
         X509Certificate[] certs = chain.getChain();
 
-        Assert.assertEquals(3, certs.length);
+        Assertions.assertEquals(3, certs.length);
 
-        Assert.assertEquals(rootCA, certs[0]);
-        Assert.assertEquals(subCA, certs[1]);
-        Assert.assertEquals(admin, certs[2]);
+        Assertions.assertEquals(rootCA, certs[0]);
+        Assertions.assertEquals(subCA, certs[1]);
+        Assertions.assertEquals(admin, certs[2]);
     }
 
     @Test
@@ -193,10 +193,10 @@ public class CertificateChainTest {
         CertificateChain chain = new CertificateChain(new X509Certificate[] { admin, subCA, rootCA });
         chain.sort();
 
-        Assert.assertEquals(3, chain.getCertificates().size());
+        Assertions.assertEquals(3, chain.getCertificates().size());
 
-        Assert.assertEquals(rootCA, chain.getCertificate(0));
-        Assert.assertEquals(subCA, chain.getCertificate(1));
-        Assert.assertEquals(admin, chain.getCertificate(2));
+        Assertions.assertEquals(rootCA, chain.getCertificate(0));
+        Assertions.assertEquals(subCA, chain.getCertificate(1));
+        Assertions.assertEquals(admin, chain.getCertificate(2));
     }
 }
