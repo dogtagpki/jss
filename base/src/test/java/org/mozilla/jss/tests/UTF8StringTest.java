@@ -1,7 +1,7 @@
 package org.mozilla.jss.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 
 public class UTF8StringTest {
@@ -20,7 +20,7 @@ public class UTF8StringTest {
         byte[] actual = StringTestUtil.encode(tag, "");
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class UTF8StringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class UTF8StringTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class UTF8StringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class UTF8StringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class UTF8StringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class UTF8StringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class UTF8StringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + output + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class UTF8StringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -163,7 +163,7 @@ public class UTF8StringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class UTF8StringTest {
         byte[] actual = StringTestUtil.encode(tag, string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class UTF8StringTest {
         String output = StringTestUtil.decode(tag, data);
         System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
-        Assert.assertEquals(input, output);
+        Assertions.assertEquals(input, output);
     }
 
     @Test

@@ -3,8 +3,8 @@ package org.mozilla.jss.tests;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.slf4j.Logger;
@@ -117,7 +117,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = null;
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = {};
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -141,7 +141,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = { rootCA };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -153,7 +153,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = { rootCA, subCA };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = { rootCA, subCA };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -177,7 +177,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = { rootCA, subCA, admin };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -189,7 +189,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = { rootCA, subCA, admin };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -201,7 +201,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input, true);
 
         X509Certificate[] expected = { admin, subCA, rootCA };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class ChainSortingTest {
         X509Certificate[] output = Cert.sortCertificateChain(input);
 
         X509Certificate[] expected = { subCA, admin };
-        Assert.assertArrayEquals(expected, output);
+        Assertions.assertArrayEquals(expected, output);
     }
 
     @Test
@@ -225,13 +225,13 @@ public class ChainSortingTest {
 
         try {
             Cert.sortCertificateChain(input);
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             String message = e.getMessage();
 
             String expected = "Duplicate certificate: " + subCA.getSubjectX500Principal();
-            Assert.assertEquals(expected, message);
+            Assertions.assertEquals(expected, message);
         }
     }
 
@@ -244,13 +244,13 @@ public class ChainSortingTest {
 
         try {
             Cert.sortCertificateChain(input);
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             String message = e.getMessage();
 
             String expected = "Branched chain: " + subCA.getSubjectX500Principal();
-            Assert.assertEquals(expected, message);
+            Assertions.assertEquals(expected, message);
         }
     }
 
@@ -263,14 +263,14 @@ public class ChainSortingTest {
 
         try {
             Cert.sortCertificateChain(input);
-            Assert.fail();
+            Assertions.fail();
 
         } catch (Exception e) {
             String message = e.getMessage();
 
             String expected = "Multiple leaf certificates: [" +
                     rootCA.getSubjectX500Principal() + "], [" + admin.getSubjectX500Principal() + "]";
-            Assert.assertEquals(expected, message);
+            Assertions.assertEquals(expected, message);
         }
     }
 }

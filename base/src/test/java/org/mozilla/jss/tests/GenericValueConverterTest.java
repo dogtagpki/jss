@@ -1,7 +1,7 @@
 package org.mozilla.jss.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.x509.GenericValueConverter;
 
@@ -19,7 +19,7 @@ public class GenericValueConverterTest {
         byte[] actual = ConverterTestUtil.convert(new GenericValueConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class GenericValueConverterTest {
         byte[] actual = ConverterTestUtil.convert(new GenericValueConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class GenericValueConverterTest {
         byte[] actual = ConverterTestUtil.convert(new GenericValueConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class GenericValueConverterTest {
         byte[] actual = ConverterTestUtil.convert(new GenericValueConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class GenericValueConverterTest {
         actual = StringTestUtil.normalizeUnicode(actual);
         System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class GenericValueConverterTest {
         });
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -116,6 +116,6 @@ public class GenericValueConverterTest {
         });
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 }
