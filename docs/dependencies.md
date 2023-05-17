@@ -20,14 +20,14 @@ To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-lang gcc-c++ java-devel jpackage-utils \
                      slf4j zlib-devel nss-tools nss-devel \
-                     cmake junit
+                     cmake junit5
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-lang-java libnss3-dev \
                          libslf4j-java default-jdk pkg-config zlib1g-dev \
                          libnss3-tools cmake zip unzip \
-                         junit4
+                         junit5
 
 ## Test Suite Dependencies:
 
@@ -36,16 +36,16 @@ additional packages:
 
  - [SLF4J's JDK14 package](https://www.slf4j.org/api/org/slf4j/impl/JDK14LoggerAdapter.html)
  - [NSS's pk12util](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Reference/NSS_tools_:_pk12util)
- - [JUnit 4](https://junit.org/junit4/)
+ - [JUnit 5](https://junit.org/)
 
 To install these dependencies on Fedora, execute the following:
 
-    sudo dnf install nss nss-tools slf4j-jdk14 junit
+    sudo dnf install nss nss-tools slf4j-jdk14 junit5
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install libnss3 libnss3-tools libslf4j-java \
-                         junit4
+                         junit5
 
 ## Run-time Dependencies
 
