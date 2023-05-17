@@ -31,20 +31,20 @@ This project has the following dependencies:
  - [CMake](https://cmake.org/)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [SLF4J](https://www.slf4j.org/)
- - [JUnit 4](https://junit.org/junit4/)
+ - [JUnit 5](https://junit.org/)
 
 To install these dependencies on Fedora, execute the following:
 
     sudo dnf install apache-commons-lang gcc-c++ java-devel jpackage-utils \
                      slf4j zlib-devel nss-tools nss-devel \
-                     cmake junit
+                     cmake junit5
 
 To install these dependencies on Debian, execute the following:
 
     sudo apt-get install build-essential libcommons-lang-java libnss3-dev \
                          libslf4j-java default-jdk pkg-config zlib1g-dev \
                          libnss3-tools cmake zip unzip \
-                         junit4
+                         junit5
 
 
 Building
