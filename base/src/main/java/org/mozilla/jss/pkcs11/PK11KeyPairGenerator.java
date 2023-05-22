@@ -140,162 +140,6 @@ public final class PK11KeyPairGenerator
         }
     };
 
-    private static Hashtable<String, PK11KeyPairGenerator.ECCurve_Code> ECCurve_NameToCode = new Hashtable<>();
-    static {
-      // NIST, SEC2 Prime curves
-        ECCurve_NameToCode.put(
-            "secp521r1", ECCurve_Code.secp521r1);
-        ECCurve_NameToCode.put(
-            "nistp521", ECCurve_Code.nistp521);
-        ECCurve_NameToCode.put(
-            "secp384r1", ECCurve_Code.secp384r1);
-        ECCurve_NameToCode.put(
-            "nistp384", ECCurve_Code.nistp384);
-        ECCurve_NameToCode.put(
-            "secp256r1", ECCurve_Code.secp256r1);
-        ECCurve_NameToCode.put(
-            "nistp256", ECCurve_Code.nistp256);
-        ECCurve_NameToCode.put(
-            "secp256k1", ECCurve_Code.secp256k1);
-        ECCurve_NameToCode.put(
-            "secp224r1", ECCurve_Code.secp224r1);
-        ECCurve_NameToCode.put(
-            "nistp224", ECCurve_Code.nistp224);
-        ECCurve_NameToCode.put(
-            "secp224k1", ECCurve_Code.secp224k1);
-        ECCurve_NameToCode.put(
-            "secp192r1", ECCurve_Code.secp192r1);
-        ECCurve_NameToCode.put(
-            "nistp192", ECCurve_Code.nistp192);
-        ECCurve_NameToCode.put(
-            "secp192k1", ECCurve_Code.secp192k1);
-        ECCurve_NameToCode.put(
-            "secp160r2", ECCurve_Code.secp160r2);
-        ECCurve_NameToCode.put(
-            "secp160r1", ECCurve_Code.secp160r1);
-        ECCurve_NameToCode.put(
-            "secp160k1", ECCurve_Code.secp160k1);
-        ECCurve_NameToCode.put(
-            "secp128r2", ECCurve_Code.secp128r2);
-        ECCurve_NameToCode.put(
-            "secp128r1", ECCurve_Code.secp128r1);
-        ECCurve_NameToCode.put(
-            "secp112r2", ECCurve_Code.secp112r2);
-        ECCurve_NameToCode.put(
-            "secp112r1", ECCurve_Code.secp112r1);
-      // NIST, SEC2 Binary curves
-        ECCurve_NameToCode.put(
-            "sect571r1", ECCurve_Code.sect571r1);
-        ECCurve_NameToCode.put(
-            "nistb571", ECCurve_Code.nistb571);
-        ECCurve_NameToCode.put(
-            "sect571k1", ECCurve_Code.sect571k1);
-        ECCurve_NameToCode.put(
-            "nistk571", ECCurve_Code.nistk571);
-        ECCurve_NameToCode.put(
-            "sect409r1", ECCurve_Code.sect409r1);
-        ECCurve_NameToCode.put(
-            "nistb409", ECCurve_Code.nistb409);
-        ECCurve_NameToCode.put(
-            "sect409k1", ECCurve_Code.sect409k1);
-        ECCurve_NameToCode.put(
-            "nistk409", ECCurve_Code.nistk409);
-        ECCurve_NameToCode.put(
-            "sect283r1", ECCurve_Code.sect283r1);
-        ECCurve_NameToCode.put(
-            "nistb283", ECCurve_Code.nistb283);
-        ECCurve_NameToCode.put(
-            "sect283k1", ECCurve_Code.sect283k1);
-        ECCurve_NameToCode.put(
-            "nistk283", ECCurve_Code.nistk283);
-        ECCurve_NameToCode.put(
-            "sect239k1", ECCurve_Code.sect239k1);
-        ECCurve_NameToCode.put(
-            "sect233r1", ECCurve_Code.sect233r1);
-        ECCurve_NameToCode.put(
-            "nistb233", ECCurve_Code.nistb233);
-        ECCurve_NameToCode.put(
-            "sect233k1", ECCurve_Code.sect233k1);
-        ECCurve_NameToCode.put(
-            "nistk233", ECCurve_Code.nistk233);
-        ECCurve_NameToCode.put(
-            "sect193r2", ECCurve_Code.sect193r2);
-        ECCurve_NameToCode.put(
-            "sect193r1", ECCurve_Code.sect193r1);
-        ECCurve_NameToCode.put(
-            "nistb163", ECCurve_Code.nistb163);
-        ECCurve_NameToCode.put(
-            "sect163r2", ECCurve_Code.sect163r2);
-        ECCurve_NameToCode.put(
-            "sect163r1", ECCurve_Code.sect163r1);
-        ECCurve_NameToCode.put(
-            "sect163k1", ECCurve_Code.sect163k1);
-        ECCurve_NameToCode.put(
-            "nistk163", ECCurve_Code.nistk163);
-        ECCurve_NameToCode.put(
-            "sect131r2", ECCurve_Code.sect131r2);
-        ECCurve_NameToCode.put(
-            "sect131r1", ECCurve_Code.sect131r1);
-        ECCurve_NameToCode.put(
-            "sect113r2", ECCurve_Code.sect113r2);
-        ECCurve_NameToCode.put(
-            "sect113r1", ECCurve_Code.sect113r1);
-      // ANSI Prime curves
-        ECCurve_NameToCode.put(
-            "prime239v3", ECCurve_Code.prime239v3);
-        ECCurve_NameToCode.put(
-            "prime239v2", ECCurve_Code.prime239v2);
-        ECCurve_NameToCode.put(
-            "prime239v1", ECCurve_Code.prime239v1);
-        ECCurve_NameToCode.put(
-            "prime192v3", ECCurve_Code.prime192v3);
-        ECCurve_NameToCode.put(
-            "prime192v2", ECCurve_Code.prime192v2);
-        ECCurve_NameToCode.put(
-            "prime192v1", ECCurve_Code.prime192v1);
-      // ANSI Binary curves
-        ECCurve_NameToCode.put(
-            "c2pnb163v1", ECCurve_Code.c2pnb163v1);
-        ECCurve_NameToCode.put(
-            "c2pnb163v2", ECCurve_Code.c2pnb163v2);
-        ECCurve_NameToCode.put(
-            "c2pnb163v3", ECCurve_Code.c2pnb163v3);
-        ECCurve_NameToCode.put(
-            "c2pnb176v1", ECCurve_Code.c2pnb176v1);
-        ECCurve_NameToCode.put(
-            "c2tnb191v1", ECCurve_Code.c2tnb191v1);
-        ECCurve_NameToCode.put(
-            "c2tnb191v2", ECCurve_Code.c2tnb191v2);
-        ECCurve_NameToCode.put(
-            "c2tnb191v3", ECCurve_Code.c2tnb191v3);
-        //ECCurve_NameToCode.put(
-        //    "c2onb191v4", ECCurve_Code.c2onb191v4);
-        //ECCurve_NameToCode.put(
-        //    "c2onb191v5", ECCurve_Code.c2onb191v5);
-        ECCurve_NameToCode.put(
-            "c2pnb208w1", ECCurve_Code.c2pnb208w1);
-        ECCurve_NameToCode.put(
-            "c2tnb239v1", ECCurve_Code.c2tnb239v1);
-        ECCurve_NameToCode.put(
-            "c2tnb239v2", ECCurve_Code.c2tnb239v2);
-        ECCurve_NameToCode.put(
-            "c2tnb239v3", ECCurve_Code.c2tnb239v3);
-        //ECCurve_NameToCode.put(
-        //    "c2onb239v4", ECCurve_Code.c2onb239v4);
-        //ECCurve_NameToCode.put(
-        //    "c2onb239v5", ECCurve_Code.c2onb239v5);
-        ECCurve_NameToCode.put(
-            "c2pnb272w1", ECCurve_Code.c2pnb272w1);
-        ECCurve_NameToCode.put(
-            "c2pnb304w1", ECCurve_Code.c2pnb304w1);
-        ECCurve_NameToCode.put(
-            "c2tnb359v1", ECCurve_Code.c2tnb359v1);
-        ECCurve_NameToCode.put(
-            "c2pnb368w1", ECCurve_Code.c2pnb368w1);
-        ECCurve_NameToCode.put(
-            "c2tnb431r1", ECCurve_Code.c2tnb431r1);
-    }
-
     // The crypto operations the key will support.  It is the logical OR
     // of the opFlag constants, each specifying a supported operation.
     private long opFlags = 0;
@@ -1074,9 +918,12 @@ public final class PK11KeyPairGenerator
         throws InvalidParameterException {
         if (curveName == null)
             throw new InvalidParameterException();
-        ECCurve_Code c = ECCurve_NameToCode.get(curveName);
-        if (c == null)
+        ECCurve_Code c;
+        try {
+            c = ECCurve_Code.valueOf(curveName);
+        } catch (IllegalArgumentException e) { // curve not found
             throw new InvalidParameterException(curveName);
+        }
         return c.code();
     }
 
