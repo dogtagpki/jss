@@ -14,7 +14,6 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.DSAParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
-import java.util.Hashtable;
 
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
@@ -49,94 +48,107 @@ public final class PK11KeyPairGenerator
      */
     private enum ECCurve_Code {
       // NIST, SEC2 Prime curves
-        secp521r1(0), // == nistp521
-        nistp521(1),
-        secp384r1(2), // == nistp384
-        nistp384(3),
-        secp256r1(4), // == nistp256
-        nistp256(5),
-        secp256k1(6),
-        secp224r1(7), // == nistp224
-        nistp224(8),
-        secp224k1(9),
-        secp192r1(10), // == nistp192
-        nistp192(11),
-        secp192k1(12),
-        secp160r2(13),
-        secp160r1(14),
-        secp160k1(15),
-        secp128r2(16),
-        secp128r1(17),
-        secp112r2(18),
-        secp112r1(19),
+        secp521r1(0, CURVE_SECG_P521R1), // == nistp521
+        nistp521 (1, CURVE_SECG_P521R1),
+        secp384r1(2, CURVE_SECG_P384R1), // == nistp384
+        nistp384 (3, CURVE_SECG_P384R1),
+        secp256r1(4, CURVE_ANSI_P256V1), // == nistp256
+        nistp256 (5, CURVE_ANSI_P256V1),
+        secp256k1(6, CURVE_SECG_P256K1),
+        secp224r1(7, CURVE_SECG_P224R1), // == nistp224
+        nistp224 (8, CURVE_SECG_P224R1),
+        secp224k1(9, CURVE_SECG_P224K1),
+        secp192r1(10, CURVE_ANSI_P192V1), // == nistp192
+        nistp192 (11, CURVE_ANSI_P192V1),
+        secp192k1(12, CURVE_SECG_P192K1),
+        secp160r2(13, CURVE_SECG_P160R2),
+        secp160r1(14, CURVE_SECG_P160R1),
+        secp160k1(15, CURVE_SECG_P160K1),
+        secp128r2(16, CURVE_SECG_P128R2),
+        secp128r1(17, CURVE_SECG_P128R1),
+        secp112r2(18, CURVE_SECG_P112R2),
+        secp112r1(19, CURVE_SECG_P112R1),
       // NIST, SEC2 Binary curves
-        sect571r1(20), // == nistb571
-        nistb571(21),
-        sect571k1(22), // == nistk571
-        nistk571(23),
-        sect409r1(24), // == nistb409
-        nistb409(25),
-        sect409k1(26), // == nistk409
-        nistk409(27),
-        sect283r1(28), // == nistb283
-        nistb283(29),
-        sect283k1(30), // == nistk283
-        nistk283(31),
-        sect239k1(32),
-        sect233r1(33), // == nistb233
-        nistb233(34),
-        sect233k1(35), // == nistk233
-        nistk233(36),
-        sect193r2(37),
-        sect193r1(38),
-        nistb163(39),
-        sect163r2(40), // == nistb163
-        sect163r1(41),
-        sect163k1(42), // == nistk163
-        nistk163(43),
-        sect131r2(44),
-        sect131r1(45),
-        sect113r2(46),
-        sect113r1(47),
+        sect571r1(20, CURVE_SECG_T571R1), // == nistb571
+        nistb571 (21, CURVE_SECG_T571R1),
+        sect571k1(22, CURVE_SECG_T571K1), // == nistk571
+        nistk571 (23, CURVE_SECG_T571K1),
+        sect409r1(24, CURVE_SECG_T409R1), // == nistb409
+        nistb409 (25, CURVE_SECG_T409R1),
+        sect409k1(26, CURVE_SECG_T409K1), // == nistk409
+        nistk409 (27, CURVE_SECG_T409K1),
+        sect283r1(28, CURVE_SECG_T283R1), // == nistb283
+        nistb283 (29, CURVE_SECG_T283R1),
+        sect283k1(30, CURVE_SECG_T283K1), // == nistk283
+        nistk283 (31, CURVE_SECG_T283K1),
+        sect239k1(32, CURVE_SECG_T239K1),
+        sect233r1(33, CURVE_SECG_T233R1), // == nistb233
+        nistb233 (34, CURVE_SECG_T233R1),
+        sect233k1(35, CURVE_SECG_T233K1), // == nistk233
+        nistk233 (36, CURVE_SECG_T233K1),
+        sect193r2(37, CURVE_SECG_T193R2),
+        sect193r1(38, CURVE_SECG_T193R1),
+        nistb163 (39, CURVE_SECG_T163K1),
+        sect163r2(40, CURVE_SECG_T163R2), // == nistb163
+        sect163r1(41, CURVE_SECG_T163R1),
+        sect163k1(42, CURVE_SECG_T163K1), // == nistk163
+        nistk163 (43, CURVE_SECG_T163K1),
+        sect131r2(44, CURVE_SECG_T131R2),
+        sect131r1(45, CURVE_SECG_T131R1),
+        sect113r2(46, CURVE_SECG_T113R2),
+        sect113r1(47, CURVE_SECG_T113R1),
       // ANSI X9.62 Prime curves
-        prime239v3(48),
-        prime239v2(49),
-        prime239v1(50),
-        prime192v3(51),
-        prime192v2(52),
-        prime192v1(53), // == nistp192
+        prime239v3(48, CURVE_ANSI_P239V3),
+        prime239v2(49, CURVE_ANSI_P239V2),
+        prime239v1(50, CURVE_ANSI_P239V1),
+        prime192v3(51, CURVE_ANSI_P192V3),
+        prime192v2(52, CURVE_ANSI_P192V2),
+        prime192v1(53, CURVE_ANSI_P192V1), // == nistp192
         // prime256v1 == nistp256
       // ANSI X9.62 Binary curves
-        c2pnb163v1(54),
-        c2pnb163v2(55),
-        c2pnb163v3(56),
-        c2pnb176v1(57),
-        c2tnb191v1(58),
-        c2tnb191v2(59),
-        c2tnb191v3(60),
-        //c2onb191v4 ,
-        //c2onb191v5 ,
-        c2pnb208w1(61),
-        c2tnb239v1(62),
-        c2tnb239v2(63),
-        c2tnb239v3(64),
-        //c2onb239v4 ,
-        //c2onb239v5 ,
-        c2pnb272w1(65),
-        c2pnb304w1(66),
-        c2tnb359v1(67),
-        c2pnb368w1(68),
-        c2tnb431r1(69);
+        c2pnb163v1(54, CURVE_ANSI_PNB163V1),
+        c2pnb163v2(55, CURVE_ANSI_PNB163V2),
+        c2pnb163v3(56, CURVE_ANSI_PNB163V3),
+        c2pnb176v1(57, CURVE_ANSI_PNB176V1),
+        c2tnb191v1(58, CURVE_ANSI_TNB191V1),
+        c2tnb191v2(59, CURVE_ANSI_TNB191V2),
+        c2tnb191v3(60, CURVE_ANSI_TNB191V3),
+        //c2onb191v4(CURVE_ANSI_ONB191V4),
+        //c2onb191v5(CURVE_ANSI_ONB191V5),
+        c2pnb208w1(61, CURVE_ANSI_PNB208W1),
+        c2tnb239v1(62, CURVE_ANSI_TNB239V1),
+        c2tnb239v2(63, CURVE_ANSI_TNB239V2),
+        c2tnb239v3(64, CURVE_ANSI_TNB239V3),
+        //c2onb239v4(CURVE_ANSI_ONB239V4),
+        //c2onb239v5(CURVE_ANSI_ONB239V5),
+        c2pnb272w1(65, CURVE_ANSI_PNB272W1),
+        c2pnb304w1(66, CURVE_ANSI_PNB304W1),
+        c2tnb359v1(67, CURVE_ANSI_TNB359V1),
+        c2pnb368w1(68, CURVE_ANSI_PNB368W1),
+        c2tnb431r1(69, CURVE_ANSI_TNB431R1);
         // no WTLS curves fo now
 
         private final int code;
+        private final OBJECT_IDENTIFIER oid;
 
-        ECCurve_Code(int code) {
+        ECCurve_Code(int code, OBJECT_IDENTIFIER oid) {
             this.code = code;
+            this.oid = oid;
         }
 
         public int code() {
             return code;
+        }
+
+        public OBJECT_IDENTIFIER oid() {
+            return oid;
+        }
+
+        public static ECCurve_Code valueOf(int code) {
+            for (ECCurve_Code curve : ECCurve_Code.values()) {
+                if (curve.code == code) return curve;
+            }
+            throw new IllegalArgumentException("Invalid EC curve code: " + code);
         }
     };
 
@@ -756,163 +768,6 @@ public final class PK11KeyPairGenerator
     static final OBJECT_IDENTIFIER CURVE_SECG_T571R1
 	= SECG_EC_CURVE.subBranch(39);
 
-    // the EC curvecode to oid hash table
-    private static Hashtable<Integer, OBJECT_IDENTIFIER> mECCurve_CodeToCurve = new Hashtable<>();
-    static {
-      // SEG Prime curves
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp521r1.code(), CURVE_SECG_P521R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp521.code(), CURVE_SECG_P521R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp384r1.code(), CURVE_SECG_P384R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp384.code(), CURVE_SECG_P384R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp256r1.code(), CURVE_ANSI_P256V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp256.code(), CURVE_ANSI_P256V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp256k1.code(), CURVE_SECG_P256K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp224r1.code(), CURVE_SECG_P224R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp224.code(), CURVE_SECG_P224R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp224k1.code(), CURVE_SECG_P224K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp192r1.code(), CURVE_ANSI_P192V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistp192.code(), CURVE_ANSI_P192V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp192k1.code(), CURVE_SECG_P192K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp160r2.code(), CURVE_SECG_P160R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp160r1.code(), CURVE_SECG_P160R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp160k1.code(), CURVE_SECG_P160K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp128r2.code(), CURVE_SECG_P128R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp128r1.code(), CURVE_SECG_P128R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp112r2.code(), CURVE_SECG_P112R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.secp112r1.code(), CURVE_SECG_P112R1);
-      // SEG Binary curves
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect571r1.code(), CURVE_SECG_T571R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb571.code(), CURVE_SECG_T571R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect571k1.code(), CURVE_SECG_T571K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk571.code(), CURVE_SECG_T571K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect409r1.code(), CURVE_SECG_T409R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb409.code(), CURVE_SECG_T409R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect409k1.code(), CURVE_SECG_T409K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk409.code(), CURVE_SECG_T409K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect283r1.code(), CURVE_SECG_T283R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb283.code(), CURVE_SECG_T283R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect283k1.code(), CURVE_SECG_T283K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk283.code(), CURVE_SECG_T283K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect239k1.code(), CURVE_SECG_T239K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect233r1.code(), CURVE_SECG_T233R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb233.code(), CURVE_SECG_T233R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect233k1.code(), CURVE_SECG_T233K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk233.code(), CURVE_SECG_T233K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect193r2.code(), CURVE_SECG_T193R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect193r1.code(), CURVE_SECG_T193R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistb163.code(), CURVE_SECG_T163K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect163r2.code(), CURVE_SECG_T163R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect163r1.code(), CURVE_SECG_T163R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect163k1.code(), CURVE_SECG_T163K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.nistk163.code(), CURVE_SECG_T163K1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect131r2.code(), CURVE_SECG_T131R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect131r1.code(), CURVE_SECG_T131R1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect113r2.code(), CURVE_SECG_T113R2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.sect113r1.code(), CURVE_SECG_T113R1);
-      // ANSI Prime curves
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime239v3.code(), CURVE_ANSI_P239V3);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime239v2.code(), CURVE_ANSI_P239V2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime239v1.code(), CURVE_ANSI_P239V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime192v3.code(), CURVE_ANSI_P192V3);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime192v2.code(), CURVE_ANSI_P192V2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.prime192v1.code(), CURVE_ANSI_P192V1);
-      // ANSI Binary curves
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb163v1.code(), CURVE_ANSI_PNB163V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb163v2.code(), CURVE_ANSI_PNB163V2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb163v3.code(), CURVE_ANSI_PNB163V3);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb176v1.code(), CURVE_ANSI_PNB176V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb191v1.code(), CURVE_ANSI_TNB191V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb191v2.code(), CURVE_ANSI_TNB191V2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb191v3.code(), CURVE_ANSI_TNB191V3);
-        //mECCurve_CodeToCurve.put(
-        //    ECCurve_Code.c2onb191v4.code(), CURVE_ANSI_ONB191V4);
-        //mECCurve_CodeToCurve.put(
-        //    ECCurve_Code.c2onb191v5.code(), CURVE_ANSI_ONB191V5);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb208w1.code(), CURVE_ANSI_PNB208W1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb239v1.code(), CURVE_ANSI_TNB239V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb239v2.code(), CURVE_ANSI_TNB239V2);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb239v3.code(), CURVE_ANSI_TNB239V3);
-        //mECCurve_CodeToCurve.put(
-        //    ECCurve_Code.c2onb239v4.code(), CURVE_ANSI_ONB239V4);
-        //mECCurve_CodeToCurve.put(
-        //    ECCurve_Code.c2onb239v5.code(), CURVE_ANSI_ONB239V5);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb272w1.code(), CURVE_ANSI_PNB272W1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb304w1.code(), CURVE_ANSI_PNB304W1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb359v1.code(), CURVE_ANSI_TNB359V1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2pnb368w1.code(), CURVE_ANSI_PNB368W1);
-        mECCurve_CodeToCurve.put(
-            ECCurve_Code.c2tnb431r1.code(), CURVE_ANSI_TNB431R1);
-    }
-
     @Override
     public int getCurveCodeByName(String curveName)
         throws InvalidParameterException {
@@ -935,11 +790,7 @@ public final class PK11KeyPairGenerator
     private AlgorithmParameterSpec getECCurve(int curvecode)
         throws InvalidParameterException
     {
-        OBJECT_IDENTIFIER oid;
-
-        oid = mECCurve_CodeToCurve.get(curvecode);
-        if (oid == null)
-            throw new IllegalArgumentException("curvecode ="+curvecode);
+        OBJECT_IDENTIFIER oid = ECCurve_Code.valueOf(curvecode).oid();
         return new PK11ParameterSpec(ASN1Util.encode(oid));
     }
 
