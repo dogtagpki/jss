@@ -22,6 +22,7 @@ import org.mozilla.jss.crypto.PQGParams;
 import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.util.ECCurve;
+import org.mozilla.jss.util.ECOIDs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,84 +49,84 @@ public final class PK11KeyPairGenerator
      */
     private enum ECCurve_Code {
       // NIST, SEC2 Prime curves
-        secp521r1(0, CURVE_SECG_P521R1), // == nistp521
-        nistp521 (1, CURVE_SECG_P521R1),
-        secp384r1(2, CURVE_SECG_P384R1), // == nistp384
-        nistp384 (3, CURVE_SECG_P384R1),
-        secp256r1(4, CURVE_ANSI_P256V1), // == nistp256
-        nistp256 (5, CURVE_ANSI_P256V1),
-        secp256k1(6, CURVE_SECG_P256K1),
-        secp224r1(7, CURVE_SECG_P224R1), // == nistp224
-        nistp224 (8, CURVE_SECG_P224R1),
-        secp224k1(9, CURVE_SECG_P224K1),
-        secp192r1(10, CURVE_ANSI_P192V1), // == nistp192
-        nistp192 (11, CURVE_ANSI_P192V1),
-        secp192k1(12, CURVE_SECG_P192K1),
-        secp160r2(13, CURVE_SECG_P160R2),
-        secp160r1(14, CURVE_SECG_P160R1),
-        secp160k1(15, CURVE_SECG_P160K1),
-        secp128r2(16, CURVE_SECG_P128R2),
-        secp128r1(17, CURVE_SECG_P128R1),
-        secp112r2(18, CURVE_SECG_P112R2),
-        secp112r1(19, CURVE_SECG_P112R1),
+        secp521r1(0, ECOIDs.CURVE_SECG_P521R1), // == nistp521
+        nistp521 (1, ECOIDs.CURVE_SECG_P521R1),
+        secp384r1(2, ECOIDs.CURVE_SECG_P384R1), // == nistp384
+        nistp384 (3, ECOIDs.CURVE_SECG_P384R1),
+        secp256r1(4, ECOIDs.CURVE_ANSI_P256V1), // == nistp256
+        nistp256 (5, ECOIDs.CURVE_ANSI_P256V1),
+        secp256k1(6, ECOIDs.CURVE_SECG_P256K1),
+        secp224r1(7, ECOIDs.CURVE_SECG_P224R1), // == nistp224
+        nistp224 (8, ECOIDs.CURVE_SECG_P224R1),
+        secp224k1(9, ECOIDs.CURVE_SECG_P224K1),
+        secp192r1(10, ECOIDs.CURVE_ANSI_P192V1), // == nistp192
+        nistp192 (11, ECOIDs.CURVE_ANSI_P192V1),
+        secp192k1(12, ECOIDs.CURVE_SECG_P192K1),
+        secp160r2(13, ECOIDs.CURVE_SECG_P160R2),
+        secp160r1(14, ECOIDs.CURVE_SECG_P160R1),
+        secp160k1(15, ECOIDs.CURVE_SECG_P160K1),
+        secp128r2(16, ECOIDs.CURVE_SECG_P128R2),
+        secp128r1(17, ECOIDs.CURVE_SECG_P128R1),
+        secp112r2(18, ECOIDs.CURVE_SECG_P112R2),
+        secp112r1(19, ECOIDs.CURVE_SECG_P112R1),
       // NIST, SEC2 Binary curves
-        sect571r1(20, CURVE_SECG_T571R1), // == nistb571
-        nistb571 (21, CURVE_SECG_T571R1),
-        sect571k1(22, CURVE_SECG_T571K1), // == nistk571
-        nistk571 (23, CURVE_SECG_T571K1),
-        sect409r1(24, CURVE_SECG_T409R1), // == nistb409
-        nistb409 (25, CURVE_SECG_T409R1),
-        sect409k1(26, CURVE_SECG_T409K1), // == nistk409
-        nistk409 (27, CURVE_SECG_T409K1),
-        sect283r1(28, CURVE_SECG_T283R1), // == nistb283
-        nistb283 (29, CURVE_SECG_T283R1),
-        sect283k1(30, CURVE_SECG_T283K1), // == nistk283
-        nistk283 (31, CURVE_SECG_T283K1),
-        sect239k1(32, CURVE_SECG_T239K1),
-        sect233r1(33, CURVE_SECG_T233R1), // == nistb233
-        nistb233 (34, CURVE_SECG_T233R1),
-        sect233k1(35, CURVE_SECG_T233K1), // == nistk233
-        nistk233 (36, CURVE_SECG_T233K1),
-        sect193r2(37, CURVE_SECG_T193R2),
-        sect193r1(38, CURVE_SECG_T193R1),
-        nistb163 (39, CURVE_SECG_T163K1),
-        sect163r2(40, CURVE_SECG_T163R2), // == nistb163
-        sect163r1(41, CURVE_SECG_T163R1),
-        sect163k1(42, CURVE_SECG_T163K1), // == nistk163
-        nistk163 (43, CURVE_SECG_T163K1),
-        sect131r2(44, CURVE_SECG_T131R2),
-        sect131r1(45, CURVE_SECG_T131R1),
-        sect113r2(46, CURVE_SECG_T113R2),
-        sect113r1(47, CURVE_SECG_T113R1),
+        sect571r1(20, ECOIDs.CURVE_SECG_T571R1), // == nistb571
+        nistb571 (21, ECOIDs.CURVE_SECG_T571R1),
+        sect571k1(22, ECOIDs.CURVE_SECG_T571K1), // == nistk571
+        nistk571 (23, ECOIDs.CURVE_SECG_T571K1),
+        sect409r1(24, ECOIDs.CURVE_SECG_T409R1), // == nistb409
+        nistb409 (25, ECOIDs.CURVE_SECG_T409R1),
+        sect409k1(26, ECOIDs.CURVE_SECG_T409K1), // == nistk409
+        nistk409 (27, ECOIDs.CURVE_SECG_T409K1),
+        sect283r1(28, ECOIDs.CURVE_SECG_T283R1), // == nistb283
+        nistb283 (29, ECOIDs.CURVE_SECG_T283R1),
+        sect283k1(30, ECOIDs.CURVE_SECG_T283K1), // == nistk283
+        nistk283 (31, ECOIDs.CURVE_SECG_T283K1),
+        sect239k1(32, ECOIDs.CURVE_SECG_T239K1),
+        sect233r1(33, ECOIDs.CURVE_SECG_T233R1), // == nistb233
+        nistb233 (34, ECOIDs.CURVE_SECG_T233R1),
+        sect233k1(35, ECOIDs.CURVE_SECG_T233K1), // == nistk233
+        nistk233 (36, ECOIDs.CURVE_SECG_T233K1),
+        sect193r2(37, ECOIDs.CURVE_SECG_T193R2),
+        sect193r1(38, ECOIDs.CURVE_SECG_T193R1),
+        nistb163 (39, ECOIDs.CURVE_SECG_T163K1),
+        sect163r2(40, ECOIDs.CURVE_SECG_T163R2), // == nistb163
+        sect163r1(41, ECOIDs.CURVE_SECG_T163R1),
+        sect163k1(42, ECOIDs.CURVE_SECG_T163K1), // == nistk163
+        nistk163 (43, ECOIDs.CURVE_SECG_T163K1),
+        sect131r2(44, ECOIDs.CURVE_SECG_T131R2),
+        sect131r1(45, ECOIDs.CURVE_SECG_T131R1),
+        sect113r2(46, ECOIDs.CURVE_SECG_T113R2),
+        sect113r1(47, ECOIDs.CURVE_SECG_T113R1),
       // ANSI X9.62 Prime curves
-        prime239v3(48, CURVE_ANSI_P239V3),
-        prime239v2(49, CURVE_ANSI_P239V2),
-        prime239v1(50, CURVE_ANSI_P239V1),
-        prime192v3(51, CURVE_ANSI_P192V3),
-        prime192v2(52, CURVE_ANSI_P192V2),
-        prime192v1(53, CURVE_ANSI_P192V1), // == nistp192
+        prime239v3(48, ECOIDs.CURVE_ANSI_P239V3),
+        prime239v2(49, ECOIDs.CURVE_ANSI_P239V2),
+        prime239v1(50, ECOIDs.CURVE_ANSI_P239V1),
+        prime192v3(51, ECOIDs.CURVE_ANSI_P192V3),
+        prime192v2(52, ECOIDs.CURVE_ANSI_P192V2),
+        prime192v1(53, ECOIDs.CURVE_ANSI_P192V1), // == nistp192
         // prime256v1 == nistp256
       // ANSI X9.62 Binary curves
-        c2pnb163v1(54, CURVE_ANSI_PNB163V1),
-        c2pnb163v2(55, CURVE_ANSI_PNB163V2),
-        c2pnb163v3(56, CURVE_ANSI_PNB163V3),
-        c2pnb176v1(57, CURVE_ANSI_PNB176V1),
-        c2tnb191v1(58, CURVE_ANSI_TNB191V1),
-        c2tnb191v2(59, CURVE_ANSI_TNB191V2),
-        c2tnb191v3(60, CURVE_ANSI_TNB191V3),
-        //c2onb191v4(CURVE_ANSI_ONB191V4),
-        //c2onb191v5(CURVE_ANSI_ONB191V5),
-        c2pnb208w1(61, CURVE_ANSI_PNB208W1),
-        c2tnb239v1(62, CURVE_ANSI_TNB239V1),
-        c2tnb239v2(63, CURVE_ANSI_TNB239V2),
-        c2tnb239v3(64, CURVE_ANSI_TNB239V3),
-        //c2onb239v4(CURVE_ANSI_ONB239V4),
-        //c2onb239v5(CURVE_ANSI_ONB239V5),
-        c2pnb272w1(65, CURVE_ANSI_PNB272W1),
-        c2pnb304w1(66, CURVE_ANSI_PNB304W1),
-        c2tnb359v1(67, CURVE_ANSI_TNB359V1),
-        c2pnb368w1(68, CURVE_ANSI_PNB368W1),
-        c2tnb431r1(69, CURVE_ANSI_TNB431R1);
+        c2pnb163v1(54, ECOIDs.CURVE_ANSI_PNB163V1),
+        c2pnb163v2(55, ECOIDs.CURVE_ANSI_PNB163V2),
+        c2pnb163v3(56, ECOIDs.CURVE_ANSI_PNB163V3),
+        c2pnb176v1(57, ECOIDs.CURVE_ANSI_PNB176V1),
+        c2tnb191v1(58, ECOIDs.CURVE_ANSI_TNB191V1),
+        c2tnb191v2(59, ECOIDs.CURVE_ANSI_TNB191V2),
+        c2tnb191v3(60, ECOIDs.CURVE_ANSI_TNB191V3),
+        //c2onb191v4(ECOIDs.CURVE_ANSI_ONB191V4),
+        //c2onb191v5(ECOIDs.CURVE_ANSI_ONB191V5),
+        c2pnb208w1(61, ECOIDs.CURVE_ANSI_PNB208W1),
+        c2tnb239v1(62, ECOIDs.CURVE_ANSI_TNB239V1),
+        c2tnb239v2(63, ECOIDs.CURVE_ANSI_TNB239V2),
+        c2tnb239v3(64, ECOIDs.CURVE_ANSI_TNB239V3),
+        //c2onb239v4(ECOIDs.CURVE_ANSI_ONB239V4),
+        //c2onb239v5(ECOIDs.CURVE_ANSI_ONB239V5),
+        c2pnb272w1(65, ECOIDs.CURVE_ANSI_PNB272W1),
+        c2pnb304w1(66, ECOIDs.CURVE_ANSI_PNB304W1),
+        c2tnb359v1(67, ECOIDs.CURVE_ANSI_TNB359V1),
+        c2pnb368w1(68, ECOIDs.CURVE_ANSI_PNB368W1),
+        c2tnb431r1(69, ECOIDs.CURVE_ANSI_TNB431R1);
         // no WTLS curves fo now
 
         private final int code;
@@ -630,144 +631,6 @@ public final class PK11KeyPairGenerator
         }
     }
 
-    //
-    // requires JAVA 1.5
-    //
-    //private AlgorithmParameterSpec getCurve(int strength) {
-    //}
-
-
-    private static final OBJECT_IDENTIFIER ANSI_X962_PRIME_CURVE =
-	new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045, 3, 1 } );
-    private static final OBJECT_IDENTIFIER ANSI_X962_BINARY_CURVE =
-	new OBJECT_IDENTIFIER( new long[] { 1, 2, 840, 10045, 3, 0 } );
-    private static final OBJECT_IDENTIFIER SECG_EC_CURVE =
-	new OBJECT_IDENTIFIER( new long[] { 1, 3, 132, 0 } );
-
-    // ANSI Prime curves
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V1
-	= ANSI_X962_PRIME_CURVE.subBranch(1);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V2
-	= ANSI_X962_PRIME_CURVE.subBranch(2);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P192V3
-	= ANSI_X962_PRIME_CURVE.subBranch(3);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V1
-	= ANSI_X962_PRIME_CURVE.subBranch(4);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V2
-	= ANSI_X962_PRIME_CURVE.subBranch(5);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P239V3
-	= ANSI_X962_PRIME_CURVE.subBranch(6);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_P256V1
-	= ANSI_X962_PRIME_CURVE.subBranch(7);
-
-    // ANSI Binary curves
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V1
-	=ANSI_X962_BINARY_CURVE.subBranch(1);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V2
-	=ANSI_X962_BINARY_CURVE.subBranch(2);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB163V3
-	=ANSI_X962_BINARY_CURVE.subBranch(3);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB176V1
-	=ANSI_X962_BINARY_CURVE.subBranch(4);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V1
-	=ANSI_X962_BINARY_CURVE.subBranch(5);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V2
-	=ANSI_X962_BINARY_CURVE.subBranch(6);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB191V3
-	=ANSI_X962_BINARY_CURVE.subBranch(7);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB191V4
-	=ANSI_X962_BINARY_CURVE.subBranch(8);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB191V5
-	=ANSI_X962_BINARY_CURVE.subBranch(9);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB208W1
-	=ANSI_X962_BINARY_CURVE.subBranch(10);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V1
-	=ANSI_X962_BINARY_CURVE.subBranch(11);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V2
-	=ANSI_X962_BINARY_CURVE.subBranch(12);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB239V3
-	=ANSI_X962_BINARY_CURVE.subBranch(13);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB239V4
-	=ANSI_X962_BINARY_CURVE.subBranch(14);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_ONB239V5
-	=ANSI_X962_BINARY_CURVE.subBranch(15);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB272W1
-	=ANSI_X962_BINARY_CURVE.subBranch(16);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB304W1
-	=ANSI_X962_BINARY_CURVE.subBranch(17);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB359V1
-	=ANSI_X962_BINARY_CURVE.subBranch(18);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_PNB368W1
-	=ANSI_X962_BINARY_CURVE.subBranch(19);
-    static final OBJECT_IDENTIFIER CURVE_ANSI_TNB431R1
-	=ANSI_X962_BINARY_CURVE.subBranch(20);
-
-    // SEG Prime curves
-    static final OBJECT_IDENTIFIER CURVE_SECG_P112R1
-	= SECG_EC_CURVE.subBranch(6);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P112R2
-	= SECG_EC_CURVE.subBranch(7);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P128R1
-	= SECG_EC_CURVE.subBranch(28);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P128R2
-	= SECG_EC_CURVE.subBranch(29);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P160K1
-	= SECG_EC_CURVE.subBranch(9);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P160R1
-	= SECG_EC_CURVE.subBranch(8);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P160R2
-	= SECG_EC_CURVE.subBranch(30);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P192K1
-	= SECG_EC_CURVE.subBranch(31);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P224K1
-	= SECG_EC_CURVE.subBranch(32);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P224R1
-	= SECG_EC_CURVE.subBranch(33);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P256K1
-	= SECG_EC_CURVE.subBranch(10);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P384R1
-	= SECG_EC_CURVE.subBranch(34);
-    static final OBJECT_IDENTIFIER CURVE_SECG_P521R1
-	= SECG_EC_CURVE.subBranch(35);
-
-    // SEG Binary curves
-    static final OBJECT_IDENTIFIER CURVE_SECG_T113R1
-	= SECG_EC_CURVE.subBranch(4);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T113R2
-	= SECG_EC_CURVE.subBranch(5);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T131R1
-	= SECG_EC_CURVE.subBranch(22);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T131R2
-	= SECG_EC_CURVE.subBranch(23);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T163K1
-	= SECG_EC_CURVE.subBranch(1);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T163R1
-	= SECG_EC_CURVE.subBranch(2);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T163R2
-	= SECG_EC_CURVE.subBranch(15);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T193R1
-	= SECG_EC_CURVE.subBranch(24);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T193R2
-	= SECG_EC_CURVE.subBranch(25);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T233K1
-	= SECG_EC_CURVE.subBranch(26);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T233R1
-	= SECG_EC_CURVE.subBranch(27);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T239K1
-	= SECG_EC_CURVE.subBranch(3);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T283K1
-	= SECG_EC_CURVE.subBranch(16);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T283R1
-	= SECG_EC_CURVE.subBranch(17);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T409K1
-	= SECG_EC_CURVE.subBranch(36);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T409R1
-	= SECG_EC_CURVE.subBranch(37);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T571K1
-	= SECG_EC_CURVE.subBranch(38);
-    static final OBJECT_IDENTIFIER CURVE_SECG_T571R1
-	= SECG_EC_CURVE.subBranch(39);
-
     @Override
     public int getCurveCodeByName(String curveName)
         throws InvalidParameterException {
@@ -800,31 +663,31 @@ public final class PK11KeyPairGenerator
 	OBJECT_IDENTIFIER oid;
 	switch (strength) {
 	case 112:
-	    oid = CURVE_SECG_P112R1; // == WTLS-6
+	    oid = ECOIDs.CURVE_SECG_P112R1; // == WTLS-6
         // Can't get to curve SECG P-112R2
         // Can't get to curve WTLS-8 (No oid for WTLS-8)
 	    break;
         case 113:
-	    oid = CURVE_SECG_T113R1; // == WTLS-4
+	    oid = ECOIDs.CURVE_SECG_T113R1; // == WTLS-4
         // Can't get to curve SECG T-113R2
         // Can't get to curve WTLS-1 (No oid for WTLS-1)
 	    break;
 	case 128:
-	    oid = CURVE_SECG_P128R1;
+	    oid = ECOIDs.CURVE_SECG_P128R1;
         // Can't get to curve SECG P-128R2
 	    break;
 	case 131:
-	    oid = CURVE_SECG_T131R1;
+	    oid = ECOIDs.CURVE_SECG_T131R1;
         // Can't get to curve SECG T-131R2
 	    break;
 	case 160:
-	    oid = CURVE_SECG_P160R1; // == WTLS-7 (TLS-16)
+	    oid = ECOIDs.CURVE_SECG_P160R1; // == WTLS-7 (TLS-16)
         // Can't get to curve SECG P-160K1 (TLS-15)
         // Can't get to curve SECG P-160R2 (TLS-17)
         // Can't get to curve WTLS-9 (No oid for WTLS-9)
 	    break;
 	case 163:
-	    oid = CURVE_SECG_T163K1; // == NIST K-163 == WTLS-3 (TLS-1)
+	    oid = ECOIDs.CURVE_SECG_T163K1; // == NIST K-163 == WTLS-3 (TLS-1)
         // Can't get to curve ANSI C2-PNB163V1 == WTLS-5
         // Can't get to curve ANSI C2-PNB163V2
         // Can't get to curve ANSI C2-PNB163V3
@@ -832,38 +695,38 @@ public final class PK11KeyPairGenerator
 	// Can't get to curve SECG T-163R2 == NIST B-163 (TLS-3)
 	    break;
 	case 176:
-	    oid = CURVE_ANSI_PNB176V1;
+	    oid = ECOIDs.CURVE_ANSI_PNB176V1;
 	    break;
 	case 191:
-	    oid = CURVE_ANSI_TNB191V1;
+	    oid = ECOIDs.CURVE_ANSI_TNB191V1;
 	// Can't get to curve ANSI C2-TNB191V2
 	// Can't get to curve ANSI C2-TNB191V3
 	// Can't get to curve ANSI C2-ONB191V4
 	// Can't get to curve ANSI C2-ONB191V5
 	    break;
 	case 192:
-	    oid = CURVE_ANSI_P192V1; // == NIST P-192 == SECG P-192R1 (TLS-19)
+	    oid = ECOIDs.CURVE_ANSI_P192V1; // == NIST P-192 == SECG P-192R1 (TLS-19)
 	// Can't get to curve ANSI P-192V2
 	// Can't get to curve ANSI P-192V3
         // Can't get to curve SECG P-192K1 (TLS-18)
 	    break;
 	case 193:
-	    oid = CURVE_SECG_T193R1;  // (TLS-4)
+	    oid = ECOIDs.CURVE_SECG_T193R1;  // (TLS-4)
         // Can't get to curve SECG T-193R2 // (TLS-5)
 	    break;
 	case 208:
-	    oid = CURVE_ANSI_PNB208W1;
+	    oid = ECOIDs.CURVE_ANSI_PNB208W1;
 	    break;
 	case 224:
-	    oid = CURVE_SECG_P224R1; // == NIST P-224 == WTLS-12 (TLS-21)
+	    oid = ECOIDs.CURVE_SECG_P224R1; // == NIST P-224 == WTLS-12 (TLS-21)
         // Can't get to curve SECG P-224K1 (TLS-20)
 	    break;
 	case 233:
-	    oid = CURVE_SECG_T233R1; // == NIST B-233 == WTLS-11 (TLS-7)
+	    oid = ECOIDs.CURVE_SECG_T233R1; // == NIST B-233 == WTLS-11 (TLS-7)
         // Can't get to curve SECG T-233K1 == NIST K-233 == WTLS-10 (TLS-6)
 	    break;
 	case 239:
-	    oid = CURVE_SECG_T239K1; // (TLS8)
+	    oid = ECOIDs.CURVE_SECG_T239K1; // (TLS8)
         // Can't get to curve ANSI P-239V1
         // Can't get to curve ANSI P-239V2
 	// Can't get to curve ANSI P-239V3
@@ -874,40 +737,40 @@ public final class PK11KeyPairGenerator
 	// Can't get to curve ANSI C2-ONB239V5
 	    break;
 	case 256:
-	    oid = CURVE_ANSI_P256V1; // == NIST P-256 == SECG P-256R1 (TLS-23)
+	    oid = ECOIDs.CURVE_ANSI_P256V1; // == NIST P-256 == SECG P-256R1 (TLS-23)
 	// Can't get to curve SECG P-256K1 (TLS-22)
 	    break;
 	case 272:
-	    oid = CURVE_ANSI_PNB272W1;
+	    oid = ECOIDs.CURVE_ANSI_PNB272W1;
 	    break;
 	case 283:
-	    oid = CURVE_SECG_T283R1; // == NIST B-283 (TLS-10)
+	    oid = ECOIDs.CURVE_SECG_T283R1; // == NIST B-283 (TLS-10)
         // Can't get to curve SECG T-283K1 == NIST K-283 (TLS-9)
 	    break;
 	case 304:
-	    oid = CURVE_ANSI_PNB304W1;
+	    oid = ECOIDs.CURVE_ANSI_PNB304W1;
 	    break;
 	case 359:
-	    oid = CURVE_ANSI_TNB359V1;
+	    oid = ECOIDs.CURVE_ANSI_TNB359V1;
 	    break;
 	case 368:
-	    oid = CURVE_ANSI_PNB368W1;
+	    oid = ECOIDs.CURVE_ANSI_PNB368W1;
 	    break;
 	case 384:
-	    oid = CURVE_SECG_P384R1; // == NIST P-384 (TLS-24)
+	    oid = ECOIDs.CURVE_SECG_P384R1; // == NIST P-384 (TLS-24)
 	    break;
 	case 409:
-	    oid = CURVE_SECG_T409R1; // == NIST B-409 (TLS-12)
+	    oid = ECOIDs.CURVE_SECG_T409R1; // == NIST B-409 (TLS-12)
         // Can't get to curve SECG T-409K1 == NIST K-409 (TLS-11)
 	    break;
 	case 431:
-	    oid = CURVE_ANSI_TNB431R1;
+	    oid = ECOIDs.CURVE_ANSI_TNB431R1;
 	    break;
 	case 521:
-	    oid = CURVE_SECG_P521R1; // == NIST P-521 (TLS-25)
+	    oid = ECOIDs.CURVE_SECG_P521R1; // == NIST P-521 (TLS-25)
 	    break;
 	case 571:
-	    oid = CURVE_SECG_T571R1; // == NIST B-571 (TLS-14)
+	    oid = ECOIDs.CURVE_SECG_T571R1; // == NIST B-571 (TLS-14)
         // Can't get to curve SECG T-571K1 == NIST K-571 (TLS-13)
 	    break;
 	default:

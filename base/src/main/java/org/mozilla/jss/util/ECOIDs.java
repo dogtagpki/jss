@@ -53,4 +53,24 @@ public class ECOIDs {
     public static final OBJECT_IDENTIFIER CURVE_SECG_P256K1 = SECG_EC_CURVE.subBranch(10);
     public static final OBJECT_IDENTIFIER CURVE_SECG_P384R1 = SECG_EC_CURVE.subBranch(34);
     public static final OBJECT_IDENTIFIER CURVE_SECG_P521R1 = SECG_EC_CURVE.subBranch(35);
+
+    // SEG Binary curves
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T113R1 = SECG_EC_CURVE.subBranch(4);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T113R2 = SECG_EC_CURVE.subBranch(5);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T131R1 = SECG_EC_CURVE.subBranch(22);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T131R2 = SECG_EC_CURVE.subBranch(23);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T163K1 = SECG_EC_CURVE.subBranch(1);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T163R1 = SECG_EC_CURVE.subBranch(2);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T163R2 = SECG_EC_CURVE.subBranch(15);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T193R1 = SECG_EC_CURVE.subBranch(24);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T193R2 = SECG_EC_CURVE.subBranch(25);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T233K1 = SECG_EC_CURVE.subBranch(26);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T233R1 = SECG_EC_CURVE.subBranch(27);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T239K1 = SECG_EC_CURVE.subBranch(3);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T283K1 = SECG_EC_CURVE.subBranch(16);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T283R1 = SECG_EC_CURVE.subBranch(17);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T409K1 = SECG_EC_CURVE.subBranch(36);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T409R1 = SECG_EC_CURVE.subBranch(37);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T571K1 = SECG_EC_CURVE.subBranch(38);
+    public static final OBJECT_IDENTIFIER CURVE_SECG_T571R1 = SECG_EC_CURVE.subBranch(39);
 }
