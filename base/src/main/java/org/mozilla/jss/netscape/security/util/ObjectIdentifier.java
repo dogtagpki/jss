@@ -20,7 +20,8 @@ package org.mozilla.jss.netscape.security.util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -42,7 +43,7 @@ import java.util.StringTokenizer;
  * @author Amit Kapoor
  * @author Hemma Prafullchandra
  */
-final public class ObjectIdentifier implements Serializable {
+public final class ObjectIdentifier implements Serializable {
     /** use serialVersionUID from JDK 1.1. for interoperability */
     private static final long serialVersionUID = 8697030238860181294L;
 
@@ -83,7 +84,7 @@ final public class ObjectIdentifier implements Serializable {
      * Constructs an object ID from an array of integers. This
      * is used to construct constant object IDs.
      */
-    public ObjectIdentifier(int values[]) {
+    public ObjectIdentifier(int[] values) {
         try {
             componentLen = values.length;
             BigInteger[] tmp = new BigInteger[componentLen];
@@ -93,12 +94,12 @@ final public class ObjectIdentifier implements Serializable {
             }
 
             components = tmp.clone();
-        } catch (Throwable t) {
+        } catch (Exception t) {
             System.out.println("X509.ObjectIdentifier(), no cloning!");
         }
     }
 
-    public ObjectIdentifier(BigInteger values[]) {
+    public ObjectIdentifier(BigInteger[] values) {
         try {
             componentLen = values.length;
 
@@ -111,7 +112,7 @@ final public class ObjectIdentifier implements Serializable {
 
             components = tmp.clone();
 
-        } catch(Throwable t) {
+        } catch(Exception t) {
             System.out.println("X509.ObjectIdentifier(), no cloning!");
         }
     }
@@ -120,7 +121,7 @@ final public class ObjectIdentifier implements Serializable {
      * Constructs an object ID from an array of longs This
      * is used to construct constant object IDs.
      */
-    public ObjectIdentifier(long values[]) {
+    public ObjectIdentifier(long[] values) {
         try {
             componentLen = values.length;
             BigInteger[] tmp = new BigInteger[componentLen];
@@ -130,7 +131,7 @@ final public class ObjectIdentifier implements Serializable {
             }
 
             components = tmp.clone();
-        } catch (Throwable t) {
+        } catch (Exception t) {
             System.out.println("X509.ObjectIdentifier(), no cloning!");
         }
     }
@@ -150,7 +151,7 @@ final public class ObjectIdentifier implements Serializable {
      */
     public ObjectIdentifier(DerInputStream in)
             throws IOException {
-        byte type_id;
+        byte typeId;
         int bufferEnd;
 
         /*
@@ -162,11 +163,11 @@ final public class ObjectIdentifier implements Serializable {
          * up so that we can use in.available() to check for the end of
          * this value in the data stream.
          */
-        type_id = (byte) in.getByte();
-        if (type_id != DerValue.tag_ObjectId)
+        typeId = (byte) in.getByte();
+        if (typeId != DerValue.tag_ObjectId)
             throw new IOException(
                     "X509.ObjectIdentifier() -- data isn't an object ID"
-                            + " (tag = " + type_id + ")");
+                            + " (tag = " + typeId + ")");
 
         bufferEnd = in.available() - in.getLength() - 1;
         if (bufferEnd < 0)
@@ -196,13 +197,14 @@ final public class ObjectIdentifier implements Serializable {
          * temporary buffer, resizing it as needed.
          */
         BigInteger component;
-        boolean first_subid = true;
+        boolean firstSubid = true;
 
-        for (components = new BigInteger[allocationQuantum], componentLen = 0; in.available() > bufferEnd;) {
+        for (components = new BigInteger[ALLOCATION_QUANTUM], componentLen = 0; in.available() > bufferEnd;) {
             component = getComponentBigInt(in);
 
-            if (first_subid) {
-                long X, Y;
+            if (firstSubid) {
+                long x;
+                long y;
 
                 /*
                  * The ISO root has three children (0, 1, 2) and those nodes
@@ -214,18 +216,18 @@ final public class ObjectIdentifier implements Serializable {
                  * we don't have to reallocate here!
                  */
                 if (component.intValue() < 40)
-                    X = 0;
+                    x = 0;
                 else if (component.intValue() < 80)
-                    X = 1;
+                    x = 1;
                 else
-                    X = 2;
-                Y = component.intValue() - (X * 40);
+                    x = 2;
+                y = component.intValue() - (x * 40);
 
-                components[0] = BigInteger.valueOf(X);
-                components[1] = BigInteger.valueOf(Y);
+                components[0] = BigInteger.valueOf(x);
+                components[1] = BigInteger.valueOf(y);
                 componentLen = 2;
 
-                first_subid = false;
+                firstSubid = false;
 
             } else {
 
@@ -234,13 +236,13 @@ final public class ObjectIdentifier implements Serializable {
                  * potential trouble is the need to grow the array.
                  */
                 if (componentLen >= components.length) {
-                    BigInteger tmp_components[];
+                    BigInteger[] tmpComponents;
 
-                    tmp_components = new BigInteger[components.length
-                            + allocationQuantum];
-                    System.arraycopy(components, 0, tmp_components, 0,
+                    tmpComponents = new BigInteger[components.length
+                            + ALLOCATION_QUANTUM];
+                    System.arraycopy(components, 0, tmpComponents, 0,
                             components.length);
-                    components = tmp_components;
+                    components = tmpComponents;
                 }
                 components[componentLen++] = component;
             }
@@ -303,11 +305,10 @@ final public class ObjectIdentifier implements Serializable {
      * big-endian form, so it buffers the output until it's ready.
      * (Minimum length encoding is a DER requirement.)
      */
-    private static void putComponentBigInt(DerOutputStream out, BigInteger val)
-            throws IOException {
+    private static void putComponentBigInt(DerOutputStream out, BigInteger val) {
         int i;
         int blockSize = 100;
-        byte buf[] = new byte[blockSize];
+        byte[] buf = new byte[blockSize];
 
         BigInteger bigInt7f = BigInteger.valueOf(0x7f);
 
@@ -354,10 +355,7 @@ final public class ObjectIdentifier implements Serializable {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof ObjectIdentifier)
-            return equals((ObjectIdentifier) other);
-        else
-            return false;
+        return other instanceof ObjectIdentifier oi && equals(oi);
     }
 
     /**
@@ -401,7 +399,7 @@ final public class ObjectIdentifier implements Serializable {
      */
     @Override
     public String toString() {
-        StringBuffer retval = new StringBuffer();
+        StringBuilder retval = new StringBuilder();
 
         int i;
 
@@ -418,10 +416,10 @@ final public class ObjectIdentifier implements Serializable {
      * larger than 64 bits.  Then we represent the path from the root as
      * an array that's (usually) only filled at the beginning.
      */
-    private BigInteger components[]; // path from root
+    private BigInteger[] components; // path from root
     private int componentLen; // how much is used.
 
-    private static final int allocationQuantum = 5; // >= 2
+    private static final int ALLOCATION_QUANTUM = 5; // >= 2
 
     /**
      * Netscape Enhancement:
@@ -434,7 +432,7 @@ final public class ObjectIdentifier implements Serializable {
      * This function never returns null. IOException is raised
      * in error conditions.
      */
-    public static Hashtable<String, ObjectIdentifier> mOIDs = new Hashtable<>();
+    private static Map<String, ObjectIdentifier> mOIDs = new HashMap<>();
 
     public static ObjectIdentifier getObjectIdentifier(String oid)
             throws IOException {
@@ -452,25 +450,23 @@ final public class ObjectIdentifier implements Serializable {
         StringTokenizer token = new StringTokenizer(oid, ".");
         value = Integer.valueOf(token.nextToken());
         /* First token should be 0, 1, 2 */
-        if (value >= 0 && value <= 2) {
-            value = Integer.valueOf(token.nextToken());
-            /* Second token should be 0 <= && >= 39 */
-            if (value >= 0 && value <= 39) {
-                thisOID = new ObjectIdentifier(oid);
-                if (thisOID.toString().equals(oid)) {
-                    mOIDs.put(oid, thisOID);
-                    return thisOID;
-                }
-                throw new IOException("invalid oid " + oid);
-            } else
-                throw new IOException("invalid oid " + oid);
-        } else
+        if (value < 0 || value > 2)
             throw new IOException("invalid oid " + oid);
+        value = Integer.valueOf(token.nextToken());
+        /* Second token should be 0 <= && >= 39 */
+        if (value < 0 || value > 39)
+            throw new IOException("invalid oid " + oid);
+        thisOID = new ObjectIdentifier(oid);
+        if (thisOID.toString().equals(oid)) {
+            mOIDs.put(oid, thisOID);
+            return thisOID;
+        }
+        throw new IOException("invalid oid " + oid);
     }
 
-    public static ObjectIdentifier getObjectIdentifier(int values[])
+    public static ObjectIdentifier getObjectIdentifier(int[] values)
             throws IOException {
-        StringBuffer retval = new StringBuffer();
+        StringBuilder retval = new StringBuilder();
         int i;
 
         for (i = 0; i < values.length; i++) {
