@@ -52,7 +52,7 @@ public class CertTemplate implements ASN1Value {
      * Creates an empty CertTemplate. Use the accessor methods to fill it
      * up with stuff.
      */
-    public CertTemplate() { }
+    public CertTemplate() { /* Prevent instantiation */ }
 
     /**
      * Returns true if the version field is present.
@@ -282,11 +282,7 @@ public class CertTemplate implements ASN1Value {
      * Returns the number of extensions present in the template.  May be zero.
      */
     public int numExtensions() {
-        if(extensions == null) {
-            return 0;
-        } else {
-            return extensions.size();
-        }
+        return extensions == null ? 0 : extensions.size();
     }
 
     /**
@@ -301,13 +297,7 @@ public class CertTemplate implements ASN1Value {
         return (Extension) extensions.elementAt(idx);
     }
 
-    public void print(PrintStream ps, int indentSpaces)
-            throws InvalidBERException, IOException {
-        StringBuffer indentBuf = new StringBuffer();
-        for(int i=0; i < indentSpaces; i++) {
-            indentBuf.append(" ");
-        }
-        String indent = indentBuf.toString();
+    public void print(PrintStream ps) throws InvalidBERException {
 
         if(version!=null) {
             ps.println("Version: "+version.toString());
@@ -369,11 +359,7 @@ public class CertTemplate implements ASN1Value {
         }
         Calendar cal = Calendar.getInstance( TimeZone.getTimeZone("GMT") );
         cal.setTime(d);
-        if( cal.get(Calendar.YEAR) <= UTCTIME_CUTOFF_YEAR) {
-            return new UTCTime(d);
-        } else {
-            return new GeneralizedTime(d);
-        }
+        return cal.get(Calendar.YEAR) <= UTCTIME_CUTOFF_YEAR ? new UTCTime(d) : new GeneralizedTime(d);
     }
 
     @Override
@@ -493,16 +479,16 @@ public class CertTemplate implements ASN1Value {
                 if( explicit != null ) {
                     choice = (CHOICE) explicit.getContent();
                     val = choice.getValue();
-                    if( val instanceof TimeBase ) {
-                        ct.setNotBefore( ((TimeBase)val).toDate() );
+                    if( val instanceof TimeBase tb) {
+                        ct.setNotBefore(tb.toDate());
                     }
                 }
                 explicit = (EXPLICIT) ((SEQUENCE)seq.elementAt(4)).elementAt(1);
                 if( explicit != null ) {
                     choice = (CHOICE) explicit.getContent();
                     val = choice.getValue();
-                    if( val instanceof TimeBase ) {
-                        ct.setNotAfter( ((TimeBase)val).toDate() );
+                    if( val instanceof TimeBase tb) {
+                        ct.setNotAfter(tb.toDate());
                     }
                 }
             }
@@ -519,7 +505,7 @@ public class CertTemplate implements ASN1Value {
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
       try {
 
@@ -547,13 +533,13 @@ public class CertTemplate implements ASN1Value {
             fos.write(encoded);
         }
 
-        ct.print(System.out, 0);
+        ct.print(System.out);
 
         CertTemplate newCt = (CertTemplate) ASN1Util.decode(
                 CertTemplate.getTemplate(), encoded );
 
         System.out.println("\nDecoded CertTemplate:");
-        newCt.print(System.out, 0);
+        newCt.print(System.out);
 
       } catch( Exception e ) {
             e.printStackTrace();
