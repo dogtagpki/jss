@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>5.4.0-SNAPSHOT</revision>
+        <revision>5.5.0-SNAPSHOT</revision>
         <sonar.organization>dogtagpki</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.c.file.suffixes>-</sonar.c.file.suffixes>
