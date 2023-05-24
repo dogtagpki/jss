@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.mozilla.jss.netscape.security.extensions.AuthInfoAccessExtension;
+import org.mozilla.jss.netscape.security.extensions.SubjectInfoAccessExtension;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 
 /**
@@ -64,6 +65,8 @@ public class OIDMap {
                                           SubjectKeyIdentifierExtension.NAME;
     private static final String AUTHORITY_INFORMATION_ACCESS_IDENTIFIER = ROOT + "." +
                                           AuthInfoAccessExtension.NAME;
+    private static final String SUBJECT_INFORMATION_ACCESS_IDENTIFIER = ROOT + "." +
+                                          SubjectInfoAccessExtension.NAME;
     private static final String KEY_USAGE = ROOT + "." +
                                           KeyUsageExtension.NAME;
     private static final String PRIVATE_KEY_USAGE = ROOT + "." +
@@ -110,6 +113,7 @@ public class OIDMap {
     private static void loadNamesDefault(Properties props) {
         props.put(SUB_KEY_IDENTIFIER, "2.5.29.14");
         props.put(AUTHORITY_INFORMATION_ACCESS_IDENTIFIER, "1.3.6.1.5.5.7.1.1");
+        props.put(SUBJECT_INFORMATION_ACCESS_IDENTIFIER, "1.3.6.1.5.5.7.1.11");
         props.put(KEY_USAGE, "2.5.29.15");
         props.put(PRIVATE_KEY_USAGE, "2.5.29.16");
         props.put(SUB_ALT_NAME, "2.5.29.17");
@@ -134,6 +138,8 @@ public class OIDMap {
                   "org.mozilla.jss.netscape.security.x509.SubjectKeyIdentifierExtension");
         props.put(AUTHORITY_INFORMATION_ACCESS_IDENTIFIER,
                  "org.mozilla.jss.netscape.security.extensions.AuthInfoAccessExtension");
+        props.put(SUBJECT_INFORMATION_ACCESS_IDENTIFIER,
+                "org.mozilla.jss.netscape.security.extensions.SubjectInfoAccessExtension");
         props.put(KEY_USAGE,
                   "org.mozilla.jss.netscape.security.x509.KeyUsageExtension");
         props.put(PRIVATE_KEY_USAGE,
