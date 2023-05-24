@@ -28,6 +28,7 @@ import org.mozilla.jss.crypto.PQGParams;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.util.IncorrectPasswordException;
 import org.mozilla.jss.util.NotImplementedException;
 import org.mozilla.jss.util.NullPasswordCallback;
@@ -526,9 +527,7 @@ public final class PK11Token implements CryptoToken {
 						throw e;
 					}
 
-					return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
-							pk10String +
-							"\n-----END NEW CERTIFICATE REQUEST-----");
+					return Cert.REQUEST_HEADER + "\n"+ pk10String + "\n" + Cert.REQUEST_FOOTER;
 				} else if ((P == null) || (Q == null) || (G == null)) {
 					throw new InvalidParameterException("need all P, Q, and G");
 				}
@@ -545,9 +544,7 @@ public final class PK11Token implements CryptoToken {
 				throw e;
 			}
 
-			return ("-----BEGIN NEW CERTIFICATE REQUEST-----\n"+
-					pk10String +
-					"\n-----END NEW CERTIFICATE REQUEST-----");
+			return Cert.REQUEST_HEADER + "\n"+  pk10String + "\n" + Cert.REQUEST_FOOTER;
 	}
 
 	protected native String generatePK10(String subject, int keysize,
