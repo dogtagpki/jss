@@ -1588,6 +1588,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (is_outbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
+            if(as_server) {
+                // If is_outbound_closed is true there is no need to wait
+                // for the receipt the peer's close_notify message.
+                closeInbound();
+            }
         }
 
         debug("JSSEngine.wrap() - Finished");
@@ -1698,7 +1703,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     protected void finalize() {
         cleanup();
     }
-
 
     private class CertValidationTask extends CertAuthHandler {
         public CertValidationTask(SSLFDProxy fd) {
