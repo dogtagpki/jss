@@ -207,13 +207,13 @@ PK11SymKey *CreateDesKey24Byte(PK11SlotInfo *slot, PK11SymKey *origKey) {
     if (  slot == NULL || origKey == NULL || internal == NULL )
         goto loser;
 
-    PR_fprintf(PR_STDOUT,"In SessionKey CreateDesKey24Bit!\n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey CreateDesKey24Bit!\n");
 
     if( internal != slot ) {  //Make sure we do this on the NSS Generic Crypto services because concatanation
-        PR_fprintf(PR_STDOUT,"CreateDesKey24Bit! Input key not on internal slot!\n");
+        // PR_fprintf(PR_STDOUT,"CreateDesKey24Bit! Input key not on internal slot!\n");
         internalOrigKey = PK11_MoveSymKey( internal, CKA_ENCRYPT, 0, PR_FALSE, origKey );
         if(internalOrigKey == NULL) {
-            PR_fprintf(PR_STDOUT,"CreateDesKey24Bit! Can't move input key to internal!\n");
+            // PR_fprintf(PR_STDOUT,"CreateDesKey24Bit! Can't move input key to internal!\n");
             goto loser;
         }
     }
@@ -230,7 +230,7 @@ PK11SymKey *CreateDesKey24Byte(PK11SlotInfo *slot, PK11SymKey *origKey) {
         firstEight = PK11_Derive(origKey, CKM_EXTRACT_KEY_FROM_KEY, &paramsItem, CKA_ENCRYPT , CKA_DERIVE, EIGHT_BYTES);
 
     if (firstEight  == NULL ) {
-        PR_fprintf(PR_STDOUT,"CreateDesKey24Bit! Can't extract first 8 bits of input key!\n");
+        // PR_fprintf(PR_STDOUT,"CreateDesKey24Bit! Can't extract first 8 bits of input key!\n");
         goto loser;
     }
 
@@ -247,7 +247,7 @@ PK11SymKey *CreateDesKey24Byte(PK11SlotInfo *slot, PK11SymKey *origKey) {
     }
 
     if ( concatKey == NULL ) {
-         PR_fprintf(PR_STDOUT,"CreateDesKey24Bit: error concatenating 8 bytes on end of key.");
+         // PR_fprintf(PR_STDOUT,"CreateDesKey24Bit: error concatenating 8 bytes on end of key.");
         goto loser;
     }
 
@@ -257,7 +257,7 @@ PK11SymKey *CreateDesKey24Byte(PK11SlotInfo *slot, PK11SymKey *origKey) {
     newKey =  PK11_MoveSymKey ( slot, CKA_ENCRYPT, 0, PR_FALSE, concatKey);
 
     if ( newKey == NULL ) {
-       PR_fprintf(PR_STDOUT,"CreateDesKey24Bit: error moving key to original slot.");
+       // PR_fprintf(PR_STDOUT,"CreateDesKey24Bit: error moving key to original slot.");
     }
 
 loser:
@@ -544,7 +544,7 @@ PK11SymKey *ComputeCardKey(PK11SymKey *masterKey, unsigned char *data, PK11SlotI
     unsigned char wrappedkey[DES3_LENGTH];
     SECItem wrappeditem = { siBuffer, NULL, 0 };
 
-    PR_fprintf(PR_STDOUT,"ComputeCardKey: protocol %d.\n",protocol);
+    // PR_fprintf(PR_STDOUT,"ComputeCardKey: protocol %d.\n",protocol);
 
     keyData = (unsigned char*)malloc(keysize);
 
@@ -833,7 +833,7 @@ PRStatus CreateKeySetDataWithSymKeys( Buffer &newMasterVer,const Buffer &old_kek
     Buffer *dumpBuffer = NULL;
     int showDerivedKeys = 0;
 
-    PR_fprintf(PR_STDOUT,"In CreateKeySetDataWithSymKeys! Protocol: %d \n",protocol);
+    // PR_fprintf(PR_STDOUT,"In CreateKeySetDataWithSymKeys! Protocol: %d \n",protocol);
 
     if ( new_auth_key == NULL || new_mac_key == NULL || new_kek_key == NULL) {
         return rv;
@@ -856,13 +856,13 @@ PRStatus CreateKeySetDataWithSymKeys( Buffer &newMasterVer,const Buffer &old_kek
             wrappingKey = CreateUnWrappedSymKeyOnToken( slot, transportKey,  masterKeyData, sizeof(masterKeyData), PR_FALSE);
 
         } else { /* card key mode */
-            PR_fprintf(PR_STDOUT,"In CreateKeySetDataWithSymKeys: SCP01 card key mode.\n");
+            // PR_fprintf(PR_STDOUT,"In CreateKeySetDataWithSymKeys: SCP01 card key mode.\n");
             wrappingKey = old_kek_key2_sym;
         }
 
    } else if(protocol == 2) {
 
-       PR_fprintf(PR_STDOUT,"In CreateKeySetDataWithSymKeys: Using dekKey from SCP02 for wrapping key.\n");
+       // PR_fprintf(PR_STDOUT,"In CreateKeySetDataWithSymKeys: Using dekKey from SCP02 for wrapping key.\n");
 
 
        // Use the unwapped SCP02 DEK sym key pointer.
@@ -1242,7 +1242,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
         goto done;
     }
 
-    PR_fprintf(PR_STDOUT,"In SessionKey.DiversifyKey! Protocol: %d \n", protocol);
+    // PR_fprintf(PR_STDOUT,"In SessionKey.DiversifyKey! Protocol: %d \n", protocol);
 
     // AC: KDF SPEC CHANGE:
     // Changed from "cuidValue" to "kddValue".
@@ -1255,7 +1255,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
     {
         tokenNameChars = (char *)(env)->GetStringUTFChars(tokenName, NULL);
         slot = ReturnSlot(tokenNameChars);
-        PR_fprintf(PR_STDOUT,"DiversifyKey: tokenNameChars %s slot %p \n", tokenNameChars,slot);
+        // PR_fprintf(PR_STDOUT,"DiversifyKey: tokenNameChars %s slot %p \n", tokenNameChars,slot);
         if( tokenNameChars != NULL) {
             (env)->ReleaseStringUTFChars(tokenName, (const char *)tokenNameChars);
         }
@@ -1268,13 +1268,13 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
     }
     /* fullNewMasterKeyName - no prefix #02#01 */
     getFullName(fullNewMasterKeyName,newMasterKeyNameChars);
-    PR_fprintf(PR_STDOUT,"DiversifyKey: fullNewMasterKeyName %s . \n", fullNewMasterKeyName);
+    // PR_fprintf(PR_STDOUT,"DiversifyKey: fullNewMasterKeyName %s . \n", fullNewMasterKeyName);
 
     if(newTokenName)
     {
         newTokenNameChars = (char *)(env)->GetStringUTFChars(newTokenName, NULL);
         newSlot = ReturnSlot(newTokenNameChars);
-        PR_fprintf(PR_STDOUT,"DiversifyKey: newTokenNameChars %s newSlot %p . \n", newTokenNameChars,newSlot);
+        // PR_fprintf(PR_STDOUT,"DiversifyKey: newTokenNameChars %s newSlot %p . \n", newTokenNameChars,newSlot);
         if( newTokenNameChars != NULL) {
             (env)->ReleaseStringUTFChars(newTokenName, (const char *)newTokenNameChars);
         }
@@ -1340,10 +1340,10 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
     if(oldMasterKeyName)
     {
         oldMasterKeyNameChars = (char *)(env)->GetStringUTFChars(oldMasterKeyName, NULL);
-        PR_fprintf(PR_STDOUT,"DiversifyKey oldMasterKeyNameChars %s \n", oldMasterKeyNameChars);
+        // PR_fprintf(PR_STDOUT,"DiversifyKey oldMasterKeyNameChars %s \n", oldMasterKeyNameChars);
     }
     getFullName(fullMasterKeyName,oldMasterKeyNameChars);
-    PR_fprintf(PR_STDOUT,"DiversifyKey fullMasterKeyName %s \n", fullMasterKeyName);
+    // PR_fprintf(PR_STDOUT,"DiversifyKey fullMasterKeyName %s \n", fullMasterKeyName);
     if(newSlot == NULL) {
         newSlot = slot;
     }
@@ -1369,7 +1369,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
             // if old key version meets setting value, use NIST SP800-108 KDF for deriving old keys
             if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, oldKeyVersion) == true){
 
-                PR_fprintf(PR_STDOUT,"DiversifyKey old key NistSP800_108KDF code: Using NIST SP800-108 KDF for old keyset.\n");
+                // PR_fprintf(PR_STDOUT,"DiversifyKey old key NistSP800_108KDF code: Using NIST SP800-108 KDF for old keyset.\n");
 
                 // react to "UseCUIDAsKDD" setting value
                 jbyte* context_jbyte = NULL;
@@ -1409,7 +1409,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
             // if not a key version where we use the NIST SP800-108 KDF, use the original KDF
             }else{
 
-                PR_fprintf(PR_STDOUT,"DiversifyKey old key NistSP800_108KDF code: Using original KDF for old keyset.\n");
+                // PR_fprintf(PR_STDOUT,"DiversifyKey old key NistSP800_108KDF code: Using original KDF for old keyset.\n");
 
                 // AC: Derives the kek key for the token.
                 old_kek_sym_key = ComputeCardKeyOnToken(oldMasterKey,KDCkek,1);
@@ -1421,7 +1421,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
 
             Buffer dek_key_buf    =   Buffer((BYTE*)old_kek_key, 16);
 
-            PR_fprintf(PR_STDOUT,"DiversifyKey: protocol is 2 import wrapped dek key. \n");
+            // PR_fprintf(PR_STDOUT,"DiversifyKey: protocol is 2 import wrapped dek key. \n");
             dek_key_buf.dump();
             transportKey = ReturnSymKey( slot, GetSharedSecretKeyName(NULL));
 
@@ -1463,7 +1463,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
         if ( encKey == NULL ) {
             goto done;
         }
-        PR_fprintf(PR_STDOUT, "Special case dev key set for DiversifyKey!\n");
+        // PR_fprintf(PR_STDOUT, "Special case dev key set for DiversifyKey!\n");
 
         macKey = ReturnDeveloperSymKey(internal, (char *) "mac", keySetString, empty);
         if ( macKey == NULL ) {
@@ -1477,7 +1477,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
         }
 
     } else {
-        PR_fprintf(PR_STDOUT,"DiversifyKey: Compute card key on token case ! \n");
+        // PR_fprintf(PR_STDOUT,"DiversifyKey: Compute card key on token case ! \n");
 
         // ---------------------------------
         // AC KDF SPEC CHANGE: Determine which KDF to use.
@@ -1485,7 +1485,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
         // if old key version meets setting value, use NIST SP800-108 KDF for deriving new keys
         if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, newKeyVersion) == true){
 
-            PR_fprintf(PR_STDOUT,"DiversifyKey new key NistSP800_108KDF code: Using NIST SP800-108 KDF for new keyset.\n");
+            // PR_fprintf(PR_STDOUT,"DiversifyKey new key NistSP800_108KDF code: Using NIST SP800-108 KDF for new keyset.\n");
 
             // react to "UseCUIDAsKDD" setting value
             jbyte* context_jbyte = NULL;
@@ -1525,7 +1525,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
         // if not a key version where we use the NIST SP800-108 KDF, use the original KDF
         }else{
 
-            PR_fprintf(PR_STDOUT,"DiversifyKey new key NistSP800_108KDF code: Using original KDF for new keyset.\n");
+            // PR_fprintf(PR_STDOUT,"DiversifyKey new key NistSP800_108KDF code: Using original KDF for new keyset.\n");
 
             // AC: Derives the kek key for the token.
             /* compute card key */
@@ -1715,8 +1715,7 @@ PK11SymKey *CreateUnWrappedSymKeyOnToken( PK11SlotInfo *slot, PK11SymKey * unWra
     PK11SymKey *unwrapper = NULL;
     PK11SymKey *unwrapped24Key = NULL;
 
-    PR_fprintf( PR_STDOUT,
-        "Creating UnWrappedSymKey on  token. \n");
+    // PR_fprintf( PR_STDOUT, "Creating UnWrappedSymKey on  token. \n");
 
      if ( (slot == NULL) || (unWrappingKey == NULL) ||
            (keyToBeUnWrapped == NULL) ||
@@ -1751,8 +1750,7 @@ PK11SymKey *CreateUnWrappedSymKeyOnToken( PK11SlotInfo *slot, PK11SymKey * unWra
         goto done;
     }
 
-     PR_fprintf( PR_STDOUT,
-        "Creating UnWrappedSymKey on  token. final len %d \n", final_len);
+    // PR_fprintf( PR_STDOUT, "Creating UnWrappedSymKey on  token. final len %d \n", final_len);
 
 
     if ( final_len != DES3_LENGTH && final_len != DES2_LENGTH) {
@@ -1808,8 +1806,7 @@ done:
         unwrapKeySlot = NULL;
     }
 
-    PR_fprintf( PR_STDOUT,
-        "UnWrappedSymKey on token result: %p \n",unWrappedSymKey);
+    // PR_fprintf( PR_STDOUT, "UnWrappedSymKey on token result: %p \n",unWrappedSymKey);
 
     return unWrappedSymKey;
 }
@@ -1831,13 +1828,13 @@ PK11SymKey *ReturnDeveloperSymKey(PK11SlotInfo *slot, char *keyType, char *keySe
 
     snprintf(devKeyName,maxKeyNameSize,"%s-%sKey", keySet, keyType);
 
-    PR_fprintf(PR_STDOUT,"ReturnDeveloperSymKey! trying to find key %s. \n",devKeyName);
+    // PR_fprintf(PR_STDOUT,"ReturnDeveloperSymKey! trying to find key %s. \n",devKeyName);
 
     devSymKey = ReturnSymKey( slot, devKeyName );
 
     // Try to create the key once and leave it there.
     if( devSymKey == NULL ) {
-        PR_fprintf(PR_STDOUT, "Can't find devSymKey, try to create it on token. \n");
+        // PR_fprintf(PR_STDOUT, "Can't find devSymKey, try to create it on token. \n");
         if ( inputKey.size() == DES2_LENGTH ) { //Any other size ignored
             transportKey = ReturnSymKey( slot, GetSharedSecretKeyName(NULL));
 
@@ -1866,7 +1863,7 @@ PK11SymKey *ReturnDeveloperSymKey(PK11SlotInfo *slot, char *keyType, char *keySe
                 }
             }
         } else {
-             PR_fprintf(PR_STDOUT,"ReturnDeveloperSymKey! input key size %d. \n",inputKey.size());
+             // PR_fprintf(PR_STDOUT,"ReturnDeveloperSymKey! input key size %d. \n",inputKey.size());
         }
 
     }
@@ -1936,8 +1933,7 @@ PK11SymKey *UnwrapWrappedSymKeyOnToken( PK11SlotInfo *slot, PK11SymKey * unWrapp
     PK11SymKey *unwrapped24Key = NULL;
 
 
-    PR_fprintf( PR_STDOUT,
-        "Creating UnWrappedSymKey on  token. UnwrapWrappedSymKeyOnToken.  \n");
+    // PR_fprintf( PR_STDOUT, "Creating UnWrappedSymKey on  token. UnwrapWrappedSymKeyOnToken.  \n");
 
     if ( (slot == NULL) || (unWrappingKey == NULL) || (wrappedKeyData == NULL))
     {
@@ -1945,8 +1941,8 @@ PK11SymKey *UnwrapWrappedSymKeyOnToken( PK11SlotInfo *slot, PK11SymKey * unWrapp
     }
 
     if(sizeOfWrappedKey == DES2_LENGTH) {
-       PR_fprintf( PR_STDOUT,
-        "UnwrapWrappedSymKeyOnToken . Given 16 byte encrypted key will have to derive a 24 byte on later. \n");
+       // PR_fprintf( PR_STDOUT,
+       //  "UnwrapWrappedSymKeyOnToken . Given 16 byte encrypted key will have to derive a 24 byte on later. \n");
    }
 
    PK11SlotInfo *unwrapKeySlot = PK11_GetSlotFromKey( unWrappingKey );
@@ -2011,8 +2007,8 @@ done:
         unWrappedSymKey = unwrapped24Key;
     }
 
-    PR_fprintf( PR_STDOUT,
-        "UnwrapWrappedSymKey on token result: %p \n",unWrappedSymKey);
+    // PR_fprintf( PR_STDOUT,
+    //     "UnwrapWrappedSymKey on token result: %p \n",unWrappedSymKey);
 
 
     return unWrappedSymKey;
