@@ -396,9 +396,9 @@ PK11SymKey *DeriveKeySCP02(PK11SymKey *cardKey, const Buffer& sequenceCounter, c
          goto done;
     }
 
-    PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! \n");
-    PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! seqCounter[0] : %d sequenceCounter [1] : %d \n", sequenceCounter[0], sequenceCounter[1]);
-    PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! derivationConstant[0] : %x derivationConstant[1] : %x \n", derivationConstant[0], derivationConstant[1]);
+    // PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! \n");
+    // PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! seqCounter[0] : %d sequenceCounter [1] : %d \n", sequenceCounter[0], sequenceCounter[1]);
+    // PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! derivationConstant[0] : %x derivationConstant[1] : %x \n", derivationConstant[0], derivationConstant[1]);
 
     master = cardKey;
 
@@ -435,7 +435,7 @@ PK11SymKey *DeriveKeySCP02(PK11SymKey *cardKey, const Buffer& sequenceCounter, c
 
          key = CreateUnWrappedSymKeyOnToken( slot,  master, &derivationData[0] , DES3_LENGTH, PR_FALSE );
 
-          PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! calculated key: %p  \n", key);
+          // PR_fprintf(PR_STDOUT,"In DeriveKeySCP02! calculated key: %p  \n", key);
     }
 
     done:
@@ -485,7 +485,7 @@ PK11SymKey *DeriveKey(PK11SymKey *cardKey, const Buffer& hostChallenge, const Bu
     PRBool invalid_mechanism = PR_FALSE;
     CK_OBJECT_HANDLE keyhandle = 0;
 
-    PR_fprintf(PR_STDOUT,"In DeriveKey! \n");
+    // PR_fprintf(PR_STDOUT,"In DeriveKey! \n");
     master = cardKey;
 
     if( ! master ) goto done;
@@ -515,7 +515,7 @@ PK11SymKey *DeriveKey(PK11SymKey *cardKey, const Buffer& hostChallenge, const Bu
 
        PR_fprintf(PR_STDERR,"DeriveKey: Can't create key, using encrypt and derive method ! error %d \n", PR_GetError());
     } else {
-       PR_fprintf(PR_STDOUT,"DeriveKey: Successfully created key using encrypt and derive method! \n");
+       // PR_fprintf(PR_STDOUT,"DeriveKey: Successfully created key using encrypt and derive method! \n");
     }
     */
     if ( invalid_mechanism == PR_FALSE) {
@@ -529,7 +529,7 @@ PK11SymKey *DeriveKey(PK11SymKey *cardKey, const Buffer& hostChallenge, const Bu
            PR_fprintf(PR_STDERR,"DeriveKey: Can't derive key using CONCATENATE method! \n");
            goto done;
         } else {
-           PR_fprintf(PR_STDOUT,"DeriveKey: Successfully created key using CONCATENATE method! \n");
+           // PR_fprintf(PR_STDOUT,"DeriveKey: Successfully created key using CONCATENATE method! \n");
         }
 
         keyhandle = PK11_GetSymKeyHandle(tmp2);
@@ -543,7 +543,7 @@ PK11SymKey *DeriveKey(PK11SymKey *cardKey, const Buffer& hostChallenge, const Bu
            PR_fprintf(PR_STDERR,"DeriveKey: Can't create final  derived key! \n");
            goto done;
         } else {
-           PR_fprintf(PR_STDOUT,"DeriveKey: Successfully created final derived  key! \n");
+           // PR_fprintf(PR_STDOUT,"DeriveKey: Successfully created final derived  key! \n");
         }
 
     }  else { /* We don't have access to the proper derive mechanism, use primitive mechanisms now */
@@ -569,7 +569,7 @@ PK11SymKey *DeriveKey(PK11SymKey *cardKey, const Buffer& hostChallenge, const Bu
          if ( key  == NULL ) {
              PR_fprintf(PR_STDERR,"DeriveKey: CreateUnWrappedSymKey failed! %d \n", PR_GetError());
          } else {
-            PR_fprintf(PR_STDOUT,"DeriveKey: CreateUnWrappedSymKey succeeded! \n");
+             // PR_fprintf(PR_STDOUT,"DeriveKey: CreateUnWrappedSymKey succeeded! \n");
          }
     }
 
@@ -882,7 +882,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
       break;
     }
 
-    PR_fprintf(PR_STDOUT,"In SessionKey.ComputeSessionKeySCP02! keyName %s keyVersion[0] %d keyVersion[1] %d \n",keyname,(int) keyVersion[0],(int) keyVersion[1]);
+    // PR_fprintf(PR_STDOUT,"In SessionKey.ComputeSessionKeySCP02! keyName %s keyVersion[0] %d keyVersion[1] %d \n",keyname,(int) keyVersion[0],(int) keyVersion[1]);
 
     if ( (keyVersion[0] == 0x1 && keyVersion[1]== 0x1 ) ||
         (keyVersion[0] == -1 && keyVersion[1] == 0x1))
@@ -896,7 +896,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
             goto done;
         }
 
-        PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! sc[0] : %d sc[1] : %d \n", sc[0], sc[1]);
+        // PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! sc[0] : %d sc[1] : %d \n", sc[0], sc[1]);
         symkey = DeriveKeySCP02(                       //Util::DeriveKey(
             devSymKey, Buffer((BYTE*)sc, sc_len), Buffer((BYTE*)dc, dc_len));
 
@@ -924,7 +924,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
 
     }else
     {
-        PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Attempting with master key. \n");
+        // PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Attempting with master key. \n");
         masterKey = ReturnSymKey( slot,keyname);
         if(masterKey == NULL)
         {
@@ -936,7 +936,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         BYTE requestedKeyVersion_byte = static_cast<BYTE>(keyVersion[0]);
         // if requested key version meets setting value, use NIST SP800-108 KDF
        if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, requestedKeyVersion_byte) == true){
-           PR_fprintf(PR_STDOUT,"ComputeSessionKeySCP02 NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
+           // PR_fprintf(PR_STDOUT,"ComputeSessionKeySCP02 NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
 
            jbyte* context_jbyte = NULL;
             jsize context_len_jsize = 0;
@@ -970,20 +970,20 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
 
             //Decide upon the key we actually are asking for.
             if(kType == mac ) {
-                PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Getting mac key. \n");
+                // PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Getting mac key. \n");
                 devKey = macKey;
                 macKey = NULL;
             }
 
             if(kType == enc) {
-                PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Getting enc key. \n");
+                // PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Getting enc key. \n");
                 devKey = encKey;
                 encKey = NULL;
 
             }
 
             if(kType == kek) {
-                PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Getting kek key. \n");
+                // PR_fprintf(PR_STDOUT,"SessionKey.ComputeSessionKeySCP02! Getting kek key. \n");
                 devKey = kekKey;
                 kekKey = NULL;
             }
@@ -991,7 +991,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
        } else {
 
            // Do what the original code did, using the standard routines.
-           PR_fprintf(PR_STDOUT,"ComputeSessionKeySCP02 NistSP800_108KDF code: Using original KDF.\n");
+           // PR_fprintf(PR_STDOUT,"ComputeSessionKeySCP02 NistSP800_108KDF code: Using original KDF.\n");
            GetDiversificationData(cuidValue,devData,kType);
 
            devKey =ComputeCardKeyOnToken(masterKey,devData,2);
@@ -1319,7 +1319,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
     }else
     GetKeyName(keyVersion,keyname);
 
-    PR_fprintf(PR_STDOUT,"In SessionKey.ComputeSessionKey! keyName %s keyVersion[0] %d keyVersion[1] %d \n",keyname,(int) keyVersion[0],(int) keyVersion[1]);
+    // PR_fprintf(PR_STDOUT,"In SessionKey.ComputeSessionKey! keyName %s keyVersion[0] %d keyVersion[1] %d \n",keyname,(int) keyVersion[0],(int) keyVersion[1]);
 
     if ( (keyVersion[0] == 0x1 && keyVersion[1]== 0x1 && strcmp( keyname, "#01#01") == 0) ||
         (keyVersion[0] == -1 && strstr(keyname, "#FF")))
@@ -1338,7 +1338,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
 
     }else
     {
-        PR_fprintf(PR_STDOUT,"In SessionKey.ComputeSessionKey! Upgraded keyset mode. \n");
+        // PR_fprintf(PR_STDOUT,"In SessionKey.ComputeSessionKey! Upgraded keyset mode. \n");
         masterKey = ReturnSymKey( slot,keyname);
         if(masterKey == NULL)
         {
@@ -1354,7 +1354,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         // if requested key version meets setting value, use NIST SP800-108 KDF
         if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, requestedKeyVersion_byte) == true){
 
-            PR_fprintf(PR_STDOUT,"ComputeSessionKey NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeSessionKey NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
 
             // react to "UseCUIDAsKDD" setting value
             jbyte* context_jbyte = NULL;
@@ -1394,7 +1394,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         // if not a key version where we use the NIST SP800-108 KDF, use the original KDF
         }else{
 
-            PR_fprintf(PR_STDOUT,"ComputeSessionKey NistSP800_108KDF code: Using original KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeSessionKey NistSP800_108KDF code: Using original KDF.\n");
 
             // AC: KDF SPEC CHANGE: Moved this call down from the original location.
             //                      (We don't always need to call it anymore; it depends on the KDF we're going to use.)
@@ -1753,7 +1753,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         // if requested key version meets setting value, use NIST SP800-108 KDF
         if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, requestedKeyVersion_byte) == true){
 
-            PR_fprintf(PR_STDOUT,"ComputeEncSessionKey NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeEncSessionKey NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
 
             // react to "UseCUIDAsKDD" setting value
             jbyte* context_jbyte = NULL;
@@ -1793,7 +1793,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         // if not a key version where we use the NIST SP800-108 KDF, use the original KDF
         }else{
 
-            PR_fprintf(PR_STDOUT,"ComputeEncSessionKey NistSP800_108KDF code: Using original KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeEncSessionKey NistSP800_108KDF code: Using original KDF.\n");
 
             // AC: KDF SPEC CHANGE: Moved this call down from the original location.
             //                      (We don't always need to call it anymore; it depends on the KDF we're going to use.)
@@ -2082,7 +2082,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_org_mozilla_jss_symkey_SessionKey_Comp
     }else
     GetKeyName(keyVersion,keyname);
 
-    PR_fprintf(PR_STDOUT,"In SessionKey.ComputeKekKey! \n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey.ComputeKekKey! \n");
 
     if (( keyVersion[0] == 0x1 && keyVersion[1]== 0x1 &&strcmp( keyname, "#01#01") == 0 ) ||
         (keyVersion[0] == -1 && strcmp(keyname, "#FF")))
@@ -2108,7 +2108,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_org_mozilla_jss_symkey_SessionKey_Comp
         // if requested key version meets setting value, use NIST SP800-108 KDF
         if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, requestedKeyVersion_byte) == true){
 
-            PR_fprintf(PR_STDOUT,"ComputeKekKey NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeKekKey NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
 
             // react to "UseCUIDAsKDD" setting value
             jbyte* context_jbyte = NULL;
@@ -2148,7 +2148,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_org_mozilla_jss_symkey_SessionKey_Comp
         // if not a key version where we use the NIST SP800-108 KDF, use the original KDF
         }else{
 
-            PR_fprintf(PR_STDOUT,"ComputeKekKey NistSP800_108KDF code: Using original KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeKekKey NistSP800_108KDF code: Using original KDF.\n");
 
             // AC: KDF SPEC CHANGE: Moved this call down from the original location.
             //                      (We don't always need to call it anymore; it depends on the KDF we're going to use.)
@@ -2410,7 +2410,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
     char input[KEYLENGTH];
     int i;
 
-    PR_fprintf(PR_STDOUT,"In SessionKey: ComputeCryptogram! \n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey: ComputeCryptogram! \n");
     jbyteArray handleBA=NULL;
     jbyte *handleBytes=NULL;
 
@@ -2580,7 +2580,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         // if requested key version meets setting value, use NIST SP800-108 KDF
         if (NistSP800_108KDF::useNistSP800_108KDF(nistSP800_108KdfOnKeyVersion_byte, requestedKeyVersion_byte) == true){
 
-            PR_fprintf(PR_STDOUT,"ComputeCryptogram NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeCryptogram NistSP800_108KDF code: Using NIST SP800-108 KDF.\n");
 
             // react to "UseCUIDAsKDD" setting value
             jbyte* context_jbyte = NULL;
@@ -2620,7 +2620,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
         // if not a key version where we use the NIST SP800-108 KDF, use the original KDF
         }else{
 
-            PR_fprintf(PR_STDOUT,"ComputeCryptogram NistSP800_108KDF code: Using original KDF.\n");
+            // PR_fprintf(PR_STDOUT,"ComputeCryptogram NistSP800_108KDF code: Using original KDF.\n");
 
             // AC: KDF SPEC CHANGE: Moved this call down from the original location.
             //                      (We don't always need to call it anymore; it depends on the KDF we're going to use.)
@@ -2774,7 +2774,7 @@ Java_org_mozilla_jss_symkey_SessionKey_ECBencrypt
     SECItem paramsItem = { siBuffer, NULL, 0 };
     CK_ULONG bitPosition = 0;
 
-    PR_fprintf(PR_STDOUT,"In SessionKey: ECBencrypt! \n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey: ECBencrypt! \n");
 
     if( !symkeyObj || !deskeyObj) {
        goto finish;
@@ -2817,20 +2817,20 @@ Java_org_mozilla_jss_symkey_SessionKey_ECBencrypt
         goto finish;
     }
 
-    PR_fprintf(PR_STDOUT,"In SessionKey: ECBencrypt! 16 byte key derived....  \n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey: ECBencrypt! 16 byte key derived....  \n");
 
     //Wrap the new 16 bit key with the input symkey.
 
     wrappedKeyItem.data = (unsigned char *) handleBytes;
     wrappedKeyItem.len  = dlen;
 
-    PR_fprintf(PR_STDOUT,"In SessionKey: ECBencrypt! About to wrap des key with sym key.\n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey: ECBencrypt! About to wrap des key with sym key.\n");
     wrapStatus = PK11_WrapSymKey(CKM_DES3_ECB,&noParams, symkey, newdeskey, &wrappedKeyItem);
 
     if( wrapStatus == SECSuccess) {
        PR_fprintf(PR_STDERR, "ECBencrypt wrapStatus %d wrappedKeySize %d \n", wrapStatus, wrappedKeyItem.len);
 
-       PR_fprintf(PR_STDOUT," ECBencrypt wrapped data: \n");
+       // PR_fprintf(PR_STDOUT," ECBencrypt wrapped data: \n");
          Buffer wrappedDataBuf(wrappedKeyItem.data,wrappedKeyItem.len);
          wrappedDataBuf.dump();
 
@@ -2887,7 +2887,7 @@ Java_org_mozilla_jss_symkey_SessionKey_DeriveDESKeyFrom3DesKey
     }
 
     if(alg != CKM_DES_CBC && alg != CKM_DES_ECB) {
-        PR_fprintf(PR_STDOUT,"SessionKey.DeriveDESKeyFrom3DesKey invalid alg!.. \n");
+        // PR_fprintf(PR_STDOUT,"SessionKey.DeriveDESKeyFrom3DesKey invalid alg!.. \n");
         goto loser;
     }
 
@@ -2912,7 +2912,7 @@ Java_org_mozilla_jss_symkey_SessionKey_DeriveDESKeyFrom3DesKey
     r = JSS_PK11_getSymKeyPtr(env, des3Key, &des3);
 
     if (r != PR_SUCCESS) {
-        PR_fprintf(PR_STDOUT,"SessionKey: DeriveDESKeyFrom3DesKey Unable to get input session 3des sym key! \n");
+        // PR_fprintf(PR_STDOUT,"SessionKey: DeriveDESKeyFrom3DesKey Unable to get input session 3des sym key! \n");
         goto loser;
     }
 
@@ -2983,7 +2983,7 @@ Java_org_mozilla_jss_symkey_SessionKey_UnwrapSessionKeyWithSharedSecret
     SECItem *SecParam = PK11_ParamFromIV(CKM_DES3_ECB, NULL);
     SECItem wrappedItem = {siBuffer , NULL, 0 };
 
-    PR_fprintf(PR_STDOUT,"In SessionKey.UnwrapSessionKeyWithSharedSecret!\n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey.UnwrapSessionKeyWithSharedSecret!\n");
 
     if( sharedSecretKey == NULL || sessionKeyBA == NULL) {
         goto loser;
@@ -2998,7 +2998,7 @@ Java_org_mozilla_jss_symkey_SessionKey_UnwrapSessionKeyWithSharedSecret
             slot = ReturnSlot(tokenNameChars);
         }
 
-        PR_fprintf(PR_STDOUT,"SessionKey.UnwrapSessionKeyWithSharedSecret  slot %p  name %s tokenName %s  \n",slot, PK11_GetSlotName(slot), PK11_GetTokenName(slot));
+        // PR_fprintf(PR_STDOUT,"SessionKey.UnwrapSessionKeyWithSharedSecret  slot %p  name %s tokenName %s  \n",slot, PK11_GetSlotName(slot), PK11_GetTokenName(slot));
         (env)->ReleaseStringUTFChars(tokenName, (const char *)tokenNameChars);
     } else {
         slot = PK11_GetInternalKeySlot();
@@ -3018,7 +3018,7 @@ Java_org_mozilla_jss_symkey_SessionKey_UnwrapSessionKeyWithSharedSecret
     r = JSS_PK11_getSymKeyPtr(env, sharedSecretKey, &sharedSecret);
 
     if (r != PR_SUCCESS) {
-        PR_fprintf(PR_STDOUT,"SessionKey: UnwrapSessionKeyWithSharedSecret Unable to get input shared secret sym key! \n");
+        // PR_fprintf(PR_STDOUT,"SessionKey: UnwrapSessionKeyWithSharedSecret Unable to get input shared secret sym key! \n");
         goto loser;
     }
 
@@ -3032,10 +3032,10 @@ Java_org_mozilla_jss_symkey_SessionKey_UnwrapSessionKeyWithSharedSecret
                           CKA_UNWRAP,
                           16);
 
-    PR_fprintf(PR_STDOUT,"SessionKey: UnwrapSessionKeyWithSharedSecret symKey: %p \n",sessionKey);
+    // PR_fprintf(PR_STDOUT,"SessionKey: UnwrapSessionKeyWithSharedSecret symKey: %p \n",sessionKey);
 
     if(sessionKey == NULL) {
-         PR_fprintf(PR_STDOUT,"SessionKey:UnwrapSessionKeyWithSharedSecret  Error unwrapping a session key! \n");
+         // PR_fprintf(PR_STDOUT,"SessionKey:UnwrapSessionKeyWithSharedSecret  Error unwrapping a session key! \n");
          goto loser;
     }
 
@@ -3043,7 +3043,7 @@ Java_org_mozilla_jss_symkey_SessionKey_UnwrapSessionKeyWithSharedSecret
     finalKey = CreateDesKey24Byte(slot, sessionKey);
 
     if(finalKey == NULL) {
-          PR_fprintf(PR_STDOUT,"SessionKey:UnwrapSessionKeyWithSharedSecret Error final unwrapped key! \n");
+          // PR_fprintf(PR_STDOUT,"SessionKey:UnwrapSessionKeyWithSharedSecret Error final unwrapped key! \n");
           goto loser;
 
     }
@@ -3179,7 +3179,7 @@ Java_org_mozilla_jss_symkey_SessionKey_GenerateSymkey
     SECItem paramsItem = { siBuffer, NULL, 0 };
     CK_OBJECT_HANDLE keyhandle = 0;
 
-    PR_fprintf(PR_STDOUT,"In SessionKey GenerateSymkey!\n");
+    // PR_fprintf(PR_STDOUT,"In SessionKey GenerateSymkey!\n");
     if (tokenName)
     {
         tokenNameChars = (char *)(env)->GetStringUTFChars(tokenName, NULL);
@@ -3189,7 +3189,7 @@ Java_org_mozilla_jss_symkey_SessionKey_GenerateSymkey
             slot = ReturnSlot(tokenNameChars);
         }
 
-        PR_fprintf(PR_STDOUT,"SessinKey: GenerateSymkey slot %p  name %s tokenName %s \n",slot, PK11_GetSlotName(slot), PK11_GetTokenName(slot));
+        // PR_fprintf(PR_STDOUT,"SessinKey: GenerateSymkey slot %p  name %s tokenName %s \n",slot, PK11_GetSlotName(slot), PK11_GetTokenName(slot));
         (env)->ReleaseStringUTFChars(tokenName, (const char *)tokenNameChars);
     }
 
