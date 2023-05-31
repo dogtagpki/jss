@@ -5,9 +5,9 @@ Name:           jss
 %global         product_id dogtag-jss
 
 # Upstream version number:
-%global         major_version 5.4.1
-%global         minor_version 
-%global         update_version 
+%global         major_version 5
+%global         minor_version 4
+%global         update_version 1
 
 # Downstream release number:
 # - development/stabilization (unsupported): 0.<n> where n >= 1
