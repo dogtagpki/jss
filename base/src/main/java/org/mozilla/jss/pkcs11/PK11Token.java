@@ -59,7 +59,7 @@ public final class PK11Token implements CryptoToken {
      * Thrown if the operation requires that the token be logged in, and it
      * isn't.
      */
-    static public class NotInitializedException
+    public static class NotInitializedException
             extends IncorrectPasswordException
     {
         private static final long serialVersionUID = 1L;
@@ -110,13 +110,6 @@ public final class PK11Token implements CryptoToken {
     getKeyGenerator(KeyGenAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
     {
-/* NSS is capable of finding the right token to do algorithm,
-   so this call is prematurely bailing
-        if( ! doesAlgorithm(algorithm) ) {
-            throw new NoSuchAlgorithmException(
-                algorithm+" is not supported by this token");
-        }
-*/
         return new PK11KeyGenerator(this, algorithm);
     }
 
@@ -147,13 +140,7 @@ public final class PK11Token implements CryptoToken {
     getKeyWrapper(KeyWrapAlgorithm algorithm)
         throws NoSuchAlgorithmException, TokenException
     {
-/* NSS is capable of finding the right token to do algorithm,
-   so this call is prematurely bailing
-        if( ! doesAlgorithm(algorithm) ) {
-            throw new NoSuchAlgorithmException(
-                algorithm+" is not supported by this token");
-        }
-*/
+
         return new PK11KeyWrapper(this, algorithm);
     }
 
@@ -194,7 +181,7 @@ public final class PK11Token implements CryptoToken {
      */
     @Override
     public void login(PasswordCallback callback)
-        throws NotInitializedException, IncorrectPasswordException,
+        throws IncorrectPasswordException,
 			TokenException
 	{
         if(callback == null) {
@@ -204,7 +191,7 @@ public final class PK11Token implements CryptoToken {
 	}
 
 	protected native void nativeLogin(PasswordCallback callback)
-        throws NotInitializedException,	IncorrectPasswordException,
+        throws IncorrectPasswordException,
         TokenException;
 
     /**
@@ -474,6 +461,18 @@ public final class PK11Token implements CryptoToken {
         }
     }
 
+    /**
+     * HashCode from underline token.
+     *
+     * Two token are equals if they have the same underline native token so
+     * they should return the same hash code
+     * @return The hash code of the underlying token.
+     */
+    @Override
+    public int hashCode() {
+        return tokenProxy.hashCode();
+    }
+
     //protected native boolean doesMechanismNative(int mech);
 
 	/**
@@ -488,64 +487,36 @@ public final class PK11Token implements CryptoToken {
 	 * @param subject subject dn of the certificate
 	 * @param keysize size of the key
 	 * @param keyType "rsa" or "dsa"
-	 * @param P The DSA prime parameter
-	 * @param Q The DSA sub-prime parameter
-	 * @param G The DSA base parameter
+	 * @param prime The DSA prime parameter
+	 * @param subPrime The DSA sub-prime parameter
+	 * @param base The DSA base parameter
 	 * @return String that represents a PKCS#10 b64 encoded blob with
 	 * begin/end brackets
 	 */
 	@Override
-    public String generateCertRequest(String subject, int keysize,
-											 String keyType,
-											 byte[] P, byte[] Q,
-											 byte[] G)
-		throws TokenException, InvalidParameterException, PQGParamGenException
-	{
+        public String generateCertRequest(String subject, int keysize,
+                String keyType,
+                byte[] prime, byte[] subPrime, byte[] base)
+                throws TokenException, InvalidParameterException, PQGParamGenException {
+            String pk10String;
+            byte[] p = prime;
+            byte[] q = subPrime;
+            byte[] g = base;
 
-			if (keyType.equalsIgnoreCase("dsa")) {
-				if ((P == null) && (Q == null) && (G == null)) {
-					PQGParams pqg;
-					try {
-						 pqg = PQGParams.generate(keysize);
-					} catch (PQGParamGenException e) {
-						throw e;
-					}
-					byte[] p = PQGParams.BigIntegerToUnsignedByteArray(pqg.getP());
-					byte[] q = PQGParams.BigIntegerToUnsignedByteArray(pqg.getQ());
-					byte[] g = PQGParams.BigIntegerToUnsignedByteArray(pqg.getG());
-					P = p;
-					Q = q;
-					G = g;
-					String pk10String;
-					try {
-						pk10String =
-							generatePK10(subject, keysize, keyType, p,
-									 q, g);
-					} catch (TokenException e) {
-						throw e;
-					} catch (InvalidParameterException e) {
-						throw e;
-					}
-
-					return Cert.REQUEST_HEADER + "\n"+ pk10String + "\n" + Cert.REQUEST_FOOTER;
-				} else if ((P == null) || (Q == null) || (G == null)) {
-					throw new InvalidParameterException("need all P, Q, and G");
-				}
-
-			}
-			String pk10String;
-			try {
-				pk10String =
-					generatePK10(subject, keysize, keyType, P,
-								 Q, G);
-			} catch (TokenException e) {
-				throw e;
-			} catch (InvalidParameterException e) {
-				throw e;
-			}
-
-			return Cert.REQUEST_HEADER + "\n"+  pk10String + "\n" + Cert.REQUEST_FOOTER;
-	}
+            if (keyType.equalsIgnoreCase("dsa")) {
+                if ((p == null) && (q == null) && (g == null)) {
+                    PQGParams pqg = PQGParams.generate(keysize);
+                    p = PQGParams.BigIntegerToUnsignedByteArray(pqg.getP());
+                    q = PQGParams.BigIntegerToUnsignedByteArray(pqg.getQ());
+                    g = PQGParams.BigIntegerToUnsignedByteArray(pqg.getG());
+                 } else if ((p == null) || (q == null) || (g == null)) {
+                    throw new InvalidParameterException("need all P, Q, and G");
+                }
+            }
+            pk10String = generatePK10(subject, keysize, keyType, p,
+                    q, g);
+            return Cert.REQUEST_HEADER + "\n" + pk10String + "\n" + Cert.REQUEST_FOOTER;
+        }
 
 	protected native String generatePK10(String subject, int keysize,
 											 String keyType,
