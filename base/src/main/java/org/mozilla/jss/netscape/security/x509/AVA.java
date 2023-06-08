@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 
 import org.mozilla.jss.netscape.security.util.DerEncoder;
@@ -106,8 +107,7 @@ public final class AVA implements DerEncoder {
      * @param type an ObjectIdentifier
      * @param val a DerValue
      */
-    public AVA(ObjectIdentifier type, DerValue val)
-            throws IOException {
+    public AVA(ObjectIdentifier type, DerValue val) {
         oid = type;
         value = val;
     }
@@ -131,17 +131,16 @@ public final class AVA implements DerEncoder {
         try {
             // convert from UTF8 bytes to java string then parse it.
             byte[] buffer = new byte[in.available()];
-            in.read(buffer);
+            if (in.read(buffer) > 0) {
+                Charset charset = StandardCharsets.UTF_8;
+                CharsetDecoder decoder = charset.newDecoder();
 
-            Charset charset = Charset.forName("UTF-8");
-            CharsetDecoder decoder = charset.newDecoder();
+                CharBuffer charBuffer = decoder.decode(ByteBuffer.wrap(buffer));
 
-            CharBuffer charBuffer = decoder.decode(ByteBuffer.wrap(buffer));
-
-            AVA a = LdapDNStrConverter.getDefault().parseAVA(charBuffer.toString());
-            oid = a.getOid();
-            value = a.getValue();
-
+                AVA a = LdapDNStrConverter.getDefault().parseAVA(charBuffer.toString());
+                oid = a.getOid();
+                value = a.getValue();
+            }
         } catch (UnsupportedCharsetException e) {
             throw new IOException("UTF8 encoding not supported", e);
         }
