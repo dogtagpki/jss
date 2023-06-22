@@ -968,7 +968,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
 
             debug("JSSEngine: Got inbound alert: " + event);
-
+            event.setEngine(this);
             // Fire inbound alert prior to raising any exception.
             fireAlertReceived(event);
 
@@ -991,7 +991,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
 
             debug("JSSEngine: Got outbound alert: " + event);
-
+            event.setEngine(this);
             // Fire outbound alert prior to raising any exception. Note that
             // this still triggers after this alert is written to the output
             // wire buffer.
