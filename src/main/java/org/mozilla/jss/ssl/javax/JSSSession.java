@@ -1,16 +1,23 @@
 package org.mozilla.jss.ssl.javax;
 
-import java.lang.AutoCloseable;
-import java.security.cert.Certificate;
-import javax.security.cert.X509Certificate;
 import java.security.Principal;
+import java.security.cert.Certificate;
 import java.util.HashMap;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSessionBindingEvent;
+import javax.net.ssl.SSLSessionBindingListener;
+import javax.net.ssl.SSLSessionContext;
+import javax.security.cert.X509Certificate;
 
-import org.mozilla.jss.nss.*;
-import org.mozilla.jss.pkcs11.*;
-import org.mozilla.jss.ssl.*;
+import org.mozilla.jss.nss.SSL;
+import org.mozilla.jss.nss.SSLChannelInfo;
+import org.mozilla.jss.nss.SSLFDProxy;
+import org.mozilla.jss.nss.SSLPreliminaryChannelInfo;
+import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.ssl.SSLCipher;
+import org.mozilla.jss.ssl.SSLVersion;
 
 public class JSSSession implements SSLSession, AutoCloseable {
     private JSSEngine parent;
@@ -33,6 +40,9 @@ public class JSSSession implements SSLSession, AutoCloseable {
 
     private String peerHost;
     private int peerPort;
+
+    private String localAddr;
+    private String remoteAddr;
 
     private Principal peerPrincipal;
     private X509Certificate[] peerChain;
@@ -314,4 +324,21 @@ public class JSSSession implements SSLSession, AutoCloseable {
     public void setPeerPort(int port) {
         peerPort = port;
     }
+
+    public String getLocalAddr() {
+        return localAddr;
+    }
+
+    public void setLocalAddr(String localAddr) {
+        this.localAddr = localAddr;
+    }
+
+    public String getRemoteAddr() {
+        return remoteAddr;
+    }
+
+    public void setRemoteAddr(String remoteAddr) {
+        this.remoteAddr = remoteAddr;
+    }
+
 }
