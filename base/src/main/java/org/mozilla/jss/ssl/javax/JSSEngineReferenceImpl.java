@@ -1262,9 +1262,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
         } while (this_src_write != 0 || this_dst_write != 0);
 
-        if (seen_exception == false && ssl_exception == null) {
-            ssl_exception = checkSSLAlerts();
-            seen_exception = (ssl_exception != null);
+        SSLException checkException = checkSSLAlerts();
+        if (checkException != null && !seen_exception) {
+            ssl_exception = checkException;
+            seen_exception = true;
         }
 
         // Before we return, check if an exception occurred and throw it if
