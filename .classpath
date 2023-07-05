@@ -10,10 +10,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-api.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/apache-commons-lang3.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/junit.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/slf4j/slf4j-simple.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/junit5/junit-vintage-engine.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/apache-commons-lang3.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/opentest4j/opentest4j.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit5/junit-platform-testkit.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit5/junit-platform-suite-commons.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit5/junit-platform-suite-api.jar"/>

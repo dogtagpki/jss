@@ -1,7 +1,7 @@
 package org.mozilla.jss.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.x509.DirStrConverter;
 
@@ -19,7 +19,7 @@ public class DirStrConverterTest {
         byte[] actual = ConverterTestUtil.convert(new DirStrConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class DirStrConverterTest {
         byte[] actual = ConverterTestUtil.convert(new DirStrConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class DirStrConverterTest {
         byte[] actual = ConverterTestUtil.convert(new DirStrConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DirStrConverterTest {
         byte[] actual = ConverterTestUtil.convert(new DirStrConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class DirStrConverterTest {
         byte[] actual = ConverterTestUtil.convert(new DirStrConverter(), string);
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class DirStrConverterTest {
         });
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -113,6 +113,6 @@ public class DirStrConverterTest {
         });
         System.out.println(" - actual  : " + StringTestUtil.toString(actual));
 
-        Assert.assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 }

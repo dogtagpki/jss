@@ -4,8 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.extensions.GenericASN1Extension;
 import org.mozilla.jss.netscape.security.x509.OIDMap;
 
@@ -19,15 +19,15 @@ public class GenericASN1ExtensionTest {
         Hashtable<String, String> config = new Hashtable<>();
         GenericASN1Extension extension1 = new GenericASN1Extension(name1, oid1,
                 pattern, false, config);
-        Assert.assertEquals(name1, extension1.getName());
-        Assert.assertNotNull(OIDMap.getClass(name1));
+        Assertions.assertEquals(name1, extension1.getName());
+        Assertions.assertNotNull(OIDMap.getClass(name1));
 
         String name2 = "testExtension2";
         String oid2 = "2.4.6.8";
         GenericASN1Extension extension2 = new GenericASN1Extension(name2, oid2,
                 pattern, false, config);
-        Assert.assertEquals(name2, extension2.getName());
-        Assert.assertNotNull(OIDMap.getClass(name2));
+        Assertions.assertEquals(name2, extension2.getName());
+        Assertions.assertNotNull(OIDMap.getClass(name2));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class GenericASN1ExtensionTest {
         config.put("critical", "true");
 
         GenericASN1Extension extension1 = new GenericASN1Extension(config);
-        Assert.assertEquals(name1, extension1.getName());
+        Assertions.assertEquals(name1, extension1.getName());
         //Assert.assertNotNull(OIDMap.getClass(name1));
 
         String name2 = "testExtension2";
@@ -51,7 +51,7 @@ public class GenericASN1ExtensionTest {
         config.put("name", name2);
 
         GenericASN1Extension extension2 = new GenericASN1Extension(config);
-        Assert.assertEquals(name2, extension2.getName());
+        Assertions.assertEquals(name2, extension2.getName());
         //Assert.assertNotNull(OIDMap.getClass(name2));
         OutputStream outputStream = new ByteArrayOutputStream();
         extension1.encode(outputStream);
