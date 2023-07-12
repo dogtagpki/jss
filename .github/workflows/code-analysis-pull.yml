@@ -84,7 +84,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Rebase to master
+      - name: Rebase PR
         run: |
           git config user.name "GitHub Workflow Action"
           git remote add jss ${{ github.event.repository.clone_url }} 

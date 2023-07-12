@@ -33,19 +33,19 @@ jobs:
 
       - name: Import Tomcat JSS packages
         run: |
-          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:latest
+          docker create --name=tomcatjss-dist quay.io/dogtagpki/tomcatjss-dist:8.4
           docker cp tomcatjss-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f tomcatjss-dist
 
       - name: Import LDAP SDK packages
         run: |
-          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:5.4
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 
       - name: Import PKI packages
         run: |
-          docker create --name=pki-dist quay.io/dogtagpki/pki-dist:latest
+          docker create --name=pki-dist quay.io/dogtagpki/pki-dist:11.4
           docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f pki-dist
 

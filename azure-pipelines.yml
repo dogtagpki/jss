@@ -31,14 +31,14 @@ jobs:
       docker build \
           --build-arg BASE_IMAGE=$(image) \
           --target jss-base \
-          --tag jss-base:latest \
+          --tag jss-base:5.4 \
           .
 
       docker run \
           --name runner \
           --privileged \
           --detach \
-          jss-base:latest
+          jss-base:5.4
 
       while :
       do
@@ -51,7 +51,7 @@ jobs:
 
   - script: |
       docker exec runner dnf install -y dnf-plugins-core rpm-build
-      docker exec runner dnf copr enable -y @pki/master
+      docker exec runner dnf copr enable -y @pki/11.4
       docker cp . runner:/root/src
       docker exec -w /root/src runner dnf builddep -y --spec jss.spec
     displayName: Install build dependencies

@@ -2,6 +2,9 @@ name: Build JSS
 
 on: [push, pull_request]
 
+env:
+  COPR_REPO: ${{ vars.COPR_REPO || '@pki/11.4' }}
+
 jobs:
   init:
     name: Initialization
@@ -32,7 +35,7 @@ jobs:
           context: .
           build-args: |
             BASE_IMAGE=${{ needs.init.outputs.base-image }}
-            COPR_REPO=${{ needs.init.outputs.repo }}
+            COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-deps
           target: jss-deps
           cache-to: type=local,dest=/tmp/.buildx-cache
@@ -44,7 +47,7 @@ jobs:
           context: .
           build-args: |
             BASE_IMAGE=${{ needs.init.outputs.base-image }}
-            COPR_REPO=${{ needs.init.outputs.repo }}
+            COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-builder-deps
           target: jss-builder-deps
           cache-to: type=local,dest=/tmp/.buildx-cache
@@ -56,7 +59,7 @@ jobs:
           context: .
           build-args: |
             BASE_IMAGE=${{ needs.init.outputs.base-image }}
-            COPR_REPO=${{ needs.init.outputs.repo }}
+            COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-builder
           target: jss-builder
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -74,7 +77,7 @@ jobs:
           context: .
           build-args: |
             BASE_IMAGE=${{ needs.init.outputs.base-image }}
-            COPR_REPO=${{ needs.init.outputs.repo }}
+            COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-dist
           target: jss-dist
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -92,7 +95,7 @@ jobs:
           context: .
           build-args: |
             BASE_IMAGE=${{ needs.init.outputs.base-image }}
-            COPR_REPO=${{ needs.init.outputs.repo }}
+            COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-runner
           target: jss-runner
           cache-from: type=local,src=/tmp/.buildx-cache

@@ -3,7 +3,7 @@ name: Publish JSS
 on:
   push:
     branches:
-      - master
+      - v5.4
 
 env:
   NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || github.repository_owner }}
@@ -95,5 +95,5 @@ jobs:
       - name: Publish jss-dist image
         run: |
           docker load --input jss-dist.tar
-          docker tag jss-dist ${{ vars.REGISTRY }}/$NAMESPACE/jss-dist:latest
-          docker push ${{ vars.REGISTRY }}/$NAMESPACE/jss-dist:latest
+          docker tag jss-dist ${{ vars.REGISTRY }}/$NAMESPACE/jss-dist:5.4
+          docker push ${{ vars.REGISTRY }}/$NAMESPACE/jss-dist:5.4
