@@ -1,11 +1,12 @@
 name: Code Analysis for Pull Fork
+
 on:
   workflow_run:
     workflows: ["Code Analysis"]
     types:
       - completed
-jobs:
 
+jobs:
   retrieve-pr:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
@@ -13,7 +14,7 @@ jobs:
       pr-number: ${{ steps.pr-artifact-script.outputs.result }}
       pr-base: ${{ steps.pr-base-script.outputs.result }}
     steps:
-      - name: 'Download PR artifact'
+      - name: Download PR artifact
         uses: actions/github-script@v6
         id: download-pr
         with:
@@ -24,28 +25,32 @@ jobs:
               repo: context.repo.repo,
               run_id: context.payload.workflow_run.id,
             });
+
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "pr"
             })[0];
+
             if (matchArtifact == null){
               core.setFailed("No PR artifact");
               return "False";
             }
+
             var download = await github.rest.actions.downloadArtifact({
               owner: context.repo.owner,
               repo: context.repo.repo,
               artifact_id: matchArtifact.id,
               archive_format: 'zip',
             });
+
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
             return "True";
 
-      - name: Unzip the pr
+      - name: Unzip the PR
         if: steps.download-pr.outputs.result == 'True'
         run: unzip pr.zip
 
-      - name: Retrieve the pr number
+      - name: Retrieve the PR number
         if: success()
         id: pr-artifact-script
         uses: actions/github-script@v6
@@ -56,7 +61,7 @@ jobs:
             var pr_number = Number(fs.readFileSync('./NR'));
             return pr_number;
 
-      - name: Retrieve the pr base
+      - name: Retrieve the PR base
         if: success()
         id: pr-base-script
         uses: actions/github-script@v6
@@ -84,7 +89,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Rebase to master
+      - name: Rebase PR
         run: |
           git config user.name "GitHub Workflow Action"
           git remote add jss ${{ github.event.repository.clone_url }} 
@@ -109,6 +114,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
       - name: Build and analyze with SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
