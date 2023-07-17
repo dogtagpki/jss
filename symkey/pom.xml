@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.dogtagpki.jss</groupId>
         <artifactId>jss-parent</artifactId>
-        <version>${revision}</version>
+        <version>5.5.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>libjss-symkey</artifactId>
