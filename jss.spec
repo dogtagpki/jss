@@ -45,7 +45,7 @@ Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?phase:-}%
 #     > jss-VERSION-RELEASE.patch
 # Patch: jss-VERSION-RELEASE.patch
 
-%if 0%{?fedora} && 0%{?fedora} > 35
+%if 0%{?java_arches:1}
 ExclusiveArch: %{java_arches}
 %else
 ExcludeArch: i686
