@@ -23,6 +23,8 @@
         <module>native</module>
         <module>symkey</module>
         <module>examples</module>
+        <module>tomcat</module>
+        <module>tomcat-9.0</module>
     </modules>
 
     <build>

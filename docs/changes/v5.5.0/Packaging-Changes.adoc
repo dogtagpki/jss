@@ -1,0 +1,10 @@
+= Packaging Changes =
+
+== New jss-tomcat RPM package ==
+
+A new `jss-tomcat` RPM package has been added to provide a JSS Connector for Tomcat.
+This package will replace Tomcat JSS with the following changes:
+
+* All classes are moved into `org.dogtagpki.jss.tomcat` package.
+* Generic Tomcat classes are packaged into `jss-tomcat.jar`.
+* Tomcat 9.0 classes are packaged into `jss-tomcat-9.0.jar`.
