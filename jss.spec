@@ -127,6 +127,24 @@ Java Security Services (JSS) is a java native interface which provides a bridge
 for java-based applications to use native Network Security Services (NSS).
 This only works with gcj. Other JREs require that JCE providers be signed.
 
+################################################################################
+%package -n %{product_id}-tomcat
+################################################################################
+
+Summary:        Java Security Services (JSS) Connector for Tomcat
+
+# Tomcat
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina)
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote)
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli)
+
+Requires:       %{product_id} = %{version}-%{release}
+
+%description -n %{product_id}-tomcat
+JSS Connector for Tomcat is a Java Secure Socket Extension (JSSE)
+module for Apache Tomcat that uses Java Security Services (JSS),
+a Java interface to Network Security Services (NSS).
+
 %if %{with javadoc}
 ################################################################################
 %package -n %{product_id}-javadoc
@@ -149,6 +167,20 @@ This package contains the API documentation for JSS.
 
 %autosetup -n jss-%{version}%{?phase:-}%{?phase} -p 1
 
+# disable native modules since they will be built by CMake
+%pom_disable_module native
+%pom_disable_module symkey
+
+# do not ship examples
+%pom_disable_module examples
+
+# flatten-maven-plugin is not available in RPM
+%pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
+
+# assign Maven artifacts to RPM packages
+%mvn_package org.dogtagpki.jss:jss-parent      jss-base
+%mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
+
 ################################################################################
 %build
 ################################################################################
@@ -169,18 +201,8 @@ export CFLAGS
 # Check if we're in FIPS mode
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
-# disable native modules since they will be built by CMake
-%pom_disable_module native
-%pom_disable_module symkey
-
-# do not ship examples
-%pom_disable_module examples
-
-# flatten-maven-plugin is not available in RPM
-%pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
-
 # build Java code, run Java tests, and build Javadoc with Maven
-%mvn_build %{!?with_tests:-f} %{!?with_javadoc:-j}
+%mvn_build -s %{!?with_tests:-f} %{!?with_javadoc:-j}
 
 # create links to Maven-built classes for CMake
 mkdir -p %{_vpath_builddir}/classes/jss
@@ -255,7 +277,7 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
     install
 
 ################################################################################
-%files -n %{product_id} -f .mfiles
+%files -n %{product_id} -f .mfiles-jss-base
 ################################################################################
 
 %doc jss.html
@@ -265,6 +287,10 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
 %{_libdir}/jss/jss.jar
 %{_libdir}/jss/libjss.so
 %{_libdir}/jss/libjss-symkey.so
+
+################################################################################
+%files -n %{product_id}-tomcat -f .mfiles-jss-tomcat
+################################################################################
 
 %if %{with javadoc}
 ################################################################################
