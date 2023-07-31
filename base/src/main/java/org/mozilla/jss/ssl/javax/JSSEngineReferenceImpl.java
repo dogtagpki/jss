@@ -613,14 +613,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private void loggingSocketConsumeAllBytes() {
         try {
             int available = s_istream.available();
-            byte[] data = new byte[available];
-            s_istream.read(data);
+            s_istream.skipNBytes(available);
         } catch (Exception e) {}
 
         try {
             int available = c_istream.available();
-            byte[] data = new byte[available];
-            c_istream.read(data);
+            c_istream.skipNBytes(available);
         } catch (Exception e) {}
     }
 

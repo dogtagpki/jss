@@ -122,10 +122,8 @@ public class JSSSocketChannel extends SocketChannel {
 
     @Override
     public boolean finishConnect() throws IOException {
-        if (parent != null) {
-            if (!parent.finishConnect()) {
-                return false;
-            }
+        if (parent != null && !parent.finishConnect()) {
+            return false;
         }
 
         SSLEngineResult.HandshakeStatus state = engine.getHandshakeStatus();
@@ -164,11 +162,11 @@ public class JSSSocketChannel extends SocketChannel {
                     throw new IOException(msg);
                 }
 
-                SSLEngineResult.HandshakeStatus last_state = state;
+                SSLEngineResult.HandshakeStatus lastState = state;
                 state = engine.getHandshakeStatus();
                 handshakeAttempts += 1;
 
-                if (state == last_state) {
+                if (state == lastState) {
                     try {
                         // This sleep is necessary in order to wait for
                         // incoming data. If it turns out our
@@ -179,7 +177,7 @@ public class JSSSocketChannel extends SocketChannel {
                         // alert. This wouldn't be good, so sleep
                         // instead. Use an linear backoff in case
                         // the remote server is really slow.
-                        Thread.sleep(handshakeAttempts * 10);
+                        Thread.sleep(handshakeAttempts * 10L);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
@@ -344,10 +342,10 @@ public class JSSSocketChannel extends SocketChannel {
 
                 dst.flip();
 
-                int this_write = writeChannel.write(dst);
-                sent += this_write;
+                int thisWrite = writeChannel.write(dst);
+                sent += thisWrite;
 
-                if (sent < encrypted && result.bytesConsumed() == 0 && result.bytesProduced() == 0 && this_write == 0) {
+                if (sent < encrypted && result.bytesConsumed() == 0 && result.bytesProduced() == 0 && thisWrite == 0) {
                     String msg = "Calls to wrap or write stalled, consuming ";
                     msg += "and producing no data: sent " + sent + " bytes ";
                     msg += "of " + encrypted + " bytes encrypted to peer.";
@@ -384,13 +382,13 @@ public class JSSSocketChannel extends SocketChannel {
                 // callback never triggering. Use a single byte buffer instead,
                 // discarding any data because we're closing the channel. This
                 // should ensure we always get a callback.
-                ByteBuffer read_one = ByteBuffer.allocate(1);
+                ByteBuffer readOne = ByteBuffer.allocate(1);
 
                 shutdownInput();
 
                 // Bypass read check.
                 inboundClosed = false;
-                read(read_one);
+                read(readOne);
 
                 if (!outboundClosed) {
                     shutdownOutput();
