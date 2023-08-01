@@ -184,7 +184,7 @@ public class JSSSocket extends SSLSocket {
      * This enables JSSServerSocket to copy its SSLContext over to the accepted
      * JSSSocket.
      */
-    public void setSSLContext(SSLContext ctx) throws IOException {
+    public void setSSLContext(SSLContext ctx) {
         jssContext = ctx;
     }
 
@@ -329,7 +329,7 @@ public class JSSSocket extends SSLSocket {
                 status = channel.finishConnect();
 
                 try {
-                    Thread.sleep(connectAttempts * 100);
+                    Thread.sleep(connectAttempts * 100L);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -408,8 +408,8 @@ public class JSSSocket extends SSLSocket {
      *
      * @see JSSEngine#setKeyMaterials(PK11Cert, PK11PrivKey)
      */
-    public void setKeyMaterials(PK11Cert our_cert, PK11PrivKey our_key) throws IllegalArgumentException {
-        engine.setKeyMaterials(our_cert, our_key);
+    public void setKeyMaterials(PK11Cert ourCert, PK11PrivKey ourKey) throws IllegalArgumentException {
+        engine.setKeyMaterials(ourCert, ourKey);
     }
 
     /**
