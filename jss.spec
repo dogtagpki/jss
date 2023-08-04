@@ -117,9 +117,13 @@ Provides:       jss = %{version}-%{release}
 Provides:       jss = %{major_version}.%{minor_version}
 Provides:       %{product_id} = %{major_version}.%{minor_version}
 
+# Tomcat JSS 8.5 has been replaced by JSS Tomcat 5.5.
+# This will remove installed Tomcat JSS packages.
+Obsoletes:      tomcatjss <= 8.5
+Conflicts:      tomcatjss <= 8.5
+
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
-Conflicts:      tomcatjss < 7.6.0
 Conflicts:      pki-base < 10.10.0
 
 %description -n %{product_id}
