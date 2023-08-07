@@ -32,13 +32,18 @@ jobs:
         if: github.event_name == 'pull_request'
 
   # docs/admin/server/Configuring-HTTPS-Connector-with-NSS-Database.adoc
-  https-nss-test:
+  https-nssdb-test:
     name: Testing HTTPS connector with NSS database
     needs: [init, build]
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/pki
     steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install xmlstarlet
+
       - name: Clone repository
         uses: actions/checkout@v3
 
@@ -79,7 +84,7 @@ jobs:
         run: |
           docker exec server pki -d /var/lib/pki/pki-tomcat/alias \
               nss-cert-request \
-              --subject "CN=$HOSTNAME" \
+              --subject "CN=server.example.com" \
               --ext /usr/share/pki/server/certs/sslserver.conf \
               --csr sslserver.csr
           docker exec server pki -d /var/lib/pki/pki-tomcat/alias \
@@ -110,7 +115,7 @@ jobs:
 
       - name: Start Tomcat
         run: |
-          docker exec server pki-server start
+          docker exec server pki-server start --wait -v
 
       - name: Set up client container
         run: |
@@ -122,9 +127,69 @@ jobs:
       - name: Connect client container to network
         run: docker network connect example client --alias client.example.com
 
-      - name: Wait for Tomcat to start
+      - name: Install dependencies
+        run: docker exec client dnf install -y sslscan
+
+      - name: Check SSL connection
         run: |
-          tests/bin/tomcat-start-wait.sh client https://server.example.com:8443
+          docker exec client sslscan --xml=$SHARED/sslscan.xml server.example.com:8443
+          cat sslscan.xml
+
+          # TLS 1.0 should be disabled
+          echo -n "0" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/protocol[@type='tls' and @version='1.0']/@enabled" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # TLS 1.1 should be disabled
+          echo -n "0" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/protocol[@type='tls' and @version='1.1']/@enabled" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # TLS 1.2 should be disabled
+          echo -n "0" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/protocol[@type='tls' and @version='1.2']/@enabled" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # TLS 1.3 should be enabled
+          echo -n "1" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/protocol[@type='tls' and @version='1.3']/@enabled" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # cert subject should be server.example.com
+          echo -n "server.example.com" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/certificates/certificate/subject" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # SAN extension should be DNS:server.example.com
+          echo -n "DNS:server.example.com" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/certificates/certificate/altnames" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # cert issuer should be server.example.com
+          echo -n "server.example.com" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/certificates/certificate/issuer" \
+              sslscan.xml > actual
+          diff expected actual
+
+          # cert should be self-signed
+          echo -n "true" > expected
+          xmlstarlet sel -t -v \
+              "/document/ssltest/certificates/certificate/self-signed" \
+              sslscan.xml > actual
+          diff expected actual
 
       - name: Stop Tomcat
         run: |
@@ -144,6 +209,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: https-nss-test
+          name: https-nssdb-test
           path: |
             /tmp/artifacts/server
