@@ -89,8 +89,8 @@ jobs:
           comm -23 --check-order /tmp/functions.txt /tmp/version.txt > /tmp/diff.txt
           test ! -s /tmp/diff.txt
 
-  rpminspect:
-    name: RPMInspect
+  rpm-test:
+    name: RPM Test
     runs-on: ubuntu-latest
     container: 'fedora:latest'
     steps:
@@ -108,7 +108,7 @@ jobs:
         dnf install -y dnf-plugins-core rpm-build maven
         dnf builddep -y --spec jss.spec
 
-    - name: Build JSS RPMs with CMake
+    - name: Build JSS RPMs with XMvn and CMake
       run: ./build.sh --work-dir=build rpm
 
     - name: Install RPMInspect
@@ -119,6 +119,42 @@ jobs:
 
     - name: Run RPMInspect on SRPM and RPMs
       run: ./tests/bin/rpminspect.sh
+
+    - name: Install RPMs
+      run: dnf localinstall -y build/RPMS/*.rpm
+
+    - name: Build JSS with Maven
+      run: mvn -pl '!native,!symkey,!examples' package
+
+    - name: Compare jss.jar
+      run: |
+        jar tvf /usr/share/java/jss/jss.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee jss.jar.rpm
+        jar tvf base/target/jss.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee jss.jar.maven
+        diff jss.jar.rpm jss.jar.maven
+
+    - name: Compare jss-tomcat.jar
+      run: |
+        jar tvf /usr/share/java/jss/jss-tomcat.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee jss-tomcat.jar.rpm
+        jar tvf tomcat/target/jss-tomcat.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee jss-tomcat.jar.maven
+        diff jss-tomcat.jar.rpm jss-tomcat.jar.maven
+
+    - name: Compare jss-tomcat-9.0.jar
+      run: |
+        jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee jss-tomcat-9.0.jar.rpm
+        jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar | awk '{print $8;}' | sort \
+            | grep -v '/$' \
+            | tee jss-tomcat-9.0.jar.maven
+        diff jss-tomcat-9.0.jar.rpm jss-tomcat-9.0.jar.maven
 
   sandbox-test:
     name: Sandbox Test
