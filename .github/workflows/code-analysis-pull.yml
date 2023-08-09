@@ -6,6 +6,9 @@ on:
     types:
       - completed
 
+env:
+  SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION || github.repository_owner }}
+
 jobs:
   retrieve-pr:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
@@ -115,6 +118,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      # https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/
       - name: Build and analyze with SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -122,7 +126,8 @@ jobs:
         run: >
           mvn
           -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          -Dsonar.projectKey=dogtagpki_jss
+          -Dsonar.organization=${SONAR_ORGANIZATION}
+          -Dsonar.projectKey=${SONAR_ORGANIZATION}_jss
           -pl '!native,!symkey'
           -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
           -Dsonar.pullrequest.key=${{ needs.retrieve-pr.outputs.pr-number }}
