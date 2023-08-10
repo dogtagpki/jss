@@ -40,7 +40,7 @@ public class SET implements ASN1Value {
 
     /**
      * Adds an element to this SET.
-     * 
+     *
      * @param v Element.
      */
     public void addElement(ASN1Value v) {
@@ -50,20 +50,20 @@ public class SET implements ASN1Value {
     /**
      * Adds an element to this SET with the given implicit tag. For example,
      * if the ASN.1 were:
-     * 
+     *
      * <pre>
      *  MyType ::= SET {
      *      item        [0] IMPLICIT INTEGER,
      *      ... }
      * </pre>
-     * 
+     *
      * then the "item" element could be added (with a sample value of 45)
      * to the SET with:
-     * 
+     *
      * <pre>
      * myTypeInstance.addElement(new Tag(0), new INTEGER(45));
      * </pre>
-     * 
+     *
      * @param implicitTag Implicit tag.
      * @param v Element.
      */
@@ -73,7 +73,7 @@ public class SET implements ASN1Value {
 
     /**
      * Inserts an element at the given index.
-     * 
+     *
      * @param v Element.
      * @param index Index.
      */
@@ -83,7 +83,7 @@ public class SET implements ASN1Value {
 
     /**
      * Inserts an element with the given implicit tag at the given index.
-     * 
+     *
      * @param implicitTag Implicit tag.
      * @param v Element.
      * @param index Index.
@@ -94,7 +94,7 @@ public class SET implements ASN1Value {
 
     /**
      * Returns the element at the given index in the SET.
-     * 
+     *
      * @param index Index.
      * @return Element.
      */
@@ -106,23 +106,19 @@ public class SET implements ASN1Value {
      * Returns the tag of the element at the given index. If the element
      * has an implicit tag, that is returned. Otherwise, the tag of the
      * underlying type is returned.
-     * 
+     *
      * @param index Index.
      * @return Tag.
      */
     public Tag tagAt(int index) {
         Tag implicit = elements.elementAt(index).getImplicitTag();
-        if (implicit != null) {
-            return implicit;
-        } else {
-            return elementAt(index).getTag();
-        }
+        return implicit == null ? elementAt(index).getTag() : implicit;
     }
 
     /**
      * Returns the element with the given Tag, or null if no element exists
      * with the given tag.
-     * 
+     *
      * @param tag Tag.
      * @return Element.
      */
@@ -155,7 +151,7 @@ public class SET implements ASN1Value {
 
     /**
      * Removes the element from the specified index.
-     * 
+     *
      * @param index Index.
      */
     public void removeElementAt(int index) {
@@ -164,7 +160,7 @@ public class SET implements ASN1Value {
 
     /**
      * Writes the DER encoding to the given output stream.
-     * 
+     *
      * @param ostream Output stream.
      */
     @Override
@@ -177,7 +173,7 @@ public class SET implements ASN1Value {
      * Writes the DER encoding to the given output stream,
      * using the given implicit tag. To satisfy DER encoding rules,
      * the elements will be re-ordered either by tag or lexicographically.
-     * 
+     *
      * @param implicitTag Implicit tag.
      * @param ostream Output stream.
      */
@@ -232,7 +228,7 @@ public class SET implements ASN1Value {
     /**
      * Encodes this SET without re-ordering it. This may violate
      * DER, but it is within BER.
-     * 
+     *
      * @param implicitTag Implicit tag.
      * @param ostream Output stream.
      * @throws IOException If an error occurred.
@@ -357,11 +353,7 @@ public class SET implements ASN1Value {
          * it will be the base tag for the value.
          */
         public Tag getTag() {
-            if (implicitTag != null) {
-                return implicitTag;
-            } else {
-                return val.getTag();
-            }
+            return implicitTag == null ? val.getTag() : implicitTag;
         }
 
         private Tag implicitTag = null;
@@ -394,19 +386,19 @@ public class SET implements ASN1Value {
         /**
          * Adds a sub-template to the end of this SET template. For example,
          * if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySet ::= SET {
          *      item        SubType,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySet template with:
-         * 
+         *
          * <pre>
          * mySet.addElement(new SubType.Template());
          * </pre>
-         * 
+         *
          * @param t Sub-template.
          */
         public void addElement(ASN1Template t) {
@@ -415,7 +407,7 @@ public class SET implements ASN1Value {
 
         /**
          * Inserts the template at the given index.
-         * 
+         *
          * @param t Sub-template.
          * @param index Index.
          */
@@ -426,19 +418,19 @@ public class SET implements ASN1Value {
         /**
          * Adds a sub-template with the given implicit tag to the end of this
          * SET template. For example, if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySet ::= SET {
          *      item        [0] IMPLICIT SubType,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySet template with:
-         * 
+         *
          * <pre>
          * mySet.addElement(new Tag(0), new SubType.Template());
          * </pre>
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Sub-template.
          */
@@ -448,7 +440,7 @@ public class SET implements ASN1Value {
 
         /**
          * Inserts the template with the given implicit tag at the given index.
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Sub-template.
          * @param index Index.
@@ -461,19 +453,19 @@ public class SET implements ASN1Value {
         /**
          * Adds an optional sub-template to the end
          * of this SET template. For example, if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySet ::= SET {
          *      item        SubType OPTIONAL,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySet template with:
-         * 
+         *
          * <pre>
          * mySet.addOptionalElement(new SubType.Template());
          * </pre>
-         * 
+         *
          * @param t Optional sub-template.
          */
         public void addOptionalElement(ASN1Template t) {
@@ -482,7 +474,7 @@ public class SET implements ASN1Value {
 
         /**
          * Inserts the optional template at the given index.
-         * 
+         *
          * @param t Optional sub-template.
          * @param index Index.
          */
@@ -493,19 +485,19 @@ public class SET implements ASN1Value {
         /**
          * Adds an optional sub-template with the given implicit tag to the end
          * of this SET template. For example, if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySet ::= SET {
          *      item        [0] IMPLICIT SubType OPTIONAL,
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySet template with:
-         * 
+         *
          * <pre>
          * mySet.addOptionalElement(new Tag(0), new SubType.Template());
          * </pre>
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Optional sub-template.
          */
@@ -516,7 +508,7 @@ public class SET implements ASN1Value {
         /**
          * Inserts the optional template with the given default
          * value at the given index.
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Optional sub-template.
          * @param index Index.
@@ -529,19 +521,19 @@ public class SET implements ASN1Value {
         /**
          * Adds a sub-template with the given default value to the end
          * of this SET template. For example, if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySet ::= SET {
          *      item        INTEGER DEFAULT (5),
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySet template with:
-         * 
+         *
          * <pre>
          * mySet.addElement(new SubType.Template(), new INTEGER(5));
          * </pre>
-         * 
+         *
          * @param t Sub-template.
          * @param def Default value.
          */
@@ -552,7 +544,7 @@ public class SET implements ASN1Value {
         /**
          * Inserts the template with the given default
          * value at the given index.
-         * 
+         *
          * @param t Sub-template.
          * @param def Default value.
          * @param index Index.
@@ -564,19 +556,19 @@ public class SET implements ASN1Value {
         /**
          * Adds a sub-template with the given default value and implicit tag to
          * the end of this SET template. For example, if the ASN.1 included:
-         * 
+         *
          * <pre>
          * MySet ::= SET {
          *      item        [0] IMPLICIT INTEGER DEFAULT (5),
          *      ... }
          * </pre>
-         * 
+         *
          * the "item" element would be added to the MySet template with:
-         * 
+         *
          * <pre>
          * mySet.addElement(new Tag(0), new SubType.Template(), new INTEGER(5));
          * </pre>
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Sub-template.
          * @param def Default value.
@@ -588,7 +580,7 @@ public class SET implements ASN1Value {
         /**
          * Inserts the template with the given implicit tag and given default
          * value at the given index.
-         * 
+         *
          * @param implicit Implicit tag.
          * @param t Sub-template.
          * @param def Default value.
@@ -602,7 +594,7 @@ public class SET implements ASN1Value {
         /**
          * Returns the implicit tag of the item stored at the given index.
          * May be NULL if no implicit tag was specified.
-         * 
+         *
          * @param index Index.
          * @return Implicit tag.
          */
@@ -612,7 +604,7 @@ public class SET implements ASN1Value {
 
         /**
          * Returns the sub-template stored at the given index.
-         * 
+         *
          * @param index Index.
          * @return Sub-template.
          */
@@ -623,7 +615,7 @@ public class SET implements ASN1Value {
         /**
          * Returns <code>true</code> if the sub-template at the given index
          * is optional.
-         * 
+         *
          * @param index Index.
          * @return True if sub-template is optional.
          */
@@ -638,7 +630,7 @@ public class SET implements ASN1Value {
         /**
          * Returns the default value for the sub-template at the given index.
          * May return NULL if no default value was specified.
-         * 
+         *
          * @param index Index.
          * @return Default value.
          */
@@ -667,7 +659,7 @@ public class SET implements ASN1Value {
 
         /**
          * Determines whether the given tag satisfies this template.
-         * 
+         *
          * @param tag Tag.
          * @return True if tag satisfies this template.
          */
@@ -678,7 +670,7 @@ public class SET implements ASN1Value {
 
         /**
          * Decodes the input stream into a SET value.
-         * 
+         *
          * @param istream Input stream.
          * @return Decoded SET value.
          */
@@ -691,7 +683,7 @@ public class SET implements ASN1Value {
         /**
          * Decodes the input stream into a SET value with the given implicit
          * tag.
-         * 
+         *
          * @param tag Implicit tag.
          * @param istream Input stream.
          * @return Decoded SET value.
@@ -810,7 +802,7 @@ public class SET implements ASN1Value {
          * or -1 if not found.
          * lame linear search - but we're dealing with small numbers of elements,
          * so it's probably not worth it to use a hashtable
-         * 
+         *
          * @param tag Tag.
          */
         private int findElementByTag(Tag tag) {
@@ -872,16 +864,12 @@ public class SET implements ASN1Value {
 
             /**
              * Determines whether the given tag satisfies this SET element.
-             * 
+             *
              * @param tag Tag.
              * @return True if tag satisfies SET.
              */
             public boolean tagMatch(Tag tag) {
-                if (implicitTag != null) {
-                    return (implicitTag.equals(tag));
-                } else {
-                    return type.tagMatch(tag);
-                }
+                return implicitTag == null ? type.tagMatch(tag) : (implicitTag.equals(tag));
             }
 
             private ASN1Template type;
@@ -898,7 +886,7 @@ public class SET implements ASN1Value {
             /**
              * Returns the default value for this element, if one exists.
              * Otherwise, returns null.
-             * 
+             *
              * @return Default value.
              */
             public ASN1Value getDefault() {
@@ -921,17 +909,17 @@ public class SET implements ASN1Value {
 
         /**
          * Creates an OF_Template with the given type. For example:
-         * 
+         *
          * <pre>
          * MySet ::= SET OF INTEGER;
          * </pre>
-         * 
+         *
          * A <code>MySet</code> template would be constructed with:
-         * 
+         *
          * <pre>
          * SET.OF_Template mySetTemplate = new SET.OF_Template(new INTEGER.Template());
          * </pre>
-         * 
+         *
          * @param type Type.
          */
         public OF_Template(ASN1Template type) {
@@ -967,7 +955,7 @@ public class SET implements ASN1Value {
     }
 
     // Test driver for SET
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         try {
 
