@@ -159,7 +159,8 @@ jobs:
   sandbox-test:
     name: Sandbox Test
     runs-on: ubuntu-latest
-    container: fedora:rawhide
+    container:
+      image: quay.io/fedora/fedora:rawhide
     steps:
     - name: Clone repository
       uses: actions/checkout@v3
