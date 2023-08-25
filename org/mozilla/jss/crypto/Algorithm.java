@@ -229,5 +229,7 @@ public class Algorithm {
     protected static final short CKM_AES_KEY_WRAP_PAD=66;
     // RSA-PSS
     protected static final short SEC_OID_PKCS1_RSA_PSS_SIGNATURE = 67;
+    // CKM_AES_KEY_WRAP_KWP for HSM support
+    protected static final int CKM_AES_KEY_WRAP_KWP = 68;
 
 }

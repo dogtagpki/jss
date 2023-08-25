@@ -130,6 +130,14 @@ public class KeyWrapAlgorithm extends Algorithm {
     AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
                 (Class<?>) null, true, 8);
 
+    /*
+     * Added to support HSMs. There is no CKM_NSS equivalent, unlike the
+     * above two mechanisms.
+    */
+    public static final KeyWrapAlgorithm
+    AES_KEY_WRAP_PAD_KWP = new KeyWrapAlgorithm(CKM_AES_KEY_WRAP_KWP, "AES KeyWrap/Wrapped",
+                (Class<?>) null, true, 8);
+
     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.5");
     public static final OBJECT_IDENTIFIER AES_CBC_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.2");
