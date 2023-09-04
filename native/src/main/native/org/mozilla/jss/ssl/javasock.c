@@ -365,11 +365,11 @@ getInetAddress(PRFileDesc *fd, PRNetAddr *addr, LocalOrPeer localOrPeer)
         if (addrBALen == 4) {
             memcpy( (void*) &addr->inet.ip, addrBytes, 4);
             addr->inet.family = PR_AF_INET;
-            addr->inet.port = port;
+            addr->inet.port = PR_htons(port);
         } else {
             memcpy( (void*) &addr->ipv6.ip,addrBytes, 16);
             addr->inet.family = PR_AF_INET6;
-            addr->inet.port = port;
+            addr->inet.port = PR_htons(port);
         }
 
         JSS_DerefByteArray(env, addrByteArray, addrBytes, JNI_ABORT);
