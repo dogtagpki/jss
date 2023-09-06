@@ -3,6 +3,7 @@ name: Build JSS
 on: [push, pull_request]
 
 env:
+  BASE_IMAGE: ${{ vars.BASE_IMAGE || 'registry.fedoraproject.org/fedora:latest' }}
   COPR_REPO: ${{ vars.COPR_REPO || '@pki/master' }}
 
 jobs:
@@ -34,7 +35,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
             COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-deps
           target: jss-deps
@@ -46,7 +47,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
             COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-builder-deps
           target: jss-builder-deps
@@ -58,7 +59,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
             COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-builder
           target: jss-builder
@@ -76,7 +77,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
             COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-dist
           target: jss-dist
@@ -94,7 +95,7 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
             COPR_REPO=${{ env.COPR_REPO }}
           tags: jss-runner
           target: jss-runner
