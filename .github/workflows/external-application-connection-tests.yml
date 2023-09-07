@@ -70,9 +70,23 @@ jobs:
           docker exec jss dnf install -y postgresql-jdbc
           docker exec -t jss sh -c 'dnf install -y /root/jss/build/RPMS/*.rpm'
 
+      - name: Import LDAP SDK packages
+        run: |
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker create --name=pki-dist quay.io/dogtagpki/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
       - name: Create postgresql certificates
         run: |
-          docker exec jss dnf install -y dogtag-pki
+          docker cp /tmp/RPMS/. jss:/root/RPMS/
+          docker exec jss bash -c "dnf localinstall -y /root/RPMS/*"
+
           docker exec jss pki nss-cert-request --subject "CN=postgresql.example.com" \
               --csr /root/sslserver.csr --ext /usr/share/pki/server/certs/sslserver.conf
           docker exec jss pki nss-cert-issue --csr /root/sslserver.csr \
