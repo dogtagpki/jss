@@ -88,6 +88,9 @@ public final class RevocationReason implements Serializable {
     }
 
     public static RevocationReason valueOf(String string) {
+        if (string == null) {
+            return null;
+        }
         return LABELS.get(string.toLowerCase());
     }
 
