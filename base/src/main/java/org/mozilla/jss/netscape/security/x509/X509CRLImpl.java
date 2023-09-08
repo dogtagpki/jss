@@ -45,6 +45,8 @@ import org.mozilla.jss.netscape.security.util.DerInputStream;
 import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -90,6 +92,8 @@ import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
  */
 public class X509CRLImpl extends X509CRL {
 
+    public static Logger logger = LoggerFactory.getLogger(X509CRLImpl.class);
+
     // CRL data, and its envelope
     private byte[] signedCRL = null; // DER encoded crl
     private byte[] signature = null; // raw signature bits
@@ -128,7 +132,7 @@ public class X509CRLImpl extends X509CRL {
             parse(in);
             signedCRL = crlData;
         } catch (IOException e) {
-            throw new CRLException("Parsing error: " + e.getMessage());
+            throw new CRLException("Parsing error: " + e.getMessage(), e);
         }
     }
 
@@ -141,7 +145,7 @@ public class X509CRLImpl extends X509CRL {
             parse(in, includeEntries);
             signedCRL = crlData;
         } catch (IOException e) {
-            throw new CRLException("Parsing error: " + e.getMessage());
+            throw new CRLException("Parsing error: " + e.getMessage(), e);
         }
     }
 
@@ -1052,9 +1056,11 @@ public class X509CRLImpl extends X509CRL {
         nextByte = (byte) derStrm.peekByte();
         if ((nextByte == DerValue.tag_SequenceOf) && ((nextByte & 0x0c0) != 0x080)) {
             if (includeEntries) {
+                logger.info("X509CRLImpl: Parsing revoked certificates:");
                 DerValue[] badCerts = derStrm.getSequence(4);
                 for (int i = 0; i < badCerts.length; i++) {
                     RevokedCertImpl entry = new RevokedCertImpl(badCerts[i]);
+                    logger.info("X509CRLImpl: - 0x" + entry.getSerialNumber().toString(16));
                     if (entry.hasExtensions() && (version == 0))
                         throw new CRLException("Invalid encoding, extensions" +
                                 " not supported in CRL v1 entries.");
@@ -1063,6 +1069,7 @@ public class X509CRLImpl extends X509CRL {
                                      entry);
                 }
             } else {
+                logger.info("X509CRLImpl: Skipping revoked certificates");
                 derStrm.skipSequence(4);
             }
         }
