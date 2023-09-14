@@ -18,7 +18,7 @@ Name:           jss
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase alpha1
+%global         phase alpha2
 
 %undefine       timestamp
 %undefine       commit_id
