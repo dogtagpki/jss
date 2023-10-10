@@ -53,6 +53,7 @@
             <groupId>org.opentest4j</groupId>
             <artifactId>opentest4j</artifactId>
             <version>1.2.0</version>
+            <scope>test</scope>
         </dependency> 
     </dependencies>
 
