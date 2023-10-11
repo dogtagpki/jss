@@ -56,6 +56,7 @@ RUN ./build.sh --work-dir=build rpm
 FROM alpine:latest AS jss-dist
 
 # Import JSS packages
+COPY --from=jss-builder /root/jss/build/SRPMS /root/SRPMS/
 COPY --from=jss-builder /root/jss/build/RPMS /root/RPMS/
 
 ################################################################################

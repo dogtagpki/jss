@@ -133,16 +133,14 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 # Tomcat
-BuildRequires:  tomcat >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina)
-BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote)
-BuildRequires:  mvn(org.apache.tomcat:tomcat-juli)
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
 
 Requires:       %{product_id} = %{version}-%{release}
-Requires:       tomcat >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-catalina)
-Requires:       mvn(org.apache.tomcat:tomcat-coyote)
-Requires:       mvn(org.apache.tomcat:tomcat-juli)
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
 # This will remove installed Tomcat JSS packages.
