@@ -117,11 +117,6 @@ Provides:       jss = %{version}-%{release}
 Provides:       jss = %{major_version}.%{minor_version}
 Provides:       %{product_id} = %{major_version}.%{minor_version}
 
-# Tomcat JSS 8.5 has been replaced by JSS Tomcat 5.5.
-# This will remove installed Tomcat JSS packages.
-Obsoletes:      tomcatjss <= 8.5
-Conflicts:      tomcatjss <= 8.5
-
 Conflicts:      ldapjdk < 4.20
 Conflicts:      idm-console-framework < 1.2
 Conflicts:      pki-base < 10.10.0
@@ -138,11 +133,28 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 # Tomcat
+BuildRequires:  tomcat >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina)
 BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote)
 BuildRequires:  mvn(org.apache.tomcat:tomcat-juli)
 
 Requires:       %{product_id} = %{version}-%{release}
+Requires:       tomcat >= 9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-catalina)
+Requires:       mvn(org.apache.tomcat:tomcat-coyote)
+Requires:       mvn(org.apache.tomcat:tomcat-juli)
+
+# Tomcat JSS has been replaced with JSS Connector for Tomcat.
+# This will remove installed Tomcat JSS packages.
+Obsoletes:      tomcatjss <= 8.5
+Conflicts:      tomcatjss <= 8.5
+
+%if 0%{?rhel} <= 8
+# PKI Servlet Engine has been replaced with Tomcat.
+# This will remove installed PKI Servlet Engine packages.
+Obsoletes:      pki-servlet-engine <= 9.0
+Conflicts:      pki-servlet-engine <= 9.0
+%endif
 
 %description -n %{product_id}-tomcat
 JSS Connector for Tomcat is a Java Secure Socket Extension (JSSE)
