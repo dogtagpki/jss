@@ -43,7 +43,7 @@ DIST=
 WITH_JAVA=true
 WITH_NATIVE=true
 WITH_JAVADOC=true
-WITH_TESTS=false
+WITH_TESTS=true
 
 VERBOSE=
 DEBUG=
@@ -73,7 +73,7 @@ usage() {
     echo "    --without-java         Do not build Java binaries."
     echo "    --without-native       Do not build native binaries."
     echo "    --without-javadoc      Do not build Javadoc package."
-    echo "    --with-tests           Run unit tests."
+    echo "    --without-tests        Do not build tests package."
     echo " -v,--verbose              Run in verbose mode."
     echo "    --debug                Run in debug mode."
     echo "    --help                 Show help message."
@@ -130,7 +130,6 @@ generate_rpm_sources() {
     tar czf "$WORK_DIR/SOURCES/$TARBALL" \
         --transform "s,^./,$PREFIX/," \
         --exclude .git \
-        --exclude bin \
         --exclude build \
         -C "$SRC_DIR" \
         .
@@ -185,10 +184,10 @@ generate_rpm_spec() {
         sed -i "s/%\(bcond_without *javadoc\)\$/# \1\n%bcond_with javadoc/g" "$SPEC_FILE"
     fi
 
-    # hard-code test option
-    if [ "$WITH_TESTS" = true ] ; then
-        # convert bcond_with into bcond_without such that it runs unit tests by default
-        sed -i "s/%\(bcond_with *tests\)\$/# \1\n%bcond_without tests/g" "$SPEC_FILE"
+    # hard-code tests option
+    if [ "$WITH_TESTS" = false ] ; then
+        # convert bcond_without into bcond_with such that tests package is not built by default
+        sed -i "s/%\(bcond_without *tests\)\$/# \1\n%bcond_with tests/g" "$SPEC_FILE"
     fi
 
     # rpmlint "$SPEC_FILE"
@@ -266,8 +265,8 @@ while getopts v-: arg ; do
         without-javadoc)
             WITH_JAVADOC=false
             ;;
-        with-tests)
-            WITH_TESTS=true
+        without-tests)
+            WITH_TESTS=false
             ;;
         verbose)
             VERBOSE=true
@@ -468,7 +467,6 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     fi
 
     echo
-    echo "To run the tests: $0 --with-tests"
     echo "To install the build: $0 install"
     echo "To create RPM packages: $0 rpm"
     echo
