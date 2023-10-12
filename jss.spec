@@ -68,10 +68,10 @@ ExcludeArch: i686
 
 %bcond_without javadoc
 
-# By default the build will not execute unit tests unless --with tests
-# option is specified.
+# By default the tests package will be built and the tests will executed
+# unless --without tests option is specified.
 
-%bcond_with tests
+%bcond_without tests
 
 ################################################################################
 # Build Dependencies
@@ -91,8 +91,6 @@ BuildRequires:  maven-local
 BuildRequires:  mvn(org.apache.commons:commons-lang3)
 BuildRequires:  mvn(org.slf4j:slf4j-api)
 BuildRequires:  mvn(org.slf4j:slf4j-jdk14)
-BuildRequires:  mvn(org.junit.jupiter:junit-jupiter)
-BuildRequires:  mvn(org.opentest4j:opentest4j)
 
 %description
 Java Security Services (JSS) is a java native interface which provides a bridge
@@ -173,6 +171,22 @@ Provides:       %{product_id}-javadoc = %{major_version}.%{minor_version}
 
 %description -n %{product_id}-javadoc
 This package contains the API documentation for JSS.
+%endif
+
+%if %{with tests}
+################################################################################
+%package -n %{product_id}-tests
+################################################################################
+
+Summary:        Java Security Services (JSS) Tests
+
+BuildRequires:  mvn(org.junit.jupiter:junit-jupiter)
+BuildRequires:  mvn(org.opentest4j:opentest4j)
+
+%description -n %{product_id}-tests
+This package provides test suite for JSS.
+
+# with tests
 %endif
 
 ################################################################################
@@ -261,7 +275,7 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --version=%{version} \
     --without-java \
     --without-javadoc \
-    %{?with_tests:--with-tests} \
+    %{!?with_tests:--without-tests} \
     dist
 
 ################################################################################
@@ -290,6 +304,12 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
     --without-java \
     install
 
+# install tests binaries
+%if %{with tests}
+mkdir -p %{buildroot}%{_datadir}/jss/tests/lib
+cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
+%endif
+
 ################################################################################
 %files -n %{product_id} -f .mfiles-jss-base
 ################################################################################
@@ -310,6 +330,16 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
 ################################################################################
 %files -n %{product_id}-javadoc -f .mfiles-javadoc
 ################################################################################
+%endif
+
+%if %{with tests}
+################################################################################
+%files -n %{product_id}-tests
+################################################################################
+
+%{_datadir}/jss/tests/
+
+# with tests
 %endif
 
 ################################################################################

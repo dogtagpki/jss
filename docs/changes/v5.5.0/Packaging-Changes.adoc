@@ -8,3 +8,7 @@ This package will replace Tomcat JSS with the following changes:
 * All classes are moved into `org.dogtagpki.jss.tomcat` package.
 * Generic Tomcat classes are packaged into `jss-tomcat.jar`.
 * Tomcat 9.0 classes are packaged into `jss-tomcat-9.0.jar`.
+
+== New jss-tests RPM package ==
+
+A new `jss-tests` RPM package has been added to provide JSS test scripts and binaries.

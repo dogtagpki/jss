@@ -56,7 +56,7 @@ jobs:
       docker exec -w /root/src runner dnf builddep -y --spec jss.spec
     displayName: Install build dependencies
 
-  - script: docker exec -w /root/src runner ./build.sh --with-tests
+  - script: docker exec -w /root/src runner ./build.sh
     displayName: Build JSS binaries, Javadoc, and run tests
 
 - job: BuildTest_apt
@@ -79,7 +79,7 @@ jobs:
           junit5 libopentest4j-java
     displayName: Install build dependencies
 
-  - script: ./build.sh --with-tests
+  - script: ./build.sh
     displayName: Build JSS binaries, Javadoc, and run tests
     env:
       JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64

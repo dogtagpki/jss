@@ -44,7 +44,7 @@ jobs:
             junit5 libopentest4j-java maven
 
     - name: Build JSS with CMake
-      run: ./build.sh --with-tests
+      run: ./build.sh
 
     - name: Build JSS with Maven
       run: mvn package
