@@ -3,14 +3,8 @@ name: PKI Tests
 on: [push, pull_request]
 
 jobs:
-  init:
-    name: Initialization
-    uses: ./.github/workflows/init.yml
-    secrets: inherit
-
   build:
     name: Waiting for build
-    needs: init
     runs-on: ubuntu-latest
     steps:
       - name: Wait for build
@@ -33,20 +27,20 @@ jobs:
 
   pki-build-test:
     name: Testing PKI build
-    needs: [init, build]
+    needs: build
     uses: ./.github/workflows/pki-build-test.yml
 
   pki-tools-test:
     name: Testing PKI tools
-    needs: [init, build]
+    needs: build
     uses: ./.github/workflows/pki-tools-test.yml
 
   pki-ca-test:
     name: Testing PKI CA
-    needs: [init, build]
+    needs: build
     uses: ./.github/workflows/pki-ca-test.yml
 
   pki-tps-test:
     name: Testing PKI TPS
-    needs: [init, build]
+    needs: build
     uses: ./.github/workflows/pki-tps-test.yml

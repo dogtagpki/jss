@@ -3,14 +3,8 @@ name: Third party Tests
 on: [push, pull_request]
 
 jobs:
-  init:
-    name: Initialization
-    uses: ./.github/workflows/init.yml
-    secrets: inherit
-
   build:
     name: Waiting for build
-    needs: init
     runs-on: ubuntu-latest
     steps:
       - name: Wait for build
@@ -34,7 +28,7 @@ jobs:
   
   postgresql-test:
     name: Testing connection to postrgresql
-    needs: [init, build]
+    needs: build
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss

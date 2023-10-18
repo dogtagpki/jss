@@ -3,14 +3,8 @@ name: PKCS11 Tests
 on: [push, pull_request]
 
 jobs:
-  init:
-    name: Initialization
-    uses: ./.github/workflows/init.yml
-    secrets: inherit
-
   build:
     name: Waiting for build
-    needs: init
     runs-on: ubuntu-latest
     steps:
       - name: Wait for build
@@ -33,7 +27,7 @@ jobs:
 
   pkcs11-constants-test:
     name: Testing PKCS11 Constants
-    needs: [init, build]
+    needs: build
     runs-on: ubuntu-latest
     env:
       SHARED: /tmp/workdir/jss

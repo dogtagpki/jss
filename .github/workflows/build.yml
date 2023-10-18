@@ -7,14 +7,8 @@ env:
   COPR_REPO: ${{ vars.COPR_REPO || '@pki/master' }}
 
 jobs:
-  init:
-    name: Initialization
-    uses: ./.github/workflows/init.yml
-    secrets: inherit
-
   build:
     name: Building JSS
-    needs: init
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
