@@ -205,8 +205,12 @@ This package provides test suite for JSS.
 # flatten-maven-plugin is not available in RPM
 %pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
 
-# assign Maven artifacts to RPM packages
-%mvn_package org.dogtagpki.jss:jss-parent      jss-base
+# specify Maven artifact locations
+%mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
+%mvn_file org.dogtagpki.jss:jss-tomcat-9.0     jss/jss-tomcat-9.0
+
+# specify Maven artifact packages
+%mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
 %mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
 
 ################################################################################
@@ -230,7 +234,7 @@ export CFLAGS
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
 # build Java code, run Java tests, and build Javadoc with Maven
-%mvn_build -s %{!?with_tests:-f} %{!?with_javadoc:-j}
+%mvn_build %{!?with_tests:-f} %{!?with_javadoc:-j}
 
 # create links to Maven-built classes for CMake
 mkdir -p %{_vpath_builddir}/classes/jss
@@ -311,7 +315,7 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %endif
 
 ################################################################################
-%files -n %{product_id} -f .mfiles-jss-base
+%files -n %{product_id} -f .mfiles
 ################################################################################
 
 %doc jss.html
