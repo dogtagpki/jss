@@ -24,6 +24,15 @@ macro(jss_build)
     jss_build_includes()
     jss_build_c()
     jss_build_jars()
+
+    if(WITH_TESTS)
+        jss_build_test_globs()
+        jss_build_tests()
+        jss_build_test_includes()
+        jss_build_test_c()
+        jss_build_test_jars()
+    endif(WITH_TESTS)
+
     jss_build_javadocs()
 endmacro()
 
@@ -33,39 +42,39 @@ macro(jss_build_globs)
         list(APPEND JAVA_SOURCES "${_JAVA_SOURCE}")
     endforeach()
 
-    file(GLOB_RECURSE _JAVA_SOURCES base/src/test/java/*.java)
-    foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
-        list(APPEND JAVA_TEST_SOURCES "${_JAVA_SOURCE}")
-    endforeach()
-
     # Write the Java sources to a file to reduce the size of the javac
     # command line.
     list(SORT JAVA_SOURCES)
-    list(SORT JAVA_TEST_SOURCES)
     jss_list_join(JAVA_SOURCES "\n" JAVA_SOURCES_CONTENTS)
-    jss_list_join(JAVA_TEST_SOURCES "\n" JAVA_TEST_SOURCES_CONTENTS)
 
     file(WRITE "${JAVA_SOURCES_FILE}" "${JAVA_SOURCES_CONTENTS}")
-    file(WRITE "${JAVA_TEST_SOURCES_FILE}" "${JAVA_TEST_SOURCES_CONTENTS}")
-
 
     file(GLOB_RECURSE _C_HEADERS native/src/main/native/*.h)
     foreach(_C_HEADER ${_C_HEADERS})
         list(APPEND C_HEADERS "${_C_HEADER}")
     endforeach()
 
-    file(GLOB_RECURSE _C_HEADERS native/src/test/native/*.h)
-    foreach(_C_HEADER ${_C_HEADERS})
-        list(APPEND C_TEST_HEADERS "${_C_HEADER}")
-    endforeach()
-
-    # We exclude any C files in the tests directory because they shouldn't
-    # contribute to our library. They should instead be built as part of the
-    # test suite and probably be built as stand alone binaries which link
-    # against libjss.so (at most).
     file(GLOB_RECURSE _C_SOURCES native/src/main/native/*.c)
     foreach(_C_SOURCE ${_C_SOURCES})
         list(APPEND C_SOURCES "${_C_SOURCE}")
+    endforeach()
+endmacro()
+
+macro(jss_build_test_globs)
+
+    file(GLOB_RECURSE _JAVA_SOURCES base/src/test/java/*.java)
+    foreach(_JAVA_SOURCE ${_JAVA_SOURCES})
+        list(APPEND JAVA_TEST_SOURCES "${_JAVA_SOURCE}")
+    endforeach()
+
+    list(SORT JAVA_TEST_SOURCES)
+    jss_list_join(JAVA_TEST_SOURCES "\n" JAVA_TEST_SOURCES_CONTENTS)
+
+    file(WRITE "${JAVA_TEST_SOURCES_FILE}" "${JAVA_TEST_SOURCES_CONTENTS}")
+
+    file(GLOB_RECURSE _C_HEADERS native/src/test/native/*.h)
+    foreach(_C_HEADER ${_C_HEADERS})
+        list(APPEND C_TEST_HEADERS "${_C_HEADER}")
     endforeach()
 
     file(GLOB_RECURSE _C_SOURCES native/src/test/native/*.c)
@@ -81,7 +90,6 @@ macro(jss_build_java)
     # on, but it also must be the last-thing created; thus, we touch
     # ${JNI_OUTPUTS} after the javac command finishes.
     set(JNI_OUTPUTS "${TARGETS_OUTPUT_DIR}/finished_generate_java")
-    set(TESTS_JNI_OUTPUTS "${TARGETS_OUTPUT_DIR}/finished_tests_generate_java")
 
     # We frequently use the add_custom_command + add_custom_target wrapper due
     # to a quirk of CMake. This is documented more extensively in the
@@ -95,6 +103,16 @@ macro(jss_build_java)
         DEPENDS ${JAVA_SOURCES}
     )
 
+    add_custom_target(
+        generate_java
+        DEPENDS ${JNI_OUTPUTS}
+    )
+endmacro()
+
+macro(jss_build_tests)
+
+    set(TESTS_JNI_OUTPUTS "${TARGETS_OUTPUT_DIR}/finished_tests_generate_java")
+
     add_custom_command(
         OUTPUT "${TESTS_JNI_OUTPUTS}"
         COMMAND ${Java_JAVAC_EXECUTABLE} ${JSS_TEST_JAVAC_FLAGS} -d ${TESTS_CLASSES_OUTPUT_DIR} -h ${TESTS_JNI_OUTPUT_DIR} @${JAVA_TEST_SOURCES_FILE}
@@ -103,8 +121,8 @@ macro(jss_build_java)
     )
 
     add_custom_target(
-        generate_java
-        DEPENDS ${JNI_OUTPUTS} ${TESTS_JNI_OUTPUTS}
+        generate_tests
+        DEPENDS ${TESTS_JNI_OUTPUTS}
     )
 endmacro()
 
@@ -119,12 +137,18 @@ macro(jss_build_includes)
         file(COPY "${C_HEADER}" DESTINATION ${INCLUDE_OUTPUT_DIR})
     endforeach()
 
+    add_custom_target(
+        generate_includes
+    )
+endmacro()
+
+macro(jss_build_test_includes)
     foreach(C_TEST_HEADER ${C_TEST_HEADERS})
         file(COPY "${C_TEST_HEADER}" DESTINATION ${TESTS_INCLUDE_OUTPUT_DIR})
     endforeach()
 
     add_custom_target(
-        generate_includes
+        generate_test_includes
     )
 endmacro()
 
@@ -167,15 +191,11 @@ macro(jss_build_c)
         DEPENDS ${C_OUTPUTS}
     )
 
-    # We generate two libraries: build/lib/libjss.so and build/libjss.so:
-    # the former is for testing and is unversioned, so all symbols are public
-    # and can thus be tested; the latter is for releases and is versioned,
-    # limiting which symbols are made public. We only need to make the JNI
-    # symbols public as libjss.so should only be used from Java in conjunction
-    # with jss.jar.
+    # The build/libjss.so is for releases and is versioned, limiting which
+    # symbols are made public. We only need to make the JNI symbols public
+    # as libjss.so should only be used from Java in conjunction with jss.jar.
     add_custom_command(
-        OUTPUT "${JSS_SO_PATH}" "${JSS_TESTS_SO_PATH}"
-        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_TESTS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_LIBRARY_FLAGS}
+        OUTPUT "${JSS_SO_PATH}"
         COMMAND ${CMAKE_C_COMPILER} -o ${JSS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_VERSION_SCRIPT} ${JSS_LIBRARY_FLAGS}
         DEPENDS generate_c
     )
@@ -183,7 +203,22 @@ macro(jss_build_c)
     # Add a target for anything depending on the library existing.
     add_custom_target(
         generate_so
-        DEPENDS ${JSS_SO_PATH} ${JSS_TESTS_SO_PATH}
+        DEPENDS ${JSS_SO_PATH}
+    )
+endmacro()
+
+macro(jss_build_test_c)
+    # The build/lib/libjss.so is for testing and is unversioned,
+    # so all symbols are public and can thus be tested.
+    add_custom_command(
+        OUTPUT "${JSS_TESTS_SO_PATH}"
+        COMMAND ${CMAKE_C_COMPILER} -o ${JSS_TESTS_SO_PATH} ${LIB_OUTPUT_DIR}/*.o ${JSS_LD_FLAGS} ${JSS_LIBRARY_FLAGS}
+        DEPENDS generate_c
+    )
+
+    add_custom_target(
+        generate_test_so
+        DEPENDS ${JSS_TESTS_SO_PATH}
     )
 endmacro()
 
@@ -213,19 +248,19 @@ macro(jss_build_jars)
         generate_jar
         DEPENDS "${JSS_JAR_PATH}"
     )
+endmacro()
 
-    if(WITH_TESTS)
-        add_custom_target(
-            generate_tests_jar
-            DEPENDS generate_java)
+macro(jss_build_test_jars)
+    add_custom_target(
+        generate_tests_jar
+        DEPENDS generate_java)
 
-        add_custom_command(
-            TARGET generate_tests_jar
-            COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
-        )
+    add_custom_command(
+        TARGET generate_tests_jar
+        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
+    )
 
-        add_dependencies(generate_jar generate_tests_jar)
-    endif(WITH_TESTS)
+    add_dependencies(generate_jar generate_tests_jar)
 endmacro()
 
 # Build javadocs from the source files

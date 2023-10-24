@@ -481,7 +481,7 @@ macro(jss_tests_compile_c C_FILE C_OUTPUT C_TARGET)
         DEPENDS "${C_FILE}"
         DEPENDS "${JSS_TESTS_SO_PATH}"
         DEPENDS generate_java
-        DEPENDS generate_includes
+        DEPENDS generate_test_includes
     )
 
     add_custom_target(
@@ -489,7 +489,7 @@ macro(jss_tests_compile_c C_FILE C_OUTPUT C_TARGET)
         DEPENDS "${C_OUTPUT}"
     )
 
-    add_dependencies("generate_so" "generate_c_${C_TARGET}")
+    add_dependencies("generate_test_so" "generate_c_${C_TARGET}")
 endmacro()
 
 function(jss_test_java)

@@ -99,10 +99,18 @@ add_custom_target(
     DEPENDS generate_java generate_jar
 )
 
+if(WITH_TESTS)
+    add_dependencies(java generate_tests)
+endif(WITH_TESTS)
+
 add_custom_target(
     native ALL
     DEPENDS generate_c generate_so symkey_library
 )
+
+if(WITH_TESTS)
+    add_dependencies(native generate_test_so)
+endif(WITH_TESTS)
 
 if(WITH_JAVA)
     install(

@@ -15,8 +15,10 @@ macro(jss_config)
     # Configure java-related flags
     jss_config_java()
 
-    # Configure test variables
-    jss_config_tests()
+    if(WITH_TESTS)
+        # Configure test variables
+        jss_config_tests()
+    endif(WITH_TESTS)
 
     # Check symbols to see what tests we run
     jss_config_symbols()
@@ -227,34 +229,6 @@ macro(jss_config_java)
         SLF4J_JDK14_JAR
         NAMES jdk14 slf4j/jdk14 slf4j-jdk14
     )
-    find_jar(
-        JUNIT5_API_JAR
-        NAMES junit-jupiter-api junit5/junit-jupiter-api
-    )
-    find_jar(
-	    JUNIT5_ENGINE_JAR
-        NAMES junit-jupiter-engine junit5/junit-jupiter-engine
-    )
-    find_jar(
-	    JUNIT5_PLATFORM_COMMONS_JAR
-        NAMES junit-platform-commons junit5/junit-platform-commons
-    )
-    find_jar(
-	    JUNIT5_PLATFORM_ENGINE_JAR
-        NAMES junit-platform-engine junit5/junit-platform-engine
-    )
-    find_jar(
-	    JUNIT5_PLATFORM_LAUNCHER_JAR
-        NAMES junit-platform-launcher junit5/junit-platform-launcher
-    )
-    find_jar(
-	    OPENTEST4J_JAR
-        NAMES opentest4j opentest4j/opentest4j
-    )
-    find_jar(
-        HAMCREST_JAR
-        NAMES hamcrest/core hamcrest-core hamcrest/hamcrest
-    )
 
     # Validate that we've found the required JARs
     if(SLF4J_API_JAR STREQUAL "SLF4J_API_JAR-NOTFOUND")
@@ -269,40 +243,9 @@ macro(jss_config_java)
         message(WARNING "Test dependency sfl4j-jdk14.jar not found by find_jar! Tests might not run properly.")
     endif()
 
-    if(JUNIT5_API_JAR STREQUAL "JUNIT5_API_JAR-NOTFOUND")
-        message(FATAL_ERROR "Test dependency JUnit 5 API not found by find_jar! Tests will not compile.")
-    endif()
-
-    if(JUNIT5_ENGINE_JAR STREQUAL "JUNIT5_ENGINE_JAR-NOTFOUND")
-        message(WARNING "Test dependency JUnit 5 engine not found by find_jar! Tests could not execute.")
-    endif()
-
-    if(JUNIT5_PLATFORM_COMMONS_JAR STREQUAL "JUNIT5_PLATFORM_COMMONS_JAR-NOTFOUND")
-        message(WARNING "Test dependency JUnit 5 platform commons not found by find_jar! Tests could not execute.")
-    endif()
-
-    if(JUNIT5_PLATFORM_ENGINE_JAR STREQUAL "JUNIT5_PLATFORM_ENGINE_JAR-NOTFOUND")
-        message(WARNING "Test dependency JUnit 5 platform engine not found by find_jar! Tests could not execute.")
-    endif()
-
-    if(JUNIT5_PLATFORM_LAUNCHER_JAR STREQUAL "JUNIT5_PLATFORM_LAUNCHER_JAR-NOTFOUND")
-        message(WARNING "Test dependency JUnit 5 platform launcher not found by find_jar! Tests could not execute.")
-    endif()
-
-    if(OPENTEST4J_JAR STREQUAL "OPENTEST4J_JAR-NOTFOUND")
-        message(WARNING "Test dependency opentest4j not found by find_jar! Tests could not execute.")
-    endif()
-
-    if(HAMCREST_JAR STREQUAL "HAMCREST_JAR-NOTFOUND")
-        message(WARNING "Test dependency hamcrest/core.jar not found by find_jar! Tests might not run properly.")
-    endif()
-
-    # Set class paths
+    # Set class path
     set(JAVAC_CLASSPATH "${SLF4J_API_JAR}:${LANG_JAR}")
-    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT5_API_JAR}:${JUNIT5_ENGINE_JAR}:${JUNIT5_PLATFORM_COMMONS_JAR}:${JUNIT5_PLATFORM_ENGINE_JAR}:${JUNIT5_PLATFORM_LAUNCHER_JAR}:${OPENTEST4J_JAR}:${HAMCREST_JAR}")
-
     message(STATUS "javac classpath: ${JAVAC_CLASSPATH}")
-    message(STATUS "tests classpath: ${TEST_CLASSPATH}")
 
     # Set compile flags for JSS
     list(APPEND JSS_JAVAC_FLAGS "-classpath")
@@ -329,39 +272,12 @@ macro(jss_config_java)
         list(APPEND JSS_JAVAC_FLAGS "-O")
     endif()
 
-    # Set compile flags for JSS test suite
-    list(APPEND JSS_TEST_JAVAC_FLAGS "-classpath")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT5_API_JAR}:${JUNIT5_PLATFORM_COMMONS_JAR}:${JUNIT5_PLATFORM_ENGINE_JAR}:${JUNIT5_PLATFORM_LAUNCHER_JAR}:${CLASSES_OUTPUT_DIR}")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/base/src/main/java:${PROJECT_SOURCE_DIR}/base/src/test/java")
-
-    # Ensure we're compatible with JDK 17
-    list(APPEND JSS_TEST_JAVAC_FLAGS "-target")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "17")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "-source")
-    list(APPEND JSS_TEST_JAVAC_FLAGS "17")
-
     # Handle passed-in javac flags as well; assume they are valid.
     separate_arguments(PASSED_JAVAC_FLAGS UNIX_COMMAND "$ENV{JAVACFLAGS}")
-    foreach(PASSED_JAVAC_FLAG ${PASSED_JAVAC_FLAGS})
-        list(APPEND JSS_TEST_JAVAC_FLAGS "${PASSED_JAVAC_FLAG}")
-    endforeach()
-
-    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        list(APPEND JSS_TEST_JAVAC_FLAGS "-g")
-    else()
-        list(APPEND JSS_TEST_JAVAC_FLAGS "-O")
-    endif()
-
     message(STATUS "JSS JAVAC FLAGS: ${JSS_JAVAC_FLAGS}")
-    message(STATUS "JSS TEST JAVAC FLAGS: ${JSS_TEST_JAVAC_FLAGS}")
 
     # Variables for javadoc building.
     set(JSS_WINDOW_TITLE "JSS: Java Security Services")
-
-    set(JSS_BASE_PORT 2876)
-    math(EXPR JSS_TEST_PORT_CLIENTAUTH ${JSS_BASE_PORT}+0)
-    math(EXPR JSS_TEST_PORT_CLIENTAUTH_FIPS ${JSS_BASE_PORT}+1)
 
     # Create META-INF directory for provider
     file(MAKE_DIRECTORY "${CLASSES_OUTPUT_DIR}/META-INF/services")
@@ -507,6 +423,96 @@ macro(jss_config_symbols)
 endmacro()
 
 macro(jss_config_tests)
+
+    find_jar(
+        JUNIT5_API_JAR
+        NAMES junit-jupiter-api junit5/junit-jupiter-api
+    )
+    find_jar(
+	    JUNIT5_ENGINE_JAR
+        NAMES junit-jupiter-engine junit5/junit-jupiter-engine
+    )
+    find_jar(
+	    JUNIT5_PLATFORM_COMMONS_JAR
+        NAMES junit-platform-commons junit5/junit-platform-commons
+    )
+    find_jar(
+	    JUNIT5_PLATFORM_ENGINE_JAR
+        NAMES junit-platform-engine junit5/junit-platform-engine
+    )
+    find_jar(
+	    JUNIT5_PLATFORM_LAUNCHER_JAR
+        NAMES junit-platform-launcher junit5/junit-platform-launcher
+    )
+    find_jar(
+	    OPENTEST4J_JAR
+        NAMES opentest4j opentest4j/opentest4j
+    )
+    find_jar(
+        HAMCREST_JAR
+        NAMES hamcrest/core hamcrest-core hamcrest/hamcrest
+    )
+
+    if(JUNIT5_API_JAR STREQUAL "JUNIT5_API_JAR-NOTFOUND")
+        message(FATAL_ERROR "Test dependency JUnit 5 API not found by find_jar! Tests will not compile.")
+    endif()
+
+    if(JUNIT5_ENGINE_JAR STREQUAL "JUNIT5_ENGINE_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 engine not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(JUNIT5_PLATFORM_COMMONS_JAR STREQUAL "JUNIT5_PLATFORM_COMMONS_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 platform commons not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(JUNIT5_PLATFORM_ENGINE_JAR STREQUAL "JUNIT5_PLATFORM_ENGINE_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 platform engine not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(JUNIT5_PLATFORM_LAUNCHER_JAR STREQUAL "JUNIT5_PLATFORM_LAUNCHER_JAR-NOTFOUND")
+        message(WARNING "Test dependency JUnit 5 platform launcher not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(OPENTEST4J_JAR STREQUAL "OPENTEST4J_JAR-NOTFOUND")
+        message(WARNING "Test dependency opentest4j not found by find_jar! Tests could not execute.")
+    endif()
+
+    if(HAMCREST_JAR STREQUAL "HAMCREST_JAR-NOTFOUND")
+        message(WARNING "Test dependency hamcrest/core.jar not found by find_jar! Tests might not run properly.")
+    endif()
+
+    # Set test class path
+    set(TEST_CLASSPATH "${JSS_JAR_PATH}:${JSS_TESTS_JAR_PATH}:${JAVAC_CLASSPATH}:${SLF4J_JDK14_JAR}:${JUNIT5_API_JAR}:${JUNIT5_ENGINE_JAR}:${JUNIT5_PLATFORM_COMMONS_JAR}:${JUNIT5_PLATFORM_ENGINE_JAR}:${JUNIT5_PLATFORM_LAUNCHER_JAR}:${OPENTEST4J_JAR}:${HAMCREST_JAR}")
+    message(STATUS "tests classpath: ${TEST_CLASSPATH}")
+
+    # Set compile flags for JSS test suite
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-classpath")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${JAVAC_CLASSPATH}:${JUNIT5_API_JAR}:${JUNIT5_PLATFORM_COMMONS_JAR}:${JUNIT5_PLATFORM_ENGINE_JAR}:${JUNIT5_PLATFORM_LAUNCHER_JAR}:${CLASSES_OUTPUT_DIR}")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-sourcepath")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "${PROJECT_SOURCE_DIR}/base/src/main/java:${PROJECT_SOURCE_DIR}/base/src/test/java")
+
+    # Ensure we're compatible with JDK 17
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-target")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "17")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "-source")
+    list(APPEND JSS_TEST_JAVAC_FLAGS "17")
+
+    foreach(PASSED_JAVAC_FLAG ${PASSED_JAVAC_FLAGS})
+        list(APPEND JSS_TEST_JAVAC_FLAGS "${PASSED_JAVAC_FLAG}")
+    endforeach()
+
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        list(APPEND JSS_TEST_JAVAC_FLAGS "-g")
+    else()
+        list(APPEND JSS_TEST_JAVAC_FLAGS "-O")
+    endif()
+
+    message(STATUS "JSS TEST JAVAC FLAGS: ${JSS_TEST_JAVAC_FLAGS}")
+
+    set(JSS_BASE_PORT 2876)
+    math(EXPR JSS_TEST_PORT_CLIENTAUTH ${JSS_BASE_PORT}+0)
+    math(EXPR JSS_TEST_PORT_CLIENTAUTH_FIPS ${JSS_BASE_PORT}+1)
+
     # Common variables used as arguments to several tests
     set(JSS_TEST_DIR "${PROJECT_SOURCE_DIR}/base/src/test/java/org/mozilla/jss/tests")
     set(PASSWORD_FILE "${JSS_TEST_DIR}/passwords")

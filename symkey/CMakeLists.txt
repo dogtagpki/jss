@@ -30,6 +30,10 @@ add_library(${SYMKEY_SHARED_LIBRARY} SHARED
 
 add_dependencies(${SYMKEY_SHARED_LIBRARY} generate_so)
 
+if(WITH_TESTS)
+    add_dependencies(${SYMKEY_SHARED_LIBRARY} generate_test_so)
+endif(WITH_TESTS)
+
 set_target_properties(${SYMKEY_SHARED_LIBRARY}
     PROPERTIES
         OUTPUT_NAME
