@@ -386,6 +386,70 @@ JSS_PK11_getStoreSlotPtr(JNIEnv *env, jobject store, PK11SlotInfo **slot)
 }
 
 /**********************************************************************
+ * PK11Store.importCert
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_importCert(
+    JNIEnv *env,
+    jobject this,
+    jbyteArray certBytes,
+    jstring nickname)
+{
+    PK11SlotInfo *slot = NULL;
+    char *nicknameChars = NULL;
+    jbyte *derCertBytes = NULL;
+    jsize derCertLen;
+    CERTCertificate *nssCert = NULL;
+    SECStatus rv;
+    jobject cert = NULL;
+
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        goto finish;
+    }
+
+    if (certBytes == NULL) {
+        goto finish;
+    }
+
+    if (!JSS_RefByteArray(env, certBytes, &derCertBytes, &derCertLen)) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to parse certificate binaries");
+        goto finish;
+    }
+
+    if (nickname != NULL) {
+        nicknameChars = (char *)JSS_RefJString(env, nickname);
+
+        if (nicknameChars == NULL) {
+            JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to parse certificate nickname");
+            goto finish;
+        }
+    }
+
+    nssCert = CERT_DecodeCertFromPackage((char *)derCertBytes, derCertLen);
+
+    if (nssCert == NULL) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to decode DER certificate");
+        goto finish;
+    }
+
+    rv = PK11_ImportCert(slot, nssCert, CK_INVALID_HANDLE, nicknameChars, PR_FALSE);
+
+    if (rv != SECSuccess) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Unable to import certificate");
+        goto finish;
+    }
+
+    cert = JSS_PK11_wrapCert(env, &nssCert);
+
+finish:
+    CERT_DestroyCertificate(nssCert);
+    JSS_DerefJString(env, nickname, nicknameChars);
+    JSS_DerefByteArray(env, certBytes, derCertBytes, JNI_ABORT);
+
+    return cert;
+}
+
+/**********************************************************************
  * PK11Store.deletePrivateKey
  */
 JNIEXPORT void JNICALL

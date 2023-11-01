@@ -194,6 +194,10 @@ public final class PK11Store implements CryptoStore {
     }
     protected native void putCertsInVector(Vector<X509Certificate> certs) throws TokenException;
 
+    @Override
+    public native X509Certificate importCert(byte[] certBytes, String nickname)
+            throws TokenException;
+
     /**
      * Deletes the specified certificate and its associated private
      * key from the store.

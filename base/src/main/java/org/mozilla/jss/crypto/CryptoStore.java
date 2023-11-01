@@ -166,6 +166,17 @@ public interface CryptoStore {
     public X509Certificate[] getCertificates() throws TokenException;
 
     /**
+     * Imports a certificate into this token.
+     *
+     * @param certBytes Certificate binaries
+     * @param nickname Certificate nickname
+     * @return X509Certificate object of the imported certificate
+     * @throws TokenException
+     */
+    public X509Certificate importCert(byte[] certBytes, String nickname)
+            throws TokenException;
+
+    /**
      * Deletes a certificate and the corresponding keys.
      *
      * @param cert A certificate to be deleted from this token. The cert
