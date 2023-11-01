@@ -512,3 +512,9 @@ Java_org_mozilla_jss_CryptoManager_initializeAllNativeWithContext;
     local:
         *;
 };
+JSS_5.5.0 {
+    global:
+Java_org_mozilla_jss_pkcs11_PK11Store_importCert;
+    local:
+        *;
+};
