@@ -322,6 +322,11 @@ public class TomcatJSS implements SSLSocketListener {
                 "/Server/Service[@name='Catalina']/Connector[@SSLEnabled='true']",
                 document, XPathConstants.NODE);
 
+        if (connector == null) {
+            // no SSL connector
+            return;
+        }
+
         String certDbProp = connector.getAttribute("certdbDir");
         if (certDbProp != null)
             setCertdbDir(certDbProp);
