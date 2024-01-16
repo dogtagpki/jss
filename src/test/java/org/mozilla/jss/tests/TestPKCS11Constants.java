@@ -1,9 +1,22 @@
 package org.mozilla.jss.tests;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TestPKCS11Constants {
+
+    public static Set<String> EXCLUDE = new HashSet<>(Arrays.asList(
+            // The following constants are defined differently in NSS and OpenJDK
+            // so they cannot be compared.
+            // https://github.com/nss-dev/nss/blob/main/lib/util/pkcs11t.h#L1308
+            // https://github.com/openjdk/jdk/blob/master/src/jdk.crypto.cryptoki/share/classes/sun/security/pkcs11/wrapper/PKCS11Constants.java#L1045
+            "CKF_EC_OID",
+            "CKF_EC_NAMEDCURVE"
+    ));
+
     /**
      * This test compares the value of the PKCS11Constants that is maintained
      * by JSS against the values maintained by Sun in the equivalent methods.
@@ -13,8 +26,8 @@ public class TestPKCS11Constants {
      */
     public static void main(String[] args) throws Exception {
         // Query the two classes to get references to their definitions.
-        Class jss = Class.forName("org.mozilla.jss.pkcs11.PKCS11Constants");
-        Class sun = Class.forName("sun.security.pkcs11.wrapper.PKCS11Constants");
+        Class<?> jss = Class.forName("org.mozilla.jss.pkcs11.PKCS11Constants");
+        Class<?> sun = Class.forName("sun.security.pkcs11.wrapper.PKCS11Constants");
 
         assert(!jss.equals(sun));
 
@@ -44,6 +57,9 @@ public class TestPKCS11Constants {
         Arrays.sort(keys_sorted);
 
         for (String key : keys_sorted) {
+
+            if (EXCLUDE.contains(key)) continue;
+
             // If the field is present in both, validate that the value
             // is the same across JSS and Sun implementation. Otherwise,
             // output which implementation it is present in.

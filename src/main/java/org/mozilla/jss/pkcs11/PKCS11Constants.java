@@ -4960,6 +4960,13 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11t.h
      */
+    public static final long CKF_EC_NAMEDCURVE = 0x00800000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11t.h
+     */
     public static final long CKF_EC_UNCOMPRESS = 0x01000000L;
 
     /**
