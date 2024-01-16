@@ -58,10 +58,10 @@ ExcludeArch: i686
 # Build Options
 ################################################################################
 
-# By default the build will not execute unit tests unless --with tests
+# By default the build will execute unit tests unless --without tests
 # option is specified.
 
-%bcond_with tests
+%bcond_without tests
 
 ################################################################################
 # Build Dependencies

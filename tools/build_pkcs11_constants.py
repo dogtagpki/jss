@@ -27,7 +27,8 @@ BLACKLIST = [
     'CK_CALLBACK_FUNCTION',
     'CK_DECLARE_FUNCTION',
     'CK_DECLARE_FUNCTION_POINTER',
-    'CK_UNAVAILABLE_INFORMATION'
+    'CK_UNAVAILABLE_INFORMATION',
+    'CKF_EC_NAMEDCURVE'  # deprecated in PKCS #11 3.0
 ]
 
 logger = logging.getLogger(__name__)
