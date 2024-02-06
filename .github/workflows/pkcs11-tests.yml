@@ -35,21 +35,20 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Retrieve jss-runner image
+      - name: Retrieve JSS images
         uses: actions/cache@v3
         with:
-          key: jss-runner-${{ github.sha }}
-          path: jss-runner.tar
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar
 
-      - name: Load jss-runner image
-        run: docker load --input jss-runner.tar
+      - name: Load JSS images
+        run: docker load --input jss-images.tar
 
-      - name: Run container
+      - name: Set up JSS container
         run: |
-          IMAGE=jss-runner \
-          NAME=jss \
-          HOSTNAME=jss.example.com \
-          tests/bin/runner-init.sh
+          tests/bin/runner-init.sh jss
+        env:
+          HOSTNAME: jss.example.com
 
       - name: Install dependencies
         run: docker exec jss dnf install -y nss-util-devel python3 java-devel

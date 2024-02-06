@@ -1,5 +1,18 @@
 #!/bin/bash -ex
 
+NAME=$1
+
+if [ "$NAME" == "" ]
+then
+    echo "Usage: runner-init.sh <name>"
+    exit 1
+fi
+
+if [ "$IMAGE" == "" ]
+then
+    IMAGE=jss-runner
+fi
+
 docker run \
     --name=${NAME} \
     --hostname=${HOSTNAME} \
