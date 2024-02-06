@@ -80,14 +80,16 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
         if: vars.REGISTRY != 'ghcr.io'
 
-      - name: Retrieve jss-dist image
+      - name: Retrieve JSS images
         uses: actions/cache@v3
         with:
-          key: jss-dist-${{ github.sha }}
-          path: jss-dist.tar
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar
+
+      - name: Load JSS images
+        run: docker load --input jss-images.tar
 
       - name: Publish jss-dist image
         run: |
-          docker load --input jss-dist.tar
           docker tag jss-dist ${{ vars.REGISTRY }}/$NAMESPACE/jss-dist:latest
           docker push ${{ vars.REGISTRY }}/$NAMESPACE/jss-dist:latest

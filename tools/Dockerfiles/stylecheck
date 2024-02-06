@@ -1,4 +1,6 @@
-FROM registry.fedoraproject.org/fedora:latest
+ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
+
+FROM $BASE_IMAGE
 
 # Install generic dependencies to check style
 RUN true \

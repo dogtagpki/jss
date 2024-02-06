@@ -3,19 +3,36 @@ name: Build Tests
 on: [push, pull_request]
 
 jobs:
+  wait-for-build:
+    name: Waiting for build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Building JSS'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+        if: github.event_name == 'push'
+
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-name: 'Building JSS'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+        if: github.event_name == 'pull_request'
+
   build-test:
     name: Build Test
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       matrix:
         os:
-          - 'fedora:latest'
           - 'debian:testing'
           - 'ubuntu:rolling'
-          # Disable CentOS due to missing dependencies
-          # - 'centos:7'
-          # - 'centos:8'
     container: ${{ matrix.os }}
     steps:
     - name: Clone repository
@@ -27,14 +44,7 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Install Fedora/CentOS dependencies
-      if: ${{ startsWith(matrix.os, 'fedora:') || startsWith(matrix.os, 'centos:') }}
-      run: |
-        dnf install -y dnf-plugins-core rpm-build maven
-        dnf builddep -y --spec jss.spec
-
-    - name: Install Debian/Ubuntu dependencies
-      if: ${{ startsWith(matrix.os, 'debian:') || startsWith(matrix.os, 'ubuntu:') }}
+    - name: Install build dependencies
       run: |
         apt-get update
         apt-get install -y \
@@ -51,10 +61,67 @@ jobs:
 
     - name: Compare jss.jar
       run: |
-        jar tvf ~/build/jss/jss.jar | awk '{print $8;}' | sort \
+        jar tvf ~/build/jss/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee cmake.out
-        jar tvf base/target/jss.jar | awk '{print $8;}' | sort \
+        jar tvf base/target/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | grep -v '^META-INF/maven/' \
+            | tee maven.out
+        diff cmake.out maven.out
+
+    # TODO: Run examples
+
+  fedora-test:
+    name: Fedora Build Test
+    needs: wait-for-build
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/pki
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v3
+
+    - name: Retrieve JSS images
+      uses: actions/cache@v3
+      with:
+        key: jss-images-${{ github.sha }}
+        path: jss-images.tar
+
+    - name: Load JSS images
+      run: docker load --input jss-images.tar
+
+    - name: Set up JSS container
+      run: |
+        tests/bin/runner-init.sh jss
+      env:
+        IMAGE: jss-builder
+        HOSTNAME: jss.example.com
+
+    - name: Build JSS with CMake
+      run: |
+        docker exec jss ./build.sh
+
+    - name: Build JSS with Maven
+      run: |
+        docker exec jss mvn package
+
+    - name: Compare jss.jar
+      run: |
+        docker exec jss \
+            jar tvf /root/build/jss/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee cmake.out
+        docker exec jss \
+            jar tvf base/target/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | grep -v '^META-INF/maven/' \
             | tee maven.out
@@ -91,108 +158,138 @@ jobs:
 
   rpm-test:
     name: RPM Test
+    needs: wait-for-build
     runs-on: ubuntu-latest
-    container: 'fedora:latest'
+    env:
+      SHARED: /tmp/workdir/pki
     steps:
     - name: Clone repository
       uses: actions/checkout@v3
 
-    - name: Set up Java
-      uses: actions/setup-java@v3
+    - name: Retrieve JSS images
+      uses: actions/cache@v3
       with:
-        java-version: '17'
-        distribution: 'adopt'
+        key: jss-images-${{ github.sha }}
+        path: jss-images.tar
 
-    - name: Install Fedora dependencies
+    - name: Load jss-images image
+      run: docker load --input jss-images.tar
+
+    - name: Set up JSS container
       run: |
-        dnf install -y dnf-plugins-core rpm-build maven
-        dnf builddep -y --spec jss.spec
-
-    - name: Build JSS RPMs with XMvn and CMake
-      run: ./build.sh --work-dir=build rpm
+        tests/bin/runner-init.sh jss
+      env:
+        IMAGE: jss-builder
+        HOSTNAME: jss.example.com
 
     - name: Install RPMInspect
       run: |
-        dnf install -y dnf-plugins-core
-        dnf copr enable -y copr.fedorainfracloud.org/dcantrell/rpminspect
-        dnf install -y rpminspect rpminspect-data-fedora
+        docker exec jss dnf copr enable -y copr.fedorainfracloud.org/dcantrell/rpminspect
+        docker exec jss dnf install -y rpminspect rpminspect-data-fedora
 
     - name: Run RPMInspect on SRPM and RPMs
-      run: ./tests/bin/rpminspect.sh
+      run: |
+        docker exec jss ./tests/bin/rpminspect.sh
 
     - name: Install RPMs
-      run: dnf localinstall -y build/RPMS/*.rpm
+      run: |
+        docker exec jss bash -c "dnf localinstall -y build/RPMS/*.rpm"
 
     - name: Build JSS with Maven
-      run: mvn -pl '!native,!symkey,!examples' package
+      run: |
+        docker exec jss mvn -pl '!native,!symkey,!examples' package
 
     - name: Compare jss.jar
       run: |
-        jar tvf /usr/share/java/jss/jss.jar | awk '{print $8;}' | sort \
+        docker exec jss jar tvf /usr/share/java/jss/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee jss.jar.rpm
-        jar tvf base/target/jss.jar | awk '{print $8;}' | sort \
+        docker exec jss jar tvf base/target/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee jss.jar.maven
         diff jss.jar.rpm jss.jar.maven
 
     - name: Compare jss-tomcat.jar
       run: |
-        jar tvf /usr/share/java/jss/jss-tomcat.jar | awk '{print $8;}' | sort \
+        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee jss-tomcat.jar.rpm
-        jar tvf tomcat/target/jss-tomcat.jar | awk '{print $8;}' | sort \
+        docker exec jss jar tvf tomcat/target/jss-tomcat.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee jss-tomcat.jar.maven
         diff jss-tomcat.jar.rpm jss-tomcat.jar.maven
 
     - name: Compare jss-tomcat-9.0.jar
       run: |
-        jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar | awk '{print $8;}' | sort \
+        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee jss-tomcat-9.0.jar.rpm
-        jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar | awk '{print $8;}' | sort \
+        docker exec jss jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar \
+            | awk '{print $8;}' \
+            | sort \
             | grep -v '/$' \
             | tee jss-tomcat-9.0.jar.maven
         diff jss-tomcat-9.0.jar.rpm jss-tomcat-9.0.jar.maven
 
   sandbox-test:
     name: Sandbox Test
+    needs: wait-for-build
     runs-on: ubuntu-latest
-    container:
-      image: quay.io/fedora/fedora:rawhide
+    env:
+      SHARED: /tmp/workdir/jss
     steps:
     - name: Clone repository
       uses: actions/checkout@v3
 
+    - name: Retrieve JSS images
+      uses: actions/cache@v3
+      with:
+        key: jss-images-${{ github.sha }}
+        path: jss-images.tar
+
+    - name: Load jss-images image
+      run: docker load --input jss-images.tar
+
+    - name: Set up JSS container
+      run: |
+        tests/bin/runner-init.sh jss
+      env:
+        IMAGE: jss-builder
+        HOSTNAME: jss.example.com
+
     - name: Install build dependencies
       run: |
-        dnf install -y dnf-plugins-core
-        dnf builddep -y nspr nss jss
-        dnf builddep -y jss.spec
-        dnf install -y mercurial \
+        docker exec jss dnf builddep -y nspr nss
+        docker exec jss dnf install -y mercurial \
             python-unversioned-command \
             gyp \
             ninja-build
 
     - name: Build NSPR and NSS
       run: |
-        cd ..
-        hg clone https://hg.mozilla.org/projects/nspr
-        hg clone https://hg.mozilla.org/projects/nss
-        cd nss
-        ./build.sh --enable-fips --enable-libpkix
+        docker exec jss hg clone https://hg.mozilla.org/projects/nspr
+        docker exec jss hg clone https://hg.mozilla.org/projects/nss
+        docker exec -w /root/jss/nss jss \
+            bash build.sh --enable-fips --enable-libpkix
 
     - name: Build JSS
       run: |
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Debug ..
-        make all
+        docker exec -w /root/jss/build jss cmake -DCMAKE_BUILD_TYPE=Debug ..
+        docker exec -w /root/jss/build jss make all
       env:
         SANDBOX: 1
         CFLAGS: -Wall -Wextra -Werror -Og -ggdb
 
     - name: Run JSS tests
       run: |
-        cd build
-        ctest --output-on-failure
+        docker exec -w /root/jss/build jss ctest --output-on-failure

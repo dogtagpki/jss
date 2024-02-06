@@ -58,13 +58,7 @@ jobs:
           tags: jss-builder
           target: jss-builder
           cache-from: type=local,src=/tmp/.buildx-cache
-          outputs: type=docker,dest=jss-builder.tar
-
-      - name: Store jss-builder image
-        uses: actions/cache@v3
-        with:
-          key: jss-builder-${{ github.sha }}
-          path: jss-builder.tar
+          outputs: type=docker
 
       - name: Build jss-dist image
         uses: docker/build-push-action@v3
@@ -76,13 +70,7 @@ jobs:
           tags: jss-dist
           target: jss-dist
           cache-from: type=local,src=/tmp/.buildx-cache
-          outputs: type=docker,dest=jss-dist.tar
-
-      - name: Store jss-dist image
-        uses: actions/cache@v3
-        with:
-          key: jss-dist-${{ github.sha }}
-          path: jss-dist.tar
+          outputs: type=docker
 
       - name: Build jss-runner image
         uses: docker/build-push-action@v3
@@ -94,10 +82,15 @@ jobs:
           tags: jss-runner
           target: jss-runner
           cache-from: type=local,src=/tmp/.buildx-cache
-          outputs: type=docker,dest=jss-runner.tar
+          outputs: type=docker
 
-      - name: Store jss-runner image
+      - name: Save JSS images
+        run: |
+          docker images
+          docker save -o jss-images.tar jss-builder jss-dist jss-runner
+
+      - name: Store JSS images
         uses: actions/cache@v3
         with:
-          key: jss-runner-${{ github.sha }}
-          path: jss-runner.tar
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar

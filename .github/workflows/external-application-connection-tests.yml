@@ -36,24 +36,23 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Retrieve jss-builder image
+      - name: Retrieve JSS images
         uses: actions/cache@v3
         with:
-          key: jss-builder-${{ github.sha }}
-          path: jss-builder.tar
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar
 
-      - name: Load jss-builder image
-        run: docker load --input jss-builder.tar
+      - name: Load JSS images
+        run: docker load --input jss-images.tar
 
       - name: Create network
         run: docker network create example
 
-      - name: Run container
+      - name: Set up JSS container
         run: |
-          tests/bin/runner-init.sh
+          tests/bin/runner-init.sh jss
         env:
           IMAGE: jss-builder
-          NAME: jss
           HOSTNAME: jss.example.com
   
       - name: Connect JSS container to network
