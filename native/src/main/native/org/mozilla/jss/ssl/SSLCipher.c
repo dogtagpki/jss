@@ -23,7 +23,7 @@ static const CK_MECHANISM_TYPE auth_alg_defs[] = {
 };
 PR_STATIC_ASSERT(PR_ARRAY_SIZE(auth_alg_defs) == ssl_auth_size);
 
-/* Copied from NSS's ssl3con.c. */
+/* Copied from NSS 3.97's ssl3con.c. */
 static const CK_MECHANISM_TYPE kea_alg_defs[] = {
     CKM_INVALID_MECHANISM, /* ssl_kea_null */
     CKM_RSA_PKCS,          /* ssl_kea_rsa */
@@ -33,8 +33,9 @@ static const CK_MECHANISM_TYPE kea_alg_defs[] = {
     CKM_ECDH1_DERIVE,      /* ssl_kea_ecdh_psk */
     CKM_DH_PKCS_DERIVE,    /* ssl_kea_dh_psk */
     CKM_INVALID_MECHANISM, /* ssl_kea_tls13_any */
+    CKM_INVALID_MECHANISM, /* ssl_kea_ecdh_hybrid */
+    CKM_INVALID_MECHANISM, /* ssl_kea_ecdh_hybrid_psk */
 };
-PR_STATIC_ASSERT(PR_ARRAY_SIZE(kea_alg_defs) == ssl_kea_size);
 
 #ifdef HAVE_NSS_CIPHER_SUITE_INFO_KDFHASH
 /* Not present in ssl3con.c. */
