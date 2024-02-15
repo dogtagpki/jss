@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - 'fedora:latest'
+          - 'fedora:39'
           - 'debian:testing'
           - 'ubuntu:rolling'
           # Disable CentOS due to missing dependencies
@@ -123,7 +123,7 @@ jobs:
   sandbox-test:
     name: Sandbox Test
     runs-on: ubuntu-latest
-    container: fedora:rawhide
+    container: fedora:39
     steps:
     - name: Clone repository
       uses: actions/checkout@v3
@@ -140,8 +140,8 @@ jobs:
     - name: Build NSPR and NSS
       run: |
         cd ..
-        hg clone https://hg.mozilla.org/projects/nspr
-        hg clone https://hg.mozilla.org/projects/nss
+        hg clone https://hg.mozilla.org/projects/nspr -r NSPR_4_35_BRANCH
+        hg clone https://hg.mozilla.org/projects/nss -r NSS_3_96_BRANCH
         cd nss
         ./build.sh --enable-fips --enable-libpkix
 

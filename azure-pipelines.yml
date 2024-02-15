@@ -3,8 +3,8 @@
 resources:
   containers:
   # This no longer works for Fedora
-  # - container: fedora_latest
-  #   image: fedora:latest
+  # - container: fedora_39
+  #   image: fedora:39
   #   options: '--name runner -v /usr/bin/docker:/usr/bin/docker:ro'
   - container: debian_testing
     image: debian:testing
@@ -19,8 +19,8 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      fedora_latest:
-        image: registry.fedoraproject.org/fedora:latest
+      fedora_39:
+        image: registry.fedoraproject.org/fedora:39
       # Disable CentOS due to missing dependencies
       # centos_7:
       #   image: centos:7
