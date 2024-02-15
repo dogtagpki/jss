@@ -81,7 +81,7 @@ jobs:
         if: vars.REGISTRY != 'ghcr.io'
 
       - name: Retrieve JSS images
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: jss-images-${{ github.sha }}
           path: jss-images.tar
