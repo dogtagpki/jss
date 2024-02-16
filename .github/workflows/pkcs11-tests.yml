@@ -48,16 +48,19 @@ jobs:
         run: |
           tests/bin/runner-init.sh jss
         env:
+          IMAGE: jss-builder
           HOSTNAME: jss.example.com
 
-      - name: Install dependencies
-        run: docker exec jss dnf install -y nss-util-devel python3 java-devel
-
-      - name: Generate PKCS11 constants
+      - name: Check PKCS11 constants
         run: |
-          docker exec jss python3 $SHARED/tools/build_pkcs11_constants.py \
-                   --pkcs11t /usr/include/nss3/pkcs11t.h \
-                   --pkcs11n /usr/include/nss3/pkcs11n.h \
-                   -o PKCS11Constants.java \
-                   --verbose
-          docker exec jss diff PKCS11Constants.java $SHARED/base/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
+          # generate new PKCS11Constants.java from NSS header files
+          docker exec jss $SHARED/tools/build_pkcs11_constants.py \
+              --pkcs11t /usr/include/nss3/pkcs11t.h \
+              --pkcs11n /usr/include/nss3/pkcs11n.h \
+              -o PKCS11Constants.java \
+              --verbose
+
+          # compare existing PKCS11Constants.java with the new one
+          docker exec jss diff \
+              $SHARED/base/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java \
+              PKCS11Constants.java
