@@ -3,7 +3,7 @@ name: Testing PKI tools
 on: workflow_call
 
 env:
-  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || github.repository_owner }}
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
 
 jobs:
   test:

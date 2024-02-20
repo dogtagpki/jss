@@ -3,7 +3,7 @@ name: Third party Tests
 on: [push, pull_request]
 
 env:
-  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || github.repository_owner }}
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
 
 jobs:
   build:
