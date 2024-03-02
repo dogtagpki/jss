@@ -25,7 +25,7 @@ Name:           jss
 
 Summary:        Java Security Services (JSS)
 URL:            https://github.com/dogtagpki/jss
-License:        (MPL-1.1 or GPL-2.0-or-later or LGPL-2.1-or-later) and Apache-2.0
+License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.0
 Version:        %{major_version}.%{minor_version}.%{update_version}
 Release:        %{release_number}%{?phase:.}%{?phase}%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
 
