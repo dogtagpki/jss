@@ -2,6 +2,9 @@ name: Tomcat Tests
 
 on: [push, pull_request]
 
+env:
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
+
 jobs:
   build:
     name: Waiting for build
@@ -62,8 +65,22 @@ jobs:
       - name: Connect server container to network
         run: docker network connect example server --alias server.example.com
 
-      - name: Install PKI packages
-        run: docker exec server dnf install -y pki-server
+      - name: Import LDAP SDK packages
+        run: |
+          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
+      - name: Install packages
+        run: |
+          docker cp /tmp/RPMS/. server:/root/RPMS/
+          docker exec server bash -c "dnf localinstall -y /root/RPMS/*"
 
       - name: Create Tomcat
         run: |
@@ -99,7 +116,7 @@ jobs:
               --secure true \
               --sslEnabled true \
               --sslProtocol SSL \
-              --sslImpl org.dogtagpki.tomcat.JSSImplementation \
+              --sslImpl org.dogtagpki.jss.tomcat.JSSImplementation \
               Secure
           docker exec server pki-server http-connector-cert-add \
               --keyAlias sslserver \
