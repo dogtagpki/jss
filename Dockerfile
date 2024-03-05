@@ -26,7 +26,7 @@ RUN if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
 
 # Install JSS runtime dependencies
 RUN dnf install -y dogtag-jss \
-    && dnf remove -y dogtag-* --noautoremove \
+    && rpm -e --nodeps $(rpm -qa | grep -E "^java-|^dogtag-") \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
