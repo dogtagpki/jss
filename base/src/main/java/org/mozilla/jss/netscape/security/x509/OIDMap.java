@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.mozilla.jss.netscape.security.extensions.AuthInfoAccessExtension;
+import org.mozilla.jss.netscape.security.extensions.ExtendedKeyUsageExtension;
 import org.mozilla.jss.netscape.security.extensions.InhibitAnyPolicyExtension;
 import org.mozilla.jss.netscape.security.extensions.OCSPNoCheckExtension;
 import org.mozilla.jss.netscape.security.extensions.SubjectInfoAccessExtension;
@@ -94,13 +95,16 @@ public class OIDMap {
     private static final String SUBJ_DIR_ATTR = ROOT + "." +
             SubjectDirAttributesExtension.NAME;
 
+    /**
+     * @deprecated This will be removed to avoid duplications
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public static final String EXT_KEY_USAGE_NAME = "ExtendedKeyUsageExtension";
+    /**
+     * @deprecated This will be removed to avoid duplications
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public static final String EXT_INHIBIT_ANY_POLICY_NAME = "InhibitAnyPolicyExtension";
-    private static final String EXT_INHIBIT_ANY_POLICY = ROOT + "." + InhibitAnyPolicyExtension.NAME;
-    private static final String EXT_KEY_USAGE = ROOT + "." +
-            EXT_KEY_USAGE_NAME;
-
-    private static final String OCSP_NO_CHECK = ROOT + "." + OCSPNoCheckExtension.NAME;
 
     private static final String CRL_NUMBER = ROOT + "." +
                                           CRLNumberExtension.NAME;
@@ -116,6 +120,9 @@ public class OIDMap {
         loadNames();
         loadClasses();
         addClass(CRLDistributionPointsExtension.class);
+        addClass(ExtendedKeyUsageExtension.class);
+        addClass(OCSPNoCheckExtension.class);
+        addClass(InhibitAnyPolicyExtension.class);
     }
 
     // Load the default name to oid map (EXTENSIONS_OIDS)
@@ -136,49 +143,28 @@ public class OIDMap {
         props.put(CERT_POLICIES, "2.5.29.32");
         props.put(AUTH_KEY_IDENTIFIER, "2.5.29.35");
         props.put(SUBJ_DIR_ATTR, "2.5.29.9");
-        props.put(EXT_KEY_USAGE, "2.5.29.37");
-        props.put(EXT_INHIBIT_ANY_POLICY, "2.5.29.54");
-        props.put(OCSP_NO_CHECK, "1.3.6.1.5.5.7.48.1.5");
     }
 
     // Load the default name to class map (EXTENSIONS_CLASSES)
     private static void loadClassDefault(Properties props) {
-        props.put(AUTH_KEY_IDENTIFIER,
-                   "org.mozilla.jss.netscape.security.x509.AuthorityKeyIdentifierExtension");
-        props.put(SUB_KEY_IDENTIFIER,
-                  "org.mozilla.jss.netscape.security.x509.SubjectKeyIdentifierExtension");
+        props.put(AUTH_KEY_IDENTIFIER, AuthorityKeyIdentifierExtension.class.getName());
+        props.put(SUB_KEY_IDENTIFIER, SubjectKeyIdentifierExtension.class.getName());
         props.put(AUTHORITY_INFORMATION_ACCESS_IDENTIFIER,
-                 "org.mozilla.jss.netscape.security.extensions.AuthInfoAccessExtension");
+                AuthInfoAccessExtension.class.getName());
         props.put(SUBJECT_INFORMATION_ACCESS_IDENTIFIER,
-                "org.mozilla.jss.netscape.security.extensions.SubjectInfoAccessExtension");
-        props.put(KEY_USAGE,
-                  "org.mozilla.jss.netscape.security.x509.KeyUsageExtension");
-        props.put(PRIVATE_KEY_USAGE,
-                  "org.mozilla.jss.netscape.security.x509.PrivateKeyUsageExtension");
-        props.put(POLICY_MAPPINGS,
-                  "org.mozilla.jss.netscape.security.x509.PolicyMappingsExtension");
-        props.put(SUB_ALT_NAME,
-                  "org.mozilla.jss.netscape.security.x509.SubjectAlternativeNameExtension");
-        props.put(ISSUER_ALT_NAME,
-                  "org.mozilla.jss.netscape.security.x509.IssuerAlternativeNameExtension");
-        props.put(BASIC_CONSTRAINTS,
-                  "org.mozilla.jss.netscape.security.x509.BasicConstraintsExtension");
-        props.put(NAME_CONSTRAINTS,
-                  "org.mozilla.jss.netscape.security.x509.NameConstraintsExtension");
-        props.put(POLICY_CONSTRAINTS,
-                  "org.mozilla.jss.netscape.security.x509.PolicyConstraintsExtension");
-        props.put(CERT_POLICIES,
-                  "org.mozilla.jss.netscape.security.x509.CertificatePoliciesExtension");
-        props.put(SUBJ_DIR_ATTR,
-                  "org.mozilla.jss.netscape.security.x509.SubjectDirAttributesExtension");
-        props.put(EXT_KEY_USAGE,
-                  "org.mozilla.jss.netscape.security.extensions.ExtendedKeyUsageExtension");
-        props.put(EXT_INHIBIT_ANY_POLICY,
-                "org.mozilla.jss.netscape.security.extensions.InhibitAnyPolicyExtension");
-        props.put(OCSP_NO_CHECK,
-                "org.mozilla.jss.netscape.security.extensions.OCSPNoCheckExtension");
-        props.put(CRL_NUMBER, "org.mozilla.jss.netscape.security.x509.CRLNumberExtension");
-        props.put(CRL_REASON, "org.mozilla.jss.netscape.security.x509.CRLReasonExtension");
+                SubjectInfoAccessExtension.class.getName());
+        props.put(KEY_USAGE, KeyUsageExtension.class.getName());
+        props.put(PRIVATE_KEY_USAGE, PrivateKeyUsageExtension.class.getName());
+        props.put(POLICY_MAPPINGS, PolicyMappingsExtension.class.getName());
+        props.put(SUB_ALT_NAME, SubjectAlternativeNameExtension.class.getName());
+        props.put(ISSUER_ALT_NAME, IssuerAlternativeNameExtension.class.getName());
+        props.put(BASIC_CONSTRAINTS, BasicConstraintsExtension.class.getName());
+        props.put(NAME_CONSTRAINTS, NameConstraintsExtension.class.getName());
+        props.put(POLICY_CONSTRAINTS, PolicyConstraintsExtension.class.getName());
+        props.put(CERT_POLICIES, CertificatePoliciesExtension.class.getName());
+        props.put(SUBJ_DIR_ATTR, SubjectDirAttributesExtension.class.getName());
+        props.put(CRL_NUMBER, CRLNumberExtension.class.getName());
+        props.put(CRL_REASON, CRLReasonExtension.class.getName());
     }
 
     // Return the file along with location
@@ -194,20 +180,10 @@ public class OIDMap {
         if (!namesMap.exists()) {
             loadNamesDefault(props);
         } else {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(namesMap);
+            try (FileInputStream fis = new FileInputStream(namesMap)){
                 props.load(fis);
             } catch (IOException e) {
                 loadNamesDefault(props);
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        logger.debug("Error closing " + EXTENSIONS_OIDS, e);
-                    }
-                }
             }
         }
 

@@ -30,7 +30,6 @@ import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 import org.mozilla.jss.netscape.security.x509.CertAttrSet;
 import org.mozilla.jss.netscape.security.x509.Extension;
-import org.mozilla.jss.netscape.security.x509.OIDMap;
 
 /**
  * RFC3280:
@@ -49,17 +48,9 @@ public class InhibitAnyPolicyExtension
      */
     private static final long serialVersionUID = -8963439897419343166L;
     public static final String OID = "2.5.29.54";
-    public static final String NAME = OIDMap.EXT_INHIBIT_ANY_POLICY_NAME;
+    public static final String NAME = "InhibitAnyPolicyExtension";
 
     private BigInt mSkipCerts = new BigInt(-1);
-
-    static {
-        try {
-            OIDMap.addAttribute(InhibitAnyPolicyExtension.class.getName(),
-                    OID, NAME);
-        } catch (CertificateException e) {
-        }
-    }
 
     public InhibitAnyPolicyExtension() throws IOException {
         this(false, null);

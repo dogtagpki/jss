@@ -27,7 +27,6 @@ import org.mozilla.jss.netscape.security.util.DerOutputStream;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 import org.mozilla.jss.netscape.security.x509.CertAttrSet;
 import org.mozilla.jss.netscape.security.x509.Extension;
-import org.mozilla.jss.netscape.security.x509.OIDMap;
 
 /**
  * This represents the OCSPNoCheck extension.
@@ -42,14 +41,6 @@ public class OCSPNoCheckExtension extends Extension implements CertAttrSet {
     public static final String NAME = "OCSPNoCheckExtension";
 
     private byte mCached[] = null;
-
-    static {
-        try {
-            OIDMap.addAttribute(OCSPNoCheckExtension.class.getName(),
-                    OID, NAME);
-        } catch (CertificateException e) {
-        }
-    }
 
     public OCSPNoCheckExtension() throws IOException {
         this(Boolean.FALSE);
