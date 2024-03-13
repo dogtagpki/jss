@@ -89,6 +89,7 @@ if(WITH_TESTS)
 endif(WITH_TESTS)
 
 add_subdirectory(symkey)
+add_subdirectory(tools)
 
 if(WITH_TESTS)
     add_subdirectory(tests)
@@ -105,7 +106,7 @@ endif(WITH_TESTS)
 
 add_custom_target(
     native ALL
-    DEPENDS generate_c generate_so symkey_library
+    DEPENDS generate_c generate_so symkey_library sslget
 )
 
 if(WITH_TESTS)
