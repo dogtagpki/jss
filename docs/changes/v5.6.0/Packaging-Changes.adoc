@@ -1,0 +1,7 @@
+= Packaging Changes =
+
+== New jss-tools RPM package ==
+
+A new `jss-tools` RPM package has been added to provide tools such as:
+
+* `sslget`

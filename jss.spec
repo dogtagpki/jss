@@ -175,6 +175,23 @@ JSS Connector for Tomcat is a Java Secure Socket Extension (JSSE)
 module for Apache Tomcat that uses Java Security Services (JSS),
 a Java interface to Network Security Services (NSS).
 
+################################################################################
+%package -n %{product_id}-tools
+################################################################################
+
+Summary:        Java Security Services (JSS) Tools
+
+Provides:       jss-tools = %{version}-%{release}
+Provides:       jss-tools = %{major_version}.%{minor_version}
+Provides:       %{product_id}-tools = %{major_version}.%{minor_version}
+
+# The sslget command has been moved from pki-tools into jss-tools.
+Conflicts:      pki-tools < 11.6
+Conflicts:      dogtag-pki-tools < 11.6
+
+%description -n %{product_id}-tools
+This package contains JSS tools.
+
 %if %{with javadoc}
 ################################################################################
 %package -n %{product_id}-javadoc
@@ -347,6 +364,12 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 ################################################################################
 %files -n %{product_id}-tomcat -f .mfiles-jss-tomcat
 ################################################################################
+
+################################################################################
+%files -n %{product_id}-tools
+################################################################################
+
+%{_bindir}/sslget
 
 %if %{with javadoc}
 ################################################################################

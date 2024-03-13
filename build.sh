@@ -459,6 +459,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
         echo "- native binaries:"
         echo "    $WORK_DIR/libjss.so"
         echo "    $WORK_DIR/symkey/libjss-symkey.so"
+        echo "    $WORK_DIR/tools/src/main/native/sslget/sslget"
     fi
 
     if [ "$WITH_JAVADOC" = true ] ; then
