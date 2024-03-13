@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -29,7 +31,6 @@ import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.util.ObjectIdentifier;
 import org.mozilla.jss.netscape.security.x509.CertAttrSet;
 import org.mozilla.jss.netscape.security.x509.Extension;
-import org.mozilla.jss.netscape.security.x509.OIDMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,60 +46,54 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
     private static final Logger logger = LoggerFactory.getLogger(ExtendedKeyUsageExtension.class);
 
     public static final String OID = "2.5.29.37";
-    public static final String NAME = OIDMap.EXT_KEY_USAGE_NAME;
-    public static final String OID_IKEIntermediate = "1.3.6.1.5.5.8.2.2";
-    public static final String OID_IpsecIKE = "1.3.6.1.5.5.7.3.17";
+    public static final String NAME = "ExtendedKeyUsageExtension";
+
+    /**
+     * @deprecated This will be removed to avoid duplications
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public static final String OID_OCSPSigning = "1.3.6.1.5.5.7.3.9";
-    public static final String OID_EMailProtection = "1.3.6.1.5.5.7.3.4";
+    /**
+     * @deprecated This will be removed to avoid duplications
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
     public static final String OID_CODESigning = "1.3.6.1.5.5.7.3.3";
-    public static final String OID_ClientAuth = "1.3.6.1.5.5.7.3.2";
-    public static final String OID_ServerAuth = "1.3.6.1.5.5.7.3.1";
 
-    public static final int OID_IKE_INTERMEDIATE_STR[] =
-        { 1, 3, 6, 1, 5, 5, 8, 2, 2 };
     public static final ObjectIdentifier OID_IKE_INTERMEDIATE = new
-            ObjectIdentifier(OID_IKE_INTERMEDIATE_STR);
+            ObjectIdentifier("1.3.6.1.5.5.8.2.2");
 
-    public static final int OID_ID_KP_IPSEC_IKE_STR[] =
-        { 1, 3, 6, 1, 5, 5, 7, 3, 17 };
     public static final ObjectIdentifier OID_ID_KP_IPSEC_IKE = new
-            ObjectIdentifier(OID_ID_KP_IPSEC_IKE_STR);
+            ObjectIdentifier("1.3.6.1.5.5.7.3.17");
 
-    public static final int OID_OCSP_SIGNING_STR[] =
+    /**
+     * @deprecated This will be removed to avoid duplications
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
+    public static final int[] OID_OCSP_SIGNING_STR =
         { 1, 3, 6, 1, 5, 5, 7, 3, 9 };
     public static final ObjectIdentifier OID_OCSP_SIGNING = new
-            ObjectIdentifier(OID_OCSP_SIGNING_STR);
+            ObjectIdentifier("1.3.6.1.5.5.7.3.9");
 
-    public static final int OID_EMAIL_PROTECTION_STR[] =
-        { 1, 3, 6, 1, 5, 5, 7, 3, 4 };
     public static final ObjectIdentifier OID_EMAIL_PROTECTION = new
-            ObjectIdentifier(OID_EMAIL_PROTECTION_STR);
+            ObjectIdentifier("1.3.6.1.5.5.7.3.4");
 
-    public static final int OID_CODE_SIGNING_STR[] =
+    /**
+     * @deprecated This will be removed to avoid duplications
+     */
+    @Deprecated(since = "5.6.0", forRemoval = true)
+    public static final int[] OID_CODE_SIGNING_STR =
         { 1, 3, 6, 1, 5, 5, 7, 3, 3 };
     public static final ObjectIdentifier OID_CODE_SIGNING = new
-            ObjectIdentifier(OID_CODE_SIGNING_STR);
+            ObjectIdentifier("1.3.6.1.5.5.7.3.3");
 
-    public static final int OID_CLIENT_AUTH_STR[] =
-        { 1, 3, 6, 1, 5, 5, 7, 3, 2 };
     public static final ObjectIdentifier OID_CLIENT_AUTH = new
-            ObjectIdentifier(OID_CLIENT_AUTH_STR);
+            ObjectIdentifier("1.3.6.1.5.5.7.3.2");
 
-    public static final int OID_SERVER_AUTH_STR[] =
-        { 1, 3, 6, 1, 5, 5, 7, 3, 1 };
     public static final ObjectIdentifier OID_SERVER_AUTH = new
-            ObjectIdentifier(OID_SERVER_AUTH_STR);
+            ObjectIdentifier("1.3.6.1.5.5.7.3.1");
 
-    private Vector<ObjectIdentifier> oidSet = null;
-    private byte mCached[] = null;
-
-    static {
-        try {
-            OIDMap.addAttribute(ExtendedKeyUsageExtension.class.getName(),
-                    OID, ExtendedKeyUsageExtension.NAME);
-        } catch (CertificateException e) {
-        }
-    }
+    private ArrayList<ObjectIdentifier> oidSet = null;
+    private byte[] mCached = null;
 
     public ExtendedKeyUsageExtension() throws IOException {
         this(false, null);
@@ -112,9 +107,9 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         }
         critical = crit;
         if (oids != null) {
-            oidSet = new Vector<>(oids);
+            oidSet = new ArrayList<>(oids);
         } else {
-            oidSet = new Vector<>();
+            oidSet = new ArrayList<>();
         }
         encodeExtValue();
     }
@@ -138,7 +133,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
     public Enumeration<ObjectIdentifier> getOIDs() {
         if (oidSet == null)
             return null;
-        return oidSet.elements();
+        return Collections.enumeration(oidSet);
     }
 
     public void deleteAllOIDs() {
@@ -149,12 +144,12 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
 
     public void addOID(ObjectIdentifier oid) {
         if (oidSet == null) {
-            oidSet = new Vector<>();
+            oidSet = new ArrayList<>();
         }
 
         if (oidSet.contains(oid))
             return;
-        oidSet.addElement(oid);
+        oidSet.add(oid);
         mCached = null;
     }
 
@@ -235,11 +230,11 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
             throw new IOException("Invalid encoding of AuthInfoAccess extension");
         }
         if (oidSet == null)
-            oidSet = new Vector<>();
+            oidSet = new ArrayList<>();
         while (val.data.available() != 0) {
             DerValue oidVal = val.data.getDerValue();
 
-            oidSet.addElement(oidVal.getOID());
+            oidSet.add(oidVal.getOID());
         }
     }
 
@@ -248,7 +243,7 @@ public class ExtendedKeyUsageExtension extends Extension implements CertAttrSet 
         DerOutputStream temp = new DerOutputStream();
 
         if (!oidSet.isEmpty()) {
-            Enumeration<ObjectIdentifier> oidList = oidSet.elements();
+            Enumeration<ObjectIdentifier> oidList = Collections.enumeration(oidSet);
 
             try {
                 while (oidList.hasMoreElements()) {

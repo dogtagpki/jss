@@ -480,21 +480,28 @@ public class ExtPrettyPrint {
                 ObjectIdentifier oid = e.nextElement();
 
                 if (oid.equals(ExtendedKeyUsageExtension.OID_IKE_INTERMEDIATE)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "ipsec Intermediate System Usage" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "ipsec Intermediate System Usage" +
+                            " - " + oid + "\n");
                 } else if (oid.equals(ExtendedKeyUsageExtension.OID_ID_KP_IPSEC_IKE)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "ipsec Internet Key Exchange" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "ipsec Internet Key Exchange" +
+                            " - " + oid + "\n");
                 } else if (oid.equals(ExtendedKeyUsageExtension.OID_OCSP_SIGNING)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "OCSPSigning" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "OCSPSigning" +
+                            " - " + oid + "\n");
                 } else if (oid.equals(ExtendedKeyUsageExtension.OID_EMAIL_PROTECTION)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "emailProtection" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "emailProtection" +
+                            " - " + oid + "\n");
                 } else if (oid.equals(ExtendedKeyUsageExtension.OID_CODE_SIGNING)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "codeSigning" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "codeSigning" +
+                            " - " + oid + "\n");
                 } else if (oid.equals(ExtendedKeyUsageExtension.OID_CLIENT_AUTH)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "clientAuth" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "clientAuth" +
+                            " - " + oid + "\n");
                 } else if (oid.equals(ExtendedKeyUsageExtension.OID_SERVER_AUTH)) {
-                    sb.append(pp.indent(mIndentSize + 8) + "serverAuth" + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + "serverAuth" +
+                            " - " + oid + "\n");
                 } else {
-                    sb.append(pp.indent(mIndentSize + 8) + oid.toString() + "\n");
+                    sb.append(pp.indent(mIndentSize + 8) + oid + "\n");
                 }
             }
         }
