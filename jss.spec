@@ -185,7 +185,7 @@ Provides:       jss-tools = %{version}-%{release}
 Provides:       jss-tools = %{major_version}.%{minor_version}
 Provides:       %{product_id}-tools = %{major_version}.%{minor_version}
 
-# The sslget command has been moved from pki-tools into jss-tools.
+# Some PKI tools have been moved into jss-tools.
 Conflicts:      pki-tools < 11.6
 Conflicts:      dogtag-pki-tools < 11.6
 
@@ -369,6 +369,7 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %files -n %{product_id}-tools
 ################################################################################
 
+%{_bindir}/p12tool
 %{_bindir}/sslget
 
 %if %{with javadoc}
