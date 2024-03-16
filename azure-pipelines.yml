@@ -75,11 +75,20 @@ jobs:
   steps:
   - script: |
       docker exec -u 0 runner apt-get update
+
+      # https://salsa.debian.org/freeipa-team/jss/-/blob/master/debian/control
       docker exec -u 0 runner apt-get install -y \
-          cmake zip unzip \
-          g++ libnss3-dev libnss3-tools \
-          openjdk-17-jdk libcommons-lang3-java libslf4j-java \
-          junit5 libopentest4j-java
+          cmake \
+          g++ \
+          junit5 \
+          libcommons-lang3-java \
+          libnss3-dev \
+          libnss3-tools \
+          libopentest4j-java \
+          libslf4j-java \
+          openjdk-17-jdk \
+          unzip \
+          zip
     displayName: Install build dependencies
 
   - script: ./build.sh

@@ -14,7 +14,7 @@ set(sslget_SRCS
 include_directories(${SSLGET_PRIVATE_INCLUDE_DIRS})
 
 add_executable(sslget ${sslget_SRCS})
-add_dependencies(sslget symkey_library)
+add_dependencies(native sslget)
 target_link_libraries(sslget plc4 nspr4 ssl3 nss3)
 
 install(
