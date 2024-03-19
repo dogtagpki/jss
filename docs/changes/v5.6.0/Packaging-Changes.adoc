@@ -5,4 +5,5 @@
 A new `jss-tools` RPM package has been added to provide tools such as:
 
 * `p12tool`
+* `p7tool`
 * `sslget`
