@@ -370,6 +370,7 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 ################################################################################
 
 %{_bindir}/p12tool
+%{_bindir}/p7tool
 %{_bindir}/sslget
 
 %if %{with javadoc}

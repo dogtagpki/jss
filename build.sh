@@ -460,6 +460,7 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
         echo "    $WORK_DIR/libjss.so"
         echo "    $WORK_DIR/symkey/libjss-symkey.so"
         echo "    $WORK_DIR/tools/src/main/native/p12tool/p12tool"
+        echo "    $WORK_DIR/tools/src/main/native/p7tool/p7tool"
         echo "    $WORK_DIR/tools/src/main/native/sslget/sslget"
     fi
 
