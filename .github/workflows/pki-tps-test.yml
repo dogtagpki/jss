@@ -32,13 +32,13 @@ jobs:
 
       - name: Import LDAP SDK packages
         run: |
-          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:5.5
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 
       - name: Import PKI packages
         run: |
-          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:latest
+          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:11.5
           docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f pki-dist
 

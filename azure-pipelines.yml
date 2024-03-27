@@ -33,14 +33,14 @@ jobs:
       docker build \
           --build-arg BASE_IMAGE=$BASE_IMAGE \
           --target jss-base \
-          --tag jss-base:latest \
+          --tag jss-base:5.5 \
           .
 
       docker run \
           --name runner \
           --privileged \
           --detach \
-          jss-base:latest
+          jss-base:5.5
 
       while :
       do

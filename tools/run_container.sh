@@ -28,28 +28,28 @@ function rc_run() {
     fi
 
     if rc_docker; then
-        docker build --pull --tag "jss_$image:latest" -f "tools/Dockerfiles/$image" .
+        docker build --pull --tag "jss_$image:5.5" -f "tools/Dockerfiles/$image" .
         ret="$?"
         if [ "x$ret" != "x0" ]; then
             echo "Container build exited with status: $ret"
             return $ret
         fi
 
-        docker run "jss_$image:latest"
+        docker run "jss_$image:5.5"
         ret="$?"
         if [ "x$ret" != "x0" ]; then
             echo "Container run exited with status: $ret"
             return $ret
         fi
     elif rc_buildah; then
-        buildah bud --pull-always --tag "jss_$image:latest" -f "tools/Dockerfiles/$image" .
+        buildah bud --pull-always --tag "jss_$image:5.5" -f "tools/Dockerfiles/$image" .
         ret="$?"
         if [ "x$ret" != "x0" ]; then
             echo "Container build exited with status: $ret"
             return $ret
         fi
 
-        podman run "jss_$image:latest"
+        podman run "jss_$image:5.5"
         ret="$?"
         if [ "x$ret" != "x0" ]; then
             echo "Container run exited with status: $ret"

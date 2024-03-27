@@ -32,14 +32,14 @@ jobs:
 
       - name: Import LDAP SDK packages
         run: |
-          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:5.5
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 
       - name: Install build dependencies
         run: |
           docker exec pki dnf install -y git rpm-build
-          docker exec pki git clone -b master https://github.com/$NAMESPACE/pki
+          docker exec pki git clone -b v11.5 https://github.com/$NAMESPACE/pki
           docker exec pki dnf builddep -y --skip-unavailable --spec pki/pki.spec
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
