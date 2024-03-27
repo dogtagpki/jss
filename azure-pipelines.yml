@@ -3,8 +3,8 @@
 resources:
   containers:
   # This no longer works for Fedora
-  # - container: fedora_latest
-  #   image: fedora:latest
+  # - container: fedora_40
+  #   image: fedora:40
   #   options: '--name runner -v /usr/bin/docker:/usr/bin/docker:ro'
   - container: debian_testing
     image: debian:testing
@@ -25,7 +25,7 @@ jobs:
       script: |
        import os
 
-       value = os.getenv('BASE_IMAGE', 'registry.fedoraproject.org/fedora:latest')
+       value = os.getenv('BASE_IMAGE', 'registry.fedoraproject.org/fedora:40')
        print('BASE_IMAGE: {value}'.format(value=value))
        print('##vso[task.setvariable variable=BASE_IMAGE]{value}'.format(value=value))
 

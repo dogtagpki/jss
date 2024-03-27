@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
+ARG BASE_IMAGE="registry.fedoraproject.org/fedora:40"
 ARG COPR_REPO=""
 
 ################################################################################
