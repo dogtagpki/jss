@@ -128,21 +128,19 @@ public class PFX implements ASN1Value {
      *      this PFX does not contain a MacData, returns false.
      */
     public boolean verifyAuthSafes(Password password, StringBuffer reason)
-        throws NotInitializedException
-    {
-      try {
+            throws Exception {
 
-        if(reason == null) {
+        if (reason == null) {
             // this is just so we don't get a null pointer exception
             reason = new StringBuffer();
         }
 
-        if( macData == null ) {
+        if (macData == null) {
             reason.append("No MAC present in PFX");
             return false;
         }
 
-        if( encodedAuthSafes == null ) {
+        if (encodedAuthSafes == null) {
             // We weren't decoded from a template, we were constructed,
             // so just verify the encoding of the AuthSafes provided to
             // the constructor.
@@ -151,30 +149,19 @@ public class PFX implements ASN1Value {
 
         // create a new MacData based on the encoded Auth Safes
         DigestInfo macDataMac = macData.getMac();
-        MacData testMac = new MacData( password,
-                            macData.getMacSalt().toByteArray(),
-                            macData.getMacIterationCount().intValue(),
-                            encodedAuthSafes );
+        MacData testMac = new MacData(password,
+                macData.getMacSalt().toByteArray(),
+                macData.getMacIterationCount().intValue(),
+                encodedAuthSafes,
+                macData.getMac().getDigestAlgorithm());
 
-        if( testMac.getMac().equals(macDataMac) ) {
+        if (testMac.getMac().equals(macDataMac)) {
             return true;
+
         } else {
             reason.append("Digests do not match");
             return false;
         }
-
-      } catch( java.security.DigestException e ) {
-        e.printStackTrace();
-        reason.append("A DigestException occurred");
-        return false;
-      } catch( TokenException e ) {
-        reason.append("A TokenException occurred");
-        return false;
-      } catch( CharConversionException e ) {
-        reason.append("An exception occurred converting the password from"+
-            " chars to bytes");
-        return false;
-      }
     }
 
     ///////////////////////////////////////////////////////////////////////
