@@ -128,52 +128,38 @@ public class PFX implements ASN1Value {
      *      this PFX does not contain a MacData, returns false.
      */
     public boolean verifyAuthSafes(Password password, StringBuffer reason)
-            throws NotInitializedException {
+            throws Exception {
 
-        try {
-            if (reason == null) {
-                // this is just so we don't get a null pointer exception
-                reason = new StringBuffer();
-            }
+        if (reason == null) {
+            // this is just so we don't get a null pointer exception
+            reason = new StringBuffer();
+        }
 
-            if (macData == null) {
-                reason.append("No MAC present in PFX");
-                return false;
-            }
-
-            if (encodedAuthSafes == null) {
-                // We weren't decoded from a template, we were constructed,
-                // so just verify the encoding of the AuthSafes provided to
-                // the constructor.
-                encodedAuthSafes = ASN1Util.encode(authSafes);
-            }
-
-            // create a new MacData based on the encoded Auth Safes
-            DigestInfo macDataMac = macData.getMac();
-            MacData testMac = new MacData(password,
-                    macData.getMacSalt().toByteArray(),
-                    macData.getMacIterationCount().intValue(),
-                    encodedAuthSafes,
-                    macData.getMac().getDigestAlgorithm());
-
-            if (testMac.getMac().equals(macDataMac)) {
-                return true;
-
-            } else {
-                reason.append("Digests do not match");
-                return false;
-            }
-
-        } catch (java.security.DigestException e) {
-            reason.append("A DigestException occurred");
+        if (macData == null) {
+            reason.append("No MAC present in PFX");
             return false;
+        }
 
-        } catch (TokenException e) {
-            reason.append("A TokenException occurred");
-            return false;
+        if (encodedAuthSafes == null) {
+            // We weren't decoded from a template, we were constructed,
+            // so just verify the encoding of the AuthSafes provided to
+            // the constructor.
+            encodedAuthSafes = ASN1Util.encode(authSafes);
+        }
 
-        } catch (CharConversionException e) {
-            reason.append("An exception occurred converting the password from chars to bytes");
+        // create a new MacData based on the encoded Auth Safes
+        DigestInfo macDataMac = macData.getMac();
+        MacData testMac = new MacData(password,
+                macData.getMacSalt().toByteArray(),
+                macData.getMacIterationCount().intValue(),
+                encodedAuthSafes,
+                macData.getMac().getDigestAlgorithm());
+
+        if (testMac.getMac().equals(macDataMac)) {
+            return true;
+
+        } else {
+            reason.append("Digests do not match");
             return false;
         }
     }
