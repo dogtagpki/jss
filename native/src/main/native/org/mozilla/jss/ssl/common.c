@@ -936,16 +936,19 @@ JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
     CERTVerifyLog *log, SECCertificateUsage *usage,
     CERTCertList *trustedCertList)
 {
-    /* Put the first set of possible flags internally here first. Later
-     * there could be a more complete list to choose from; for now we only
-     * support our hard core fetch AIA OCSP policy. Note that we disable
-     * CRL fetching as Dogtag doesn't support it. Additionally, enable OCSP
-     * checking on the chained CA certificates. Since NSS/PKIX's
-     * CERT_GetClassicOCSPEnabledHardFailurePolicy doesn't do what we want,
-     * we construct the policy ourselves. */
+    /* Since NSS/PKIX's CERT_GetClassicOCSPEnabledHardFailurePolicy doesn't
+     * do what we want, we construct the policy ourselves.
+     *
+     * When enabled the checking on the chained CA certificates.
+     * With this policy the verification process does:
+     * - if one between AIA and CRL-DP is present then it will be used;
+     * - if AIA and CRL-DP are both presents only AIA is used and in case
+     *   freshin formation cannot be retrieved it fails the validation;
+     * - it no AIA and CRL-DP are present no revocation check is performed.*/
     PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
         /* crl */
-        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
+        CERT_REV_M_TEST_USING_THIS_METHOD |
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
             CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
@@ -953,7 +956,8 @@ JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
 
     PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
         /* crl */
-        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
+        CERT_REV_M_TEST_USING_THIS_METHOD |
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
             CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
