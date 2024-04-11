@@ -73,12 +73,20 @@ public class Http11NioProtocol extends AbstractHttp11JsseProtocol<NioChannel> {
         tomcatjss.setServerCertNickFile(serverCertNickFile);
     }
 
-    public boolean getEnabledOCSP() {
-        return tomcatjss.getEnableOCSP();
+    public boolean getEnableOCSP() {
+        return tomcatjss.getEnableRevocationCheck();
     }
 
     public void setEnableOCSP(boolean enableOCSP) {
-        tomcatjss.setEnableOCSP(enableOCSP);
+        tomcatjss.setEnableRevocationCheck(enableOCSP);
+    }
+
+    public boolean getEnableRevocationCheck() {
+        return tomcatjss.getEnableRevocationCheck();
+    }
+    
+    public void setEnableRevocationCheck(boolean enableRevocationCheck) {
+        tomcatjss.setEnableRevocationCheck(enableRevocationCheck);
     }
 
     public String getOcspResponderURL() {

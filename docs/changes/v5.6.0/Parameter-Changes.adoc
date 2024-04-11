@@ -1,0 +1,5 @@
+= Paramater Changes =
+
+== Rename enableOCSP to enableRevocationCheck ==
+
+The `enableOCSP` param has been deprecated. Use `enableRevocationCheck` instead.

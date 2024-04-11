@@ -88,7 +88,7 @@ public class TomcatJSS implements SSLSocketListener {
     boolean requireClientAuth;
     boolean wantClientAuth;
 
-    boolean enableOCSP;
+    boolean enableRevocationCheck;
     String ocspResponderURL;
     String ocspResponderCertNickname;
     int ocspCacheSize = 1000; // entries
@@ -183,12 +183,12 @@ public class TomcatJSS implements SSLSocketListener {
         return wantClientAuth;
     }
 
-    public boolean getEnableOCSP() {
-        return enableOCSP;
+    public boolean getEnableRevocationCheck() {
+        return enableRevocationCheck;
     }
 
-    public void setEnableOCSP(boolean enableOCSP) {
-        this.enableOCSP = enableOCSP;
+    public void setEnableRevocationCheck(boolean enableRevocationCheck) {
+        this.enableRevocationCheck = enableRevocationCheck;
     }
 
     public String getOcspResponderURL() {
@@ -269,7 +269,11 @@ public class TomcatJSS implements SSLSocketListener {
 
         String enableOCSPProp = config.getProperty("enableOCSP");
         if (enableOCSPProp != null)
-            setEnableOCSP(Boolean.parseBoolean(enableOCSPProp));
+            setEnableRevocationCheck(Boolean.parseBoolean(enableOCSPProp));
+
+        String enableRevocationCheckProp = config.getProperty("enableRevocationCheck");
+        if (enableRevocationCheckProp != null)
+            setEnableRevocationCheck(Boolean.parseBoolean(enableRevocationCheckProp));
 
         String ocspResponderURLProp = config.getProperty("ocspResponderURL");
         if (ocspResponderURLProp != null)
@@ -328,31 +332,35 @@ public class TomcatJSS implements SSLSocketListener {
         }
 
         String certDbProp = connector.getAttribute("certdbDir");
-        if (certDbProp != null)
+        if (StringUtils.isNotEmpty(certDbProp))
             setCertdbDir(certDbProp);
 
         String passwordClassProp = connector.getAttribute("passwordClass");
-        if (passwordClassProp != null)
+        if (StringUtils.isNotEmpty(passwordClassProp))
             setPasswordClass(passwordClassProp);
 
         String passwordFileProp = connector.getAttribute("passwordFile");
-        if (passwordFileProp != null)
+        if (StringUtils.isNotEmpty(passwordFileProp))
             setPasswordFile(passwordFileProp);
 
         String serverCertNickFileProp = connector.getAttribute("serverCertNickFile");
-        if (serverCertNickFileProp != null)
+        if (StringUtils.isNotEmpty(serverCertNickFileProp))
             setServerCertNickFile(serverCertNickFileProp);
 
         String enableOCSPProp = connector.getAttribute("enableOCSP");
-        if (enableOCSPProp != null)
-            setEnableOCSP(Boolean.parseBoolean(enableOCSPProp));
+        if (StringUtils.isNotEmpty(enableOCSPProp))
+            setEnableRevocationCheck(Boolean.parseBoolean(enableOCSPProp));
+
+        String enableRevocationCheckProp = connector.getAttribute("enableRevocationCheck");
+        if (StringUtils.isNotEmpty(enableRevocationCheckProp))
+            setEnableRevocationCheck(Boolean.parseBoolean(enableRevocationCheckProp));
 
         String ocspResponderURLProp = connector.getAttribute("ocspResponderURL");
-        if (ocspResponderURLProp != null)
+        if (StringUtils.isNotEmpty(ocspResponderURLProp))
             setOcspResponderURL(ocspResponderURLProp);
 
         String ocspResponderCertNicknameProp = connector.getAttribute("ocspResponderCertNickname");
-        if (ocspResponderCertNicknameProp != null)
+        if (StringUtils.isNotEmpty(ocspResponderCertNicknameProp))
             setOcspResponderCertNickname(ocspResponderCertNicknameProp);
 
         String ocspCacheSizeProp = connector.getAttribute("ocspCacheSize");
@@ -469,7 +477,7 @@ public class TomcatJSS implements SSLSocketListener {
         logger.debug("wantClientAuth: {}", wantClientAuth);
 
         if (requireClientAuth || wantClientAuth) {
-            configureOCSP();
+            configureRevocationCheck();
         }
 
         // 12 hours = 43200 seconds
@@ -549,12 +557,12 @@ public class TomcatJSS implements SSLSocketListener {
         return null;
     }
 
-    public void configureOCSP() throws GeneralSecurityException, ConfigurationException {
+    public void configureRevocationCheck() throws GeneralSecurityException, ConfigurationException {
 
-        logger.info("configuring OCSP");
+        logger.info("configuring Revocation Check");
 
-        logger.debug("enableOCSP: {}", enableOCSP);
-        if (!enableOCSP) {
+        logger.debug("enableCertificateCheck: {}", enableRevocationCheck);
+        if (!enableRevocationCheck) {
             return;
         }
 
