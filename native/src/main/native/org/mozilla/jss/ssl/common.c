@@ -929,6 +929,21 @@ finish:
     return root; 
 }
 
+
+/* Verify if the CRLDP extension is defined in the certificate. */
+static PRBool JSSL_isCRLDPExtensionInCert(CERTCertificate *cert)
+{
+    SECStatus rv = CERT_FindCertExtension(cert,
+                                          SEC_OID_X509_CRL_DIST_POINTS,
+                                          NULL);
+    if (rv == SECSuccess) {
+        return PR_TRUE;
+    }
+    return PR_FALSE;
+}
+
+
+
 /* Internal helper for the below call. */
 static SECStatus
 JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
@@ -941,10 +956,10 @@ JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
      *
      * When enabled the checking on the chained CA certificates.
      * With this policy the verification process does:
-     * - if one between AIA and CRL-DP is present then it will be used;
-     * - if AIA and CRL-DP are both presents only AIA is used and in case
-     *   freshin formation cannot be retrieved it fails the validation;
-     * - it no AIA and CRL-DP are present no revocation check is performed.*/
+     * - if only an AIA or an CRL-DP is present, the respective validation method is used;
+     * - if AIA and CRL-DP are both presents the execution order is: AIA first followed by
+     *   CRL only in case OCSP endpoint does not provide fresh information;
+     * - if no AIA and CRL-DP are present no revocation check is performed.*/
     PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
         /* crl */
         CERT_REV_M_TEST_USING_THIS_METHOD |
@@ -962,6 +977,14 @@ JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
         CERT_REV_M_TEST_USING_THIS_METHOD |
             CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
     };
+
+    /* if CRL-dp is present in the cert, disable CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO for ocsp */
+    if (JSSL_isCRLDPExtensionInCert(cert)) {
+        ocsp_Enabled_Hard_Policy_LeafFlags[1] =
+            CERT_REV_M_TEST_USING_THIS_METHOD;
+        ocsp_Enabled_Hard_Policy_ChainFlags[1] =
+          CERT_REV_M_TEST_USING_THIS_METHOD;
+    }
 
     CERTRevocationMethodIndex ocsp_Enabled_Hard_Policy_Method_Preference[1] = {
         cert_revocation_method_ocsp
