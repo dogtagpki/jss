@@ -561,7 +561,7 @@ public class TomcatJSS implements SSLSocketListener {
 
         logger.info("configuring Revocation Check");
 
-        logger.debug("enableCertificateCheck: {}", enableRevocationCheck);
+        logger.debug("enableRevocationCheck: {}", enableRevocationCheck);
         if (!enableRevocationCheck) {
             return;
         }
