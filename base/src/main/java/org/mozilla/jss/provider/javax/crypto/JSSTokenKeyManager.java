@@ -29,8 +29,8 @@ import java.util.Collection;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.pkcs11.PK11Cert;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +75,10 @@ public class JSSTokenKeyManager implements JSSKeyManager {
             }
 
             return (org.mozilla.jss.crypto.X509Certificate) jks.getCertificate(alias);
+
+        } catch (ObjectNotFoundException e) {
+            return null;
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -86,6 +90,11 @@ public class JSSTokenKeyManager implements JSSKeyManager {
 
         try {
             org.mozilla.jss.crypto.X509Certificate cert = getCertificate(alias);
+
+            if (cert == null) {
+                return null;
+            }
+
             org.mozilla.jss.crypto.X509Certificate[] chain = cm.buildCertificateChain(cert);
 
             logger.debug("JSSKeyManager: cert chain:");
