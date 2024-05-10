@@ -78,15 +78,27 @@ jobs:
           docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f pki-dist
 
-      - name: Create postgresql certificates
+      - name: Install packages
         run: |
           docker cp /tmp/RPMS/. jss:/root/RPMS/
           docker exec jss bash -c "dnf localinstall -y /root/RPMS/*"
 
-          docker exec jss pki nss-cert-request --subject "CN=postgresql.example.com" \
-              --csr /root/sslserver.csr --ext /usr/share/pki/server/certs/sslserver.conf
-          docker exec jss pki nss-cert-issue --csr /root/sslserver.csr \
-              --ext /usr/share/pki/server/certs/sslserver.conf  --cert /root/sslserver.crt
+      - name: Create postgresql certificates
+        run: |
+          docker exec jss pki nss-cert-request \
+              --subject "CN=postgresql.example.com" \
+              --csr /root/sslserver.csr \
+              --ext /usr/share/pki/server/certs/sslserver.conf
+
+          docker exec jss openssl req -text -noout -in /root/sslserver.csr
+
+          docker exec jss pki nss-cert-issue \
+              --csr /root/sslserver.csr \
+              --ext /usr/share/pki/server/certs/sslserver.conf  \
+              --cert /root/sslserver.crt
+
+          docker exec jss openssl x509 -text -noout -in /root/sslserver.crt
+
           docker exec jss pki nss-cert-import --cert /root/sslserver.crt --trust "TC,C,C" postgres
           docker exec jss pk12util -o /root/ssl.p12 -n postgres -d /root/.dogtag/nssdb/ -W myPassword
           docker cp jss:/root/ssl.p12 ssl.p12
