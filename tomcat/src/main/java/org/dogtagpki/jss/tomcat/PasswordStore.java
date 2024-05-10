@@ -19,9 +19,20 @@
 
 package org.dogtagpki.jss.tomcat;
 
-/**
- * @deprecated Use org.dogtagpki.jss.tomcat.PasswordStore instead.
- */
-@Deprecated(since="5.6.0", forRemoval=true)
-public interface IPasswordStore extends PasswordStore {
+import java.io.IOException;
+import java.util.Enumeration;
+
+public interface PasswordStore {
+    public void init(String pwdPath) throws IOException;
+
+    public String getPassword(String tag, int iteration);
+
+    public String getPassword(String tag);
+
+    public Enumeration<String> getTags();
+
+    public Object putPassword(String tag, String password);
+
+    public void commit() throws IOException, ClassCastException,
+            NullPointerException;
 }

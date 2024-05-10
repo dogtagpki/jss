@@ -79,7 +79,7 @@ public class TomcatJSS implements SSLSocketListener {
 
     String passwordClass;
     String passwordFile;
-    IPasswordStore passwordStore;
+    PasswordStore passwordStore;
 
     String serverCertNickFile;
     String serverCertNick;
@@ -147,11 +147,11 @@ public class TomcatJSS implements SSLSocketListener {
         return serverCertNickFile;
     }
 
-    public IPasswordStore getPasswordStore() {
+    public PasswordStore getPasswordStore() {
         return passwordStore;
     }
 
-    public void setPasswordStore(IPasswordStore passwordStore) {
+    public void setPasswordStore(PasswordStore passwordStore) {
         this.passwordStore = passwordStore;
     }
 
@@ -451,7 +451,7 @@ public class TomcatJSS implements SSLSocketListener {
 
         manager = CryptoManager.getInstance();
 
-        passwordStore = (IPasswordStore) Class.forName(passwordClass).getDeclaredConstructor().newInstance();
+        passwordStore = (PasswordStore) Class.forName(passwordClass).getDeclaredConstructor().newInstance();
         passwordStore.init(passwordFile);
 
         login();

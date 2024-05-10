@@ -29,7 +29,7 @@ import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 import java.util.Properties;
 
-public class PlainPasswordFile implements IPasswordStore {
+public class PlainPasswordFile implements PasswordStore {
     private String mPwdPath = "";
     private Properties mPwdStore;
     private static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PlainPasswordFile.class);

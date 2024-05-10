@@ -1,0 +1,6 @@
+= API Changes =
+
+== Deprecate IPasswordStore ==
+
+The `org.dogtagpki.jss.tomcat.IPasswordStore` has been deprecated.
+Use `org.dogtagpki.jss.tomcat.PasswordStore` instead.
