@@ -104,22 +104,37 @@ jobs:
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-cert.sh
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-logs.sh
 
-      - name: Gather artifacts
-        if: always()
-        run: |
-          tests/bin/ds-artifacts-save.sh pki
-          tests/bin/pki-artifacts-save.sh pki
-
       - name: Remove CA
         run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
 
       - name: Remove DS
         run: docker exec pki ${SHARED}/tests/bin/ds-remove.sh
 
+      - name: Check DS server systemd journal
+        if: always()
+        run: |
+          docker exec pki journalctl -x --no-pager -u dirsrv@localhost.service
+
+      - name: Check PKI server systemd journal
+        if: always()
+        run: |
+          docker exec pki journalctl -x --no-pager -u pki-tomcatd@pki-tomcat.service
+
+      - name: Check CA debug log
+        if: always()
+        run: |
+          docker exec pki find /var/lib/pki/pki-tomcat/logs/ca -name "debug.*" -exec cat {} \;
+
+      - name: Gather artifacts
+        if: always()
+        run: |
+          tests/bin/ds-artifacts-save.sh pki
+          tests/bin/pki-artifacts-save.sh pki
+        continue-on-error: true
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pki-ca-test
-          path: |
-            /tmp/artifacts/pki
+          path: /tmp/artifacts
