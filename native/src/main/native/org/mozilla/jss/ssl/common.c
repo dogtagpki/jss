@@ -962,8 +962,7 @@ JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
      * - if no AIA and CRL-DP are present no revocation check is performed.*/
     PRUint64 ocsp_Enabled_Hard_Policy_LeafFlags[2] = {
         /* crl */
-        CERT_REV_M_TEST_USING_THIS_METHOD |
-            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO,
+        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
             CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
@@ -971,17 +970,20 @@ JSSL_verifyCertPKIXInternal(CERTCertificate *cert,
 
     PRUint64 ocsp_Enabled_Hard_Policy_ChainFlags[2] = {
         /* crl */
-        CERT_REV_M_TEST_USING_THIS_METHOD |
-            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO,
+        CERT_REV_M_DO_NOT_TEST_USING_THIS_METHOD,
         /* ocsp */
         CERT_REV_M_TEST_USING_THIS_METHOD |
             CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO
     };
 
-    /* if CRL-dp is present in the cert, disable CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO for ocsp */
+    /* if CRL-DP is present in the cert, disable CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO for ocsp and enable CRL-DP*/
     if (JSSL_isCRLDPExtensionInCert(cert)) {
+        ocsp_Enabled_Hard_Policy_LeafFlags[0] = CERT_REV_M_TEST_USING_THIS_METHOD |
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO | CERT_REV_M_REQUIRE_INFO_ON_MISSING_SOURCE;
         ocsp_Enabled_Hard_Policy_LeafFlags[1] =
             CERT_REV_M_TEST_USING_THIS_METHOD;
+        ocsp_Enabled_Hard_Policy_ChainFlags[0] = CERT_REV_M_TEST_USING_THIS_METHOD |
+            CERT_REV_M_FAIL_ON_MISSING_FRESH_INFO | CERT_REV_M_REQUIRE_INFO_ON_MISSING_SOURCE;
         ocsp_Enabled_Hard_Policy_ChainFlags[1] =
           CERT_REV_M_TEST_USING_THIS_METHOD;
     }
