@@ -100,6 +100,7 @@ public class OIDMap {
      */
     @Deprecated(since = "5.6.0", forRemoval = true)
     public static final String EXT_KEY_USAGE_NAME = "ExtendedKeyUsageExtension";
+    private static final String EXT_KEY_USAGE = ROOT + "." + ExtendedKeyUsageExtension.NAME;
     /**
      * @deprecated This will be removed to avoid duplications
      */
@@ -120,7 +121,6 @@ public class OIDMap {
         loadNames();
         loadClasses();
         addClass(CRLDistributionPointsExtension.class);
-        addClass(ExtendedKeyUsageExtension.class);
         addClass(OCSPNoCheckExtension.class);
         addClass(InhibitAnyPolicyExtension.class);
     }
@@ -143,6 +143,7 @@ public class OIDMap {
         props.put(CERT_POLICIES, "2.5.29.32");
         props.put(AUTH_KEY_IDENTIFIER, "2.5.29.35");
         props.put(SUBJ_DIR_ATTR, "2.5.29.9");
+        props.put(EXT_KEY_USAGE, "2.5.29.37");
     }
 
     // Load the default name to class map (EXTENSIONS_CLASSES)
@@ -165,6 +166,7 @@ public class OIDMap {
         props.put(SUBJ_DIR_ATTR, SubjectDirAttributesExtension.class.getName());
         props.put(CRL_NUMBER, CRLNumberExtension.class.getName());
         props.put(CRL_REASON, CRLReasonExtension.class.getName());
+        props.put(EXT_KEY_USAGE, ExtendedKeyUsageExtension.class.getName());
     }
 
     // Return the file along with location
