@@ -1008,7 +1008,6 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
     private void updateHandshakeState() {
         debug("JSSEngine: updateHandshakeState()");
-
         // If we've previously seen an exception, we should just return
         // here; there's already an alert on the wire, so there's no point
         // in checking for new ones and/or stepping the handshake: it has
@@ -1055,6 +1054,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine.updateHandshakeState() - forcing handshake");
         if (SSL.ForceHandshake(ssl_fd) == SSL.SECFailure) {
             int error_value = PR.GetError();
+
+            try {
+                PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
+                session.setPeerCertificates(peer_chain);
+            } catch (Exception e) {
+                // If certificate is not available, then the handshake error is before
+                // peerCertificate was retrieved. The following message is enough to report
+            }
 
             if (error_value != PRErrors.WOULD_BLOCK_ERROR) {
                 debug("JSSEngine.updateHandshakeState() - FATAL " + getStatus());
