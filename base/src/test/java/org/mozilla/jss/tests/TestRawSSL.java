@@ -1,5 +1,6 @@
 package org.mozilla.jss.tests;
 
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.nss.PR;
 import org.mozilla.jss.nss.PRFDProxy;
 import org.mozilla.jss.nss.SSL;
@@ -27,15 +28,15 @@ public class TestRawSSL {
         SSLFDProxy ssl_fd = SSL.ImportFD(null, fd);
         assert(ssl_fd != null);
 
-        // 8 == SSL_ENABLE_SSL3; disable it
-        assert(SSL.OptionSet(ssl_fd, 8, 0) == SSL.SECSuccess);
+        // 9 == SSL_NO_CACHE; disable it
+        assert(SSL.OptionSet(ssl_fd, 9, 0) == SSL.SECSuccess);
 
         // Validate that the set worked.
-        assert(SSL.OptionGet(ssl_fd, 8) == SSL.SECSuccess);
+        assert(SSL.OptionGet(ssl_fd, 9) == SSL.SECSuccess);
 
-        // Renable SSL_ENABLE_SSL3 and validate it worked
-        assert(SSL.OptionSet(ssl_fd, 8, 1) == SSL.SECSuccess);
-        assert(SSL.OptionGet(ssl_fd, 8) == 1);
+        // Renable SSL_NO_CACHE and validate it worked
+        assert(SSL.OptionSet(ssl_fd, 9, 1) == SSL.SECSuccess);
+        assert(SSL.OptionGet(ssl_fd, 9) == 1);
 
         // Ensure that setting an invalid option fails
         assert(SSL.OptionSet(ssl_fd, 799999, 0) != SSL.SECSuccess);
@@ -160,7 +161,7 @@ public class TestRawSSL {
             System.out.println("Usage: TestRawSSL /path/to/nssdb");
             System.exit(1);
         }
-
+        CryptoManager cm = CryptoManager.getInstance();
         System.out.println("Calling TestSSLImportFD()...");
         TestSSLImportFD();
 
