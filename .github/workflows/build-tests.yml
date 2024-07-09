@@ -91,7 +91,7 @@ jobs:
     needs: wait-for-build
     runs-on: ubuntu-latest
     env:
-      SHARED: /tmp/workdir/pki
+      SHARED: /tmp/workdir/jss
     steps:
     - name: Clone repository
       uses: actions/checkout@v4
@@ -171,7 +171,7 @@ jobs:
     needs: wait-for-build
     runs-on: ubuntu-latest
     env:
-      SHARED: /tmp/workdir/pki
+      SHARED: /tmp/workdir/jss
     steps:
     - name: Clone repository
       uses: actions/checkout@v4
