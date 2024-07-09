@@ -1,6 +1,7 @@
 package org.mozilla.jss.pkcs11;
 
 import java.math.BigInteger;
+import java.security.spec.AlgorithmParameterSpec;
 
 import org.mozilla.jss.crypto.PrivateKey;
 import org.slf4j.Logger;
@@ -22,6 +23,17 @@ public class PK11RSAPrivateKey
     @Override
     public PrivateKey.Type getType() {
         return PrivateKey.Type.RSA;
+    }
+
+    @Override
+    public AlgorithmParameterSpec getParams() {
+        PK11PubKey publicKey = getPublicKey();
+        if (!(publicKey instanceof PK11RSAPublicKey)) {
+            throw new RuntimeException("Unknown key type: expected the public key of an RSA key to be an PK11RSAPublicKey; got: " + publicKey);
+        }
+
+        PK11RSAPublicKey rsaPublicKey = (PK11RSAPublicKey)publicKey;
+        return rsaPublicKey.getParams();
     }
 
     @Override
