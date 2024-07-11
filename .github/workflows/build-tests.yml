@@ -44,7 +44,7 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
         apt-get update
 
@@ -63,11 +63,11 @@ jobs:
             unzip \
             zip
 
-    - name: Build JSS with CMake
+    - name: Build with CMake
       run: ./build.sh
 
-    - name: Build JSS with Maven
-      run: mvn package
+    - name: Build with Maven
+      run: mvn --batch-mode package
 
     - name: Compare jss.jar
       run: |
@@ -112,13 +112,13 @@ jobs:
         IMAGE: jss-builder
         HOSTNAME: jss.example.com
 
-    - name: Build JSS with CMake
+    - name: Build with CMake
       run: |
         docker exec jss ./build.sh
 
-    - name: Build JSS with Maven
+    - name: Build with Maven
       run: |
-        docker exec jss mvn package
+        docker exec jss mvn --batch-mode package
 
     - name: Compare jss.jar
       run: |
@@ -192,6 +192,56 @@ jobs:
         IMAGE: jss-builder
         HOSTNAME: jss.example.com
 
+    - name: Install RPMs
+      run: |
+        docker exec jss bash -c "dnf localinstall -y build/RPMS/*.rpm"
+
+    - name: Build with Maven
+      run: |
+        docker exec jss mvn --batch-mode -pl '!native,!symkey,!examples' package
+
+    - name: Compare jss.jar
+      run: |
+        docker exec jss jar tvf /usr/share/java/jss/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee rpm.out
+        docker exec jss jar tvf base/target/jss.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee maven.out
+        diff rpm.out maven.out
+
+    - name: Compare jss-tomcat.jar
+      run: |
+        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee rpm.out
+        docker exec jss jar tvf tomcat/target/jss-tomcat.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee maven.out
+        diff rpm.out maven.out
+
+    - name: Compare jss-tomcat-9.0.jar
+      run: |
+        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee rpm.out
+        docker exec jss jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee maven.out
+        diff rpm.out maven.out
+
     - name: Install RPMInspect
       run: |
         docker exec jss dnf copr enable -y copr.fedorainfracloud.org/dcantrell/rpminspect
@@ -200,56 +250,6 @@ jobs:
     - name: Run RPMInspect on SRPM and RPMs
       run: |
         docker exec jss ./tests/bin/rpminspect.sh
-
-    - name: Install RPMs
-      run: |
-        docker exec jss bash -c "dnf localinstall -y build/RPMS/*.rpm"
-
-    - name: Build JSS with Maven
-      run: |
-        docker exec jss mvn -pl '!native,!symkey,!examples' package
-
-    - name: Compare jss.jar
-      run: |
-        docker exec jss jar tvf /usr/share/java/jss/jss.jar \
-            | awk '{print $8;}' \
-            | sort \
-            | grep -v '/$' \
-            | tee jss.jar.rpm
-        docker exec jss jar tvf base/target/jss.jar \
-            | awk '{print $8;}' \
-            | sort \
-            | grep -v '/$' \
-            | tee jss.jar.maven
-        diff jss.jar.rpm jss.jar.maven
-
-    - name: Compare jss-tomcat.jar
-      run: |
-        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat.jar \
-            | awk '{print $8;}' \
-            | sort \
-            | grep -v '/$' \
-            | tee jss-tomcat.jar.rpm
-        docker exec jss jar tvf tomcat/target/jss-tomcat.jar \
-            | awk '{print $8;}' \
-            | sort \
-            | grep -v '/$' \
-            | tee jss-tomcat.jar.maven
-        diff jss-tomcat.jar.rpm jss-tomcat.jar.maven
-
-    - name: Compare jss-tomcat-9.0.jar
-      run: |
-        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar \
-            | awk '{print $8;}' \
-            | sort \
-            | grep -v '/$' \
-            | tee jss-tomcat-9.0.jar.rpm
-        docker exec jss jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar \
-            | awk '{print $8;}' \
-            | sort \
-            | grep -v '/$' \
-            | tee jss-tomcat-9.0.jar.maven
-        diff jss-tomcat-9.0.jar.rpm jss-tomcat-9.0.jar.maven
 
   sandbox-test:
     name: Sandbox Test
