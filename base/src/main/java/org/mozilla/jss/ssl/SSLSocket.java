@@ -13,10 +13,13 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.net.ssl.HandshakeCompletedListener;
+import javax.net.ssl.SSLSession;
+
 /**
  * SSL client socket.
  */
-public class SSLSocket extends java.net.Socket {
+public class SSLSocket extends javax.net.ssl.SSLSocket {
 
     /**
      *
@@ -388,7 +391,7 @@ public class SSLSocket extends java.net.Socket {
     /**
      * For sockets that get created by accept().
      */
-    SSLSocket() {
+    protected SSLSocket() {
     }
 
     /**
@@ -1363,13 +1366,13 @@ public class SSLSocket extends java.net.Socket {
         base.requestClientAuth(b);
     }
 
-    /**
-     * @deprecated As of JSS 3.0. This method is misnamed. Use
-     *             <code>requestClientAuth</code> instead.
-     */
-    @Deprecated
-    public void setNeedClientAuth(boolean b) throws SocketException {
-        base.requestClientAuth(b);
+    @Override
+    public void setNeedClientAuth(boolean b) {
+        try {
+            base.requestClientAuth(b);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -1644,4 +1647,72 @@ public class SSLSocket extends java.net.Socket {
      * <code>TLS_RSA_WITH_AES_128_CBC_SHA</code>).
      */
     public static native int[] getImplementedCipherSuites();
+
+    @Override
+    public String[] getSupportedCipherSuites() {
+        return null;
+    }
+
+    @Override
+    public String[] getEnabledCipherSuites() {
+        return null;
+    }
+
+    @Override
+    public void setEnabledCipherSuites(String[] suites) {
+    }
+
+    @Override
+    public String[] getSupportedProtocols() {
+        return null;
+    }
+
+    @Override
+    public String[] getEnabledProtocols() {
+        return null;
+    }
+
+    @Override
+    public void setEnabledProtocols(String[] protocols) {
+    }
+
+    @Override
+    public SSLSession getSession() {
+        return null;
+    }
+
+    @Override
+    public void addHandshakeCompletedListener(HandshakeCompletedListener listener) {
+    }
+
+    @Override
+    public void removeHandshakeCompletedListener(HandshakeCompletedListener listener) {
+    }
+
+    @Override
+    public void startHandshake() throws IOException {
+    }
+
+    @Override
+    public boolean getNeedClientAuth() {
+        return false;
+    }
+
+    @Override
+    public void setWantClientAuth(boolean want) {
+    }
+
+    @Override
+    public boolean getWantClientAuth() {
+        return false;
+    }
+
+    @Override
+    public void setEnableSessionCreation(boolean flag) {
+    }
+
+    @Override
+    public boolean getEnableSessionCreation() {
+        return false;
+    }
 }

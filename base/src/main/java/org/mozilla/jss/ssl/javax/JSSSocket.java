@@ -22,13 +22,13 @@ import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.provider.javax.crypto.JSSTrustManager;
+import org.mozilla.jss.ssl.SSLSocket;
 
 /**
  * SSL-enabled socket following the javax.net.ssl.SSLSocket interface.
