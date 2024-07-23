@@ -4,3 +4,11 @@
 
 The `org.dogtagpki.jss.tomcat.IPasswordStore` has been deprecated.
 Use `org.dogtagpki.jss.tomcat.PasswordStore` instead.
+
+== SSLSocket Changes ==
+
+The `org.mozilla.jss.ssl.SSLSocket` has been modified to extend `javax.net.ssl.SSLSocket`.
+
+== JSSSocket Changes ==
+
+The `org.mozilla.jss.ssl.javax.JSSSocket` has been modified to extend `org.mozilla.jss.ssl.SSLSocket`.
