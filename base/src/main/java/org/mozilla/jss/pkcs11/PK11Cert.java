@@ -20,18 +20,15 @@ import java.util.Date;
 import java.util.Set;
 
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.InternalCertificate;
-import org.mozilla.jss.crypto.TokenCertificate;
+import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.netscape.security.x509.X509CertImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class PK11Cert
-        extends java.security.cert.X509Certificate
-        implements InternalCertificate,
-                TokenCertificate,
-                java.lang.AutoCloseable
+        extends X509Certificate
+        implements AutoCloseable
 {
     public static Logger logger = LoggerFactory.getLogger(PK11Cert.class);
 

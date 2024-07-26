@@ -11,14 +11,15 @@ import java.security.cert.CertificateEncodingException;
  * Certificates handled by JSS.  All certificates handled by JSS are
  * of this type.
  */
-public interface X509Certificate
-{
+public abstract class X509Certificate
+        extends java.security.cert.X509Certificate
+        implements InternalCertificate, TokenCertificate {
     /**
      * @return The DER encoding of this certificate.
      * @throws CertificateEncodingException If an error occurred.
      */
-    public byte[] getEncoded()
-		throws CertificateEncodingException;
+    public abstract byte[] getEncoded()
+            throws CertificateEncodingException;
 
     /**
      * @return The nickname of this certificate (could be null).

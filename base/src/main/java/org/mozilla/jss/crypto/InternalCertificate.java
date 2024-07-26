@@ -11,7 +11,7 @@ import org.mozilla.jss.pkcs11.PK11Cert;
  * can be viewed and modified. Other types of certificates do not
  * have trust flags.
  */
-public interface InternalCertificate extends X509Certificate
+public interface InternalCertificate
 {
     /**
      * @deprecated Use PK11Cert.VALID_PEER instead.
