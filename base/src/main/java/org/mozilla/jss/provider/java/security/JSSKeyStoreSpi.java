@@ -35,13 +35,12 @@ import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SecretKeyFacade;
 import org.mozilla.jss.crypto.SymmetricKey;
-import org.mozilla.jss.crypto.TokenCertificate;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
 import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.netscape.security.util.Utils;
-import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.pkcs11.PK11Token;
 import org.mozilla.jss.pkcs11.TokenProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,8 +223,7 @@ public class JSSKeyStoreSpi extends java.security.KeyStoreSpi {
                 X509Certificate cert = manager.findCertByNickname(alias);
 
                 CryptoToken token;
-                if (cert instanceof TokenCertificate) {
-                    TokenCertificate tokenCert = (TokenCertificate) cert;
+                if (cert instanceof PK11Cert tokenCert) {
                     token = tokenCert.getOwningToken();
 
                 } else {

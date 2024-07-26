@@ -29,7 +29,7 @@ public interface PrivateKey extends java.security.PrivateKey {
      * Returns the unique ID of this key. Unique IDs can be used to match
      * certificates to keys.
      *
-     * @see org.mozilla.jss.crypto.TokenCertificate#getUniqueID
+     * @see org.mozilla.jss.pkcs11.PK11Cert#getUniqueID
      */
     public byte[] getUniqueID() throws TokenException;
 
