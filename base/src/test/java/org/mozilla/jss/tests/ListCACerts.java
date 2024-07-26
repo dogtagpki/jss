@@ -1,7 +1,8 @@
 package org.mozilla.jss.tests;
 
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.*;
+import org.mozilla.jss.crypto.X509Certificate;
+import org.mozilla.jss.pkcs11.PK11Cert;
 
 public class ListCACerts {
     public static void main(String args[]) throws Exception {
@@ -21,9 +22,9 @@ public class ListCACerts {
         if (args.length == 2 && args[1].equalsIgnoreCase("verbose")) {
             for (int i = 0; i < certs.length; i++) {
                 System.out.println(certs[i].getSubjectDN().toString());
-                InternalCertificate ic = (InternalCertificate) certs[i];
-                System.out.println("SSL: " + ic.getSSLTrust() + 
-                    ", Email: " + ic.getEmailTrust() + 
+                PK11Cert ic = (PK11Cert) certs[i];
+                System.out.println("SSL: " + ic.getSSLTrust() +
+                    ", Email: " + ic.getEmailTrust() +
                     ", Object Signing: " + ic.getObjectSigningTrust());
             }
         }

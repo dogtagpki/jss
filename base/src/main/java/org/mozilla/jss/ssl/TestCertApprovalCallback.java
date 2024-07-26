@@ -6,7 +6,7 @@ package org.mozilla.jss.ssl;
 
 import java.util.Enumeration;
 
-import org.mozilla.jss.crypto.InternalCertificate;
+import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.pkcs11.PK11Cert;
 
 /**
@@ -59,8 +59,8 @@ public class TestCertApprovalCallback
         if (trust_the_server_cert) {
             System.out.println("importing certificate.");
             try {
-                InternalCertificate newcert = org.mozilla.jss.CryptoManager.getInstance().importCertToPerm(servercert,
-                        "testnick");
+                CryptoManager cm = CryptoManager.getInstance();
+                PK11Cert newcert = (PK11Cert) cm.importCertToPerm(servercert, "testnick");
                 newcert.setSSLTrust(PK11Cert.TRUSTED_PEER | PK11Cert.VALID_PEER);
             } catch (Exception e) {
                 System.out.println("thrown exception: " + e);

@@ -26,7 +26,6 @@ import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
@@ -211,7 +210,7 @@ public class SSLClientAuth implements Runnable {
                     caPair.getPrivate(), caPair.getPublic(), serialNum, extensions);
             X509Certificate nssCaCert = cm.importUserCACertPackage(
                     ASN1Util.encode(caCert), "SSLCA-"+serialNum);
-            InternalCertificate intern = (InternalCertificate)nssCaCert;
+            PK11Cert intern = (PK11Cert) nssCaCert;
             intern.setSSLTrust(
                     PK11Cert.TRUSTED_CA |
                     PK11Cert.TRUSTED_CLIENT_CA |
