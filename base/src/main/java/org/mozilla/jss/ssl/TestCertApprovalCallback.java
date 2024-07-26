@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.ssl;
 
+import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
 import org.mozilla.jss.CryptoManager;
@@ -19,7 +20,7 @@ public class TestCertApprovalCallback
 
     @Override
     public boolean approve(
-            org.mozilla.jss.crypto.X509Certificate servercert,
+            X509Certificate servercert,
             SSLCertificateApprovalCallback.ValidityStatus status) {
 
         SSLCertificateApprovalCallback.ValidityItem item;
@@ -60,7 +61,9 @@ public class TestCertApprovalCallback
             System.out.println("importing certificate.");
             try {
                 CryptoManager cm = CryptoManager.getInstance();
-                PK11Cert newcert = (PK11Cert) cm.importCertToPerm(servercert, "testnick");
+                PK11Cert newcert = (PK11Cert) cm.importCertToPerm(
+                        (org.mozilla.jss.crypto.X509Certificate) servercert,
+                        "testnick");
                 newcert.setSSLTrust(PK11Cert.TRUSTED_PEER | PK11Cert.VALID_PEER);
             } catch (Exception e) {
                 System.out.println("thrown exception: " + e);

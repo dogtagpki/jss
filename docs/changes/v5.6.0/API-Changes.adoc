@@ -12,3 +12,8 @@ The `org.mozilla.jss.ssl.SSLSocket` has been modified to extend `javax.net.ssl.S
 == JSSSocket Changes ==
 
 The `org.mozilla.jss.ssl.javax.JSSSocket` has been modified to extend `org.mozilla.jss.ssl.SSLSocket`.
+
+== SSLCertificateApprovalCallback Changes ==
+
+The `approve()` method in `org.mozilla.jss.ssl.SSLCertificateApprovalCallback` has been modified
+to accept `java.security.cert.X509Certificate` instead of `org.mozilla.jss.crypto.X509Certificate`.

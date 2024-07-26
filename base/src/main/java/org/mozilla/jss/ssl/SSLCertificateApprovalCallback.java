@@ -8,6 +8,7 @@
 
 package org.mozilla.jss.ssl;
 
+import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -43,8 +44,7 @@ public interface SSLCertificateApprovalCallback {
 	 *         <b>false</b> terminate the connection (Expect an IOException
 	 *              on the outstanding read()/write() on the socket)
 	*/
-	public boolean approve(org.mozilla.jss.crypto.X509Certificate cert,
-			ValidityStatus status);
+	public boolean approve(X509Certificate cert, ValidityStatus status);
 
 	/**
 	 *  This class holds details about the errors for each cert in
