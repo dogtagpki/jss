@@ -299,7 +299,7 @@ PR_BEGIN_EXTERN_C
  * SSLCertificateApprovalCallback
  */
 #define SSLCERT_APP_CB_APPROVE_NAME "approve"
-#define SSLCERT_APP_CB_APPROVE_SIG "(Lorg/mozilla/jss/crypto/X509Certificate;Lorg/mozilla/jss/ssl/SSLCertificateApprovalCallback$ValidityStatus;)Z"
+#define SSLCERT_APP_CB_APPROVE_SIG "(Ljava/security/cert/X509Certificate;Lorg/mozilla/jss/ssl/SSLCertificateApprovalCallback$ValidityStatus;)Z"
 
 /*
  * SSLSecurityStatus
