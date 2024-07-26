@@ -10,7 +10,7 @@ package org.mozilla.jss.crypto;
  * To find out if an X509Certificate is a TokenCertificate, use 
  *  <code>instanceof</code>.
  */
-public interface TokenCertificate extends X509Certificate {
+public interface TokenCertificate {
 
     /**
      * Returns the unique ID of this key.  Unique IDs can be used to match
