@@ -482,6 +482,10 @@ public class JSSSocket extends SSLSocket {
     public void startHandshake() throws IOException {
         engine.beginHandshake();
 
+        JSSSession session = engine.getSession();
+        session.setPeerHost(getInetAddress().getHostName());
+        session.setPeerPort(getPort());
+
         if (channel == null) {
             // Only be blocking on the first handshake call.
             doHandshake();
