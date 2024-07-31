@@ -303,7 +303,7 @@ public class JSSSocketChannel extends SocketChannel {
                 // bytes in another call to unwrap().
             } while (result.bytesConsumed() > 0);
         } catch (SSLException ssle) {
-            String msg = "Unable to unwrap data using SSLEngine: ";
+            String msg = "Unable to read from socket: ";
             msg += ssle.getMessage();
             throw new IOException(msg, ssle);
         }
@@ -355,7 +355,7 @@ public class JSSSocketChannel extends SocketChannel {
                 dst.flip();
             } while (sent < encrypted);
         } catch (SSLException ssle) {
-            String msg = "Unable to wrap data with SSLEngine: ";
+            String msg = "Unable to write to socket: ";
             msg += ssle.getMessage();
             throw new IOException(msg, ssle);
         }
