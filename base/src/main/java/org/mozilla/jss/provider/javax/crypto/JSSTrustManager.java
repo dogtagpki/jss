@@ -84,23 +84,28 @@ public class JSSTrustManager implements X509TrustManager {
 
     public void checkCert(X509Certificate cert, X509Certificate[] caCerts, String keyUsage) throws Exception {
 
-        logger.debug("JSSTrustManager: checkCert(" + cert.getSubjectX500Principal() + "):");
+        logger.debug("JSSTrustManager: Checking cert:");
+        logger.debug("JSSTrustManager: - subject: " + cert.getSubjectX500Principal());
+        logger.debug("JSSTrustManager: - issuer: " + cert.getIssuerX500Principal());
 
         boolean[] aki = cert.getIssuerUniqueID();
-        logger.debug("JSSTrustManager: cert AKI: " + Arrays.toString(aki));
+        logger.debug("JSSTrustManager: - AKI: " + Arrays.toString(aki));
 
         X509Certificate issuer = null;
         for (X509Certificate caCert : caCerts) {
 
+            logger.debug("JSSTrustManager: Checking against CA cert:");
+            logger.debug("JSSTrustManager: - subject: " + caCert.getSubjectX500Principal());
+
             boolean[] ski = caCert.getSubjectUniqueID();
-            logger.debug("JSSTrustManager: SKI of " + caCert.getSubjectX500Principal() + ": " + Arrays.toString(ski));
+            logger.debug("JSSTrustManager: - SKI: " + Arrays.toString(ski));
 
             try {
                 cert.verify(caCert.getPublicKey(), "Mozilla-JSS");
                 issuer = caCert;
                 break;
             } catch (Exception e) {
-                logger.debug("JSSTrustManager: invalid certificate: " + e);
+                logger.debug("JSSTrustManager: " + e.getClass().getName() + ": " + e.getMessage());
             }
         }
 
@@ -163,11 +168,9 @@ public class JSSTrustManager implements X509TrustManager {
             logger.debug("JSSTrustManager: SSL client certificate is valid");
 
         } catch (CertificateException e) {
-            logger.warn("JSSTrustManager: Invalid SSL client certificate: " + e);
             throw e;
 
         } catch (Exception e) {
-            logger.warn("JSSTrustManager: Unable to validate certificate: " + e);
             throw new CertificateException(e);
         }
     }
@@ -182,11 +185,9 @@ public class JSSTrustManager implements X509TrustManager {
             logger.debug("JSSTrustManager: SSL server certificate is valid");
 
         } catch (CertificateException e) {
-            logger.warn("JSSTrustManager: Invalid SSL server certificate: " + e);
             throw e;
 
         } catch (Exception e) {
-            logger.warn("JSSTrustManager: Unable to validate SSL server certificate: " + e);
             throw new CertificateException(e);
         }
     }
@@ -209,7 +210,7 @@ public class JSSTrustManager implements X509TrustManager {
                     caCerts.add(caCert);
 
                 } catch (Exception e) {
-                    logger.debug("JSSTrustManager: invalid CA certificate: " + e);
+                    logger.debug("JSSTrustManager: " + e.getClass().getName() + ": " + e.getMessage());
                 }
             }
 
