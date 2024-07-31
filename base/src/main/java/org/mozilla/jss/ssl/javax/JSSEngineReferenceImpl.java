@@ -8,10 +8,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.security.PublicKey;
+import java.security.cert.CertificateException;
 
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.X509ExtendedTrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -1790,10 +1792,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         public int check(SSLFDProxy fd) {
             // Needs to be available for assignException() below.
             PK11Cert[] chain = null;
+            String authType;
 
             try {
                 chain = SSL.PeerCertificateChain(fd);
-                String authType = findAuthType(fd, chain);
+                authType = findAuthType(fd, chain);
                 debug("CertAuthType: " + authType);
 
                 if (chain == null || chain.length == 0) {
@@ -1810,7 +1813,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                         return 0;
                     }
                 }
+            } catch (Exception excpt) {
+                return assignException(excpt, chain);
+            }
 
+            try {
                 for (X509TrustManager tm : trust_managers) {
                     // X509ExtendedTrustManager lets the TM access the
                     // SSLEngine while validating certificates. Otherwise,
@@ -1831,8 +1838,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                         }
                     }
                 }
-            } catch (Exception excpt) {
-                return assignException(excpt, chain);
+            } catch (CertificateException excpt) {
+                return handleCertificateException(excpt, chain);
             }
 
             return 0;
@@ -1870,6 +1877,22 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             seen_exception = true;
             ssl_exception = new SSLException(msg, excpt);
+            return nss_code;
+        }
+
+        private int handleCertificateException(Exception excpt, PK11Cert[] chain) {
+            int nss_code = Cert.MatchExceptionToNSSError(excpt);
+
+            if (seen_exception) {
+                return nss_code;
+            }
+
+            String msg = "Unable to validate "
+                    + chain[0].getSubjectX500Principal() + ": "
+                    + excpt.getMessage();
+
+            seen_exception = true;
+            ssl_exception = new SSLPeerUnverifiedException(msg);
             return nss_code;
         }
     }
