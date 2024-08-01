@@ -12,8 +12,6 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.mozilla.jss.pkcs11.PK11Cert;
-
 /**
  * This interface is what you should implement if you want to
  * be able to decide whether or not you want to approve the peer's cert,
@@ -105,9 +103,11 @@ class ValidityStatus {
      * @param depth     the index of this cert in the chain. 0 is the server cert.
      */
 
-	public void addReason(int newReason,
-							PK11Cert cert,
-							int depth) {
+	public void addReason(
+	        int newReason,
+	        X509Certificate cert,
+	        int depth) {
+
 		ValidityItem status = new ValidityItem(newReason,cert,depth);
 		reasons.addElement(status);
 	}
@@ -125,11 +125,13 @@ class ValidityStatus {
 class ValidityItem {
 	private int reason;
 	private int depth;
-	private PK11Cert cert;
+	private X509Certificate cert;
 
-	public ValidityItem(int reason,
-							PK11Cert cert,
-							int depth) {
+	public ValidityItem(
+	        int reason,
+	        X509Certificate cert,
+		int depth) {
+
 		this.reason = reason;
 		this.cert = cert;
 		this.depth = depth;
@@ -157,7 +159,7 @@ class ValidityItem {
 	 *     the X509Certificate functions to get details such as issuer/subject
 	 *     name, serial number, etc.
 	 */
-	public PK11Cert getCert() {
+	public X509Certificate getCert() {
 		return cert;
 	}
 

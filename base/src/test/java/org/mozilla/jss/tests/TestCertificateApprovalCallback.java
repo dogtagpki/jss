@@ -53,7 +53,7 @@ public class TestCertificateApprovalCallback
                     " reason="+item.getReason()+
                     " depth="+item.getDepth());
 
-            org.mozilla.jss.crypto.X509Certificate cert = item.getCert();
+            X509Certificate cert = item.getCert();
             if (item.getReason() ==
                 SSLCertificateApprovalCallback.ValidityStatus.UNTRUSTED_ISSUER) {
                 trust_the_server_cert = true;

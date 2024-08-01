@@ -333,7 +333,7 @@ PR_BEGIN_EXTERN_C
     "org/mozilla/jss/ssl/SSLCertificateApprovalCallback$ValidityStatus"
 #define SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_NAME "addReason"
 #define SSLCERT_APP_CB_VALIDITY_STATUS_ADD_REASON_SIG \
-    "(ILorg/mozilla/jss/pkcs11/PK11Cert;I)V"
+    "(ILjava/security/cert/X509Certificate;I)V"
 
 
 /*
