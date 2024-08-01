@@ -386,6 +386,52 @@ JSS_PK11_getStoreSlotPtr(JNIEnv *env, jobject store, PK11SlotInfo **slot)
 }
 
 /**********************************************************************
+ * PK11Store.findCertFromDERCertItem
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11Store_findCertFromDERCertItem(
+    JNIEnv *env,
+    jobject this,
+    jbyteArray certBytes)
+{
+    PK11SlotInfo *slot = NULL;
+    SECItem *derCert = NULL;
+    CERTCertificate *nssCert = NULL;
+    jobject cert = NULL;
+
+    if (certBytes == NULL) {
+        goto finish;
+    }
+
+    if (JSS_PK11_getStoreSlotPtr(env, this, &slot) != PR_SUCCESS) {
+        goto finish;
+    }
+
+    derCert = JSS_ByteArrayToSECItem(env, certBytes);
+    if (derCert == NULL) {
+        goto finish;
+    }
+
+    nssCert = PK11_FindCertFromDERCertItem(slot, derCert, NULL);
+    if (nssCert == NULL) {
+        goto finish;
+    }
+
+    cert = JSS_PK11_wrapCertAndSlot(env, &nssCert, &slot);
+
+finish:
+    if (nssCert != NULL) {
+        CERT_DestroyCertificate(nssCert);
+    }
+
+    if (derCert != NULL) {
+        SECITEM_FreeItem(derCert, PR_TRUE);
+    }
+
+    return cert;
+}
+
+/**********************************************************************
  * PK11Store.importCert
  */
 JNIEXPORT jobject JNICALL

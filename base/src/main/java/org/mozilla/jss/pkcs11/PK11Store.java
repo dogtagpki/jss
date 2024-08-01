@@ -4,7 +4,6 @@
 
 package org.mozilla.jss.pkcs11;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
@@ -15,8 +14,6 @@ import java.util.Vector;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
-import org.mozilla.jss.asn1.ASN1Util;
-import org.mozilla.jss.asn1.INTEGER;
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.CryptoStore;
 import org.mozilla.jss.crypto.KeyAlreadyImportedException;
@@ -28,9 +25,6 @@ import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.X509Certificate;
-import org.mozilla.jss.pkix.cert.Certificate;
-import org.mozilla.jss.pkix.cert.CertificateInfo;
-import org.mozilla.jss.pkix.primitive.Name;
 import org.mozilla.jss.util.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -202,28 +196,11 @@ public final class PK11Store implements CryptoStore {
 
     @Override
     public X509Certificate findCert(byte[] certBytes) throws TokenException {
-
-        try (ByteArrayInputStream is = new ByteArrayInputStream(certBytes)) {
-
-            Certificate pkixCert = (Certificate) Certificate.getTemplate().decode(is);
-            CertificateInfo certInfo = pkixCert.getInfo();
-
-            Name issuer = certInfo.getIssuer();
-            INTEGER serialNumber = certInfo.getSerialNumber();
-
-            // TODO: replace with PK11_FindCertFromDERCert()
-            CryptoManager cm = CryptoManager.getInstance();
-            return cm.findCertByIssuerAndSerialNumber(
-                    ASN1Util.encode(issuer),
-                    serialNumber);
-
-        } catch (ObjectNotFoundException e) {
-            return null;
-
-        } catch (Exception e) {
-            throw new TokenException("Unable to find certificate: " + e.getMessage(), e);
-        }
+        return findCertFromDERCertItem(certBytes);
     }
+
+    public native X509Certificate findCertFromDERCertItem(byte[] certBytes)
+            throws TokenException;
 
     @Override
     public native X509Certificate importCert(byte[] certBytes, String nickname)

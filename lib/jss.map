@@ -518,3 +518,9 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importCert;
     local:
         *;
 };
+JSS_5.6.0 {
+    global:
+Java_org_mozilla_jss_pkcs11_PK11Store_findCertFromDERCertItem;
+    local:
+        *;
+};
