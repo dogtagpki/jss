@@ -22,3 +22,13 @@ to accept `java.security.cert.X509Certificate` instead of `org.mozilla.jss.crypt
 
 The `importCertToPerm()` method in `org.mozilla.jss.CryptoManager` has been modified
 to return `org.mozilla.jss.crypto.X509Certificate`.
+
+== CryptoManager Changes ==
+
+The `importCertToPerm()` method in `org.mozilla.jss.CryptoManager` has been modified
+to return `org.mozilla.jss.crypto.X509Certificate`.
+
+== Remove PK11InternalCert and PK11InternalTokenCert ==
+
+The `org.mozilla.jss.pkcs11.PK11InternalCert` and `org.mozilla.jss.pkcs11.PK11InternalTokenCert`
+are no longer used so they have been removed.

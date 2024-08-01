@@ -137,16 +137,6 @@ PR_BEGIN_EXTERN_C
 #define CERT_PROXY_SIG "Lorg/mozilla/jss/pkcs11/CertProxy;"
 
 /*
- * PK11InternalCert
- */
-#define INTERNAL_CERT_CLASS_NAME "org/mozilla/jss/pkcs11/PK11InternalCert"
-
-/*
- * PK11InternalTokenCert
- */
-#define INTERNAL_TOKEN_CERT_CLASS_NAME "org/mozilla/jss/pkcs11/PK11InternalTokenCert"
-
-/*
  * PK11DSAPublicKey
  */
 #define PK11_DSA_PUBKEY_CLASS_NAME "org/mozilla/jss/pkcs11/PK11DSAPublicKey"

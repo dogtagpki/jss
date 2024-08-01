@@ -391,7 +391,7 @@ JSS_PK11_wrapCertAndSlotAndNickname(JNIEnv *env, CERTCertificate **cert,
 		jnickname = (*env)->NewStringUTF(env, nickname);
 	}
 
-	certClass = (*env)->FindClass(env, INTERNAL_TOKEN_CERT_CLASS_NAME);
+	certClass = (*env)->FindClass(env, CERT_CLASS_NAME);
 	if(certClass == NULL) {
 		ASSERT_OUTOFMEM(env);
 		goto finish;
