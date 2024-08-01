@@ -17,3 +17,8 @@ The `org.mozilla.jss.ssl.javax.JSSSocket` has been modified to extend `org.mozil
 
 The `approve()` method in `org.mozilla.jss.ssl.SSLCertificateApprovalCallback` has been modified
 to accept `java.security.cert.X509Certificate` instead of `org.mozilla.jss.crypto.X509Certificate`.
+
+== CryptoManager Changes ==
+
+The `importCertToPerm()` method in `org.mozilla.jss.CryptoManager` has been modified
+to return `org.mozilla.jss.crypto.X509Certificate`.

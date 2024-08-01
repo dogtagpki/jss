@@ -19,7 +19,6 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.crypto.CryptoToken;
-import org.mozilla.jss.crypto.InternalCertificate;
 import org.mozilla.jss.crypto.NoSuchItemOnTokenException;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
@@ -884,7 +883,7 @@ public final class CryptoManager implements TokenSupplier
      * @throws InvalidNicknameException If the nickname is invalid.
      */
 
-    public InternalCertificate
+    public X509Certificate
         importCertToPerm(X509Certificate cert, String nickname)
         throws TokenException, InvalidNicknameException
     {
@@ -905,7 +904,7 @@ public final class CryptoManager implements TokenSupplier
 
     private native X509Certificate importDERCertNative(byte[] cert, int usage, boolean permanent, String nickname);
 
-    private native InternalCertificate
+    private native X509Certificate
         importCertToPermNative(X509Certificate cert, String nickname)
         throws TokenException;
 
