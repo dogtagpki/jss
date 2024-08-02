@@ -47,16 +47,13 @@ jobs:
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
 
-      - name: Check AES key
+      - name: Check PKI CLI with AES
         run: |
           # create key
           docker exec pki pki nss-key-create --key-type AES aes
-          docker exec pki pki nss-key-find | tee output
 
-          # check key nickname
-          sed -n 's/\s*Nickname:\s*\(\S\+\)\s*$/\1/p' output > actual
-          echo "aes" > expected
-          diff expected actual
+          # find key with nickname
+          docker exec pki pki nss-key-show --key-nickname aes | tee output
 
           # check key type
           sed -n 's/\s*Type:\s*\(\S\+\)\s*$/\1/p' output > actual
@@ -67,3 +64,95 @@ jobs:
           sed -n 's/\s*Algorithm:\s*\(\S\+\)\s*$/\1/p' output > actual
           echo "AES" > expected
           diff expected actual
+
+      - name: Check PKI CLI with RSA
+        run: |
+          # create key
+          docker exec pki pki nss-key-create --key-type RSA | tee output
+
+          # get key ID
+          KEY_ID=$(sed -n 's/^\s*Key ID:\s*\(\S\+\)\s*$/\1/p' output)
+
+          # find key with key ID
+          docker exec pki pki nss-key-show --key-id $KEY_ID | tee output
+
+          # check key type
+          sed -n 's/\s*Type:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "RSA" > expected
+          diff expected actual
+
+          # check key algorithm
+          sed -n 's/\s*Algorithm:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "RSA" > expected
+          diff expected actual
+
+          # create cert request
+          docker exec pki pki nss-cert-request \
+              --key-id $KEY_ID \
+              --subject "CN=Certificate Authority" \
+              --ext /usr/share/pki/server/certs/ca_signing.conf \
+              --csr rsa.csr
+
+          # issue cert
+          docker exec pki pki nss-cert-issue \
+              --csr rsa.csr \
+              --ext /usr/share/pki/server/certs/ca_signing.conf \
+              --cert rsa.crt
+
+          # import cert
+          docker exec pki pki nss-cert-import \
+              --cert rsa.crt \
+              --trust CT,C,C \
+              rsa
+
+          # find cert with nickname
+          docker exec pki pki nss-cert-show rsa
+
+          # find cert with cert binaries
+          docker exec pki pki nss-cert-show --cert-file rsa.crt
+
+      - name: Check PKI CLI with ECC
+        run: |
+          # create key
+          docker exec pki pki nss-key-create --key-type EC | tee output
+
+          # get key ID
+          KEY_ID=$(sed -n 's/^\s*Key ID:\s*\(\S\+\)\s*$/\1/p' output)
+
+          # find key with key ID
+          docker exec pki pki nss-key-show --key-id $KEY_ID | tee output
+
+          # check key type
+          sed -n 's/\s*Type:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "EC" > expected
+          diff expected actual
+
+          # check key algorithm
+          sed -n 's/\s*Algorithm:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "EC" > expected
+          diff expected actual
+
+          # create cert request
+          docker exec pki pki nss-cert-request \
+              --key-id $KEY_ID \
+              --subject "CN=Certificate Authority" \
+              --ext /usr/share/pki/server/certs/ca_signing.conf \
+              --csr ecc.csr
+
+          # issue cert
+          docker exec pki pki nss-cert-issue \
+              --csr ecc.csr \
+              --ext /usr/share/pki/server/certs/ca_signing.conf \
+              --cert ecc.crt
+
+          # import cert
+          docker exec pki pki nss-cert-import \
+              --cert ecc.crt \
+              --trust CT,C,C \
+              ecc
+
+          # find cert with nickname
+          docker exec pki pki nss-cert-show ecc
+
+          # find cert with cert binaries
+          docker exec pki pki nss-cert-show --cert-file ecc.crt
