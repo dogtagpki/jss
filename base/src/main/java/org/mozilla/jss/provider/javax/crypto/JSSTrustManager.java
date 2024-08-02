@@ -59,11 +59,34 @@ public class JSSTrustManager implements X509TrustManager {
             logger.debug("JSSTrustManager:  - " + cert.getSubjectX500Principal());
         }
 
-        checkIssuerTrusted(certChain);
+        if (!isTrustedPeer(certChain)) {
+            checkIssuerTrusted(certChain);
+        }
 
         checkValidityDates(certChain);
 
         checkKeyUsage(certChain, keyUsage);
+    }
+
+    public boolean isTrustedPeer(X509Certificate[] certChain) throws Exception {
+
+        // checking trust flags on leaf cert only
+        X509Certificate leafCert = certChain[certChain.length - 1];
+        logger.debug("JSSTrustManager: Checking trust flags of cert 0x" + leafCert.getSerialNumber().toString(16));
+
+        if (! (leafCert instanceof org.mozilla.jss.crypto.X509Certificate)) {
+            return false;
+        }
+
+        org.mozilla.jss.crypto.X509Certificate jssCert = (org.mozilla.jss.crypto.X509Certificate) leafCert;
+
+        String trustFlags = jssCert.getTrustFlags();
+        logger.debug("JSSTrustManager: - trust flags: " + trustFlags);
+
+        int sslTrust = jssCert.getSSLTrust();
+        return org.mozilla.jss.crypto.X509Certificate.isTrustFlagEnabled(
+                org.mozilla.jss.crypto.X509Certificate.TRUSTED_PEER,
+                sslTrust);
     }
 
     public void checkIssuerTrusted(X509Certificate[] certChain) throws Exception {
