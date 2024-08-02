@@ -417,7 +417,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_findCertFromDERCertItem(
         goto finish;
     }
 
-    cert = JSS_PK11_wrapCertAndSlot(env, &nssCert, &slot);
+    cert = JSS_PK11_wrapCert(env, &nssCert);
 
 finish:
     if (nssCert != NULL) {
