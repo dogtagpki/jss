@@ -47,6 +47,20 @@ jobs:
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
 
+      - name: Create HSM token
+        run: |
+          docker exec pki dnf install -y softhsm
+          docker exec pki softhsm2-util --init-token \
+              --label HSM \
+              --so-pin Secret.HSM \
+              --pin Secret.HSM \
+              --free
+          docker exec pki softhsm2-util --show-slots
+
+          # create password.conf
+          echo "internal=" > password.conf
+          echo "hardware-HSM=Secret.HSM" >> password.conf
+
       - name: Check PKI CLI with AES
         run: |
           # create key
@@ -156,3 +170,83 @@ jobs:
 
           # find cert with cert binaries
           docker exec pki pki nss-cert-show --cert-file ecc.crt
+
+      - name: Check PKI CLI with HSM
+        run: |
+          # create key
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-key-create \
+              --key-type RSA | tee output
+
+          # get key ID
+          KEY_ID=$(sed -n 's/^\s*Key ID:\s*\(\S\+\)\s*$/\1/p' output)
+
+          # find key with key ID
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-key-show \
+              --key-id $KEY_ID | tee output
+
+          # check key type
+          sed -n 's/\s*Type:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "RSA" > expected
+          diff expected actual
+
+          # check key algorithm
+          sed -n 's/\s*Algorithm:\s*\(\S\+\)\s*$/\1/p' output > actual
+          echo "RSA" > expected
+          diff expected actual
+
+          # create cert request
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-cert-request \
+              --key-id $KEY_ID \
+              --subject "CN=Certificate Authority" \
+              --ext /usr/share/pki/server/certs/ca_signing.conf \
+              --csr hsm.csr
+
+          # issue cert
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-cert-issue \
+              --csr hsm.csr \
+              --ext /usr/share/pki/server/certs/ca_signing.conf \
+              --cert hsm.crt
+
+          # import cert
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-cert-import \
+              --cert hsm.crt \
+              --trust CT,C,C \
+              hsm
+
+          # find cert with nickname
+          docker exec pki pki nss-cert-show hsm
+
+          # find cert with cert binaries
+          docker exec pki pki nss-cert-show --cert-file hsm.crt
+
+          # find cert in HSM with nickname
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-cert-show \
+              HSM:hsm
+
+          # find cert in HSM with cert binaries
+          docker exec pki pki \
+              --token HSM \
+              -f $SHARED/password.conf \
+              nss-cert-show \
+              --cert-file hsm.crt
+
+      - name: Remove HSM token
+        run: docker exec pki softhsm2-util --delete-token --token HSM
