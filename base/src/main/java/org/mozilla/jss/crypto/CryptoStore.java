@@ -166,6 +166,15 @@ public interface CryptoStore {
     public X509Certificate[] getCertificates() throws TokenException;
 
     /**
+     * Find a certificate in this token from its binary data.
+     *
+     * @param certBytes Certificate binaries
+     * @return X509Certificate object
+     * @throws TokenException
+     */
+    public X509Certificate findCert(byte[] certBytes) throws TokenException;
+
+    /**
      * Imports a certificate into this token.
      *
      * @param certBytes Certificate binaries
