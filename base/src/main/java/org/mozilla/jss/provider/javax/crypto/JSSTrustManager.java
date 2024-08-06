@@ -75,14 +75,19 @@ public class JSSTrustManager implements X509TrustManager {
                 usage = null;
             }
 
-            checkCert(cert, caCerts, usage);
+            checkSignature(cert, caCerts);
+            checkValidityDates(cert);
+
+            if (usage != null) {
+                checkKeyUsage(cert, usage);
+            }
 
             // use the current cert as the CA cert for the next cert in the chain
             caCerts = new X509Certificate[] { cert };
         }
     }
 
-    public void checkCert(X509Certificate cert, X509Certificate[] caCerts, String keyUsage) throws Exception {
+    public void checkSignature(X509Certificate cert, X509Certificate[] caCerts) throws Exception {
 
         logger.debug("JSSTrustManager: Checking cert:");
         logger.debug("JSSTrustManager: - subject: " + cert.getSubjectX500Principal());
@@ -114,48 +119,59 @@ public class JSSTrustManager implements X509TrustManager {
         }
 
         logger.debug("JSSTrustManager: cert signed by " + issuer.getSubjectX500Principal());
+    }
 
-        logger.debug("JSSTrustManager: checking validity range:");
-        logger.debug("JSSTrustManager:  - not before: " + cert.getNotBefore());
-        logger.debug("JSSTrustManager:  - not after: " + cert.getNotAfter());
+    public void checkValidityDates(X509Certificate cert) throws Exception {
+
+        logger.debug("JSSTrustManager: Checking validity range:");
+        logger.debug("JSSTrustManager: - not before: " + cert.getNotBefore());
+        logger.debug("JSSTrustManager: - not after: " + cert.getNotAfter());
+
         cert.checkValidity();
+    }
 
-        if (keyUsage != null) {
+    public void checkKeyUsage(X509Certificate cert, String keyUsage) throws Exception {
 
-            List<String> extendedKeyUsages = cert.getExtendedKeyUsage();
-            logger.debug("JSSTrustManager: checking extended key usages:");
+        List<String> extendedKeyUsages = cert.getExtendedKeyUsage();
+        logger.debug("JSSTrustManager: Checking extended key usages:");
 
-            if (extendedKeyUsages != null) {
-                for (String extKeyUsage : extendedKeyUsages) {
-                    logger.debug("JSSTrustManager:  - " + extKeyUsage);
-                }
-            }
-
-            boolean haveKeyUsage = extendedKeyUsages != null && extendedKeyUsages.contains(keyUsage);
-            boolean allowedToSkip = extendedKeyUsages == null && allowMissingExtendedKeyUsage;
-            if (haveKeyUsage) {
-                logger.debug("JSSTrustManager: extended key usage found: " + keyUsage);
-            } else if (allowedToSkip) {
-                logger.debug("JSSTrustManager: configured to allow null extended key usages field");
-            } else {
-                String msg = "Missing EKU: " + keyUsage +
-                    ". Certificate with subject DN `" + cert.getSubjectX500Principal() + "` had ";
-                if (extendedKeyUsages == null) {
-                    msg += "no EKU extension";
-                } else {
-                    msg += "EKUs { ";
-                    boolean first = true;
-                    for (String eku : extendedKeyUsages) {
-                        if (!first) msg += " , ";
-                        msg += eku;
-                        first = false;
-                    }
-                    msg += " }";
-                }
-                msg += ".  class = " + cert.getClass();
-                throw new CertificateException(msg);
+        if (extendedKeyUsages != null) {
+            for (String extKeyUsage : extendedKeyUsages) {
+                logger.debug("JSSTrustManager: - " + extKeyUsage);
             }
         }
+
+        boolean haveKeyUsage = extendedKeyUsages != null && extendedKeyUsages.contains(keyUsage);
+        if (haveKeyUsage) {
+            logger.debug("JSSTrustManager: Extended key usage found: " + keyUsage);
+            return;
+        }
+
+        boolean allowedToSkip = extendedKeyUsages == null && allowMissingExtendedKeyUsage;
+        if (allowedToSkip) {
+            logger.debug("JSSTrustManager: Configured to allow null extended key usages field");
+            return;
+        }
+
+        String msg = "Missing EKU: " + keyUsage +
+            ". Certificate with subject DN `" + cert.getSubjectX500Principal() + "` had ";
+
+        if (extendedKeyUsages == null) {
+            msg += "no EKU extension";
+
+        } else {
+            msg += "EKUs { ";
+            boolean first = true;
+            for (String eku : extendedKeyUsages) {
+                if (!first) msg += " , ";
+                msg += eku;
+                first = false;
+            }
+            msg += " }";
+        }
+
+        msg += ".  class = " + cert.getClass();
+        throw new CertificateException(msg);
     }
 
     @Override
