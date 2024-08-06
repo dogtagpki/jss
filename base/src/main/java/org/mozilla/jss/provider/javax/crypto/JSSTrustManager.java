@@ -59,28 +59,21 @@ public class JSSTrustManager implements X509TrustManager {
             logger.debug("JSSTrustManager:  - " + cert.getSubjectX500Principal());
         }
 
+        checkIssuerTrusted(certChain);
+
+        checkValidityDates(certChain);
+
+        checkKeyUsage(certChain, keyUsage);
+    }
+
+    public void checkIssuerTrusted(X509Certificate[] certChain) throws Exception {
+
         // get CA certs
         X509Certificate[] caCerts = getAcceptedIssuers();
 
-        // validating cert chain from root to leaf
-        for (int i = 0; i < certChain.length; i++) {
-
-            X509Certificate cert = certChain[i];
-
-            // validating key usage on leaf cert only
-            String usage;
-            if (i == certChain.length - 1) {
-                usage = keyUsage;
-            } else {
-                usage = null;
-            }
-
+        // validating signature from root to leaf
+        for (X509Certificate cert : certChain) {
             checkSignature(cert, caCerts);
-            checkValidityDates(cert);
-
-            if (usage != null) {
-                checkKeyUsage(cert, usage);
-            }
 
             // use the current cert as the CA cert for the next cert in the chain
             caCerts = new X509Certificate[] { cert };
@@ -89,7 +82,7 @@ public class JSSTrustManager implements X509TrustManager {
 
     public void checkSignature(X509Certificate cert, X509Certificate[] caCerts) throws Exception {
 
-        logger.debug("JSSTrustManager: Checking cert:");
+        logger.debug("JSSTrustManager: Checking signature of cert 0x" + cert.getSerialNumber().toString(16));
         logger.debug("JSSTrustManager: - subject: " + cert.getSubjectX500Principal());
         logger.debug("JSSTrustManager: - issuer: " + cert.getIssuerX500Principal());
 
@@ -121,19 +114,25 @@ public class JSSTrustManager implements X509TrustManager {
         logger.debug("JSSTrustManager: cert signed by " + issuer.getSubjectX500Principal());
     }
 
-    public void checkValidityDates(X509Certificate cert) throws Exception {
+    public void checkValidityDates(X509Certificate[] certChain) throws Exception {
 
-        logger.debug("JSSTrustManager: Checking validity range:");
-        logger.debug("JSSTrustManager: - not before: " + cert.getNotBefore());
-        logger.debug("JSSTrustManager: - not after: " + cert.getNotAfter());
+        for (X509Certificate cert : certChain) {
 
-        cert.checkValidity();
+            logger.debug("JSSTrustManager: Checking validity dates of cert 0x" + cert.getSerialNumber().toString(16));
+            logger.debug("JSSTrustManager: - not before: " + cert.getNotBefore());
+            logger.debug("JSSTrustManager: - not after: " + cert.getNotAfter());
+
+            cert.checkValidity();
+        }
     }
 
-    public void checkKeyUsage(X509Certificate cert, String keyUsage) throws Exception {
+    public void checkKeyUsage(X509Certificate[] certChain, String keyUsage) throws Exception {
+
+        // validating key usage on leaf cert only
+        X509Certificate cert = certChain[certChain.length - 1];
 
         List<String> extendedKeyUsages = cert.getExtendedKeyUsage();
-        logger.debug("JSSTrustManager: Checking extended key usages:");
+        logger.debug("JSSTrustManager: Checking key usage of cert 0x" + cert.getSerialNumber().toString(16));
 
         if (extendedKeyUsages != null) {
             for (String extKeyUsage : extendedKeyUsages) {
