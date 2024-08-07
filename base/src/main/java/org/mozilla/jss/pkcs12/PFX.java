@@ -11,7 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import java.security.DigestException;
+import java.security.NoSuchAlgorithmException;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
@@ -28,10 +30,12 @@ import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.asn1.Tag;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.cert.Certificate;
+import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.Attribute;
 import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
@@ -211,11 +215,14 @@ public class PFX implements ASN1Value {
      */
     public void computeMacData(Password password,
             byte[] salt, int iterationCount)
-        throws NotInitializedException, DigestException,
+        throws NotInitializedException, DigestException,NoSuchAlgorithmException,
         TokenException, CharConversionException
     {
+
+        //Make this alg the default mac alg.
+        AlgorithmIdentifier algID = new AlgorithmIdentifier(DigestAlgorithm.SHA256.toOID());
         macData = new MacData( password, salt, iterationCount,
-                ASN1Util.encode(authSafes) );
+                ASN1Util.encode(authSafes), algID );
     }
 
 
