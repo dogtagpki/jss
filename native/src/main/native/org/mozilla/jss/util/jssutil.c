@@ -945,7 +945,9 @@ JSS_ExportEncryptedPrivKeyInfoV2(
     SECKEYEncryptedPrivateKeyInfo *epki = NULL;
     PLArenaPool *arena = NULL;
     SECAlgorithmID *algid;
-    SECOidTag pbeAlgTag = SEC_OID_UNKNOWN;
+    // Make this alg set to what the routine sec_pkcs5CreateAlgorithmID sets it to.
+    // From here we can't get to this lower level routine, using PK11_CreatePBEV2AlgorithmID.
+    SECOidTag pbeAlgTag = SEC_OID_PKCS5_PBKDF2;
     SECItem *crypto_param = NULL;
     PK11SymKey *key = NULL;
     PK11SymKey *finalKey = NULL;
@@ -955,7 +957,6 @@ JSS_ExportEncryptedPrivKeyInfoV2(
     CK_MECHANISM_TYPE pbeMechType;
     CK_MECHANISM_TYPE cryptoMechType;
     CK_MECHANISM cryptoMech;
-    SECItem *iv = NULL;
 
     if (!pwitem || !pk) {
         PORT_SetError(SEC_ERROR_INVALID_ARGS);
@@ -964,6 +965,7 @@ JSS_ExportEncryptedPrivKeyInfoV2(
 
     algid = PK11_CreatePBEV2AlgorithmID(pbeAlg, encAlg, prfAlg,
                                         0,iteration , NULL);
+
     if (algid == NULL) {
         return NULL;
     }
@@ -986,6 +988,7 @@ JSS_ExportEncryptedPrivKeyInfoV2(
      * pbe key gen, generate the key in the private key slot so we don't have
      * to move it later */
     pbeMechType = PK11_AlgtagToMechanism(pbeAlgTag);
+
     if (slot != pk->pkcs11Slot) {
         if (PK11_DoesMechanism(pk->pkcs11Slot, pbeMechType)) {
             slot = pk->pkcs11Slot;
@@ -1000,12 +1003,14 @@ JSS_ExportEncryptedPrivKeyInfoV2(
     }
 
     cryptoMechType = PK11_GetPBECryptoMechanism(algid, &crypto_param, pwitem);
+
     if (cryptoMechType == CKM_INVALID_MECHANISM) {
         rv = SECFailure;
         goto loser;
     }
 
     cryptoMech.mechanism = PK11_GetPadMechanism(cryptoMechType);
+
     cryptoMech.pParameter = crypto_param ? crypto_param->data : NULL;
     cryptoMech.ulParameterLen = crypto_param ? crypto_param->len : 0;
 
@@ -1050,15 +1055,42 @@ JSS_ExportEncryptedPrivKeyInfoV2(
      * pkcs8/pkcs5.
      */
 
-    /* Allocate  a large buffer to make sure we can fit the wrapped key */
-    encBufLen = 16384;
+    encBufLen = 0;
 
+    epki->encryptedData.data = NULL;
+    epki->encryptedData.len = 0; // Just get the len we need
+
+    // Modify behavior for KWP since NULL is not returned for crypto_param
+    // from PK11_GetPBECryptoMechanism. It returns some default 8 byte iv, which is incorrect.
+    int isKeyWrapKWP = 0;
+    if(cryptoMech.mechanism == CKM_AES_KEY_WRAP_KWP) {
+        isKeyWrapKWP = 1;
+    }
+
+    //First call to get get the size.
+    crv = PK11_WrapPrivKey(pk->pkcs11Slot,  finalKey,
+                            pk,  cryptoMech.mechanism,
+                            isKeyWrapKWP ? NULL : crypto_param,  &epki->encryptedData, NULL);
+
+    if (crv != CKR_OK) {
+        rv = SECFailure;
+        goto loser;
+     }
+
+    // If KWP increase buffer size by 8
+    // The size value from the first PK11_WrapPrivKey does not account for AES_BLOCK_SIZE
+
+    if(isKeyWrapKWP) {
+      epki->encryptedData.len  += 8;
+    }
+
+    encBufLen = epki->encryptedData.len;
     epki->encryptedData.data = PORT_ArenaAlloc(arena, encBufLen);
+
     if (!epki->encryptedData.data) {
         rv = SECFailure;
         goto loser;
     }
-    epki->encryptedData.len = (unsigned int)encBufLen;
 
     if (!epki->encryptedData.len) {
         rv = SECFailure;
@@ -1066,10 +1098,9 @@ JSS_ExportEncryptedPrivKeyInfoV2(
     }
 
     crv = PK11_WrapPrivKey(pk->pkcs11Slot,  finalKey,
-                            pk,  cryptoMechType,
-                           iv,  &epki->encryptedData, NULL);
+                            pk,  cryptoMech.mechanism,
+                            isKeyWrapKWP ? NULL : crypto_param,  &epki->encryptedData, NULL);
 
-  /*  crv = PK11_GETTAB(pk->pkcs11Slot)->C_WrapKey(pk->pkcs11Slot->session, &cryptoMech, key->objectID, pk->pkcs11ID, NULL, &encBufLen); */
     if (crv != CKR_OK) {
         rv = SECFailure;
         goto loser;

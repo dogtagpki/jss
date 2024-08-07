@@ -748,28 +748,22 @@ Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo(
         goto finish;
     }
 
-    // export the epki
-    epki = PK11_ExportEncryptedPrivKeyInfo(
-        slot, algTag, pwItem, privk, iterations, NULL /*wincx*/);
-    if (epki == NULL) {
-	    //try our own version for the new AES KWP algs.
-
-	epki = JSS_ExportEncryptedPrivKeyInfoV2(
+    // Call our JSS version of the  newer V2 version of PK11_ExportEncryptedPrivateKeyInfoV2
+    epki = JSS_ExportEncryptedPrivKeyInfoV2(
                    slot,
-        algTag,     /* PBE algorithm to encrypt the  key with */
-        SEC_OID_UNKNOWN,     /* Encryption algorithm to Encrypt the key with */
-        SEC_OID_UNKNOWN,     /* Hash algorithm for PRF */
-        pwItem,      /* password for PBE encryption */
-        privk, /* encrypt this private key */
-        iterations,        /* interations for PBE alg */
-        NULL);
+       algTag,     /* PBE algorithm to encrypt the  key with */
+       SEC_OID_UNKNOWN,     /* Encryption algorithm to Encrypt the key with */
+       SEC_OID_HMAC_SHA256, /* Hash algorithm for PRF, make this upgraded to SHA256, we can make configurable in future. */
+       pwItem,      /* password for PBE encryption */
+       privk, /* encrypt this private key */
+       iterations,        /* interations for PBE alg */
+       NULL);
 
-	if(epki == NULL) {
-            JSS_throwMsgPrErr(
+    if(epki == NULL) {
+        JSS_throwMsgPrErr(
                 env, TOKEN_EXCEPTION, "Failed to export EncryptedPrivateKeyInfo");
             goto finish;
 	}
-    }
 
     // DER-encode the epki
     if (SEC_ASN1EncodeItem(NULL, &epkiItem, epki,
