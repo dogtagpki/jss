@@ -20,18 +20,25 @@
 package org.mozilla.jss.provider.javax.crypto;
 
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.net.ssl.X509TrustManager;
+import javax.security.auth.x500.X500Principal;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
+import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityItem;
+import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +50,18 @@ public class JSSTrustManager implements X509TrustManager {
     public static final String CLIENT_AUTH_OID = "1.3.6.1.5.5.7.3.2";
 
     private boolean allowMissingExtendedKeyUsage = false;
+    private SSLCertificateApprovalCallback callback;
 
     public void configureAllowMissingExtendedKeyUsage(boolean allow) {
         allowMissingExtendedKeyUsage = allow;
+    }
+
+    public SSLCertificateApprovalCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(SSLCertificateApprovalCallback certCallback) {
+        this.callback = certCallback;
     }
 
     public void checkCertChain(X509Certificate[] certChain, String keyUsage) throws Exception {
@@ -53,19 +69,57 @@ public class JSSTrustManager implements X509TrustManager {
         logger.debug("JSSTrustManager: checkCertChain(" + keyUsage + ")");
 
         // sort cert chain from root to leaf
+        // TODO: resolve incomplete chain
         certChain = Cert.sortCertificateChain(certChain);
 
         for (X509Certificate cert : certChain) {
             logger.debug("JSSTrustManager:  - " + cert.getSubjectX500Principal());
         }
 
-        if (!isTrustedPeer(certChain)) {
-            checkIssuerTrusted(certChain);
+        X509Certificate leafCert = certChain[certChain.length - 1];
+
+        ValidityStatus status = new ValidityStatus();
+        checkCertChain(certChain, keyUsage, status);
+
+        Enumeration<ValidityItem> reasons = status.getReasons();
+        if (!reasons.hasMoreElements()) {
+            logger.debug("JSSTrustManager: Trusted cert: " + leafCert.getSubjectX500Principal());
+            return;
         }
 
-        checkValidityDates(certChain);
+        if (callback != null && callback.approve(leafCert, status)) {
+            logger.debug("JSSTrustManager: Approved cert: " + leafCert.getSubjectX500Principal());
+            return;
+        }
 
-        checkKeyUsage(certChain, keyUsage);
+        // throw an exception based on the first issue
+        ValidityItem issue = reasons.nextElement();
+        X500Principal subject = issue.getCert().getSubjectX500Principal();
+
+        // TODO: use enum
+        switch (issue.getReason()) {
+        case ValidityStatus.EXPIRED_CERTIFICATE:
+            throw new CertificateExpiredException("Expired certificate: " + subject);
+        case ValidityStatus.INADEQUATE_KEY_USAGE:
+            throw new CertificateException("Inadequate key usage: " + subject);
+        case ValidityStatus.UNTRUSTED_ISSUER:
+            throw new CertificateException("Untrusted issuer: " + subject);
+        case ValidityStatus.BAD_CERT_DOMAIN:
+            throw new CertificateException("Bad certificate domain: " + subject);
+        default:
+            throw new CertificateException("Invalid certificate: " + subject);
+        }
+    }
+
+    public void checkCertChain(X509Certificate[] certChain, String keyUsage, ValidityStatus status) throws Exception {
+
+        if (!isTrustedPeer(certChain)) {
+            checkIssuerTrusted(certChain, status);
+        }
+
+        checkValidityDates(certChain, status);
+
+        checkKeyUsage(certChain, keyUsage, status);
     }
 
     public boolean isTrustedPeer(X509Certificate[] certChain) throws Exception {
@@ -89,21 +143,28 @@ public class JSSTrustManager implements X509TrustManager {
                 sslTrust);
     }
 
-    public void checkIssuerTrusted(X509Certificate[] certChain) throws Exception {
+    public void checkIssuerTrusted(X509Certificate[] certChain, ValidityStatus status) throws Exception {
 
         // get CA certs
         X509Certificate[] caCerts = getAcceptedIssuers();
 
         // validating signature from root to leaf
-        for (X509Certificate cert : certChain) {
-            checkSignature(cert, caCerts);
+        for (int i = 0; i < certChain.length; i++) {
+            X509Certificate cert = certChain[i];
+            int depth = certChain.length - 1 - i;
+
+            checkSignature(cert, caCerts, depth, status);
 
             // use the current cert as the CA cert for the next cert in the chain
             caCerts = new X509Certificate[] { cert };
         }
     }
 
-    public void checkSignature(X509Certificate cert, X509Certificate[] caCerts) throws Exception {
+    public void checkSignature(
+            X509Certificate cert,
+            X509Certificate[] caCerts,
+            int depth,
+            ValidityStatus status) throws Exception {
 
         logger.debug("JSSTrustManager: Checking signature of cert 0x" + cert.getSerialNumber().toString(16));
         logger.debug("JSSTrustManager: - subject: " + cert.getSubjectX500Principal());
@@ -131,28 +192,47 @@ public class JSSTrustManager implements X509TrustManager {
         }
 
         if (issuer == null) {
-            throw new CertificateException("Unable to validate signature: " + cert.getSubjectX500Principal());
+            logger.debug("JSSTrustManager: Untrusted issuer: " + cert.getIssuerX500Principal());
+
+            status.addReason(ValidityStatus.UNTRUSTED_ISSUER, cert, depth);
+
+            return;
         }
 
-        logger.debug("JSSTrustManager: cert signed by " + issuer.getSubjectX500Principal());
+        logger.debug("JSSTrustManager: Trusted issuer: " + issuer.getSubjectX500Principal());
     }
 
-    public void checkValidityDates(X509Certificate[] certChain) throws Exception {
+    public void checkValidityDates(X509Certificate[] certChain, ValidityStatus status) throws Exception {
 
-        for (X509Certificate cert : certChain) {
+        for (int i = 0; i < certChain.length; i++) {
+            X509Certificate cert = certChain[i];
+            int depth = certChain.length - 1 - i;
 
             logger.debug("JSSTrustManager: Checking validity dates of cert 0x" + cert.getSerialNumber().toString(16));
             logger.debug("JSSTrustManager: - not before: " + cert.getNotBefore());
             logger.debug("JSSTrustManager: - not after: " + cert.getNotAfter());
 
-            cert.checkValidity();
+            try {
+                cert.checkValidity();
+
+            } catch (CertificateNotYetValidException e) {
+                logger.debug("JSSTrustManager: Cert not yet valid: " + cert.getSubjectX500Principal());
+
+                // NSS uses EXPIRED_CERTIFICATE for this case in CERT_CheckCertValidTimes()
+                status.addReason(ValidityStatus.EXPIRED_CERTIFICATE, cert, depth);
+
+            } catch (CertificateExpiredException e) {
+                logger.debug("JSSTrustManager: Cert has expired: " + cert.getSubjectX500Principal());
+                status.addReason(ValidityStatus.EXPIRED_CERTIFICATE, cert, depth);
+            }
         }
     }
 
-    public void checkKeyUsage(X509Certificate[] certChain, String keyUsage) throws Exception {
+    public void checkKeyUsage(X509Certificate[] certChain, String keyUsage, ValidityStatus status) throws Exception {
 
         // validating key usage on leaf cert only
         X509Certificate cert = certChain[certChain.length - 1];
+        int depth = 0;
 
         List<String> extendedKeyUsages = cert.getExtendedKeyUsage();
         logger.debug("JSSTrustManager: Checking key usage of cert 0x" + cert.getSerialNumber().toString(16));
@@ -175,25 +255,14 @@ public class JSSTrustManager implements X509TrustManager {
             return;
         }
 
-        String msg = "Missing EKU: " + keyUsage +
-            ". Certificate with subject DN `" + cert.getSubjectX500Principal() + "` had ";
-
         if (extendedKeyUsages == null) {
-            msg += "no EKU extension";
+            logger.debug("JSSTrustManager: Missing extended key usage extension");
 
         } else {
-            msg += "EKUs { ";
-            boolean first = true;
-            for (String eku : extendedKeyUsages) {
-                if (!first) msg += " , ";
-                msg += eku;
-                first = false;
-            }
-            msg += " }";
+            logger.debug("JSSTrustManager: Missing " + keyUsage + " key usage");
         }
 
-        msg += ".  class = " + cert.getClass();
-        throw new CertificateException(msg);
+        status.addReason(ValidityStatus.INADEQUATE_KEY_USAGE, cert, depth);
     }
 
     @Override
