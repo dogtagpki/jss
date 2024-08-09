@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.net.ssl.X509TrustManager;
 import javax.security.auth.x500.X500Principal;
@@ -35,6 +37,16 @@ import javax.security.auth.x500.X500Principal;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
 import org.mozilla.jss.netscape.security.util.Cert;
+import org.mozilla.jss.netscape.security.x509.CertificateSubjectName;
+import org.mozilla.jss.netscape.security.x509.DNSName;
+import org.mozilla.jss.netscape.security.x509.GeneralName;
+import org.mozilla.jss.netscape.security.x509.GeneralNameInterface;
+import org.mozilla.jss.netscape.security.x509.GeneralNames;
+import org.mozilla.jss.netscape.security.x509.PKIXExtensions;
+import org.mozilla.jss.netscape.security.x509.SubjectAlternativeNameExtension;
+import org.mozilla.jss.netscape.security.x509.X500Name;
+import org.mozilla.jss.netscape.security.x509.X509CertImpl;
+import org.mozilla.jss.netscape.security.x509.X509CertInfo;
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityItem;
@@ -49,8 +61,17 @@ public class JSSTrustManager implements X509TrustManager {
     public static final String SERVER_AUTH_OID = "1.3.6.1.5.5.7.3.1";
     public static final String CLIENT_AUTH_OID = "1.3.6.1.5.5.7.3.2";
 
+    private String hostname;
     private boolean allowMissingExtendedKeyUsage = false;
     private SSLCertificateApprovalCallback callback;
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
     public void configureAllowMissingExtendedKeyUsage(boolean allow) {
         allowMissingExtendedKeyUsage = allow;
@@ -62,6 +83,81 @@ public class JSSTrustManager implements X509TrustManager {
 
     public void setCallback(SSLCertificateApprovalCallback certCallback) {
         this.callback = certCallback;
+    }
+
+    public boolean isValidSAN(SubjectAlternativeNameExtension sanExt) throws Exception {
+
+        logger.debug("JSSTrustManager: Checking hostname in SAN extension");
+
+        if (sanExt == null) {
+            return false;
+        }
+
+        GeneralNames generalNames = sanExt.getGeneralNames();
+        Set<String> dnsNames = new HashSet<>();
+
+        for (GeneralNameInterface generalName : generalNames) {
+
+            if (generalName instanceof GeneralName) {
+                generalName = ((GeneralName) generalName).unwrap();
+            }
+
+            if (generalName instanceof DNSName) {
+                String dnsName = ((DNSName) generalName).getValue();
+                logger.debug("JSSTrustManager: - dns: " + dnsName);
+                dnsNames.add(dnsName.toLowerCase());
+                continue;
+            }
+        }
+
+        // TODO: add support for wildcards
+        return dnsNames.contains(hostname);
+    }
+
+    public boolean isValidSubject(CertificateSubjectName subject) throws Exception {
+
+        logger.debug("JSSTrustManager: Checking hostname in subject");
+
+        X500Name dn = (X500Name) subject.get(CertificateSubjectName.DN_NAME);
+        List<String> cns = dn.getAttributesForOid(X500Name.commonName_oid);
+
+        if (cns == null) {
+            return false;
+        }
+
+        for (String cn : cns) {
+            logger.debug("JSSTrustManager: - cn: " + cn);
+        }
+
+        // TODO: add support for wildcards
+        return cns.contains(hostname);
+    }
+
+    public void checkHostname(X509Certificate[] certChain, ValidityStatus status) throws Exception {
+
+        if (hostname == null) {
+            return;
+        }
+
+        // validating hostname on leaf cert only
+        X509Certificate leafCert = certChain[certChain.length - 1];
+        int depth = 0;
+
+        X509CertImpl certImpl = new X509CertImpl(leafCert.getEncoded());
+        SubjectAlternativeNameExtension sanExt = (SubjectAlternativeNameExtension) certImpl.getExtension(PKIXExtensions.SubjectAlternativeName_Id.toString());
+
+        if (isValidSAN(sanExt)) {
+            return;
+        }
+
+        X509CertInfo info = certImpl.getInfo();
+        CertificateSubjectName subject = (CertificateSubjectName) info.get(X509CertInfo.SUBJECT);
+
+        if (isValidSubject(subject)) {
+            return;
+        }
+
+        status.addReason(ValidityStatus.BAD_CERT_DOMAIN, leafCert, depth);
     }
 
     public void checkCertChain(X509Certificate[] certChain, String keyUsage) throws Exception {
@@ -112,6 +208,8 @@ public class JSSTrustManager implements X509TrustManager {
     }
 
     public void checkCertChain(X509Certificate[] certChain, String keyUsage, ValidityStatus status) throws Exception {
+
+        checkHostname(certChain, status);
 
         if (!isTrustedPeer(certChain)) {
             checkIssuerTrusted(certChain, status);
