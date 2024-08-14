@@ -55,7 +55,7 @@ ExcludeArch: i686
 # Java
 ################################################################################
 
-%if 0%{?rhel}
+%if 0%{?rhel} && 0%{?rhel} <= 9
 
 %define java_devel java-17-openjdk-devel
 %define java_headless java-17-openjdk-headless
@@ -63,7 +63,7 @@ ExcludeArch: i686
 
 %else
 
-# Use Java 21 on Fedora 40+
+# Use Java 21 on Fedora 40+ and RHEL 10, otherwise use Java 17.
 %global java_devel java-devel >= 1:17
 %global java_headless java-headless >= 1:17
 
