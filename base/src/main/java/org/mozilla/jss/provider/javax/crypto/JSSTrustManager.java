@@ -198,6 +198,8 @@ public class JSSTrustManager implements X509TrustManager {
             throw new CertificateExpiredException("Expired certificate: " + subject);
         case ValidityStatus.INADEQUATE_KEY_USAGE:
             throw new CertificateException("Inadequate key usage: " + subject);
+        case ValidityStatus.UNKNOWN_ISSUER:
+            throw new CertificateException("Unknown issuer: " + subject);
         case ValidityStatus.UNTRUSTED_ISSUER:
             throw new CertificateException("Untrusted issuer: " + subject);
         case ValidityStatus.BAD_CERT_DOMAIN:
@@ -290,9 +292,9 @@ public class JSSTrustManager implements X509TrustManager {
         }
 
         if (issuer == null) {
-            logger.debug("JSSTrustManager: Untrusted issuer: " + cert.getIssuerX500Principal());
+            logger.debug("JSSTrustManager: Unknown issuer: " + cert.getIssuerX500Principal());
 
-            status.addReason(ValidityStatus.UNTRUSTED_ISSUER, cert, depth);
+            status.addReason(ValidityStatus.UNKNOWN_ISSUER, cert, depth);
 
             return;
         }
