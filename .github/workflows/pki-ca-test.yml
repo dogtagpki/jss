@@ -142,7 +142,7 @@ jobs:
 
           # check stderr
           cat > expected << EOF
-          WARNING: UNTRUSTED ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a non-trusted CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
+          WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
           Trust this certificate (y/N)? SEVERE: FATAL: SSL alert sent: BAD_CERTIFICATE
           IOException: Unable to write to socket: Failed to write to socket: (-5987) Invalid function argument.
           EOF
@@ -169,8 +169,8 @@ jobs:
 
           # check stderr
           cat > expected << EOF
+          WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
           WARNING: BAD_CERT_DOMAIN encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a common-name mismatch
-          WARNING: UNTRUSTED ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a non-trusted CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
           Trust this certificate (y/N)? SEVERE: FATAL: SSL alert sent: BAD_CERTIFICATE
           IOException: Unable to write to socket: Failed to write to socket: (-12276) Unable to communicate securely with peer: requested domain name does not match the server's certificate.
           EOF
@@ -194,7 +194,7 @@ jobs:
 
           # check stderr
           cat > expected << EOF
-          WARNING: UNTRUSTED ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a non-trusted CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
+          WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
           Trust this certificate (y/N)?
           EOF
 
