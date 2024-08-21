@@ -105,15 +105,13 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
 
             sig.initVerify(publicKey);
         } catch(NoSuchProviderException e) {
-            throw new InvalidKeyException("Unable to convert non-JSS key " +
-                "to JSS key");
+            throw new InvalidKeyException("Unable to convert non-JSS key to JSS key: " + e.getMessage(), e);
         } catch(java.security.spec.InvalidKeySpecException e) {
-            throw new InvalidKeyException("Unable to convert non-JSS key " +
-                "to JSS key");
+            throw new InvalidKeyException("Unable to convert non-JSS key to JSS key: " + e.getMessage(), e);
         } catch(java.security.NoSuchAlgorithmException e) {
-            throw new InvalidKeyException("Algorithm not supported");
+            throw new InvalidKeyException("Algorithm not supported: " + e.getMessage(), e);
         } catch(TokenException e) {
-            throw new InvalidKeyException("Token exception occurred");
+            throw new InvalidKeyException("Token exception occurred: " + e.getMessage(), e);
         }
     }
 
