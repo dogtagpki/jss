@@ -218,13 +218,13 @@ public class PKCS10 {
                 sig.initVerify(publicKey);
                 sig.update(data);
                 if (!sig.verify(sigData)) {
-                    logger.error("PKCS10: " + msg + "sig.verify() failed");
+                    logger.error("PKCS10: " + msg + "Invalid PKCS #10 signature");
                     throw new SignatureException(msg + "Invalid PKCS #10 signature");
                 }
             }
         } catch (InvalidKeyException e) {
-            logger.error("PKCS10: " + msg + e.getMessage());
-            throw new SignatureException(msg + "invalid key", e);
+            logger.error("PKCS10: " + msg + e.getMessage(), e);
+            throw new SignatureException(msg + e.getMessage(), e);
         }
         logger.debug("PKCS10: ends");
     }
