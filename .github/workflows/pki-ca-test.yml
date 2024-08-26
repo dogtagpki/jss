@@ -37,13 +37,21 @@ jobs:
               --alias pki.example.com \
               --alias server.example.com
 
-      - name: Set up client container
+      - name: Set up client1 container for blocking socket factory
         run: |
           tests/bin/runner-init.sh \
-              --hostname=client.example.com \
+              --hostname=client1.example.com \
               --network=example \
-              --network-alias=client.example.com \
-              client
+              --network-alias=client1.example.com \
+              client1
+
+      - name: Set up client2 container for non-blocking socket factory
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=client2.example.com \
+              --network=example \
+              --network-alias=client2.example.com \
+              client2
 
       - name: Import LDAP SDK packages
         run: |
@@ -64,9 +72,13 @@ jobs:
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
 
-          # install packages on client
-          docker cp /tmp/RPMS/. client:/root/RPMS/
-          docker exec client bash -c "dnf localinstall -y /root/RPMS/*"
+          # install packages on client1
+          docker cp /tmp/RPMS/. client1:/root/RPMS/
+          docker exec client1 bash -c "dnf localinstall -y /root/RPMS/*"
+
+          # install packages on client2
+          docker cp /tmp/RPMS/. client2:/root/RPMS/
+          docker exec client2 bash -c "dnf localinstall -y /root/RPMS/*"
 
       - name: Install DS
         run: docker exec pki ${SHARED}/tests/bin/ds-create.sh
@@ -127,10 +139,12 @@ jobs:
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-cert.sh
           docker exec pki /usr/share/pki/tests/ca/bin/test-ca-auditor-logs.sh
 
-      - name: Check client with untrusted server cert
+      - name: Check client1 with unknown issuer
         run: |
-          # run client but don't trust the cert
-          echo n | docker exec -i client pki -U https://pki.example.com:8443 info \
+          # run PKI CLI
+          echo n | docker exec -i client1 pki \
+              -U https://pki.example.com:8443 \
+              info \
               > >(tee stdout) 2> >(tee stderr >&2) || true
 
           # check stdout
@@ -150,14 +164,44 @@ jobs:
           diff expected stderr
 
           # the cert should not be stored
-          docker exec client pki nss-cert-find | tee output
+          docker exec client1 pki nss-cert-find | tee output
 
           diff /dev/null output
 
-      - name: Check client with untrusted server cert with wrong hostname
+      - name: Check client2 with unknown issuer
         run: |
-          # run client with wrong hostname
-          echo n | docker exec -i client pki -U https://server.example.com:8443 info \
+          # run PKI CLI
+          echo n | docker exec -i client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+          EOF
+
+          # check stderr
+          # TODO: fix missing SSL alert
+          cat > expected << EOF
+          WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
+          Trust this certificate (y/N)? IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Unknown issuer: CN=CA Signing Certificate, OU=pki-tomcat, O=EXAMPLE
+          EOF
+
+          diff expected stderr
+
+          # the cert should not be stored
+          docker exec client2 pki nss-cert-find | tee output
+
+          diff /dev/null output
+
+      - name: Check client1 with unknown issuer and wrong hostname
+        run: |
+          # run PKI CLI
+          echo n | docker exec -i client1 pki \
+              -U https://server.example.com:8443 \
+              info \
               > >(tee stdout) 2> >(tee stderr >&2) || true
 
           # check stdout
@@ -177,10 +221,48 @@ jobs:
 
           diff expected stderr
 
-      - name: Check client with newly trusted server cert
+          # the cert should not be stored
+          docker exec client1 pki nss-cert-find | tee output
+
+          diff /dev/null output
+
+      - name: Check client2 with unknown issuer and wrong hostname
         run: |
-          # run client and trust the cert
-          echo y | docker exec -i client pki -U https://pki.example.com:8443 info \
+          # run PKI CLI
+          echo n | docker exec -i client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://server.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://server.example.com:8443
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          # TODO: fix missing SSL alert
+          cat > expected << EOF
+          WARNING: BAD_CERT_DOMAIN encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a common-name mismatch
+          WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
+          Trust this certificate (y/N)? IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Bad certificate domain: CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE
+          EOF
+
+          diff expected stderr
+
+          # the cert should not be stored
+          docker exec client2 pki nss-cert-find | tee output
+
+          diff /dev/null output
+
+      - name: Check client1 with newly trusted server cert
+        run: |
+          # run PKI CLI
+          echo y | docker exec -i client1 pki \
+              -U https://pki.example.com:8443 \
+              info \
               > >(tee stdout) 2> >(tee stderr >&2) || true
 
           # check stdout
@@ -207,7 +289,7 @@ jobs:
           diff expected stderr
 
           # the cert should be stored and trusted
-          docker exec client pki nss-cert-find | tee output
+          docker exec client1 pki nss-cert-find | tee output
 
           sed -i \
               -e '/^ *Serial Number:/d' \
@@ -224,10 +306,62 @@ jobs:
 
           diff expected output
 
-      - name: Check client with trusted server cert with wrong hostname
+      - name: Check client2 with newly trusted server cert
         run: |
-          # run client with wrong hostname
-          docker exec client pki -U https://server.example.com:8443 info \
+          # run PKI CLI
+          echo y | docker exec -i client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.6.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          cat > expected << EOF
+          WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
+          Trust this certificate (y/N)?
+          EOF
+
+          # remove trailing whitespace
+          sed -i 's/ *$//' stderr
+
+          # append end of line
+          echo >> stderr
+
+          diff expected stderr
+
+          # the cert should be stored and trusted
+          docker exec client2 pki nss-cert-find | tee output
+
+          sed -i \
+              -e '/^ *Serial Number:/d' \
+              -e '/^ *Not Valid Before:/d' \
+              -e '/^ *Not Valid After:/d' \
+              output
+
+          cat > expected << EOF
+            Nickname: CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE
+            Subject DN: CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE
+            Issuer DN: CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE
+            Trust Flags: P,,
+          EOF
+
+          diff expected output
+
+      - name: Check client1 with trusted server cert and wrong hostname
+        run: |
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://server.example.com:8443 \
+              info \
               > >(tee stdout) 2> >(tee stderr >&2) || true
 
           # check stdout
@@ -246,10 +380,37 @@ jobs:
 
           diff expected stderr
 
-      - name: Check client with already trusted server cert
+      - name: Check client2 with trusted server cert and wrong hostname
         run: |
-          # run client with correct hostname
-          docker exec client pki -U https://pki.example.com:8443 info \
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://server.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://server.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.6.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          cat > expected << EOF
+          WARNING: BAD_CERT_DOMAIN encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a common-name mismatch
+          EOF
+
+          diff expected stderr
+
+      - name: Check client1 with already trusted server cert
+        run: |
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki.example.com:8443 \
+              info \
               > >(tee stdout) 2> >(tee stderr >&2) || true
 
           # check stdout
@@ -263,6 +424,98 @@ jobs:
 
           # check stderr
           diff /dev/null stderr
+
+      - name: Check client2 with already trusted server cert
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.6.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Check client1 with self-signed user cert
+        run: |
+          # generate user CSR
+          docker exec client1 pki nss-cert-request \
+              --subject "UID=testuser" \
+              --ext /usr/share/pki/server/certs/admin.conf \
+              --csr testuser.csr
+
+          # issue self-signed user cert
+          docker exec client1 pki nss-cert-issue \
+              --csr testuser.csr \
+              --ext /usr/share/pki/server/certs/admin.conf \
+              --cert testuser.crt
+
+          # import user cert
+          docker exec client1 pki nss-cert-import \
+              --cert testuser.crt \
+              testuser
+
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki.example.com:8443 \
+              -n testuser \
+              ca-user-find \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stderr
+          cat > expected << EOF
+          SEVERE: FATAL: SSL alert received: UNKNOWN_CA
+          IOException: Unable to read from socket: Error reading from socket: (-12195) Peer does not recognize and trust the CA that issued your certificate.
+          EOF
+
+          diff expected stderr
+
+      - name: Check client2 with self-signed user cert
+        run: |
+          # generate user CSR
+          docker exec client2 pki nss-cert-request \
+              --subject "UID=testuser" \
+              --ext /usr/share/pki/server/certs/admin.conf \
+              --csr testuser.csr
+
+          # issue self-signed user cert
+          docker exec client2 pki nss-cert-issue \
+              --csr testuser.csr \
+              --ext /usr/share/pki/server/certs/admin.conf \
+              --cert testuser.crt
+
+          # import user cert
+          docker exec client2 pki nss-cert-import \
+              --cert testuser.crt \
+              testuser
+
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              -n testuser \
+              ca-user-find \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stderr
+          # TODO: fix excessive SSL alert
+          cat > expected << EOF
+          SEVERE: FATAL: SSL alert received: UNKNOWN_CA
+          SEVERE: FATAL: SSL alert sent: UNEXPECTED_MESSAGE
+          RuntimeException: Unexpected error trying to construct channel: Unable to perform operations on a closed socket!
+          EOF
+
+          diff expected stderr
 
       - name: Remove CA
         run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
