@@ -46,10 +46,10 @@ jobs:
 
       - name: Set up JSS container
         run: |
-          tests/bin/runner-init.sh jss
-        env:
-          IMAGE: jss-builder
-          HOSTNAME: jss.example.com
+          tests/bin/runner-init.sh \
+              --image=jss-builder \
+              --hostname=jss.example.com \
+              jss
 
       - name: Check PKCS11 constants
         run: |

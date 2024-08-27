@@ -24,11 +24,16 @@ jobs:
       - name: Load JSS images
         run: docker load --input jss-images.tar
 
+      - name: Create network
+        run: docker network create example
+
       - name: Set up JSS container
         run: |
-          tests/bin/runner-init.sh pki
-        env:
-          HOSTNAME: pki.example.com
+          tests/bin/runner-init.sh \
+              --hostname=pki.example.com \
+              --network=example \
+              --network-alias=pki.example.com \
+              pki
 
       - name: Import LDAP SDK packages
         run: |
