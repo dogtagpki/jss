@@ -53,13 +53,12 @@ jobs:
 
       - name: Set up JSS container
         run: |
-          tests/bin/runner-init.sh jss
-        env:
-          IMAGE: jss-builder
-          HOSTNAME: jss.example.com
-  
-      - name: Connect JSS container to network
-        run: docker network connect example jss --alias jss.example.com
+          tests/bin/runner-init.sh \
+              --image=jss-builder \
+              --hostname=jss.example.com \
+              --network=example \
+              --network-alias=jss.example.com \
+              jss
 
       - name: Set up jss and  database drivers
         run: |
@@ -130,14 +129,13 @@ jobs:
         run: |
           docker run -d --name postgresql \
               --hostname postgresql.example.com \
+              --network example \
+              --network-alias postgresql.example.com \
               -e POSTGRES_PASSWORD=mysecretpassword \
               -e POSTGRES_USER=jss \
               postgres-ssl -c ssl=on \
               -c ssl_cert_file=/var/lib/postgresql/server.crt \
               -c ssl_key_file=/var/lib/postgresql/server.key
-
-      - name: Connect DB container to network
-        run: docker network connect example postgresql --alias postgresql.example.com
 
       - name: Build the tests
         run: docker exec jss ./build.sh --work-dir=./build

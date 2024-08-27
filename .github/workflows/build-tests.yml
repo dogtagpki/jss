@@ -107,10 +107,10 @@ jobs:
 
     - name: Set up JSS container
       run: |
-        tests/bin/runner-init.sh jss
-      env:
-        IMAGE: jss-builder
-        HOSTNAME: jss.example.com
+        tests/bin/runner-init.sh \
+            --image=jss-builder \
+            --hostname=jss.example.com \
+            jss
 
     - name: Build with CMake
       run: |
@@ -187,10 +187,10 @@ jobs:
 
     - name: Set up JSS container
       run: |
-        tests/bin/runner-init.sh jss
-      env:
-        IMAGE: jss-builder
-        HOSTNAME: jss.example.com
+        tests/bin/runner-init.sh \
+            --image=jss-builder \
+            --hostname=jss.example.com \
+            jss
 
     - name: Install RPMs
       run: |
@@ -272,10 +272,10 @@ jobs:
 
     - name: Set up JSS container
       run: |
-        tests/bin/runner-init.sh jss
-      env:
-        IMAGE: jss-builder
-        HOSTNAME: jss.example.com
+        tests/bin/runner-init.sh \
+            --image=jss-builder \
+            --hostname=jss.example.com \
+            jss
 
     - name: Install build dependencies
       run: |
