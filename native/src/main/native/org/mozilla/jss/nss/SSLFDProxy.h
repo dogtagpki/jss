@@ -10,7 +10,8 @@ PRStatus JSS_NSS_getSSLAlertSentList(JNIEnv *env, jobject sslfd_proxy, jobject *
 
 PRStatus JSS_NSS_getSSLAlertReceivedList(JNIEnv *env, jobject sslfd_proxy, jobject *list);
 
-PRStatus JSS_NSS_addSSLAlert(JNIEnv *env, jobject sslfd_proxy, jobject list, const SSLAlert *alert);
+jobject JSS_NSS_createSSLAlert(JNIEnv *env, jobject sslfd_proxy, const SSLAlert *alert);
+PRStatus JSS_NSS_addSSLAlert(JNIEnv *env, jobject list, jobject event);
 
 PRStatus JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref);
 

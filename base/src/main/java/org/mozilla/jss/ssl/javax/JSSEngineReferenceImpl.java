@@ -37,6 +37,7 @@ import org.mozilla.jss.ssl.SSLAlertEvent;
 import org.mozilla.jss.ssl.SSLAlertLevel;
 import org.mozilla.jss.ssl.SSLCipher;
 import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLSocketListener;
 import org.mozilla.jss.ssl.SSLVersion;
 import org.mozilla.jss.ssl.SSLVersionRange;
 
@@ -285,6 +286,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // certificate.
         applyTrustManagers();
 
+        configureSocketListener();
+
         // Finally, set up any debug logging necessary.
         createLoggingSocket();
     }
@@ -532,6 +535,27 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 throw new SSLException("Unable to configure server hostname: " + errorText(PR.GetError()));
             }
         }
+    }
+
+    private void configureSocketListener() {
+
+        // register a listener in SSLFDProxy
+        ssl_fd.addSocketListener(new SSLSocketListener() {
+            @Override
+            public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
+                fireHandshakeComplete(event);
+            }
+
+            @Override
+            public void alertReceived(SSLAlertEvent event) {
+                fireAlertReceived(event);
+            }
+
+            @Override
+            public void alertSent(SSLAlertEvent event) {
+                fireAlertSent(event);
+            }
+        });
     }
 
     private void applyTrustManagers() throws SSLException {

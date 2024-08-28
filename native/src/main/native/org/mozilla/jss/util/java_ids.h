@@ -286,6 +286,11 @@ PR_BEGIN_EXTERN_C
 #define SSL_ALERT_EVENT_CLASS "org/mozilla/jss/ssl/SSLAlertEvent"
 
 /*
+ * SSLHandshakeCompletedEvent
+ */
+#define SSL_HANDSHAKE_COMPLETED_EVENT_CLASS "org/mozilla/jss/ssl/SSLHandshakeCompletedEvent"
+
+/*
  * SSLCertificateApprovalCallback
  */
 #define SSLCERT_APP_CB_APPROVE_NAME "approve"

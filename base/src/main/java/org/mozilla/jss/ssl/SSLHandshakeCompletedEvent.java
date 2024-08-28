@@ -9,9 +9,10 @@
 
 package org.mozilla.jss.ssl;
 
-import java.net.*;
-import java.util.*;
+import java.net.SocketException;
+import java.util.EventObject;
 
+import org.mozilla.jss.nss.SSLFDProxy;
 import org.mozilla.jss.ssl.javax.JSSEngine;
 
 /*
@@ -28,6 +29,10 @@ public class SSLHandshakeCompletedEvent extends EventObject {
 
     public SSLHandshakeCompletedEvent(SSLSocket socket) {
         super(socket);
+    }
+
+    public SSLHandshakeCompletedEvent(SSLFDProxy proxy) {
+        super(proxy);
     }
 
     public SSLHandshakeCompletedEvent(JSSEngine engine) {

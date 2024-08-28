@@ -104,37 +104,40 @@ JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
     return PR_SUCCESS;
 }
 
-PRStatus
-JSS_NSS_addSSLAlert(JNIEnv *env, jobject sslfd_proxy, jobject list,
-    const SSLAlert *alert)
+jobject
+JSS_NSS_createSSLAlert(JNIEnv *env, jobject sslfd_proxy, const SSLAlert *alert)
 {
     jclass eventClass;
     jmethodID eventConstructor;
     jobject event;
 
-    jclass eventListClass;
-    jmethodID arrayListAdd;
-
-    PR_ASSERT(env != NULL && sslfd_proxy != NULL && list != NULL && alert != NULL);
+    PR_ASSERT(env != NULL && sslfd_proxy != NULL && alert != NULL);
 
     /* Build the new alert event object (org.mozilla.jss.ssl.SSLAlertEvent). */
     eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
     if (eventClass == NULL) {
-        return PR_FAILURE;
+        return NULL;
     }
 
     eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>",
                                            "(L" SSLFD_PROXY_CLASS_NAME ";II)V");
     if (eventConstructor == NULL) {
-        return PR_FAILURE;
+        return NULL;
     }
 
     event = (*env)->NewObject(env, eventClass, eventConstructor,
                               sslfd_proxy, (int)alert->level,
                               (int)alert->description);
-    if (event == NULL) {
-        return PR_FAILURE;
-    }
+    return event;
+}
+
+PRStatus
+JSS_NSS_addSSLAlert(JNIEnv *env, jobject list, jobject event)
+{
+    jclass eventListClass;
+    jmethodID arrayListAdd;
+
+    PR_ASSERT(env != NULL && list != NULL && event != NULL);
 
     /* Add it to the event list. */
     eventListClass = (*env)->GetObjectClass(env, list);
@@ -160,6 +163,11 @@ JSSL_SSLFDAlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert 
     jobject sslfd_proxy = (jobject)arg;
     jobject list;
 
+    jobject event;
+
+    jclass proxyClass;
+    jmethodID proxyFireAlertReceivedMethod;
+
     if (fd == NULL || arg == NULL || alert == NULL || JSS_javaVM == NULL) {
         return;
     }
@@ -172,9 +180,32 @@ JSSL_SSLFDAlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert 
         return;
     }
 
-    if (JSS_NSS_addSSLAlert(env, sslfd_proxy, list, alert) != PR_SUCCESS) {
+    // event = new SSLAlertEvent()
+    event = JSS_NSS_createSSLAlert(env, sslfd_proxy, alert);
+
+    if (event == NULL) {
         return;
     }
+
+    // sslfd_proxy.inboundAlerts.add(event)
+    if (JSS_NSS_addSSLAlert(env, list, event) != PR_SUCCESS) {
+        return;
+    }
+
+    proxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+    if (proxyClass == NULL) {
+        return;
+    }
+
+    proxyFireAlertReceivedMethod = (*env)->GetMethodID(
+        env, proxyClass, "fireAlertReceived",
+        "(L" SSL_ALERT_EVENT_CLASS ";)V");
+    if (proxyFireAlertReceivedMethod == NULL) {
+        return;
+    }
+
+    // sslfd_proxy.fireAlertReceived(event)
+    (void)(*env)->CallVoidMethod(env, sslfd_proxy, proxyFireAlertReceivedMethod, event);
 }
 
 void
@@ -183,6 +214,11 @@ JSSL_SSLFDAlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *ale
     JNIEnv *env;
     jobject sslfd_proxy = (jobject)arg;
     jobject list;
+
+    jobject event;
+
+    jclass proxyClass;
+    jmethodID proxyFireAlertSentMethod;
 
     if (fd == NULL || arg == NULL || alert == NULL || JSS_javaVM == NULL) {
         return;
@@ -196,9 +232,32 @@ JSSL_SSLFDAlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *ale
         return;
     }
 
-    if (JSS_NSS_addSSLAlert(env, sslfd_proxy, list, alert) != PR_SUCCESS) {
+    // event = new SSLAlertEvent()
+    event = JSS_NSS_createSSLAlert(env, sslfd_proxy, alert);
+
+    if (event == NULL) {
         return;
     }
+
+    // sslfd_proxy.outboundAlerts.add(event)
+    if (JSS_NSS_addSSLAlert(env, list, event) != PR_SUCCESS) {
+        return;
+    }
+
+    proxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+    if (proxyClass == NULL) {
+        return;
+    }
+
+    proxyFireAlertSentMethod = (*env)->GetMethodID(
+        env, proxyClass, "fireAlertSent",
+        "(L" SSL_ALERT_EVENT_CLASS ";)V");
+    if (proxyFireAlertSentMethod == NULL) {
+        return;
+    }
+
+    // sslfd_proxy.fireAlertSent(event)
+    (void)(*env)->CallVoidMethod(env, sslfd_proxy, proxyFireAlertSentMethod, event);
 }
 
 SECStatus
@@ -250,6 +309,12 @@ JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data)
     jclass sslfdProxyClass;
     jfieldID handshakeCompleteField;
 
+    jclass eventClass;
+    jmethodID eventConstructor;
+    jobject event;
+
+    jmethodID proxyFireHandshakeCompletedMethod;
+
     if (fd == NULL || client_data == NULL || JSS_javaVM == NULL) {
         return;
     }
@@ -270,6 +335,34 @@ JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data)
     }
 
     (*env)->SetBooleanField(env, sslfd_proxy, handshakeCompleteField, JNI_TRUE);
+
+    eventClass = (*env)->FindClass(env, SSL_HANDSHAKE_COMPLETED_EVENT_CLASS);
+    if (eventClass == NULL) {
+        return;
+    }
+
+    eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>",
+                                           "(L" SSLFD_PROXY_CLASS_NAME ";)V");
+    if (eventConstructor == NULL) {
+        return;
+    }
+
+    // event = new SSLHandshakeCompletedEvent()
+    event = (*env)->NewObject(env, eventClass, eventConstructor,
+                              sslfd_proxy);
+    if (event == NULL) {
+        return;
+    }
+
+    proxyFireHandshakeCompletedMethod = (*env)->GetMethodID(
+        env, sslfdProxyClass, "fireHandshakeCompleted",
+        "(L" SSL_HANDSHAKE_COMPLETED_EVENT_CLASS ";)V");
+    if (proxyFireHandshakeCompletedMethod == NULL) {
+        return;
+    }
+
+    // sslfd_proxy.fireHandshakeCompleted(event)
+    (void)(*env)->CallVoidMethod(env, sslfd_proxy, proxyFireHandshakeCompletedMethod, event);
 }
 
 SECStatus
