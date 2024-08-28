@@ -76,18 +76,6 @@ JSS_NSS_getEventArrayList(JNIEnv *env, jobject sslfd_proxy, const char *which, j
 }
 
 PRStatus
-JSS_NSS_getSSLAlertReceivedList(JNIEnv *env, jobject sslfd_proxy, jobject *list)
-{
-    return JSS_NSS_getEventArrayList(env, sslfd_proxy, "inboundAlerts", list);
-}
-
-PRStatus
-JSS_NSS_getSSLAlertSentList(JNIEnv *env, jobject sslfd_proxy, jobject *list)
-{
-    return JSS_NSS_getEventArrayList(env, sslfd_proxy, "outboundAlerts", list);
-}
-
-PRStatus
 JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
 {
     PR_ASSERT(env != NULL && sslfd_proxy != NULL && global_ref != NULL);
@@ -104,53 +92,31 @@ JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
     return PR_SUCCESS;
 }
 
-PRStatus
-JSS_NSS_addSSLAlert(JNIEnv *env, jobject sslfd_proxy, jobject list,
-    const SSLAlert *alert)
+jobject
+JSS_NSS_createSSLAlert(JNIEnv *env, jobject sslfd_proxy, const SSLAlert *alert)
 {
     jclass eventClass;
     jmethodID eventConstructor;
     jobject event;
 
-    jclass eventListClass;
-    jmethodID arrayListAdd;
-
-    PR_ASSERT(env != NULL && sslfd_proxy != NULL && list != NULL && alert != NULL);
+    PR_ASSERT(env != NULL && sslfd_proxy != NULL && alert != NULL);
 
     /* Build the new alert event object (org.mozilla.jss.ssl.SSLAlertEvent). */
     eventClass = (*env)->FindClass(env, SSL_ALERT_EVENT_CLASS);
     if (eventClass == NULL) {
-        return PR_FAILURE;
+        return NULL;
     }
 
     eventConstructor = (*env)->GetMethodID(env, eventClass, "<init>",
                                            "(L" SSLFD_PROXY_CLASS_NAME ";II)V");
     if (eventConstructor == NULL) {
-        return PR_FAILURE;
+        return NULL;
     }
 
     event = (*env)->NewObject(env, eventClass, eventConstructor,
                               sslfd_proxy, (int)alert->level,
                               (int)alert->description);
-    if (event == NULL) {
-        return PR_FAILURE;
-    }
-
-    /* Add it to the event list. */
-    eventListClass = (*env)->GetObjectClass(env, list);
-    if (eventListClass == NULL) {
-        return PR_FAILURE;
-    }
-
-    arrayListAdd = (*env)->GetMethodID(env, eventListClass, "add",
-                                       "(Ljava/lang/Object;)Z");
-    if (arrayListAdd == NULL) {
-        return PR_FAILURE;
-    }
-
-    // We ignore the return code: ArrayList.add() always returns true.
-    (void)(*env)->CallBooleanMethod(env, list, arrayListAdd, event);
-    return PR_SUCCESS;
+    return event;
 }
 
 void
@@ -158,7 +124,9 @@ JSSL_SSLFDAlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert 
 {
     JNIEnv *env;
     jobject sslfd_proxy = (jobject)arg;
-    jobject list;
+    jclass sslfdProxyClass;
+    jmethodID alertReceivedMethod;
+    jobject event;
 
     if (fd == NULL || arg == NULL || alert == NULL || JSS_javaVM == NULL) {
         return;
@@ -168,13 +136,31 @@ JSSL_SSLFDAlertReceivedCallback(const PRFileDesc *fd, void *arg, const SSLAlert 
         return;
     }
 
-    if (JSS_NSS_getSSLAlertReceivedList(env, sslfd_proxy, &list) != PR_SUCCESS) {
+    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+
+    if (sslfdProxyClass == NULL) {
         return;
     }
 
-    if (JSS_NSS_addSSLAlert(env, sslfd_proxy, list, alert) != PR_SUCCESS) {
+    alertReceivedMethod = (*env)->GetMethodID(
+        env,
+        sslfdProxyClass,
+        "alertReceived",
+        "(L" SSL_ALERT_EVENT_CLASS ";)V");
+
+    if (alertReceivedMethod == NULL) {
         return;
     }
+
+    // event = new SSLAlertEvent()
+    event = JSS_NSS_createSSLAlert(env, sslfd_proxy, alert);
+
+    if (event == NULL) {
+        return;
+    }
+
+    // sslfd_proxy.alertReceived(event)
+    (void)(*env)->CallVoidMethod(env, sslfd_proxy, alertReceivedMethod, event);
 }
 
 void
@@ -182,7 +168,9 @@ JSSL_SSLFDAlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *ale
 {
     JNIEnv *env;
     jobject sslfd_proxy = (jobject)arg;
-    jobject list;
+    jclass sslfdProxyClass;
+    jmethodID alertSentMethod;
+    jobject event;
 
     if (fd == NULL || arg == NULL || alert == NULL || JSS_javaVM == NULL) {
         return;
@@ -192,13 +180,31 @@ JSSL_SSLFDAlertSentCallback(const PRFileDesc *fd, void *arg, const SSLAlert *ale
         return;
     }
 
-    if (JSS_NSS_getSSLAlertSentList(env, sslfd_proxy, &list) != PR_SUCCESS) {
+    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+
+    if (sslfdProxyClass == NULL) {
         return;
     }
 
-    if (JSS_NSS_addSSLAlert(env, sslfd_proxy, list, alert) != PR_SUCCESS) {
+    alertSentMethod = (*env)->GetMethodID(
+        env,
+        sslfdProxyClass,
+        "alertSent",
+        "(L" SSL_ALERT_EVENT_CLASS ";)V");
+
+    if (alertSentMethod == NULL) {
         return;
     }
+
+    // event = new SSLAlertEvent()
+    event = JSS_NSS_createSSLAlert(env, sslfd_proxy, alert);
+
+    if (event == NULL) {
+        return;
+    }
+
+    // sslfd_proxy.alertSent(event)
+    (void)(*env)->CallVoidMethod(env, sslfd_proxy, alertSentMethod, event);
 }
 
 SECStatus
@@ -248,7 +254,11 @@ JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data)
     JNIEnv *env = NULL;
     jobject sslfd_proxy = (jobject)client_data;
     jclass sslfdProxyClass;
-    jfieldID handshakeCompleteField;
+    jmethodID handshakeCompletedMethod;
+
+    jclass eventClass;
+    jmethodID eventConstructor;
+    jobject event;
 
     if (fd == NULL || client_data == NULL || JSS_javaVM == NULL) {
         return;
@@ -259,17 +269,50 @@ JSSL_SSLFDHandshakeComplete(PRFileDesc *fd, void *client_data)
     }
 
     sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
+
     if (sslfdProxyClass == NULL) {
         return;
     }
 
-    handshakeCompleteField = (*env)->GetFieldID(env, sslfdProxyClass,
-                                                "handshakeComplete", "Z");
-    if (handshakeCompleteField == NULL) {
+    handshakeCompletedMethod = (*env)->GetMethodID(
+        env,
+        sslfdProxyClass,
+        "handshakeCompleted",
+        "(L" SSL_HANDSHAKE_COMPLETED_EVENT_CLASS ";)V");
+
+    if (handshakeCompletedMethod == NULL) {
         return;
     }
 
-    (*env)->SetBooleanField(env, sslfd_proxy, handshakeCompleteField, JNI_TRUE);
+    eventClass = (*env)->FindClass(env, SSL_HANDSHAKE_COMPLETED_EVENT_CLASS);
+
+    if (eventClass == NULL) {
+        return;
+    }
+
+    eventConstructor = (*env)->GetMethodID(
+        env,
+        eventClass,
+        "<init>",
+        "(L" SSLFD_PROXY_CLASS_NAME ";)V");
+
+    if (eventConstructor == NULL) {
+        return;
+    }
+
+    // event = new SSLHandshakeCompletedEvent()
+    event = (*env)->NewObject(
+        env,
+        eventClass,
+        eventConstructor,
+        sslfd_proxy);
+
+    if (event == NULL) {
+        return;
+    }
+
+    // sslfd_proxy.handshakeCompleted(event)
+    (void)(*env)->CallVoidMethod(env, sslfd_proxy, handshakeCompletedMethod, event);
 }
 
 SECStatus
