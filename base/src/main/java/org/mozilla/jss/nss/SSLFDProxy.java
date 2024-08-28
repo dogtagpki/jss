@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import org.mozilla.jss.crypto.X509Certificate;
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.ssl.SSLAlertEvent;
+import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLSocketListener;
 import org.mozilla.jss.util.GlobalRefProxy;
 
-public class SSLFDProxy extends PRFDProxy {
+public class SSLFDProxy extends PRFDProxy implements SSLSocketListener {
     public PK11Cert clientCert;
     public GlobalRefProxy globalRef;
 
@@ -59,5 +61,20 @@ public class SSLFDProxy extends PRFDProxy {
 
     public int invokeBadCertHandler(int error) {
         return badCertHandler.check(this, error);
+    }
+
+    @Override
+    public void handshakeCompleted(SSLHandshakeCompletedEvent event) {
+        handshakeComplete = true;
+    }
+
+    @Override
+    public void alertReceived(SSLAlertEvent event) {
+        inboundAlerts.add(event);
+    }
+
+    @Override
+    public void alertSent(SSLAlertEvent event) {
+        outboundAlerts.add(event);
     }
 }
