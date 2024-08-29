@@ -121,6 +121,7 @@ jobs:
               --keyAlias sslserver \
               --keystoreType pkcs11 \
               --keystoreProvider Mozilla-JSS
+          docker exec server cat /etc/pki/pki-tomcat/server.xml
 
       - name: Start Tomcat
         run: |
@@ -205,6 +206,11 @@ jobs:
       - name: Remove Tomcat
         run: |
           docker exec server pki-server remove -v
+
+      - name: Check PKI server systemd journal
+        if: always()
+        run: |
+          docker exec server journalctl -x --no-pager -u pki-tomcatd@pki-tomcat.service
 
       - name: Gather artifacts from server container
         if: always()
