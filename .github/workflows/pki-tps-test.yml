@@ -24,10 +24,23 @@ jobs:
       - name: Load JSS images
         run: docker load --input jss-images.tar
 
-      - name: Set up JSS container
+      - name: Create network
+        run: docker network create example
+
+      - name: Set up DS container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=ds.example.com \
+              --network=example \
+              --network-alias=ds.example.com \
+              ds
+
+      - name: Set up PKI container
         run: |
           tests/bin/runner-init.sh \
               --hostname=pki.example.com \
+              --network=example \
+              --network-alias=pki.example.com \
               pki
 
       - name: Import LDAP SDK packages
@@ -44,38 +57,36 @@ jobs:
 
       - name: Install packages
         run: |
-          docker exec pki dnf install -y 389-ds-base
+          docker exec ds dnf install -y 389-ds-base
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
 
       - name: Install DS
-        run: docker exec pki ${SHARED}/tests/bin/ds-create.sh
+        run: docker exec ds ${SHARED}/tests/bin/ds-create.sh
 
       - name: Install CA
         run: |
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/ca.cfg \
               -s CA \
-              -D pki_cert_id_generator=random \
-              -D pki_request_id_generator=random \
+              -D pki_ds_url=ldap://ds.example.com:389 \
               -v
-
-          docker exec pki pki-server cert-find
 
       - name: Install TKS
         run: |
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/tks.cfg \
               -s TKS \
+              -D pki_ds_url=ldap://ds.example.com:389 \
               -v
-
-          docker exec pki pki-server cert-find
 
       - name: Install TPS
         run: |
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/tps.cfg \
               -s TPS \
+              -D pki_ds_url=ldap://ds.example.com:389 \
+              -D pki_authdb_url=ldap://ds.example.com:389 \
               -v
 
       - name: Check TPS admin
@@ -97,10 +108,12 @@ jobs:
         run: |
           # import sample TPS users
           docker exec pki ldapadd \
+              -H ldap://ds.example.com:389 \
               -D "cn=Directory Manager" \
               -w Secret.123 \
               -f /usr/share/pki/tps/auth/ds/create.ldif
           docker exec pki ldapadd \
+              -H ldap://ds.example.com:389 \
               -D "cn=Directory Manager" \
               -w Secret.123 \
               -f /usr/share/pki/tps/auth/ds/example.ldif
@@ -167,7 +180,7 @@ jobs:
       - name: Check DS server systemd journal
         if: always()
         run: |
-          docker exec pki journalctl -x --no-pager -u dirsrv@localhost.service
+          docker exec ds journalctl -x --no-pager -u dirsrv@localhost.service
 
       - name: Check PKI server systemd journal
         if: always()
@@ -192,7 +205,7 @@ jobs:
       - name: Gather artifacts
         if: always()
         run: |
-          tests/bin/ds-artifacts-save.sh pki
+          tests/bin/ds-artifacts-save.sh ds
           tests/bin/pki-artifacts-save.sh pki
         continue-on-error: true
 
