@@ -4,6 +4,7 @@ on: workflow_call
 
 env:
   NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
+  DS_IMAGE: ${{ vars.DS_IMAGE || 'jss-runner' }}
 
 jobs:
   test:
@@ -29,8 +30,10 @@ jobs:
 
       - name: Set up DS container
         run: |
-          tests/bin/runner-init.sh \
+          tests/bin/ds-create.sh \
+              --image=${{ env.DS_IMAGE }} \
               --hostname=ds.example.com \
+              --password=Secret.123 \
               --network=example \
               --network-alias=ds.example.com \
               ds
@@ -57,19 +60,15 @@ jobs:
 
       - name: Install packages
         run: |
-          docker exec ds dnf install -y 389-ds-base
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
-
-      - name: Install DS
-        run: docker exec ds ${SHARED}/tests/bin/ds-create.sh
 
       - name: Install CA
         run: |
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/ca.cfg \
               -s CA \
-              -D pki_ds_url=ldap://ds.example.com:389 \
+              -D pki_ds_url=ldap://ds.example.com:3389 \
               -v
 
           # set buffer size to 0 so that revocation takes effect immediately
@@ -119,13 +118,15 @@ jobs:
       - name: Remove CA
         run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
 
-      - name: Remove DS
-        run: docker exec ds ${SHARED}/tests/bin/ds-remove.sh
-
       - name: Check DS server systemd journal
         if: always()
         run: |
           docker exec ds journalctl -x --no-pager -u dirsrv@localhost.service
+
+      - name: Check DS container logs
+        if: always()
+        run: |
+          docker logs ds
 
       - name: Check PKI server systemd journal
         if: always()

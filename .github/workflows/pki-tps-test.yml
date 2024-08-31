@@ -4,6 +4,7 @@ on: workflow_call
 
 env:
   NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
+  DS_IMAGE: ${{ vars.DS_IMAGE || 'jss-runner' }}
 
 jobs:
   test:
@@ -29,8 +30,10 @@ jobs:
 
       - name: Set up DS container
         run: |
-          tests/bin/runner-init.sh \
+          tests/bin/ds-create.sh \
+              --image=${{ env.DS_IMAGE }} \
               --hostname=ds.example.com \
+              --password=Secret.123 \
               --network=example \
               --network-alias=ds.example.com \
               ds
@@ -57,19 +60,15 @@ jobs:
 
       - name: Install packages
         run: |
-          docker exec ds dnf install -y 389-ds-base
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
-
-      - name: Install DS
-        run: docker exec ds ${SHARED}/tests/bin/ds-create.sh
 
       - name: Install CA
         run: |
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/ca.cfg \
               -s CA \
-              -D pki_ds_url=ldap://ds.example.com:389 \
+              -D pki_ds_url=ldap://ds.example.com:3389 \
               -v
 
       - name: Install TKS
@@ -77,7 +76,7 @@ jobs:
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/tks.cfg \
               -s TKS \
-              -D pki_ds_url=ldap://ds.example.com:389 \
+              -D pki_ds_url=ldap://ds.example.com:3389 \
               -v
 
       - name: Install TPS
@@ -85,9 +84,9 @@ jobs:
           docker exec pki pkispawn \
               -f /usr/share/pki/server/examples/installation/tps.cfg \
               -s TPS \
-              -D pki_ds_url=ldap://ds.example.com:389 \
+              -D pki_ds_url=ldap://ds.example.com:3389 \
               -D pki_authdb_hostname=ds.example.com \
-              -D pki_authdb_port=389 \
+              -D pki_authdb_port=3389 \
               -v
 
       - name: Check TPS admin
@@ -103,12 +102,12 @@ jobs:
         run: |
           # import sample TPS users
           docker exec pki ldapadd \
-              -H ldap://ds.example.com:389 \
+              -H ldap://ds.example.com:3389 \
               -D "cn=Directory Manager" \
               -w Secret.123 \
               -f /usr/share/pki/tps/auth/ds/create.ldif
           docker exec pki ldapadd \
-              -H ldap://ds.example.com:389 \
+              -H ldap://ds.example.com:3389 \
               -D "cn=Directory Manager" \
               -w Secret.123 \
               -f /usr/share/pki/tps/auth/ds/example.ldif
@@ -176,6 +175,11 @@ jobs:
         if: always()
         run: |
           docker exec ds journalctl -x --no-pager -u dirsrv@localhost.service
+
+      - name: Check DS container logs
+        if: always()
+        run: |
+          docker logs ds
 
       - name: Check PKI server systemd journal
         if: always()
