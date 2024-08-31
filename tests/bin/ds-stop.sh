@@ -60,6 +60,9 @@ while getopts v-: arg ; do
     esac
 done
 
+# remove parsed options and args from $@ list
+shift $((OPTIND-1))
+
 NAME=$1
 
 if [ "$NAME" == "" ]
@@ -78,47 +81,15 @@ if [ "$DEBUG" = true ] ; then
     echo "IMAGE: $IMAGE"
 fi
 
-remove_server() {
-    if [ "$VERBOSE" = true ] ; then
-        echo "Removing DS server"
-    fi
-
-    docker exec $NAME dsctl slapd-localhost remove --do-it
-
-    if [ "$VERBOSE" = true ] ; then
-        echo "Removing DS container"
-    fi
-
-    docker rm $NAME > /dev/null
-
-    echo "DS server has been removed"
-}
-
-remove_container() {
-    if [ "$VERBOSE" = true ] ; then
-        echo "Stopping DS container"
-    fi
-
-    docker stop $NAME > /dev/null
-
-    if [ "$VERBOSE" = true ] ; then
-        echo "Removing DS container"
-    fi
-
-    docker rm $NAME > /dev/null
-
-    if [ "$VERBOSE" = true ] ; then
-        echo "Removing DS volume"
-    fi
-
-    docker volume rm $NAME-data > /dev/null
-
-    echo "DS container has been removed"
-}
-
-if [ "$IMAGE" = "jss-runner" ]
-then
-    remove_server
-else
-    remove_container
+if [ "$VERBOSE" = true ] ; then
+    echo "Stopping DS container"
 fi
+
+if [ "$IMAGE" == "jss-runner" ]
+then
+    docker exec $NAME dsctl localhost stop
+else
+    docker stop $NAME > /dev/null
+fi
+
+echo "DS container is stopped"
