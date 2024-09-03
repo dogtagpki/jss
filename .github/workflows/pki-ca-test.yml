@@ -4,7 +4,7 @@ on: workflow_call
 
 env:
   NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
-  DS_IMAGE: ${{ vars.DS_IMAGE || 'jss-runner' }}
+  DS_IMAGE: ${{ vars.DS_IMAGE || 'quay.io/389ds/dirsrv' }}
 
 jobs:
   test:
