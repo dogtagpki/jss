@@ -46,35 +46,6 @@ JSS_NSS_getSSLClientCert(JNIEnv *env, jobject sslfd_proxy, CERTCertificate **cer
     return JSS_PK11_getCertPtr(env, certProxy, cert);
 }
 
-static PRStatus
-JSS_NSS_getEventArrayList(JNIEnv *env, jobject sslfd_proxy, const char *which, jobject *list)
-{
-    jclass sslfdProxyClass;
-    jfieldID eventArrayListField;
-
-    PR_ASSERT(env != NULL && sslfd_proxy != NULL && list != NULL);
-
-    sslfdProxyClass = (*env)->GetObjectClass(env, sslfd_proxy);
-    if (sslfdProxyClass == NULL) {
-        return PR_FAILURE;
-    }
-
-    eventArrayListField = (*env)->GetFieldID(env, sslfdProxyClass, which,
-                                             SSLFD_PROXY_EVENT_LIST_SIG);
-    if (eventArrayListField == NULL) {
-        /* Unlike JSS_NSS_getSSLClientCert above, this is a failure to process
-         * the event. We expect the  */
-        return PR_FAILURE;
-    }
-
-    *list = (*env)->GetObjectField(env, sslfd_proxy, eventArrayListField);
-    if (*list == NULL) {
-        return PR_FAILURE;
-    }
-
-    return PR_SUCCESS;
-}
-
 PRStatus
 JSS_NSS_getGlobalRef(JNIEnv *env, jobject sslfd_proxy, jobject *global_ref)
 {
