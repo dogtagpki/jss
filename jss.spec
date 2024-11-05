@@ -2,7 +2,8 @@
 Name:           jss
 ################################################################################
 
-%global         product_id dogtag-jss
+%global         vendor_id dogtag
+%global         product_id %{vendor_id}-jss
 
 # Upstream version number:
 %global         major_version 5
@@ -55,25 +56,19 @@ ExcludeArch: i686
 # Java
 ################################################################################
 
-%if 0%{?rhel} && 0%{?rhel} <= 9
+%if 0%{?fedora} && 0%{?fedora} <= 39 || 0%{?rhel} && 0%{?rhel} <= 9
 
+# use Java 17 on Fedora 39 or older and RHEL 9 or older
 %define java_devel java-17-openjdk-devel
 %define java_headless java-17-openjdk-headless
 %define java_home %{_jvmdir}/jre-17-openjdk
 
 %else
 
-# Use Java 21 on Fedora 40+ and RHEL 10, otherwise use Java 17.
-%global java_devel java-devel >= 1:17
-%global java_headless java-headless >= 1:17
-
-# Don't use find since it might not work well with local builds.
-#   find {_jvmdir} -maxdepth 1 | grep "jre-[0-9]\+$"
-%global java_home %(
-   source /usr/share/java-utils/java-functions;
-   _prefer_jre=true;
-   set_jvm;
-   echo $JAVA_HOME)
+# otherwise, use Java 21
+%define java_devel java-21-openjdk-devel
+%define java_headless java-21-openjdk-headless
+%define java_home %{_jvmdir}/jre-21-openjdk
 
 %endif
 
@@ -187,7 +182,7 @@ Provides:       %{product_id}-tools = %{major_version}.%{minor_version}
 
 # Some PKI tools have been moved into jss-tools.
 Conflicts:      pki-tools < 11.6
-Conflicts:      dogtag-pki-tools < 11.6
+Conflicts:      %{vendor_id}-pki-tools < 11.6
 
 %description -n %{product_id}-tools
 This package contains JSS tools.
