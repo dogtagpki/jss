@@ -66,7 +66,7 @@ FROM jss-deps AS jss-runner
 COPY --from=jss-dist /root/RPMS /tmp/RPMS/
 
 # Install JSS packages
-RUN dnf localinstall -y /tmp/RPMS/* \
+RUN dnf install -y /tmp/RPMS/* \
     && dnf clean all \
     && rm -rf /var/cache/dnf \
     && rm -rf /tmp/RPMS

@@ -194,7 +194,7 @@ jobs:
 
     - name: Install RPMs
       run: |
-        docker exec jss bash -c "dnf localinstall -y build/RPMS/*.rpm"
+        docker exec jss bash -c "dnf install -y build/RPMS/*.rpm"
 
     - name: Build with Maven
       run: |

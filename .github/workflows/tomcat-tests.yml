@@ -79,7 +79,7 @@ jobs:
       - name: Install packages
         run: |
           docker cp /tmp/RPMS/. server:/root/RPMS/
-          docker exec server bash -c "dnf localinstall -y /root/RPMS/*"
+          docker exec server bash -c "dnf install -y /root/RPMS/*"
 
       - name: Create Tomcat
         run: |
