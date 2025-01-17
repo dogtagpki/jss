@@ -80,7 +80,7 @@ jobs:
       - name: Install packages
         run: |
           docker cp /tmp/RPMS/. jss:/root/RPMS/
-          docker exec jss bash -c "dnf localinstall -y /root/RPMS/*"
+          docker exec jss bash -c "dnf install -y /root/RPMS/*"
 
       - name: Create postgresql certificates
         run: |

@@ -80,15 +80,15 @@ jobs:
         run: |
           # install packages on server
           docker cp /tmp/RPMS/. pki:/root/RPMS/
-          docker exec pki bash -c "dnf localinstall -y /root/RPMS/*"
+          docker exec pki bash -c "dnf install -y /root/RPMS/*"
 
           # install packages on client1
           docker cp /tmp/RPMS/. client1:/root/RPMS/
-          docker exec client1 bash -c "dnf localinstall -y /root/RPMS/*"
+          docker exec client1 bash -c "dnf install -y /root/RPMS/*"
 
           # install packages on client2
           docker cp /tmp/RPMS/. client2:/root/RPMS/
-          docker exec client2 bash -c "dnf localinstall -y /root/RPMS/*"
+          docker exec client2 bash -c "dnf install -y /root/RPMS/*"
 
       - name: Install CA
         run: |
