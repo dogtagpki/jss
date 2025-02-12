@@ -51,16 +51,20 @@ jobs:
               --hostname=jss.example.com \
               jss
 
-      - name: Check PKCS11 constants
+      - name: Build PKCS11Constants.java
         run: |
           # generate new PKCS11Constants.java from NSS header files
+          # https://github.com/nss-dev/nss/blob/master/lib/util/pkcs11t.h
+          # https://github.com/nss-dev/nss/blob/master/lib/util/pkcs11n.h
+
           docker exec jss $SHARED/tools/build_pkcs11_constants.py \
               --pkcs11t /usr/include/nss3/pkcs11t.h \
               --pkcs11n /usr/include/nss3/pkcs11n.h \
               -o PKCS11Constants.java \
               --verbose
 
-          # compare existing PKCS11Constants.java with the new one
-          docker exec jss diff \
+      - name: Compare PKCS11Constants.java
+        run: |
+          docker exec jss diff -Naru \
               $SHARED/base/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java \
               PKCS11Constants.java

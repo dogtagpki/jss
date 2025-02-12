@@ -21,10 +21,6 @@ import tempfile
 import argparse
 import textwrap
 
-# Exclude new constants added in NSS 3.97 such that this script will
-# create a new PKCS11Constants.java that will match the existing
-# PKCS11Constants.java in base/src/main/java/org/mozilla/jss/pkcs11.
-#
 # https://github.com/dogtagpki/jss/issues/993
 EXCLUDED_CONSTANTS = [
     'CK_PTR',
@@ -33,12 +29,6 @@ EXCLUDED_CONSTANTS = [
     'CK_DECLARE_FUNCTION',
     'CK_DECLARE_FUNCTION_POINTER',
     'CK_UNAVAILABLE_INFORMATION',
-    'CKK_NSS_KYBER',                  # added in NSS 3.97
-    'CKA_NSS_PARAMETER_SET',          # added in NSS 3.97
-    'CKM_NSS_KYBER_KEY_PAIR_GEN',     # added in NSS 3.97
-    'CKM_NSS_KYBER',                  # added in NSS 3.97
-    'CKP_NSS',                        # added in NSS 3.97
-    'CKP_NSS_KYBER_768_ROUND3',       # added in NSS 3.97
 ]
 
 logger = logging.getLogger(__name__)
