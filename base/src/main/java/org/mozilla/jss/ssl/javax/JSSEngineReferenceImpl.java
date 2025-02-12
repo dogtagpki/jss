@@ -1565,9 +1565,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
         } while (this_src_write != 0 || this_dst_write != 0);
 
-        if (seen_exception == false && ssl_exception == null) {
-            ssl_exception = checkSSLAlerts();
-            seen_exception = (ssl_exception != null);
+        // Check for new outbound alerts to the peer and fire the related events
+        SSLException newSSLException = checkSSLAlerts();
+        if (!seen_exception && ssl_exception == null && newSSLException != null) {
+            ssl_exception = newSSLException;
+            seen_exception = true;
         }
 
         logWrap(dst);

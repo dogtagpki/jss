@@ -194,7 +194,8 @@ jobs:
           # TODO: fix missing SSL alert
           cat > expected << EOF
           WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
-          Trust this certificate (y/N)? IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Unknown issuer: CN=CA Signing Certificate, OU=pki-tomcat, O=EXAMPLE
+          Trust this certificate (y/N)? SEVERE: FATAL: SSL alert sent: UNKNOWN_CA
+          IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Unknown issuer: CN=CA Signing Certificate, OU=pki-tomcat, O=EXAMPLE
           EOF
 
           diff expected stderr
@@ -255,7 +256,8 @@ jobs:
           cat > expected << EOF
           WARNING: BAD_CERT_DOMAIN encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates a common-name mismatch
           WARNING: UNKNOWN_ISSUER encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' indicates an unknown CA cert 'CN=CA Signing Certificate,OU=pki-tomcat,O=EXAMPLE'
-          Trust this certificate (y/N)? IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Bad certificate domain: CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE
+          Trust this certificate (y/N)? SEVERE: FATAL: SSL alert sent: ACCESS_DENIED
+          IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Bad certificate domain: CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE
           EOF
 
           diff expected stderr
