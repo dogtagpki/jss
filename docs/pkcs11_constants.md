@@ -31,7 +31,7 @@ fail, notifying us that this will need to be updated.
 To do so, first make sure the system's NSS is up to date:
 
     dnf update --refresh
-    dnf install nss-dev
+    dnf install nss-devel
 
 Then, validate the location of the NSS header files; on Fedora, this location
 is `/usr/include/nss3`:
@@ -43,7 +43,7 @@ Lastly, run the utility:
     python3 ./tools/build_pkcs11_constants.py --system \
         --pkcs11t /usr/include/nss3/pkcs11t.h \
         --pkcs11n /usr/include/nss3/pkcs11n.h \
-        --output src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
+        --output base/src/main/java/org/mozilla/jss/pkcs11/PKCS11Constants.java
 
 While not required, it is suggested to use the `--system` flag to ensure
 the values of `PKCS11Constants.java` are the same as the installed NSS
