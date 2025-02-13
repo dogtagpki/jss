@@ -157,6 +157,8 @@ Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
 # This will remove installed Tomcat JSS packages.
 Obsoletes:      tomcatjss <= 8.5
 Conflicts:      tomcatjss <= 8.5
+Obsoletes:      %{vendor_id}-tomcatjss <= 8.5
+Conflicts:      %{vendor_id}-tomcatjss <= 8.5
 
 %if 0%{?rhel} <= 8
 # PKI Servlet Engine has been replaced with Tomcat.
