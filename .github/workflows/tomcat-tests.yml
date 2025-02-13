@@ -157,8 +157,8 @@ jobs:
               sslscan.xml > actual
           diff expected actual
 
-          # TLS 1.2 should be disabled
-          echo -n "0" > expected
+          # TLS 1.2 should be enabled
+          echo -n "1" > expected
           xmlstarlet sel -t -v \
               "/document/ssltest/protocol[@type='tls' and @version='1.2']/@enabled" \
               sslscan.xml > actual
