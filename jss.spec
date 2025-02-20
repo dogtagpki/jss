@@ -152,11 +152,17 @@ Summary:        Java Security Services (JSS) Connector for Tomcat
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
+%if 0%{?rhel} && 0%{?rhel} >= 10
+BuildRequires:  tomcat9-lib
+%endif
 
 Requires:       %{product_id} = %{version}-%{release}
 Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
 Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
 Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
+%if 0%{?rhel} && 0%{?rhel} >= 10
+Requires:       tomcat9 >= 1:9.0.62
+%endif
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
 # This will remove installed Tomcat JSS packages.
