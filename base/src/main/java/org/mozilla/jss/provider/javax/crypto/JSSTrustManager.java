@@ -33,9 +33,11 @@ import java.util.Set;
 
 import javax.net.ssl.X509TrustManager;
 import javax.security.auth.x500.X500Principal;
+import org.mozilla.jss.CertificateUsage;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.x509.CertificateSubjectName;
 import org.mozilla.jss.netscape.security.x509.DNSName;
@@ -51,6 +53,7 @@ import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityItem;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityStatus;
+import org.mozilla.jss.util.InvalidNicknameException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +66,15 @@ public class JSSTrustManager implements X509TrustManager {
 
     private String hostname;
     private boolean allowMissingExtendedKeyUsage = false;
+    private boolean enabledNSSCertVerify = false;
+
+    public boolean isEnabledNSSCertVerify() {
+        return enabledNSSCertVerify;
+    }
+
+    public void setEnabledNSSCertVerify(boolean enabledNSSCertVerify) {
+        this.enabledNSSCertVerify = enabledNSSCertVerify;
+    }
     private SSLCertificateApprovalCallback callback;
 
     public String getHostname() {
@@ -179,6 +191,9 @@ public class JSSTrustManager implements X509TrustManager {
 
         Enumeration<ValidityItem> reasons = status.getReasons();
         if (!reasons.hasMoreElements()) {
+            if (enabledNSSCertVerify) {
+                nssCertVerify(certChain, keyUsage);
+            }
             logger.debug("JSSTrustManager: Trusted cert: " + leafCert.getSubjectX500Principal());
             return;
         }
@@ -427,5 +442,27 @@ public class JSSTrustManager implements X509TrustManager {
         }
 
         return caCerts.toArray(new X509Certificate[caCerts.size()]);
+    }
+
+    public void nssCertVerify(X509Certificate[] certChain, String keyUsage) throws CertificateException {
+        try{
+            CryptoManager cm = CryptoManager.getInstance();
+
+            logger.debug("JSSTrustManager: nssCertVerify()");
+            for (int i = 0; i < certChain.length; i++) {
+                CertificateUsage usage = CertificateUsage.AnyCA;
+
+                if (i == certChain.length - 1) {
+                    usage = keyUsage.equals(SERVER_AUTH_OID) ? CertificateUsage.SSLServer : CertificateUsage.SSLClient;
+                }
+
+                cm.verifyCertificate((org.mozilla.jss.crypto.X509Certificate) certChain[i], false, usage);
+            }
+        } catch (NotInitializedException e) {
+            logger.error("JSSTrustManager: Unable to get CryptoManager: " + e, e);
+            throw new RuntimeException(e);
+        } catch (ObjectNotFoundException | InvalidNicknameException ex) {
+            logger.error("JSSTrustManager: nss certificate verification not done: " + ex, ex);
+        }
     }
 }
