@@ -33,9 +33,11 @@ import java.util.Set;
 
 import javax.net.ssl.X509TrustManager;
 import javax.security.auth.x500.X500Principal;
+import org.mozilla.jss.CertificateUsage;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.NotInitializedException;
+import org.mozilla.jss.crypto.ObjectNotFoundException;
 import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.x509.CertificateSubjectName;
 import org.mozilla.jss.netscape.security.x509.DNSName;
@@ -63,6 +65,15 @@ public class JSSTrustManager implements X509TrustManager {
 
     private String hostname;
     private boolean allowMissingExtendedKeyUsage = false;
+    private boolean enableCertRevokeVerify = false;
+
+    public boolean isEnableCertRevokeVerify() {
+        return enableCertRevokeVerify;
+    }
+
+    public void setEnableCertRevokeVerify(boolean enableCertRevokeVerify) {
+        this.enableCertRevokeVerify = enableCertRevokeVerify;
+    }
     private SSLCertificateApprovalCallback callback;
 
     public String getHostname() {
@@ -194,18 +205,13 @@ public class JSSTrustManager implements X509TrustManager {
 
         // TODO: use enum
         switch (issue.getReason()) {
-        case ValidityStatus.EXPIRED_CERTIFICATE:
-            throw new CertificateExpiredException("Expired certificate: " + subject);
-        case ValidityStatus.INADEQUATE_KEY_USAGE:
-            throw new CertificateException("Inadequate key usage: " + subject);
-        case ValidityStatus.UNKNOWN_ISSUER:
-            throw new CertificateException("Unknown issuer: " + subject);
-        case ValidityStatus.UNTRUSTED_ISSUER:
-            throw new CertificateException("Untrusted issuer: " + subject);
-        case ValidityStatus.BAD_CERT_DOMAIN:
-            throw new CertificateException("Bad certificate domain: " + subject);
-        default:
-            throw new CertificateException("Invalid certificate: " + subject);
+        case ValidityStatus.EXPIRED_CERTIFICATE -> throw new CertificateExpiredException("Expired certificate: " + subject);
+        case ValidityStatus.INADEQUATE_KEY_USAGE -> throw new CertificateException("Inadequate key usage: " + subject);
+        case ValidityStatus.UNKNOWN_ISSUER -> throw new CertificateException("Unknown issuer: " + subject);
+        case ValidityStatus.UNTRUSTED_ISSUER -> throw new CertificateException("Untrusted issuer: " + subject);
+        case ValidityStatus.BAD_CERT_DOMAIN -> throw new CertificateException("Bad certificate domain: " + subject);
+        case ValidityStatus.REVOKED_CERTIFICATE -> throw new CertificateException("Revoked certificate: " + subject);
+        default -> throw new CertificateException("Invalid certificate: " + subject);
         }
     }
 
@@ -220,6 +226,10 @@ public class JSSTrustManager implements X509TrustManager {
         checkValidityDates(certChain, status);
 
         checkKeyUsage(certChain, keyUsage, status);
+        
+        if (enableCertRevokeVerify) {
+            certChainRevokeVerify(certChain, keyUsage, status);
+        }
     }
 
     public boolean isTrustedPeer(X509Certificate[] certChain) throws Exception {
@@ -428,4 +438,27 @@ public class JSSTrustManager implements X509TrustManager {
 
         return caCerts.toArray(new X509Certificate[caCerts.size()]);
     }
+
+    private void certChainRevokeVerify(X509Certificate[] certChain, String KeyUsage, ValidityStatus status) {
+        logger.debug("JSSTrustManager: certChainRevokeVerify()");
+        
+        //NOTE: if the usage is not correct the verification stops and the revocation is not verified
+        int leafUsage = KeyUsage.equals(CLIENT_AUTH_OID) ? CertificateUsage.SSLClient.getUsage() : CertificateUsage.SSLServer.getUsage();
+        try {
+            for (int i = 0; i < certChain.length; i++) {
+                int usage = i == (certChain.length - 1) ? leafUsage : CertificateUsage.AnyCA.getUsage();
+                int result = certRevokeVerify((org.mozilla.jss.crypto.X509Certificate) certChain[i], usage);
+                if (result != 0) {
+                    logger.debug("JSSTrustManager: certChainRevokeVerify exit with error {} for cert {}",
+                            result, certChain[i].getSubjectX500Principal());
+                    status.addReason(result, certChain[i], i);
+                }
+            }
+        } catch (ObjectNotFoundException  ex) {
+            logger.error("JSSTrustManager: nss certificate verification not done: " + ex, ex);
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    private native int certRevokeVerify(org.mozilla.jss.crypto.X509Certificate cert, int usage) throws ObjectNotFoundException;
 }
