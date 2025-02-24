@@ -1,0 +1,229 @@
+name: Tomcat HTTPS with TLS 1.3
+
+on: workflow_call
+
+env:
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/pki
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install xmlstarlet
+
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Retrieve JSS images
+        uses: actions/cache@v4
+        with:
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar
+
+      - name: Load JSS images
+        run: docker load --input jss-images.tar
+
+      - name: Create network
+        run: docker network create example
+
+      - name: Set up JSS container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=server.example.com \
+              --network=example \
+              --network-alias=server.example.com \
+              server
+
+      - name: Import LDAP SDK packages
+        run: |
+          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
+      - name: Install packages
+        run: |
+          docker cp /tmp/RPMS/. server:/root/RPMS/
+          docker exec server bash -c "dnf install -y /root/RPMS/*"
+          docker exec server dnf install -y xmlstarlet
+
+      - name: Create Tomcat
+        run: |
+          docker exec server pki-server create -v
+
+      - name: Create NSS database in Tomcat
+        run: |
+          docker exec server pki-server nss-create --no-password
+
+      - name: Create SSL server cert
+        run: |
+          docker exec server pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-request \
+              --subject "CN=server.example.com" \
+              --ext /usr/share/pki/server/certs/sslserver.conf \
+              --csr sslserver.csr
+
+          docker exec server pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-issue \
+              --csr sslserver.csr \
+              --ext /usr/share/pki/server/certs/sslserver.conf \
+              --cert sslserver.crt
+
+          docker exec server pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-import \
+              --cert sslserver.crt \
+              sslserver
+
+      - name: Create HTTPS connector
+        run: |
+          docker exec server pki-server jss-enable
+
+          docker exec server pki-server http-connector-add \
+              --port 8443 \
+              --scheme https \
+              --secure true \
+              --sslEnabled true \
+              --sslProtocol SSL \
+              --sslImpl org.dogtagpki.jss.tomcat.JSSImplementation \
+              Secure
+
+          docker exec server pki-server http-connector-cert-add \
+              --keyAlias sslserver \
+              --keystoreType pkcs11 \
+              --keystoreProvider Mozilla-JSS
+
+          docker exec server cat /etc/pki/pki-tomcat/server.xml
+
+      - name: Set protocol to TLSv1.3
+        run: |
+          docker exec server xmlstarlet edit --inplace \
+              -u "//SSLHostConfig/@protocols" \
+              -v "TLSv1.3" \
+              -i "//SSLHostConfig[not(@protocols)]" \
+              -t attr \
+              -n "protocols" \
+              -v "TLSv1.3" \
+              /etc/pki/pki-tomcat/server.xml
+
+          docker exec server cat /etc/pki/pki-tomcat/server.xml
+
+      - name: Start Tomcat
+        run: |
+          docker exec server pki-server start --wait -v
+
+      - name: Set up client container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=client.example.com \
+              --network=example \
+              --network-alias=client.example.com \
+              client
+
+      - name: Install dependencies
+        run: docker exec client dnf install -y sslscan
+
+      - name: Run sslscan
+        run: |
+          docker exec client sslscan \
+              --xml=$SHARED/sslscan.xml \
+              server.example.com:8443
+          cat sslscan.xml
+
+      - name: Check protocols
+        run: |
+          # only TLS 1.3 protocol should be enabled
+          cat > expected << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document>
+            <ssltest host="server.example.com" sniname="server.example.com" port="8443">
+              <protocol type="ssl" version="2" enabled="0"/>
+              <protocol type="ssl" version="3" enabled="0"/>
+              <protocol type="tls" version="1.0" enabled="0"/>
+              <protocol type="tls" version="1.1" enabled="0"/>
+              <protocol type="tls" version="1.2" enabled="0"/>
+              <protocol type="tls" version="1.3" enabled="1"/>
+            </ssltest>
+          </document>
+          EOF
+
+          xmlstarlet ed \
+              -d '/document/@*' \
+              -d '/document/ssltest/*[not(self::protocol)]' \
+              sslscan.xml | tee actual
+
+          diff expected actual
+
+      - name: Check ciphers
+        run: |
+          # only TLS 1.3 ciphers should be supported
+          cat > expected << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document>
+            <ssltest host="server.example.com" sniname="server.example.com" port="8443">
+              <cipher status="preferred" sslversion="TLSv1.3" bits="128" cipher="TLS_AES_128_GCM_SHA256" id="0x1301" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.3" bits="256" cipher="TLS_CHACHA20_POLY1305_SHA256" id="0x1303" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.3" bits="256" cipher="TLS_AES_256_GCM_SHA384" id="0x1302" strength="strong" curve="25519" ecdhebits="253"/>
+            </ssltest>
+          </document>
+          EOF
+
+          xmlstarlet ed \
+              -d '/document/@*' \
+              -d '/document/ssltest/*[not(self::cipher)]' \
+              sslscan.xml | tee actual
+
+          diff expected actual
+
+      - name: Check key exchange groups
+        run: |
+          # only TLS 1.3 key exchange groups should be supported
+          cat > expected << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document>
+            <ssltest host="server.example.com" sniname="server.example.com" port="8443">
+              <group sslversion="TLSv1.3" bits="128" name="secp256r1 (NIST P-256)" id="0x0017"/>
+              <group sslversion="TLSv1.3" bits="192" name="secp384r1 (NIST P-384)" id="0x0018"/>
+              <group sslversion="TLSv1.3" bits="260" name="secp521r1 (NIST P-521)" id="0x0019"/>
+              <group sslversion="TLSv1.3" bits="128" name="x25519" id="0x001d"/>
+              <group sslversion="TLSv1.3" bits="112" name="ffdhe2048" id="0x0100"/>
+              <group sslversion="TLSv1.3" bits="128" name="ffdhe3072" id="0x0101"/>
+              <group sslversion="TLSv1.3" bits="150" name="ffdhe4096" id="0x0102"/>
+              <group sslversion="TLSv1.3" bits="175" name="ffdhe6144" id="0x0103"/>
+              <group sslversion="TLSv1.3" bits="192" name="ffdhe8192" id="0x0104"/>
+            </ssltest>
+          </document>
+          EOF
+
+          xmlstarlet ed \
+              -d '/document/@*' \
+              -d '/document/ssltest/*[not(self::group)]' \
+              sslscan.xml | tee actual
+
+          diff expected actual
+
+      - name: Stop Tomcat
+        run: |
+          docker exec server pki-server stop --wait -v
+
+      - name: Remove Tomcat
+        run: |
+          docker exec server pki-server remove -v
+
+      - name: Check PKI server systemd journal
+        if: always()
+        run: |
+          docker exec server journalctl -x --no-pager -u pki-tomcatd@pki-tomcat.service
