@@ -221,15 +221,28 @@ public class JSSTrustManager implements X509TrustManager {
 
         if (!isTrustedPeer(certChain)) {
             checkIssuerTrusted(certChain, status);
+
+            if (enableCertRevokeVerify) {
+                // If the certificate is a trusted peer there is not check of the issuer and/or the certificate.
+                // If the issuer is not available, or it is a trusted peer, the revocation is not verified because 
+                // it cannot verify the full chain in any case. The issue is already reported.
+                // See: https://github.com/dogtagpki/jss/blob/18e97f6fe56ac89627979614f35c84b50630dcf3/native/src/main/native/org/mozilla/jss/ssl/common.c#L1141
+                Enumeration<ValidityItem> reasons = status.getReasons();
+                boolean issuerTrusted = true;
+                while (reasons.hasMoreElements() && issuerTrusted) {
+                    ValidityItem reason = reasons.nextElement();
+                    issuerTrusted = reason.getReason() != ValidityStatus.UNKNOWN_ISSUER;
+                }
+                if (issuerTrusted) {
+                    certChainRevokeVerify(certChain, keyUsage, status);
+                }
+            }
         }
 
         checkValidityDates(certChain, status);
 
         checkKeyUsage(certChain, keyUsage, status);
         
-        if (enableCertRevokeVerify) {
-            certChainRevokeVerify(certChain, keyUsage, status);
-        }
     }
 
     public boolean isTrustedPeer(X509Certificate[] certChain) throws Exception {
