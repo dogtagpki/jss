@@ -1,0 +1,177 @@
+name: Tomcat HTTPS with specific ciphers
+
+on: workflow_call
+
+env:
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/pki
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install xmlstarlet
+
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Retrieve JSS images
+        uses: actions/cache@v4
+        with:
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar
+
+      - name: Load JSS images
+        run: docker load --input jss-images.tar
+
+      - name: Create network
+        run: docker network create example
+
+      - name: Set up JSS container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=server.example.com \
+              --network=example \
+              --network-alias=server.example.com \
+              server
+
+      - name: Import LDAP SDK packages
+        run: |
+          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+      - name: Import PKI packages
+        run: |
+          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:latest
+          docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f pki-dist
+
+      - name: Install packages
+        run: |
+          docker cp /tmp/RPMS/. server:/root/RPMS/
+          docker exec server bash -c "dnf install -y /root/RPMS/*"
+          docker exec server dnf install -y xmlstarlet
+
+      - name: Create Tomcat
+        run: |
+          docker exec server pki-server create -v
+
+      - name: Create NSS database in Tomcat
+        run: |
+          docker exec server pki-server nss-create --no-password
+
+      - name: Create SSL server cert
+        run: |
+          docker exec server pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-request \
+              --subject "CN=server.example.com" \
+              --ext /usr/share/pki/server/certs/sslserver.conf \
+              --csr sslserver.csr
+
+          docker exec server pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-issue \
+              --csr sslserver.csr \
+              --ext /usr/share/pki/server/certs/sslserver.conf \
+              --cert sslserver.crt
+
+          docker exec server pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-import \
+              --cert sslserver.crt \
+              sslserver
+
+      - name: Create HTTPS connector
+        run: |
+          docker exec server pki-server jss-enable
+
+          docker exec server pki-server http-connector-add \
+              --port 8443 \
+              --scheme https \
+              --secure true \
+              --sslEnabled true \
+              --sslProtocol SSL \
+              --sslImpl org.dogtagpki.jss.tomcat.JSSImplementation \
+              Secure
+
+          docker exec server pki-server http-connector-cert-add \
+              --keyAlias sslserver \
+              --keystoreType pkcs11 \
+              --keystoreProvider Mozilla-JSS
+
+          docker exec server cat /etc/pki/pki-tomcat/server.xml
+
+      - name: Configure ciphers
+        run: |
+          docker exec server xmlstarlet edit --inplace \
+              -u "//SSLHostConfig/@ciphers" \
+              -v "TLS_AES_256_GCM_SHA384,ECDHE-RSA-AES256-GCM-SHA384" \
+              -i "//SSLHostConfig[not(@ciphers)]" \
+              -t attr \
+              -n "ciphers" \
+              -v "TLS_AES_256_GCM_SHA384,ECDHE-RSA-AES256-GCM-SHA384" \
+              /etc/pki/pki-tomcat/server.xml
+
+          docker exec server cat /etc/pki/pki-tomcat/server.xml
+
+      - name: Start Tomcat
+        run: |
+          docker exec server pki-server start --wait -v
+
+      - name: Set up client container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=client.example.com \
+              --network=example \
+              --network-alias=client.example.com \
+              client
+
+      - name: Install dependencies
+        run: docker exec client dnf install -y sslscan
+
+      - name: Run sslscan
+        run: |
+          docker exec client sslscan \
+              --xml=$SHARED/sslscan.xml \
+              server.example.com:8443
+          cat sslscan.xml
+
+      - name: Check ciphers
+        run: |
+          # only specified ciphers should be enabled
+          cat > expected << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document>
+            <ssltest host="server.example.com" sniname="server.example.com" port="8443">
+              <cipher status="preferred" sslversion="TLSv1.3" bits="256" cipher="TLS_AES_256_GCM_SHA384" id="0x1302" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="preferred" sslversion="TLSv1.2" bits="256" cipher="ECDHE-RSA-AES256-GCM-SHA384" id="0xC030" strength="strong" curve="25519" ecdhebits="253"/>
+            </ssltest>
+          </document>
+          EOF
+
+          xmlstarlet ed \
+              -d '/document/@*' \
+              -d '/document/ssltest/*[not(self::cipher)]' \
+              sslscan.xml | tee actual
+
+          diff expected actual
+
+      - name: Stop Tomcat
+        run: |
+          docker exec server pki-server stop --wait -v
+
+      - name: Remove Tomcat
+        run: |
+          docker exec server pki-server remove -v
+
+      - name: Check PKI server systemd journal
+        if: always()
+        run: |
+          docker exec server journalctl -x --no-pager -u pki-tomcatd@pki-tomcat.service
