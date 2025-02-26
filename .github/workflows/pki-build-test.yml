@@ -32,7 +32,7 @@ jobs:
 
       - name: Import LDAP SDK packages
         run: |
-          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
+          docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:5.6
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 
