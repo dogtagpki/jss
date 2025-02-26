@@ -112,10 +112,10 @@ jobs:
 
       - name: Initialize PKI client
         run: |
-          docker exec pki pki-server cert-export ca_signing --cert-file ca_signing.crt
+          docker exec pki pki-server cert-export ca_signing --cert-file $SHARED/ca_signing.crt
 
           docker exec pki pki nss-cert-import \
-              --cert ca_signing.crt \
+              --cert $SHARED/ca_signing.crt \
               --trust CT,C,C \
               ca_signing
 
@@ -526,6 +526,169 @@ jobs:
           EOF
 
           diff expected stderr
+
+      - name: Revoke sslserver certificate
+        run: |
+          SERIAL=$(docker exec pki  pki -d /etc/pki/pki-tomcat/alias nss-cert-show sslserver | sed -ne 's/^  Serial Number: \(.*\)$/\1/p')
+          docker exec -i pki pki -n caadmin ca-cert-hold --force  $SERIAL
+
+      - name: Check client1 with already trusted server cert revoked
+        run: |
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificate is not verified because OCSP check is not enabled by default so it is trusted
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Check client2 with already trusted server cert revoked
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificate is not verified because it is set as trusted peer
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Check client1 with trusted root and revoked server cert
+        run: |
+          # remove nss DB
+          docker exec client1 rm -rf /root/.dogtag
+
+          # init nss DB with trusted root
+          docker exec client1 pki nss-cert-import \
+              --cert $SHARED/ca_signing.crt \
+              --trust CT,C,C \
+              ca_signing
+
+          docker exec client1 pki nss-cert-find
+
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificate is not verified because OCSP check is not enabled by default so it is trusted
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Check client2 with trusted root and revoked server cert
+        run: |
+          # remove nss DB
+          docker exec client2 rm -rf /root/.dogtag
+
+          # init nss DB with trusted root
+          docker exec client2 pki nss-cert-import \
+              --cert $SHARED/ca_signing.crt \
+              --trust CT,C,C \
+              ca_signing
+
+          docker exec client2 pki nss-cert-find
+
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificate is verified and the operation fails
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          cat > expected << EOF
+          ERROR: REVOKED_CERTIFICATE encountered on 'CN=pki.example.com,OU=pki-tomcat,O=EXAMPLE' results in a denied SSL server cert!
+          SEVERE: FATAL: SSL alert sent: CERTIFICATE_REVOKED
+          IOException: Unable to write to socket: Unable to validate CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE: Revoked certificate: CN=pki.example.com, OU=pki-tomcat, O=EXAMPLE
+          EOF
+
+          diff expected stderr
+
+      - name: Release sslserver certificate
+        run: |
+          SERIAL=$(docker exec pki  pki -d /etc/pki/pki-tomcat/alias nss-cert-show sslserver | sed -ne 's/^  Serial Number: \(.*\)$/\1/p')
+          docker exec -i pki pki -n caadmin ca-cert-release-hold --force  $SERIAL
+
+      - name: Check client1 with trusted root
+        run: |
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Check client2 with trusted root
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
 
       - name: Remove CA
         run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
