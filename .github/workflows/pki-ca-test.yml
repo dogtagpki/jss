@@ -644,6 +644,29 @@ jobs:
 
           diff expected stderr
 
+      - name: Check client2 with trusted root and revoked server cert but disabled check
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              --ignore-cert-status REVOKED_CERTIFICATE \
+              -U https://pki.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificatei revocation is not verified so it is trusted
+          cat > expected << EOF
+            Server URL: https://pki.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
       - name: Release sslserver certificate
         run: |
           SERIAL=$(docker exec pki  pki -d /etc/pki/pki-tomcat/alias nss-cert-show sslserver | sed -ne 's/^  Serial Number: \(.*\)$/\1/p')
