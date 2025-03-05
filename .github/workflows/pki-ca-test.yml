@@ -48,6 +48,14 @@ jobs:
               --alias pki.example.com \
               --alias server.example.com
 
+      - name: Set up secondary server container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=pki2.example.com \
+              --network=example \
+              --network-alias=pki2.example.com \
+              pki2
+
       - name: Set up client1 container for blocking socket factory
         run: |
           tests/bin/runner-init.sh \
@@ -81,6 +89,10 @@ jobs:
           # install packages on server
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf install -y /root/RPMS/*"
+
+          # install packages on secondary server
+          docker cp /tmp/RPMS/. pki2:/root/RPMS/
+          docker exec pki2 bash -c "dnf install -y /root/RPMS/*"
 
           # install packages on client1
           docker cp /tmp/RPMS/. client1:/root/RPMS/
@@ -713,8 +725,184 @@ jobs:
           # check stderr
           diff /dev/null stderr
 
+      - name: Create secondary server instance
+        run: |
+          docker exec pki2 pki-server create -v
+          docker exec pki2 pki-server nss-create --no-password
+          docker exec pki2 pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-import \
+              --cert $SHARED/ca_signing.crt \
+              --trust CT,C,C \
+              ca_signing
+
+      - name: Generate certificate for secondary server
+        run: |
+          docker exec pki2 pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-request \
+              --subject "CN=pki2.example.com" \
+              --ext /usr/share/pki/server/certs/sslserver.conf \
+              --csr $SHARED/sslserver2.csr
+
+          docker exec pki pki \
+              -n caadmin \
+              ca-cert-issue \
+              --profile caServerCert \
+              --csr-file $SHARED/sslserver2.csr \
+              --output-file $SHARED/sslserver2.crt
+
+          docker exec pki2 pki \
+              -d /var/lib/pki/pki-tomcat/alias \
+              nss-cert-import \
+              --cert $SHARED/sslserver2.crt \
+              sslserver
+
+      - name: Configure and start secondary server
+        run: |
+          docker exec pki2 pki-server jss-enable
+          docker exec pki2 pki-server http-connector-add \
+              --port 8443 \
+              --scheme https \
+              --secure true \
+              --sslEnabled true \
+              --sslProtocol SSL \
+              --sslImpl org.dogtagpki.jss.tomcat.JSSImplementation \
+              Secure
+
+          docker exec pki2 pki-server http-connector-cert-add \
+              --keyAlias sslserver \
+              --keystoreType pkcs11 \
+              --keystoreProvider Mozilla-JSS
+
+          docker exec pki2 pki-server webapp-deploy \
+              --descriptor /usr/share/pki/server/conf/Catalina/localhost/ROOT.xml \
+              ROOT
+
+          docker exec pki2 pki-server webapp-deploy \
+              --descriptor /usr/share/pki/server/conf/Catalina/localhost/pki.xml \
+              pki
+          docker exec pki2 pki-server start --wait
+
+      - name: Secondary check client1 with trusted root
+        run: |
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki2.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki2.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Secondary check client2 with trusted root
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki2.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          cat > expected << EOF
+            Server URL: https://pki2.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Disable OCSP responder from the server
+        run: |
+          docker exec pki pki-server stop --wait
+
+      - name: Secondary check client1 with trusted root and disabled OCSP
+        run: |
+          # run PKI CLI
+          docker exec client1 pki \
+              -U https://pki2.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificate is not verified because OCSP check is not enabled by default so it is trusted
+          cat > expected << EOF
+            Server URL: https://pki2.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
+      - name: Secondary check client2 with trusted root and disabled OCSP
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              -U https://pki2.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the certificate cannot be verified and the operation fails
+          cat > expected << EOF
+            Server URL: https://pki2.example.com:8443
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          cat > expected << EOF
+          ERROR: OCSP_SERVER_ERROR encountered on 'CN=pki2.example.com' results in a denied SSL server cert!
+          SEVERE: FATAL: SSL alert sent: ACCESS_DENIED
+          IOException: Unable to write to socket: Unable to validate CN=pki2.example.com: Invalid certificate: CN=pki2.example.com
+          EOF
+
+          diff expected stderr
+
+      - name: Secondary check client2 with trusted root and disabled OCSP but disabled check
+        run: |
+          # run PKI CLI
+          docker exec client2 pki \
+              -D org.dogtagpki.client.socketFactory=org.dogtagpki.client.NonBlockingSocketFactory \
+              --ignore-cert-status OCSP_SERVER_ERROR \
+              -U https://pki2.example.com:8443 \
+              info \
+              > >(tee stdout) 2> >(tee stderr >&2) || true
+
+          # check stdout
+          # the OCSP server failure is ignored so it is trusted
+          cat > expected << EOF
+            Server URL: https://pki2.example.com:8443
+            Server Name: Dogtag Certificate System
+            Server Version: 11.7.0
+          EOF
+
+          diff expected stdout
+
+          # check stderr
+          diff /dev/null stderr
+
       - name: Remove CA
-        run: docker exec pki pkidestroy -i pki-tomcat -s CA -v
+        run: |
+          docker exec pki pki-server start --wait
+          docker exec pki pkidestroy -i pki-tomcat -s CA -v
 
       - name: Check DS server systemd journal
         if: always()
