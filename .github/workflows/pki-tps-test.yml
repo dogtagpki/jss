@@ -71,6 +71,23 @@ jobs:
               -D pki_ds_url=ldap://ds.example.com:3389 \
               -v
 
+      - name: Update PKI server configuration
+        run: |
+          docker exec pki dnf install -y xmlstarlet
+
+          # disable access log buffer to avoid logging delay
+          docker exec pki xmlstarlet edit --inplace \
+              -u "//Valve[@className='org.apache.catalina.valves.AccessLogValve']/@buffered" \
+              -v "false" \
+              -i "//Valve[@className='org.apache.catalina.valves.AccessLogValve' and not(@buffered)]" \
+              -t attr \
+              -n "buffered" \
+              -v "false" \
+              /etc/pki/pki-tomcat/server.xml
+
+          # restart PKI server
+          docker exec pki pki-server restart --wait
+
       - name: Install TKS
         run: |
           docker exec pki pkispawn \
@@ -103,7 +120,7 @@ jobs:
 
           docker exec pki pki -n caadmin tps-user-show tpsadmin
 
-      - name: Set up TPS authentication
+      - name: Update TPS configuration
         run: |
           # import sample TPS users
           docker exec pki ldapadd \
@@ -121,6 +138,11 @@ jobs:
           docker exec pki pki-server tps-config-set \
               auths.instance.ldap1.ldap.basedn \
               ou=people,dc=example,dc=com
+
+          # allow token enrollment
+          # https://github.com/dogtagpki/pki/commit/847ddbc9e146603d11e917609411fde03e301778
+          docker exec pki pki-server tps-config-set \
+              channel.scp01.no.le.byte true
 
           # restart TPS subsystem
           docker exec pki pki-server tps-redeploy --wait
@@ -191,6 +213,11 @@ jobs:
         run: |
           docker exec pki journalctl -x --no-pager -u pki-tomcatd@pki-tomcat.service
 
+      - name: Check PKI server access log
+        if: always()
+        run: |
+          docker exec pki find /var/log/pki/pki-tomcat -name "localhost_access_log.*" -exec cat {} \;
+
       - name: Check CA debug log
         if: always()
         run: |
@@ -205,17 +232,3 @@ jobs:
         if: always()
         run: |
           docker exec pki find /var/lib/pki/pki-tomcat/logs/tps -name "debug.*" -exec cat {} \;
-
-      - name: Gather artifacts
-        if: always()
-        run: |
-          tests/bin/ds-artifacts-save.sh ds
-          tests/bin/pki-artifacts-save.sh pki
-        continue-on-error: true
-
-      - name: Upload artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pki-tps-test
-          path: /tmp/artifacts
