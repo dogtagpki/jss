@@ -291,8 +291,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -341,8 +345,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -390,8 +398,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://server.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -415,8 +427,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://server.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -439,8 +455,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -460,8 +480,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -557,8 +581,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -579,8 +607,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -611,8 +643,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -671,8 +707,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -696,8 +736,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -717,8 +761,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -796,8 +844,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki2.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -817,8 +869,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki2.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -842,8 +898,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki2.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
@@ -891,8 +951,12 @@ jobs:
           cat > expected << EOF
             Server URL: https://pki2.example.com:8443
             Server Name: Dogtag Certificate System
-            Server Version: 11.7.0
           EOF
+
+          # ignore version number
+          sed -i \
+              -e '/^ *Server Version:/d' \
+              stdout
 
           diff expected stdout
 
