@@ -329,6 +329,7 @@ public class JSSSocketChannel extends SocketChannel {
         long wrapped = 0;
         long encrypted = 0;
         long sent = 0;
+        boolean completeWrite = true;
 
         try {
             do {
@@ -339,6 +340,14 @@ public class JSSSocketChannel extends SocketChannel {
 
                 wrapped += result.bytesConsumed();
                 encrypted += result.bytesProduced();
+
+                // If the channel is blocking all the data have to be written. In case of exceding the
+                // buffer capacity an additional write is requested 
+                if (isBlocking() && dst.remaining() == 0) {
+                    completeWrite = false;
+                } else {
+                    completeWrite = true;
+                }
 
                 dst.flip();
 
@@ -353,13 +362,12 @@ public class JSSSocketChannel extends SocketChannel {
                 }
 
                 dst.flip();
-            } while (sent < encrypted);
+            } while (sent < encrypted || !completeWrite);
         } catch (SSLException ssle) {
             String msg = "Unable to write to socket: ";
             msg += ssle.getMessage();
             throw new IOException(msg, ssle);
         }
-
         return sent;
     }
 
