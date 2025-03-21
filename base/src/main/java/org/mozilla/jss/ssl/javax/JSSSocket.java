@@ -752,6 +752,9 @@ public class JSSSocket extends SSLSocket {
 
     @Override
     public synchronized void close() throws IOException {
+        if (closed) {
+            return;
+        }
         getInternalChannel().close();
         engine.cleanup();
         engine = null;
