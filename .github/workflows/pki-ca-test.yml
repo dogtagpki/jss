@@ -558,7 +558,7 @@ jobs:
           cat > expected << EOF
           SEVERE: FATAL: SSL alert received: UNKNOWN_CA
           SEVERE: FATAL: SSL alert sent: UNEXPECTED_MESSAGE
-          RuntimeException: Unexpected error trying to construct channel: Unable to perform operations on a closed socket!
+          IOException: Unable to read from socket: Unexpected return from PR.Read(): SSL_ERROR_UNKNOWN_CA_ALERT (-12195)
           EOF
 
           diff expected stderr
