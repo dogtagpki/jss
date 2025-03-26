@@ -412,7 +412,7 @@ public class TomcatJSS implements SSLSocketListener {
             return;
         }
 
-        logger.info("TomcatJSS: initialization");
+        logger.debug("TomcatJSS: initialization");
 
         if (certdbDir == null) {
             certdbDir = System.getProperty(CATALINA_BASE) + File.separator + "alias";
@@ -458,10 +458,10 @@ public class TomcatJSS implements SSLSocketListener {
 
         if (StringUtils.isNotEmpty(serverCertNickFile)) {
             serverCertNick = new String(Files.readAllBytes(Paths.get(serverCertNickFile))).trim();
-            logger.debug("serverCertNick: {}", serverCertNick);
+            logger.debug("TomcatJSS: serverCertNick: {}", serverCertNick);
         }
 
-        logger.debug("clientAuth: {}", clientAuth);
+        logger.debug("TomcatJSS: clientAuth: {}", clientAuth);
         if (clientAuth.equalsIgnoreCase("true")) {
             requireClientAuth = true;
 
@@ -473,8 +473,8 @@ public class TomcatJSS implements SSLSocketListener {
             wantClientAuth = true;
         }
 
-        logger.debug("requireClientAuth: {}", requireClientAuth);
-        logger.debug("wantClientAuth: {}", wantClientAuth);
+        logger.debug("TomcatJSS: requireClientAuth: {}", requireClientAuth);
+        logger.debug("TomcatJSS: wantClientAuth: {}", wantClientAuth);
 
         if (requireClientAuth || wantClientAuth) {
             configureRevocationCheck();
@@ -483,7 +483,7 @@ public class TomcatJSS implements SSLSocketListener {
         // 12 hours = 43200 seconds
         SSLServerSocket.configServerSessionIDCache(0, 43200, 43200, null);
 
-        logger.info("TomcatJSS: initialization complete");
+        logger.debug("TomcatJSS: initialization complete");
 
         initialized = true;
     }
@@ -531,7 +531,7 @@ public class TomcatJSS implements SSLSocketListener {
                 token.login(password);
                 return; //NOSONAR - Not a redundant return, break will print the final error message even on success.
             } catch (IncorrectPasswordException e) {
-                logger.warn("TomcatJSS: incorrect password");
+                logger.warn("Incorrect password for {}", tag);
                 iteration ++;
             } finally {
                 password.clear();
@@ -559,20 +559,20 @@ public class TomcatJSS implements SSLSocketListener {
 
     public void configureRevocationCheck() throws GeneralSecurityException, ConfigurationException {
 
-        logger.info("configuring Revocation Check");
+        logger.debug("TomcatJSS: configuring Revocation Check");
 
-        logger.debug("enableRevocationCheck: {}", enableRevocationCheck);
+        logger.debug("TomcatJSS: enableRevocationCheck: {}", enableRevocationCheck);
         if (!enableRevocationCheck) {
             return;
         }
 
-        logger.debug("ocspResponderURL: {}", ocspResponderURL);
+        logger.debug("TomcatJSS: ocspResponderURL: {}", ocspResponderURL);
 
         if (StringUtils.isEmpty(ocspResponderURL)) {
             ocspResponderURL = null;
         }
 
-        logger.debug("ocspResponderCertNickname: {}", ocspResponderCertNickname);
+        logger.debug("TomcatJSS: ocspResponderCertNickname: {}", ocspResponderCertNickname);
         if (StringUtils.isEmpty(ocspResponderCertNickname)) {
             ocspResponderCertNickname = null;
         }
@@ -592,15 +592,15 @@ public class TomcatJSS implements SSLSocketListener {
                 ocspResponderURL,
                 ocspResponderCertNickname);
 
-        logger.debug("ocspCacheSize: {}", ocspCacheSize);
-        logger.debug("ocspMinCacheEntryDuration: {}", ocspMinCacheEntryDuration);
-        logger.debug("ocspMaxCacheEntryDuration: {}", ocspMaxCacheEntryDuration);
+        logger.debug("TomcatJSS: ocspCacheSize: {}", ocspCacheSize);
+        logger.debug("TomcatJSS: ocspMinCacheEntryDuration: {}", ocspMinCacheEntryDuration);
+        logger.debug("TomcatJSS: ocspMaxCacheEntryDuration: {}", ocspMaxCacheEntryDuration);
 
         manager.OCSPCacheSettings(ocspCacheSize,
                 ocspMinCacheEntryDuration,
                 ocspMaxCacheEntryDuration);
 
-        logger.debug("ocspTimeout: {}", ocspTimeout);
+        logger.debug("TomcatJSS: ocspTimeout: {}", ocspTimeout);
 
         manager.setOCSPTimeout(ocspTimeout);
     }
