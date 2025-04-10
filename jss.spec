@@ -23,6 +23,8 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 %undefine       timestamp
 %undefine       commit_id
 
+%global         fedora_cutoff 43
+
 # Full version number:
 # - development/stabilization: <major>.<minor>.<update>-<phase>
 # - GA/update:                 <major>.<minor>.<update>
@@ -73,12 +75,12 @@ ExcludeArch: i686
 
 # maven-local is a subpackage of javapackages-tools
 
-%if 0%{?fedora} && 0%{?fedora} <= 39 || 0%{?rhel} && 0%{?rhel} <= 9
+%if 0%{?fedora} >= %{fedora_cutoff} || 0%{?rhel} >= 10 
 
-%define java_devel java-17-openjdk-devel
-%define java_headless java-17-openjdk-headless
-%define java_home %{_jvmdir}/jre-17-openjdk
-%define maven_local maven-local-openjdk17
+%define java_devel java-25-openjdk-devel
+%define java_headless java-25-openjdk-headless
+%define java_home %{_jvmdir}/jre-25-openjdk
+%define maven_local maven-local-openjdk25
 
 %else
 
@@ -160,20 +162,30 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
+
+%if 0%{?fedora} >=  %{fedora_cutoff} || 0%{?rhel} >= 10
+
 # Tomcat
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
+
+Requires:       %{product_id} = %{version}-%{release}
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
+
+%else
+
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-%if 0%{?rhel} && 0%{?rhel} >= 10
-BuildRequires:  tomcat9-lib
-%endif
 
 Requires:       %{product_id} = %{version}-%{release}
 Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-%if 0%{?rhel} && 0%{?rhel} >= 10
-Requires:       tomcat9 >= 1:9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >=  9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >=  9.0.62
+
 %endif
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
@@ -260,6 +272,21 @@ This package provides test suite for JSS.
 # flatten-maven-plugin is not available in RPM
 %pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
 
+
+%if 0%{?fedora} >=  %{fedora_cutoff}  || 0%{?rhel} >= 10
+
+# specify Maven artifact locations
+%mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
+%mvn_file org.dogtagpki.jss:jss-tomcat-10.1     jss/jss-tomcat-10.1
+
+# specify Maven artifact packages
+%mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
+%mvn_package org.dogtagpki.jss:jss-tomcat-10.1  jss-tomcat
+
+%pom_disable_module tomcat-9.0
+
+%else
+
 # specify Maven artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
 %mvn_file org.dogtagpki.jss:jss-tomcat-9.0     jss/jss-tomcat-9.0
@@ -267,6 +294,10 @@ This package provides test suite for JSS.
 # specify Maven artifact packages
 %mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
 %mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
+
+%pom_disable_module tomcat-10.1
+
+%endif
 
 ################################################################################
 %build
