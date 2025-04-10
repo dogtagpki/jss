@@ -25,6 +25,7 @@
         <module>examples</module>
         <module>tomcat</module>
         <module>tomcat-9.0</module>
+        <module>tomcat-10.1</module>
     </modules>
 
     <build>
