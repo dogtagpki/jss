@@ -6,21 +6,25 @@ package org.mozilla.jss.provider.java.security;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.DSAPrivateKeySpec;
 import java.security.spec.DSAPublicKeySpec;
+import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.asn1.CHOICE;
 import org.mozilla.jss.asn1.INTEGER;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.asn1.OCTET_STRING;
@@ -30,11 +34,13 @@ import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
+import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.pkcs11.PK11PubKey;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
 import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
+import org.mozilla.jss.util.ECCurve;
 
 public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
 {
@@ -77,45 +83,46 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
                 algID, new BIT_STRING(encodedPublicValue, 0) );
 
             return PK11PubKey.fromSPKI( ASN1Util.encode(spki) );
-  	//
-	// requires JAVA 1.5
-	//
-        //} else if( keySpec instanceof ECPublicKeySpec ) {
-        //   // We need to import both the public value and the curve.
-        //   // The only way to get all that information in DER is to send
-        //   // a full SubjectPublicKeyInfo. So we encode all the information
-        //   // into an SPKI.
-        //
-        //  ECPublicKeySpec spec = (ECPublicKeySpec) keySpec;
-	//    AlgorithmParameters algParams = getInstance("ECParameters");
-        //
-        //    algParameters.init(spec.getECParameters());
-        //    OBJECT_IDENTIFIER oid = null;
-        //    try {
-        //        oid = SignatureAlgorithm.ECSignature.toOID();
-        //    } catch(NoSuchAlgorithmException ex ) {
-        //        Assert.notReached("no such algorithm as DSA?");
-        //    }
-        //    AlgorithmIdentifier algID =
-        //                  new AlgorithmIdentifier(oid, ecParams.getParams() );
-        //    INTEGER publicValueX = new INTEGER(spec.getW().getAffineX());
-        //    INTEGER publicValueY = new INTEGER(spec.getW().getAffineY());
-        //    byte[] encodedPublicValue;
-        //    encodedPublicValue[0] = EC_UNCOMPRESSED_POINT;
-        //    encodedPublicValue += spec.getW().getAffineX().toByteArray();
-        //    encodedPublicValue += spec.getW().getAffineY().toByteArray();
-        //
-        //    byte[] encodedPublicValue = ASN1Util.encode(publicValue);
-        //    SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(
-        //        algID, new BIT_STRING(encodedPublicValue, 0) );
-        //
-        //   return PK11PubKey.fromSPKI( ASN1Util.encode(spki) );
-        //
-        // use the following for EC keys in 1.4.2
+        } else if(keySpec instanceof ECPublicKeySpec ecPKSpec) {
+
+            ECCurve curve = ECCurve.fromOrder(ecPKSpec.getParams().getOrder());
+            if (curve == null) {
+                throw new InvalidKeySpecException("Unsupported Elliptic Curve");
+            }
+            int pointSize = switch(curve) {
+                case P256 -> 32;
+                case P384 -> 48;
+                case P521 -> 66;
+                default -> 32;
+            };
+
+            OBJECT_IDENTIFIER oid = null;
+            try {
+                oid = SignatureAlgorithm.ECSignature.toOID();
+            } catch(NoSuchAlgorithmException ex ) {
+                throw new InvalidKeySpecException("Unsupported KeySpec type: " +
+                                                  keySpec.getClass().getName());
+            }
+			
+            AlgorithmIdentifier algID =
+                new AlgorithmIdentifier(oid, curve.getOIDs()[0]);
+
+            byte[] publicValueX = convertIntToBigEndian(ecPKSpec.getW().getAffineX(), pointSize);
+            byte[] publicValueY = convertIntToBigEndian(ecPKSpec.getW().getAffineY(), pointSize);
+
+            byte[] encodedPublicValue = new byte[1 + publicValueX.length + publicValueY.length];
+            encodedPublicValue[0] = 0x04; //EC_UNCOMPRESSED_POINT
+            for (int i = 0; i < publicValueX.length; i++) {
+                encodedPublicValue[i + 1] = publicValueX[i];
+            }
+            for (int i = 0; i < publicValueY.length; i++) {
+                encodedPublicValue[i + 1 + publicValueX.length] = publicValueY[i];
+            }
+
+            SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(algID, new BIT_STRING(encodedPublicValue, 0));
+            return PK11PubKey.fromSPKI(ASN1Util.encode(spki));
+
         } else if( keySpec instanceof X509EncodedKeySpec ) {
-            //
-            // SubjectPublicKeyInfo
-            //
             X509EncodedKeySpec spec = (X509EncodedKeySpec) keySpec;
             return PK11PubKey.fromSPKI( spec.getEncoded() );
         }
@@ -252,5 +259,22 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
           }
         throw new InvalidKeyException(
             "Unsupported encoding format: " + format);
+    }
+
+
+    private byte[] convertIntToBigEndian(BigInteger elem, int size) {
+        byte[] arrayElem = elem.toByteArray();
+        if(arrayElem.length > size) {
+            arrayElem = Arrays.copyOfRange(arrayElem, arrayElem.length - size, arrayElem.length);
+        }
+        if(arrayElem.length < size) {
+            byte[] temp = new byte[size];
+            Arrays.fill(temp, (byte) 0);
+            for (int i=0; i < arrayElem.length; i++) {
+                temp[size - arrayElem.length + i] = arrayElem[i];
+            }
+            arrayElem = temp;
+        }
+        return arrayElem;
     }
 }
