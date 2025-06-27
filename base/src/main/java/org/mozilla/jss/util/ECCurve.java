@@ -170,4 +170,13 @@ public enum ECCurve {
 
         return null;
     }
+
+    public static ECCurve fromOrder(BigInteger order) {
+        for (ECCurve curve : ECCurve.values()) {
+            if (curve.getOrder().equals(order)) {
+                return curve;
+            }
+        }
+        return null;
+    }
 }

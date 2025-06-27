@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.tests;
 
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -12,13 +13,18 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.DSAPrivateKeySpec;
 import java.security.spec.DSAPublicKeySpec;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPublicKeySpec;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.Policy;
+import org.mozilla.jss.util.ECCurve;
 import org.mozilla.jss.util.PasswordCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +109,8 @@ public class KeyFactoryTest {
 
         // translate RSA key
         genPubKeyFromSpec(rsa);
+
+        getECPubKeyFromSpec();
     }
 
     void genPrivKeyFromSpec(TestValues vals) throws Throwable {
@@ -187,5 +195,35 @@ public class KeyFactoryTest {
 
         System.out.println("Successfully generated a " + vals.keyGenAlg +
             " public key from a " + vals.publicKeySpecClass.getName());
+    }
+
+    void getECPubKeyFromSpec() throws Throwable {
+
+        String message = "eyJhbGciOiJFUzI1NiIsImp3ayI6eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6IklkZE5BWi1CMG5mT1ZBUnBJeklOdjkzUmNiQ2VmdnNwRkl1eWItenJlaEUiLCJ5IjoidXlvd3duRVFHM1VWZUk3NUtkSUpfbmVXTjVQZGNmXzNRZGFRX0x1Rl9zOCJ9LCJub25jZSI6Iktka0Q1NmxEYjBVMHhtbzJ4dEtvSUEiLCJ1cmwiOiJodHRwczovL3BraS5leGFtcGxlLmNvbTo4NDQzL2FjbWUvbmV3LWFjY291bnQifQ.eyJzdGF0dXMiOiIiLCJ0ZXJtc09mU2VydmljZUFncmVlZCI6dHJ1ZX0";
+        String signature = "MEQCIP0ZKGeCvoVOwb3LsMssIFf0eslxZuRB/3eVshsHzULXAiBXnrXR5+9y6p4NtB/GBccv13KqzYuFJWu/ss1i6y27sg";
+
+        String x = "IddNAZ+B0nfOVARpIzINv93RcbCefvspFIuyb+zrehE";
+        String y = "uyowwnEQG3UVeI75KdIJ/neWN5Pdcf/3QdaQ/LuF/s8";
+
+        Signature signer;
+        PublicKey publicKey;
+
+        signer = Signature.getInstance("SHA256withECDSA", "Mozilla-JSS");
+
+        KeyFactory keyFactory = KeyFactory.getInstance("EC", "Mozilla-JSS");
+        ECCurve curve = ECCurve.fromName("P-256");
+        BigInteger biX = new BigInteger(1, Base64.getDecoder().decode(x));
+        BigInteger biY = new BigInteger(1, Base64.getDecoder().decode(y));
+        ECPoint ecPoint = new ECPoint(biX, biY);
+        ECParameterSpec ecParameterSpec = new ECParameterSpec(curve.getEC(), ecPoint, curve.getOrder(), curve.getCofactor());
+        ECPublicKeySpec ecKeySpec = new ECPublicKeySpec(ecPoint, ecParameterSpec);
+        publicKey = keyFactory.generatePublic(ecKeySpec);
+
+        signer.initVerify(publicKey);
+        signer.update(message.getBytes());
+
+        if (!signer.verify(Base64.getDecoder().decode(signature))) {
+            throw new Exception("Invalid JWS");
+        }
     }
 }
