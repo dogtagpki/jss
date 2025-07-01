@@ -7,7 +7,7 @@ Name:           jss
 
 # Upstream version number:
 %global         major_version 5
-%global         minor_version 7
+%global         minor_version 8
 %global         update_version 0
 
 # Downstream release number:
