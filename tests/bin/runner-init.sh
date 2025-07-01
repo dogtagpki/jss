@@ -98,7 +98,12 @@ fi
 OPTIONS=()
 OPTIONS+=(--name "$NAME")
 OPTIONS+=(--hostname "$HOSTNAME")
-OPTIONS+=(--tmpfs /tmp)
+
+# Allows the execution of executable binaries in /tmp.
+# This is required to build PKI with Maven.
+# https://docs.docker.com/engine/storage/tmpfs/
+OPTIONS+=(--tmpfs /tmp:exec)
+
 OPTIONS+=(--tmpfs /run)
 OPTIONS+=(-v "$GITHUB_WORKSPACE:$SHARED")
 
