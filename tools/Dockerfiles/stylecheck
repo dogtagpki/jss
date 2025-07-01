@@ -1,4 +1,4 @@
-ARG BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
+ARG BASE_IMAGE="registry.fedoraproject.org/fedora:42"
 
 FROM $BASE_IMAGE
 

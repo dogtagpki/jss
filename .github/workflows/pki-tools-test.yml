@@ -38,7 +38,7 @@ jobs:
 
       - name: Import PKI packages
         run: |
-          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:latest
+          docker create --name=pki-dist quay.io/$NAMESPACE/pki-dist:11.7
           docker cp pki-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f pki-dist
 

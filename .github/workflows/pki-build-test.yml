@@ -39,7 +39,7 @@ jobs:
       - name: Install build dependencies
         run: |
           docker exec pki dnf install -y git rpm-build
-          docker exec pki git clone -b master https://github.com/$NAMESPACE/pki
+          docker exec pki git clone -b v11.7 https://github.com/$NAMESPACE/pki
           docker exec pki dnf builddep -y --skip-unavailable --spec pki/pki.spec
           docker cp /tmp/RPMS/. pki:/root/RPMS/
           docker exec pki bash -c "dnf install -y /root/RPMS/*"
