@@ -86,7 +86,7 @@ jobs:
           libnss3-tools \
           libopentest4j-java \
           libslf4j-java \
-          openjdk-17-jdk \
+          openjdk-21-jdk \
           unzip \
           zip
     displayName: Install build dependencies
@@ -94,7 +94,7 @@ jobs:
   - script: ./build.sh
     displayName: Build JSS binaries, Javadoc, and run tests
     env:
-      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
 
 - job: SymbolTest
   pool:
