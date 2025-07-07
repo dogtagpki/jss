@@ -27,7 +27,8 @@ public enum ECCurve {
         new BigInteger("ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551", 16), // order
         // OpenJDK lists this curve as having a cofactor of one, but NIST
         // doesn't share their cofactor.
-        1 // cofactor
+        1, // cofactor
+        32 // size of the key  
     ),
     P384(
         new String[] { "ansip384r1", "secp384r1", "nistp384", "P-384", "NIST P-384" }, // names
@@ -40,7 +41,8 @@ public enum ECCurve {
         new BigInteger("ffffffffffffffffffffffffffffffffffffffffffffffffc7634d81f4372ddf581a0db248b0a77aecec196accc52973", 16), // order
         // OpenJDK lists this curve as having a cofactor of one, but NIST
         // doesn't share their cofactor.
-        1 // cofactor
+        1, // cofactor
+        48 // size of the key  
     ),
     P521(
         new String[] { "ansip521r1", "secp521r1", "nistp521", "P-521", "NIST P-521" }, // names
@@ -53,7 +55,8 @@ public enum ECCurve {
         new BigInteger("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa51868783bf2f966b7fcc0148f709a5d03bb5c9b8899c47aebb6fb71e91386409", 16), // order
         // OpenJDK lists this curve as having a cofactor of one, but NIST
         // doesn't share their cofactor.
-        1 // cofactor
+        1, // cofactor
+        66 // size of the key  
     );
 
     // OIDs are defined at the bottom of this class.
@@ -68,10 +71,11 @@ public enum ECCurve {
     private BigInteger generatorY;
     private BigInteger order;
     private int cofactor;
+    private int pointSize;
 
     private ECCurve(String[] names, OBJECT_IDENTIFIER[] oids, ECField field,
                     BigInteger a, BigInteger b, ECPoint generator,
-                    BigInteger order, int cofactor)
+                    BigInteger order, int cofactor, int pointSize)
     {
         this.names = names;
         this.oids = oids;
@@ -82,11 +86,13 @@ public enum ECCurve {
         this.generatorY = generator.getAffineY();
         this.order = order;
         this.cofactor = cofactor;
+        this.pointSize = pointSize;
     }
 
     private ECCurve(String[] names, OBJECT_IDENTIFIER[] oids, ECField field,
                     BigInteger a, BigInteger b, BigInteger generatorX,
-                    BigInteger generatorY, BigInteger order, int cofactor)
+                    BigInteger generatorY, BigInteger order, int cofactor,
+                    int pointSize)
     {
         this.names = names;
         this.oids = oids;
@@ -97,6 +103,7 @@ public enum ECCurve {
         this.generatorY = generatorY;
         this.order = order;
         this.cofactor = cofactor;
+        this.pointSize = pointSize;
     }
 
     public String[] getNames() {
@@ -145,6 +152,10 @@ public enum ECCurve {
 
     public int getCofactor() {
       return cofactor;
+    }
+
+    public int getPointSize() {
+      return pointSize;
     }
 
     public static ECCurve fromOID(OBJECT_IDENTIFIER oid) {

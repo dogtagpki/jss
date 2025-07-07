@@ -6,7 +6,6 @@ package org.mozilla.jss.provider.java.security;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -24,7 +23,6 @@ import java.util.Arrays;
 
 import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.asn1.BIT_STRING;
-import org.mozilla.jss.asn1.CHOICE;
 import org.mozilla.jss.asn1.INTEGER;
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.asn1.OCTET_STRING;
@@ -34,7 +32,6 @@ import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
-import org.mozilla.jss.netscape.security.util.Utils;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.pkcs11.PK11PubKey;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
@@ -89,12 +86,8 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
             if (curve == null) {
                 throw new InvalidKeySpecException("Unsupported Elliptic Curve");
             }
-            int pointSize = switch(curve) {
-                case P256 -> 32;
-                case P384 -> 48;
-                case P521 -> 66;
-                default -> 32;
-            };
+            
+            int pointSize = curve.getPointSize();
 
             OBJECT_IDENTIFIER oid = null;
             try {
@@ -112,12 +105,8 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
 
             byte[] encodedPublicValue = new byte[1 + publicValueX.length + publicValueY.length];
             encodedPublicValue[0] = 0x04; //EC_UNCOMPRESSED_POINT
-            for (int i = 0; i < publicValueX.length; i++) {
-                encodedPublicValue[i + 1] = publicValueX[i];
-            }
-            for (int i = 0; i < publicValueY.length; i++) {
-                encodedPublicValue[i + 1 + publicValueX.length] = publicValueY[i];
-            }
+            System.arraycopy(publicValueX, 0, encodedPublicValue, 1, publicValueX.length);
+            System.arraycopy(publicValueY, 0, encodedPublicValue, 1 + publicValueX.length, publicValueY.length);
 
             SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(algID, new BIT_STRING(encodedPublicValue, 0));
             return PK11PubKey.fromSPKI(ASN1Util.encode(spki));
@@ -262,6 +251,13 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
     }
 
 
+    /** Converts a non-negative BigInteger to a fixed-size big-endian byte array.
+    Pads with zeros or trims as needed.
+    @param elem the BigInteger to convert (must be non-negative)
+    @param size the desired byte array length
+    @return a big-endian byte array of length {@code size}
+    @throws IllegalArgumentException if elem is negative or size is non-positive
+    */
     private byte[] convertIntToBigEndian(BigInteger elem, int size) {
         byte[] arrayElem = elem.toByteArray();
         if(arrayElem.length > size) {
@@ -270,9 +266,7 @@ public class KeyFactorySpi1_2 extends java.security.KeyFactorySpi
         if(arrayElem.length < size) {
             byte[] temp = new byte[size];
             Arrays.fill(temp, (byte) 0);
-            for (int i=0; i < arrayElem.length; i++) {
-                temp[size - arrayElem.length + i] = arrayElem[i];
-            }
+            System.arraycopy(arrayElem, 0, temp, size - arrayElem.length, arrayElem.length);
             arrayElem = temp;
         }
         return arrayElem;
