@@ -35,7 +35,6 @@ SPEC_TEMPLATE="$SRC_DIR/jss.spec"
 SPEC_FILE=
 
 VERSION=
-RELEASE=
 
 WITH_TIMESTAMP=
 WITH_COMMIT_ID=
@@ -67,10 +66,8 @@ usage() {
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
-    echo "    --version=<version>    Use the specified version."
-    echo "    --release=<release>    Use the specified release."
-    echo "    --with-timestamp       Append timestamp to release number."
-    echo "    --with-commit-id       Append commit ID to release number."
+    echo "    --with-timestamp       Append timestamp to RPM version number."
+    echo "    --with-commit-id       Append commit ID to RPM version number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
     echo "    --without-java         Do not build Java binaries."
     echo "    --without-native       Do not build native binaries."
@@ -91,12 +88,7 @@ usage() {
 
 generate_rpm_sources() {
 
-    PREFIX="jss-$VERSION"
-
-    if [[ "$PHASE" != "" ]]; then
-        PREFIX=$PREFIX-$PHASE
-    fi
-
+    PREFIX="jss-$FULL_VERSION"
     TARBALL="$PREFIX.tar.gz"
 
     if [ "$SOURCE_TAG" != "" ] ; then
@@ -139,7 +131,7 @@ generate_rpm_sources() {
 
 generate_patch() {
 
-    PATCH="jss-$VERSION-$RELEASE.patch"
+    PATCH="jss-$FULL_VERSION.patch"
 
     if [ "$VERBOSE" = true ] ; then
         echo "Generating $PATCH for all changes since $SOURCE_TAG tag"
@@ -246,12 +238,6 @@ while getopts v-: arg ; do
         spec=?*)
             SPEC_TEMPLATE="$LONG_OPTARG"
             ;;
-        version=?*)
-            VERSION="$LONG_OPTARG"
-            ;;
-        release=?*)
-            RELEASE="$LONG_OPTARG"
-            ;;
         with-timestamp)
             WITH_TIMESTAMP=true
             ;;
@@ -289,7 +275,7 @@ while getopts v-: arg ; do
             ;;
         name* | work-dir* | prefix-dir* | include-dir* | lib-dir* | sbin-dir* | sysconf-dir* | share-dir* | \
         cmake* | java-home* | jni-dir* | install-dir* | \
-        source-tag* | spec* | version* | release* | dist*)
+        source-tag* | spec* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -355,6 +341,73 @@ fi
 mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
 
+spec=$(<"$SPEC_TEMPLATE")
+
+regex=$'%global *major_version *([^\n]+)'
+if [[ $spec =~ $regex ]] ; then
+    MAJOR_VERSION="${BASH_REMATCH[1]}"
+else
+    echo "ERROR: Missing major_version macro in $SPEC_TEMPLATE"
+    exit 1
+fi
+
+regex=$'%global *minor_version *([^\n]+)'
+if [[ $spec =~ $regex ]] ; then
+    MINOR_VERSION="${BASH_REMATCH[1]}"
+else
+    echo "ERROR: Missing minor_version macro in $SPEC_TEMPLATE"
+    exit 1
+fi
+
+regex=$'%global *update_version *([^\n]+)'
+if [[ $spec =~ $regex ]] ; then
+    UPDATE_VERSION="${BASH_REMATCH[1]}"
+else
+    echo "ERROR: Missing update_version macro in $SPEC_TEMPLATE"
+    exit 1
+fi
+
+VERSION="$MAJOR_VERSION.$MINOR_VERSION.$UPDATE_VERSION"
+
+if [ "$DEBUG" = true ] ; then
+    echo "VERSION: $VERSION"
+fi
+
+regex=$'%global *phase *([^\n]+)'
+if [[ $spec =~ $regex ]] ; then
+    PHASE="${BASH_REMATCH[1]}"
+fi
+
+if [ "$DEBUG" = true ] ; then
+    echo "PHASE: $PHASE"
+fi
+
+if [ "$WITH_TIMESTAMP" = true ] ; then
+    TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
+fi
+
+if [ "$DEBUG" = true ] ; then
+    echo "TIMESTAMP: $TIMESTAMP"
+fi
+
+if [ "$WITH_COMMIT_ID" = true ]; then
+    COMMIT_ID=$(git -C "$SRC_DIR" rev-parse --short=8 HEAD)
+fi
+
+if [ "$DEBUG" = true ] ; then
+    echo "COMMIT_ID: $COMMIT_ID"
+fi
+
+if [ "$PHASE" = "" ] ; then
+    FULL_VERSION="$VERSION"
+else
+    FULL_VERSION="$VERSION-$PHASE"
+fi
+
+if [ "$DEBUG" = true ] ; then
+    echo "FULL_VERSION: $FULL_VERSION"
+fi
+
 ################################################################################
 # Build JSS
 ################################################################################
@@ -397,6 +450,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     OPTIONS+=(-DJNI_DIR="$JNI_DIR" )
 
     OPTIONS+=(-DVERSION="$VERSION")
+
+    if [ "$PHASE" != "" ] ; then
+        OPTIONS+=(-DPHASE="$PHASE")
+    fi
 
     if [ "$WITH_JAVA" = false ] ; then
         OPTIONS+=(-DWITH_JAVA=FALSE)
@@ -514,63 +571,17 @@ fi
 # Prepare RPM build
 ################################################################################
 
-if [ "$VERSION" = "" ] ; then
-    # if version not specified, get from spec template
-    VERSION="$(rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}')"
-fi
-
-if [ "$DEBUG" = true ] ; then
-    echo "VERSION: $VERSION"
-fi
-
-if [ "$RELEASE" = "" ] ; then
-    # if release not specified, get from spec template
-    RELEASE="$(rpmspec -P "$SPEC_TEMPLATE" --undefine dist | grep "^Release:" | awk '{print $2;}')"
-fi
-
-if [ "$DEBUG" = true ] ; then
-    echo "RELEASE: $RELEASE"
-fi
-
-spec=$(<"$SPEC_TEMPLATE")
-
-regex=$'%global *phase *([^\n]+)'
-if [[ $spec =~ $regex ]] ; then
-    PHASE="${BASH_REMATCH[1]}"
-    RELEASE=$RELEASE.$PHASE
-fi
-
-if [ "$DEBUG" = true ] ; then
-    echo "PHASE: $PHASE"
-fi
-
-if [ "$WITH_TIMESTAMP" = true ] ; then
-    TIMESTAMP=$(date -u +"%Y%m%d%H%M%S%Z")
-    RELEASE=$RELEASE.$TIMESTAMP
-fi
-
-if [ "$DEBUG" = true ] ; then
-    echo "TIMESTAMP: $TIMESTAMP"
-fi
-
-if [ "$WITH_COMMIT_ID" = true ]; then
-    COMMIT_ID=$(git -C "$SRC_DIR" rev-parse --short=8 HEAD)
-    RELEASE=$RELEASE.$COMMIT_ID
-fi
-
-if [ "$DEBUG" = true ] ; then
-    echo "COMMIT_ID: $COMMIT_ID"
-fi
-
-echo "Building $NAME-$VERSION-$RELEASE"
+echo "Building $NAME-$FULL_VERSION"
 
 rm -rf BUILD
+rm -rf BUILDROOT
 rm -rf RPMS
 rm -rf SOURCES
 rm -rf SPECS
 rm -rf SRPMS
 
 mkdir BUILD
+mkdir BUILDROOT
 mkdir RPMS
 mkdir SOURCES
 mkdir SPECS
