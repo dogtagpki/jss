@@ -2,33 +2,41 @@
 Name:           jss
 ################################################################################
 
+Summary:        Java Security Services (JSS)
+URL:            https://github.com/dogtagpki/jss
+License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.0
+
 %global         vendor_id dogtag
 %global         product_id %{vendor_id}-jss
 
 # Upstream version number:
 %global         major_version 5
-%global         minor_version 8
+%global         minor_version 9
 %global         update_version 0
-
-# Downstream release number:
-# - development/stabilization (unsupported): 0.<n> where n >= 1
-# - GA/update (supported): <n> where n >= 1
-%global         release_number 0.1
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
-# - stabilization (unsupported): beta<n> where n >= 1
+# - stabilization (supported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta1
+%global         phase alpha1
 
 %undefine       timestamp
 %undefine       commit_id
 
-Summary:        Java Security Services (JSS)
-URL:            https://github.com/dogtagpki/jss
-License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.0
-Version:        %{major_version}.%{minor_version}.%{update_version}
-Release:        %{release_number}%{?phase:.}%{?phase}%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
+# Full version number:
+# - development/stabilization: <major>.<minor>.<update>-<phase>
+# - GA/update:                 <major>.<minor>.<update>
+%global         full_version %{major_version}.%{minor_version}.%{update_version}%{?phase:-}%{?phase}
+
+# RPM version number:
+# - development:   <major>.<minor>.<update>~<phase>^<timestamp>.<commit_id>
+# - stabilization: <major>.<minor>.<update>~<phase>
+# - GA/update:     <major>.<minor>.<update>
+#
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/Versioning
+
+Version:        %{major_version}.%{minor_version}.%{update_version}%{?phase:~}%{?phase}%{?timestamp:^}%{?timestamp}%{?commit_id:.}%{?commit_id}
+Release:        %autorelease
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -37,7 +45,7 @@ Release:        %{release_number}%{?phase:.}%{?phase}%{?timestamp:.}%{?timestamp
 # $ git push origin v4.5.<z>
 # Then go to https://github.com/dogtagpki/jss/releases and download the source
 # tarball.
-Source:         https://github.com/dogtagpki/jss/archive/v%{version}%{?phase:-}%{?phase}/jss-%{version}%{?phase:-}%{?phase}.tar.gz
+Source:         https://github.com/dogtagpki/jss/archive/v%{full_version}/jss-%{full_version}.tar.gz
 
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
@@ -236,7 +244,7 @@ This package provides test suite for JSS.
 %prep
 ################################################################################
 
-%autosetup -n jss-%{version}%{?phase:-}%{?phase} -p 1
+%autosetup -n jss-%{full_version} -p 1
 
 # disable native modules since they will be built by CMake
 %pom_disable_module native
@@ -319,7 +327,6 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --cmake=%{__cmake} \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
-    --version=%{version} \
     --without-java \
     --without-javadoc \
     %{!?with_tests:--without-tests} \
