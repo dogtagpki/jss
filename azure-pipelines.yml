@@ -23,24 +23,29 @@ jobs:
     inputs:
       scriptSource: inline
       script: |
-       import os
+        import os
 
-       value = os.getenv('BASE_IMAGE', 'registry.fedoraproject.org/fedora:42')
-       print('BASE_IMAGE: {value}'.format(value=value))
-       print('##vso[task.setvariable variable=BASE_IMAGE]{value}'.format(value=value))
+        value = os.getenv('BASE_IMAGE', 'registry.fedoraproject.org/fedora:42')
+        print('BASE_IMAGE: {value}'.format(value=value))
+        print('##vso[task.setvariable variable=BASE_IMAGE]{value}'.format(value=value))
+
+        value = os.getenv('COPR_REPO', '@pki/11.7')
+        print('COPR_REPO: {value}'.format(value=value))
+        print('##vso[task.setvariable variable=COPR_REPO]{value}'.format(value=value))
 
   - script: |
       docker build \
           --build-arg BASE_IMAGE=$BASE_IMAGE \
+          --build-arg COPR_REPO=$COPR_REPO \
           --target jss-base \
-          --tag jss-base:latest \
+          --tag jss-base \
           .
 
       docker run \
           --name runner \
           --privileged \
           --detach \
-          jss-base:latest
+          jss-base
 
       while :
       do
