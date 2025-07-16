@@ -1,0 +1,186 @@
+name: Basic Tomcat
+
+on: workflow_call
+
+env:
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || 'dogtagpki' }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      SHARED: /tmp/workdir/pki
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Retrieve JSS images
+        uses: actions/cache@v4
+        with:
+          key: jss-images-${{ github.sha }}
+          path: jss-images.tar
+
+      - name: Load JSS images
+        run: docker load --input jss-images.tar
+
+      - name: Create network
+        run: docker network create example
+
+      - name: Set up client container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=client.example.com \
+              --network=example \
+              --network-alias=client.example.com \
+              client
+
+      - name: Set up server container
+        run: |
+          tests/bin/runner-init.sh \
+              --hostname=server.example.com \
+              --network=example \
+              --network-alias=server.example.com \
+              server
+
+      - name: Check Java
+        run: |
+          docker exec server ls -la /usr/lib/jvm/java-21-openjdk
+
+      - name: Check Tomcat packages
+        run: |
+          docker exec server dnf install -y iproute tomcat tomcat-user-instance tomcat-webapps
+          docker exec server rpm -qa | grep tomcat
+
+      - name: Check Tomcat config
+        run: |
+          docker exec server ls -lR /etc/tomcat
+
+      - name: Check Tomcat libraries
+        run: |
+          docker exec server ls -lR /usr/share/java/tomcat
+
+      - name: Check Tomcat executables
+        run: |
+          docker exec server ls -lR /usr/share/tomcat/bin
+
+      - name: Check Catalina home
+        run: |
+          docker exec server ls -lR /usr/share/tomcat
+
+      - name: Check Catalina base
+        run: |
+          docker exec server ls -lR /var/lib/tomcat
+
+      - name: Check server.xml
+        run: |
+          docker exec server cat /etc/tomcat/server.xml
+
+      - name: Check tomcat.conf
+        run: |
+          docker exec server cat /etc/tomcat/tomcat.conf
+
+      - name: Check catalina.policy
+        run: |
+          docker exec server cat /etc/tomcat/catalina.policy
+
+      - name: Check catalina.properties
+        run: |
+          docker exec server cat /etc/tomcat/catalina.properties
+
+      - name: Check catalina.sh
+        run: |
+          docker exec server cat /usr/share/tomcat/bin/catalina.sh
+
+      - name: Check version.sh
+        run: |
+          docker exec server cat /usr/share/tomcat/bin/version.sh
+
+      - name: Check startup.sh
+        run: |
+          docker exec server cat /usr/share/tomcat/bin/startup.sh
+
+      - name: Check shutdown.sh
+        run: |
+          docker exec server cat /usr/share/tomcat/bin/shutdown.sh
+
+      - name: Check migrate.sh
+        run: |
+          docker exec server cat /usr/share/tomcat/bin/migrate.sh
+
+      - name: Check tomcat-run.sh
+        run: |
+          docker exec server cat /usr/libexec/tomcat/tomcat-run.sh
+
+      - name: Check Tomcat version
+        run: |
+          docker exec server /usr/share/tomcat/bin/version.sh
+
+      - name: Check Tomcat digest
+        run: |
+          docker exec server /usr/share/tomcat/bin/digest.sh Secret.123
+
+      - name: Check tomcat.service
+        run: |
+          docker exec server cat /usr/lib/systemd/system/tomcat.service
+
+      - name: Start system instance
+        run: |
+          docker exec server systemctl status tomcat || true
+          docker exec server systemctl start tomcat
+
+      - name: Wait for system instance
+        run: |
+          docker exec client curl \
+              --retry 60 \
+              --retry-delay 0 \
+              --retry-connrefused \
+              -s \
+              -k \
+              http://server.example.com:8080
+
+      - name: Stop system instance
+        run: |
+          docker exec server systemctl status tomcat || true
+          docker exec server systemctl stop tomcat
+
+          sleep 5
+          docker exec server systemctl status tomcat || true
+
+      - name: Check system instance systemd journal
+        if: always()
+        run: |
+          docker exec server journalctl -x --no-pager -u tomcat
+
+      - name: Check system instance logs
+        if: always()
+        run: |
+          docker exec server ls -lR /var/log/tomcat
+
+      - name: Create user instance
+        run: |
+          echo | docker exec -i server tomcat-user-instance-create /var/lib/tomcats/jss
+          docker exec server ls -lR /var/lib/tomcats/jss
+
+      - name: Start user instance
+        run: |
+          docker exec server /var/lib/tomcats/jss/bin/startup.sh
+
+      - name: Wait for user instance
+        run: |
+          docker exec client curl \
+              --retry 60 \
+              --retry-delay 0 \
+              --retry-connrefused \
+              -s \
+              -k \
+              http://server.example.com:8080
+
+      - name: Stop user instance
+        run: |
+          docker exec server /var/lib/tomcats/jss/bin/shutdown.sh
+
+      - name: Check user instance logs
+        if: always()
+        run: |
+          docker exec server ls -lR /var/lib/tomcats/jss/logs

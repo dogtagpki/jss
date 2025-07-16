@@ -25,6 +25,11 @@ jobs:
           wait-interval: 30
         if: github.event_name == 'pull_request'
 
+  tomcat-basic-test:
+    name: Basic Tomcat
+    needs: build
+    uses: ./.github/workflows/tomcat-basic-test.yml
+
   tomcat-https-default-test:
     name: Tomcat HTTPS with default settings
     needs: build
