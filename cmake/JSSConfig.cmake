@@ -140,6 +140,10 @@ macro(jss_config_cflags)
         list(APPEND JSS_RAW_C_FLAGS "-O2")
     endif()
 
+    if(ENABLE_NSS_VERSION_PQC_DEF)
+        list(APPEND JSS_RAW_C_FLAGS "-DNSS_VERSION_PQC_DEF")
+    endif()
+
     list(APPEND JSS_RAW_C_FLAGS "-Wall")
     list(APPEND JSS_RAW_C_FLAGS "-std=gnu99")
     list(APPEND JSS_RAW_C_FLAGS "-Wno-cast-function-type")
