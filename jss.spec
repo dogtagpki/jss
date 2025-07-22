@@ -28,6 +28,10 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # - GA/update:                 <major>.<minor>.<update>
 %global         full_version %{major_version}.%{minor_version}.%{update_version}%{?phase:-}%{?phase}
 
+%if 0%{?rhel} && 0%{?rhel} >= 10
+%global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
+%endif
+
 # RPM version number:
 # - development:   <major>.<minor>.<update>~<phase>^<timestamp>.<commit_id>
 # - stabilization: <major>.<minor>.<update>~<phase>
@@ -324,7 +328,7 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --lib-dir=%{_libdir} \
     --sysconf-dir=%{_sysconfdir} \
     --share-dir=%{_datadir} \
-    --cmake=%{__cmake} \
+    --cmake="%{__cmake} %{?enable_nss_version_pqc_def_flag}" \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
     --without-java \
