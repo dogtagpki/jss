@@ -46,7 +46,7 @@ option(TEST_WITH_INTERNET "When enabled, runs various tests which require an int
 ##
 # NSS V3.112 have some PQC defs in auth_alg_defs of ssl3con.c
 # that need to be reflected into JSS SSLCipher.c (auth_alg_defs[])
-# The upstream NSS (currently v3.113) apparently has no such defs.
+# Some OS platforms not yet have such defs.
 #
 option(ENABLE_NSS_VERSION_PQC_DEF "Enable PQC DEF to match NSS" OFF)
 
