@@ -21,6 +21,10 @@ Name:           jss
 # - GA/update (supported): <none>
 %global         phase beta1
 
+%if 0%{?rhel} && 0%{?rhel} >= 10
+%global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
+%endif
+
 %undefine       timestamp
 %undefine       commit_id
 
@@ -316,7 +320,7 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --lib-dir=%{_libdir} \
     --sysconf-dir=%{_sysconfdir} \
     --share-dir=%{_datadir} \
-    --cmake=%{__cmake} \
+    --cmake="%{__cmake} %{?enable_nss_version_pqc_def_flag}" \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
     --version=%{version} \
