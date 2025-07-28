@@ -13,13 +13,13 @@ Name:           jss
 # Downstream release number:
 # - development/stabilization (unsupported): 0.<n> where n >= 1
 # - GA/update (supported): <n> where n >= 1
-%global         release_number 0.2
+%global         release_number 0.3
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta2
+%global         phase beta3
 
 %if 0%{?rhel} && 0%{?rhel} >= 10
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
@@ -153,14 +153,14 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 # Tomcat
-BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.33
-BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.33
-BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.33
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.43
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.43
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.43
 
 Requires:       %{product_id} = %{version}-%{release}
-Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.33
-Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.33
-Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.33
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.43
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.43
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.43
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
 # This will remove installed Tomcat JSS packages.
