@@ -19,7 +19,7 @@ Name:           jss
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta1
+%global         phase beta2
 
 %if 0%{?rhel} && 0%{?rhel} >= 10
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
