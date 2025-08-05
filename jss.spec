@@ -13,15 +13,15 @@ Name:           jss
 # Downstream release number:
 # - development/stabilization (unsupported): 0.<n> where n >= 1
 # - GA/update (supported): <n> where n >= 1
-%global         release_number 0.1
+%global         release_number 1
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta2
+%undefine       phase
 
-%if 0%{?rhel} && 0%{?rhel} >= 10
+%if 0%{?rhel} && 0%{?rhel} >= 9
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
 %endif
 
