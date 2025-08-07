@@ -13,13 +13,13 @@ Name:           jss
 # Downstream release number:
 # - development/stabilization (unsupported): 0.<n> where n >= 1
 # - GA/update (supported): <n> where n >= 1
-%global         release_number 0.3
+%global         release_number 0.4
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (unsupported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta3
+%global         phase beta4
 
 %if 0%{?rhel} && 0%{?rhel} >= 10
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
@@ -65,12 +65,12 @@ ExcludeArch: i686
 
 # maven-local is a subpackage of javapackages-tools
 
-%if 0%{?fedora} && 0%{?fedora} <= 39 || 0%{?rhel} && 0%{?rhel} <= 9
+%if 0%{?fedora} && 0%{?fedora} >= 43
 
-%define java_devel java-17-openjdk-devel
-%define java_headless java-17-openjdk-headless
-%define java_home %{_jvmdir}/jre-17-openjdk
-%define maven_local maven-local-openjdk17
+%define java_devel java-25-openjdk-devel
+%define java_headless java-25-openjdk-headless
+%define java_home %{_jvmdir}/jre-25-openjdk
+%define maven_local maven-local-openjdk25
 
 %else
 
@@ -153,14 +153,14 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 # Tomcat
-BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.43
-BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.43
-BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.43
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
 
 Requires:       %{product_id} = %{version}-%{release}
-Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.43
-Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.43
-Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.43
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36 
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
 # This will remove installed Tomcat JSS packages.
@@ -178,8 +178,7 @@ Conflicts:      pki-servlet-engine <= 9.0
 
 %description -n %{product_id}-tomcat
 JSS Connector for Tomcat is a Java Secure Socket Extension (JSSE)
-module for Apache Tomcat that uses Java Security Services (JSS),
-a Java interface to Network Security Services (NSS).
+module for Apache Tomcat that uses Java Security Services (JSS), a Java interface to Network Security Services (NSS).
 
 ################################################################################
 %package -n %{product_id}-tools
