@@ -40,7 +40,7 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Versioning
 
 Version:        %{major_version}.%{minor_version}.%{update_version}%{?phase:~}%{?phase}%{?timestamp:^}%{?timestamp}%{?commit_id:.}%{?commit_id}
-Release:        %autorelease
+Release:        2
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -73,12 +73,12 @@ ExcludeArch: i686
 
 # maven-local is a subpackage of javapackages-tools
 
-%if 0%{?fedora} && 0%{?fedora} <= 39 || 0%{?rhel} && 0%{?rhel} <= 9
+%if 0%{?fedora} && 0%{?fedora} >= 43
 
-%define java_devel java-17-openjdk-devel
-%define java_headless java-17-openjdk-headless
-%define java_home %{_jvmdir}/jre-17-openjdk
-%define maven_local maven-local-openjdk17
+%define java_devel java-25-openjdk-devel
+%define java_headless java-25-openjdk-headless
+%define java_home %{_jvmdir}/jre-25-openjdk
+%define maven_local maven-local-openjdk25
 
 %else
 
@@ -88,6 +88,7 @@ ExcludeArch: i686
 %define maven_local maven-local
 
 %endif
+
 
 ################################################################################
 # Build Options
@@ -161,20 +162,14 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 # Tomcat
-BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-%if 0%{?rhel} && 0%{?rhel} >= 10
-BuildRequires:  tomcat9-lib
-%endif
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
 
 Requires:       %{product_id} = %{version}-%{release}
-Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-%if 0%{?rhel} && 0%{?rhel} >= 10
-Requires:       tomcat9 >= 1:9.0.62
-%endif
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
 # This will remove installed Tomcat JSS packages.
@@ -262,11 +257,11 @@ This package provides test suite for JSS.
 
 # specify Maven artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
-%mvn_file org.dogtagpki.jss:jss-tomcat-9.0     jss/jss-tomcat-9.0
+%mvn_file org.dogtagpki.jss:jss-tomcat-10.1     jss/jss-tomcat-10.1
 
 # specify Maven artifact packages
 %mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
-%mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
+%mvn_package org.dogtagpki.jss:jss-tomcat-10.1  jss-tomcat
 
 ################################################################################
 %build
