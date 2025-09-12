@@ -525,3 +525,10 @@ Java_org_mozilla_jss_provider_javax_crypto_JSSTrustManager_certRevokeVerify;
     local:
         *;
 };
+JSS_5.9.0 {
+    global:
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair;
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags;
+    local:
+        *;
+};
