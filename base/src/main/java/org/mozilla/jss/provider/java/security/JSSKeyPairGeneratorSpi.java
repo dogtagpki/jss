@@ -23,6 +23,11 @@ public class JSSKeyPairGeneratorSpi
 
     private KeyPairGenerator kpg;
 
+    protected JSSKeyPairGeneratorSpi(KeyPairAlgorithm alg, int keySize) {
+       this(alg);
+       kpg.initialize(keySize);
+    }
+
     protected JSSKeyPairGeneratorSpi(KeyPairAlgorithm alg) {
         super();
         CryptoToken token =
@@ -74,6 +79,26 @@ public class JSSKeyPairGeneratorSpi
     public static class EC extends JSSKeyPairGeneratorSpi {
         public EC() {
             super(KeyPairAlgorithm.EC);
+        }
+    }
+    public static class MLDSA extends JSSKeyPairGeneratorSpi {
+        public MLDSA() {
+            super(KeyPairAlgorithm.MLDSA, 65);
+        }
+    }
+    public static class MLDSA44 extends JSSKeyPairGeneratorSpi {
+        public MLDSA44() {
+            super(KeyPairAlgorithm.MLDSA, 44);
+        }
+    }
+    public static class MLDSA65 extends JSSKeyPairGeneratorSpi {
+        public MLDSA65() {
+            super(KeyPairAlgorithm.MLDSA, 65);
+        }
+    }
+    public static class MLDSA87 extends JSSKeyPairGeneratorSpi {
+        public MLDSA87() {
+            super(KeyPairAlgorithm.MLDSA, 87);
         }
     }
 }

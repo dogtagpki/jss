@@ -238,6 +238,15 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$DSA");
         put("KeyPairGenerator.EC",
             "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$EC");
+        // OpenDJK JEP 497 definition
+        put("KeyPairGenerator.ML-DSA",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA");
+        put("KeyPairGenerator.ML-DSA-44",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA44");
+        put("KeyPairGenerator.ML-DSA-65",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA65");
+        put("KeyPairGenerator.ML-DSA-87",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA87");
 
         /////////////////////////////////////////////////////////////
         // KeyFactory

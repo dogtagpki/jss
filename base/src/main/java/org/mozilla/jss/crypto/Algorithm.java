@@ -273,4 +273,8 @@ public class Algorithm {
     protected static final int SEC_OID_AES_256_KEY_WRAP_KWP = 83;
 
     protected static final int SEC_OID_HMAC_SHA1 = 84;
+    
+    // ML-DSA
+    protected static final int CKM_ML_DSA_KEY_PAIR_GEN = 85;
+    protected static final int CKM_ML_DSA = 86;
 }
