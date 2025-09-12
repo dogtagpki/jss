@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.DSAParameterSpec;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import org.mozilla.jss.asn1.ASN1Util;
@@ -237,8 +238,7 @@ public final class PK11KeyPairGenerator
                     "In order to use pre-cooked PQG values, key strength must"+
                     "be 512, 768, or 1024.");
             }
-        } else {
-            assert( algorithm == KeyPairAlgorithm.EC );
+        } else if (algorithm == KeyPairAlgorithm.EC) {
             if (strength < 112) {
                 // for EC, "strength" is actually a code for curves defined in
                 //   ECCurve_Code
@@ -248,6 +248,23 @@ public final class PK11KeyPairGenerator
                 // which is somewhat defective
                 params = getCurve(strength);
             }
+        } else if (algorithm == KeyPairAlgorithm.MLDSA){
+            // Java v.24 has these value already defined
+            switch (strength) {
+                case 44:
+                    params = new NamedParameterSpec("ML-DSA-44");
+                    break;
+                case 65:
+                    params = new NamedParameterSpec("ML-DSA-65");
+                    break;
+                case 87:
+                    params = new NamedParameterSpec("ML-DSA-87");
+                    break;
+                default:
+                    params = new NamedParameterSpec("ML-DSA-65");
+            }
+        } else {
+            throw new InvalidParameterException("Invocation not expted wiht ML-DSA");            
         }
     }
 
@@ -284,8 +301,7 @@ public final class PK11KeyPairGenerator
             if(! (params instanceof DSAParameterSpec) ) {
                 throw new InvalidAlgorithmParameterException();
             }
-        } else {
-            assert(algorithm == KeyPairAlgorithm.EC);
+        } else if (algorithm == KeyPairAlgorithm.EC) {
             if (params instanceof ECGenParameterSpec) {
                 ECGenParameterSpec standard_params = (ECGenParameterSpec)params;
                 String curve_name = standard_params.getName();
@@ -304,6 +320,8 @@ public final class PK11KeyPairGenerator
             if (!(params instanceof PK11ParameterSpec)) {
                 throw new InvalidAlgorithmParameterException("Expected params to either be an instance of ECGenParameterSpec or PK11ParameterSpec!");
             }
+        } else {
+            throw new InvalidParameterException("Invocation not expted wiht ML-DSA");
         } // future add support for X509EncodedSpec
 
         this.params = params;
@@ -383,8 +401,7 @@ public final class PK11KeyPairGenerator
                 extractablePairMode,
                 (int) opFlags,
                 (int) opFlagsMask);
-        } else {
-            assert( algorithm == KeyPairAlgorithm.EC );
+        } else if (algorithm == KeyPairAlgorithm.EC) {
             // requires JAVA 1.5 for ECParameters.
             //
             //AlgorithmParameters ecParams =
@@ -394,12 +411,31 @@ public final class PK11KeyPairGenerator
 
             return generateECKeyPairWithOpFlags(
                 token,
-		        ecParams.getEncoded(), /* curve */
+                ecParams.getEncoded(), /* curve */
                 temporaryPairMode,
                 sensitivePairMode,
                 extractablePairMode,
                 (int) opFlags,
                 (int) opFlagsMask);
+        } else if (algorithm == KeyPairAlgorithm.MLDSA) {
+            NamedParameterSpec mlParams = (NamedParameterSpec) params;
+            int size = 65;
+            if (mlParams.getName().equals("ML-DSA-44")) {
+                size = 44;
+            }
+            if (mlParams.getName().equals("ML-DSA-87")) {
+                size = 87;
+            }
+            return generateMLDSAKeyPairWithOpFlags(
+                token,
+		size, /* security level */
+                temporaryPairMode,
+                sensitivePairMode,
+                extractablePairMode,
+                (int) opFlags,
+                (int) opFlagsMask);
+        } else {
+            throw new TokenException("We are ahead!!!");
         }
     }
 
@@ -459,6 +495,26 @@ public final class PK11KeyPairGenerator
             int op_flags, int op_flags_mask)
         throws TokenException;
 
+    /**
+     * Generates a ML-DSA key pair with the given security level.
+     * Security level as defined by NIST can be the value 44, 65 or 87.
+     */
+    private native KeyPair
+    generateMLDSAKeyPair(PK11Token token, int size,
+            boolean temporary, int sensitive, int extractable)
+        throws TokenException;
+
+    /**
+     * Generates a ML-DSA key pair with the given security level.
+     * Security level as defined by NIST can be the value 44, 65 or 87.
+     * Adds the ability to specify a set of flags and masks
+     * to control how NSS generates the key pair.
+     */
+    private native KeyPair
+    generateMLDSAKeyPairWithOpFlags(PK11Token token, int size,
+            boolean temporary, int sensitive, int extractable,
+            int op_flags, int op_flags_mask)
+        throws TokenException;
 
     /**
      * Generates a EC key pair with the given a curve.
