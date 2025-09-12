@@ -24,7 +24,7 @@ typedef struct JSS_AlgInfoStr {
     JSS_AlgType type;
 } JSS_AlgInfo;
 
-#define NUM_ALGS 87
+#define NUM_ALGS 88
 
 extern JSS_AlgInfo JSS_AlgTable[];
 extern CK_ULONG JSS_symkeyUsage[];
@@ -87,6 +87,10 @@ SECU_cert_fetchOID(SECOidTag *data, const SECOidData *src);
 #define  SEC_OID_AES_256_KEY_WRAP_KWP (SEC_OID_TOTAL + 2)
 #endif
 
+// New version of NSS should define this
+#ifndef SEC_OID_ML_DSA_SIGNATURE
+#define SEC_OID_ML_DSA_SIGNATURE (SEC_OID_TOTAL + 3)
+#endif
 PR_END_EXTERN_C
 
 #endif

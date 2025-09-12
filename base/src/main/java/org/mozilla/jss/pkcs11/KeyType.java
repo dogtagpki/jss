@@ -153,6 +153,14 @@ public final class KeyType {
                 );
 
     //////////////////////////////////////////////////////////////
+    static public final KeyType
+    MLDSA     = new KeyType(new Algorithm[]
+                    {
+                    SignatureAlgorithm.MLDSA
+                    },
+                    "ML-DSA"
+                );
+    //////////////////////////////////////////////////////////////
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
      * This is just a placeholder for backward compatibility.

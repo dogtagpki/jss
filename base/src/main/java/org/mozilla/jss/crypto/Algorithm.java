@@ -277,4 +277,5 @@ public class Algorithm {
     // ML-DSA
     protected static final int CKM_ML_DSA_KEY_PAIR_GEN = 85;
     protected static final int CKM_ML_DSA = 86;
+    protected static final int SEC_OID_ML_DSA_SIGNATURE = 87;
 }

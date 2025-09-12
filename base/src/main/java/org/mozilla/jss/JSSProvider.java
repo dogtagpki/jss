@@ -204,6 +204,13 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.Signature.SHA-512/EC", "SHA512withEC");
         put("Alg.Alias.Signature.SHA512withECDSA", "SHA512withEC"); //JCE Standard Name
 
+// ML-DSA
+        put("Signature.ML-DSA",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MLDSA"); //JCE Standard Name
+
+        // NOTE: ML-DSA specific signature are not yet defined in the NSS version used.
+        // They should be available in v. 3.116
+
         /////////////////////////////////////////////////////////////
         // Message Digesting
         /////////////////////////////////////////////////////////////

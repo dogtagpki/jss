@@ -266,4 +266,9 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
             super(SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest);
         }
     }
+    public static class MLDSA extends JSSSignatureSpi {
+        public MLDSA() {
+            super(SignatureAlgorithm.MLDSA);
+        }
+    }
 }
