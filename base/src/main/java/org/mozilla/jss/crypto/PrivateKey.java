@@ -100,6 +100,7 @@ public interface PrivateKey extends java.security.PrivateKey {
         private static int CKK_EC = 0x3;
         private static int CKK_X9_42_DH = 0x4;
         private static int CKK_KEA = 0x5;
+        private static int CKK_ML_DSA = 0x4a;
 
         public static final Type RSA = new Type(
                 OBJECT_IDENTIFIER.PKCS1.subBranch(1), "RSA", CKK_RSA);
@@ -107,6 +108,8 @@ public interface PrivateKey extends java.security.PrivateKey {
                 Algorithm.ANSI_X9_ALGORITHM.subBranch(1), "DSA", CKK_DSA);
         public static final Type EC = new Type(
                 Algorithm.ANSI_X962_OID.subBranch(2).subBranch(1), "EC", CKK_EC);
+        public static final Type MLDSA = new Type(
+                OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(18), "ML-DSA", CKK_ML_DSA);
         public static final Type DiffieHellman = new Type(
                 DH_OID, "DiffieHellman", CKK_DH);
 

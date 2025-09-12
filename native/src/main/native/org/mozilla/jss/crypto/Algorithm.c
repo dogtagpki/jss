@@ -183,6 +183,8 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
 
 /* 85 */    {CKM_ML_DSA_KEY_PAIR_GEN, PK11_MECH},
 /* 86 */    {CKM_ML_DSA, PK11_MECH},
+/* 87 */    {SEC_OID_ML_DSA_SIGNATURE, SEC_OID_TAG},
+
 /* REMEMBER TO UPDATE NUM_ALGS!!! (in Algorithm.h) */
 };
 
