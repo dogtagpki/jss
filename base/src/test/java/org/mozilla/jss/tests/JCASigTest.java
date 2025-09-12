@@ -60,6 +60,7 @@ public class JCASigTest {
             System.out.println("Signature Verified Successfully!");
         } else {
             System.out.println("ERROR: Signature failed to verify.");
+            System.exit(1);
         }
     }
 
@@ -125,5 +126,21 @@ public class JCASigTest {
         sigTest("SHA-256/EC", keyPair);
         sigTest("SHA-384/EC", keyPair);
         sigTest("SHA-512/EC", keyPair);
+
+        kpgen = java.security.KeyPairGenerator.getInstance("ML-DSA-44");
+        keyPair = kpgen.genKeyPair();
+        provider = kpgen.getProvider();
+
+        System.out.println("The provider used to Generate the Keys was "
+                            + provider.getName() );
+        System.out.println("provider info " + provider.getInfo() );
+
+        if (provider.getName().equalsIgnoreCase("Mozilla-JSS") == false) {
+            System.out.println("Mozilla-JSS is supposed to be the " +
+                "default provider for JCASigTest");
+            System.exit(1);
+        }
+
+        sigTest("ML-DSA", keyPair);
     }
 }

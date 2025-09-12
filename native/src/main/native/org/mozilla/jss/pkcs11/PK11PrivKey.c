@@ -180,6 +180,9 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getKeyType
     case ecKey:
         keyTypeFieldName = EC_KEYTYPE_FIELD;
         break;
+    case mldsaKey:
+        keyTypeFieldName = MLDSA_KEYTYPE_FIELD;
+        break;
     default:
         PR_ASSERT(PR_FALSE);
         keyTypeFieldName = NULL_KEYTYPE_FIELD;
@@ -422,7 +425,8 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj)
         FORTEZZA_KEYTYPE_FIELD,
         DH_KEYTYPE_FIELD,
         KEA_KEYTYPE_FIELD,
-	EC_KEYTYPE_FIELD };
+	EC_KEYTYPE_FIELD,
+        MLDSA_KEYTYPE_FIELD };
     int numTypes = 6;
     KeyType keyTypes[] = {
         rsaKey,
@@ -430,7 +434,8 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj)
 	fortezzaKey,
 	dhKey,
 	keaKey,
-	ecKey };
+	ecKey,
+        mldsaKey };
     jobject field;
     int i;
 
