@@ -438,6 +438,9 @@ public class AlgorithmId implements Serializable, DerEncoder {
             return RSA_SIGNING_ALGORITHMS;
         } else if (algOid.equals(ANSIX962_EC_Public_Key_oid) || algOid.equals(ANSIX962_SHA1_With_EC_oid)) {
             return EC_SIGNING_ALGORITHMS;
+        } else if (algOid.equals(mldsa44_oid) || algOid.equals(mldsa65_oid) || algOid.equals(mldsa87_oid)) {
+            String[] sAlgs = new String[] { alg.getName() };
+            return sAlgs;
         } else {
             return null;
         }
@@ -515,7 +518,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
             return AlgorithmId.sha1WithDSA_oid;
         if (name.equals("SHA256withRSA/PSS") || name.equals("SHA384withRSA/PSS") || name.equals("SHA512withRSA/PSS"))
             return AlgorithmId.rsaPSS_oid;
-
+        if (name.equals("ML-DSA-44")){
+            return AlgorithmId.mldsa44_oid;
+        }
+        if (name.equals("ML-DSA-65")){
+            return AlgorithmId.mldsa65_oid;
+        }
+        if (name.equals("ML-DSA-87")){
+            return AlgorithmId.mldsa87_oid;
+        }
         return null;
     }
 
@@ -606,7 +617,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
                 || algid.equals(AlgorithmId.sha1WithDSA_OIW_oid)
                 || algid.equals(AlgorithmId.shaWithDSA_OIW_oid))
             return "SHA1withDSA";
-
+        if (algid.equals(AlgorithmId.mldsa44_oid)) {
+            return "ML-DSA-44";
+        }
+        if (algid.equals(AlgorithmId.mldsa65_oid)) {
+            return "ML-DSA-65";
+        }
+        if (algid.equals(AlgorithmId.mldsa87_oid)) {
+            return "ML-DSA-87";
+        }
         // default returns a dot-notation ID
 
         return "OID." + algid.toString();
@@ -963,6 +982,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
     private static final int rsaPSS_data[] =
                                    { 1, 2, 840, 113549, 1, 1, 10 };
 
+    private static final int mldsa44_data[] =
+                                   { 2, 16, 840, 1, 101, 3, 4, 3, 17 };
+
+    private static final int mldsa65_data[] =
+                                   { 2, 16, 840, 1, 101, 3, 4, 3, 18 };
+
+    private static final int mldsa87_data[] =
+                                   { 2, 16, 840, 1, 101, 3, 4, 3, 19 };
+
     @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithEC_oid = new
             ObjectIdentifier(sha1WithEC_data);
@@ -982,6 +1010,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     public static final ObjectIdentifier rsaPSS_oid = new
             ObjectIdentifier(rsaPSS_data);
+
+    public static final ObjectIdentifier mldsa44_oid = new
+            ObjectIdentifier(mldsa44_data);
+
+    public static final ObjectIdentifier mldsa65_oid = new
+            ObjectIdentifier(mldsa65_data);
+
+    public static final ObjectIdentifier mldsa87_oid = new
+            ObjectIdentifier(mldsa87_data);
 
     /**
      * Identifies a signing algorithm where an MD2 digest is encrypted
@@ -1075,8 +1112,12 @@ public class AlgorithmId implements Serializable, DerEncoder {
     public static final String[] EC_SIGNING_ALGORITHMS = new String[]
     { "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC" };
 
+    public static final String[] MLDSA_SIGNING_ALGORITHMS = new String[]
+    { "ML-DSA-44", "ML-DSA-65", "ML-DSA-87" };
+
     /**
      * All supported signing algorithms.
      */
-    public static final String[] ALL_SIGNING_ALGORITHMS = ArrayUtils.addAll(RSA_SIGNING_ALGORITHMS, EC_SIGNING_ALGORITHMS);
+    public static final String[] ALL_SIGNING_ALGORITHMS = ArrayUtils.addAll(
+            ArrayUtils.addAll(RSA_SIGNING_ALGORITHMS, EC_SIGNING_ALGORITHMS), MLDSA_SIGNING_ALGORITHMS);
 }
