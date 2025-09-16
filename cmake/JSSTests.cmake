@@ -512,6 +512,11 @@ function(jss_test_java)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         list(APPEND EXEC_COMMAND "-Djava.util.logging.config.file=${PROJECT_SOURCE_DIR}/tools/logging.properties")
     endif()
+
+    if(ENABLE_NSS_VERSION_PQC_DEF)
+        list(APPEND EXEC_COMMAND "-Dtest.NSS_PQC=True")
+    endif()
+
     set(EXEC_COMMAND "${EXEC_COMMAND};${TEST_JAVA_COMMAND}")
 
     if(TEST_JAVA_DEPENDS)
