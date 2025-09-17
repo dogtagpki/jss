@@ -204,6 +204,7 @@ jobs:
               <group sslversion="TLSv1.3" bits="150" name="ffdhe4096" id="0x0102"/>
               <group sslversion="TLSv1.3" bits="175" name="ffdhe6144" id="0x0103"/>
               <group sslversion="TLSv1.3" bits="192" name="ffdhe8192" id="0x0104"/>
+              <group sslversion="TLSv1.3" bits="192" name="X25519MLKEM768" id="0x11ec"/>
             </ssltest>
           </document>
           EOF
