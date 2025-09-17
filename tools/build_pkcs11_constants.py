@@ -31,6 +31,8 @@ EXCLUDED_CONSTANTS = [
     'CK_UNAVAILABLE_INFORMATION',
 ]
 
+DEPRECATED_VALUE_DEFINITION = '_NSS_DEPRECATE_DEFINE_VALUE'
+
 logger = logging.getLogger(__name__)
 
 
@@ -113,7 +115,6 @@ class ConstantDefinition(object):
         value = self.value
         value_history = []
         changed = True
-
         # Since we can't truly parse C in Python (or, parse C well outside of
         # a C compiler), we can't really parse the obj's value for tokens and
         # then check if the tokens match our constants and replace them.
@@ -320,14 +321,34 @@ class ConstantDefinition(object):
 def read_lines(file_handle):
     """
     Given a pointer to a file, returns contents of the file as a list,
-    removing the trailing whitespace from all lines.
+    removing the trailing whitespace from all lines. Lines ending with
+    backslash (\\) are merged with the following line, removing the
+    backslash and adding a space.
     """
 
     # readlines() leaves the newline character attached, and in general,
     # we don't care about whitespace at the end. We care about prefixed
     # whitespace when reading the copyright header though, hence rstrip()
     # and not strip().
-    return list(map(lambda x: x.rstrip(), file_handle.readlines()))
+    raw_lines = list(map(lambda x: x.rstrip(), file_handle.readlines()))
+    
+    # Handle line continuation with backslash
+    merged_lines = []
+    i = 0
+    raw_line_len = len(raw_lines)
+    while i < raw_line_len:
+        current_line = raw_lines[i]
+        
+        # Check if line ends with backslash (line continuation)
+        while current_line.endswith('\\') and i + 1 < raw_line_len:
+            # Remove the backslash and add a space, then merge with next line
+            current_line = current_line[:-1] + ' ' + raw_lines[i + 1]
+            i += 1
+        
+        merged_lines.append(current_line)
+        i += 1
+    
+    return merged_lines
 
 
 def parse_token(line, offset, parenthesis=True):
@@ -469,6 +490,10 @@ def parse_header(header):
             if name in EXCLUDED_CONSTANTS:
                 logger.info("Skipping constant: %s", name)
                 continue
+
+            if value.startswith(DEPRECATED_VALUE_DEFINITION):
+                logger.info("Removing depreated declaration: %s", name)
+                value = value.split()[1][:-1]
 
             logger.info("Found definition %s = %s", name, value)
             new_definition = ConstantDefinition(header.name, line_num, line,
