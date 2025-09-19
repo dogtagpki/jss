@@ -424,6 +424,92 @@ DumpItem(SECItem *item)
   printf(" : %8p %d\n", data, item->len);
 }
 
+
+/**********************************************************************
+ *
+ * PK11KeyPairGenerator._generateMLDSAKeyPair
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair
+  (JNIEnv *env, jobject this, jobject token, jint size, 
+    jboolean temporary, jint sensitive, jint extractable)
+{
+#ifdef NSS_VERSION_PQC_DEF
+    CK_ML_DSA_PARAMETER_SET_TYPE  param;
+    if (size == 44) {
+        param = CKP_ML_DSA_44;
+ //       param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_44);
+    } else if (size == 65) {
+        param = CKP_ML_DSA_65;
+ //       param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_65);
+    } else if (size == 87) {
+        param = CKP_ML_DSA_87;
+//        param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_87);
+    } else {
+        JSS_throw(env, ILLEGAL_ARGUMENT_EXCEPTION);
+        goto finish;
+    } 
+
+    jobject keyPair=NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
+
+
+    keyPair = PK11KeyPairGenerator(env, this, token, CKM_ML_DSA_KEY_PAIR_GEN,
+     			&param, temporary, sensitive, extractable);
+
+finish:
+    return keyPair;
+#else
+    return NULL;
+#endif
+}
+
+/**********************************************************************
+ *
+ * PK11KeyPairGenerator.generateMLDSAKeyPairWithOpFlags
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
+  (JNIEnv *env, jobject this, jobject token, jint size, 
+    jboolean temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
+{
+#ifdef NSS_VERSION_PQC_DEF
+    CK_ML_DSA_PARAMETER_SET_TYPE  param;
+    if (size == 44) {
+        param = CKP_ML_DSA_44;
+ //       param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_44);
+    } else if (size == 65) {
+        param = CKP_ML_DSA_65;
+ //       param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_65);
+    } else if (size == 87) {
+        param = CKP_ML_DSA_87;
+//        param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_87);
+    } else {
+        JSS_throw(env, ILLEGAL_ARGUMENT_EXCEPTION);
+        goto finish;
+    } 
+
+    jobject keyPair=NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
+
+
+    keyPair = PK11KeyPairGeneratorWithOpFlags(env, this, token,
+                CKM_ML_DSA_KEY_PAIR_GEN, &param, temporary, 
+                sensitive, extractable,
+                op_flags, op_flags_mask);
+
+finish:
+    return keyPair;
+#else
+    return NULL;
+#endif
+}
+
 /**********************************************************************
  *
  * PK11KeyPairGenerator.generateECKeyPair

@@ -72,6 +72,9 @@ public class KeyPairAlgorithm extends Algorithm {
 //    This fix will support tokens that do not do ECDH
     ECFamily = new Algorithm(SEC_OID_ANSIX962_ECDSA_SIGNATURE_SPECIFIED_DIGEST, "EC");
 
+    public static final Algorithm
+    MLDSAFamily = new Algorithm(CKM_ML_DSA, "ML-DSA");
+
     public static final KeyPairAlgorithm
     RSA = new KeyPairAlgorithm(CKM_RSA_PKCS_KEY_PAIR_GEN, "RSA", RSAFamily);
 
@@ -80,4 +83,7 @@ public class KeyPairAlgorithm extends Algorithm {
 
     public static final KeyPairAlgorithm
     EC = new KeyPairAlgorithm(CKM_EC_KEY_PAIR_GEN, "EC", ECFamily);
+
+    public static final KeyPairAlgorithm
+    MLDSA = new KeyPairAlgorithm(CKM_ML_DSA_KEY_PAIR_GEN, "ML-DSA", MLDSAFamily);
 }
