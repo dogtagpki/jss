@@ -28,7 +28,7 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # - GA/update:                 <major>.<minor>.<update>
 %global         full_version %{major_version}.%{minor_version}.%{update_version}%{?phase:-}%{?phase}
 
-%if 0%{?rhel} && 0%{?rhel} >= 10
+%if (0%{?rhel} && 0%{?rhel} >= 10) || (0%{?centos} && 0%{?centos} >= 9)
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
 %endif
 
