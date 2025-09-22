@@ -18,7 +18,6 @@
 
 package org.mozilla.jss.tests;
 
-import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Enumeration;
@@ -26,12 +25,12 @@ import java.util.Enumeration;
 import org.mozilla.jss.CryptoManager;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.KeyPairAlgorithm;
-import org.mozilla.jss.pkcs11.PK11KeyPairGenerator;
 import org.mozilla.jss.util.Base64OutputStream;
 
 public class TestKeyGen {
 
     public static void main(String[] args) {
+      boolean testPQC = Boolean.parseBoolean(System.getProperty("test.NSS_PQC", "False"));
       try {
         CryptoManager manager;
         java.security.KeyPair keyPair;
@@ -97,6 +96,36 @@ public class TestKeyGen {
         keyPair = kpg.genKeyPair();
         System.out.println("Generated 521-bit EC KeyPair!");
 
+        if (testPQC) {
+            // ML-DSA default
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA", "Mozilla-JSS");
+            kpg.initialize(44);
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-DSA with 44!");
+
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA-44", "Mozilla-JSS");
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-DSA-44!");
+
+            // ML-DSA 65
+            // It is default value
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA", "Mozilla-JSS");
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-DSA with default 65!");
+
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA-65", "Mozilla-JSS");
+            System.out.println("Generated ML-DSA with 65!");
+
+            // ML-DSA 87
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA", "Mozilla-JSS");
+            kpg.initialize(87);
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-DSA with 87!");
+
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA-87", "Mozilla-JSS");
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-DSA-87!");
+}
         System.out.println("TestKeyGen passed");
         System.exit(0);
       } catch (Exception e) {
