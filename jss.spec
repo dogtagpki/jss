@@ -161,20 +161,14 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 # Tomcat
-BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-%if 0%{?rhel} && 0%{?rhel} >= 10
-BuildRequires:  tomcat9-lib
-%endif
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.33
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.33
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.33
 
 Requires:       %{product_id} = %{version}-%{release}
-Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-%if 0%{?rhel} && 0%{?rhel} >= 10
-Requires:       tomcat9 >= 1:9.0.62
-%endif
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.33
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.33
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.33
 
 # Tomcat JSS has been replaced with JSS Connector for Tomcat.
 # This will remove installed Tomcat JSS packages.
@@ -262,11 +256,11 @@ This package provides test suite for JSS.
 
 # specify Maven artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
-%mvn_file org.dogtagpki.jss:jss-tomcat-9.0     jss/jss-tomcat-9.0
+%mvn_file org.dogtagpki.jss:jss-tomcat-10.1     jss/jss-tomcat-10.1
 
 # specify Maven artifact packages
 %mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
-%mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
+%mvn_package org.dogtagpki.jss:jss-tomcat-10.1  jss-tomcat
 
 ################################################################################
 %build
