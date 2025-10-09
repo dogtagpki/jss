@@ -75,19 +75,31 @@ ExcludeArch: i686
 
 # maven-local is a subpackage of javapackages-tools
 
-%if 0%{?fedora} >= %{fedora_cutoff} || 0%{?rhel} >= 10 
+%if 0%{?rhel} && 0%{?rhel} <= 9
+
+%define java_devel java-17-openjdk-devel
+%define java_headless java-17-openjdk-headless
+%define java_home %{_jvmdir}/jre-17-openjdk
+%define maven_local maven-local-openjdk17
+
+%else
+
+%if  0%{?fedora} < %{fedora_cutoff}  ||  0%{?rhel} >= 10
+
+%define java_devel java-21-openjdk-devel
+%define java_headless java-21-openjdk-headless
+%define java_home %{_jvmdir}/jre-21-openjdk
+%define maven_local maven-local
+
+%else
+# fedora >= 43
 
 %define java_devel java-25-openjdk-devel
 %define java_headless java-25-openjdk-headless
 %define java_home %{_jvmdir}/jre-25-openjdk
 %define maven_local maven-local-openjdk25
 
-%else
-
-%define java_devel java-21-openjdk-devel
-%define java_headless java-21-openjdk-headless
-%define java_home %{_jvmdir}/jre-21-openjdk
-%define maven_local maven-local
+%endif
 
 %endif
 
