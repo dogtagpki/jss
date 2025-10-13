@@ -40,7 +40,7 @@ jobs:
     targets:
       - fedora-all
       - centos-stream-9-x86_64
-      - rhel-9-x86_64
+      - centos-stream-10-x86_64
     actions:
       get-current-version:
       - rpmspec -q --qf "%{Version}" --srpm jss.spec
@@ -53,7 +53,7 @@ jobs:
     targets:
       - fedora-all
       - centos-stream-9-x86_64
-      - rhel-9-x86_64
+      - centos-stream-10-x86_64
     actions:
       get-current-version:
       - rpmspec -q --qf "%{Version}" --srpm jss.spec
