@@ -7459,6 +7459,13 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKA_NSS_SIGNATURE = 0x83000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKA_NSS_MESSAGE_MASK = 0xFF000000L;
 
     /**
@@ -7467,6 +7474,13 @@ public interface PKCS11Constants {
      * Source file: /usr/include/nss3/pkcs11n.h
      */
     public static final long CKA_FLAGS_ONLY = 0x00000000L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_VERIFY_SIGNATURE = 0x8300010AL;
 
     /**
      * Content automatically generated; see NSS documentation for more information.
