@@ -170,6 +170,13 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "30" "localhost" "SHA-256/EC" "CA_ECDSA" "Server_ECDSA" "Client_ECDSA"
         DEPENDS "Generate_known_RSA_cert_pair"
     )
+    if(ENABLE_NSS_VERSION_PQC_DEF)
+        jss_test_java(
+            NAME "Generate_known_MLDSA_cert_pair"
+	    COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "ML-DSA" "CA_MLDSA" "Server_MLDSA" "Client_MLDSA"
+            DEPENDS "Generate_known_RSA_cert_pair"
+        )
+    endif()
     jss_test_exec(
         NAME "Create_PKCS11_cert_to_PKCS12_rsa.pfx"
         COMMAND "pk12util" "-o" "${RESULTS_NSSDB_OUTPUT_DIR}/rsa.pfx" "-n" "CA_RSA" "-d" "${RESULTS_NSSDB_OUTPUT_DIR}" "-K" "${DB_PWD}" "-W" "${DB_PWD}"
@@ -288,6 +295,13 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
         DEPENDS "SSLEngine_RSA"
     )
+    if(ENABLE_NSS_VERSION_PQC_DEF)
+        jss_test_java(
+            NAME "SSLEngine_MLDSA"
+	    COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_MLDSA" "Server_MLDSA"
+            DEPENDS "SSLEngine_RSA"
+        )
+    endif()
 
     if(NOT FIPS_ENABLED)
         jss_test_java(
@@ -350,6 +364,14 @@ macro(jss_tests)
             DEPENDS "Generate_FIPS_known_RSA_cert_pair"
             MODE "FIPS"
         )
+        if(ENABLE_NSS_VERSION_PQC_DEF)
+            jss_test_java(
+                NAME "Generate_FIPS_known_MLDSA_cert_pair"
+	        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "ML-DSA" "CA_MLDSA" "Server_MLDSA" "Client_MLDSA"
+	        DEPENDS "Generate_FIPS_known_RSA_cert_pair"
+                MODE "FIPS"
+            )
+        endif()
         jss_test_java(
             NAME "Enable_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "enable"
@@ -417,6 +439,14 @@ macro(jss_tests)
             DEPENDS "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA"
             MODE "FIPS"
         )
+        if(ENABLE_NSS_VERSION_PQC_DEF)
+            jss_test_java(
+                NAME "SSLEngine_MLDSA_FIPSMODE"
+	        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_MLDSA" "Server_MLDSA"
+                DEPENDS "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA"
+                MODE "FIPS"
+            )
+	endif()
 
         # Since we need to disable FIPS mode _after_ all FIPS-mode tests have
         # run, we have to add a strict dependency from Disable_FipsMODE onto all

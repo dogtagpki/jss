@@ -82,7 +82,8 @@ public class GenerateTestCert {
             "\tSHA-1/EC" +
             "\tSHA-256/EC" +
             "\tSHA-384/EC" +
-            "\tSHA-512/EC");
+            "\tSHA-512/EC" +
+            "\tML-DSA");
 
         System.exit(1);
     }
@@ -107,10 +108,14 @@ public class GenerateTestCert {
             sigAlg = SignatureAlgorithm.ECSignatureWithSHA384Digest;
         } else if (alg.equalsIgnoreCase("SHA-512/EC")) {
             sigAlg = SignatureAlgorithm.ECSignatureWithSHA512Digest;
+        } else if (alg.equalsIgnoreCase("ML-DSA")) {
+            sigAlg = SignatureAlgorithm.MLDSA;
         } else { usage(); }
 
         if (alg.endsWith("RSA")) {
             keyType = "RSA";
+        } else if (alg.equals("ML-DSA")) {
+            keyType = "ML-DSA";
         } else if (alg.endsWith("DSA")) {
             keyType = "DSA";
             keyLength = 1024;
