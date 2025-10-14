@@ -115,8 +115,8 @@ BuildRequires:  zip
 BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
-BuildRequires:  nss-devel >= 3.101
-BuildRequires:  nss-tools >= 3.101
+BuildRequires:  nss-devel >= 3.112
+BuildRequires:  nss-tools >= 3.112
 
 BuildRequires:  %{java_devel}
 BuildRequires:  %{maven_local}
@@ -135,7 +135,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS)
 
-Requires:       nss >= 3.101
+Requires:       nss >= 3.112
 
 Requires:       %{java_headless}
 Requires:       mvn(org.apache.commons:commons-lang3)
