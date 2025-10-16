@@ -1,9 +1,13 @@
 package org.mozilla.jss.ssl.javax;
 
-import javax.net.ssl.*;
-import java.util.*;
-
-import org.mozilla.jss.ssl.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EventListener;
+import java.util.List;
+import javax.net.ssl.SSLParameters;
+import org.mozilla.jss.ssl.SSLCipher;
+import org.mozilla.jss.ssl.SSLVersion;
+import org.mozilla.jss.ssl.SSLVersionRange;
 
 /**
  * JSSParameters is an implementation of SSLParameters to interoperate
@@ -24,7 +28,7 @@ import org.mozilla.jss.ssl.*;
 public class JSSParameters extends SSLParameters {
     private SSLCipher[] suites;
     private SSLVersionRange range;
-    private String alias;
+    private List<String> aliases;
     private String hostname;
     private Collection<? extends EventListener> listeners;
 
@@ -180,20 +184,20 @@ public class JSSParameters extends SSLParameters {
         return range;
     }
 
-    public String getAlias() {
-        return alias;
+    public List<String> getAliases() {
+        return aliases;
     }
 
-    public void setAlias(String cert_alias) {
-        alias = cert_alias;
+    public void setAliases(List<String> certAliases) {
+        aliases = certAliases;
     }
 
     public String getHostname() {
         return hostname;
     }
 
-    public void setHostname(String server_hostname) {
-        hostname = server_hostname;
+    public void setHostname(String serverHostname) {
+        hostname = serverHostname;
     }
 
     public Collection<? extends EventListener> getListeners() {

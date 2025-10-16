@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -166,7 +167,9 @@ public class TestSSLEngine {
     public static JSSParameters createParameters(String alias) throws Exception {
         JSSParameters params = new JSSParameters();
 
-        params.setAlias(alias);
+        String[] aliases = alias.split(",");
+        
+        params.setAliases(Arrays.asList(aliases));
         params.setHostname("localhost");
 
         return params;
