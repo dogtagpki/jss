@@ -9,6 +9,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
@@ -16,6 +18,7 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.X509ExtendedTrustManager;
 import javax.net.ssl.X509TrustManager;
+import org.apache.commons.lang3.tuple.Pair;
 
 import org.mozilla.jss.nss.BadCertHandler;
 import org.mozilla.jss.nss.Buffer;
@@ -31,6 +34,7 @@ import org.mozilla.jss.nss.SSLFDProxy;
 import org.mozilla.jss.nss.SSLPreliminaryChannelInfo;
 import org.mozilla.jss.nss.SecurityStatusResult;
 import org.mozilla.jss.pkcs11.PK11Cert;
+import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
 import org.mozilla.jss.ssl.SSLAlertDescription;
 import org.mozilla.jss.ssl.SSLAlertEvent;
@@ -331,7 +335,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // re-creating it from scratch. This saves a significant amount of
             // time during construction. The implementation lives in JSSEngine,
             // to be shared by all other JSSEngine implementations.
-            model = getServerTemplate(cert, key);
+            model = getServerTemplate(certs);
         }
 
         // Initialize ssl_fd from the model Buffer-backed PRFileDesc.
@@ -366,13 +370,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     private void initClient() throws SSLException {
         debug("JSSEngine: initClient()");
 
-        if (cert != null && key != null) {
+        if (certs != null && !certs.isEmpty()) {
             // NSS uses a callback to check for the client certificate; we
             // assume we have knowledge of it ahead of time and set it
             // directly on our SSLFDProxy instance.
             //
             // In the future, we could use a KeyManager for inquiring at
             // selection time which certificate to use.
+            
+            // For the clients only the first certificate is used.
+            // Multiple certificate could be configure if it is needed.
+            PK11Cert cert = certs.iterator().next().getLeft();
             debug("JSSEngine.initClient(): Enabling client auth: " + cert);
             ssl_fd.SetClientCert(cert);
             if (SSL.AttachClientCertCallback(ssl_fd) != SSL.SECSuccess) {
@@ -400,14 +408,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         // The only time cert and key are strictly required are when we're
         // creating a server SSLEngine.
-        if (cert == null || key == null) {
+        if (certs == null) {
             throw new IllegalArgumentException("JSSEngine: must be initialized with server certificate and key!");
         }
 
-        debug("JSSEngine.initServer(): " + cert);
-        debug("JSSEngine.initServer(): " + key);
+        debug("JSSEngine.initServer(): " + certs);
 
-        session.setLocalCertificates(new PK11Cert[]{ cert } );
+        List<PK11Cert> lstCerts = new ArrayList<>();
+        for (Pair<PK11Cert, PK11PrivKey> pairKeys: certs) {
+            lstCerts.add(pairKeys.getLeft());
+        }
+        
+        session.setLocalCertificates(lstCerts.toArray(new PK11Cert[0]));
 
         // Create a small server session cache.
         //

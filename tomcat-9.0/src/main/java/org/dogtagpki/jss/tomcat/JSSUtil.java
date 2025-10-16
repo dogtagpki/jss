@@ -19,11 +19,13 @@
 
 package org.dogtagpki.jss.tomcat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -42,16 +44,23 @@ import org.mozilla.jss.provider.javax.crypto.JSSNativeTrustManager;
 public class JSSUtil extends SSLUtilBase {
     public static Log logger = LogFactory.getLog(JSSUtil.class);
 
-    private String keyAlias;
+    private List<String> keyAliases;
 
     private SSLEngine engine;
     private Set<String> protocols;
     private Set<String> ciphers;
 
-    public JSSUtil(SSLHostConfigCertificate cert) {
-        super(cert);
+    public JSSUtil(SSLHostConfigCertificate certificate) {
+        super(certificate);
 
-        keyAlias = certificate.getCertificateKeyAlias();
+        // TODO: Temporary workaround for NSS bug
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1994978
+        // EC certificates must be listed before RSA for proper selection.
+        // Remove this sorting once NSS is fixed.
+        keyAliases = sslHostConfig.getCertificates().stream()
+                .sorted((cert1, cert2) -> cert2.getType().compareTo(cert1.getType()))
+                .map(cert -> cert.getCertificateKeyAlias())
+                .collect(Collectors.toList());
         logger.debug("JSSUtil: instance created");
     }
 
@@ -61,7 +70,7 @@ public class JSSUtil extends SSLUtilBase {
         }
 
         try {
-            JSSContext ctx = new JSSContext(null);
+            JSSContext ctx = new JSSContext();
             ctx.init(null, null, null);
             engine = ctx.createSSLEngine();
         } catch (Exception e) {
@@ -97,8 +106,8 @@ public class JSSUtil extends SSLUtilBase {
 
     @Override
     public SSLContext createSSLContextInternal(List<String> negotiableProtocols) throws Exception {
-        logger.debug("JSSUtil createSSLContextInternal(...) keyAlias=" + keyAlias);
-        return new JSSContext(keyAlias);
+        logger.debug("JSSUtil createSSLContextInternal(...) keyAlias=" + String.join(", ", keyAliases));
+        return new JSSContext(keyAliases);
     }
 
     @Override

@@ -295,6 +295,11 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
         DEPENDS "SSLEngine_RSA"
     )
+    jss_test_java(
+	NAME "SSLEngine_Multi_Cert_RSA_ECDSA"
+	COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_RSA,Server_ECDSA"
+        DEPENDS "SSLEngine_RSA"
+    )
     if(ENABLE_NSS_VERSION_PQC_DEF)
         jss_test_java(
             NAME "SSLEngine_MLDSA"
@@ -436,6 +441,12 @@ macro(jss_tests)
         jss_test_java(
             NAME "SSLEngine_ECDSA_FIPSMODE"
             COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
+            DEPENDS "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA"
+            MODE "FIPS"
+        )
+        jss_test_java(
+		NAME "SSLEngine_Multi_Cert_RSA_ECDSA_FIPSMODE"
+	    COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_RSA,Server_ECDSA"
             DEPENDS "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA"
             MODE "FIPS"
         )

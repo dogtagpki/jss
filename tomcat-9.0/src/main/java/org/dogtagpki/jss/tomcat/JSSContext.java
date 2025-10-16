@@ -2,6 +2,8 @@ package org.dogtagpki.jss.tomcat;
 
 import java.security.KeyManagementException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -15,19 +17,29 @@ import org.mozilla.jss.ssl.javax.JSSEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+* Implements the {@link SSLContext} interface from Tomcat for creating SSL connections.
+* 
+* This class is a wrapper around the Mozilla-JSS implementation of JSSE, which
+* provides additional functionality not available in the SunJSSE implementation.
+*
+* @see org.apache.tomcat.util.net.SSLContext
+* @see org.mozilla.jss.ssl.KeyManagerFactory#getInstance(String algorithm, String provider)
+* @see org.mozilla.jss.ssl.TrustManagerFactory#getInstance(String algorithm, String provider)
+*/
 public class JSSContext implements org.apache.tomcat.util.net.SSLContext {
     public static Logger logger = LoggerFactory.getLogger(JSSContext.class);
 
     private javax.net.ssl.SSLContext ctx;
-    private String alias;
+    private List<String> aliases;
 
     private JSSKeyManager jkm;
     private JSSTrustManager jtm;
 
-    public JSSContext(String alias) {
-        logger.debug("JSSContext(" + alias + ")");
-        this.alias = alias;
-
+    /**
+     * Create the cContext for SSL connections.
+     */
+    public JSSContext() {
         /* These KeyManagers and TrustManagers aren't used with the SSLEngine;
          * they're only used to implement certain function calls below. */
         try {
@@ -39,6 +51,29 @@ public class JSSContext implements org.apache.tomcat.util.net.SSLContext {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Create the cContext for SSL connections.
+     *
+     * @param alias Certificate nickname used by the server for the connections.
+     */
+    public JSSContext(String alias) {
+        this();
+        logger.debug("JSSContext(" + alias + ")");
+        aliases = new ArrayList<>();
+        aliases.add(alias);
+    }
+
+    /**
+     * Create the cContext for SSL connections.
+     *
+     * @param aliases List of certificate nicknames used by the server for the connections.
+     */
+    public JSSContext(List<String> aliases) {
+        this();
+        logger.debug("JSSContext(" + (aliases == null ? "NO aliases" : String.join(", ", aliases)) + ")");
+        this.aliases = aliases;
     }
 
     @Override
@@ -67,7 +102,7 @@ public class JSSContext implements org.apache.tomcat.util.net.SSLContext {
 
         if (eng instanceof JSSEngine) {
             JSSEngine j_eng = (JSSEngine) eng;
-            j_eng.setCertFromAlias(alias);
+            j_eng.setCertFromAliases(aliases);
             if(instance != null) {
                 j_eng.setListeners(instance.getSocketListeners());
             }

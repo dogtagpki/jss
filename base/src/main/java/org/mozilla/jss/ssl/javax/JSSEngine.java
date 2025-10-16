@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.SSLEngineResult;
@@ -11,6 +12,8 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.nss.PR;
@@ -76,21 +79,16 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Certificate alias used by the JSSEngine instance.
      */
-    protected String certAlias;
+    protected List<String> certAliases;
 
     /**
-     * Certificate used by this JSSEngine instance.
+     * Collection of certificates and related keys used by this JSSEngine instance.
      *
      * Selected and inferred from the KeyManagers passed, when not passed
      * explicitly (either during construction or with a call to
      * setKeyMaterials(...)).
      */
-    protected PK11Cert cert;
-
-    /**
-     * Key corresponding to the local certificate.
-     */
-    protected PK11PrivKey key;
+    protected List<Pair<PK11Cert, PK11PrivKey>> certs;
 
     /**
      * A list of all KeyManagers available to this JSSEngine instance.
@@ -197,7 +195,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * Set of cached server sockets based on the PK11Cert they were
      * initialized with.
      */
-    protected static HashMap<PK11Cert, SSLFDProxy> serverTemplates = new HashMap<>();
+    protected static HashMap<List<Pair<PK11Cert, PK11PrivKey>>, SSLFDProxy> serverTemplates = new HashMap<>();
 
     /**
      * Whether or not the session cache has been initialized already.
@@ -255,9 +253,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
                      org.mozilla.jss.crypto.X509Certificate localCert,
                      org.mozilla.jss.crypto.PrivateKey localKey) {
         super(peerHost, peerPort);
-
-        cert = (PK11Cert) localCert;
-        key = (PK11PrivKey) localKey;
+        certs = new ArrayList<>();
+        certs.add(ImmutablePair.of((PK11Cert) localCert, (PK11PrivKey) localKey));
 
         session = new JSSSession(this, BUFFER_SIZE);
         session.setPeerHost(peerHost);
@@ -338,7 +335,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             ret.setWantClientAuth(true);
         }
 
-        ret.setAlias(certAlias);
+        ret.setAliases(certAliases);
         ret.setHostname(hostname);
         ret.setListeners(listeners);
 
@@ -405,8 +402,9 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         // them from the alias specified... We assume that when the SSLEngine
         // has a certificate already, we want to use them, even if parsed has
         // a null certificate.
-        if (parsed.getAlias() != null && key_managers != null && key_managers.length > 0 && cert == null && key == null) {
-            setCertFromAlias(parsed.getAlias());
+        if (parsed.getAliases() != null && !parsed.getAliases().isEmpty() && key_managers != null && key_managers.length > 0
+                && (certs == null || certs.isEmpty())) {
+            setCertFromAliases(parsed.getAliases());
         }
 
         // When we have a value for the peer hostname, we should try and use
@@ -452,16 +450,24 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      *
      */
     public void setCertFromAlias(String alias) throws IllegalArgumentException {
-        if (alias == null) {
+        List<String> aliases = new ArrayList<>();
+        if (alias != null) { 
+            aliases.add(alias);
+        }
+        setCertFromAliases(aliases);
+    }
+    
+    public void setCertFromAliases(List<String> aliases) throws IllegalArgumentException {
+        if (aliases == null || aliases.isEmpty()) {
             // Per calling, semantics, get rid of any existing cert/key we
             // might have.
-            certAlias = null;
-            cert = null;
-            key = null;
+            certAliases = null;
+            certs = null;
             return;
         }
 
-        certAlias = alias;
+        certAliases = aliases;
+        certs = new ArrayList<>();
 
         if (key_managers == null || key_managers.length == 0) {
             String msg = "Missing or null KeyManagers; refusing to search ";
@@ -469,37 +475,39 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             throw new IllegalArgumentException(msg);
         }
 
-        for (X509KeyManager key_manager : key_managers) {
-            if (key_manager == null) {
-                // Skip this key_manager. This case could occur when
-                // setKeyManagers(...) is passed an array containing the value
-                // null, but otherwise shouldn't happen.
-                continue;
-            }
+        for (String alias: certAliases) {
+            for (X509KeyManager key_manager : key_managers) {
+                if (key_manager == null) {
+                    // Skip this key_manager. This case could occur when
+                    // setKeyManagers(...) is passed an array containing the value
+                    // null, but otherwise shouldn't happen.
+                    continue;
+                }
 
-            if (!(key_manager instanceof JSSKeyManager)) {
-                // We're explicitly looking for a JSSKeyManager; skip this if
-                // it doesn't match.
-                continue;
-            }
+                if (!(key_manager instanceof JSSKeyManager)) {
+                    // We're explicitly looking for a JSSKeyManager; skip this if
+                    // it doesn't match.
+                    continue;
+                }
 
-            JSSKeyManager jkm = (JSSKeyManager) key_manager;
+                JSSKeyManager jkm = (JSSKeyManager) key_manager;
 
-            // While the return type of CryptoManager.findCertByNickname is
-            // technically org.mozilla.jss.crypto.X509Certificate, in practice
-            // they are always PK11Cert instances. We're going to need an
-            // instance of PK11Cert anyways, in order to correctly pass it to
-            // the native layer.
-            cert = (PK11Cert) jkm.getCertificate(alias);
-            key = (PK11PrivKey) jkm.getPrivateKey(alias);
+                // While the return type of CryptoManager.findCertByNickname is
+                // technically org.mozilla.jss.crypto.X509Certificate, in practice
+                // they are always PK11Cert instances. We're going to need an
+                // instance of PK11Cert anyways, in order to correctly pass it to
+                // the native layer.
+                PK11Cert cert = (PK11Cert) jkm.getCertificate(alias);
+                PK11PrivKey key = (PK11PrivKey) jkm.getPrivateKey(alias);
 
-            if (cert != null && key != null) {
-                // Found a cert and key matching our alias; exit.
-                break;
+                if (cert != null && key != null) {
+                    // Found a cert and key matching our alias; exit.
+                    certs.add(ImmutablePair.of(cert, key));
+                    break;
+                }
             }
         }
-
-        if (cert == null && key == null) {
+        if (certs.isEmpty()) {
             String msg = "JSSEngine.setCertFromAlias: Unable to find ";
             msg += "certificate and key for specified alias!";
             throw new IllegalArgumentException(msg);
@@ -771,8 +779,10 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             throw new IllegalArgumentException("JSSEngine.setKeyMaterials(): Either both cert and key must be null or both must be not-null");
         }
 
-        cert = our_cert;
-        key = our_key;
+        if (certs == null) {
+            certs = new ArrayList<>();
+        }
+        certs.add(ImmutablePair.of(our_cert, our_key));
     }
 
     /**
@@ -1093,23 +1103,25 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     /**
      * Returns the templated server certificate, if one exists.
      */
-    protected static SSLFDProxy getServerTemplate(PK11Cert cert, PK11PrivKey key) {
-        if (cert == null || key == null) {
+    protected static SSLFDProxy getServerTemplate(List<Pair<PK11Cert, PK11PrivKey>> lstCerts) {
+        if (lstCerts == null || lstCerts.isEmpty()) {
             return null;
         }
 
-        SSLFDProxy fd = serverTemplates.get(cert);
+        SSLFDProxy fd = serverTemplates.get(lstCerts);
         if (fd == null) {
             PRFDProxy base = PR.NewTCPSocket();
             fd = SSL.ImportFD(null, base);
-            if (SSL.ConfigServerCert(fd, cert, key) != SSL.SECSuccess) {
-                String msg = "Unable to configure certificate and key on ";
-                msg += "model SSL PRFileDesc proxy: ";
-                msg += errorText(PR.GetError());
-                throw new RuntimeException(msg);
+            for(Pair<PK11Cert, PK11PrivKey> pairKey: lstCerts) {
+                if (SSL.ConfigServerCert(fd, pairKey.getLeft(), pairKey.getRight()) != SSL.SECSuccess) {
+                    String msg = "Unable to configure certificate and key on ";
+                    msg += "model SSL PRFileDesc proxy: ";
+                    msg += errorText(PR.GetError());
+                    throw new RuntimeException(msg);
+                }
             }
-
-            serverTemplates.put(cert, fd);
+ 
+            serverTemplates.put(lstCerts, fd);
         }
 
         return fd;
