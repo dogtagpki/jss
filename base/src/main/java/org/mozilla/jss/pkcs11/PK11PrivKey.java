@@ -77,6 +77,12 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     public native PK11PubKey getPublicKey();
 
     /**
+     * Sets the private key PRBool pkcs11IsTemp property.
+     * Use with care
+     */
+    public native void setTemporary(boolean isTemporary);
+
+    /**
      * Imports a PrivateKeyInfo, storing it as a temporary PrivateKey
      * on the given token.
      * The key will be a temporary (session) key until it is imported
