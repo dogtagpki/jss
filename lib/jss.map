@@ -529,6 +529,7 @@ JSS_5.9.0 {
     global:
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags;
+Java_org_mozilla_jss_pkcs11_PK11PrivKey_setTemporary;
     local:
         *;
 };

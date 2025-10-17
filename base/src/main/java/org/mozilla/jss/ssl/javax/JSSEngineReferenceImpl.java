@@ -417,8 +417,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         List<PK11Cert> lstCerts = new ArrayList<>();
         for (Pair<PK11Cert, PK11PrivKey> pairKeys: certs) {
             lstCerts.add(pairKeys.getLeft());
+            PK11PrivKey key = pairKeys.getRight();
+ 
+            // Workaround to account for NSS giving us a copy of the actual SSL Server private key.
+            // This is to keep calls to SECKEY_DestroyPrivateKey from blowing the long lived SSL cert
+            // private key off the token.
+
+            if(key != null) {
+                key.setTemporary(false);
+            }
         }
-        
+ 
         session.setLocalCertificates(lstCerts.toArray(new PK11Cert[0]));
 
         // Create a small server session cache.
