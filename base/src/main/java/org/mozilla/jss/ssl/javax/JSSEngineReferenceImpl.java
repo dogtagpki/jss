@@ -407,6 +407,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine.initServer(): " + cert);
         debug("JSSEngine.initServer(): " + key);
 
+	// Workaround to account for NSS giving us a copy of the actual SSL Server private key.
+	// This is to keep calls to SECKEY_DestroyPrivateKey from blowing the long lived SSL cert
+	// private key off the token.
+
+	key.setTemporary(false);
+
         session.setLocalCertificates(new PK11Cert[]{ cert } );
 
         // Create a small server session cache.

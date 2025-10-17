@@ -756,3 +756,28 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getPublicKey
 
     return JSS_PK11_wrapPubKey(env, &pubKey);
 }
+
+/**********************************************************************
+ * PK11PrivKey.setTemporary
+ * Workaround to account for SSL Server Cert private keys created as copies by NSS on a token.
+ * Can either make it temporary of not temporary based on boolean argument.
+ * Not recommended for normal use.
+ */
+JNIEXPORT void JNICALL
+Java_org_mozilla_jss_pkcs11_PK11PrivKey_setTemporary
+    (JNIEnv *env, jobject this, jboolean isTemporary)
+{
+    SECKEYPrivateKey *key = NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL);
+
+    /***************************************************
+     * Get the private key and slot C structures
+     ***************************************************/
+    if( JSS_PK11_getPrivKeyPtr(env, this, &key) != PR_SUCCESS) {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+        return;
+    }
+
+    key->pkcs11IsTemp = isTemporary;
+}
