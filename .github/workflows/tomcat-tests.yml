@@ -44,3 +44,8 @@ jobs:
     name: Tomcat HTTPS with specific ciphers
     needs: build
     uses: ./.github/workflows/tomcat-https-ciphers-test.yml
+
+  tomcat-https-multi-certificate-test:
+    name: Tomcat HTTPS with multiple certificates 
+    needs: build
+    uses: ./.github/workflows/tomcat-https-multi-certificate-test.yml
