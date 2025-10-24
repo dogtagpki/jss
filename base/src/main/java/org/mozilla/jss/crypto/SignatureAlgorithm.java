@@ -109,13 +109,23 @@ public class SignatureAlgorithm extends Algorithm {
 
     /**********************************************************************
      * Raw ML_DSA signing. This algorithm does not do any hashing, it merely
-     * encrypts its input, which should be a hash.
+     * encrypts its input.
      * 
      * NOTA: the OID is not correctly defined and it is not present in current NSS implementation.
      */
     public static final SignatureAlgorithm
-    MLDSA = new SignatureAlgorithm(CKM_ML_DSA, "ML-DSA",
+    MLDSA44 = new SignatureAlgorithm(CKM_ML_DSA, "ML-DSA-44",
+            null, null, OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(17) );
+
+    public static final SignatureAlgorithm
+    MLDSA65 = new SignatureAlgorithm(CKM_ML_DSA, "ML-DSA-65",
             null, null, OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(18) );
+
+    public static final SignatureAlgorithm MLDSA = MLDSA65;
+
+    public static final SignatureAlgorithm
+    MLDSA87 = new SignatureAlgorithm(CKM_ML_DSA, "ML-DSA-87",
+            null, null, OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(19) );
 
     //////////////////////////////////////////////////////////////////////
     public static final SignatureAlgorithm

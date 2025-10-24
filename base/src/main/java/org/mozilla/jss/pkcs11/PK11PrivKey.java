@@ -44,6 +44,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     public native byte[] getUniqueID() throws TokenException;
 
     public native KeyType getKeyType();
+    public native int getMLDSAKeyParam();
 
     @Override
     public PrivateKey.Type getType() {
@@ -53,6 +54,17 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
             return PrivateKey.Type.RSA;
         } else if (kt == KeyType.DSA) {
             return PrivateKey.Type.DSA;
+        } else if (kt == KeyType.MLDSA) {
+            switch(getMLDSAKeyParam()) {
+                case 44:
+                    return PrivateKey.Type.MLDSA44;
+                case 65:
+                    return PrivateKey.Type.MLDSA65;
+                case 87:
+                    return PrivateKey.Type.MLDSA87;
+                default:
+                    return PrivateKey.Type.MLDSA65;
+            }
         } else {
             assert(kt == KeyType.EC);
             return PrivateKey.Type.EC;

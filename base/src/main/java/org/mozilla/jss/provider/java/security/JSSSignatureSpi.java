@@ -268,7 +268,22 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
     }
     public static class MLDSA extends JSSSignatureSpi {
         public MLDSA() {
-            super(SignatureAlgorithm.MLDSA);
+            super(SignatureAlgorithm.MLDSA65);
+        }
+    }
+    public static class MLDSA44 extends JSSSignatureSpi {
+        public MLDSA44() {
+            super(SignatureAlgorithm.MLDSA44);
+        }
+    }
+    public static class MLDSA65 extends JSSSignatureSpi {
+        public MLDSA65() {
+            super(SignatureAlgorithm.MLDSA65);
+        }
+    }
+    public static class MLDSA87 extends JSSSignatureSpi {
+        public MLDSA87() {
+            super(SignatureAlgorithm.MLDSA87);
         }
     }
 }

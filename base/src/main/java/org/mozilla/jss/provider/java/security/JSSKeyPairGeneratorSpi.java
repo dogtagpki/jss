@@ -81,11 +81,6 @@ public class JSSKeyPairGeneratorSpi
             super(KeyPairAlgorithm.EC);
         }
     }
-    public static class MLDSA extends JSSKeyPairGeneratorSpi {
-        public MLDSA() {
-            super(KeyPairAlgorithm.MLDSA, 65);
-        }
-    }
     public static class MLDSA44 extends JSSKeyPairGeneratorSpi {
         public MLDSA44() {
             super(KeyPairAlgorithm.MLDSA, 44);
