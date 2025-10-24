@@ -207,6 +207,12 @@ public final class JSSProvider extends java.security.Provider {
 // ML-DSA
         put("Signature.ML-DSA",
             "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MLDSA"); //JCE Standard Name
+        put("Signature.ML-DSA-44",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MLDSA44"); //JCE Standard Name
+        put("Signature.ML-DSA-65",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MLDSA65"); //JCE Standard Name
+        put("Signature.ML-DSA-87",
+            "org.mozilla.jss.provider.java.security.JSSSignatureSpi$MLDSA87"); //JCE Standard Name
 
         // NOTE: ML-DSA specific signature are not yet defined in the NSS version used.
         // They should be available in v. 3.116
@@ -247,7 +253,7 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$EC");
         // OpenDJK JEP 497 definition
         put("KeyPairGenerator.ML-DSA",
-            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA");
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA65");
         put("KeyPairGenerator.ML-DSA-44",
             "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA44");
         put("KeyPairGenerator.ML-DSA-65",
@@ -264,7 +270,12 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.EC",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
-
+        put("KeyFactory.ML-DSA-44",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-DSA-65",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-DSA-87",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         /////////////////////////////////////////////////////////////
         // KeyStore
         /////////////////////////////////////////////////////////////

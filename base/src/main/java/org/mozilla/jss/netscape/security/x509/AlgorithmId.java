@@ -338,11 +338,14 @@ public class AlgorithmId implements Serializable, DerEncoder {
             DerOutputStream bytes = new DerOutputStream();
             bytes.putOID(algid);
 
-            // omit parameter field for ECDSA
+            // omit parameter field for ECDSA & MLDSA
             if (!algid.equals(sha224WithEC_oid) &&
                     !algid.equals(sha256WithEC_oid) &&
                     !algid.equals(sha384WithEC_oid) &&
-                    !algid.equals(sha512WithEC_oid)) {
+                    !algid.equals(sha512WithEC_oid) &&
+                    !algid.equals(mldsa44_oid) &&
+                    !algid.equals(mldsa65_oid) &&
+                    !algid.equals(mldsa87_oid)) {
                 if (params == null) {
                     bytes.putNull();
                 } else

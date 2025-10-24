@@ -218,6 +218,74 @@ finish:
     return keyTypeObject;
 }
 
+/*
+ * PK11PrivKey.getMLDSAKeySize
+ *
+ * Returns: The MLDSA size of this key.
+ */
+JNIEXPORT jint JNICALL
+Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLDSAKeyParam
+  (JNIEnv *env, jobject this)
+{
+    PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
+    SECKEYPrivateKey *privk;
+    jint size = -1;
+#ifdef NSS_VERSION_PQC_DEF
+    CK_ULONG paramSet = CK_UNAVAILABLE_INFORMATION;
+    SECItem  item;
+    SECStatus rv;
+#endif
+
+    PR_ASSERT(env!=NULL && this!=NULL);
+
+    pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
+    PR_ASSERT(pThread != NULL);
+
+    if(JSS_PK11_getPrivKeyPtr(env, this, &privk) != PR_SUCCESS) {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL );
+        goto finish;
+    }
+    PR_ASSERT(privk!=NULL);
+
+// The implmenetation could be improved using MLDSA helper functions but for
+// now they are kept private. 
+#ifdef NSS_VERSION_PQC_DEF
+    rv =  PK11_ReadRawAttribute(PK11_TypePrivKey, privk, CKA_PARAMETER_SET, &item);
+    if (rv != SECSuccess) {
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Key type not supported.");
+        goto finish;
+    }
+
+    if (item.len != sizeof (paramSet)) {
+        PORT_Free(item.data);
+        PORT_SetError(SEC_ERROR_INVALID_KEY);
+        goto finish;
+    }
+    paramSet = *(CK_ULONG *)item.data;
+    PORT_Free(item.data);
+
+    switch (paramSet) {
+        case CKP_ML_DSA_44:
+            size = 44;
+            break;
+        case CKP_ML_DSA_65:
+            size = 65;
+            break;
+        case CKP_ML_DSA_87:
+            size = 87;
+            break;
+        default:
+            size = 65;
+    }
+#else
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Key type not supported.");
+        goto finish;
+#endif
+
+finish:
+    PR_DetachThread();
+    return size;
+}
 
 /*
  * PrivateKeyProxy.releaseNativeResources

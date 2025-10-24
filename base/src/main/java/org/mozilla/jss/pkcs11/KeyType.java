@@ -156,7 +156,9 @@ public final class KeyType {
     static public final KeyType
     MLDSA     = new KeyType(new Algorithm[]
                     {
-                    SignatureAlgorithm.MLDSA
+                    SignatureAlgorithm.MLDSA44,
+                    SignatureAlgorithm.MLDSA65,
+                    SignatureAlgorithm.MLDSA87
                     },
                     "ML-DSA"
                 );
