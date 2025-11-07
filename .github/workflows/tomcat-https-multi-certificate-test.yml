@@ -149,7 +149,7 @@ jobs:
           docker exec server openssl s_client -sigalgs 'RSA-PSS+SHA256'  \
           server.example.com:8443 | tee output
 
-          echo "   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256" > expected
+          echo "   a:PKEY: RSA, 2048 (bit); sigalg: sha256WithRSAEncryption" > expected
           grep "a:PKEY" output > actual
           diff expected actual
           
@@ -159,7 +159,7 @@ jobs:
           docker exec server openssl s_client -sigalgs 'ECDSA+SHA256'  \
           server.example.com:8443 | tee output
 
-          echo "   a:PKEY: id-ecPublicKey, 256 (bit); sigalg: ecdsa-with-SHA256" > expected
+          echo "   a:PKEY: EC, (prime256v1); sigalg: ecdsa-with-SHA256" > expected
           grep "a:PKEY" output > actual
           diff expected actual
 

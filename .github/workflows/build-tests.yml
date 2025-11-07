@@ -228,14 +228,14 @@ jobs:
             | tee maven.out
         diff rpm.out maven.out
 
-    - name: Compare jss-tomcat-9.0.jar
+    - name: Compare jss-tomcat-10.1.jar
       run: |
-        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar \
+        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-10.1.jar \
             | awk '{print $8;}' \
             | sort \
             | grep -v '/$' \
             | tee rpm.out
-        docker exec jss jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar \
+        docker exec jss jar tvf tomcat-10.1/target/jss-tomcat-10.1.jar \
             | awk '{print $8;}' \
             | sort \
             | grep -v '/$' \

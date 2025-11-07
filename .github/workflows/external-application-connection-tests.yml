@@ -181,6 +181,7 @@ jobs:
         run: |
           docker exec -t jss sh -c 'java -cp \
               "/usr/share/java/*:/usr/share/java/ongres-stringprep/*:/usr/share/java/ongres-scram/*:/usr/lib/java/jss.jar:/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-jdk14.jar:/root/jss/build/classes/tests" \
+              --enable-native-access=ALL-UNNAMED \
               -Djava.security.properties==/root/jss/java.security \
               org.mozilla.jss.tests.JSSConnectionPostgres jss mysecretpassword \
               '"'"'jdbc:postgresql://postgresql.example.com:5432/jss?ssl=true&sslmode=verify-full'"'" | tee output-jss
