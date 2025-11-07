@@ -7704,6 +7704,13 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKA_NSS_SEED_OK = 0xCE534379L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKA_NSS_TRUST_BASE = 0xCE536350L;
 
     /**
