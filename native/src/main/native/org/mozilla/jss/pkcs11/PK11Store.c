@@ -939,6 +939,11 @@ Java_org_mozilla_jss_pkcs11_PK11Store_importEncryptedPrivateKeyInfo(
         case ecKey:
             pubValue = &pubKey->u.ec.publicValue;
             break;
+#ifdef NSS_VERSION_PQC_DEF
+        case mldsaKey:
+            pubValue = &pubKey->u.mldsa.publicValue;
+            break;
+#endif
         default:
             pubValue = NULL;
     }
