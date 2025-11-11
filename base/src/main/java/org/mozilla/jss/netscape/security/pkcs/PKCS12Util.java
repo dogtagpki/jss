@@ -937,7 +937,6 @@ public class PKCS12Util {
         }
 
         X509CertImpl certImpl = certInfo.getCert();
-        X509Certificate cert;
 
         byte[] keyID = certInfo.getKeyID();
 
@@ -945,16 +944,11 @@ public class PKCS12Util {
             logger.debug("Importing private key for " + certInfo.getFriendlyName());
             PKCS12KeyInfo keyInfo = pkcs12.getKeyInfoByID(keyID);
             importKey(pkcs12, password, certInfo.getFriendlyName(), keyInfo);
-
-            logger.debug("Importing user certificate " + certInfo.getFriendlyName());
-            cert = cm.importUserCACertPackage(
-                    certImpl.getEncoded(), certInfo.getFriendlyName());
-
-        } else { // cert has no key
-            logger.debug("Importing CA certificate " + certInfo.getFriendlyName());
-            // Note: JSS does not preserve CA certificate nickname
-            cert = cm.importCACertPackage(certImpl.getEncoded());
         }
+
+        logger.debug("Importing certificate " + nickname);
+        byte[] certData = certInfo.getCert().getEncoded();
+        X509Certificate cert = store.importCert(certData, nickname);
 
         String trustFlags = certInfo.getTrustFlags();
         if (trustFlags != null && trustFlagsEnabled) {
