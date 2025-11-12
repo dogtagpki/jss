@@ -662,6 +662,9 @@ public class PKCS12Util {
                 byte[] keyID = keyIdAsn1.toByteArray();
                 keyInfo.setID(keyID);
 
+            } else if (oid.equals(PKCS12.CERT_TRUST_FLAGS_OID)) {
+                // ignore
+
             } else {
                 logger.warn("   " + oid + ": " + attr.getValues());
             }
@@ -720,7 +723,7 @@ public class PKCS12Util {
                 certInfo.setKeyID(keyID);
                 logger.debug("   Key ID: " + Utils.HexEncode(keyID));
 
-            } else if (oid.equals(PKCS12.CERT_TRUST_FLAGS_OID) && trustFlagsEnabled) {
+            } else if (oid.equals(PKCS12.CERT_TRUST_FLAGS_OID)) {
 
                 SET values = attr.getValues();
                 ANY value = (ANY) values.elementAt(0);
@@ -729,8 +732,11 @@ public class PKCS12Util {
                 BMPString trustFlagsAsn1 = (BMPString) (new BMPString.Template()).decode(is);
 
                 String trustFlags = trustFlagsAsn1.toString();
-                certInfo.setTrustFlags(trustFlags);
                 logger.debug("   Trust flags: " + trustFlags);
+
+                if (trustFlagsEnabled) {
+                    certInfo.setTrustFlags(trustFlags);
+                }
 
             } else {
                 logger.warn("   " + oid + ": " + attr.getValues());
