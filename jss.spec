@@ -30,7 +30,7 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # - GA/update:                 <major>.<minor>.<update>
 %global         full_version %{major_version}.%{minor_version}.%{update_version}%{?phase:-}%{?phase}
 
-%if (0%{?rhel} && 0%{?rhel} >= 10) || (0%{?centos} && 0%{?centos} >= 9)
+%if (0%{?rhel} && 0%{?rhel} >= 10) || (0%{?centos} && 0%{?centos} >= 9) || (0%{?fedora} && 0%{?fedora} >= 43) 
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
 %endif
 
@@ -127,8 +127,14 @@ BuildRequires:  zip
 BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
+
+%if (0%{?fedora} && 0%{?fedora} >= 43) 
+BuildRequires:  nss-devel >= 3.118
+BuildRequires:  nss-tools >= 3.118
+%else
 BuildRequires:  nss-devel >= 3.112
 BuildRequires:  nss-tools >= 3.112
+%endif
 
 BuildRequires:  %{java_devel}
 BuildRequires:  %{maven_local}
@@ -147,7 +153,11 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS)
 
+%if (0%{?fedora} && 0%{?fedora} >= 43) 
+Requires:       nss >= 3.118
+%else
 Requires:       nss >= 3.112
+%endif
 
 Requires:       %{java_headless}
 Requires:       mvn(org.apache.commons:commons-lang3)
