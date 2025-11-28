@@ -138,7 +138,7 @@ jobs:
               -c ssl_key_file=/var/lib/postgresql/server.key
 
       - name: Build the tests
-        run: docker exec jss ./build.sh --work-dir=./build
+        run: docker exec jss ./build.sh --work-dir=./build --cmake='/usr/bin/cmake -DENABLE_NSS_VERSION_PQC_DEF=ON'
 
       - name: Test connection with java
         run: |

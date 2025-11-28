@@ -114,7 +114,7 @@ jobs:
 
     - name: Build with CMake
       run: |
-        docker exec jss ./build.sh
+        docker exec jss ./build.sh --cmake='/usr/bin/cmake -DENABLE_NSS_VERSION_PQC_DEF=ON'
 
     - name: Build with Maven
       run: |
@@ -294,7 +294,7 @@ jobs:
 
     - name: Build JSS
       run: |
-        docker exec -w /root/jss/build jss cmake -DCMAKE_BUILD_TYPE=Debug ..
+        docker exec -w /root/jss/build jss cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_NSS_VERSION_PQC_DEF=ON ..
         docker exec -w /root/jss/build jss make all
       env:
         SANDBOX: 1
