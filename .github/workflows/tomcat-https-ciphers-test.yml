@@ -150,7 +150,7 @@ jobs:
           <?xml version="1.0" encoding="UTF-8"?>
           <document>
             <ssltest host="server.example.com" sniname="server.example.com" port="8443">
-              <cipher status="preferred" sslversion="TLSv1.3" bits="256" cipher="TLS_AES_256_GCM_SHA384" id="0x1302" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="preferred" sslversion="TLSv1.3" bits="256" cipher="TLS_AES_256_GCM_SHA384" id="0x1302" strength="strong"/>
               <cipher status="preferred" sslversion="TLSv1.2" bits="256" cipher="ECDHE-RSA-AES256-GCM-SHA384" id="0xC030" strength="strong" curve="25519" ecdhebits="253"/>
             </ssltest>
           </document>
