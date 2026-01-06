@@ -23,14 +23,16 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 %undefine       timestamp
 %undefine       commit_id
 
-%global         fedora_cutoff 43
+%global         rhel_nss_cutoff 9
+%global         fedora_nss_cutoff 42
+%global         fedora_tomcat_cutoff 43
 
 # Full version number:
 # - development/stabilization: <major>.<minor>.<update>-<phase>
 # - GA/update:                 <major>.<minor>.<update>
 %global         full_version %{major_version}.%{minor_version}.%{update_version}%{?phase:-}%{?phase}
 
-%if (0%{?rhel} && 0%{?rhel} >= 10) || (0%{?centos} && 0%{?centos} >= 9) || (0%{?fedora} && 0%{?fedora} >= 43) 
+%if 0%{?rhel} >= %{rhel_nss_cutoff} || 0%{?fedora} >= %{fedora_nss_cutoff}
 %global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
 %endif
 
@@ -84,7 +86,7 @@ ExcludeArch: i686
 
 %else
 
-%if  0%{?fedora} < %{fedora_cutoff}  ||  0%{?rhel} >= 10
+%if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat_cutoff} || 0%{?rhel} >= 10
 
 %define java_devel java-21-openjdk-devel
 %define java_headless java-21-openjdk-headless
@@ -92,7 +94,6 @@ ExcludeArch: i686
 %define maven_local maven-local
 
 %else
-# fedora >= 43
 
 %define java_devel java-25-openjdk-devel
 %define java_headless java-25-openjdk-headless
@@ -128,7 +129,7 @@ BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
 
-%if (0%{?fedora} && 0%{?fedora} >= 43) 
+%if 0%{?fedora} >= %{fedora_nss_cutoff}
 BuildRequires:  nss-devel >= 3.118
 BuildRequires:  nss-tools >= 3.118
 %else
@@ -153,7 +154,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS)
 
-%if (0%{?fedora} && 0%{?fedora} >= 43) 
+%if 0%{?rhel} >= %{rhel_nss_cutoff} || 0%{?fedora} >= %{fedora_nss_cutoff}
 Requires:       nss >= 3.118
 %else
 Requires:       nss >= 3.112
@@ -185,7 +186,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 Summary:        Java Security Services (JSS) Connector for Tomcat
 
 
-%if 0%{?fedora} >=  %{fedora_cutoff} || 0%{?rhel} >= 10
+%if 0%{?fedora} >= %{fedora_tomcat_cutoff} || 0%{?rhel} >= 10
 
 # Tomcat
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
@@ -295,7 +296,7 @@ This package provides test suite for JSS.
 %pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
 
 
-%if 0%{?fedora} >=  %{fedora_cutoff}  || 0%{?rhel} >= 10
+%if 0%{?fedora} >= %{fedora_tomcat_cutoff} || 0%{?rhel} >= 10
 
 # specify Maven artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
