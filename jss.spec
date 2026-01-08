@@ -154,7 +154,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS)
 
-%if 0%{?rhel} >= %{rhel_nss_cutoff} || 0%{?fedora} >= %{fedora_nss_cutoff}
+%if 0%{?fedora} >= %{fedora_nss_cutoff}
 Requires:       nss >= 3.118
 %else
 Requires:       nss >= 3.112
