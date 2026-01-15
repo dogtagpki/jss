@@ -11,7 +11,7 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 
 # Upstream version number:
 %global         major_version 5
-%global         minor_version 9
+%global         minor_version 10 
 %global         update_version 0
 
 # Development phase:
