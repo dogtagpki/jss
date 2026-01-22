@@ -84,7 +84,7 @@ ExcludeArch: i686
 ################################################################################
 
 # Use Java 21 before Fedora 43, otherwise use Java 25.
-# Use Java 17 before RHEL 10, otherwise use Java 21.
+# Use Java 17 before RHEL 9, otherwise use Java 21.
 
 %global         fedora_java21_cutoff 43
 %global         rhel_java17_cutoff 9
@@ -490,7 +490,7 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 # "Rebase to JSS 5.6.0-alpha1" which means the RPM includes all enhancements
 # and bug fixes from that upstream version.
 #
-# The <phase> is only available during development/stabilitation. It should
+# The <phase> is only available during development/stabilization. It should
 # not be included in GA/update releases.
 #
 # To list all changes in <branch> since <tag>:
