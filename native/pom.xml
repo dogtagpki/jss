@@ -43,7 +43,15 @@
                         </source>
                     </sources>
                     <compilerStartOptions>
-                        <compilerStartOption>-shared -Wl,-z,defs -Wl,-soname -Wl,libjss.so -I/usr/include/nspr -I/usr/include/nspr4 -I/usr/include/nss -I/usr/include/nss3 -fPIC</compilerStartOption>
+                        <compilerStartOption>-shared</compilerStartOption>
+                        <compilerStartOption>-fPIC</compilerStartOption>
+                        <compilerStartOption>-Wl,-z,defs</compilerStartOption>
+                        <compilerStartOption>-Wl,-soname</compilerStartOption>
+                        <compilerStartOption>-Wl,libjss.so</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nspr</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nspr4</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nss</compilerStartOption>
+                        <compilerStartOption>-I/usr/include/nss3</compilerStartOption>
                         <compilerStartOption>-I${JAVA_HOME}/include</compilerStartOption>
                         <compilerStartOption>-I${JAVA_HOME}/include/linux</compilerStartOption>
                         <compilerStartOption>-I${basedir}/src/main/native/org/mozilla/jss</compilerStartOption>
@@ -57,7 +65,17 @@
                         <compilerStartOption>-I${basedir}/../base/target/include</compilerStartOption>
                     </compilerStartOptions>
                     <linkerStartOptions>
-                        <linkerStartOption>-lsmime3 -lssl3 -lnss3 -lnssutil3 -lplc4 -lplds4 -lnspr4 -lpthread -ldl -shared -fPIC</linkerStartOption>
+                        <linkerStartOption>-lsmime3</linkerStartOption>
+                        <linkerStartOption>-lssl3</linkerStartOption>
+                        <linkerStartOption>-lnss3</linkerStartOption>
+                        <linkerStartOption>-lnssutil3</linkerStartOption>
+                        <linkerStartOption>-lplc4</linkerStartOption>
+                        <linkerStartOption>-lplds4</linkerStartOption>
+                        <linkerStartOption>-lnspr4</linkerStartOption>
+                        <linkerStartOption>-lpthread</linkerStartOption>
+                        <linkerStartOption>-ldl</linkerStartOption>
+                        <linkerStartOption>-shared</linkerStartOption>
+                        <linkerStartOption>-fPIC</linkerStartOption>
                     </linkerStartOptions>
                     <linkerFinalName>libjss</linkerFinalName>
                 </configuration>
