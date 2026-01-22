@@ -118,7 +118,7 @@ jobs:
 
     - name: Build with Maven
       run: |
-        docker exec jss mvn --batch-mode package
+        docker exec jss mvn --batch-mode -pl '!native,!symkey,!examples' package
 
     - name: Compare jss.jar
       run: |
@@ -192,6 +192,10 @@ jobs:
             --hostname=jss.example.com \
             jss
 
+          # get Fedora version
+          FEDORA_VERSION=$(docker exec jss sed -n 's/^VERSION_ID=//p' /etc/os-release)
+          echo "FEDORA_VERSION=$FEDORA_VERSION" >> $GITHUB_ENV
+
     - name: Install RPMs
       run: |
         docker exec jss bash -c "dnf install -y build/RPMS/*.rpm"
@@ -228,7 +232,23 @@ jobs:
             | tee maven.out
         diff rpm.out maven.out
 
+    - name: Compare jss-tomcat-9.0.jar
+      if: ${{ fromJSON(env.FEDORA_VERSION) < 43 }}
+      run: |
+        docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-9.0.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee rpm.out
+        docker exec jss jar tvf tomcat-9.0/target/jss-tomcat-9.0.jar \
+            | awk '{print $8;}' \
+            | sort \
+            | grep -v '/$' \
+            | tee maven.out
+        diff rpm.out maven.out
+
     - name: Compare jss-tomcat-10.1.jar
+      if: ${{ fromJSON(env.FEDORA_VERSION) >= 43 }}
       run: |
         docker exec jss jar tvf /usr/share/java/jss/jss-tomcat-10.1.jar \
             | awk '{print $8;}' \
