@@ -2,12 +2,13 @@
 Name:           jss
 ################################################################################
 
-Summary:        Java Security Services (JSS)
+%global         vendor_id dogtag
+%global         product_name Java Security Services (JSS)
+%global         product_id dogtag-jss
+
+Summary:        %{product_name}
 URL:            https://github.com/dogtagpki/jss
 License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.0
-
-%global         vendor_id dogtag
-%global         product_id %{vendor_id}-jss
 
 # Upstream version number:
 %global         major_version 5
@@ -20,21 +21,13 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # - GA/update (supported): <none>
 %global         phase beta1
 
-%undefine       timestamp
-%undefine       commit_id
-
-%global         rhel_nss_cutoff 9
-%global         fedora_nss_cutoff 42
-%global         fedora_tomcat_cutoff 43
-
 # Full version number:
 # - development/stabilization: <major>.<minor>.<update>-<phase>
 # - GA/update:                 <major>.<minor>.<update>
 %global         full_version %{major_version}.%{minor_version}.%{update_version}%{?phase:-}%{?phase}
 
-%if 0%{?rhel} >= %{rhel_nss_cutoff} || 0%{?fedora} >= %{fedora_nss_cutoff}
-%global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
-%endif
+%undefine       timestamp
+%undefine       commit_id
 
 # RPM version number:
 # - development:   <major>.<minor>.<update>~<phase>^<timestamp>.<commit_id>
@@ -42,9 +35,14 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # - GA/update:     <major>.<minor>.<update>
 #
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Versioning
-
 Version:        %{major_version}.%{minor_version}.%{update_version}%{?phase:~}%{?phase}%{?timestamp:^}%{?timestamp}%{?commit_id:.}%{?commit_id}
+
+# RPM release number
+%if 0%{?rhel} && 0%{?rhel} < 10
+Release:        1%{?dist}
+%else
 Release:        %autorelease
+%endif
 
 # To generate the source tarball:
 # $ git clone https://github.com/dogtagpki/jss.git
@@ -69,29 +67,45 @@ ExcludeArch: i686
 %endif
 
 ################################################################################
+# NSS
+################################################################################
+
+# Support PQC on Fedora 42 and RHEL 8 or later.
+
+%global         fedora_pqc_support 42
+%global         rhel_pqc_support 8
+
+%if 0%{?fedora} >= %{fedora_pqc_support} || 0%{?rhel} >= %{rhel_pqc_support}
+%global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
+%endif
+
+################################################################################
 # Java
 ################################################################################
 
-# use Java 17 on Fedora 39 or older and RHEL 9 or older
-# otherwise, use Java 21
+# Use Java 21 before Fedora 43, otherwise use Java 25.
+# Use Java 17 before RHEL 10, otherwise use Java 21.
+
+%global         fedora_java21_cutoff 43
+%global         rhel_java17_cutoff 9
 
 # maven-local is a subpackage of javapackages-tools
 
-%if 0%{?rhel} && 0%{?rhel} <= 9
+%if 0%{?rhel} && 0%{?rhel} < %{rhel_java17_cutoff}
 
 %define java_devel java-17-openjdk-devel
 %define java_headless java-17-openjdk-headless
 %define java_home %{_jvmdir}/jre-17-openjdk
-%define maven_local maven-local-openjdk17
+%define maven_local maven-local
 
 %else
 
-%if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat_cutoff} || 0%{?rhel} >= 10
+%if 0%{?fedora} && 0%{?fedora} < %{fedora_java21_cutoff} || 0%{?rhel}
 
 %define java_devel java-21-openjdk-devel
 %define java_headless java-21-openjdk-headless
 %define java_home %{_jvmdir}/jre-21-openjdk
-%define maven_local maven-local
+%define maven_local maven-local-openjdk21
 
 %else
 
@@ -103,6 +117,15 @@ ExcludeArch: i686
 %endif
 
 %endif
+
+################################################################################
+# Tomcat
+################################################################################
+
+# Use Tomcat 9 before Fedora 43 and RHEL 10, otherwise use Tomcat 10.
+
+%global         fedora_tomcat9_cutoff 43
+%global         rhel_tomcat9_cutoff 10
 
 ################################################################################
 # Build Options
@@ -129,12 +152,12 @@ BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
 
-%if 0%{?fedora} >= %{fedora_nss_cutoff}
-BuildRequires:  nss-devel >= 3.118
-BuildRequires:  nss-tools >= 3.118
-%else
+%if 0%{?rhel}
 BuildRequires:  nss-devel >= 3.112
 BuildRequires:  nss-tools >= 3.112
+%else
+BuildRequires:  nss-devel >= 3.118
+BuildRequires:  nss-tools >= 3.118
 %endif
 
 BuildRequires:  %{java_devel}
@@ -144,7 +167,7 @@ BuildRequires:  mvn(org.slf4j:slf4j-api)
 BuildRequires:  mvn(org.slf4j:slf4j-jdk14)
 
 %description
-Java Security Services (JSS) is a java native interface which provides a bridge
+%{product_name} is a java native interface which provides a bridge
 for java-based applications to use native Network Security Services (NSS).
 This only works with gcj. Other JREs require that JCE providers be signed.
 
@@ -152,12 +175,12 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 %package -n %{product_id}
 ################################################################################
 
-Summary:        Java Security Services (JSS)
+Summary:        %{product_name}
 
-%if 0%{?fedora} >= %{fedora_nss_cutoff}
-Requires:       nss >= 3.118
-%else
+%if 0%{?rhel}
 Requires:       nss >= 3.112
+%else
+Requires:       nss >= 3.118
 %endif
 
 Requires:       %{java_headless}
@@ -175,7 +198,7 @@ Conflicts:      idm-console-framework < 1.2
 Conflicts:      pki-base < 10.10.0
 
 %description -n %{product_id}
-Java Security Services (JSS) is a java native interface which provides a bridge
+%{product_name} is a java native interface which provides a bridge
 for java-based applications to use native Network Security Services (NSS).
 This only works with gcj. Other JREs require that JCE providers be signed.
 
@@ -183,12 +206,21 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 %package -n %{product_id}-tomcat
 ################################################################################
 
-Summary:        Java Security Services (JSS) Connector for Tomcat
+Summary:        %{product_name} Connector for Tomcat
 
+%if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat9_cutoff} || 0%{?rhel} && 0%{?rhel} < %{rhel_tomcat9_cutoff}
 
-%if 0%{?fedora} >= %{fedora_tomcat_cutoff} || 0%{?rhel} >= 10
+BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
+BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
+BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
 
-# Tomcat
+Requires:       %{product_id} = %{version}-%{release}
+Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
+Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
+
+%else
+
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
 BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
 BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
@@ -197,17 +229,6 @@ Requires:       %{product_id} = %{version}-%{release}
 Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
 Requires:       mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
 Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
-
-%else
-
-BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
-BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
-
-Requires:       %{product_id} = %{version}-%{release}
-Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-coyote) >=  9.0.62
-Requires:       mvn(org.apache.tomcat:tomcat-juli) >=  9.0.62
 
 %endif
 
@@ -227,14 +248,14 @@ Conflicts:      pki-servlet-engine <= 9.0
 
 %description -n %{product_id}-tomcat
 JSS Connector for Tomcat is a Java Secure Socket Extension (JSSE)
-module for Apache Tomcat that uses Java Security Services (JSS),
+module for Apache Tomcat that uses %{product_name},
 a Java interface to Network Security Services (NSS).
 
 ################################################################################
 %package -n %{product_id}-tools
 ################################################################################
 
-Summary:        Java Security Services (JSS) Tools
+Summary:        %{product_name} Tools
 
 Provides:       jss-tools = %{version}-%{release}
 Provides:       jss-tools = %{major_version}.%{minor_version}
@@ -252,7 +273,7 @@ This package contains JSS tools.
 %package -n %{product_id}-javadoc
 ################################################################################
 
-Summary:        Java Security Services (JSS) Javadocs
+Summary:        %{product_name} Javadocs
 
 Obsoletes:      jss-javadoc < %{version}-%{release}
 Provides:       jss-javadoc = %{version}-%{release}
@@ -268,7 +289,7 @@ This package contains the API documentation for JSS.
 %package -n %{product_id}-tests
 ################################################################################
 
-Summary:        Java Security Services (JSS) Tests
+Summary:        %{product_name} Tests
 
 BuildRequires:  mvn(org.junit.jupiter:junit-jupiter)
 BuildRequires:  mvn(org.opentest4j:opentest4j)
@@ -295,20 +316,7 @@ This package provides test suite for JSS.
 # flatten-maven-plugin is not available in RPM
 %pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
 
-
-%if 0%{?fedora} >= %{fedora_tomcat_cutoff} || 0%{?rhel} >= 10
-
-# specify Maven artifact locations
-%mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
-%mvn_file org.dogtagpki.jss:jss-tomcat-10.1     jss/jss-tomcat-10.1
-
-# specify Maven artifact packages
-%mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
-%mvn_package org.dogtagpki.jss:jss-tomcat-10.1  jss-tomcat
-
-%pom_disable_module tomcat-9.0
-
-%else
+%if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat9_cutoff} || 0%{?rhel} && 0%{?rhel} < %{rhel_tomcat9_cutoff}
 
 # specify Maven artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
@@ -319,6 +327,18 @@ This package provides test suite for JSS.
 %mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
 
 %pom_disable_module tomcat-10.1
+
+%else
+
+# specify Maven artifact locations
+%mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
+%mvn_file org.dogtagpki.jss:jss-tomcat-10.1    jss/jss-tomcat-10.1
+
+# specify Maven artifact packages
+%mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
+%mvn_package org.dogtagpki.jss:jss-tomcat-10.1 jss-tomcat
+
+%pom_disable_module tomcat-9.0
 
 %endif
 
@@ -463,7 +483,19 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %endif
 
 ################################################################################
+# For changelog header, use the RPM <version>~<phase>-<release>, for example
+# 5.6.0~alpha1-1.
+#
+# For changelog content, use the upstream <version>-<phase>, for example
+# "Rebase to JSS 5.6.0-alpha1" which means the RPM includes all enhancements
+# and bug fixes from that upstream version.
+#
+# The <phase> is only available during development/stabilitation. It should
+# not be included in GA/update releases.
+#
+# To list all changes in <branch> since <tag>:
+# $ git log --pretty=oneline --abbrev-commit --no-decorate <tag>..<branch>
+
 %changelog
-* Tue May 29 2018 Dogtag PKI Team <devel@lists.dogtagpki.org> 4.5.0-0
-- To list changes in <branch> since <tag>:
-  $ git log --pretty=oneline --abbrev-commit --no-decorate <tag>..<branch>
+* Tue May 29 2018 Dogtag PKI Team <devel@lists.dogtagpki.org> 4.5.0-1
+- Rebase to JSS 4.5.0
