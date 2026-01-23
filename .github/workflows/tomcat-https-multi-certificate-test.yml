@@ -40,6 +40,10 @@ jobs:
               --network-alias=server.example.com \
               server
 
+          # get Fedora version
+          FEDORA_VERSION=$(docker exec server sed -n 's/^VERSION_ID=//p' /etc/os-release)
+          echo "FEDORA_VERSION=$FEDORA_VERSION" >> $GITHUB_ENV
+
       - name: Import LDAP SDK packages
         run: |
           docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:latest
@@ -144,20 +148,44 @@ jobs:
           docker exec server pki-server start --wait -v
 
       - name: Check connection using RSA certificate
+        if: ${{ fromJSON(env.FEDORA_VERSION) < 43 }}
         run: |
-          echo "Hello" | \
-          docker exec server openssl s_client -sigalgs 'RSA-PSS+SHA256'  \
-          server.example.com:8443 | tee output
+          echo "Hello" \
+            | docker exec server openssl s_client -sigalgs 'RSA-PSS+SHA256' server.example.com:8443 \
+            | tee output
+
+          echo "   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256" > expected
+          grep "a:PKEY" output > actual
+          diff expected actual
+
+      - name: Check connection using RSA certificate
+        if: ${{ fromJSON(env.FEDORA_VERSION) >= 43 }}
+        run: |
+          echo "Hello" \
+            | docker exec server openssl s_client -sigalgs 'RSA-PSS+SHA256' server.example.com:8443 \
+            | tee output
 
           echo "   a:PKEY: RSA, 2048 (bit); sigalg: sha256WithRSAEncryption" > expected
           grep "a:PKEY" output > actual
           diff expected actual
-          
+
       - name: Check connection using EC certificate
+        if: ${{ fromJSON(env.FEDORA_VERSION) < 43 }}
         run: |
-          echo "Hello" | \
-          docker exec server openssl s_client -sigalgs 'ECDSA+SHA256'  \
-          server.example.com:8443 | tee output
+          echo "Hello" \
+            | docker exec server openssl s_client -sigalgs 'ECDSA+SHA256' server.example.com:8443 \
+            | tee output
+
+          echo "   a:PKEY: id-ecPublicKey, 256 (bit); sigalg: ecdsa-with-SHA256" > expected
+          grep "a:PKEY" output > actual
+          diff expected actual
+
+      - name: Check connection using EC certificate
+        if: ${{ fromJSON(env.FEDORA_VERSION) >= 43 }}
+        run: |
+          echo "Hello" \
+            | docker exec server openssl s_client -sigalgs 'ECDSA+SHA256' server.example.com:8443 \
+            | tee output
 
           echo "   a:PKEY: EC, (prime256v1); sigalg: ecdsa-with-SHA256" > expected
           grep "a:PKEY" output > actual
