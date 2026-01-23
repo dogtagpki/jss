@@ -40,6 +40,10 @@ jobs:
               --network-alias=server.example.com \
               server
 
+          # get Fedora version
+          FEDORA_VERSION=$(docker exec server sed -n 's/^VERSION_ID=//p' /etc/os-release)
+          echo "FEDORA_VERSION=$FEDORA_VERSION" >> $GITHUB_ENV
+
       - name: Import LDAP SDK packages
         run: |
           docker create --name=ldapjdk-dist quay.io/$NAMESPACE/ldapjdk-dist:5.6
@@ -154,8 +158,45 @@ jobs:
           diff expected actual
 
       - name: Check ciphers
+        if: ${{ fromJSON(env.FEDORA_VERSION) < 43 }}
         run: |
-          # only TLS1.2 and TLS 1.3 ciphers should be supported
+          # only TLS 1.2 and TLS 1.3 ciphers should be supported
+          cat > expected << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document>
+            <ssltest host="server.example.com" sniname="server.example.com" port="8443">
+              <cipher status="preferred" sslversion="TLSv1.3" bits="128" cipher="TLS_AES_128_GCM_SHA256" id="0x1301" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.3" bits="256" cipher="TLS_CHACHA20_POLY1305_SHA256" id="0x1303" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.3" bits="256" cipher="TLS_AES_256_GCM_SHA384" id="0x1302" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="preferred" sslversion="TLSv1.2" bits="128" cipher="ECDHE-RSA-AES128-GCM-SHA256" id="0xC02F" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="ECDHE-RSA-CHACHA20-POLY1305" id="0xCCA8" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="ECDHE-RSA-AES256-GCM-SHA384" id="0xC030" strength="strong" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="128" cipher="ECDHE-RSA-AES128-SHA" id="0xC013" strength="medium" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="128" cipher="ECDHE-RSA-AES128-SHA256" id="0xC027" strength="acceptable" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="ECDHE-RSA-AES256-SHA" id="0xC014" strength="medium" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="ECDHE-RSA-AES256-SHA384" id="0xC028" strength="acceptable" curve="25519" ecdhebits="253"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="128" cipher="DHE-RSA-AES128-GCM-SHA256" id="0x009E" strength="strong" dhebits="2048"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="DHE-RSA-CHACHA20-POLY1305" id="0xCCAA" strength="strong" dhebits="2048"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="DHE-RSA-AES256-GCM-SHA384" id="0x009F" strength="strong" dhebits="2048"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="128" cipher="DHE-RSA-AES128-SHA" id="0x0033" strength="medium" dhebits="2048"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="128" cipher="DHE-RSA-AES128-SHA256" id="0x0067" strength="acceptable" dhebits="2048"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="DHE-RSA-AES256-SHA" id="0x0039" strength="medium" dhebits="2048"/>
+              <cipher status="accepted" sslversion="TLSv1.2" bits="256" cipher="DHE-RSA-AES256-SHA256" id="0x006B" strength="acceptable" dhebits="2048"/>
+            </ssltest>
+          </document>
+          EOF
+
+          xmlstarlet ed \
+              -d '/document/@*' \
+              -d '/document/ssltest/*[not(self::cipher)]' \
+              sslscan.xml | tee actual
+
+          diff expected actual
+
+      - name: Check ciphers
+        if: ${{ fromJSON(env.FEDORA_VERSION) >= 43 }}
+        run: |
+          # only TLS 1.2 and TLS 1.3 ciphers should be supported
           cat > expected << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <document>
@@ -189,26 +230,59 @@ jobs:
           diff expected actual
 
       - name: Check key exchange groups
+        if: ${{ fromJSON(env.FEDORA_VERSION) < 43 }}
         run: |
           # only TLS 1.2 and TLS 1.3 key exchange groups should be supported
           cat > expected << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <document>
             <ssltest host="server.example.com" sniname="server.example.com" port="8443">
-              <group sslversion="TLSv1.3" bits="128" name="secp256r1 (NIST P-256)" id="0x0017"/>
-              <group sslversion="TLSv1.3" bits="192" name="secp384r1 (NIST P-384)" id="0x0018"/>
-              <group sslversion="TLSv1.3" bits="260" name="secp521r1 (NIST P-521)" id="0x0019"/>
-              <group sslversion="TLSv1.3" bits="128" name="x25519" id="0x001d"/>
-              <group sslversion="TLSv1.3" bits="112" name="ffdhe2048" id="0x0100"/>
-              <group sslversion="TLSv1.3" bits="128" name="ffdhe3072" id="0x0101"/>
-              <group sslversion="TLSv1.3" bits="150" name="ffdhe4096" id="0x0102"/>
-              <group sslversion="TLSv1.3" bits="175" name="ffdhe6144" id="0x0103"/>
-              <group sslversion="TLSv1.3" bits="192" name="ffdhe8192" id="0x0104"/>
-              <group sslversion="TLSv1.3" bits="192" name="X25519MLKEM768" id="0x11ec"/>
-              <group sslversion="TLSv1.2" bits="128" name="secp256r1 (NIST P-256)" id="0x0017"/>
-              <group sslversion="TLSv1.2" bits="192" name="secp384r1 (NIST P-384)" id="0x0018"/>
-              <group sslversion="TLSv1.2" bits="260" name="secp521r1 (NIST P-521)" id="0x0019"/>
-              <group sslversion="TLSv1.2" bits="128" name="x25519" id="0x001d"/>
+              <group sslversion="TLSv1.3" bits="128" name="secp256r1 (NIST P-256)" id="0x0017" strength="good"/>
+              <group sslversion="TLSv1.3" bits="192" name="secp384r1 (NIST P-384)" id="0x0018" strength="good"/>
+              <group sslversion="TLSv1.3" bits="260" name="secp521r1 (NIST P-521)" id="0x0019" strength="good"/>
+              <group sslversion="TLSv1.3" bits="128" name="x25519" id="0x001d" strength="good"/>
+              <group sslversion="TLSv1.3" bits="112" name="ffdhe2048" id="0x0100" strength="medium"/>
+              <group sslversion="TLSv1.3" bits="128" name="ffdhe3072" id="0x0101" strength="good"/>
+              <group sslversion="TLSv1.3" bits="150" name="ffdhe4096" id="0x0102" strength="good"/>
+              <group sslversion="TLSv1.3" bits="175" name="ffdhe6144" id="0x0103" strength="good"/>
+              <group sslversion="TLSv1.3" bits="192" name="ffdhe8192" id="0x0104" strength="good"/>
+              <group sslversion="TLSv1.2" bits="128" name="secp256r1 (NIST P-256)" id="0x0017" strength="good"/>
+              <group sslversion="TLSv1.2" bits="192" name="secp384r1 (NIST P-384)" id="0x0018" strength="good"/>
+              <group sslversion="TLSv1.2" bits="260" name="secp521r1 (NIST P-521)" id="0x0019" strength="good"/>
+              <group sslversion="TLSv1.2" bits="128" name="x25519" id="0x001d" strength="good"/>
+            </ssltest>
+          </document>
+          EOF
+
+          xmlstarlet ed \
+              -d '/document/@*' \
+              -d '/document/ssltest/*[not(self::group)]' \
+              sslscan.xml | tee actual
+
+          diff expected actual
+
+      - name: Check key exchange groups
+        if: ${{ fromJSON(env.FEDORA_VERSION) >= 43 }}
+        run: |
+          # only TLS 1.2 and TLS 1.3 key exchange groups should be supported
+          cat > expected << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document>
+            <ssltest host="server.example.com" sniname="server.example.com" port="8443">
+              <group sslversion="TLSv1.3" bits="128" name="secp256r1 (NIST P-256)" id="0x0017" strength="good"/>
+              <group sslversion="TLSv1.3" bits="192" name="secp384r1 (NIST P-384)" id="0x0018" strength="good"/>
+              <group sslversion="TLSv1.3" bits="260" name="secp521r1 (NIST P-521)" id="0x0019" strength="good"/>
+              <group sslversion="TLSv1.3" bits="128" name="x25519" id="0x001d" strength="good"/>
+              <group sslversion="TLSv1.3" bits="112" name="ffdhe2048" id="0x0100" strength="medium"/>
+              <group sslversion="TLSv1.3" bits="128" name="ffdhe3072" id="0x0101" strength="good"/>
+              <group sslversion="TLSv1.3" bits="150" name="ffdhe4096" id="0x0102" strength="good"/>
+              <group sslversion="TLSv1.3" bits="175" name="ffdhe6144" id="0x0103" strength="good"/>
+              <group sslversion="TLSv1.3" bits="192" name="ffdhe8192" id="0x0104" strength="good"/>
+              <group sslversion="TLSv1.3" bits="192" name="X25519MLKEM768" id="0x11ec" strength="good"/>
+              <group sslversion="TLSv1.2" bits="128" name="secp256r1 (NIST P-256)" id="0x0017" strength="good"/>
+              <group sslversion="TLSv1.2" bits="192" name="secp384r1 (NIST P-384)" id="0x0018" strength="good"/>
+              <group sslversion="TLSv1.2" bits="260" name="secp521r1 (NIST P-521)" id="0x0019" strength="good"/>
+              <group sslversion="TLSv1.2" bits="128" name="x25519" id="0x001d" strength="good"/>
             </ssltest>
           </document>
           EOF
