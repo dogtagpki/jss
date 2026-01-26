@@ -64,7 +64,8 @@ jobs:
       docker exec -w /root/src runner dnf builddep -y --spec jss.spec
     displayName: Install build dependencies
 
-  - script: docker exec -w /root/src runner ./build.sh
+  - script: |
+      docker exec -w /root/src runner ./build.sh --cmake='/usr/bin/cmake -DENABLE_NSS_VERSION_PQC_DEF=ON'
     displayName: Build JSS binaries, Javadoc, and run tests
 
 - job: BuildTest_apt
