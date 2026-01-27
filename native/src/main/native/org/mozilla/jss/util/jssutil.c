@@ -1026,6 +1026,7 @@ JSS_ExportEncryptedPrivKeyInfoV2(
             /* couldn't import the wrapping key, try exchanging the
              *  key */
             CK_FLAGS opFlags = 0;
+            opFlags |= CKF_WRAP;
             opFlags |= CKF_UNWRAP;
             opFlags |= CKF_DECRYPT;
             opFlags |= CKF_ENCRYPT;
