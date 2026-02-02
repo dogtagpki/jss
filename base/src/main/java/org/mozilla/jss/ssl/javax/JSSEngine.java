@@ -54,15 +54,17 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public static Logger logger = LoggerFactory.getLogger(JSSEngine.class);
 
     /**
-     * Size of the underlying BUFFERs.
-     *
-     * Helps to be large enough to fit well-formed SSL packets during the
-     * initial handshake and subsequent data transfer.
+     * Default buffer size for traditional cryptographic algorithms (RSA, ECDSA, etc.)
      *
      * See MAX_ENCRYPTED_PACKET_LENGTH calculation from Tomcat's
      *     org.apache.tomcat.util.net.openssl.OpenSSLEngine.
      */
-    protected static int BUFFER_SIZE = 5 + 1024 + 1024 + 20 + 256 + (1 << 14);
+    protected static final int DEFAULT_BUFFER_SIZE = 5 + 1024 + 1024 + 20 + 256 + (1 << 14);
+
+    /**
+     * Size of the underlying BUFFERs.
+     */
+    protected int bufferSize = Integer.getInteger("jdk.tls.maxHandshakeMessageSize", DEFAULT_BUFFER_SIZE);
 
     /**
      * Whether or not this SSLEngine is acting as the client end of the
@@ -221,7 +223,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public JSSEngine() {
         super();
 
-        session = new JSSSession(this, BUFFER_SIZE);
+        session = new JSSSession(this, bufferSize);
         config = getDefaultConfiguration();
     }
 
@@ -235,7 +237,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public JSSEngine(String peerHost, int peerPort) {
         super(peerHost, peerPort);
 
-        session = new JSSSession(this, BUFFER_SIZE);
+        session = new JSSSession(this, bufferSize);
         session.setPeerHost(peerHost);
         session.setPeerPort(peerPort);
         config = getDefaultConfiguration();
@@ -256,7 +258,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
         certs = new ArrayList<>();
         certs.add(ImmutablePair.of((PK11Cert) localCert, (PK11PrivKey) localKey));
 
-        session = new JSSSession(this, BUFFER_SIZE);
+        session = new JSSSession(this, bufferSize);
         session.setPeerHost(peerHost);
         session.setPeerPort(peerPort);
         config = getDefaultConfiguration();

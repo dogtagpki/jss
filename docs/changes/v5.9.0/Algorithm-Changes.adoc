@@ -14,3 +14,4 @@ The following algorithms for object signature are introduced:
 * `ML-DSA`
 
 
+IMPORTANT: when ML-DSA certificates are used for SSL communication the handshake message can exceed the default size of the allocated buffer generating an exception. The buffer size can be increased with the java option `jdk.tls.maxHandshakeMessageSize`.
