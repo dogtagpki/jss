@@ -301,12 +301,12 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (read_buf != null) {
             Buffer.Free(read_buf);
         }
-        read_buf = Buffer.Create(BUFFER_SIZE);
+        read_buf = Buffer.Create(bufferSize);
 
         if (write_buf != null) {
             Buffer.Free(write_buf);
         }
-        write_buf = Buffer.Create(BUFFER_SIZE);
+        write_buf = Buffer.Create(bufferSize);
     }
 
     private void createBufferFD() throws SSLException {
@@ -611,17 +611,17 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         try {
             ss_socket = new ServerSocket(debug_port);
             ss_socket.setReuseAddress(true);
-            ss_socket.setReceiveBufferSize(BUFFER_SIZE);
+            ss_socket.setReceiveBufferSize(bufferSize);
 
             c_socket = new Socket(ss_socket.getInetAddress(), ss_socket.getLocalPort());
             c_socket.setReuseAddress(true);
-            c_socket.setReceiveBufferSize(BUFFER_SIZE);
-            c_socket.setSendBufferSize(BUFFER_SIZE);
+            c_socket.setReceiveBufferSize(bufferSize);
+            c_socket.setSendBufferSize(bufferSize);
 
             s_socket = ss_socket.accept();
             s_socket.setReuseAddress(true);
-            s_socket.setReceiveBufferSize(BUFFER_SIZE);
-            s_socket.setSendBufferSize(BUFFER_SIZE);
+            s_socket.setReceiveBufferSize(bufferSize);
+            s_socket.setSendBufferSize(bufferSize);
 
             s_istream = s_socket.getInputStream();
             s_ostream = s_socket.getOutputStream();
@@ -1217,6 +1217,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         boolean handshake_already_complete = ssl_fd.handshakeComplete;
         int src_capacity = src.remaining();
 
+        // Check if the incoming packet is larger than our buffer capacity.
+        // This prevents silent performance degradation from looping when
+        // processing large TLS packets (e.g., ML-DSA certificates).
+        if (src_capacity > bufferSize) {
+            String msg = "Incoming TLS packet size (" + src_capacity + " bytes) exceeds ";
+            msg += "buffer capacity (" + bufferSize + " bytes). ";
+            msg += "This may indicate Post-Quantum Cryptography (ML-DSA) is generating ";
+            msg += "large handshake messages. In this case the buffer can be defined with ";
+            msg += "the java property 'jdk.tls.maxHandshakeMessageSize'.";            
+            throw new SSLException(msg);
+        }
+
         logUnwrap(src);
 
         // Order of operations:
@@ -1376,7 +1388,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // srcs[index].remaining() > 0. There's no point in getting more
             // than BUFFER_SIZE bytes either; so cap at the minimum of the
             // two sizes.
-            int expected_write = Math.min(srcs[index].remaining(), BUFFER_SIZE);
+            int expected_write = Math.min(srcs[index].remaining(), bufferSize);
             debug("JSSEngine.writeData(): expected_write=" + expected_write + " write_cap=" + Buffer.WriteCapacity(write_buf) + " read_cap=" + Buffer.ReadCapacity(read_buf));
 
             // Get data from our current srcs[index] buffer.
@@ -1530,6 +1542,21 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             // First we try updating the handshake state.
             updateHandshakeState();
+
+            // Check if write_buf has accumulated excessive data, indicating
+            // NSS is trying to send a packet larger than our buffer capacity.
+            // This prevents silent performance degradation from looping when
+            // sending large TLS packets (e.g., ML-DSA certificate messages).
+            long write_buf_data = Buffer.ReadCapacity(write_buf);
+            if (write_buf_data >= bufferSize) {
+                String msg = "Outbound TLS data in buffer (" + write_buf_data + " bytes) ";
+                msg += "has reached buffer capacity (" + bufferSize + " bytes). ";
+                msg += "This may indicate Post-Quantum Cryptography (ML-DSA) is generating ";
+                msg += "large handshake messages. In this case the buffer can be defined with ";
+                msg += "the java property 'jdk.tls.maxHandshakeMessageSize'.";            
+                throw new SSLException(msg);
+            }
+
             if (ssl_exception == null && seen_exception) {
                 if (handshake_state != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
                     // In the event that:
