@@ -19,7 +19,7 @@ License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (supported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%global         phase beta1
+%global         phase beta2
 
 # Full version number:
 # - development/stabilization: <major>.<minor>.<update>-<phase>
