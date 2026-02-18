@@ -1220,7 +1220,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // Check if the incoming packet is larger than our buffer capacity.
         // This prevents silent performance degradation from looping when
         // processing large TLS packets (e.g., ML-DSA certificates).
-        if (src_capacity > bufferSize) {
+        if (src_capacity > bufferSize && !handshake_already_complete) {
             String msg = "Incoming TLS packet size (" + src_capacity + " bytes) exceeds ";
             msg += "buffer capacity (" + bufferSize + " bytes). ";
             msg += "This may indicate Post-Quantum Cryptography (ML-DSA) is generating ";
@@ -1548,7 +1548,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // This prevents silent performance degradation from looping when
             // sending large TLS packets (e.g., ML-DSA certificate messages).
             long write_buf_data = Buffer.ReadCapacity(write_buf);
-            if (write_buf_data >= bufferSize) {
+            if (write_buf_data >= bufferSize && !ssl_fd.handshakeComplete) {
                 String msg = "Outbound TLS data in buffer (" + write_buf_data + " bytes) ";
                 msg += "has reached buffer capacity (" + bufferSize + " bytes). ";
                 msg += "This may indicate Post-Quantum Cryptography (ML-DSA) is generating ";
