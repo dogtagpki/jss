@@ -757,6 +757,7 @@ kbkdf_GetInitialValue(JNIEnv *env, jobject this, jclass this_class, CK_ULONG *in
 {
     jfieldID field_id = NULL;
     jobjectArray iv_array = NULL;
+    size_t st_initial_value_length = 0;
 
     field_id = (*env)->GetFieldID(env, this_class, "initial_value", "[B");
     if (field_id == NULL) {
@@ -770,8 +771,12 @@ kbkdf_GetInitialValue(JNIEnv *env, jobject this, jclass this_class, CK_ULONG *in
         return PR_SUCCESS;
     }
 
-    if (!JSS_FromByteArray(env, iv_array, initial_value, initial_value_length)) {
+    if (!JSS_FromByteArray(env, iv_array, initial_value, &st_initial_value_length)) {
         return PR_FAILURE;
+    }
+
+    if (initial_value_length != NULL) {
+        *initial_value_length = st_initial_value_length;
     }
 
     return PR_SUCCESS;
