@@ -47,6 +47,7 @@ oaep_GetSpecifiedSourceData(JNIEnv *env, jobject this, jclass this_class, CK_VOI
 {
     jfieldID field_id = NULL;
     jbyteArray data = NULL;
+    size_t st_ret_len = 0;
 
     field_id = (*env)->GetFieldID(env, this_class, "sourceData", "[B");
     if (field_id == NULL) {
@@ -60,8 +61,12 @@ oaep_GetSpecifiedSourceData(JNIEnv *env, jobject this, jclass this_class, CK_VOI
         return PR_SUCCESS;
     }
 
-    if (!JSS_FromByteArray(env, data, (uint8_t **)ret, ret_len)) {
+    if (!JSS_FromByteArray(env, data, (uint8_t **)ret, &st_ret_len)) {
         return PR_FAILURE;
+    }
+
+    if (ret_len != NULL) {
+        *ret_len = st_ret_len;
     }
 
     return PR_SUCCESS;
