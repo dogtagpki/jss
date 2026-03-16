@@ -776,7 +776,11 @@ kbkdf_GetInitialValue(JNIEnv *env, jobject this, jclass this_class, CK_ULONG *in
     }
 
     if (initial_value_length != NULL) {
-        *initial_value_length = st_initial_value_length;
+        if (sizeof(size_t) > sizeof(CK_ULONG) && st_initial_value_length > (CK_ULONG)-1) {
+            /* This should be impossible as length comes from a jbyteArray */
+            return PR_FAILURE;
+        }
+        *initial_value_length = (CK_ULONG)st_initial_value_length;
     }
 
     return PR_SUCCESS;

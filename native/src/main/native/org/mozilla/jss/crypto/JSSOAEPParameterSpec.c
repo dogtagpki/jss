@@ -66,7 +66,11 @@ oaep_GetSpecifiedSourceData(JNIEnv *env, jobject this, jclass this_class, CK_VOI
     }
 
     if (ret_len != NULL) {
-        *ret_len = st_ret_len;
+        if (sizeof(size_t) > sizeof(CK_ULONG) && st_ret_len > (CK_ULONG)-1) {
+            /* This should be impossible as length comes from a jbyteArray */
+            return PR_FAILURE;
+        }
+        *ret_len = (CK_ULONG)st_ret_len;
     }
 
     return PR_SUCCESS;
