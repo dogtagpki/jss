@@ -320,8 +320,11 @@ public final class PK11KeyPairGenerator
             if (!(params instanceof PK11ParameterSpec)) {
                 throw new InvalidAlgorithmParameterException("Expected params to either be an instance of ECGenParameterSpec or PK11ParameterSpec!");
             }
-        } else {
-            throw new InvalidParameterException("Invocation not expted wiht ML-DSA");
+        } else if (algorithm == KeyPairAlgorithm.MLDSA) {
+            if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-DSA-"))) {
+                throw new InvalidParameterException("Parameter not supported wiht ML-DSA");
+            }
+            
         } // future add support for X509EncodedSpec
 
         this.params = params;
