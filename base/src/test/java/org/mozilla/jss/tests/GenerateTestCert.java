@@ -116,6 +116,7 @@ public class GenerateTestCert {
             keyType = "RSA";
         } else if (alg.equals("ML-DSA")) {
             keyType = "ML-DSA";
+            keyLength = 65;
         } else if (alg.endsWith("DSA")) {
             keyType = "DSA";
             keyLength = 1024;

@@ -96,4 +96,19 @@ public class JSSKeyPairGeneratorSpi
             super(KeyPairAlgorithm.MLDSA, 87);
         }
     }
+    public static class MLKEM512 extends JSSKeyPairGeneratorSpi {
+        public MLKEM512() {
+            super(KeyPairAlgorithm.MLKEM, 512);
+        }
+    }
+    public static class MLKEM768 extends JSSKeyPairGeneratorSpi {
+        public MLKEM768() {
+            super(KeyPairAlgorithm.MLKEM, 768);
+        }
+    }
+    public static class MLKEM1024 extends JSSKeyPairGeneratorSpi {
+        public MLKEM1024() {
+            super(KeyPairAlgorithm.MLKEM, 1024);
+        }
+    }
 }
