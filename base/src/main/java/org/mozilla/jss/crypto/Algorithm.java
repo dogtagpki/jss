@@ -278,4 +278,8 @@ public class Algorithm {
     protected static final int CKM_ML_DSA_KEY_PAIR_GEN = 85;
     protected static final int CKM_ML_DSA = 86;
     protected static final int SEC_OID_ML_DSA_SIGNATURE = 87;
+
+    // ML-KEM
+    protected static final int CKM_ML_KEM_KEY_PAIR_GEN = 88;
+    protected static final int CKM_ML_KEM = 89;
 }
