@@ -25,7 +25,7 @@ typedef struct JSS_AlgInfoStr {
 } JSS_AlgInfo;
 
 #ifdef NSS_VERSION_PQC_DEF
-#define NUM_ALGS 88
+#define NUM_ALGS 90
 #else
 #define NUM_ALGS 85
 #endif

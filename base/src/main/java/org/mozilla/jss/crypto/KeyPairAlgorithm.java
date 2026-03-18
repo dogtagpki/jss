@@ -75,6 +75,9 @@ public class KeyPairAlgorithm extends Algorithm {
     public static final Algorithm
     MLDSAFamily = new Algorithm(CKM_ML_DSA, "ML-DSA");
 
+    public static final Algorithm
+    MLKEMFamily = new Algorithm(CKM_ML_KEM, "ML-KEM");
+
     public static final KeyPairAlgorithm
     RSA = new KeyPairAlgorithm(CKM_RSA_PKCS_KEY_PAIR_GEN, "RSA", RSAFamily);
 
@@ -86,4 +89,7 @@ public class KeyPairAlgorithm extends Algorithm {
 
     public static final KeyPairAlgorithm
     MLDSA = new KeyPairAlgorithm(CKM_ML_DSA_KEY_PAIR_GEN, "ML-DSA", MLDSAFamily);
+
+    public static final KeyPairAlgorithm
+    MLKEM = new KeyPairAlgorithm(CKM_ML_KEM_KEY_PAIR_GEN, "ML-KEM", MLKEMFamily);
 }
