@@ -447,7 +447,9 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair
         param = CKP_ML_DSA_87;
 //        param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_87);
     } else {
-        JSS_throw(env, ILLEGAL_ARGUMENT_EXCEPTION);
+        char *msg = PR_smprintf("Invalid ML-DSA key strength:  %d", size);
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION, msg);
+        PR_smprintf_free(msg);
         goto finish;
     } 
 
@@ -489,7 +491,9 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
         param = CKP_ML_DSA_87;
 //        param = SECKEY_GetMLDSAPkcs11ParamSetByOidTag(SEC_OID_ML_DSA_87);
     } else {
-        JSS_throw(env, ILLEGAL_ARGUMENT_EXCEPTION);
+        char *msg = PR_smprintf("Invalid ML-DSA key strength:  %d", size);
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION, msg);
+        PR_smprintf_free(msg);
         goto finish;
     } 
 
@@ -500,6 +504,89 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
 
     keyPair = PK11KeyPairGeneratorWithOpFlags(env, this, token,
                 CKM_ML_DSA_KEY_PAIR_GEN, &param, temporary, 
+                sensitive, extractable,
+                op_flags, op_flags_mask);
+
+finish:
+    return keyPair;
+#else
+    return NULL;
+#endif
+}
+
+/**********************************************************************
+ *
+ * PK11KeyPairGenerator._generateMLKEMKeyPair
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair
+  (JNIEnv *env, jobject this, jobject token, jint size,
+    jboolean temporary, jint sensitive, jint extractable)
+{
+#ifdef NSS_VERSION_PQC_DEF
+    CK_ML_KEM_PARAMETER_SET_TYPE  param;
+    if (size == 512) {
+        param = CKP_ML_KEM_512;
+    } else if (size == 768) {
+        param = CKP_ML_KEM_768;
+    } else if (size == 1024) {
+        param = CKP_ML_KEM_1024;
+    } else {
+        char *msg = PR_smprintf("Invalid ML-KEM key strength:  %d", size);
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION, msg);
+        PR_smprintf_free(msg);
+        goto finish;
+    }
+
+    jobject keyPair=NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
+
+
+    keyPair = PK11KeyPairGenerator(env, this, token, CKM_ML_KEM_KEY_PAIR_GEN,
+     			&param, temporary, sensitive, extractable);
+
+finish:
+    return keyPair;
+#else
+    return NULL;
+#endif
+}
+
+/**********************************************************************
+ *
+ * PK11KeyPairGenerator.generateMLKEMKeyPairWithOpFlags
+ *
+ */
+JNIEXPORT jobject JNICALL
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags
+  (JNIEnv *env, jobject this, jobject token, jint size,
+    jboolean temporary, jint sensitive, jint extractable,
+    jint op_flags, jint op_flags_mask)
+{
+#ifdef NSS_VERSION_PQC_DEF
+    CK_ML_KEM_PARAMETER_SET_TYPE  param;
+    if (size == 512) {
+        param = CKP_ML_KEM_512;
+    } else if (size == 768) {
+        param = CKP_ML_KEM_768;
+    } else if (size == 1024) {
+        param = CKP_ML_KEM_1024;
+    } else {
+        char *msg = PR_smprintf("Invalid ML-KEM key strength:  %d", size);
+        JSS_throwMsg(env, ILLEGAL_ARGUMENT_EXCEPTION, msg);
+        PR_smprintf_free(msg);
+        goto finish;
+    }
+
+    jobject keyPair=NULL;
+
+    PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
+
+
+    keyPair = PK11KeyPairGeneratorWithOpFlags(env, this, token,
+                CKM_ML_KEM_KEY_PAIR_GEN, &param, temporary,
                 sensitive, extractable,
                 op_flags, op_flags_mask);
 

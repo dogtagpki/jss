@@ -171,8 +171,10 @@ public final class PK11KeyPairGenerator
      * @param token The PKCS #11 token that the keypair will be generated on.
      * @param algorithm The type of key that will be generated.  Currently,
      *      <code>KeyPairAlgorithm.RSA</code> ,
-     *      <code>KeyPairAlgorithm.DSA</code> and
-     *      <code>KeyPairAlgorithm.EC</code> are supported.
+     *      <code>KeyPairAlgorithm.DSA</code> ,
+     *      <code>KeyPairAlgorithm.EC</code> ,
+     *      <code>KeyPairAlgorithm.MLDSA</code> and
+     *      <code>KeyPairAlgorithm.MLKEM</code> are supported.
      * @throws NoSuchAlgorithmException
      * @throws TokenException
      */
@@ -235,7 +237,7 @@ public final class PK11KeyPairGenerator
                 params = PQG1024;
             } else {
                 throw new InvalidParameterException(
-                    "In order to use pre-cooked PQG values, key strength must"+
+                    "In order to use pre-cooked PQG values, key strength must " +
                     "be 512, 768, or 1024.");
             }
         } else if (algorithm == KeyPairAlgorithm.EC) {
@@ -249,7 +251,7 @@ public final class PK11KeyPairGenerator
                 params = getCurve(strength);
             }
         } else if (algorithm == KeyPairAlgorithm.MLDSA){
-            // Java v.24 has these value already defined
+            // Java v.24 has these values already defined
             switch (strength) {
                 case 44:
                     params = new NamedParameterSpec("ML-DSA-44");
@@ -261,10 +263,33 @@ public final class PK11KeyPairGenerator
                     params = new NamedParameterSpec("ML-DSA-87");
                     break;
                 default:
-                    params = new NamedParameterSpec("ML-DSA-65");
+                    throw new InvalidParameterException(
+                        String.format(
+                            "Invalid parameter: %d. ML-DSA key strength must be 44, 65 or 87",
+                             strength)
+                    );
+            }
+        } else if (algorithm == KeyPairAlgorithm.MLKEM){
+            // Java v.24 has these values already defined
+            switch (strength) {
+                case 512:
+                    params = new NamedParameterSpec("ML-KEM-512");
+                    break;
+                case 768:
+                    params = new NamedParameterSpec("ML-KEM-768");
+                    break;
+                case 1024:
+                    params = new NamedParameterSpec("ML-KEM-1024");
+                    break;
+                default:
+                    throw new InvalidParameterException(
+                        String.format(
+                            "Invalid parameter: %d. ML-KEM key strength must be 512, 768 or 1024",
+                             strength)
+                    );
             }
         } else {
-            throw new InvalidParameterException("Invocation not expted wiht ML-DSA");            
+            throw new InvalidParameterException("Initialization not supported");
         }
     }
 
@@ -322,7 +347,11 @@ public final class PK11KeyPairGenerator
             }
         } else if (algorithm == KeyPairAlgorithm.MLDSA) {
             if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-DSA-"))) {
-                throw new InvalidParameterException("Parameter not supported wiht ML-DSA");
+                throw new InvalidParameterException("Parameter not supported with ML-DSA key");
+            }
+        } else if (algorithm == KeyPairAlgorithm.MLKEM) {
+            if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-KEM-"))) {
+                throw new InvalidParameterException("Parameter not supported with ML-KEM key");
             }
             
         } // future add support for X509EncodedSpec
@@ -421,15 +450,42 @@ public final class PK11KeyPairGenerator
                 (int) opFlags,
                 (int) opFlagsMask);
         } else if (algorithm == KeyPairAlgorithm.MLDSA) {
-            NamedParameterSpec mlParams = (NamedParameterSpec) params;
-            int size = 65;
-            if (mlParams.getName().equals("ML-DSA-44")) {
-                size = 44;
+            NamedParameterSpec mlParams;
+            if (params instanceof NamedParameterSpec nParam) {
+                mlParams = nParam;
+            } else {
+                mlParams = new NamedParameterSpec("ML-DSA-65");
             }
-            if (mlParams.getName().equals("ML-DSA-87")) {
-                size = 87;
-            }
+            int size = switch (mlParams.getName())
+                {
+                case "ML-DSA-44" -> 44;
+                case "ML-DSA-65" -> 65;
+                case "ML-DSA-87" -> 87;
+                default -> 65;
+                };
             return generateMLDSAKeyPairWithOpFlags(
+                token,
+		size, /* security level */
+                temporaryPairMode,
+                sensitivePairMode,
+                extractablePairMode,
+                (int) opFlags,
+                (int) opFlagsMask);
+        } else if (algorithm == KeyPairAlgorithm.MLKEM) {
+            NamedParameterSpec mlParams;
+            if (params instanceof NamedParameterSpec nParam) {
+                mlParams = nParam;
+            } else {
+                mlParams = new NamedParameterSpec("ML-KEM-768");
+            }
+            int size = switch (mlParams.getName())
+                {
+                case "ML-KEM-512" -> 512;
+                case "ML-KEM-768" -> 768;
+                case "ML-KEM-1024" -> 1024;
+                default -> 768;
+                };
+            return generateMLKEMKeyPairWithOpFlags(
                 token,
 		size, /* security level */
                 temporaryPairMode,
@@ -515,6 +571,27 @@ public final class PK11KeyPairGenerator
      */
     private native KeyPair
     generateMLDSAKeyPairWithOpFlags(PK11Token token, int size,
+            boolean temporary, int sensitive, int extractable,
+            int op_flags, int op_flags_mask)
+        throws TokenException;
+
+    /**
+     * Generates a ML-KEM key pair with the given security level.
+     * Security level as defined by NIST can be the value 512, 768 or 1024.
+     */
+    private native KeyPair
+    generateMLKEMKeyPair(PK11Token token, int size,
+            boolean temporary, int sensitive, int extractable)
+        throws TokenException;
+
+    /**
+     * Generates a ML-KEM key pair with the given security level.
+     * Security level as defined by NIST can be the value 512, 768 or 1024.
+     * Adds the ability to specify a set of flags and masks
+     * to control how NSS generates the key pair.
+     */
+    private native KeyPair
+    generateMLKEMKeyPairWithOpFlags(PK11Token token, int size,
             boolean temporary, int sensitive, int extractable,
             int op_flags, int op_flags_mask)
         throws TokenException;
