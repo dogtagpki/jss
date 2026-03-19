@@ -436,6 +436,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair
     jboolean temporary, jint sensitive, jint extractable)
 {
 #ifdef NSS_VERSION_PQC_DEF
+    jobject keyPair=NULL;
+
     CK_ML_DSA_PARAMETER_SET_TYPE  param;
     if (size == 44) {
         param = CKP_ML_DSA_44;
@@ -453,8 +455,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair
         goto finish;
     } 
 
-    jobject keyPair=NULL;
-
     PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
 
 
@@ -464,6 +464,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair
 finish:
     return keyPair;
 #else
+    JSS_throwMsg(env, UNSUPPORTED_OPERATION_EXCEPTION, "ML-DSA is not supported");
     return NULL;
 #endif
 }
@@ -480,6 +481,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
     jint op_flags, jint op_flags_mask)
 {
 #ifdef NSS_VERSION_PQC_DEF
+    jobject keyPair=NULL;
+
     CK_ML_DSA_PARAMETER_SET_TYPE  param;
     if (size == 44) {
         param = CKP_ML_DSA_44;
@@ -497,8 +500,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
         goto finish;
     } 
 
-    jobject keyPair=NULL;
-
     PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
 
 
@@ -510,6 +511,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
 finish:
     return keyPair;
 #else
+    JSS_throwMsg(env, UNSUPPORTED_OPERATION_EXCEPTION, "ML-DSA is not supported");
     return NULL;
 #endif
 }
@@ -525,6 +527,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair
     jboolean temporary, jint sensitive, jint extractable)
 {
 #ifdef NSS_VERSION_PQC_DEF
+    jobject keyPair=NULL;
+
     CK_ML_KEM_PARAMETER_SET_TYPE  param;
     if (size == 512) {
         param = CKP_ML_KEM_512;
@@ -539,8 +543,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair
         goto finish;
     }
 
-    jobject keyPair=NULL;
-
     PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
 
 
@@ -550,6 +552,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair
 finish:
     return keyPair;
 #else
+    JSS_throwMsg(env, UNSUPPORTED_OPERATION_EXCEPTION, "ML-KEM is not supported");
     return NULL;
 #endif
 }
@@ -566,6 +569,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags
     jint op_flags, jint op_flags_mask)
 {
 #ifdef NSS_VERSION_PQC_DEF
+    jobject keyPair=NULL;
+
     CK_ML_KEM_PARAMETER_SET_TYPE  param;
     if (size == 512) {
         param = CKP_ML_KEM_512;
@@ -580,8 +585,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags
         goto finish;
     }
 
-    jobject keyPair=NULL;
-
     PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
 
 
@@ -593,6 +596,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags
 finish:
     return keyPair;
 #else
+    JSS_throwMsg(env, UNSUPPORTED_OPERATION_EXCEPTION, "ML-KEM is not supported");
     return NULL;
 #endif
 }

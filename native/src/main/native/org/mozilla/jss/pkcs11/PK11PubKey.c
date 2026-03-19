@@ -149,23 +149,23 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_verifyKeyIsOnToken
   (JNIEnv *env, jobject this, jobject token)
 {
     PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
-	SECKEYPublicKey *key = NULL;
-	PK11SlotInfo *slot = NULL;
-	PK11SlotInfo *keySlot = NULL;
-  PK11SlotInfo *internalSlot = NULL;
+    SECKEYPublicKey *key = NULL;
+    PK11SlotInfo *slot = NULL;
+    PK11SlotInfo *keySlot = NULL;
+    PK11SlotInfo *internalSlot = NULL;
 
-	pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
-	PR_ASSERT(pThread != NULL);
+    pThread = PR_AttachThread(PR_SYSTEM_THREAD, 0, NULL);
+    PR_ASSERT(pThread != NULL);
 
-	if( JSS_PK11_getPubKeyPtr(env, this, &key) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-		goto finish;
-	}
+    if( JSS_PK11_getPubKeyPtr(env, this, &key) != PR_SUCCESS) {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+        goto finish;
+    }
 
-	if( JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
-		PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
-		goto finish;
-	}
+    if( JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
+        PR_ASSERT( (*env)->ExceptionOccurred(env) != NULL);
+        goto finish;
+    }
 
   internalSlot = PK11_GetInternalSlot();
 
@@ -252,6 +252,9 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_getKeyType
         keyTypeFieldName = KEA_KEYTYPE_FIELD;
         break;
 #ifdef NSS_VERSION_PQC_DEF
+    case kyberKey:
+        keyTypeFieldName = MLKEM_KEYTYPE_FIELD;
+        break;
     case mldsaKey:
         keyTypeFieldName = MLDSA_KEYTYPE_FIELD;
         break;

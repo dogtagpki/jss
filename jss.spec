@@ -156,8 +156,8 @@ BuildRequires:  gcc-c++
 BuildRequires:  nss-devel >= 3.112
 BuildRequires:  nss-tools >= 3.112
 %else
-BuildRequires:  nss-devel >= 3.118
-BuildRequires:  nss-tools >= 3.118
+BuildRequires:  nss-devel >= 3.123
+BuildRequires:  nss-tools >= 3.123
 %endif
 
 BuildRequires:  %{java_devel}
@@ -180,7 +180,7 @@ Summary:        %{product_name}
 %if 0%{?rhel}
 Requires:       nss >= 3.112
 %else
-Requires:       nss >= 3.118
+Requires:       nss >= 3.123
 %endif
 
 Requires:       %{java_headless}
