@@ -181,6 +181,9 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getKeyType
         keyTypeFieldName = EC_KEYTYPE_FIELD;
         break;
 #ifdef NSS_VERSION_PQC_DEF
+    case kyberKey:
+        keyTypeFieldName = MLKEM_KEYTYPE_FIELD;
+        break;
     case mldsaKey:
         keyTypeFieldName = MLDSA_KEYTYPE_FIELD;
         break;
@@ -498,7 +501,8 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj)
         EC_KEYTYPE_FIELD
 #ifdef NSS_VERSION_PQC_DEF
        ,
-        MLDSA_KEYTYPE_FIELD 
+        MLDSA_KEYTYPE_FIELD,
+        MLKEM_KEYTYPE_FIELD
 #endif
     };
     int numTypes = 6;
@@ -511,7 +515,8 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj)
         ecKey
 #ifdef NSS_VERSION_PQC_DEF
        ,
-        mldsaKey
+        mldsaKey,
+        kyberKey
 #endif
     };
     jobject field;
