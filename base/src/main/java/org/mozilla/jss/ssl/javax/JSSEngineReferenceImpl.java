@@ -736,7 +736,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     @Override
-    public void closeInbound() {
+    public synchronized void closeInbound() {
         debug("JSSEngine: closeInbound()");
 
         if (!is_inbound_closed && ssl_fd != null && !closed_fd) {
@@ -750,7 +750,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     @Override
-    public void closeOutbound() {
+    public synchronized void closeOutbound() {
         debug("JSSEngine: closeOutbound()");
 
         if (!is_outbound_closed && ssl_fd != null && !closed_fd) {
@@ -1675,7 +1675,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * connection.
      */
     @Override
-    public void tryCleanup() {
+    public synchronized void tryCleanup() {
         debug("JSSEngine: tryCleanup()");
         if (is_inbound_closed && is_outbound_closed) {
             // throw new RuntimeException("Probably shouldn't be here!");
@@ -1688,7 +1688,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * data streams if still open.
      */
     @Override
-    public void cleanup() {
+    public synchronized void cleanup() {
         debug("JSSEngine: cleanup()");
 
         if (!is_inbound_closed) {
