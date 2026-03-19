@@ -347,11 +347,11 @@ public final class PK11KeyPairGenerator
             }
         } else if (algorithm == KeyPairAlgorithm.MLDSA) {
             if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-DSA-"))) {
-                throw new InvalidParameterException("Parameter not supported with ML-DSA key");
+                throw new InvalidAlgorithmParameterException("Parameter not supported with ML-DSA key");
             }
         } else if (algorithm == KeyPairAlgorithm.MLKEM) {
             if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-KEM-"))) {
-                throw new InvalidParameterException("Parameter not supported with ML-KEM key");
+                throw new InvalidAlgorithmParameterException("Parameter not supported with ML-KEM key");
             }
             
         } // future add support for X509EncodedSpec
