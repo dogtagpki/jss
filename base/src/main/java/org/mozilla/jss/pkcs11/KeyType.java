@@ -162,7 +162,11 @@ public final class KeyType {
                     },
                     "ML-DSA"
                 );
-    //////////////////////////////////////////////////////////////
+    static public final KeyType
+    MLKEM     = new KeyType(new Algorithm[0],
+                    "ML-KEM"
+                ); 
+   //////////////////////////////////////////////////////////////
     /**
      * @deprecated As of NSS 3.11, FORTEZZA is no longer supported.
      * This is just a placeholder for backward compatibility.
