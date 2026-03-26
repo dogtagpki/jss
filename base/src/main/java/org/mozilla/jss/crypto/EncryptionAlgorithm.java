@@ -442,7 +442,7 @@ public class EncryptionAlgorithm extends Algorithm {
     public static final EncryptionAlgorithm AES_192_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_192_KEY_WRAP_KWP,
             Alg.AES, Mode.NONE,
             Padding.PKCS5, IVParameterSpecClasses, 16,
-            AES_ROOT_OID.subBranch(28), 192, "AES/None/PKCSPadding/Kwp/192");
+            AES_ROOT_OID.subBranch(28), 192, "AES/None/PKCS5Padding/Kwp/192");
 
     public static final EncryptionAlgorithm AES_256_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_256_KEY_WRAP_KWP,
             Alg.AES, Mode.NONE,
