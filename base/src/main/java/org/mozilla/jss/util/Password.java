@@ -286,7 +286,37 @@ public class Password implements PasswordCallback, Cloneable,
     public static Password readPasswordFromConsole() throws PasswordCallback.GiveUpException {
 
         Console console = System.console();
-        char[] password = console.readPassword();
+
+        char[] password;
+        if (console == null) {
+            // no console, read password from standard input
+            try {
+                char[] buffer = new char[128];
+                int len = 0;
+                int c;
+
+                // read a single line into buffer
+                while ((c = System.in.read()) != -1 && c != '\n' && c != '\r') {
+                    if (len == buffer.length) {
+                        // buffer full, resize buffer
+                        buffer = Arrays.copyOf(buffer, buffer.length * 2);
+                    }
+                    buffer[len++] = (char) c;
+                }
+
+                // get password from buffer
+                password = Arrays.copyOf(buffer, len);
+                Arrays.fill(buffer, (char) 0);
+
+            } catch (java.io.IOException e) {
+                logger.error("Unable to read password: " + e.getMessage(), e);
+                password = null;
+            }
+
+        } else {
+            // read password from console
+            password = console.readPassword();
+        }
 
         if (password == null || password.length == 0) {
             throw new PasswordCallback.GiveUpException();
