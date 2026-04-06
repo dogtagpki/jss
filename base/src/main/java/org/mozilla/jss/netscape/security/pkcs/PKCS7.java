@@ -176,12 +176,11 @@ public class PKCS7 {
             if (contentType.equals(ContentInfo.SIGNED_DATA_OID)) {
                 parseSignedData(contentInfo.getContent());
             } else {
-                throw new ParsingException("content type " + contentType +
-                        " not supported.");
+                throw new ParsingException("Content type " + contentType + " not supported");
             }
         } catch (IOException e) {
-            ParsingException pe =
-                    new ParsingException("IOException: " + e.getMessage());
+            ParsingException pe = new ParsingException(
+                    "Unable to parse PKCS #7: " + e.getMessage(), e);
             pe.fillInStackTrace();
             throw pe;
         }
