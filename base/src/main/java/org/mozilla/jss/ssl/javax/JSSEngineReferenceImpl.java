@@ -1732,14 +1732,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
     private void cleanupSSLFD() {
         if (!closed_fd && ssl_fd != null) {
+            // Set closed_fd BEFORE freeing native resources to prevent
+            // concurrent calls to closeInbound()/closeOutbound() from
+            // attempting PR.Shutdown() on ssl_fd that is being freed.
+            closed_fd = true;
+
             try {
                 SSL.RemoveCallbacks(ssl_fd);
                 ssl_fd.close();
                 ssl_fd = null;
             } catch (Exception e) {
                 logger.error("Got exception trying to cleanup SSLFD", e);
-            } finally {
-                closed_fd = true;
+                // closed_fd remains true even if cleanup fails
             }
         }
 
