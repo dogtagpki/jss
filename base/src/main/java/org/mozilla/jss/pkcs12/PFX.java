@@ -28,10 +28,13 @@ import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.NULL;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.crypto.PBEAlgorithm;
 import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.cert.Certificate;
@@ -39,7 +42,9 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.Attribute;
 import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
+import org.mozilla.jss.pkix.primitive.PBMAC1Params;
 import org.mozilla.jss.util.Password;
+import org.mozilla.jss.netscape.security.pkcs.PKCS12Util.MacType;
 
 /**
  * The top level ASN.1 structure for a PKCS #12 blob.
@@ -94,12 +99,23 @@ public class PFX implements ASN1Value {
     // currently we are on version 3 of the standard
     private static final INTEGER VERSION = new INTEGER(3);
 
+    // MAC configuration
+    private MacType macType = MacType.LEGACY;  // default
+    private DigestAlgorithm macDigest = DigestAlgorithm.SHA256;  // default
+
     /**
      * The default number of iterations to use when generating the MAC.
      * Currently, it is 1.
      */
     public static final int DEFAULT_ITERATIONS = 1;
 
+    public void setMacType(MacType type) {
+        this.macType = type;
+    }
+
+    public void setMacDigest(DigestAlgorithm digest) {
+        this.macDigest = digest;
+    }
 
     public INTEGER getVersion() {
         return version;
@@ -153,6 +169,7 @@ public class PFX implements ASN1Value {
 
         // create a new MacData based on the encoded Auth Safes
         DigestInfo macDataMac = macData.getMac();
+
         MacData testMac = new MacData(password,
                 macData.getMacSalt().toByteArray(),
                 macData.getMacIterationCount().intValue(),
@@ -219,12 +236,81 @@ public class PFX implements ASN1Value {
         TokenException, CharConversionException
     {
 
-        //Make this alg the default mac alg.
-        AlgorithmIdentifier algID = new AlgorithmIdentifier(DigestAlgorithm.SHA256.toOID());
-        macData = new MacData( password, salt, iterationCount,
-                ASN1Util.encode(authSafes), algID );
+        AlgorithmIdentifier algID;
+
+        if (salt == null) {
+            CryptoManager cm = CryptoManager.getInstance();
+            JSSSecureRandom rand = cm.createPseudoRandomNumberGenerator();
+            salt = new byte[20];  // SALT_LENGTH from MacData
+            rand.nextBytes(salt);
+        }
+
+        if (macType == MacType.PBMAC1) {
+            // Create PBMAC1 AlgorithmIdentifier with PBKDF2 parameters
+            algID = createPBMAC1AlgorithmID(salt, iterationCount, macDigest);
+        } else {
+            // Legacy: Use configured digest 
+            algID = new AlgorithmIdentifier(macDigest.toOID());
+        }
+
+        macData = new MacData(password, salt, iterationCount,
+            ASN1Util.encode(authSafes), algID);
     }
 
+    private AlgorithmIdentifier createPBMAC1AlgorithmID(
+        byte[] salt, int iterationCount, DigestAlgorithm digest)
+        throws NoSuchAlgorithmException
+    {
+        // Determine HMAC OID and key length from digest algorithm
+        // Use existing HMACAlgorithm constants instead of hardcoded OIDs
+
+        int keyLength = digest.getOutputSize();
+        // Get the corresponding HMAC algorithm
+        HMACAlgorithm hmacAlg;
+
+        if (digest.equals(DigestAlgorithm.SHA256)) {
+            hmacAlg = HMACAlgorithm.SHA256;
+        } else if (digest.equals(DigestAlgorithm.SHA384)) {
+            hmacAlg = HMACAlgorithm.SHA384;
+        } else if (digest.equals(DigestAlgorithm.SHA512)) {
+            hmacAlg = HMACAlgorithm.SHA512;
+        } else {
+            throw new NoSuchAlgorithmException(
+                "Unsupported PBMAC1 digest: " + digest);
+        }
+
+        OBJECT_IDENTIFIER hmacOID = hmacAlg.toOID();
+
+        // Construct PBKDF2 parameters
+        // PBKDF2-params ::= SEQUENCE {
+        //   salt OCTET STRING,
+        //   iterationCount INTEGER,
+        //   keyLength INTEGER OPTIONAL,
+        //   prf AlgorithmIdentifier DEFAULT hmacWithSHA1
+        // }
+        SEQUENCE pbkdf2Params = new SEQUENCE();
+        pbkdf2Params.addElement(new OCTET_STRING(salt));
+        pbkdf2Params.addElement(new INTEGER(iterationCount));
+        pbkdf2Params.addElement(new INTEGER(keyLength));
+
+        // PRF algorithm for PBKDF2 (same HMAC algorithm)
+        AlgorithmIdentifier prfAlg = new AlgorithmIdentifier(hmacOID);
+        pbkdf2Params.addElement(prfAlg);
+
+        // Construct PBKDF2 AlgorithmIdentifier
+        AlgorithmIdentifier kdfAlg = new AlgorithmIdentifier(
+            PBEAlgorithm.PBE_PKCS5_PBKDF2.toOID(), pbkdf2Params);
+
+        // Construct HMAC AlgorithmIdentifier for MAC scheme
+        AlgorithmIdentifier macAlg = new AlgorithmIdentifier(hmacOID);
+
+        // Construct PBMAC1 parameters using dedicated ASN.1 type
+        PBMAC1Params pbmac1Params = new PBMAC1Params(kdfAlg, macAlg);
+
+        // Construct final PBMAC1 AlgorithmIdentifier
+        return new AlgorithmIdentifier(
+            PBEAlgorithm.PBE_PKCS5_PBMAC1.toOID(), pbmac1Params);
+    }
 
     ///////////////////////////////////////////////////////////////////////
     // DER encoding
