@@ -67,12 +67,20 @@ import org.mozilla.jss.pkcs12.SafeBag;
 import org.mozilla.jss.pkix.primitive.Attribute;
 import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.util.Password;
+import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PKCS12Util {
 
     private static Logger logger = LoggerFactory.getLogger(PKCS12Util.class);
+
+
+    //Differentiate between newer PBMAC1 and older algs
+    public static enum MacType {
+        LEGACY,
+        PBMAC1
+    }
 
     public final static String NO_ENCRYPTION = "none";
 
@@ -96,6 +104,26 @@ public class PKCS12Util {
     PBEAlgorithm certEncryption = DEFAULT_CERT_ENCRYPTION;
     PBEAlgorithm keyEncryption = DEFAULT_KEY_ENCRYPTION;
     boolean trustFlagsEnabled = true;
+
+    // MAC configuration (separate from encryption)
+    private MacType macType = MacType.LEGACY;  // default for backward compatibility
+    private DigestAlgorithm macDigest = DigestAlgorithm.SHA256;  // default digest
+
+    public void setMacType(MacType type) {
+        this.macType = type;
+    }
+
+    public MacType getMacType() {
+        return macType;
+    }
+
+    public void setMacDigest(DigestAlgorithm digest) {
+        this.macDigest = digest;
+    }
+
+    public DigestAlgorithm getMacDigest() {
+        return macDigest;
+    }
 
     public PKCS12Util() throws Exception {
         random = SecureRandom.getInstance("pkcs11prng", "Mozilla-JSS");
@@ -603,6 +631,10 @@ public class PKCS12Util {
 
         byte[] salt = new byte[16];
         random.nextBytes(salt);
+
+        pfx.setMacType(macType);
+        pfx.setMacDigest(macDigest);
+
         pfx.computeMacData(password, salt, 100000);
 
         return pfx;

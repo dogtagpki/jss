@@ -614,3 +614,185 @@ finish:
     PK11_FreeSymKey(result);
     return resultObj;
 }
+
+JNIEXPORT jbyteArray JNICALL
+  Java_org_mozilla_jss_pkcs12_MacData_nativeComputePBMAC1(
+      JNIEnv *env, jobject this,
+      jobject token,
+      jbyteArray passwordArray,
+      jbyteArray dataArray,
+      jbyteArray pbmac1AlgIDArray,
+      jobject hmacAlgorithm)
+  {
+      PK11SlotInfo *slot = NULL;
+      SECItem *password = NULL;
+      SECItem *data = NULL;
+      SECItem *pbmac1AlgIDItem = NULL;
+      SECOidTag hmacAlgTag;
+      PK11SymKey *key = NULL;
+      SECAlgorithmID *pbmac1AlgID = NULL;
+      PK11Context *context = NULL;
+      SECItem macItem = {siBuffer, NULL, 0};
+      jbyteArray result = NULL;
+      unsigned int macLen = 0;
+      CK_MECHANISM_TYPE hmacMech;
+      SECStatus rv;
+
+      PR_ASSERT(env != NULL && this != NULL);
+
+      if (token == NULL || passwordArray == NULL || pbmac1AlgIDArray == NULL ||
+          dataArray == NULL || hmacAlgorithm == NULL) {
+          JSS_throw(env, NULL_POINTER_EXCEPTION);
+          goto finish;
+      }
+
+      // Get slot from token
+      if (JSS_PK11_getTokenSlotPtr(env, token, &slot) != PR_SUCCESS) {
+          goto finish;
+      }
+
+      if (slot == NULL) {
+          JSS_throwMsg(env, TOKEN_EXCEPTION, "Failed to get slot from token");
+          goto finish;
+      }
+
+      // Convert Java byte arrays to SECItems
+      password = JSS_ByteArrayToSECItem(env, passwordArray);
+      if (password == NULL) {
+          goto finish;
+      }
+
+      // Convert PBKDF2 AlgorithmID bytes to SECItem
+      pbmac1AlgIDItem = JSS_ByteArrayToSECItem(env, pbmac1AlgIDArray);
+      if (pbmac1AlgIDItem == NULL) {
+           goto finish;
+      }
+
+      pbmac1AlgID = PR_Calloc(1, sizeof(SECAlgorithmID));
+      if (pbmac1AlgID == NULL) {
+          JSS_throw(env, OUT_OF_MEMORY_ERROR);
+          goto finish;
+      }
+
+      if (SEC_ASN1DecodeItem(
+          NULL,
+          pbmac1AlgID,
+          SEC_ASN1_GET(SECOID_AlgorithmIDTemplate),
+          pbmac1AlgIDItem
+      ) != SECSuccess) {
+          JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+              "Failed to decode PBMAC1 AlgorithmID");
+          goto finish;
+      }
+
+      data = JSS_ByteArrayToSECItem(env, dataArray);
+      if (data == NULL) {
+          goto finish;
+      }
+
+      // Convert HMAC algorithm to SECOidTag
+      hmacAlgTag = JSS_getOidTagFromAlg(env, hmacAlgorithm);
+      if (hmacAlgTag == SEC_OID_UNKNOWN) {
+          JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+              "Unknown HMAC algorithm");
+          goto finish;
+      }
+
+      // Determine HMAC output length and mechanism based on algorithm
+      switch (hmacAlgTag) {
+          case SEC_OID_HMAC_SHA256:
+              macLen = 32;
+              hmacMech = CKM_SHA256_HMAC;
+              break;
+          case SEC_OID_HMAC_SHA384:
+              macLen = 48;
+              hmacMech = CKM_SHA384_HMAC;
+              break;
+          case SEC_OID_HMAC_SHA512:
+              macLen = 64;
+              hmacMech = CKM_SHA512_HMAC;
+              break;
+          default:
+              JSS_throwMsg(env, INVALID_PARAMETER_EXCEPTION,
+                  "Unsupported HMAC algorithm for PBMAC1");
+              goto finish;
+      }
+
+      key = PK11_PBEKeyGen(slot, pbmac1AlgID, password, PR_FALSE, NULL);
+
+      if (key == NULL) {
+          JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+              "Failed to derive key for PBMAC1");
+          goto finish;
+      }
+
+      // Allocate buffer for HMAC output
+      macItem.data = (unsigned char *)PORT_Alloc(macLen);
+      if (macItem.data == NULL) {
+          JSS_throw(env, OUT_OF_MEMORY_ERROR);
+          goto finish;
+      }
+      macItem.len = macLen;
+
+      SECItem noParam = {siBuffer, NULL, 0};
+      context = PK11_CreateContextBySymKey(hmacMech, CKA_SIGN, key, &noParam);
+
+      if (context == NULL) {
+          JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+              "Failed to create HMAC context for PBMAC1");
+          goto finish;
+      }
+
+      rv = PK11_DigestBegin(context);
+      if (rv != SECSuccess) {
+          JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+              "Failed to begin HMAC operation");
+          goto finish;
+      }
+
+      rv = PK11_DigestOp(context, data->data, data->len);
+      if (rv != SECSuccess) {
+          JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+              "Failed to process data for HMAC");
+          goto finish;
+      }
+
+      rv = PK11_DigestFinal(context, macItem.data, &macLen, macItem.len);
+      macItem.len = macLen;
+
+      if (rv != SECSuccess) {
+          JSS_throwMsgPrErr(env, TOKEN_EXCEPTION,
+              "Failed to finalize HMAC operation");
+          goto finish;
+      }
+
+      // Convert result to Java byte array
+      result = JSS_SECItemToByteArray(env, &macItem);
+
+  finish:
+      if (password != NULL) {
+          SECITEM_ZfreeItem(password, PR_TRUE);
+      }
+
+      if (pbmac1AlgIDItem != NULL) {
+          SECITEM_FreeItem(pbmac1AlgIDItem, PR_TRUE);
+      }
+
+      if (data != NULL) {
+          SECITEM_FreeItem(data, PR_TRUE);
+      }
+      if (pbmac1AlgID != NULL) {
+          SECOID_DestroyAlgorithmID(pbmac1AlgID, PR_TRUE);
+      }
+      if (key != NULL) {
+          PK11_FreeSymKey(key);
+      }
+      if (context != NULL) {
+          PK11_DestroyContext(context, PR_TRUE);
+      }
+      if (macItem.data != NULL) {
+          PORT_ZFree(macItem.data, macItem.len);
+      }
+
+      return result;
+  }
