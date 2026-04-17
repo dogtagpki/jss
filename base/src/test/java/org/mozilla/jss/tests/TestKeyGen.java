@@ -19,6 +19,7 @@
 package org.mozilla.jss.tests;
 
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Enumeration;
 
@@ -126,7 +127,38 @@ public class TestKeyGen {
             kpg = java.security.KeyPairGenerator.getInstance("ML-DSA-87", "Mozilla-JSS");
             keyPair = kpg.genKeyPair();
             System.out.println("Generated ML-DSA-87!");
-}
+
+            // ML-DSA-87 initialisation with named parameter
+            kpg = java.security.KeyPairGenerator.getInstance("ML-DSA", "Mozilla-JSS");
+            NamedParameterSpec param = new NamedParameterSpec("ML-DSA-87");
+            kpg.initialize(param);
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-DSA with parameter ML-DSA-87!");
+
+            // ML-KEM-768 initialisation
+            kpg = java.security.KeyPairGenerator.getInstance("ML-KEM-768", "Mozilla-JSS");
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-KEM-768!");
+
+            // ML-KEM-768 initialisation with named parameter
+            kpg = java.security.KeyPairGenerator.getInstance("ML-KEM", "Mozilla-JSS");
+            param = new NamedParameterSpec("ML-KEM-768");
+            kpg.initialize(param);
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-KEM with parameter ML-KEM-768!");
+
+            // ML-KEM-1024 initialisation
+            kpg = java.security.KeyPairGenerator.getInstance("ML-KEM-1024", "Mozilla-JSS");
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-KEM-1024!");
+
+            // ML-KEM-1024 initialisation with named parameter
+            kpg = java.security.KeyPairGenerator.getInstance("ML-KEM", "Mozilla-JSS");
+            param = new NamedParameterSpec("ML-KEM-1024");
+            kpg.initialize(param);
+            keyPair = kpg.genKeyPair();
+            System.out.println("Generated ML-KEM with parameter ML-KEM-1024!");
+        }
         System.out.println("TestKeyGen passed");
         System.exit(0);
       } catch (Exception e) {
