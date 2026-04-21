@@ -8,6 +8,8 @@ import java.io.CharConversionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.security.DigestException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -22,6 +24,8 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.ANY;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
@@ -32,8 +36,11 @@ import org.mozilla.jss.crypto.KeyGenerator;
 import org.mozilla.jss.crypto.PBEKeyGenParams;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.pkix.primitive.PBMAC1Params;
 import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.PBKDF2Params;
 import org.mozilla.jss.util.Password;
 
 public class MacData implements ASN1Value {
@@ -137,13 +144,30 @@ public class MacData implements ASN1Value {
             rand.nextBytes(macSalt);
         }
 
+        // Handle null algID - default to SHA1 for backward compatibility
+
+        try {
+            if (algID == null) {
+                algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
+            }
+
+            // Check if this is PBMAC1 - route to new implementation
+            if (algID.getOID().equals(PBEAlgorithm.PBE_PKCS5_PBMAC1.toOID())) {
+                computePBMAC1(token, password, toBeMACed, algID);
+                return; // Early return - skip legacy code below
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new TokenException("Algorithm OID error: " + e.getMessage(), e);
+        } catch (TokenException | CharConversionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new TokenException("Failed to compute PBMAC1: " + e.getMessage(), e);
+        }
+
         PBEKeyGenParams params = new PBEKeyGenParams(password, macSalt, iterations);
 
         try {
             // generate key from password and salt
-            if(algID == null) {
-                algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
-            }
             KeyGenerator kg = null;
             JSSMessageDigest digest = null;
             if(DigestAlgorithm.SHA1.toOID().equals(algID.getOID())){
@@ -195,6 +219,116 @@ public class MacData implements ASN1Value {
             params.clear();
         }
     }
+
+    private void computePBMAC1(CryptoToken token, Password password,
+                           byte[] data, AlgorithmIdentifier algID)
+        throws Exception
+    {
+        // Parse PBMAC1 parameters to extract KDF and MAC algorithms
+
+        PBMAC1Params pbmac1Params;
+        ASN1Value params =  algID.getParameters();
+
+        if (params instanceof PBMAC1Params) {
+           // Already decoded (create/write path)
+           pbmac1Params = (PBMAC1Params) params;
+        } else if (params instanceof ANY) {
+          // Needs decoding (read from file path)
+          pbmac1Params = (PBMAC1Params) ((ANY) params).decodeWith(PBMAC1Params.getTemplate());
+        } else {
+            throw new Exception("Unexpected PBMAC1 parameter type: " + params.getClass().getName());
+        }
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        algID.encode(bos);
+        byte[] pbmac1AlgIDBytes = bos.toByteArray();
+
+        AlgorithmIdentifier kdfAlg = pbmac1Params.getKeyDerivationFunc();
+        AlgorithmIdentifier macAlg = pbmac1Params.getMessageAuthScheme();
+
+        ASN1Value kdfParams = kdfAlg.getParameters();
+
+        //Extract PBKDF2 parameters
+        PBKDF2Params pbkdf2Params;
+
+        if (kdfParams instanceof SEQUENCE) {
+             // Need to decode SEQUENCE bytes to PBKDF2Params
+             ByteArrayOutputStream bosForDecode = new ByteArrayOutputStream();
+             kdfParams.encode(bosForDecode);
+             pbkdf2Params = (PBKDF2Params) PBKDF2Params.getTemplate().decode(
+             new ByteArrayInputStream(bosForDecode.toByteArray()));
+
+        } else if (kdfParams instanceof ANY) {
+            // Create template that knows PBKDF2 structure
+            pbkdf2Params = (PBKDF2Params) ((ANY) kdfParams).decodeWith(PBKDF2Params.getTemplate());
+        } else {
+            throw new Exception("Unexpected PBKDF2 parameter type: " + kdfParams.getClass().getName());
+        }
+
+        byte[] kdfSalt = pbkdf2Params.getSalt();
+        int kdfIterations = pbkdf2Params.getIterations();
+
+        // Get HMAC OID from MAC AlgorithmIdentifier
+        OBJECT_IDENTIFIER macOID = macAlg.getOID();
+
+        HMACAlgorithm hmacAlgorithm;
+        if (macOID.equals(HMACAlgorithm.SHA256.toOID())) {
+            hmacAlgorithm = HMACAlgorithm.SHA256;
+        } else if (macOID.equals(HMACAlgorithm.SHA384.toOID())) {
+            hmacAlgorithm = HMACAlgorithm.SHA384;
+        } else if (macOID.equals(HMACAlgorithm.SHA512.toOID())) {
+            hmacAlgorithm = HMACAlgorithm.SHA512;
+        } else {
+            throw new NoSuchAlgorithmException("Unsupported HMAC algorithm for PBMAC1: " + macOID.toString());
+        }
+
+        // Call native JSS code to perform PBKDF2 + HMAC
+        // This uses certified NSS crypto (PK11_PBEKeyGen + PK11_DigestOp)
+        // The OID will be mapped to the appropriate NSS HMAC mechanism
+
+
+        char[] passwordChars = password.getCharCopy();
+        byte[] passwordBytes = null;
+
+        try {
+                passwordBytes = Password.charToByte(passwordChars);
+                byte[] macValue = nativeComputePBMAC1(
+                token,
+                passwordBytes,
+                data,
+                pbmac1AlgIDBytes,
+                hmacAlgorithm
+                );
+
+                this.mac = new DigestInfo(algID, new OCTET_STRING(macValue));
+                this.macSalt = new OCTET_STRING(kdfSalt);
+                this.macIterationCount = new INTEGER(1);
+        } finally {
+            if (passwordBytes != null) {
+                Password.wipeBytes(passwordBytes);
+            }
+            Password.wipeChars(passwordChars);
+        }
+    }
+
+    /**
+     * Native method to compute PBMAC1 MAC using NSS.
+     *
+     * @param password Password bytes
+     * @param salt PBKDF2 salt
+     * @param iterations PBKDF2 iteration count
+     * @param data Data to MAC
+     * @param hmacOID HMAC algorithm OID (e.g., hmacWithSHA256)
+     * @return HMAC value
+     */
+    private native byte[] nativeComputePBMAC1(
+        CryptoToken token,
+        byte[] password,
+        byte[] data,
+        byte[] pbmac1AlgID,
+        HMACAlgorithm hmacAlgorithm
+    ) throws Exception;
 
     ///////////////////////////////////////////////////////////////////////
     // DER encoding

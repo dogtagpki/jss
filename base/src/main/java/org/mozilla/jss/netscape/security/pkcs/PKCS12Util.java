@@ -631,6 +631,10 @@ public class PKCS12Util {
 
         byte[] salt = new byte[16];
         random.nextBytes(salt);
+
+        pfx.setMacType(macType);
+        pfx.setMacDigest(macDigest);
+
         pfx.computeMacData(password, salt, 100000);
 
         return pfx;
