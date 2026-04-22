@@ -534,3 +534,9 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_setTemporary;
     local:
         *;
 };
+JSS_5.11.1 {
+    global:
+Java_org_mozilla_jss_pkcs12_MacData_nativeComputePBMAC1;
+    local:
+        *;
+};

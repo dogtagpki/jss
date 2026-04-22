@@ -98,6 +98,13 @@ macro(jss_tests)
         NAME "JSS_Test_PR_FileDesc"
         COMMAND "org.mozilla.jss.tests.TestPRFD"
     )
+
+    jss_test_java(
+        NAME "PBMAC1_Test"
+        COMMAND "org.mozilla.jss.tests.PBMAC1Test" "${RESULTS_NSSDB_OUTPUT_DIR}"  "${PASSWORD_FILE}"
+        DEPENDS "Setup_DBs"
+    )
+
     jss_test_java(
         NAME "JSS_Test_Raw_SSL"
         COMMAND "org.mozilla.jss.tests.TestRawSSL" "${RESULTS_NSSDB_OUTPUT_DIR}"
