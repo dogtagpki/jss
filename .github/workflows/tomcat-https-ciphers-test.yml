@@ -114,13 +114,38 @@ jobs:
 
       - name: Configure ciphers
         run: |
+          # Since Tomcat 10.1.53 the TLS 1.2 ciphers and TLS 1.3 cipher suites need
+          # to be configured separately.
+          # https://tomcat.apache.org/tomcat-10.1-doc/changelog.html
+          #
+          # - 69964: Respect the configured cipher order, which was no longer respected
+          #   following the addition of TLS 1.3 specific cipher configuration. TLS 1.3
+          #   ciphers will always be first in the list. (remm)
+          #
+          # - To aid the migration from the single ciphers configuration attribute to
+          #   the use of ciphers and cipherSuites, TLS 1.3 cipher suites listed in the
+          #   ciphers attribute will be removed from the ciphers attribute and added to
+          #   the end of the cipherSuites attribute. This behaviour will be removed in
+          #   Tomcat 12.0.x onwards. (markt)
+
+          # TLS 1.2 ciphers
           docker exec server xmlstarlet edit --inplace \
               -u "//SSLHostConfig/@ciphers" \
-              -v "TLS_AES_256_GCM_SHA384,ECDHE-RSA-AES256-GCM-SHA384" \
+              -v "ECDHE-RSA-AES256-GCM-SHA384" \
               -i "//SSLHostConfig[not(@ciphers)]" \
               -t attr \
               -n "ciphers" \
-              -v "TLS_AES_256_GCM_SHA384,ECDHE-RSA-AES256-GCM-SHA384" \
+              -v "ECDHE-RSA-AES256-GCM-SHA384" \
+              /etc/pki/pki-tomcat/server.xml
+
+          # TLS 1.3 cipher suites
+          docker exec server xmlstarlet edit --inplace \
+              -u "//SSLHostConfig/@cipherSuites" \
+              -v "TLS_AES_256_GCM_SHA384" \
+              -i "//SSLHostConfig[not(@cipherSuites)]" \
+              -t attr \
+              -n "cipherSuites" \
+              -v "TLS_AES_256_GCM_SHA384" \
               /etc/pki/pki-tomcat/server.xml
 
           docker exec server cat /etc/pki/pki-tomcat/server.xml
