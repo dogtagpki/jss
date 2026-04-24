@@ -61,7 +61,6 @@ Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initDigest;
 Java_org_mozilla_jss_pkcs11_PK11MessageDigest_initHMAC;
 Java_org_mozilla_jss_pkcs11_PK11MessageDigest_update;
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getKeyType;
-Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLDSAKeyParam;
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getOwningToken;
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getStrength;
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_getUniqueID;
@@ -528,9 +527,19 @@ Java_org_mozilla_jss_provider_javax_crypto_JSSTrustManager_certRevokeVerify;
 };
 JSS_5.9.0 {
     global:
+Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLDSAKeyParam;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags;
 Java_org_mozilla_jss_pkcs11_PK11PrivKey_setTemporary;
+    local:
+        *;
+};
+JSS_5.10.0 {
+    global:
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair;
+Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags;
+Java_org_mozilla_jss_provider_javax_crypto_JSSKEMEncapsulatorSpi_engineEncapsulateNative;
+Java_org_mozilla_jss_provider_javax_crypto_JSSKEMDecapsulatorSpi_engineDecapsulateNative;
     local:
         *;
 };

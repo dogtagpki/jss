@@ -237,6 +237,19 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.MessageDigest.SHA512", "SHA-512");
 
         /////////////////////////////////////////////////////////////
+        // KEM
+        /////////////////////////////////////////////////////////////
+        put("KEM.ML-KEM",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM");
+        put("KEM.ML-KEM-512",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM512");
+        put("KEM.ML-KEM-768",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM768");
+        put("KEM.ML-KEM-1024",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM1024");
+        
+        
+        /////////////////////////////////////////////////////////////
         // SecureRandom
         /////////////////////////////////////////////////////////////
         put("SecureRandom.pkcs11prng",
@@ -260,6 +273,15 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA65");
         put("KeyPairGenerator.ML-DSA-87",
             "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLDSA87");
+        // OpenJDK JEP 496 definition
+        put("KeyPairGenerator.ML-KEM",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLKEM768");
+        put("KeyPairGenerator.ML-KEM-512",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLKEM512");
+        put("KeyPairGenerator.ML-KEM-768",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLKEM768");
+        put("KeyPairGenerator.ML-KEM-1024",
+            "org.mozilla.jss.provider.java.security.JSSKeyPairGeneratorSpi$MLKEM1024");
 
         /////////////////////////////////////////////////////////////
         // KeyFactory
@@ -275,6 +297,12 @@ public final class JSSProvider extends java.security.Provider {
         put("KeyFactory.ML-DSA-65",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.ML-DSA-87",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-KEM-512",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-KEM-768",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-KEM-1024",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         /////////////////////////////////////////////////////////////
         // KeyStore

@@ -11,6 +11,7 @@ import org.mozilla.jss.crypto.Algorithm;
 import org.mozilla.jss.crypto.CMACAlgorithm;
 import org.mozilla.jss.crypto.EncryptionAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
+import org.mozilla.jss.crypto.KEMAlgorithm;
 import org.mozilla.jss.crypto.KeyWrapAlgorithm;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 
@@ -161,6 +162,15 @@ public final class KeyType {
                     SignatureAlgorithm.MLDSA87
                     },
                     "ML-DSA"
+                );
+    static public final KeyType
+    MLKEM     = new KeyType(new Algorithm[]
+                    {
+                    KEMAlgorithm.MLKEM512,
+                    KEMAlgorithm.MLKEM768,
+                    KEMAlgorithm.MLKEM1024
+                    },
+                    "ML-KEM"
                 );
     //////////////////////////////////////////////////////////////
     /**
