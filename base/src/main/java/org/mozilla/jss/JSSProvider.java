@@ -237,6 +237,19 @@ public final class JSSProvider extends java.security.Provider {
         put("Alg.Alias.MessageDigest.SHA512", "SHA-512");
 
         /////////////////////////////////////////////////////////////
+        // KEM
+        /////////////////////////////////////////////////////////////
+        put("KEM.ML-KEM",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM");
+        put("KEM.ML-KEM-512",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM512");
+        put("KEM.ML-KEM-768",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM768");
+        put("KEM.ML-KEM-1024",
+            "org.mozilla.jss.provider.javax.crypto.JSSKEMSpi$MLKEM1024");
+        
+        
+        /////////////////////////////////////////////////////////////
         // SecureRandom
         /////////////////////////////////////////////////////////////
         put("SecureRandom.pkcs11prng",

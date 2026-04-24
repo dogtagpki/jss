@@ -538,6 +538,8 @@ JSS_5.10.0 {
     global:
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair;
 Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags;
+Java_org_mozilla_jss_provider_javax_crypto_JSSKEMEncapsulatorSpi_engineEncapsulateNative;
+Java_org_mozilla_jss_provider_javax_crypto_JSSKEMDecapsulatorSpi_engineDecapsulateNative;
     local:
         *;
 };
