@@ -81,10 +81,20 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
             new long[] { 2, 16, 840, 1, 101, 3, 4, 2 });
 
     /**
+     * The OID space for NIST standardized algorithms.
+     */
+    public static final OBJECT_IDENTIFIER NIST_ALGORITHM = new OBJECT_IDENTIFIER(
+            new long[] { 2, 16, 840, 1, 101, 3, 4 });
+
+    /**
      * The OID space for NIST standardized sign algorithms.
      */
-    public static final OBJECT_IDENTIFIER SIGN_ALGORITHM = new OBJECT_IDENTIFIER(
-            new long[] { 2, 16, 840, 1, 101, 3, 4, 3 });
+    public static final OBJECT_IDENTIFIER SIGN_ALGORITHM = NIST_ALGORITHM.subBranch(3);
+
+    /**
+     * The OID space for NIST standardized kem algorithms.
+     */
+    public static final OBJECT_IDENTIFIER KEM_ALGORITHM = NIST_ALGORITHM.subBranch(4);
 
     /**
      * The OID space for PKIX.
