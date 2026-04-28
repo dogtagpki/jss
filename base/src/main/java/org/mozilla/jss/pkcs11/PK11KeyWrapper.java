@@ -502,6 +502,51 @@ public final class PK11KeyWrapper implements KeyWrapper {
                     "match type of private key which is DSA");
             }
             return ((DSAPublicKey)publicKey).getY().toByteArray();
+        } else if(type == PrivateKey.MLKEM512 || type == PrivateKey.MLKEM768 ||
+                  type == PrivateKey.MLKEM1024 || type == PrivateKey.MLKEM) {
+            // Workaround: Extract ML-KEM public key bytes from SPKI manually
+            // TODO: Replace with PK11MLKEMPublicKey.getKeyByteArray() when available in JSS
+            try {
+                byte[] spki = publicKey.getEncoded();
+                // SPKI structure: SEQUENCE { AlgorithmIdentifier, BIT_STRING }
+                // We need to find the BIT_STRING and extract its contents
+
+                // Simple DER parser to find the BIT_STRING tag (0x03)
+                int pos = 0;
+                // Skip outer SEQUENCE tag and length
+                if (spki[pos++] != 0x30) {
+                    throw new InvalidKeyException("Invalid SPKI: not a SEQUENCE");
+                }
+                pos += getLengthBytes(spki, pos); // skip length
+
+                // Skip AlgorithmIdentifier SEQUENCE
+                if (spki[pos++] != 0x30) {
+                    throw new InvalidKeyException("Invalid SPKI: AlgorithmIdentifier not a SEQUENCE");
+                }
+                int algIdLen = getLength(spki, pos);
+                pos += getLengthBytes(spki, pos);
+                pos += algIdLen; // skip algorithm identifier content
+
+                // Now at BIT_STRING
+                if (spki[pos++] != 0x03) {
+                    throw new InvalidKeyException("Invalid SPKI: subjectPublicKey not a BIT_STRING");
+                }
+                int bitStringLen = getLength(spki, pos);
+                pos += getLengthBytes(spki, pos);
+
+                // First byte of BIT_STRING is number of unused bits (should be 0)
+                int unusedBits = spki[pos++];
+                if (unusedBits != 0) {
+                    throw new InvalidKeyException("Invalid SPKI: BIT_STRING has unused bits");
+                }
+
+                // Extract the actual public key bytes
+                byte[] publicKeyBytes = new byte[bitStringLen - 1];
+                System.arraycopy(spki, pos, publicKeyBytes, 0, bitStringLen - 1);
+                return publicKeyBytes;
+            } catch (Exception e) {
+                throw new InvalidKeyException("Failed to extract ML-KEM public key from SPKI", e);
+            }
         } else {
             throw new InvalidKeyException("Unknown private key type: " + type);
         }
@@ -666,10 +711,14 @@ public final class PK11KeyWrapper implements KeyWrapper {
             return KeyPairAlgorithm.RSAFamily;
         } else if (type == PrivateKey.DSA) {
             return KeyPairAlgorithm.DSAFamily;
-        } else {
-            assert( type == PrivateKey.EC);
+        } else if (type == PrivateKey.EC) {
             return KeyPairAlgorithm.ECFamily;
-	}
+        } else if (type == PrivateKey.MLKEM512 || type == PrivateKey.MLKEM768 ||
+                   type == PrivateKey.MLKEM1024 || type == PrivateKey.MLKEM) {
+            return KeyPairAlgorithm.MLKEMFamily;
+        } else {
+            throw new IllegalArgumentException("Unknown private key type: " + type);
+        }
     }
 
     private static Algorithm
@@ -738,5 +787,40 @@ public final class PK11KeyWrapper implements KeyWrapper {
         pubKey = null;
         parameters = null;
         IV = null;
+    }
+
+    /**
+     * Helper method to parse DER length value.
+     * Returns the actual length value.
+     */
+    private static int getLength(byte[] data, int pos) {
+        int lengthByte = data[pos] & 0xFF;
+        if ((lengthByte & 0x80) == 0) {
+            // Short form: length is in the first byte
+            return lengthByte;
+        } else {
+            // Long form: first byte tells us how many bytes encode the length
+            int numLengthBytes = lengthByte & 0x7F;
+            int length = 0;
+            for (int i = 0; i < numLengthBytes; i++) {
+                length = (length << 8) | (data[pos + 1 + i] & 0xFF);
+            }
+            return length;
+        }
+    }
+
+    /**
+     * Helper method to determine how many bytes were used to encode the DER length.
+     * Returns the number of bytes used for length encoding.
+     */
+    private static int getLengthBytes(byte[] data, int pos) {
+        int lengthByte = data[pos] & 0xFF;
+        if ((lengthByte & 0x80) == 0) {
+            // Short form: 1 byte for length
+            return 1;
+        } else {
+            // Long form: 1 + number of length bytes
+            return 1 + (lengthByte & 0x7F);
+        }
     }
 }

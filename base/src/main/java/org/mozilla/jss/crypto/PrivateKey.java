@@ -18,6 +18,10 @@ public interface PrivateKey extends java.security.PrivateKey {
     public static final Type RSA = Type.RSA;
     public static final Type DSA = Type.DSA;
     public static final Type EC = Type.EC;
+    public static final Type MLKEM512 = Type.MLKEM512;
+    public static final Type MLKEM768 = Type.MLKEM768;
+    public static final Type MLKEM = Type.MLKEM;
+    public static final Type MLKEM1024 = Type.MLKEM1024;
     public static final Type DiffieHellman = Type.DiffieHellman;
 
     /**
@@ -100,6 +104,7 @@ public interface PrivateKey extends java.security.PrivateKey {
         private static int CKK_EC = 0x3;
         private static int CKK_X9_42_DH = 0x4;
         private static int CKK_KEA = 0x5;
+        private static int CKK_ML_KEM = 0x49;
         private static int CKK_ML_DSA = 0x4a;
 
         public static final Type RSA = new Type(
@@ -115,6 +120,13 @@ public interface PrivateKey extends java.security.PrivateKey {
         public static final Type MLDSA = MLDSA65;
         public static final Type MLDSA87 = new Type(
                 OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(19), "ML-DSA-87", CKK_ML_DSA);
+        public static final Type MLKEM512 = new Type(
+                OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(1), "ML-KEM-512", CKK_ML_KEM);
+        public static final Type MLKEM768 = new Type(
+                OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(2), "ML-KEM-768", CKK_ML_KEM);
+        public static final Type MLKEM = MLKEM768;
+        public static final Type MLKEM1024 = new Type(
+                OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(3), "ML-KEM-1024", CKK_ML_KEM);
         public static final Type DiffieHellman = new Type(
                 DH_OID, "DiffieHellman", CKK_DH);
 

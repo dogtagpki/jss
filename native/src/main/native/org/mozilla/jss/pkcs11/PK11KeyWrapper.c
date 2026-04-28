@@ -466,6 +466,11 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
         attribs[0] = CKA_DERIVE;
         numAttribs = 1;
 	break;
+    case CKK_ML_KEM:
+        /* ML-KEM is a KEM (Key Encapsulation Mechanism), not a signature key */
+        attribs[0] = CKA_DERIVE;
+        numAttribs = 1;
+	break;
     default:
         /* unknown key type */
         PR_ASSERT(PR_FALSE);
