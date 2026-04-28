@@ -279,11 +279,15 @@ public final class JSSProvider extends java.security.Provider {
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.EC",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-DSA",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.ML-DSA-44",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.ML-DSA-65",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.ML-DSA-87",
+            "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
+        put("KeyFactory.ML-KEM",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");
         put("KeyFactory.ML-KEM-512",
             "org.mozilla.jss.provider.java.security.KeyFactorySpi1_2");

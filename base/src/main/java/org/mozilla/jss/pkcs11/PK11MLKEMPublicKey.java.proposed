@@ -1,0 +1,23 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.mozilla.jss.pkcs11;
+
+/**
+ * PK11 ML-KEM public key.
+ */
+public class PK11MLKEMPublicKey extends PK11PubKey {
+
+    private static final long serialVersionUID = 1L;
+
+    public PK11MLKEMPublicKey(byte[] pointer) {
+        super(pointer);
+    }
+
+    /**
+     * Returns the raw ML-KEM public key bytes.
+     * For ML-KEM, the public key is just raw bytes (no structure like RSA modulus/exponent).
+     */
+    public native byte[] getKeyByteArray();
+}

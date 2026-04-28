@@ -1061,14 +1061,24 @@ JSS_ExportEncryptedPrivKeyInfoV2(
     epki->encryptedData.data = NULL;
     epki->encryptedData.len = 0; // Just get the len we need
 
-    // Modify behavior for KWP since NULL is not returned for crypto_param
-    // from PK11_GetPBECryptoMechanism. It returns some default 8 byte iv, which is incorrect.
+    /* AES-KWP (CKM_AES_KEY_WRAP_KWP = 0x210B) does not use an external IV parameter.
+     *
+     * Unlike AES-CBC which requires a random IV, AES-KWP (RFC 5649) uses a fixed
+     * 8-byte overhead block that contains:
+     *   - 4 bytes: Fixed ICV2 = 0xa65959a6 (AES_KEY_WRAP_ICV2 in NSS)
+     *   - 4 bytes: Original plaintext length
+     *
+     * PK11_GetPBECryptoMechanism() incorrectly returns a default 8-byte IV for KWP,
+     * but we must pass NULL to PK11_WrapPrivKey for KWP to work correctly.
+     *
+     * See NSS lib/freebl/aeskeywrap.c:494 where the IV is constructed internally.
+     */
     int isKeyWrapKWP = 0;
     if(cryptoMech.mechanism == CKM_AES_KEY_WRAP_KWP) {
         isKeyWrapKWP = 1;
     }
 
-    //First call to get get the size.
+    /* First call to PK11_WrapPrivKey: query the PKCS#8 encoded private key size */
     crv = PK11_WrapPrivKey(pk->pkcs11Slot,  finalKey,
                             pk,  cryptoMech.mechanism,
                             isKeyWrapKWP ? NULL : crypto_param,  &epki->encryptedData, NULL);
@@ -1078,11 +1088,32 @@ JSS_ExportEncryptedPrivKeyInfoV2(
         goto loser;
      }
 
-    // If KWP increase buffer size by 8
-    // The size value from the first PK11_WrapPrivKey does not account for AES_BLOCK_SIZE
+    /* AES-KWP (RFC 5649) output size calculation
+     *
+     * AES-KWP wraps arbitrary-length input by:
+     * 1. Padding input to a multiple of 8 bytes (AES_KEY_WRAP_BLOCK_SIZE)
+     * 2. Adding an 8-byte overhead block containing:
+     *    - 4 bytes: ICV2 (Integrity Check Value) = 0xa65959a6
+     *    - 4 bytes: Original input length (big-endian)
+     *
+     * Output size formula (from NSS lib/freebl/aeskeywrap.c:491-493):
+     *   padLen = BLOCK_PAD_POWER2(inputLen, AES_KEY_WRAP_BLOCK_SIZE)
+     *   outLen = inputLen + padLen + AES_KEY_WRAP_BLOCK_SIZE
+     *
+     * Where:
+     *   BLOCK_PAD_POWER2(x, bs) = ((bs) - ((x) & ((bs)-1))) & ((bs)-1)
+     *   AES_KEY_WRAP_BLOCK_SIZE = 8 (defined in NSS lib/freebl/blapit.h:133)
+     *
+     * The first PK11_WrapPrivKey call returns the PKCS#8 encoded key size,
+     * but does not account for KWP padding and overhead.
+     */
 
     if(isKeyWrapKWP) {
-      epki->encryptedData.len  += 8;
+      unsigned int inputLen = epki->encryptedData.len;
+      /* Calculate padding needed to reach multiple of 8 bytes */
+      unsigned int padLen = (8 - (inputLen & 7)) & 7;
+      /* Add padding + 8-byte overhead block (ICV2 + length) */
+      epki->encryptedData.len = inputLen + padLen + 8;
     }
 
     encBufLen = epki->encryptedData.len;
