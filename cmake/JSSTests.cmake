@@ -224,6 +224,13 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
+    if(ENABLE_NSS_VERSION_PQC_DEF)
+        jss_test_java(
+            NAME "KeyEncapsulating"
+	    COMMAND "org.mozilla.jss.tests.KeyEncapsulating" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
+            DEPENDS "Setup_DBs"
+        )
+    endif()
     if(HAVE_NSS_OAEP)
         jss_test_java(
             NAME "JSS-KeyWrapping"
@@ -427,6 +434,14 @@ macro(jss_tests)
             DEPENDS "Enable_FipsMODE"
             MODE "FIPS"
         )
+        if(ENABLE_NSS_VERSION_PQC_DEF)
+            jss_test_java(
+                NAME "KeyEncapsulating_FIPSMODE"
+		COMMAND "org.mozilla.jss.tests.KeyEncapsulating" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
+                DEPENDS "Enable_FipsMODE"
+                MODE "FIPS"
+            )
+        endif()
         jss_test_java(
             NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
             COMMAND "org.mozilla.jss.tests.JCASigTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
