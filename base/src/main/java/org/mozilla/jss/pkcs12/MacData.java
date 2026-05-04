@@ -8,6 +8,8 @@ import java.io.CharConversionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.security.DigestException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -22,6 +24,9 @@ import org.mozilla.jss.asn1.InvalidBERException;
 import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
+import org.mozilla.jss.asn1.ANY;
+import org.mozilla.jss.asn1.ASN1Util;
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.HMACAlgorithm;
@@ -32,9 +37,13 @@ import org.mozilla.jss.crypto.KeyGenerator;
 import org.mozilla.jss.crypto.PBEKeyGenParams;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.PBEAlgorithm;
+import org.mozilla.jss.pkix.primitive.PBMAC1Params;
 import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
+import org.mozilla.jss.pkix.primitive.PBKDF2Params;
 import org.mozilla.jss.util.Password;
+import org.mozilla.jss.util.UTF8Converter;
 
 public class MacData implements ASN1Value {
 
@@ -45,7 +54,7 @@ public class MacData implements ASN1Value {
     private static final int DEFAULT_ITERATIONS = 1;
 
     // 20 is the length of SHA-1 hash output
-    private static final int SALT_LENGTH = 20;
+    public static final int SALT_LENGTH = 20;
 
     public DigestInfo getMac() {
         return mac;
@@ -137,13 +146,30 @@ public class MacData implements ASN1Value {
             rand.nextBytes(macSalt);
         }
 
+        // Handle null algID - default to SHA1 for backward compatibility
+
+        try {
+            if (algID == null) {
+                algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
+            }
+
+            // Check if this is PBMAC1 - route to new implementation
+            if (algID.getOID().equals(PBEAlgorithm.PBE_PKCS5_PBMAC1.toOID())) {
+                computePBMAC1(token, password, toBeMACed, algID);
+                return; // Early return - skip classic code below
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new TokenException("Algorithm OID error: " + e.getMessage(), e);
+        } catch (TokenException | CharConversionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new TokenException("Failed to compute PBMAC1: " + e.getMessage(), e);
+        }
+
         PBEKeyGenParams params = new PBEKeyGenParams(password, macSalt, iterations);
 
         try {
             // generate key from password and salt
-            if(algID == null) {
-                algID = new AlgorithmIdentifier(DigestAlgorithm.SHA1.toOID());
-            }
             KeyGenerator kg = null;
             JSSMessageDigest digest = null;
             if(DigestAlgorithm.SHA1.toOID().equals(algID.getOID())){
@@ -195,6 +221,129 @@ public class MacData implements ASN1Value {
             params.clear();
         }
     }
+
+    /**
+    * Computes a PBMAC1 MAC per RFC 9879 using NSS native crypto.
+    *
+    * @param token The crypto token for key derivation and HMAC
+    * @param password The password for PBKDF2 key derivation
+    * @param data The data to authenticate
+    * @param algID The PBMAC1 AlgorithmIdentifier containing KDF and MAC params
+    * @throws Exception if MAC computation fails
+    */
+    private void computePBMAC1(CryptoToken token, Password password,
+                           byte[] data, AlgorithmIdentifier algID)
+        throws Exception
+    {
+        // Parse PBMAC1 parameters to extract KDF and MAC algorithms
+
+        PBMAC1Params pbmac1Params;
+        ASN1Value params =  algID.getParameters();
+
+        if (params == null) {
+            throw new InvalidBERException("Missing PBMAC1 parameters");
+        }
+
+        if (params instanceof PBMAC1Params) {
+           // Already decoded (create/write path)
+           pbmac1Params = (PBMAC1Params) params;
+        } else if (params instanceof ANY) {
+          // Needs decoding (read from file path)
+          pbmac1Params = (PBMAC1Params) ((ANY) params).decodeWith(PBMAC1Params.getTemplate());
+        } else {
+            throw new InvalidBERException("Unexpected PBMAC1 parameter type: " + params.getClass().getName());
+        }
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        algID.encode(bos);
+        byte[] pbmac1AlgIDBytes = bos.toByteArray();
+
+        AlgorithmIdentifier kdfAlg = pbmac1Params.getKeyDerivationFunc();
+        AlgorithmIdentifier macAlg = pbmac1Params.getMessageAuthScheme();
+
+        ASN1Value kdfParams = kdfAlg.getParameters();
+        if (kdfParams == null) {
+            throw new InvalidBERException("Missing PBKDF2 parameters");
+        }
+
+        //Extract PBKDF2 parameters
+        PBKDF2Params pbkdf2Params;
+
+        if (kdfParams instanceof PBKDF2Params) {
+        // Already decoded (create/write path using typed constructor)
+            pbkdf2Params = (PBKDF2Params) kdfParams;
+        } else if (kdfParams instanceof SEQUENCE) {
+            pbkdf2Params = (PBKDF2Params) ASN1Util.decode(
+            PBKDF2Params.getTemplate(), ASN1Util.encode(kdfParams));
+        } else if (kdfParams instanceof ANY) {
+            pbkdf2Params = (PBKDF2Params) ((ANY) kdfParams).decodeWith(PBKDF2Params.getTemplate());
+        } else {
+            throw new InvalidBERException("Unexpected PBKDF2 parameter type: " + kdfParams.getClass().getName());
+        }
+
+        byte[] kdfSalt = pbkdf2Params.getSalt();
+        if(kdfSalt == null) {
+            throw new InvalidBERException("PBKDF2 otherSource salt not supported");
+        }
+
+        // Get HMAC OID from MAC AlgorithmIdentifier
+        OBJECT_IDENTIFIER macOID = macAlg.getOID();
+
+        HMACAlgorithm hmacAlgorithm = HMACAlgorithm.fromOID(macOID);
+
+        // Call native JSS code to perform PBKDF2 + HMAC
+        // This uses certified NSS crypto (PK11_PBEKeyGen + PK11_DigestOp)
+        // The OID will be mapped to the appropriate NSS HMAC mechanism
+
+
+        char[] passwordChars = password.getCharCopy();
+        byte[] passwordBytes = null;
+
+        try {
+                passwordBytes = UTF8Converter.UnicodeToUTF8(passwordChars);
+                byte[] macValue = nativeComputePBMAC1(
+                token,
+                passwordBytes,
+                data,
+                pbmac1AlgIDBytes,
+                hmacAlgorithm
+                );
+
+                this.mac = new DigestInfo(algID, new OCTET_STRING(macValue));
+                // PBMAC1: outer macSalt comes from the PBKDF2 params within
+                // the AlgorithmIdentifier, not from the constructor argument,
+                // since the salt is bound to the KDF computation.
+                this.macSalt = new OCTET_STRING(kdfSalt);
+                // PBMAC1: outer macIterationCount is always 1 (default) because
+                // the actual iteration count is inside the PBKDF2 params within
+                // the AlgorithmIdentifier, not at the MacData level.
+                this.macIterationCount = new INTEGER(1);
+        } finally {
+            if (passwordBytes != null) {
+                Password.wipeBytes(passwordBytes);
+            }
+            Password.wipeChars(passwordChars);
+        }
+    }
+
+    /**
+     * Native method to compute PBMAC1 MAC using NSS.
+     *
+     * @param password Password bytes
+     * @param salt PBKDF2 salt
+     * @param iterations PBKDF2 iteration count
+     * @param data Data to MAC
+     * @param hmacOID HMAC algorithm OID (e.g., hmacWithSHA256)
+     * @return HMAC value
+     */
+    private native byte[] nativeComputePBMAC1(
+        CryptoToken token,
+        byte[] password,
+        byte[] data,
+        byte[] pbmac1AlgID,
+        HMACAlgorithm hmacAlgorithm
+    ) throws Exception;
 
     ///////////////////////////////////////////////////////////////////////
     // DER encoding
