@@ -62,11 +62,13 @@ import org.mozilla.jss.pkcs11.PK11Store;
 import org.mozilla.jss.pkcs12.AuthenticatedSafes;
 import org.mozilla.jss.pkcs12.CertBag;
 import org.mozilla.jss.pkcs12.PFX;
+import org.mozilla.jss.pkcs12.MacType;
 import org.mozilla.jss.pkcs12.PasswordConverter;
 import org.mozilla.jss.pkcs12.SafeBag;
 import org.mozilla.jss.pkix.primitive.Attribute;
 import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.util.Password;
+import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +98,49 @@ public class PKCS12Util {
     PBEAlgorithm certEncryption = DEFAULT_CERT_ENCRYPTION;
     PBEAlgorithm keyEncryption = DEFAULT_KEY_ENCRYPTION;
     boolean trustFlagsEnabled = true;
+
+    // MAC configuration (separate from encryption)
+    private MacType macType = MacType.CLASSIC;  // default for backward compatibility
+    private DigestAlgorithm macDigest = DigestAlgorithm.SHA256;  // default digest
+
+    /**
+    * Sets the MAC algorithm type for PKCS#12 file generation.
+    *
+    * @param type The MAC type (CLASSIC or PBMAC1)
+    * @throws IllegalArgumentException
+    */
+    public void setMacType(MacType type) {
+        if(type == null) {
+            throw new IllegalArgumentException("Must provide macType");
+        }
+        this.macType = type;
+    }
+
+    /**
+    * Returns the configured MAC algorithm type.
+    *
+    * @return The MAC type
+    */
+    public MacType getMacType() {
+        return macType;
+    }
+
+    /**
+    * Sets the configured MAC digest algorithm.
+    *
+    * @param digest The digest algorithm
+    * @throws IllegalArgumentException
+    */
+    public void setMacDigest(DigestAlgorithm digest) {
+        if(digest == null) {
+            throw new IllegalArgumentException("Must provide digest");
+        }
+        this.macDigest = digest;
+    }
+
+    public DigestAlgorithm getMacDigest() {
+        return macDigest;
+    }
 
     public PKCS12Util() throws Exception {
         random = SecureRandom.getInstance("pkcs11prng", "Mozilla-JSS");
