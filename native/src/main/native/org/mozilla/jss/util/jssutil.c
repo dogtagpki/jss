@@ -1082,7 +1082,7 @@ JSS_ExportEncryptedPrivKeyInfoV2(
     // The size value from the first PK11_WrapPrivKey does not account for AES_BLOCK_SIZE
 
     if(isKeyWrapKWP) {
-      epki->encryptedData.len  += 8;
+      epki->encryptedData.len  += 16;
     }
 
     encBufLen = epki->encryptedData.len;

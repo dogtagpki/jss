@@ -28,10 +28,13 @@ import org.mozilla.jss.asn1.OCTET_STRING;
 import org.mozilla.jss.asn1.SEQUENCE;
 import org.mozilla.jss.asn1.SET;
 import org.mozilla.jss.asn1.Tag;
+import org.mozilla.jss.asn1.NULL;
+import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
 import org.mozilla.jss.crypto.JSSSecureRandom;
 import org.mozilla.jss.crypto.PBEAlgorithm;
 import org.mozilla.jss.crypto.DigestAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.crypto.HMACAlgorithm;
 import org.mozilla.jss.pkcs7.ContentInfo;
 import org.mozilla.jss.pkcs7.DigestInfo;
 import org.mozilla.jss.pkix.cert.Certificate;
@@ -39,8 +42,10 @@ import org.mozilla.jss.pkix.primitive.AlgorithmIdentifier;
 import org.mozilla.jss.pkix.primitive.Attribute;
 import org.mozilla.jss.pkix.primitive.EncryptedPrivateKeyInfo;
 import org.mozilla.jss.pkix.primitive.PrivateKeyInfo;
+import org.mozilla.jss.pkix.primitive.PBMAC1Params;
+import org.mozilla.jss.pkix.primitive.PBKDF2Params;
 import org.mozilla.jss.util.Password;
-
+import org.mozilla.jss.pkcs12.MacType;
 /**
  * The top level ASN.1 structure for a PKCS #12 blob.
  *
@@ -94,12 +99,41 @@ public class PFX implements ASN1Value {
     // currently we are on version 3 of the standard
     private static final INTEGER VERSION = new INTEGER(3);
 
+    // MAC configuration
+    private MacType macType = MacType.CLASSIC;  // default
+    private DigestAlgorithm macDigest = DigestAlgorithm.SHA256;  // default
+
     /**
      * The default number of iterations to use when generating the MAC.
      * Currently, it is 1.
      */
     public static final int DEFAULT_ITERATIONS = 1;
 
+   /**
+    * Sets the MAC algorithm type for this PFX.
+    *
+    * @param type The MAC type (CLASSIC or PBMAC1)
+    * @throws IllegalArgumentException if type is null
+    */
+    public void setMacType(MacType type) {
+        if(type == null) {
+            throw new IllegalArgumentException("MacType must not be null");
+        }
+        this.macType = type;
+    }
+
+    /**
+    * Sets the digest algorithm for MAC computation.
+    *
+    * @param digest The digest algorithm (e.g., SHA256, SHA384, SHA512)
+    * @throws IllegalArgumentException if digest is null
+    */
+    public void setMacDigest(DigestAlgorithm digest) {
+        if(digest == null) {
+            throw new IllegalArgumentException("Digest must not be null");
+        }
+        this.macDigest = digest;
+    }
 
     public INTEGER getVersion() {
         return version;
@@ -153,6 +187,7 @@ public class PFX implements ASN1Value {
 
         // create a new MacData based on the encoded Auth Safes
         DigestInfo macDataMac = macData.getMac();
+
         MacData testMac = new MacData(password,
                 macData.getMacSalt().toByteArray(),
                 macData.getMacIterationCount().intValue(),
@@ -219,10 +254,87 @@ public class PFX implements ASN1Value {
         TokenException, CharConversionException
     {
 
-        //Make this alg the default mac alg.
-        AlgorithmIdentifier algID = new AlgorithmIdentifier(DigestAlgorithm.SHA256.toOID());
-        macData = new MacData( password, salt, iterationCount,
-                ASN1Util.encode(authSafes), algID );
+        AlgorithmIdentifier algID;
+
+        if (salt == null) {
+            CryptoManager cm = CryptoManager.getInstance();
+            JSSSecureRandom rand = cm.createPseudoRandomNumberGenerator();
+            salt = new byte[MacData.SALT_LENGTH];  // SALT_LENGTH from MacData
+            rand.nextBytes(salt);
+        }
+
+        if (macType == MacType.PBMAC1) {
+            // Create PBMAC1 AlgorithmIdentifier with PBKDF2 parameters
+            algID = createPBMAC1AlgorithmID(salt, iterationCount, macDigest);
+        } else {
+            // Legacy: Use configured digest
+            algID = new AlgorithmIdentifier(macDigest.toOID());
+        }
+
+        macData = new MacData(password, salt, iterationCount,
+            ASN1Util.encode(authSafes), algID);
+    }
+
+    /**
+    * Creates a PBMAC1 AlgorithmIdentifier with PBKDF2 parameters per RFC 9879.
+    *
+    * @param salt The salt for PBKDF2 key derivation
+    * @param iterationCount The PBKDF2 iteration count
+    * @param digest The digest algorithm for HMAC
+    * @return The PBMAC1 AlgorithmIdentifier
+    * @throws NoSuchAlgorithmException if the digest is unsupported
+    */
+    private AlgorithmIdentifier createPBMAC1AlgorithmID(
+        byte[] salt, int iterationCount, DigestAlgorithm digest)
+        throws NoSuchAlgorithmException
+    {
+        // Determine HMAC OID and key length from digest algorithm
+        // Use existing HMACAlgorithm constants instead of hardcoded OIDs
+
+        int keyLength = digest.getOutputSize();
+        // Get the corresponding HMAC algorithm
+        HMACAlgorithm hmacAlg = getHMACForDigest(digest);
+
+        OBJECT_IDENTIFIER hmacOID = hmacAlg.toOID();
+
+        // PRF algorithm for PBKDF2 (same HMAC algorithm)
+        AlgorithmIdentifier prfAlg = new AlgorithmIdentifier(hmacOID, new NULL());
+        PBKDF2Params pbkdf2Params = new PBKDF2Params(salt, null, iterationCount, keyLength, prfAlg);
+
+        // Construct PBKDF2 AlgorithmIdentifier
+        AlgorithmIdentifier kdfAlg = new AlgorithmIdentifier(
+            PBEAlgorithm.PBE_PKCS5_PBKDF2.toOID(), pbkdf2Params);
+
+        // Construct HMAC AlgorithmIdentifier for MAC scheme
+        AlgorithmIdentifier macAlg = new AlgorithmIdentifier(hmacOID, new NULL());
+
+        // Construct PBMAC1 parameters using dedicated ASN.1 type
+        PBMAC1Params pbmac1Params = new PBMAC1Params(kdfAlg, macAlg);
+
+        // Construct final PBMAC1 AlgorithmIdentifier
+        return new AlgorithmIdentifier(
+            PBEAlgorithm.PBE_PKCS5_PBMAC1.toOID(), pbmac1Params);
+    }
+
+    /**
+    * Maps a digest algorithm to the corresponding HMAC algorithm.
+    *
+    * @param digest The digest algorithm
+    * @return The corresponding HMACAlgorithm
+    * @throws NoSuchAlgorithmException if no HMAC exists for the digest
+    */
+    private static HMACAlgorithm getHMACForDigest(DigestAlgorithm digest)
+          throws NoSuchAlgorithmException {
+        if (digest.equals(DigestAlgorithm.SHA256)) {
+            return HMACAlgorithm.SHA256;
+        } else if (digest.equals(DigestAlgorithm.SHA384)) {
+            return HMACAlgorithm.SHA384;
+        } else if (digest.equals(DigestAlgorithm.SHA512)) {
+            return HMACAlgorithm.SHA512;
+        } else {
+            throw new NoSuchAlgorithmException(
+              "Unsupported PBMAC1 digest: " + digest);
+        }
     }
 
 
