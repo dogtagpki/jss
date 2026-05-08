@@ -222,12 +222,12 @@ finish:
 }
 
 /*
- * PK11PrivKey.getMLDSAKeySize
+ * PK11PrivKey.getMLKeyParam
  *
- * Returns: The MLDSA size of this key.
+ * Returns: The ML key param.
  */
-JNIEXPORT jint JNICALL
-Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLDSAKeyParam
+JNIEXPORT jlong JNICALL
+Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLKeyParam
   (JNIEnv *env, jobject this)
 {
     PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
@@ -266,20 +266,6 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLDSAKeyParam
     }
     paramSet = *(CK_ULONG *)item.data;
     PORT_Free(item.data);
-
-    switch (paramSet) {
-        case CKP_ML_DSA_44:
-            size = 44;
-            break;
-        case CKP_ML_DSA_65:
-            size = 65;
-            break;
-        case CKP_ML_DSA_87:
-            size = 87;
-            break;
-        default:
-            size = 65;
-    }
 #else
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Key type not supported.");
         goto finish;
@@ -287,7 +273,7 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLDSAKeyParam
 
 finish:
     PR_DetachThread();
-    return size;
+    return paramSet;
 }
 
 /*

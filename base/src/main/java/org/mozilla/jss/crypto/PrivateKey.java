@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.crypto;
 
+import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
@@ -22,8 +23,9 @@ public interface PrivateKey extends java.security.PrivateKey {
 
     /**
      * Returns the type (RSA or DSA) of this private key.
+     * @throws java.security.KeyException
      */
-    public Type getType();
+    public Type getType() throws KeyException;
 
     /**
      * Returns the unique ID of this key. Unique IDs can be used to match
@@ -100,6 +102,7 @@ public interface PrivateKey extends java.security.PrivateKey {
         private static int CKK_EC = 0x3;
         private static int CKK_X9_42_DH = 0x4;
         private static int CKK_KEA = 0x5;
+        private static int CKK_ML_KEM = 0x49;
         private static int CKK_ML_DSA = 0x4a;
 
         public static final Type RSA = new Type(
@@ -108,6 +111,13 @@ public interface PrivateKey extends java.security.PrivateKey {
                 Algorithm.ANSI_X9_ALGORITHM.subBranch(1), "DSA", CKK_DSA);
         public static final Type EC = new Type(
                 Algorithm.ANSI_X962_OID.subBranch(2).subBranch(1), "EC", CKK_EC);
+                public static final Type MLKEM512 = new Type(
+                OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(1), "ML-KEM-512", CKK_ML_KEM);
+        public static final Type MLKEM768 = new Type(
+                OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(2), "ML-KEM-768", CKK_ML_KEM);
+        public static final Type MLKEM = MLKEM768;
+        public static final Type MLKEM1024 = new Type(
+                OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(3), "ML-KEM-1024", CKK_ML_KEM);
         public static final Type MLDSA44 = new Type(
                 OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(17), "ML-DSA-44", CKK_ML_DSA);
         public static final Type MLDSA65 = new Type(

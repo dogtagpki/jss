@@ -92,7 +92,15 @@ public class OBJECT_IDENTIFIER implements ASN1Value {
     public static final OBJECT_IDENTIFIER SIGN_ALGORITHM = NIST_ALGORITHM.subBranch(3);
 
     /**
-     * The OID space for NIST standardized kem algorithms.
+     * The OID space for NIST standardized Key Encapsulation Mechanism (KEM) algorithms.
+     * Base OID: 2.16.840.1.101.3.4.4
+     *
+     * This OID family includes post-quantum cryptography algorithms such as:
+     * <ul>
+     *   <li>2.16.840.1.101.3.4.4.1 - ML-KEM-512</li>
+     *   <li>2.16.840.1.101.3.4.4.2 - ML-KEM-768</li>
+     *   <li>2.16.840.1.101.3.4.4.3 - ML-KEM-1024</li>
+     * </ul>
      */
     public static final OBJECT_IDENTIFIER KEM_ALGORITHM = NIST_ALGORITHM.subBranch(4);
 
