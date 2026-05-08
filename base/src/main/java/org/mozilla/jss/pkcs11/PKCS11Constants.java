@@ -7452,6 +7452,20 @@ public interface PKCS11Constants {
      *
      * Source file: /usr/include/nss3/pkcs11n.h
      */
+    public static final long CKA_NSS_GENERATE = 0x81000001L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
+    public static final long CKA_NSS_GENERATE_KEY_PAIR = 0x81000002L;
+
+    /**
+     * Content automatically generated; see NSS documentation for more information.
+     *
+     * Source file: /usr/include/nss3/pkcs11n.h
+     */
     public static final long CKA_NSS_MESSAGE = 0x82000000L;
 
     /**
