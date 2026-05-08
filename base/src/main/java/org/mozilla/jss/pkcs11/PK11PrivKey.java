@@ -44,7 +44,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     public native byte[] getUniqueID() throws TokenException;
 
     public native KeyType getKeyType();
-    public native int getMLDSAKeyParam();
+    private native long getMLKeyParam();
 
     @Override
     public PrivateKey.Type getType() {
@@ -55,16 +55,17 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
         } else if (kt == KeyType.DSA) {
             return PrivateKey.Type.DSA;
         } else if (kt == KeyType.MLDSA) {
-            switch(getMLDSAKeyParam()) {
-                case 44:
-                    return PrivateKey.Type.MLDSA44;
-                case 65:
-                    return PrivateKey.Type.MLDSA65;
-                case 87:
-                    return PrivateKey.Type.MLDSA87;
-                default:
-                    return PrivateKey.Type.MLDSA65;
-            }
+            long keyParam = getMLKeyParam();
+            if (keyParam == PKCS11Constants.CKP_ML_DSA_44) return PrivateKey.Type.MLDSA44;
+            if (keyParam == PKCS11Constants.CKP_ML_DSA_65) return PrivateKey.Type.MLDSA65;
+            if (keyParam == PKCS11Constants.CKP_ML_DSA_87) return PrivateKey.Type.MLDSA87;
+            throw new PK11Exception("Unsupported ML-DSA parameter set: " + keyParam);
+        } else if (kt == KeyType.MLKEM) {
+            long keyParam = getMLKeyParam();
+            if (keyParam == PKCS11Constants.CKP_ML_KEM_512) return PrivateKey.Type.MLKEM512;
+            if (keyParam == PKCS11Constants.CKP_ML_KEM_768) return PrivateKey.Type.MLKEM768;
+            if (keyParam == PKCS11Constants.CKP_ML_KEM_1024) return PrivateKey.Type.MLKEM1024;
+            throw new PK11Exception("Unsupported ML-KEM parameter set: " + keyParam);
         } else {
             assert(kt == KeyType.EC);
             return PrivateKey.Type.EC;
