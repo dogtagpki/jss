@@ -104,6 +104,7 @@ public interface PrivateKey extends java.security.PrivateKey {
         private static int CKK_EC = 0x3;
         private static int CKK_X9_42_DH = 0x4;
         private static int CKK_KEA = 0x5;
+        private static int CKK_ML_KEM = 0x49;
         private static int CKK_ML_DSA = 0x4a;
 
         public static final Type RSA = new Type(
