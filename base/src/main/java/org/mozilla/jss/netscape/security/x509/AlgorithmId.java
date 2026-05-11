@@ -345,7 +345,10 @@ public class AlgorithmId implements Serializable, DerEncoder {
                     !algid.equals(sha512WithEC_oid) &&
                     !algid.equals(mldsa44_oid) &&
                     !algid.equals(mldsa65_oid) &&
-                    !algid.equals(mldsa87_oid)) {
+                    !algid.equals(mldsa87_oid) &&
+                    !algid.equals(mlkem512_oid) &&
+                    !algid.equals(mlkem768_oid) &&
+                    !algid.equals(mlkem1024_oid)) {
                 if (params == null) {
                     bytes.putNull();
                 } else
@@ -530,6 +533,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
         if (name.equals("ML-DSA-87")){
             return AlgorithmId.mldsa87_oid;
         }
+        if (name.equals("ML-KEM-512")){
+            return AlgorithmId.mlkem512_oid;
+        }
+        if (name.equals("ML-KEM-768")){
+            return AlgorithmId.mlkem768_oid;
+        }
+        if (name.equals("ML-KEM-1024")){
+            return AlgorithmId.mlkem1024_oid;
+        }
         return null;
     }
 
@@ -628,6 +640,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
         }
         if (algid.equals(AlgorithmId.mldsa87_oid)) {
             return "ML-DSA-87";
+        }
+        if (algid.equals(AlgorithmId.mlkem512_oid)) {
+            return "ML-KEM-512";
+        }
+        if (algid.equals(AlgorithmId.mlkem768_oid)) {
+            return "ML-KEM-768";
+        }
+        if (algid.equals(AlgorithmId.mlkem1024_oid)) {
+            return "ML-KEM-1024";
         }
         // default returns a dot-notation ID
 
@@ -994,6 +1015,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
     private static final int mldsa87_data[] =
                                    { 2, 16, 840, 1, 101, 3, 4, 3, 19 };
 
+    private static final int mlkem512_data[] =
+                                   { 2, 16, 840, 1, 101, 3, 4, 4, 1 };
+
+    private static final int mlkem768_data[] =
+                                   { 2, 16, 840, 1, 101, 3, 4, 4, 2 };
+
+    private static final int mlkem1024_data[] =
+                                   { 2, 16, 840, 1, 101, 3, 4, 4, 3 };
+
     @Deprecated(since="5.0.1", forRemoval=true)
     public static final ObjectIdentifier sha1WithEC_oid = new
             ObjectIdentifier(sha1WithEC_data);
@@ -1022,6 +1052,15 @@ public class AlgorithmId implements Serializable, DerEncoder {
 
     public static final ObjectIdentifier mldsa87_oid = new
             ObjectIdentifier(mldsa87_data);
+
+    public static final ObjectIdentifier mlkem512_oid = new
+            ObjectIdentifier(mlkem512_data);
+
+    public static final ObjectIdentifier mlkem768_oid = new
+            ObjectIdentifier(mlkem768_data);
+
+    public static final ObjectIdentifier mlkem1024_oid = new
+            ObjectIdentifier(mlkem1024_data);
 
     /**
      * Identifies a signing algorithm where an MD2 digest is encrypted
