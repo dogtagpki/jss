@@ -19,6 +19,10 @@ public interface PrivateKey extends java.security.PrivateKey {
     public static final Type RSA = Type.RSA;
     public static final Type DSA = Type.DSA;
     public static final Type EC = Type.EC;
+    public static final Type MLKEM512 = Type.MLKEM512;
+    public static final Type MLKEM768 = Type.MLKEM768;
+    public static final Type MLKEM = Type.MLKEM;
+    public static final Type MLKEM1024 = Type.MLKEM1024;
     public static final Type DiffieHellman = Type.DiffieHellman;
 
     /**
