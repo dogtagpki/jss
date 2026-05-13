@@ -92,7 +92,7 @@ jobs:
           libnss3-tools \
           libopentest4j-java \
           libslf4j-java \
-          openjdk-21-jdk \
+          openjdk-25-jdk \
           unzip \
           zip
     displayName: Install build dependencies
