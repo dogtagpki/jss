@@ -6,6 +6,7 @@ package org.mozilla.jss.crypto;
 
 import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Hashtable;
 
 import org.mozilla.jss.asn1.OBJECT_IDENTIFIER;
@@ -32,7 +33,7 @@ public interface PrivateKey extends java.security.PrivateKey {
     public static final Type DiffieHellman = Type.DiffieHellman;
 
     /**
-     * Returns the type (RSA or DSA) of this private key.
+     * Returns the type (RSA, DSA, ML-DSA or ML-KEM) of this private key.
      * @throws java.security.KeyException
      */
     public Type getType() throws KeyException;
@@ -50,6 +51,13 @@ public interface PrivateKey extends java.security.PrivateKey {
      * Returns -1 for other types of keys.
      */
     public int getStrength();
+    
+    /**
+     * 
+     */
+    default AlgorithmParameterSpec getParams() {
+        return null;
+    }
 
     /**
      * Returns the CryptoToken that owns this private key. Cryptographic
