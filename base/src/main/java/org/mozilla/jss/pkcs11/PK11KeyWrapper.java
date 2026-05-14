@@ -27,6 +27,8 @@ import org.mozilla.jss.crypto.KeyWrapper;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SymmetricKey;
 import org.mozilla.jss.crypto.TokenException;
+import org.mozilla.jss.asn1.BIT_STRING;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 import org.mozilla.jss.util.NativeEnclosure;
 import org.mozilla.jss.util.NativeProxy;
 import org.slf4j.Logger;
@@ -434,8 +436,10 @@ public final class PK11KeyWrapper implements KeyWrapper {
 
         byte[] publicValue = extractPublicValue(publicKey, type);
         /* If first byte is null, omit it.
-         * It can be null due to how BigInteger.toByteArray() is specified. */
-        if (publicValue.length > 0 && publicValue[0] == 0) {
+         * It can be null due to how BigInteger.toByteArray() is specified.
+         * Only apply this to RSA/DSA which use BigInteger, not to raw byte types (EC, ML-KEM, ML-DSA). */
+        if ((type == PrivateKey.RSA || type == PrivateKey.DSA) &&
+            publicValue.length > 0 && publicValue[0] == 0) {
             publicValue = Arrays.copyOfRange(publicValue, 1, publicValue.length);
         }
 
@@ -502,6 +506,29 @@ public final class PK11KeyWrapper implements KeyWrapper {
                     "match type of private key which is DSA");
             }
             return ((DSAPublicKey)publicKey).getY().toByteArray();
+        } else if (type == PrivateKey.MLKEM512 || type == PrivateKey.MLKEM768 ||
+                   type == PrivateKey.MLKEM1024 ||
+                   type == PrivateKey.MLDSA44  || type == PrivateKey.MLDSA65 ||
+                   type == PrivateKey.MLDSA87) {
+            // Extract raw public key bytes from SubjectPublicKeyInfo for PQC keys.
+            // TODO: Replace with PK11MLKEMPublicKey/PK11MLDSAPublicKey.getKeyByteArray()
+            //       when available in JSS.
+            try {
+                SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(publicKey);
+                BIT_STRING publicKeyBits = spki.getSubjectPublicKey();
+
+                // Verify byte-alignment (ML-KEM/ML-DSA keys are always whole bytes per FIPS 203/204)
+                if (publicKeyBits.getPadCount() != 0) {
+                    throw new InvalidKeyException(
+                        "PQC public key BIT STRING has unexpected padding bits: " +
+                        publicKeyBits.getPadCount());
+                }
+
+                return publicKeyBits.getBits();
+            } catch (org.mozilla.jss.asn1.InvalidBERException e) {
+                throw new InvalidKeyException(
+                    "Failed to extract " + type + " public key from SPKI", e);
+            }
         } else {
             throw new InvalidKeyException("Unknown private key type: " + type);
         }
@@ -666,10 +693,17 @@ public final class PK11KeyWrapper implements KeyWrapper {
             return KeyPairAlgorithm.RSAFamily;
         } else if (type == PrivateKey.DSA) {
             return KeyPairAlgorithm.DSAFamily;
-        } else {
-            assert( type == PrivateKey.EC);
+        } else if (type == PrivateKey.EC) {
             return KeyPairAlgorithm.ECFamily;
-	}
+        } else if (type == PrivateKey.MLKEM512 || type == PrivateKey.MLKEM768 ||
+                   type == PrivateKey.MLKEM1024) {
+            return KeyPairAlgorithm.MLKEMFamily;
+        } else if (type == PrivateKey.MLDSA44 || type == PrivateKey.MLDSA65 ||
+                   type == PrivateKey.MLDSA87) {
+            return KeyPairAlgorithm.MLDSAFamily;
+        } else {
+            throw new IllegalArgumentException("Unknown private key type: " + type);
+        }
     }
 
     private static Algorithm
