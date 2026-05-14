@@ -19,6 +19,16 @@ public interface PrivateKey extends java.security.PrivateKey {
     public static final Type RSA = Type.RSA;
     public static final Type DSA = Type.DSA;
     public static final Type EC = Type.EC;
+    public static final Type MLKEM512 = Type.MLKEM512;
+    public static final Type MLKEM768 = Type.MLKEM768;
+    /** Generic ML-KEM alias; resolves to ML-KEM-768 (NIST security level 3). */
+    public static final Type MLKEM = Type.MLKEM;
+    public static final Type MLKEM1024 = Type.MLKEM1024;
+    public static final Type MLDSA44 = Type.MLDSA44;
+    public static final Type MLDSA65 = Type.MLDSA65;
+    /** Generic ML-DSA alias; resolves to ML-DSA-65 (NIST security level 3). */
+    public static final Type MLDSA = Type.MLDSA;
+    public static final Type MLDSA87 = Type.MLDSA87;
     public static final Type DiffieHellman = Type.DiffieHellman;
 
     /**
@@ -115,6 +125,7 @@ public interface PrivateKey extends java.security.PrivateKey {
                 OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(1), "ML-KEM-512", CKK_ML_KEM);
         public static final Type MLKEM768 = new Type(
                 OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(2), "ML-KEM-768", CKK_ML_KEM);
+        /** Generic ML-KEM alias; resolves to ML-KEM-768 (NIST security level 3). */
         public static final Type MLKEM = MLKEM768;
         public static final Type MLKEM1024 = new Type(
                 OBJECT_IDENTIFIER.KEM_ALGORITHM.subBranch(3), "ML-KEM-1024", CKK_ML_KEM);
@@ -122,6 +133,7 @@ public interface PrivateKey extends java.security.PrivateKey {
                 OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(17), "ML-DSA-44", CKK_ML_DSA);
         public static final Type MLDSA65 = new Type(
                 OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(18), "ML-DSA-65", CKK_ML_DSA);
+        /** Generic ML-DSA alias; resolves to ML-DSA-65 (NIST security level 3). */
         public static final Type MLDSA = MLDSA65;
         public static final Type MLDSA87 = new Type(
                 OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(19), "ML-DSA-87", CKK_ML_DSA);

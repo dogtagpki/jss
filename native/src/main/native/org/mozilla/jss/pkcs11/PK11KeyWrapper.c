@@ -425,7 +425,16 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
         goto finish;
     }
 
-    keyType = PK11_GetKeyType(keyTypeMech, 0);
+    /* Workaround: NSS PK11_GetKeyType() doesn't map PKCS#11 v3.2 PQC mechanisms
+     * Without this, it returns CKK_GENERIC_SECRET (0x10) which also works,
+     * but using the proper key types is clearer and more correct */
+    if (keyTypeMech == CKM_ML_KEM_KEY_PAIR_GEN || keyTypeMech == CKM_ML_KEM) {
+        keyType = CKK_ML_KEM;  /* 0x49 from PKCS#11 v3.2 */
+    } else if (keyTypeMech == CKM_ML_DSA_KEY_PAIR_GEN || keyTypeMech == CKM_ML_DSA) {
+        keyType = CKK_ML_DSA;  /* 0x48 from PKCS#11 v3.2 */
+    } else {
+        keyType = PK11_GetKeyType(keyTypeMech, 0);
+    }
 
     /* special case nethsm and lunasa*/
     if( isNethsm ) {
@@ -465,6 +474,26 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     case CKK_X9_42_DH:
         attribs[0] = CKA_DERIVE;
         numAttribs = 1;
+	break;
+    case CKK_ML_KEM:
+        /* ML-KEM is a KEM (Key Encapsulation Mechanism), not a signature key
+         * Set CKA_DECAPSULATE to indicate intended usage per PKCS#11 v3.2 */
+        numAttribs = 1;
+        attribs[0] = CKA_DECAPSULATE;
+        if (isExtractable) {
+            attribs[1] = CKA_EXTRACTABLE;
+            numAttribs = 2;
+        }
+	break;
+    case CKK_ML_DSA:
+        /* ML-DSA is a digital signature algorithm
+         * Set CKA_SIGN to indicate intended usage per PKCS#11 v3.2 */
+        numAttribs = 1;
+        attribs[0] = CKA_SIGN;
+        if (isExtractable) {
+            attribs[1] = CKA_EXTRACTABLE;
+            numAttribs = 2;
+        }
 	break;
     default:
         /* unknown key type */
