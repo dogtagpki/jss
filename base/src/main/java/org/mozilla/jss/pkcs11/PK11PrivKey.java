@@ -5,7 +5,10 @@
 package org.mozilla.jss.pkcs11;
 
 import java.math.BigInteger;
+import java.security.KeyException;
+import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.DSAParameterSpec;
+import java.security.spec.NamedParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 
 import org.mozilla.jss.crypto.CryptoToken;
@@ -47,9 +50,8 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     private native long getMLKeyParam();
 
     @Override
-    public PrivateKey.Type getType() {
+    public PrivateKey.Type getType() throws KeyException {
         KeyType kt = getKeyType();
-
         if( kt == KeyType.RSA ) {
             return PrivateKey.Type.RSA;
         } else if (kt == KeyType.DSA) {
@@ -59,13 +61,13 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
             if (keyParam == PKCS11Constants.CKP_ML_DSA_44) return PrivateKey.Type.MLDSA44;
             if (keyParam == PKCS11Constants.CKP_ML_DSA_65) return PrivateKey.Type.MLDSA65;
             if (keyParam == PKCS11Constants.CKP_ML_DSA_87) return PrivateKey.Type.MLDSA87;
-            throw new PK11Exception("Unsupported ML-DSA parameter set: " + keyParam);
+            throw new KeyException("Unsupported ML-DSA parameter set: " + keyParam);
         } else if (kt == KeyType.MLKEM) {
             long keyParam = getMLKeyParam();
             if (keyParam == PKCS11Constants.CKP_ML_KEM_512) return PrivateKey.Type.MLKEM512;
             if (keyParam == PKCS11Constants.CKP_ML_KEM_768) return PrivateKey.Type.MLKEM768;
             if (keyParam == PKCS11Constants.CKP_ML_KEM_1024) return PrivateKey.Type.MLKEM1024;
-            throw new PK11Exception("Unsupported ML-KEM parameter set: " + keyParam);
+            throw new KeyException("Unsupported ML-KEM parameter set: " + keyParam);
         } else {
             assert(kt == KeyType.EC);
             return PrivateKey.Type.EC;
@@ -74,10 +76,25 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
 
     @Override
     public String getAlgorithm() {
-        return getType().toString();
+        return getKeyType().toString();
     }
 
-    /**
+    @Override
+    public AlgorithmParameterSpec getParams() {
+        Type t = null;
+        try {
+            t = getType();
+        } catch (KeyException ex) {
+            throw new PK11Exception("Private key agorithm not recogniesed", ex);
+        }
+        if (t == Type.MLDSA44 || t == Type.MLDSA65 || t == Type.MLDSA87 ||
+                t == Type.MLKEM512 || t == Type.MLKEM768 || t == Type.MLKEM1024) {
+            return new NamedParameterSpec(t.toString());
+        }
+        return null;
+    }
+
+   /**
      * Returns the size in bits of the modulus of an RSA Private key.
      * Returns -1 for other types of keys.
      */
@@ -138,7 +155,7 @@ public class PK11PrivKey extends org.mozilla.jss.pkcs11.PK11Key
     getDSAParams() throws TokenException {
         byte[][] pqgArray = getDSAParamsNative();
 
-        return new DSAParameterSpec(
+        return new PK11DSAParams(
             new BigInteger(1, pqgArray[0]),
             new BigInteger(1, pqgArray[1]),
             new BigInteger(1, pqgArray[2])
