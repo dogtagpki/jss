@@ -26,6 +26,7 @@
  * This is bytes, not bits.  A 2048-bit wrapped RSA private key takes up around
  * 1200 bytes, because lots of "helper" values are stored along with the
  * modulus and exponent. 4096 bytes will hold at least a 4096-bit RSA key.
+ * ML-KEM-1024 wrapped keys are ~3280 bytes; 4096 provides sufficient headroom.
  */
 #define MAX_WRAPPED_KEY_LEN     4096
 
