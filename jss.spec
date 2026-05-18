@@ -83,22 +83,11 @@ ExcludeArch: i686
 # Java
 ################################################################################
 
-# Use Java 21 before Fedora 44, otherwise use Java 25.
-# Use Java 17 before RHEL 9, otherwise use Java 21.
+# Use Java 21 before Fedora 43 or RHEL, otherwise use Java 25.
 
-%global         fedora_java21_cutoff 44
-%global         rhel_java17_cutoff 9
+%global         fedora_java21_cutoff 43
 
 # maven-local is a subpackage of javapackages-tools
-
-%if 0%{?rhel} && 0%{?rhel} < %{rhel_java17_cutoff}
-
-%define java_devel java-17-openjdk-devel
-%define java_headless java-17-openjdk-headless
-%define java_home %{_jvmdir}/jre-17-openjdk
-%define maven_local maven-local
-
-%else
 
 %if 0%{?fedora} && 0%{?fedora} < %{fedora_java21_cutoff} || 0%{?rhel}
 
@@ -113,8 +102,6 @@ ExcludeArch: i686
 %define java_headless java-25-openjdk-headless
 %define java_home %{_jvmdir}/jre-25-openjdk
 %define maven_local maven-local-openjdk25
-
-%endif
 
 %endif
 

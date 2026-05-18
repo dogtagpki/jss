@@ -3,8 +3,8 @@ package org.mozilla.jss.pkcs11;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.TokenException;
 import java.math.BigInteger;
-import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPrivateKey;
+import java.security.spec.DSAParameterSpec;
 
 public class PK11DSAPrivateKey
     extends PK11PrivKey implements DSAPrivateKey
@@ -27,7 +27,7 @@ public class PK11DSAPrivateKey
      * If this fails, we just return null, since no exceptions are allowed.
      */
     @Override
-    public DSAParams getParams() {
+    public DSAParameterSpec getParams() {
       try {
         return getDSAParams();
       } catch(TokenException te) {

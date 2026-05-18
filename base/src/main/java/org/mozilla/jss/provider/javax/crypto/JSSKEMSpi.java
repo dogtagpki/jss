@@ -99,19 +99,18 @@ public class JSSKEMSpi implements KEMSpi{
             if (pKey.getKeyType() != KeyType.MLKEM){
                 return false;
             }
-            if(kemAlgorithm == null) {
-                try {
+            try {
+                if(kemAlgorithm == null) {
                     KEMAlgorithm.fromOID(pKey.getType().toOID());
                     return true;
-                } catch (NoSuchAlgorithmException ex) {
-                    logger.error("JSSKEMSpi: key algorithm not supported.");
-                    return false;
                 }
+                if(kemAlgorithm.toString().equals(pKey.getType().toString())) {
+                    return true;
+                }
+            } catch (NoSuchAlgorithmException | KeyException ex) {
+                logger.error("JSSKEMSpi: key algorithm not supported.");
             }
-            if(kemAlgorithm.toString().equals(pKey.getAlgorithm())) {
-                return true;
-            }
-        }
+    }
         return false;
     }
 
