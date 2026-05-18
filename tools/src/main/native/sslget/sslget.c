@@ -215,10 +215,10 @@ my_GetClientAuthData(void *                       arg,
 
   if (chosenNickName) {
     cert = PK11_FindCertFromNickname(chosenNickName, proto_win);
-    FPRINTF(stderr,"   mygetclientauthdata - cert = %x\n",(unsigned int)cert);
+    FPRINTF(stderr,"   mygetclientauthdata - cert = %p\n",(void *)cert);
     if ( cert ) {
       privkey = PK11_FindKeyByAnyCert(cert, proto_win);
-      FPRINTF(stderr,"   mygetclientauthdata - privkey = %x\n",(unsigned int)privkey);
+      FPRINTF(stderr,"   mygetclientauthdata - privkey = %p\n",(void *)privkey);
       if ( privkey ) {
     rv = SECSuccess;
       } else {
@@ -482,7 +482,6 @@ do_connect(
     PRFileDesc *        ssl_sock;
     PRFileDesc *        tcp_sock;
     PRStatus            prStatus;
-    SECStatus           result;
     int                 rv = SECSuccess;
     PRSocketOptionData  opt;
 
@@ -531,7 +530,7 @@ do_connect(
         exit(8);
     }
 
-    result = do_io( ssl_sock, connection);
+    do_io( ssl_sock, connection);
 
     if( ssl_sock != NULL ) {
         PR_Close(ssl_sock);
@@ -540,31 +539,6 @@ do_connect(
     return SECSuccess;
 }
 
-/* Returns IP address for hostname as PRUint32 in Host Byte Order.
-** Since the value returned is an integer (not a string of bytes), 
-** it is inherently in Host Byte Order. 
-*/
-static PRUint32
-getIPAddress(const char * hostName) 
-{
-    const unsigned char *p;
-    PRStatus	         prStatus;
-    PRUint32	         rv;
-    PRHostEnt	         prHostEnt;
-    char                 scratch[PR_NETDB_BUF_SIZE];
-
-    prStatus = PR_GetHostByName(hostName, scratch, sizeof scratch, &prHostEnt);
-    if (prStatus != PR_SUCCESS)
-	errExit("PR_GetHostByName");
-
-#undef  h_addr
-#define h_addr  h_addr_list[0]   /* address, for backward compatibility */
-
-    p = (const unsigned char *)(prHostEnt.h_addr); /* in Network Byte order */
-    FPRINTF(stderr, "%s -> %d.%d.%d.%d\n", hostName, p[0], p[1], p[2], p[3]);
-    rv = (p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3];
-    return rv;
-}
 
 static void
 client_main(
