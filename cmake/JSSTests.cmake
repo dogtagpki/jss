@@ -230,6 +230,11 @@ macro(jss_tests)
 	    COMMAND "org.mozilla.jss.tests.KeyEncapsulating" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
             DEPENDS "Setup_DBs"
         )
+        jss_test_java(
+            NAME "MLKEMKeyWrapping"
+	    COMMAND "org.mozilla.jss.tests.MLKEMKeyWrapping" "${PASSWORD_FILE}"
+            DEPENDS "Setup_DBs"
+        )
     endif()
     if(HAVE_NSS_OAEP)
         jss_test_java(
@@ -441,6 +446,12 @@ macro(jss_tests)
                 DEPENDS "Enable_FipsMODE"
                 MODE "FIPS"
             )
+            jss_test_java(
+                NAME "MLKEMKeyWrapping_FIPSMODE"
+		COMMAND "org.mozilla.jss.tests.MLKEMKeyWrapping" "${PASSWORD_FILE}"
+                DEPENDS "Enable_FipsMODE"
+                MODE "FIPS"
+            )
         endif()
         jss_test_java(
             NAME "Mozilla_JSS_JCA_Signature_FIPSMODE"
@@ -487,7 +498,7 @@ macro(jss_tests)
         jss_test_java(
             NAME "Disable_FipsMODE"
             COMMAND "org.mozilla.jss.tests.FipsTest" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "disable"
-            DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE" "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA_FIPSMODE"
+            DEPENDS "check_FipsMODE" "SSLClientAuth_FIPSMODE" "HMAC_FIPSMODE" "KeyWrapping_FIPSMODE" "KeyEncapsulating_FIPSMODE" "MLKEMKeyWrapping_FIPSMODE" "Mozilla_JSS_JCA_Signature_FIPSMODE" "JSS_Signature_test_FipsMODE" "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA_FIPSMODE"
             MODE "NONE"
         )
     endif()

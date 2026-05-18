@@ -232,7 +232,6 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLKeyParam
 {
     PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
     SECKEYPrivateKey *privk;
-    jint size = -1;
     CK_ULONG paramSet = CK_UNAVAILABLE_INFORMATION;
 #ifdef NSS_VERSION_PQC_DEF
     SECItem  item;
