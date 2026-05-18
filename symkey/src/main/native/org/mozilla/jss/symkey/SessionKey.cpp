@@ -119,9 +119,10 @@ JSS_ptrToByteArray(JNIEnv *env, void *ptr)
 jobject
 JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey)
 {
-//    return JSS_PK11_wrapSymKey(env, symKey, NULL);
-// hmmm, looks like I may not need to steal code after all
-    return JSS_PK11_wrapSymKey(env, symKey);
+    // Call the 3-parameter version with NULL debug_fd
+    // This avoids infinite recursion by calling the more specific overload
+    extern jobject JSS_PK11_wrapSymKey(JNIEnv *env, PK11SymKey **symKey, PRFileDesc *debug_fd);
+    return JSS_PK11_wrapSymKey(env, symKey, (PRFileDesc*)NULL);
 }
 
 
@@ -854,7 +855,8 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
     if(keyName)
     {
         keyNameChars = (char *)(env)->GetStringUTFChars(keyName, NULL);
-        strncpy(keyname,keyNameChars,KEYNAMELENGTH);
+        strncpy(keyname,keyNameChars,KEYNAMELENGTH-1);
+        keyname[KEYNAMELENGTH-1] = '\0';
         (env)->ReleaseStringUTFChars(keyName, (const char *)keyNameChars);
     }else
         GetKeyName(keyVersion,keyname);
@@ -1314,7 +1316,8 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
     if(keyName)
     {
         keyNameChars = (char *)(env)->GetStringUTFChars(keyName, NULL);
-        strncpy(keyname,keyNameChars,KEYNAMELENGTH);
+        strncpy(keyname,keyNameChars,KEYNAMELENGTH-1);
+        keyname[KEYNAMELENGTH-1] = '\0';
         (env)->ReleaseStringUTFChars(keyName, (const char *)keyNameChars);
     }else
     GetKeyName(keyVersion,keyname);
@@ -1715,7 +1718,8 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_C
     if(keyName)
     {
         keyNameChars = (char *)(env)->GetStringUTFChars(keyName, NULL);
-        strncpy(keyname,keyNameChars,KEYNAMELENGTH);
+        strncpy(keyname,keyNameChars,KEYNAMELENGTH-1);
+        keyname[KEYNAMELENGTH-1] = '\0';
         (env)->ReleaseStringUTFChars(keyName, (const char *)keyNameChars);
     }
     else {
