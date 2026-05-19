@@ -13,13 +13,17 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.NamedParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
+import org.mozilla.jss.asn1.ASN1Util;
 
 import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.PrivateKey;
 import org.mozilla.jss.crypto.SignatureAlgorithm;
 import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.crypto.TokenSupplierManager;
+import org.mozilla.jss.pkcs11.KeyType;
+import org.mozilla.jss.pkix.primitive.SubjectPublicKeyInfo;
 
 public class JSSSignatureSpi extends java.security.SignatureSpi {
 
@@ -74,10 +78,28 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
             throw new InvalidKeyException();
         }
         privk = (PrivateKey)privateKey;
-
+        SignatureAlgorithm effectiveAlg = this.alg;
+        if (privk.getAlgorithm().equals(KeyType.MLDSA.toString()) &&
+                privk.getParams() instanceof NamedParameterSpec param) {
+            if (effectiveAlg == null) {
+                effectiveAlg = switch(param.getName()) {
+                    case "ML-DSA-44" -> SignatureAlgorithm.MLDSA44;
+                    case "ML-DSA-65" -> SignatureAlgorithm.MLDSA65;
+                    case "ML-DSA-87" -> SignatureAlgorithm.MLDSA87;
+                    default -> throw new NoSuchAlgorithmException("Signature algorithm not defined for " + param.getName());
+                };
+            } else {
+                if (!effectiveAlg.toString().equals(param.getName())) {
+                    throw new InvalidKeyException("Invalid " + param.getName() + " parameter for " + effectiveAlg);
+                }
+            }
+        }
         token = privk.getOwningToken();
 
-        return token.getSignatureContext(alg);
+        if (effectiveAlg == null) {
+            throw new NoSuchAlgorithmException("Signature algorithm not defined");
+        }
+        return token.getSignatureContext(effectiveAlg);
     }
 
     @Override
@@ -87,8 +109,6 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
         try {
             CryptoToken token =
               TokenSupplierManager.getTokenSupplier().getThreadToken();
-            sig = token.getSignatureContext(alg);
-
             // convert the public key into a JSS public key if necessary
             if( ! (publicKey instanceof org.mozilla.jss.pkcs11.PK11PubKey) ) {
                 if( ! publicKey.getFormat().equalsIgnoreCase("X.509") ) {
@@ -102,11 +122,24 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
                     publicKey.getAlgorithm(), "Mozilla-JSS");
                 publicKey = fact.generatePublic(encodedKey);
             }
-
+            SignatureAlgorithm effectiveAlg = this.alg;
+            if (publicKey.getAlgorithm().equals(KeyType.MLDSA.toString())) {
+                SignatureAlgorithm keyAlg = getKeyAlg(publicKey.getEncoded());
+                if (effectiveAlg == null) {
+                    effectiveAlg = keyAlg;
+                } else {
+                    if (!effectiveAlg.equals(keyAlg)) {
+                        throw new InvalidKeyException("Key variant " + keyAlg +
+                                  " does not match signature algorithm " + effectiveAlg);
+                    }
+                }
+            }
+            if (effectiveAlg == null) {
+              throw new NoSuchAlgorithmException("Signature algorithm not defined");
+            }
+            sig = token.getSignatureContext(effectiveAlg);
             sig.initVerify(publicKey);
-        } catch(NoSuchProviderException e) {
-            throw new InvalidKeyException("Unable to convert non-JSS key to JSS key: " + e.getMessage(), e);
-        } catch(java.security.spec.InvalidKeySpecException e) {
+        } catch(NoSuchProviderException | java.security.spec.InvalidKeySpecException e) {
             throw new InvalidKeyException("Unable to convert non-JSS key to JSS key: " + e.getMessage(), e);
         } catch(java.security.NoSuchAlgorithmException e) {
             throw new InvalidKeyException("Algorithm not supported: " + e.getMessage(), e);
@@ -189,6 +222,22 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
             "name/value parameters not supported");
     }
 
+    private SignatureAlgorithm getKeyAlg(byte[] encoded)
+            throws InvalidKeyException {
+        if (encoded == null) {
+            throw new InvalidKeyException("Unable to determine key algorithm");
+        }
+        try {
+            SubjectPublicKeyInfo spki = (SubjectPublicKeyInfo)
+                          ASN1Util.decode(new SubjectPublicKeyInfo.Template(), encoded);
+             SignatureAlgorithm keyAlg = SignatureAlgorithm.fromOID(
+                     spki.getAlgorithmIdentifier().getOID());
+             return keyAlg;
+        } catch (Exception ex) {
+            throw new InvalidKeyException("Unable to determine key algorithm", ex);
+        }
+    }
+
     @Deprecated(since="5.0.1", forRemoval=true)
     public static class DSA extends JSSSignatureSpi {
         public DSA() {
@@ -268,7 +317,7 @@ public class JSSSignatureSpi extends java.security.SignatureSpi {
     }
     public static class MLDSA extends JSSSignatureSpi {
         public MLDSA() {
-            super(SignatureAlgorithm.MLDSA65);
+            super(null);
         }
     }
     public static class MLDSA44 extends JSSSignatureSpi {

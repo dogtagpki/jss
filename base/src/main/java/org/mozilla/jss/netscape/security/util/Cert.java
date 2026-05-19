@@ -79,8 +79,6 @@ public class Cert {
             return SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest;
         else if (algname.equals("SHA512withRSA/PSS"))
             return SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest;
-        else if (algname.equals("ML-DSA"))
-            return SignatureAlgorithm.MLDSA;
         else if (algname.equals("ML-DSA-44"))
             return SignatureAlgorithm.MLDSA44;
         else if (algname.equals("ML-DSA-65"))
