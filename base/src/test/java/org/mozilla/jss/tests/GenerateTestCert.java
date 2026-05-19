@@ -109,7 +109,7 @@ public class GenerateTestCert {
         } else if (alg.equalsIgnoreCase("SHA-512/EC")) {
             sigAlg = SignatureAlgorithm.ECSignatureWithSHA512Digest;
         } else if (alg.equalsIgnoreCase("ML-DSA")) {
-            sigAlg = SignatureAlgorithm.MLDSA;
+            sigAlg = SignatureAlgorithm.MLDSA65;
         } else { usage(); }
 
         if (alg.endsWith("RSA")) {

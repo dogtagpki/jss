@@ -121,8 +121,6 @@ public class SignatureAlgorithm extends Algorithm {
     MLDSA65 = new SignatureAlgorithm(CKM_ML_DSA, "ML-DSA-65",
             null, null, OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(18) );
 
-    public static final SignatureAlgorithm MLDSA = MLDSA65;
-
     public static final SignatureAlgorithm
     MLDSA87 = new SignatureAlgorithm(CKM_ML_DSA, "ML-DSA-87",
             null, null, OBJECT_IDENTIFIER.SIGN_ALGORITHM.subBranch(19) );

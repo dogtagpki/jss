@@ -4,6 +4,7 @@
 
 package org.mozilla.jss.tests;
 
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.Provider;
@@ -144,6 +145,7 @@ public class JCASigTest {
                 System.exit(1);
             }
 
+            // Test with ML-DSA-44 key and generic ML-DSA signature
             sigTest("ML-DSA", keyPair);
 
             kpgen = java.security.KeyPairGenerator.getInstance("ML-DSA");
@@ -160,6 +162,8 @@ public class JCASigTest {
                 System.exit(1);
             }
 
+            // Test with generic ML-DSA key (convert to ML-DSA-65) and
+            // generic ML-DSA signature
             sigTest("ML-DSA", keyPair);
 
             kpgen = java.security.KeyPairGenerator.getInstance("ML-DSA-87");
@@ -176,8 +180,19 @@ public class JCASigTest {
                 System.exit(1);
             }
 
+            // Test with generic ML-DSA-87 key and generic ML-DSA signature
             sigTest("ML-DSA", keyPair);
-            
+
+            // Test with generic ML-DSA-87 key and ML-DSA-44 signature. It throws
+            // InvalidKeyException and because of key signature mismatch 
+            try {
+                sigTest("ML-DSA-44", keyPair);
+                assert(false);
+            } catch(InvalidKeyException ex) {
+            }
+
+            // Test with generic ML-DSA-87 key and ML-DSA-87 signature 
+            sigTest("ML-DSA-87", keyPair);
         }
     }
 }
