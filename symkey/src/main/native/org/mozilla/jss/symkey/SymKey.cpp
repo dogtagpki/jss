@@ -295,7 +295,6 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_DeleteKey(JNIEnv * env, jclass th
 {
     char *tokenNameChars;
     char *keyNameChars;
-    int         count        = 0;
     int         keys_deleted = 0;
     PK11SymKey *symKey       = NULL;
     PK11SymKey *nextSymKey   = NULL;
@@ -347,8 +346,6 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_DeleteKey(JNIEnv * env, jclass th
         nextSymKey = PK11_GetNextSymKey( symKey );
         PK11_FreeSymKey( symKey );
         symKey = nextSymKey;
-
-        count++;
     }
 
     if( keys_deleted == 0 )
@@ -424,7 +421,6 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_ListSymmetricKeys(JNIEnv * env, j
     /* Iterate through the symmetric key list. */
     while (symKey != NULL)
     {
-        int  count = 0;
         char *name = NULL;
         char *temp = NULL;
         name = PK11_GetSymKeyNickname( symKey );
@@ -441,8 +437,6 @@ JNICALL Java_org_mozilla_jss_symkey_SessionKey_ListSymmetricKeys(JNIEnv * env, j
         nextSymKey = PK11_GetNextSymKey( symKey );
         PK11_FreeSymKey( symKey );
         symKey = nextSymKey;
-
-        count++;
     }
 
 finish:
@@ -1084,7 +1078,8 @@ void GetDiversificationData(jbyte *cuidValue,BYTE *KDC,keyType keytype)
 char *GetSharedSecretKeyName(char *newKeyName) {
     if ( newKeyName && strlen( newKeyName ) > 0 ) {
        if( strlen( sharedSecretSymKeyName) == 0) {
-           strncpy( sharedSecretSymKeyName, newKeyName, KEYNAMELENGTH);
+           strncpy( sharedSecretSymKeyName, newKeyName, KEYNAMELENGTH-1);
+           sharedSecretSymKeyName[KEYNAMELENGTH-1] = '\0';
        }
     }
 
@@ -1454,7 +1449,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL Java_org_mozilla_jss_symkey_SessionKey_D
     //}
 
     /* special case #01#01 */
-    if (fullNewMasterKeyName != NULL && strcmp(fullNewMasterKeyName, "#01#01") == 0)
+    if (strcmp(fullNewMasterKeyName, "#01#01") == 0)
     {
         Buffer empty = Buffer();
 
