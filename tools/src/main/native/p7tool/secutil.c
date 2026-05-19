@@ -61,6 +61,7 @@
 #include "secutil.h"
 #include "secpkcs7.h"
 #include <stdarg.h>
+#include <stdint.h>
 #if !defined(_WIN32_WCE)
 #include <sys/stat.h>
 #include <errno.h>
@@ -393,6 +394,12 @@ SECU_ChangePW(PK11SlotInfo *slot, char *passwd, char *pwFile)
     if (PK11_NeedUserInit(slot)) {
 	newpw = secu_InitSlotPassword(slot, PR_FALSE, &pwdata);
 	rv = PK11_InitPin(slot, (char*)NULL, newpw);
+	if (rv != SECSuccess) {
+	    PR_fprintf(PR_STDERR, "Failed to initialize slot.\n");
+	    PORT_Memset(newpw, 0, PL_strlen(newpw));
+	    PORT_Free(newpw);
+	    return SECFailure;
+	}
 	goto done;
     }
 
@@ -2150,7 +2157,7 @@ printflags(char *trusts, unsigned int flags)
 	if (!(flags & CERTDB_TRUSTED_CA) &&
 	    !(flags & CERTDB_TRUSTED_CLIENT_CA))
 	    PORT_Strcat(trusts, "c");
-    if (flags & CERTDB_VALID_PEER)
+    if (flags & CERTDB_TERMINAL_RECORD)
 	if (!(flags & CERTDB_TRUSTED))
 	    PORT_Strcat(trusts, "p");
     if (flags & CERTDB_TRUSTED_CA)
@@ -2950,8 +2957,8 @@ SECU_PrintPKCS7ContentInfo(FILE *out, SECItem *der, const char *m, int level)
 static void
 printFlags(FILE *out, unsigned int flags, int level)
 {
-    if ( flags & CERTDB_VALID_PEER ) {
-	SECU_Indent(out, level); fprintf(out, "Valid Peer\n");
+    if ( flags & CERTDB_TERMINAL_RECORD ) {
+	SECU_Indent(out, level); fprintf(out, "Terminal Record\n");
     }
     if ( flags & CERTDB_TRUSTED ) {
 	SECU_Indent(out, level); fprintf(out, "Trusted\n");
@@ -3288,7 +3295,7 @@ SECU_printCertProblems(FILE *outfile, CERTCertDBHandle *handle,
 	    errstr = NULL;
 	    switch (node->error) {
 	    case SEC_ERROR_INADEQUATE_KEY_USAGE:
-		flags = (unsigned int)node->arg;
+		flags = (unsigned int)(uintptr_t)node->arg;
 		switch (flags) {
 		case KU_DIGITAL_SIGNATURE:
 		    errstr = "Cert cannot sign.";
@@ -3304,7 +3311,7 @@ SECU_printCertProblems(FILE *outfile, CERTCertDBHandle *handle,
 		    break;
 		}
 	    case SEC_ERROR_INADEQUATE_CERT_TYPE:
-		flags = (unsigned int)node->arg;
+		flags = (unsigned int)(uintptr_t)node->arg;
 		switch (flags) {
 		case NS_CERT_TYPE_SSL_CLIENT:
 		case NS_CERT_TYPE_SSL_SERVER:
