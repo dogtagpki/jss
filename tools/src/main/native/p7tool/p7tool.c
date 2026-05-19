@@ -132,7 +132,7 @@ decryption_allowed(SECAlgorithmID *algid, PK11SymKey *key)
 
 int
 DecodeAndPrintFile(FILE *out, PRFileDesc *in, char *progName, int ascii,
-                  char *prefix)
+                  const char *prefix)
 {
     SECItem derdata;
     SEC_PKCS7ContentInfo *cinfo = NULL;
@@ -269,6 +269,12 @@ DecodeAndPrintFile(FILE *out, PRFileDesc *in, char *progName, int ascii,
                 break;
             }
             nb = fwrite((char *) cert, 1, items[i]->len, outFile);
+            if (nb != (int)items[i]->len) {
+                fprintf(out, "Error writing to file '%s'\n", filename);
+                fclose(outFile);
+                i = -1;
+                break;
+            }
             fclose(outFile);
 
             i++;
@@ -296,7 +302,7 @@ main(int argc, char **argv)
     PLOptStatus status;
     SECStatus rv;
     int ascii = 0;
-    char *prefix = NULL;
+    const char *prefix = NULL;
     int exitStatus = 0;
 
     progName = strrchr(argv[0], '/');
