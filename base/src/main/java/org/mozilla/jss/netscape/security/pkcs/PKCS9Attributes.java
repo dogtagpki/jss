@@ -137,8 +137,8 @@ public class PKCS9Attributes {
      * Decode this set of PKCS9 attribute set from the contents of its
      * DER encoding.
      *
-     * @param buf
-     *            the contents of the DER encoding of the attribute set.
+     * @param in
+     *            the DER input stream containing the DER encoding of the attribute set.
      *
      * @exception IOException
      *                on i/o error, encoding syntax error, unacceptable or

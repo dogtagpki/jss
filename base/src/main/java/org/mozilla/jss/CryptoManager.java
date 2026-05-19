@@ -950,7 +950,7 @@ public final class CryptoManager implements TokenSupplier
     /**
      * Imports a CRL, and stores it into the cert7.db
      *
-     * @param the DER-encoded CRL.
+     * @param crl the DER-encoded CRL.
      */
     private native
     void importCRLNative(byte[] crl, String url, int rl_type)

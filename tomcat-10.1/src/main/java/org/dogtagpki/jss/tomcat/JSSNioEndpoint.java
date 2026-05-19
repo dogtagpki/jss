@@ -61,14 +61,14 @@ public class JSSNioEndpoint extends NioEndpoint {
     private static final Log log = LogFactory.getLog(NioEndpoint.class);
     /**
      * Code in the following method is almost identical of that available in the base
-     * class {@link org.apache.tomcat.util.net.NioEndpoint#setSocketOptions(SocketChannel) from tomcat
-     * git repository for the version 9.0.78..
+     * class {@link org.apache.tomcat.util.net.NioEndpoint#setSocketOptions(SocketChannel)} from tomcat
+     * git repository for the version 9.0.78.
      * <p>
      * The only difference is the instantiation of the JSSSecureNioChannel class instead of the tomcat
      * provided SecureNioChannel class. This is needed because the channel class is hard-coded in the
      * base class method.
      *
-     * @see org.apache.tomcat.util.net.NioEndpoint#setSocketOptions(SocketChannel socket)
+     * @see org.apache.tomcat.util.net.NioEndpoint#setSocketOptions(SocketChannel)
      */
 
     @Override

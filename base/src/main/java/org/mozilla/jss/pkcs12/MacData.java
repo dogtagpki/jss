@@ -330,11 +330,11 @@ public class MacData implements ASN1Value {
     /**
      * Native method to compute PBMAC1 MAC using NSS.
      *
-     * @param password Password bytes
-     * @param salt PBKDF2 salt
-     * @param iterations PBKDF2 iteration count
-     * @param data Data to MAC
-     * @param hmacOID HMAC algorithm OID (e.g., hmacWithSHA256)
+     * @param token the crypto token
+     * @param password password bytes
+     * @param data data to MAC
+     * @param pbmac1AlgID PBMAC1 algorithm identifier
+     * @param hmacAlgorithm HMAC algorithm
      * @return HMAC value
      */
     private native byte[] nativeComputePBMAC1(

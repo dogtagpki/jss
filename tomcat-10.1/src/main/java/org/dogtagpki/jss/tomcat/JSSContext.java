@@ -18,14 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-* Implements the {@link SSLContext} interface from Tomcat for creating SSL connections.
-* 
+* Implements the {@link org.apache.tomcat.util.net.SSLContext} interface from Tomcat for creating SSL connections.
+*
 * This class is a wrapper around the Mozilla-JSS implementation of JSSE, which
 * provides additional functionality not available in the SunJSSE implementation.
 *
 * @see org.apache.tomcat.util.net.SSLContext
-* @see org.mozilla.jss.ssl.KeyManagerFactory#getInstance(String algorithm, String provider)
-* @see org.mozilla.jss.ssl.TrustManagerFactory#getInstance(String algorithm, String provider)
+* @see javax.net.ssl.KeyManagerFactory#getInstance(String)
+* @see javax.net.ssl.TrustManagerFactory#getInstance(String)
 */
 public class JSSContext implements org.apache.tomcat.util.net.SSLContext {
     public static Logger logger = LoggerFactory.getLogger(JSSContext.class);

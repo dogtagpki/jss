@@ -641,7 +641,7 @@ public class PKCS9Attribute implements DerEncoder {
     /**
      * Decode a PKCS9 attribute.
      *
-     * @param val
+     * @param derVal
      *            the DerValue representing the DER encoding of the attribute.
      */
     private void decode(DerValue derVal) throws IOException {

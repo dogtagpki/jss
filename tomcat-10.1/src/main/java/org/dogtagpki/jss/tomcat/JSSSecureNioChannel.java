@@ -72,7 +72,7 @@ import org.mozilla.jss.ssl.javax.JSSSession;
  * Implementation of a secure socket channel
  * <p>
  * Code in the following methods are almost identical of that available in the base
- * class {@link org.apache.tomcat.util.net.SecureNioChannel from tomcat git repository
+ * class {@link org.apache.tomcat.util.net.SecureNioChannel} from tomcat git repository
  * for the version 9.0.78.
  * <p>
  * The only difference is the registration of local and remote IP in the SSL engine session.

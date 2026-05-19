@@ -56,19 +56,9 @@ public class DirStrConverter implements AVAValueConverter {
     // public functions
 
     /**
-     * Converts a string to a DER encoded ASN1 Directory String, which is a
-     * CHOICE of PrintableString, T.61String or UniversalString.
-     * The string is taken as is i.e. should not be in Ldap DN string syntax.
-     *
-     * @param ds a string representing a directory string value.
-     *
-     * @return a DerValue
-     *
-     * @exception IOException if the string cannot be converted, such as
-     *                when a UniversalString encoder
-     *                isn't available and the string contains
-     *                characters covered only in the universal
-     *                string (or UCS-4) character set.
+     * Default encoding order for DER encoded ASN1 Directory String choices.
+     * Defines the preference order for PrintableString, T.61String,
+     * UniversalString, and UTF8String encodings.
      */
     private static byte[] DefEncodingOrder =
             new byte[] {
