@@ -128,6 +128,11 @@ ExcludeArch: i686
 
 %bcond_without tests
 
+# By default Maven will be used for building Java code unless --without maven
+# option is specified. When Maven is disabled, CMake will build everything.
+
+%bcond_without maven
+
 ################################################################################
 # Build Dependencies
 ################################################################################
@@ -148,10 +153,13 @@ BuildRequires:  nss-tools >= 3.123
 %endif
 
 BuildRequires:  %{java_devel}
-BuildRequires:  %{maven_local}
 BuildRequires:  mvn(org.apache.commons:commons-lang3)
 BuildRequires:  mvn(org.slf4j:slf4j-api)
 BuildRequires:  mvn(org.slf4j:slf4j-jdk14)
+
+%if %{with maven}
+BuildRequires:  %{maven_local}
+%endif
 
 %description
 %{product_name} is a java native interface which provides a bridge
@@ -293,6 +301,8 @@ This package provides test suite for JSS.
 
 %autosetup -n jss-%{full_version} -p 1
 
+%if %{with maven}
+
 # disable native modules since they will be built by CMake
 %pom_disable_module native
 %pom_disable_module symkey
@@ -329,6 +339,9 @@ This package provides test suite for JSS.
 
 %endif
 
+# with maven
+%endif
+
 ################################################################################
 %build
 ################################################################################
@@ -348,6 +361,8 @@ export CFLAGS
 
 # Check if we're in FIPS mode
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
+
+%if %{with maven}
 
 # build Java code, run Java tests, and build Javadoc with Maven
 %mvn_build %{!?with_tests:-f} %{!?with_javadoc:-j}
@@ -380,6 +395,9 @@ touch %{_vpath_builddir}/.targets/finished_tests_generate_java
 touch %{_vpath_builddir}/.targets/finished_generate_javadocs
 %endif
 
+# with maven
+%endif
+
 # build native code and run native tests with CMake
 ./build.sh \
     %{?_verbose:-v} \
@@ -392,14 +410,16 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --cmake="%{__cmake} %{?enable_nss_version_pqc_def_flag}" \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
-    --without-java \
-    --without-javadoc \
+    %{?with_maven:--without-java} \
+    %{?with_maven:--without-javadoc} \
     %{!?with_tests:--without-tests} \
     dist
 
 ################################################################################
 %install
 ################################################################################
+
+%if %{with maven}
 
 # install Java binaries and Javadoc
 %mvn_install
@@ -415,13 +435,18 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_jnidir}/jss.jar
 mkdir -p %{buildroot}%{_libdir}/jss
 ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
 
+# with maven
+%endif
+
 # install native binaries
 ./build.sh \
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
     --install-dir=%{buildroot} \
-    --without-java \
+    %{?with_maven:--without-java} \
     install
+
+%if %{with maven}
 
 # install tests binaries
 %if %{with tests}
@@ -429,20 +454,27 @@ mkdir -p %{buildroot}%{_datadir}/jss/tests/lib
 cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %endif
 
+# with maven
+%endif
+
 ################################################################################
-%files -n %{product_id} -f .mfiles
+%files -n %{product_id} %{?with_maven:-f .mfiles}
 ################################################################################
 
 %doc jss.html
 %license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
+
+%if %{with maven}
 %{_javadir}/jss/jss.jar
+%endif
+
 %{_jnidir}/jss.jar
 %{_libdir}/jss/jss.jar
 %{_libdir}/jss/libjss.so
 %{_libdir}/jss/libjss-symkey.so
 
 ################################################################################
-%files -n %{product_id}-tomcat -f .mfiles-jss-tomcat
+%files -n %{product_id}-tomcat %{?with_maven:-f .mfiles-jss-tomcat}
 ################################################################################
 
 ################################################################################
@@ -455,8 +487,9 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 
 %if %{with javadoc}
 ################################################################################
-%files -n %{product_id}-javadoc -f .mfiles-javadoc
+%files -n %{product_id}-javadoc %{?with_maven:-f .mfiles-javadoc}
 ################################################################################
+%{_javadocdir}/jss/
 %endif
 
 %if %{with tests}
