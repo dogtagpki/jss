@@ -225,9 +225,21 @@ public class SignerInfo implements ASN1Value {
         } else {
             throw new IllegalArgumentException("Unexpected SignerIdentifier type");
         }
-        this.digestAlgorithm =
-                new AlgorithmIdentifier(signingAlg.getDigestAlg().toOID(),null);
-
+        if(signingAlg.equals(SignatureAlgorithm.MLDSA44) ||
+                signingAlg.equals(SignatureAlgorithm.MLDSA65) ||
+                signingAlg.equals(SignatureAlgorithm.MLDSA87)) {
+            // Per RFC 9882 Section 4, for ML-DSA the digestAlgorithm MUST be
+            // id-sha512 and the parameters MUST be absent.
+            this.digestAlgorithm =
+                    new AlgorithmIdentifier(DigestAlgorithm.SHA512.toOID());
+            this.digestEncryptionAlgorithm = new AlgorithmIdentifier(
+                signingAlg.toOID());
+        } else {
+            this.digestAlgorithm =
+                    new AlgorithmIdentifier(signingAlg.getDigestAlg().toOID(),null);
+            this.digestEncryptionAlgorithm = new AlgorithmIdentifier(
+                signingAlg.toOID(), null);
+        }
         // if content-type is not data, add message-digest and content-type
         // to signed attributes.
         if( ! contentType.equals(ContentInfo.DATA) ) {
@@ -240,10 +252,6 @@ public class SignerInfo implements ASN1Value {
                             new OCTET_STRING(messageDigest) );
             signedAttributes.addElement(attrib);
         }
-
-        digestEncryptionAlgorithm = new AlgorithmIdentifier(
-            signingAlg.toOID(),null );
-
 
         if( signedAttributes != null )
         {
