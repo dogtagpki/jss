@@ -40,6 +40,9 @@ WITH_TIMESTAMP=
 WITH_COMMIT_ID=
 DIST=
 
+WITH_MLDSA=true
+WITH_MLKEM=true
+
 WITH_JAVA=true
 WITH_NATIVE=true
 WITH_JAVADOC=true
@@ -69,6 +72,8 @@ usage() {
     echo "    --with-timestamp       Append timestamp to RPM version number."
     echo "    --with-commit-id       Append commit ID to RPM version number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
+    echo "    --without-mldsa        Do not enable ML-DSA."
+    echo "    --without-mlkem        Do not enable ML-KEM."
     echo "    --without-java         Do not build Java binaries."
     echo "    --without-native       Do not build native binaries."
     echo "    --without-javadoc      Do not build Javadoc package."
@@ -246,6 +251,13 @@ while getopts v-: arg ; do
             ;;
         dist=?*)
             DIST="$LONG_OPTARG"
+            ;;
+        without-mldsa)
+            WITH_MLDSA=false
+            WITH_MLKEM=false
+            ;;
+        without-mlkem)
+            WITH_MLKEM=false
             ;;
         without-java)
             WITH_JAVA=false
@@ -453,6 +465,14 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     if [ "$PHASE" != "" ] ; then
         OPTIONS+=(-DPHASE="$PHASE")
+    fi
+
+    if [ "$WITH_MLDSA" = false ] ; then
+        OPTIONS+=(-DWITH_MLDSA=FALSE)
+    fi
+
+    if [ "$WITH_MLKEM" = false ] ; then
+        OPTIONS+=(-DWITH_MLKEM=FALSE)
     fi
 
     if [ "$WITH_JAVA" = false ] ; then

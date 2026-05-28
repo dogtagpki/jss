@@ -140,8 +140,12 @@ macro(jss_config_cflags)
         list(APPEND JSS_RAW_C_FLAGS "-O2")
     endif()
 
-    if(ENABLE_NSS_VERSION_PQC_DEF)
-        list(APPEND JSS_RAW_C_FLAGS "-DNSS_VERSION_PQC_DEF")
+    if(WITH_MLDSA)
+        list(APPEND JSS_RAW_C_FLAGS "-DJSS_MLDSA_ENABLED")
+    endif()
+
+    if(WITH_MLKEM)
+        list(APPEND JSS_RAW_C_FLAGS "-DJSS_MLKEM_ENABLED")
     endif()
 
     list(APPEND JSS_RAW_C_FLAGS "-Wall")

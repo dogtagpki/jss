@@ -65,7 +65,8 @@ jobs:
     displayName: Install build dependencies
 
   - script: |
-      docker exec -w /root/src runner ./build.sh --cmake='/usr/bin/cmake -DENABLE_NSS_VERSION_PQC_DEF=ON'
+      # the current NSS on Fedora supports ML-DSA and ML-KEM
+      docker exec -w /root/src runner ./build.sh
     displayName: Build JSS binaries, Javadoc, and run tests
 
 - job: BuildTest_apt
@@ -97,7 +98,11 @@ jobs:
           zip
     displayName: Install build dependencies
 
-  - script: ./build.sh
+  - script: |
+      # the current NSS on Debian/Ubuntu does not support ML-DSA nor ML-KEM
+      # https://wiki.debian.org/DebianReleases
+      # https://packages.debian.org/source/trixie/nss
+      ./build.sh --without-mldsa --without-mlkem
     displayName: Build JSS binaries, Javadoc, and run tests
     env:
       JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64

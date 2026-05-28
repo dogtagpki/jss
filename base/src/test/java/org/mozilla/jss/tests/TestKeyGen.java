@@ -31,7 +31,8 @@ import org.mozilla.jss.util.Base64OutputStream;
 public class TestKeyGen {
 
     public static void main(String[] args) {
-      boolean testPQC = Boolean.parseBoolean(System.getProperty("test.NSS_PQC", "False"));
+        boolean testMLDSA = Boolean.parseBoolean(System.getProperty("TEST_MLDSA", "true"));
+        boolean testMLKEM = Boolean.parseBoolean(System.getProperty("TEST_MLKEM", "true"));
       try {
         CryptoManager manager;
         java.security.KeyPair keyPair;
@@ -62,7 +63,7 @@ public class TestKeyGen {
 
         //Get rid of all the DSA keygen tests and the small keysize and exponent RSA tests.
         //This is due to evolving nss policy changes away from weaker algs.
-      
+
         // 2048-bit RSA with default exponent
         System.out.println("Generating 2048-bit RSA KeyPair!");
         for (int cntr=0; cntr<5; cntr++ ) {
@@ -97,7 +98,7 @@ public class TestKeyGen {
         keyPair = kpg.genKeyPair();
         System.out.println("Generated 521-bit EC KeyPair!");
 
-        if (testPQC) {
+        if (testMLDSA) {
             // ML-DSA default
             kpg = java.security.KeyPairGenerator.getInstance("ML-DSA", "Mozilla-JSS");
             kpg.initialize(44);
@@ -134,7 +135,9 @@ public class TestKeyGen {
             kpg.initialize(param);
             keyPair = kpg.genKeyPair();
             System.out.println("Generated ML-DSA with parameter ML-DSA-87!");
+        }
 
+        if (testMLKEM) {
             // ML-KEM-768 initialisation
             kpg = java.security.KeyPairGenerator.getInstance("ML-KEM-768", "Mozilla-JSS");
             keyPair = kpg.genKeyPair();
@@ -142,7 +145,7 @@ public class TestKeyGen {
 
             // ML-KEM-768 initialisation with named parameter
             kpg = java.security.KeyPairGenerator.getInstance("ML-KEM", "Mozilla-JSS");
-            param = new NamedParameterSpec("ML-KEM-768");
+            NamedParameterSpec param = new NamedParameterSpec("ML-KEM-768");
             kpg.initialize(param);
             keyPair = kpg.genKeyPair();
             System.out.println("Generated ML-KEM with parameter ML-KEM-768!");

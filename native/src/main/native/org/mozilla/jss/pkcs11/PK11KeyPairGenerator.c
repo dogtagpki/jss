@@ -435,7 +435,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPair
   (JNIEnv *env, jobject this, jobject token, jint size, 
     jboolean temporary, jint sensitive, jint extractable)
 {
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLDSA_ENABLED
     jobject keyPair=NULL;
 
     CK_ML_DSA_PARAMETER_SET_TYPE  param;
@@ -480,7 +480,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
     jboolean temporary, jint sensitive, jint extractable,
     jint op_flags, jint op_flags_mask)
 {
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLDSA_ENABLED
     jobject keyPair=NULL;
 
     CK_ML_DSA_PARAMETER_SET_TYPE  param;
@@ -501,7 +501,6 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLDSAKeyPairWithOpFlags
     } 
 
     PR_ASSERT(env!=NULL && this!=NULL && token!=NULL);
-
 
     keyPair = PK11KeyPairGeneratorWithOpFlags(env, this, token,
                 CKM_ML_DSA_KEY_PAIR_GEN, &param, temporary, 
@@ -526,7 +525,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPair
   (JNIEnv *env, jobject this, jobject token, jint size,
     jboolean temporary, jint sensitive, jint extractable)
 {
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLKEM_ENABLED
     jobject keyPair=NULL;
 
     CK_ML_KEM_PARAMETER_SET_TYPE  param;
@@ -568,7 +567,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyPairGenerator_generateMLKEMKeyPairWithOpFlags
     jboolean temporary, jint sensitive, jint extractable,
     jint op_flags, jint op_flags_mask)
 {
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLKEM_ENABLED
     jobject keyPair=NULL;
 
     CK_ML_KEM_PARAMETER_SET_TYPE  param;

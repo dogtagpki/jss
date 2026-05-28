@@ -24,11 +24,16 @@ typedef struct JSS_AlgInfoStr {
     JSS_AlgType type;
 } JSS_AlgInfo;
 
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLDSA_ENABLED
+#ifdef JSS_MLKEM_ENABLED
 #define NUM_ALGS 90
+#else
+#define NUM_ALGS 88
+#endif
 #else
 #define NUM_ALGS 85
 #endif
+
 extern JSS_AlgInfo JSS_AlgTable[];
 extern CK_ULONG JSS_symkeyUsage[];
 

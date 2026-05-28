@@ -48,7 +48,12 @@ option(TEST_WITH_INTERNET "When enabled, runs various tests which require an int
 # that need to be reflected into JSS SSLCipher.c (auth_alg_defs[])
 # Some OS platforms not yet have such defs.
 #
-option(ENABLE_NSS_VERSION_PQC_DEF "Enable PQC DEF to match NSS" OFF)
+option(WITH_MLDSA "Enable ML-DSA" ON)
+option(WITH_MLKEM "Enable ML-KEM" ON)
+
+if (NOT WITH_MLDSA)
+    set(WITH_MLKEM OFF)
+endif()
 
 option(WITH_JAVA "Build Java binaries." TRUE)
 option(WITH_NATIVE "Build native binaries." TRUE)
