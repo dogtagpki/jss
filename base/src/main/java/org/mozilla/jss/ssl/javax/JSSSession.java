@@ -91,6 +91,10 @@ public class JSSSession implements SSLSession, AutoCloseable {
         return packetBufferSize;
     }
 
+    public void setPacketBufferSize(int size) {
+        packetBufferSize = size;
+    }
+
     @Override
     public byte[] getId() {
         return sessionID;

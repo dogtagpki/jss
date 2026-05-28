@@ -1,3 +1,4 @@
+
 package org.mozilla.jss.ssl.javax;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.mozilla.jss.nss.PRFDProxy;
 import org.mozilla.jss.nss.SSL;
 import org.mozilla.jss.nss.SSLFDProxy;
 import org.mozilla.jss.nss.SecurityStatusResult;
+import org.mozilla.jss.pkcs11.KeyType;
 import org.mozilla.jss.pkcs11.PK11Cert;
 import org.mozilla.jss.pkcs11.PK11PrivKey;
 import org.mozilla.jss.provider.javax.crypto.JSSKeyManager;
@@ -60,6 +62,16 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      *     org.apache.tomcat.util.net.openssl.OpenSSLEngine.
      */
     protected static final int DEFAULT_BUFFER_SIZE = 5 + 1024 + 1024 + 20 + 256 + (1 << 14);
+
+    /**
+     * Default buffer size for PQC cryptographic algorithms (ML-DSA, ML-KEM, etc.)
+     *
+     * PQC keys and signatures are much bigger than traditional equivalent so the minimum buffer
+     * has to be increased. For a root ML-DSA-87 and client certificate it is required around 50KB
+     * therefore a default value of 64 KB is used. 
+     * 
+     */
+    protected static final int DEFAULT_PQC_BUFFER_SIZE = 65536;
 
     /**
      * Size of the underlying BUFFERs.
@@ -256,7 +268,10 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
                      org.mozilla.jss.crypto.PrivateKey localKey) {
         super(peerHost, peerPort);
         certs = new ArrayList<>();
-        certs.add(ImmutablePair.of((PK11Cert) localCert, (PK11PrivKey) localKey));
+        PK11PrivKey pk11Key = (PK11PrivKey) localKey;
+        
+        certs.add(ImmutablePair.of((PK11Cert) localCert, pk11Key));
+        updateBufferSizeForPQCKeys(pk11Key);
 
         session = new JSSSession(this, bufferSize);
         session.setPeerHost(peerHost);
@@ -505,6 +520,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
                 if (cert != null && key != null) {
                     // Found a cert and key matching our alias; exit.
                     certs.add(ImmutablePair.of(cert, key));
+                    updateBufferSizeForPQCKeys(key);
                     break;
                 }
             }
@@ -785,6 +801,7 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             certs = new ArrayList<>();
         }
         certs.add(ImmutablePair.of(our_cert, our_key));
+        updateBufferSizeForPQCKeys(our_key);
     }
 
     /**
@@ -1143,4 +1160,17 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
      * data streams if still open.
      */
     public abstract void cleanup();
+
+
+    /**
+     * Update the default buffer size in case of PQC key
+     */
+    private void updateBufferSizeForPQCKeys(PK11PrivKey key) {
+        if (key != null && key.getKeyType() == KeyType.MLDSA) {
+            bufferSize = Integer.getInteger("jdk.tls.maxHandshakeMessageSize", DEFAULT_PQC_BUFFER_SIZE);
+            if (session != null) {
+                session.setPacketBufferSize(bufferSize);
+            }
+        }
+    }
 }
