@@ -66,7 +66,7 @@ public class JCASigTest {
     }
 
     public static void main(String args[]) throws Exception {
-        boolean testPQC = Boolean.parseBoolean(System.getProperty("test.NSS_PQC", "False"));
+        boolean testMLDSA = Boolean.parseBoolean(System.getProperty("TEST_MLDSA", "true"));
 
         CryptoManager manager;
         KeyPairGenerator kpgen;
@@ -130,7 +130,7 @@ public class JCASigTest {
         sigTest("SHA-384/EC", keyPair);
         sigTest("SHA-512/EC", keyPair);
 
-        if (testPQC) {
+        if (testMLDSA) {
             kpgen = java.security.KeyPairGenerator.getInstance("ML-DSA-44");
             keyPair = kpgen.genKeyPair();
             provider = kpgen.getProvider();
@@ -184,14 +184,14 @@ public class JCASigTest {
             sigTest("ML-DSA", keyPair);
 
             // Test with generic ML-DSA-87 key and ML-DSA-44 signature. It throws
-            // InvalidKeyException and because of key signature mismatch 
+            // InvalidKeyException and because of key signature mismatch
             try {
                 sigTest("ML-DSA-44", keyPair);
                 assert(false);
             } catch(InvalidKeyException ex) {
             }
 
-            // Test with generic ML-DSA-87 key and ML-DSA-87 signature 
+            // Test with generic ML-DSA-87 key and ML-DSA-87 signature
             sigTest("ML-DSA-87", keyPair);
         }
     }

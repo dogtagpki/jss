@@ -180,13 +180,15 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getKeyType
     case ecKey:
         keyTypeFieldName = EC_KEYTYPE_FIELD;
         break;
-#ifdef NSS_VERSION_PQC_DEF
-    case kyberKey:
-        keyTypeFieldName = MLKEM_KEYTYPE_FIELD;
-        break;
+#ifdef JSS_MLDSA_ENABLED
     case mldsaKey:
         keyTypeFieldName = MLDSA_KEYTYPE_FIELD;
         break;
+#ifdef JSS_MLKEM_ENABLED
+    case kyberKey:
+        keyTypeFieldName = MLKEM_KEYTYPE_FIELD;
+        break;
+#endif
 #endif
     default:
         PR_ASSERT(PR_FALSE);
@@ -233,7 +235,7 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLKeyParam
     PRThread * VARIABLE_MAY_NOT_BE_USED pThread;
     SECKEYPrivateKey *privk;
     CK_ULONG paramSet = CK_UNAVAILABLE_INFORMATION;
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLDSA_ENABLED
     SECItem  item;
     SECStatus rv;
 #endif
@@ -249,9 +251,9 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLKeyParam
     }
     PR_ASSERT(privk!=NULL);
 
-// The implmenetation could be improved using MLDSA helper functions but for
+// The implementation could be improved using MLDSA helper functions but for
 // now they are kept private. 
-#ifdef NSS_VERSION_PQC_DEF
+#ifdef JSS_MLDSA_ENABLED
     rv =  PK11_ReadRawAttribute(PK11_TypePrivKey, privk, CKA_PARAMETER_SET, &item);
     if (rv != SECSuccess) {
         JSS_throwMsg(env, TOKEN_EXCEPTION, "Key type not supported.");
@@ -266,8 +268,8 @@ Java_org_mozilla_jss_pkcs11_PK11PrivKey_getMLKeyParam
     paramSet = *(CK_ULONG *)item.data;
     PORT_Free(item.data);
 #else
-        JSS_throwMsg(env, TOKEN_EXCEPTION, "Key type not supported.");
-        goto finish;
+    JSS_throwMsg(env, TOKEN_EXCEPTION, "Key type not supported.");
+    goto finish;
 #endif
 
 finish:
@@ -484,17 +486,24 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj)
         DH_KEYTYPE_FIELD,
         KEA_KEYTYPE_FIELD,
         EC_KEYTYPE_FIELD
-#ifdef NSS_VERSION_PQC_DEF
-       ,
-        MLDSA_KEYTYPE_FIELD,
-        MLKEM_KEYTYPE_FIELD
+#ifdef JSS_MLDSA_ENABLED
+        , MLDSA_KEYTYPE_FIELD
+#ifdef JSS_MLKEM_ENABLED
+        , MLKEM_KEYTYPE_FIELD
+#endif
 #endif
     };
-#ifdef NSS_VERSION_PQC_DEF
+
+#ifdef JSS_MLDSA_ENABLED
+#ifdef JSS_MLKEM_ENABLED
     int numTypes = 8;
+#else
+    int numTypes = 7;
+#endif
 #else
     int numTypes = 6;
 #endif
+
     KeyType keyTypes[] = {
         rsaKey,
         dsaKey,
@@ -502,10 +511,11 @@ JSS_PK11_getKeyType(JNIEnv *env, jobject keyTypeObj)
         dhKey,
         keaKey,
         ecKey
-#ifdef NSS_VERSION_PQC_DEF
-       ,
-        mldsaKey,
-        kyberKey
+#ifdef JSS_MLDSA_ENABLED
+        , mldsaKey
+#ifdef JSS_MLKEM_ENABLED
+        , kyberKey
+#endif
 #endif
     };
     jobject field;

@@ -64,7 +64,11 @@ jobs:
             zip
 
     - name: Build with CMake
-      run: ./build.sh
+      run: |
+        # the current NSS on Debian/Ubuntu does not support ML-DSA nor ML-KEM
+        # https://wiki.debian.org/DebianReleases
+        # https://packages.debian.org/source/trixie/nss
+        ./build.sh --without-mldsa --without-mlkem
 
     - name: Build with Maven
       run: mvn --batch-mode package
@@ -114,7 +118,8 @@ jobs:
 
     - name: Build with CMake
       run: |
-        docker exec jss ./build.sh --cmake='/usr/bin/cmake -DENABLE_NSS_VERSION_PQC_DEF=ON'
+        # the current NSS on Fedora supports ML-DSA and ML-KEM
+        docker exec jss ./build.sh
 
     - name: Build with Maven
       run: |
@@ -314,7 +319,8 @@ jobs:
 
     - name: Build JSS
       run: |
-        docker exec -w /root/jss/build jss cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_NSS_VERSION_PQC_DEF=ON ..
+        # the current NSS on Fedora supports ML-DSA and ML-KEM
+        docker exec -w /root/jss/build jss cmake -DCMAKE_BUILD_TYPE=Debug ..
         docker exec -w /root/jss/build jss make all
       env:
         SANDBOX: 1

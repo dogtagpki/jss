@@ -19,15 +19,15 @@ static const CK_MECHANISM_TYPE auth_alg_defs[] = {
     CKM_RSA_PKCS,          /* ssl_auth_rsa_sign */
     CKM_RSA_PKCS_PSS,      /* ssl_auth_rsa_pss */
     CKM_NSS_HKDF_SHA256,   /* ssl_auth_psk (just check for HKDF) */
-#ifndef NSS_VERSION_PQC_DEF
     CKM_INVALID_MECHANISM  /* ssl_auth_tls13_any */
-#else
-    CKM_INVALID_MECHANISM,  /* ssl_auth_tls13_any */
+#ifdef JSS_MLDSA_ENABLED
+    ,
     CKM_ML_DSA,            /* ssl_auth_mldsa (same mech for each) */
-    CKM_ML_DSA,            /* ssl_auth_mldsa (key determines the*/
-    CKM_ML_DSA            /* ssl_auth_mldsa  parameter set) */
+    CKM_ML_DSA,            /* ssl_auth_mldsa (key determines the */
+    CKM_ML_DSA             /* ssl_auth_mldsa  parameter set) */
 #endif
 };
+
 PR_STATIC_ASSERT(PR_ARRAY_SIZE(auth_alg_defs) == ssl_auth_size);
 
 /* Copied from NSS 3.97's ssl3con.c. */

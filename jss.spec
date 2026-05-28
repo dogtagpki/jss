@@ -70,13 +70,20 @@ ExcludeArch: i686
 # NSS
 ################################################################################
 
-# Support PQC on Fedora 42 and RHEL 8 or later.
+%if 0%{?rhel}
 
-%global         fedora_pqc_support 42
-%global         rhel_pqc_support 8
+# the current NSS on RHEL only supports ML-DSA
+%define nss_version 3.112
+%global with_mldsa 1
+%undefine with_mlkem
 
-%if 0%{?fedora} >= %{fedora_pqc_support} || 0%{?rhel} >= %{rhel_pqc_support}
-%global enable_nss_version_pqc_def_flag -DENABLE_NSS_VERSION_PQC_DEF=ON
+%else
+
+# the current NSS on Fedora supports both ML-DSA and ML-DSA
+%define nss_version 3.123
+%global with_mldsa 1
+%global with_mlkem 1
+
 %endif
 
 ################################################################################
@@ -144,13 +151,8 @@ BuildRequires:  unzip
 
 BuildRequires:  gcc-c++
 
-%if 0%{?rhel}
-BuildRequires:  nss-devel >= 3.112
-BuildRequires:  nss-tools >= 3.112
-%else
-BuildRequires:  nss-devel >= 3.123
-BuildRequires:  nss-tools >= 3.123
-%endif
+BuildRequires:  nss-devel >= %{nss_version}
+BuildRequires:  nss-tools >= %{nss_version}
 
 BuildRequires:  %{java_devel}
 BuildRequires:  mvn(org.apache.commons:commons-lang3)
@@ -172,11 +174,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        %{product_name}
 
-%if 0%{?rhel}
-Requires:       nss >= 3.112
-%else
-Requires:       nss >= 3.123
-%endif
+Requires:       nss >= %{nss_version}
 
 Requires:       %{java_headless}
 Requires:       mvn(org.apache.commons:commons-lang3)
@@ -407,9 +405,11 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --lib-dir=%{_libdir} \
     --sysconf-dir=%{_sysconfdir} \
     --share-dir=%{_datadir} \
-    --cmake="%{__cmake} %{?enable_nss_version_pqc_def_flag}" \
+    --cmake="%{__cmake}" \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
+    %{!?with_mldsa:--without-mldsa} \
+    %{!?with_mlkem:--without-mlkem} \
     %{?with_maven:--without-java} \
     %{?with_maven:--without-javadoc} \
     %{!?with_tests:--without-tests} \

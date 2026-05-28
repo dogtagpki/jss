@@ -177,7 +177,7 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "30" "localhost" "SHA-256/EC" "CA_ECDSA" "Server_ECDSA" "Client_ECDSA"
         DEPENDS "Generate_known_RSA_cert_pair"
     )
-    if(ENABLE_NSS_VERSION_PQC_DEF)
+    if(WITH_MLDSA)
         jss_test_java(
             NAME "Generate_known_MLDSA_cert_pair"
 	    COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "ML-DSA" "CA_MLDSA" "Server_MLDSA" "Client_MLDSA"
@@ -224,7 +224,7 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JCAKeyWrap" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "Setup_DBs"
     )
-    if(ENABLE_NSS_VERSION_PQC_DEF)
+    if(WITH_MLKEM)
         jss_test_java(
             NAME "KeyEncapsulating"
 	    COMMAND "org.mozilla.jss.tests.KeyEncapsulating" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
@@ -319,7 +319,7 @@ macro(jss_tests)
 	COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_RSA,Server_ECDSA"
         DEPENDS "SSLEngine_RSA"
     )
-    if(ENABLE_NSS_VERSION_PQC_DEF)
+    if(WITH_MLDSA)
         jss_test_java(
             NAME "SSLEngine_MLDSA"
 	    COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_MLDSA" "Server_MLDSA"
@@ -388,7 +388,7 @@ macro(jss_tests)
             DEPENDS "Generate_FIPS_known_RSA_cert_pair"
             MODE "FIPS"
         )
-        if(ENABLE_NSS_VERSION_PQC_DEF)
+        if(WITH_MLDSA)
             jss_test_java(
                 NAME "Generate_FIPS_known_MLDSA_cert_pair"
 	        COMMAND "org.mozilla.jss.tests.GenerateTestCert" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "40" "localhost" "ML-DSA" "CA_MLDSA" "Server_MLDSA" "Client_MLDSA"
@@ -439,7 +439,7 @@ macro(jss_tests)
             DEPENDS "Enable_FipsMODE"
             MODE "FIPS"
         )
-        if(ENABLE_NSS_VERSION_PQC_DEF)
+        if(WITH_MLKEM)
             jss_test_java(
                 NAME "KeyEncapsulating_FIPSMODE"
 		COMMAND "org.mozilla.jss.tests.KeyEncapsulating" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}"
@@ -483,7 +483,7 @@ macro(jss_tests)
             DEPENDS "SSLEngine_RSA_FIPSMODE" "SSLEngine_ECDSA"
             MODE "FIPS"
         )
-        if(ENABLE_NSS_VERSION_PQC_DEF)
+        if(WITH_MLDSA)
             jss_test_java(
                 NAME "SSLEngine_MLDSA_FIPSMODE"
 	        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_FIPS_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_MLDSA" "Server_MLDSA"
@@ -587,8 +587,12 @@ function(jss_test_java)
         list(APPEND EXEC_COMMAND "-Djava.util.logging.config.file=${PROJECT_SOURCE_DIR}/tools/logging.properties")
     endif()
 
-    if(ENABLE_NSS_VERSION_PQC_DEF)
-        list(APPEND EXEC_COMMAND "-Dtest.NSS_PQC=True")
+    if(NOT WITH_MLDSA)
+        list(APPEND EXEC_COMMAND "-DTEST_MLDSA=false")
+    endif()
+
+    if(NOT WITH_MLKEM)
+        list(APPEND EXEC_COMMAND "-DTEST_MLKEM=false")
     endif()
 
     set(EXEC_COMMAND "${EXEC_COMMAND};${TEST_JAVA_COMMAND}")

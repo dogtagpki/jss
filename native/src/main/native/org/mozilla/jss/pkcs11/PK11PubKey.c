@@ -251,13 +251,15 @@ Java_org_mozilla_jss_pkcs11_PK11PubKey_getKeyType
     case keaKey:
         keyTypeFieldName = KEA_KEYTYPE_FIELD;
         break;
-#ifdef NSS_VERSION_PQC_DEF
-    case kyberKey:
-        keyTypeFieldName = MLKEM_KEYTYPE_FIELD;
-        break;
+#ifdef JSS_MLDSA_ENABLED
     case mldsaKey:
         keyTypeFieldName = MLDSA_KEYTYPE_FIELD;
         break;
+#ifdef JSS_MLKEM_ENABLED
+    case kyberKey:
+        keyTypeFieldName = MLKEM_KEYTYPE_FIELD;
+        break;
+#endif
 #endif
     default:
         PR_ASSERT(PR_FALSE);
