@@ -195,7 +195,7 @@ public final class PK11KeyPairGenerator
                 // OK for now.
                 mKeygenOnInternalToken = true;
             } else {
-                throw new NoSuchAlgorithmException();
+                throw new NoSuchAlgorithmException("Unsupported algorithm: " + algorithm);
             }
         }
 
@@ -236,9 +236,7 @@ public final class PK11KeyPairGenerator
             } else if(strength==1024) {
                 params = PQG1024;
             } else {
-                throw new InvalidParameterException(
-                    "In order to use pre-cooked PQG values, key strength must " +
-                    "be 512, 768, or 1024.");
+                throw new InvalidParameterException("Invalid DSA strength: " + strength);
             }
         } else if (algorithm == KeyPairAlgorithm.EC) {
             if (strength < 112) {
@@ -264,9 +262,7 @@ public final class PK11KeyPairGenerator
                     break;
                 default:
                     throw new InvalidParameterException(
-                        String.format(
-                            "Invalid parameter: %d. ML-DSA key strength must be 44, 65 or 87",
-                             strength)
+                        String.format("Invalid ML-DSA strength: %d", strength)
                     );
             }
         } else if (algorithm == KeyPairAlgorithm.MLKEM){
@@ -283,9 +279,7 @@ public final class PK11KeyPairGenerator
                     break;
                 default:
                     throw new InvalidParameterException(
-                        String.format(
-                            "Invalid parameter: %d. ML-KEM key strength must be 512, 768 or 1024",
-                             strength)
+                        String.format("Invalid ML-KEM strength: %d", strength)
                     );
             }
         } else {
@@ -309,7 +303,7 @@ public final class PK11KeyPairGenerator
         throws InvalidAlgorithmParameterException
     {
         if(params == null) {
-            throw new InvalidAlgorithmParameterException("Null parameters");
+            throw new InvalidAlgorithmParameterException("Missing algorithm parameters");
         }
 
         if(algorithm == KeyPairAlgorithm.RSA) {
@@ -320,7 +314,7 @@ public final class PK11KeyPairGenerator
             // Security library stores public exponent in an unsigned long
             if (((RSAKeyGenParameterSpec)params).getPublicExponent().bitLength() > 31) {
                 throw new InvalidAlgorithmParameterException(
-                        "RSA Public Exponent must fit in 31 or fewer bits.");
+                        "RSA public exponent exceeds 31 bits");
             }
         } else if ( algorithm == KeyPairAlgorithm.DSA ){
             if(! (params instanceof DSAParameterSpec) ) {
@@ -332,7 +326,7 @@ public final class PK11KeyPairGenerator
                 String curve_name = standard_params.getName();
                 ECCurve curve = ECCurve.fromName(curve_name);
                 if (curve == null) {
-                    throw new InvalidAlgorithmParameterException("Unable to find curve with the given name: " + curve_name);
+                    throw new InvalidAlgorithmParameterException("Invalid EC curve: " + curve_name);
                 }
 
                 OBJECT_IDENTIFIER[] oid = curve.getOIDs();
@@ -343,17 +337,17 @@ public final class PK11KeyPairGenerator
             }
 
             if (!(params instanceof PK11ParameterSpec)) {
-                throw new InvalidAlgorithmParameterException("Expected params to either be an instance of ECGenParameterSpec or PK11ParameterSpec!");
+                throw new InvalidAlgorithmParameterException("Invalid EC parameters: " + params.getClass().getName());
             }
         } else if (algorithm == KeyPairAlgorithm.MLDSA) {
             if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-DSA-"))) {
-                throw new InvalidAlgorithmParameterException("Parameter not supported with ML-DSA key");
+                throw new InvalidAlgorithmParameterException("Invalid ML-DSA parameters: " + params.getClass().getName());
             }
         } else if (algorithm == KeyPairAlgorithm.MLKEM) {
             if(!(params instanceof NamedParameterSpec p && p.getName().startsWith("ML-KEM-"))) {
-                throw new InvalidAlgorithmParameterException("Parameter not supported with ML-KEM key");
+                throw new InvalidAlgorithmParameterException("Invalid with ML-KEM parameters: "+ params.getClass().getName());
             }
-            
+
         } // future add support for X509EncodedSpec
 
         this.params = params;
@@ -494,7 +488,7 @@ public final class PK11KeyPairGenerator
                 (int) opFlags,
                 (int) opFlagsMask);
         } else {
-            throw new TokenException("We are ahead!!!");
+            throw new TokenException("Unsupported algorithm: " + algorithm);
         }
     }
 
@@ -776,7 +770,7 @@ public final class PK11KeyPairGenerator
         try {
             c = ECCurve_Code.valueOf(curveName);
         } catch (IllegalArgumentException e) { // curve not found
-            throw new InvalidParameterException(curveName);
+            throw new InvalidParameterException("Unable to get curve code: " + e.getMessage(), e);
         }
         return c.code();
     }
@@ -910,7 +904,7 @@ public final class PK11KeyPairGenerator
         // Can't get to curve SECG T-571K1 == NIST K-571 (TLS-13)
 	    break;
 	default:
-             throw new InvalidParameterException();
+             throw new InvalidParameterException("Unsupported curve: " + strength);
         }
         return new PK11ParameterSpec(ASN1Util.encode(oid));
     }
