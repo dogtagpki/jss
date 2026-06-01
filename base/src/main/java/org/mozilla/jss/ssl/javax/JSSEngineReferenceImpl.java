@@ -1758,12 +1758,21 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
+    // Old comment, leaving for reference...
     // During testing with Tomcat 8.5, most instances did not call
     // cleanup, so all the JNI resources end up getting leaked: ssl_fd
     // (and its global ref), read_buf, and write_buf.
+    //
+    // Latest findings...
+    // Make this method empty. Each native resource (ssl_fd, read_buf, write_buf) has
+    // its own NativeProxy finalizer that handles individual cleanup.
+    // Do not call cleanup() here — GC finalization order is undefined,
+    // so BufferProxy objects may already be finalized, making
+    // PR.Close() or PR.Shutdown() crash with use-after-free (SIGSEGV
+    // in memcpy).
+
     @Override
     protected void finalize() {
-        cleanup();
     }
 
     private class CertValidationTask extends CertAuthHandler {
