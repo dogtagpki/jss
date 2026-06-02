@@ -73,13 +73,17 @@ ExcludeArch: i686
 %if 0%{?rhel}
 
 # the current NSS on RHEL only supports ML-DSA
-%define nss_version 3.112
+#define nss_version 3.112
 %global with_mldsa 1
-%undefine with_mlkem
+#undefine with_mlkem
+
+# temporarily enable ML-KEM on RHEL using NSS COPR build
+%define nss_version 3.123
+%global with_mlkem 1
 
 %else
 
-# the current NSS on Fedora supports both ML-DSA and ML-DSA
+# the current NSS on Fedora supports both ML-DSA and ML-KEM
 %define nss_version 3.123
 %global with_mldsa 1
 %global with_mlkem 1
