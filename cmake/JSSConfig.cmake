@@ -367,7 +367,6 @@ macro(jss_config_symbols)
 
     # Assume OAEP support and set the define required.
     set(HAVE_NSS_OAEP TRUE)
-    message(WARNING "Assuming OAEP support.")
 
     if(HAVE_NSS_CMAC)
         try_run(CK_HAVE_WORKING_CMAC

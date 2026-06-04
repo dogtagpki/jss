@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/bash -e
 
 # Use this script to automate updating jss version.
 #

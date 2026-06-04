@@ -493,7 +493,11 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 ################################################################################
 %files -n %{product_id}-javadoc %{?with_maven:-f .mfiles-javadoc}
 ################################################################################
+
+%if ! %{with maven}
 %{_javadocdir}/jss/
+%endif
+
 %endif
 
 %if %{with tests}

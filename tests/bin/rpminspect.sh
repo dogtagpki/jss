@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/bash -e
 
 # Don't run metadata check as we can't know the build host subdomain
 # of CI runners in advance to add to an allow list

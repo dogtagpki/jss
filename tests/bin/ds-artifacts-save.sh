@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 CONTAINER=$1
 INSTANCE=$2

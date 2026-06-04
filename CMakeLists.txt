@@ -1,9 +1,7 @@
-# This is the CMakeLists.txt for the JSS Project.
-project(jss)
+# Required cmake version
+cmake_minimum_required(VERSION 3.26)
 
-# Required cmake version; set a 3.14.2 since we need LINK_OPTIONS in
-# try_compile.
-cmake_minimum_required(VERSION 3.14.0)
+project(jss)
 
 # Source our custom CMake modules; this includes NSS and NSPR modules from
 # PKI and the JSSConfig and JSSCommon modules.

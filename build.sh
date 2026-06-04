@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/bash -e
 
 # BEGIN COPYRIGHT BLOCK
 # (C) 2018 Red Hat, Inc.
@@ -438,11 +438,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
     # Set environment variables for CMake
     # (see /usr/lib/rpm/macros.d/macros.cmake)
 
-    OPTIONS+=(-DCMAKE_C_FLAGS_RELEASE:STRING=-DNDEBUG)
-    OPTIONS+=(-DCMAKE_CXX_FLAGS_RELEASE:STRING=-DNDEBUG)
-    OPTIONS+=(-DCMAKE_Fortran_FLAGS_RELEASE:STRING=-DNDEBUG)
-    OPTIONS+=(-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON)
-    OPTIONS+=(-DCMAKE_INSTALL_DO_STRIP:BOOL=OFF)
+    if [ "$VERBOSE" = true ] ; then
+        OPTIONS+=(-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON)
+    fi
+
     OPTIONS+=(-DCMAKE_INSTALL_PREFIX:PATH="$PREFIX_DIR")
 
     OPTIONS+=(-DINCLUDE_INSTALL_DIR:PATH="$INCLUDE_DIR")

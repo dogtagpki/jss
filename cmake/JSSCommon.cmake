@@ -251,13 +251,15 @@ macro(jss_build_jars)
 endmacro()
 
 macro(jss_build_test_jars)
+    add_custom_command(
+        OUTPUT "${JSS_TESTS_JAR_PATH}"
+        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
+        DEPENDS generate_java
+    )
+
     add_custom_target(
         generate_tests_jar
-        DEPENDS generate_java)
-
-    add_custom_command(
-        TARGET generate_tests_jar
-        COMMAND "${Java_JAR_EXECUTABLE}" cmf "${CMAKE_BINARY_DIR}/MANIFEST.MF" ${JSS_TESTS_JAR_PATH} -C "${TESTS_CLASSES_OUTPUT_DIR}" org
+        DEPENDS "${JSS_TESTS_JAR_PATH}"
     )
 
     add_dependencies(generate_jar generate_tests_jar)
