@@ -5,8 +5,12 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TeletexStringTest {
+
+    public static Logger logger = LoggerFactory.getLogger(TeletexStringTest.class);
 
     public byte tag = DerValue.tag_T61String;
 
@@ -14,13 +18,13 @@ public class TeletexStringTest {
     public void testEncodingEmptyString() throws Exception {
 
         String string = "";
-        System.out.println("Encoding: [" + string + "]");
+        logger.debug("Encoding: [" + string + "]");
 
         byte[] expected = JSSUtil.encode(tag, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = StringTestUtil.encode(tag, string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -31,12 +35,12 @@ public class TeletexStringTest {
         String input = "";
         byte[] data = JSSUtil.encode(tag, input);
 
-        System.out.println("Decoding: [" + StringTestUtil.toString(data) + "]");
+        logger.debug("Decoding: [" + StringTestUtil.toString(data) + "]");
 
-        System.out.println(" - expected: [" + input + "]");
+        logger.debug(" - expected: [" + input + "]");
 
         String output = StringTestUtil.decode(tag, data);
-        System.out.println(" - actual  : [" + output + "]");
+        logger.debug(" - actual  : [" + output + "]");
 
         Assertions.assertEquals(input, output);
     }
@@ -45,16 +49,16 @@ public class TeletexStringTest {
     public void testEncodingNullCharacters() throws Exception {
 
         String string = StringTestUtil.NULL_CHARS;
-        System.out.println("Encoding: [" + StringTestUtil.toString(string.getBytes()) + "]");
+        logger.debug("Encoding: [" + StringTestUtil.toString(string.getBytes()) + "]");
 
         byte[] expected = JSSUtil.encode(tag, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = StringTestUtil.encode(tag, string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         actual = StringTestUtil.normalizeUnicode(actual);
-        System.out.println(" - norm.   : " + StringTestUtil.toString(actual));
+        logger.debug(" - norm.   : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -65,12 +69,12 @@ public class TeletexStringTest {
         String input = StringTestUtil.NULL_CHARS;
         byte[] data = JSSUtil.encode(tag, input);
 
-        System.out.println("Decoding: [" + StringTestUtil.toString(data) + "]");
+        logger.debug("Decoding: [" + StringTestUtil.toString(data) + "]");
 
-        System.out.println(" - expected: [" + StringTestUtil.toString(input.getBytes()) + "]");
+        logger.debug(" - expected: [" + StringTestUtil.toString(input.getBytes()) + "]");
 
         String output = StringTestUtil.decode(tag, data);
-        System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
+        logger.debug(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
         Assertions.assertEquals(input, output);
     }
@@ -79,13 +83,13 @@ public class TeletexStringTest {
     public void testEncodingPrintableCharacters() throws Exception {
 
         String string = StringTestUtil.PRINTABLE_CHARS;
-        System.out.println("Encoding: [" + string + "]");
+        logger.debug("Encoding: [" + string + "]");
 
         byte[] expected = JSSUtil.encode(tag, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = StringTestUtil.encode(tag, string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -96,12 +100,12 @@ public class TeletexStringTest {
         String input = StringTestUtil.PRINTABLE_CHARS;
         byte[] data = JSSUtil.encode(tag, input);
 
-        System.out.println("Decoding: [" + StringTestUtil.toString(data) + "]");
+        logger.debug("Decoding: [" + StringTestUtil.toString(data) + "]");
 
-        System.out.println(" - expected: [" + input + "]");
+        logger.debug(" - expected: [" + input + "]");
 
         String output = StringTestUtil.decode(tag, data);
-        System.out.println(" - actual  : [" + output + "]");
+        logger.debug(" - actual  : [" + output + "]");
 
         Assertions.assertEquals(input, output);
     }
@@ -110,13 +114,13 @@ public class TeletexStringTest {
     public void testEncodingNonPrintableCharacters() throws Exception {
 
         String string = StringTestUtil.NON_PRINTABLE_CHARS;
-        System.out.println("Encoding: [" + string + "]");
+        logger.debug("Encoding: [" + string + "]");
 
         byte[] expected = JSSUtil.encode(tag, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = StringTestUtil.encode(tag, string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -127,12 +131,12 @@ public class TeletexStringTest {
         String input = StringTestUtil.NON_PRINTABLE_CHARS;
         byte[] data = JSSUtil.encode(tag, input);
 
-        System.out.println("Decoding: [" + StringTestUtil.toString(data) + "]");
+        logger.debug("Decoding: [" + StringTestUtil.toString(data) + "]");
 
-        System.out.println(" - expected: [" + input + "]");
+        logger.debug(" - expected: [" + input + "]");
 
         String output = StringTestUtil.decode(tag, data);
-        System.out.println(" - actual  : [" + output + "]");
+        logger.debug(" - actual  : [" + output + "]");
 
         Assertions.assertEquals(input, output);
     }
@@ -141,13 +145,13 @@ public class TeletexStringTest {
     public void testEncodingControlCharacters() throws Exception {
 
         String string = StringTestUtil.CONTROL_CHARS;
-        System.out.println("Encoding: [" + StringTestUtil.toString(string.getBytes()) + "]");
+        logger.debug("Encoding: [" + StringTestUtil.toString(string.getBytes()) + "]");
 
         byte[] expected = JSSUtil.encode(tag, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = StringTestUtil.encode(tag, string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -158,12 +162,12 @@ public class TeletexStringTest {
         String input = StringTestUtil.CONTROL_CHARS;
         byte[] data = JSSUtil.encode(tag, input);
 
-        System.out.println("Decoding: [" + StringTestUtil.toString(data) + "]");
+        logger.debug("Decoding: [" + StringTestUtil.toString(data) + "]");
 
-        System.out.println(" - expected: [" + StringTestUtil.toString(input.getBytes()) + "]");
+        logger.debug(" - expected: [" + StringTestUtil.toString(input.getBytes()) + "]");
 
         String output = StringTestUtil.decode(tag, data);
-        System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
+        logger.debug(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
         Assertions.assertEquals(input, output);
     }
@@ -172,18 +176,18 @@ public class TeletexStringTest {
     public void testEncodingMultibyteCharacters() throws Exception {
 
         String string = StringTestUtil.MULTIBYTE_CHARS;
-        System.out.println("Encoding: [" + string + "]");
+        logger.debug("Encoding: [" + string + "]");
 
-        System.out.println(" - expected: IOException");
+        logger.debug(" - expected: IOException");
 
         try {
             byte[] actual = StringTestUtil.encode(tag, string);
-            System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+            logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
             Assertions.fail();
 
         } catch (Exception e) {
-            System.out.println(" - actual  : " + e.getClass().getSimpleName());
+            logger.debug(" - actual  : " + e.getClass().getSimpleName());
             Assertions.assertTrue(e instanceof IOException);
         }
     }
@@ -194,18 +198,18 @@ public class TeletexStringTest {
         String input = StringTestUtil.MULTIBYTE_CHARS;
         byte[] data = JSSUtil.encode(DerValue.tag_UTF8String, input);
 
-        System.out.println("Decoding: [" + StringTestUtil.toString(data) + "]");
+        logger.debug("Decoding: [" + StringTestUtil.toString(data) + "]");
 
-        System.out.println(" - expected: IOException");
+        logger.debug(" - expected: IOException");
 
         try {
             String output = StringTestUtil.decode(tag, data);
-            System.out.println(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
+            logger.debug(" - actual  : [" + StringTestUtil.toString(output.getBytes()) + "]");
 
             Assertions.fail();
 
         } catch (Exception e) {
-            System.out.println(" - actual  : " + e.getClass().getSimpleName());
+            logger.debug(" - actual  : " + e.getClass().getSimpleName());
             Assertions.assertTrue(e instanceof IOException);
         }
     }
@@ -213,7 +217,7 @@ public class TeletexStringTest {
     @Test
     public void testEncodingTime() throws Exception {
 
-        System.out.println("Encoding time:");
+        logger.debug("Encoding time:");
 
         String string = StringTestUtil.NULL_CHARS +
                 StringTestUtil.PRINTABLE_CHARS +
@@ -235,14 +239,14 @@ public class TeletexStringTest {
         long time1 = t1 - t0;
         long time2 = t2 - t1;
 
-        System.out.println(" - JSS     : " + time1 + " ms");
-        System.out.println(" - Internal: " + time2 + " ms");
+        logger.debug(" - JSS     : " + time1 + " ms");
+        logger.debug(" - Internal: " + time2 + " ms");
     }
 
     @Test
     public void testDecodingTime() throws Exception {
 
-        System.out.println("Decoding time:");
+        logger.debug("Decoding time:");
 
         String string = StringTestUtil.NULL_CHARS +
                 StringTestUtil.PRINTABLE_CHARS +
@@ -266,7 +270,7 @@ public class TeletexStringTest {
         long time1 = t1 - t0;
         long time2 = t2 - t1;
 
-        System.out.println(" - JSS     : " + time1 + " ms");
-        System.out.println(" - Internal: " + time2 + " ms");
+        logger.debug(" - JSS     : " + time1 + " ms");
+        logger.debug(" - Internal: " + time2 + " ms");
     }
 }

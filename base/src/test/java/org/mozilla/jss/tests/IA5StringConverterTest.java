@@ -4,20 +4,24 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mozilla.jss.netscape.security.util.DerValue;
 import org.mozilla.jss.netscape.security.x509.IA5StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IA5StringConverterTest {
+
+    public static Logger logger = LoggerFactory.getLogger(IA5StringConverterTest.class);
 
     @Test
     public void testEmptyString() throws Exception {
 
         String string = "";
-        System.out.println("Converting: [" + string + "]");
+        logger.debug("Converting: [" + string + "]");
 
         byte[] expected = JSSUtil.encode(DerValue.tag_IA5String, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = ConverterTestUtil.convert(new IA5StringConverter(), string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -26,13 +30,13 @@ public class IA5StringConverterTest {
     public void testNullCharacters() throws Exception {
 
         String string = StringTestUtil.NULL_CHARS;
-        System.out.println("Converting: [" + StringTestUtil.toString(string.getBytes()) + "]");
+        logger.debug("Converting: [" + StringTestUtil.toString(string.getBytes()) + "]");
 
         byte[] expected = JSSUtil.encode(DerValue.tag_IA5String, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = ConverterTestUtil.convert(new IA5StringConverter(), string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -41,13 +45,13 @@ public class IA5StringConverterTest {
     public void testPrintableCharacters() throws Exception {
 
         String string = StringTestUtil.PRINTABLE_CHARS;
-        System.out.println("Converting: [" + string + "]");
+        logger.debug("Converting: [" + string + "]");
 
         byte[] expected = JSSUtil.encode(DerValue.tag_IA5String, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = ConverterTestUtil.convert(new IA5StringConverter(), string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -56,13 +60,13 @@ public class IA5StringConverterTest {
     public void testControlCharacters() throws Exception {
 
         String string = StringTestUtil.CONTROL_CHARS;
-        System.out.println("Converting: [" + StringTestUtil.toString(string.getBytes()) + "]");
+        logger.debug("Converting: [" + StringTestUtil.toString(string.getBytes()) + "]");
 
         byte[] expected = JSSUtil.encode(DerValue.tag_IA5String, string);
-        System.out.println(" - expected: " + StringTestUtil.toString(expected));
+        logger.debug(" - expected: " + StringTestUtil.toString(expected));
 
         byte[] actual = ConverterTestUtil.convert(new IA5StringConverter(), string);
-        System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+        logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -71,18 +75,18 @@ public class IA5StringConverterTest {
     public void testMultibyteCharacters() throws Exception {
 
         String string = StringTestUtil.MULTIBYTE_CHARS;
-        System.out.println("Converting: [" + string + "]");
+        logger.debug("Converting: [" + string + "]");
 
-        System.out.println(" - expected: IllegalArgumentException");
+        logger.debug(" - expected: IllegalArgumentException");
 
         try {
             byte[] actual = ConverterTestUtil.convert(new IA5StringConverter(), string);
-            System.out.println(" - actual  : " + StringTestUtil.toString(actual));
+            logger.debug(" - actual  : " + StringTestUtil.toString(actual));
 
             Assertions.fail();
 
         } catch (Exception e) {
-            System.out.println(" - actual  : " + e.getClass().getSimpleName());
+            logger.debug(" - actual  : " + e.getClass().getSimpleName());
             Assertions.assertTrue(e instanceof IllegalArgumentException);
         }
     }

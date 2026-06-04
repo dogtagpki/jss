@@ -111,7 +111,7 @@ public class ChainSortingTest {
     @Test
     public void testNulLChain() throws Exception {
 
-        logger.info("Testing null chain");
+        logger.debug("Testing null chain");
 
         X509Certificate[] input = null;
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -123,7 +123,7 @@ public class ChainSortingTest {
     @Test
     public void testEmptyChain() throws Exception {
 
-        logger.info("Testing empty chain");
+        logger.debug("Testing empty chain");
 
         X509Certificate[] input = {};
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -135,7 +135,7 @@ public class ChainSortingTest {
     @Test
     public void testOneLevelChain() throws Exception {
 
-        logger.info("Testing one-level chain");
+        logger.debug("Testing one-level chain");
 
         X509Certificate[] input = { rootCA };
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -147,7 +147,7 @@ public class ChainSortingTest {
     @Test
     public void testTwoLevelOrderedChain() throws Exception {
 
-        logger.info("Testing two-level ordered chain");
+        logger.debug("Testing two-level ordered chain");
 
         X509Certificate[] input = { rootCA, subCA };
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -159,7 +159,7 @@ public class ChainSortingTest {
     @Test
     public void testTwoLevelUnorderedChain() throws Exception {
 
-        logger.info("Testing two-level unordered chain");
+        logger.debug("Testing two-level unordered chain");
 
         X509Certificate[] input = { subCA, rootCA };
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -171,7 +171,7 @@ public class ChainSortingTest {
     @Test
     public void testThreeLevelOrderedChain() throws Exception {
 
-        logger.info("Testing three-level ordered chain");
+        logger.debug("Testing three-level ordered chain");
 
         X509Certificate[] input = { rootCA, subCA, admin };
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -183,7 +183,7 @@ public class ChainSortingTest {
     @Test
     public void testThreeLevelUnorderedChain() throws Exception {
 
-        logger.info("Testing three-level unordered chain");
+        logger.debug("Testing three-level unordered chain");
 
         X509Certificate[] input = { admin, subCA, rootCA };
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -195,7 +195,7 @@ public class ChainSortingTest {
     @Test
     public void testThreeLevelReverseChain() throws Exception {
 
-        logger.info("Testing three-level reverse chain");
+        logger.debug("Testing three-level reverse chain");
 
         X509Certificate[] input = { subCA, rootCA, admin };
         X509Certificate[] output = Cert.sortCertificateChain(input, true);
@@ -207,7 +207,7 @@ public class ChainSortingTest {
     @Test
     public void testPartialChain() throws Exception {
 
-        logger.info("Testing partial chain");
+        logger.debug("Testing partial chain");
 
         X509Certificate[] input = { admin, subCA };
         X509Certificate[] output = Cert.sortCertificateChain(input);
@@ -219,7 +219,7 @@ public class ChainSortingTest {
     @Test
     public void testDuplicateChain() throws Exception {
 
-        logger.info("Testing chain with duplicate certificates");
+        logger.debug("Testing chain with duplicate certificates");
 
         X509Certificate[] input = { rootCA, subCA, subCA, admin };
 
@@ -238,7 +238,7 @@ public class ChainSortingTest {
     @Test
     public void testBranchedChain() throws Exception {
 
-        logger.info("Testing branched chain");
+        logger.debug("Testing branched chain");
 
         X509Certificate[] input = { rootCA, subCA, admin, agent};
 
@@ -257,7 +257,7 @@ public class ChainSortingTest {
     @Test
     public void testBrokenChain() throws Exception {
 
-        logger.info("Testing broken chain");
+        logger.debug("Testing broken chain");
 
         X509Certificate[] input = { rootCA, admin };
 
