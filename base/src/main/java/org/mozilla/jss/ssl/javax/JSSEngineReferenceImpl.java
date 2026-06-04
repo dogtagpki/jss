@@ -2,6 +2,7 @@ package org.mozilla.jss.ssl.javax;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.Reference;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -1344,6 +1345,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         tryCleanup();
+        Reference.reachabilityFence(this);
         return new SSLEngineResult(handshake_status, handshake_state, wire_data, app_data);
     }
 
@@ -1664,6 +1666,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
 
         tryCleanup();
+        Reference.reachabilityFence(this);
         return new SSLEngineResult(handshake_status, handshake_state, app_data, wire_data);
     }
 
@@ -1690,6 +1693,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     @Override
     public synchronized void cleanup() {
         debug("JSSEngine: cleanup()");
+
+        // Set closed_fd BEFORE calling closeInbound()/closeOutbound() to prevent
+        // them from calling PR.Shutdown() on ssl_fd that is about to be freed.
+        // This avoids a use-after-free crash in the finalizer thread.
+        closed_fd = true;
 
         if (!is_inbound_closed) {
             debug("JSSEngine: cleanup() - closing opened inbound socket");
@@ -1731,12 +1739,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     private void cleanupSSLFD() {
-        if (!closed_fd && ssl_fd != null) {
-            // Set closed_fd BEFORE freeing native resources to prevent
-            // concurrent calls to closeInbound()/closeOutbound() from
+        if (ssl_fd != null) {
+            // closed_fd is already set to true in cleanup() before this is called.
+            // This prevents concurrent calls to closeInbound()/closeOutbound() from
             // attempting PR.Shutdown() on ssl_fd that is being freed.
-            closed_fd = true;
-
             try {
                 SSL.RemoveCallbacks(ssl_fd);
                 ssl_fd.close();
