@@ -434,22 +434,24 @@ public class EncryptionAlgorithm extends Algorithm {
             Padding.PKCS5, IVParameterSpecClasses, 16,
             AES_ROOT_OID.subBranch(42), 256);
 
-  public static final EncryptionAlgorithm
-   AES_128_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_128_KEY_WRAP_KWP,
-        Alg.AES,Mode.NONE,
-        Padding.PKCS5, IVParameterSpecClasses, 16,
-        AES_ROOT_OID.subBranch(8), 128,"AES/None/PKCS5Padding/Kwp/128");
+    public static final EncryptionAlgorithm AES_128_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_128_KEY_WRAP_KWP,
+            Alg.AES, Mode.NONE,
+            Padding.PKCS5, IVParameterSpecClasses, 16,
+            AES_ROOT_OID.subBranch(8), 128, "AES/None/PKCS5Padding/Kwp/128");
 
-  public static final EncryptionAlgorithm
-   AES_192_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_192_KEY_WRAP_KWP,
-        Alg.AES,Mode.NONE,
-        Padding.PKCS5, IVParameterSpecClasses, 16,
-        AES_ROOT_OID.subBranch(28), 192,"AES/None/PKCSPadding/Kwp/192");
+    public static final EncryptionAlgorithm AES_192_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_192_KEY_WRAP_KWP,
+            Alg.AES, Mode.NONE,
+            Padding.PKCS5, IVParameterSpecClasses, 16,
+            AES_ROOT_OID.subBranch(28), 192, "AES/None/PKCS5Padding/Kwp/192");
 
-  public static final EncryptionAlgorithm
-   AES_256_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_256_KEY_WRAP_KWP,
-        Alg.AES,Mode.NONE,
-        Padding.PKCS5, IVParameterSpecClasses, 16,
-        AES_ROOT_OID.subBranch(48), 256,"AES/None/PKCS5Padding/Kwp/256");
+    public static final EncryptionAlgorithm AES_256_KEY_WRAP_KWP = new EncryptionAlgorithm(SEC_OID_AES_256_KEY_WRAP_KWP,
+            Alg.AES, Mode.NONE,
+            Padding.PKCS5, IVParameterSpecClasses, 16,
+            AES_ROOT_OID.subBranch(48), 256, "AES/None/PKCS5Padding/Kwp/256");
+
+    public static final EncryptionAlgorithm AES_KEY_WRAP_PAD_KWP = new EncryptionAlgorithm(CKM_AES_KEY_WRAP_KWP,
+            Alg.AES, Mode.NONE,
+            Padding.PKCS5, (Class<?>) null, 8,
+            null, 256);
 
 }
