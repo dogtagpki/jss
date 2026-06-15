@@ -327,6 +327,13 @@ macro(jss_tests)
         )
     endif()
 
+    jss_test_java(
+        NAME "SSLEngine_Cleaner_Abandoned"
+        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA" "cleaner_abandoned"
+        DEPENDS "Generate_known_RSA_cert_pair"
+    )
+
+
     if(NOT FIPS_ENABLED)
         jss_test_java(
             NAME "Key_Factory"

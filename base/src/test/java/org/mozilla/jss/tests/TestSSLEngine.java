@@ -1006,6 +1006,45 @@ public class TestSSLEngine {
         testJSSEToJSSHandshakes(ctx, server_alias);
     }
 
+    public static void testCleanerAbandoned(SSLContext ctx, String client_alias, String server_alias) throws Exception {
+        JSSEngine client_eng = (JSSEngine) ctx.createSSLEngine();
+        client_eng.setSSLParameters(createParameters(client_alias));
+        client_eng.setUseClientMode(true);
+
+        JSSEngine server_eng = (JSSEngine) ctx.createSSLEngine();
+        server_eng.setSSLParameters(createParameters(server_alias));
+        server_eng.setUseClientMode(false);
+        server_eng.setNeedClientAuth(true);
+
+        configureSSLEngine(client_eng, "TLSv1.2", client_eng.getSupportedCipherSuites()[0]);
+        configureSSLEngine(server_eng, "TLSv1.2", server_eng.getSupportedCipherSuites()[0]);
+
+        testHandshake(client_eng, server_eng, false);
+
+        // Abandon both engines — no close, no cleanup
+
+        java.lang.ref.WeakReference<JSSEngine> clientRef = new java.lang.ref.WeakReference<>(client_eng);
+        java.lang.ref.WeakReference<JSSEngine> serverRef = new java.lang.ref.WeakReference<>(server_eng);
+
+        // Print engine IDs before abandoning
+        System.out.println("Abandoning client engine: " + ((JSSEngineReferenceImpl) client_eng).getEngineId());
+        System.out.println("Abandoning server engine (with certAuthHandler): " + ((JSSEngineReferenceImpl) server_eng).getEngineId());
+
+        client_eng = null;
+        server_eng = null;
+
+        System.gc();
+        Thread.sleep(1000);
+        System.gc();
+        System.runFinalization();
+        Thread.sleep(1000);
+
+        System.out.println("Client engine collected: " + (clientRef.get() == null));
+        System.out.println("Server engine collected: " + (serverRef.get() == null));
+
+        System.out.println("testCleanerAbandoned completed — no crash!");
+    }
+
     public static void main(String[] args) throws Exception {
         // Args:
         //  - nssdb
@@ -1021,6 +1060,14 @@ public class TestSSLEngine {
         }
 
         assert(SSLVersion.TLS_1_2.matchesAlias("TLSv1.2"));
+
+        if (args.length > 4 && args[4].equals("cleaner_abandoned")) {
+            System.out.println("Testing Cleaner with abandoned engine...");
+            SSLContext ctx = SSLContext.getInstance("TLS", "Mozilla-JSS");
+            ctx.init(getKMs(), getTMs(), null);
+            testCleanerAbandoned(ctx, args[2], args[3]);
+            return;
+        }
 
         System.out.println("Testing provided instance...");
         testProvided();
