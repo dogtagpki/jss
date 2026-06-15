@@ -12,9 +12,11 @@ import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
+import java.lang.ref.Cleaner;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.X509ExtendedTrustManager;
@@ -61,6 +63,46 @@ import org.mozilla.jss.ssl.SSLVersionRange;
  * as being from the appropriate side of the TLS connection.
  */
 public class JSSEngineReferenceImpl extends JSSEngine {
+
+    /**
+     * Cleaner instance for guaranteed resource cleanup.
+     * Used as a safety net when close()/cleanup() is not called explicitly.
+     */
+    private static final Cleaner cleaner = Cleaner.create();
+    private Cleaner.Cleanable cleanable;
+
+    // Used for further identifying the engine instance being cleaned.
+    private static java.util.concurrent.atomic.AtomicInteger engineCounter = new AtomicInteger(0);
+    private int engineId = engineCounter.incrementAndGet();
+
+
+    /**
+     * Cleaner action - must be a static class to avoid preventing GC
+     * of the JSSEngineReferenceImpl instance.
+     */
+    private static class EngineCleanup implements Runnable {
+        private final String name;
+
+        private SSLFDProxy ssl_fd;
+        private BufferProxy read_buf;
+        private BufferProxy write_buf;
+
+        EngineCleanup(String name, SSLFDProxy fd, BufferProxy rb, BufferProxy wb) {
+            this.name = name;
+            this.ssl_fd = fd;
+            this.read_buf = rb;
+            this.write_buf = wb;
+        }
+
+        public void run() {
+            logger.debug("JSSEngine: CLEANER: EngineCleanup.run() fired for " + name);
+            freeEngineResources(ssl_fd, read_buf, write_buf);
+            ssl_fd = null;
+            read_buf = null;
+            write_buf = null;
+        }
+    }
+
     /**
      * Faked peer information that we pass to the underlying BufferPRFD
      * implementation.
@@ -224,7 +266,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: constructor(" + peerHost + ", " + peerPort + ", " + localCert + ", " + localKey + ")");
     }
 
-    private void debug(String msg) {
+    void debug(String msg) {
         logger.debug(prefix + msg);
     }
 
@@ -234,6 +276,40 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
     private void warn(String msg) {
         logger.warn(prefix + msg);
+    }
+
+    private static void freeEngineResources(SSLFDProxy fd, BufferProxy rb, BufferProxy wb) {
+        if (fd != null && !fd.isNull()) {
+            try {
+                SSL.RemoveCallbacks(fd);
+                fd.close();
+            } catch (Exception e) {
+                logger.error("Error closing ssl_fd", e);
+            }
+        }
+        if (rb != null && !rb.isNull()) {
+            Buffer.Free(rb);
+        }
+        if (wb != null && !wb.isNull()) {
+            Buffer.Free(wb);
+        }
+    }
+
+
+    boolean isSeenException()  {
+        return seen_exception;
+    }
+ 
+    void setSeenException(boolean val) {
+        seen_exception = val;
+    }
+
+    SSLException getSslException() {
+        return ssl_exception;
+    }
+
+    void setSslException(SSLException e) {
+        ssl_exception = e;
     }
 
     /**
@@ -348,6 +424,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         fd = null;
         closed_fd = false;
+
+        cleanable = cleaner.register(this, new EngineCleanup(
+            "engine-" + engineId + " " + peer_info, ssl_fd, read_buf, write_buf));
+
+        logger.debug("Registering cleaner: " +  "engine-" + engineId + " " + peer_info);
 
         // Turn on SSL Alert Logging for the ssl_fd object.
         int ret = SSL.EnableAlertLogging(ssl_fd);
@@ -588,7 +669,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // from Runnable, so we can reuse it here as well. We can create
             // it ahead of time though. In this case, checkNeedCertValidation()
             // is never called.
-            ssl_fd.certAuthHandler = new CertValidationTask(ssl_fd);
+            ssl_fd.certAuthHandler = new CertValidationTask(ssl_fd, as_server, need_client_auth, trust_managers, this);
 
             if (SSL.ConfigSyncTrustManagerCertAuthCallback(ssl_fd) == SSL.SECFailure) {
                 throw new SSLException("Unable to configure TrustManager validation on this JSSengine: " + errorText(PR.GetError()));
@@ -842,7 +923,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         debug("JSSEngine: checkNeedCertValidation() - creating task");
 
         // OK, time to create our runnable task.
-        task = new CertValidationTask(ssl_fd);
+        task = new CertValidationTask(ssl_fd, as_server, need_client_auth, trust_managers, this);
 
         // Update our handshake state so we know what to do next.
         handshake_state = SSLEngineResult.HandshakeStatus.NEED_TASK;
@@ -1686,6 +1767,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         }
     }
 
+    public int getEngineId() {
+        return engineId;
+    }
+
     /**
      * Performs cleanup of internal data, closing both inbound and outbound
      * data streams if still open.
@@ -1739,29 +1824,15 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     private void cleanupSSLFD() {
-        if (ssl_fd != null) {
-            // closed_fd is already set to true in cleanup() before this is called.
-            // This prevents concurrent calls to closeInbound()/closeOutbound() from
-            // attempting PR.Shutdown() on ssl_fd that is being freed.
-            try {
-                SSL.RemoveCallbacks(ssl_fd);
-                ssl_fd.close();
-            } catch (Exception e) {
-                logger.error("Got exception trying to cleanup SSLFD", e);
-            } finally {
-                ssl_fd = null;
-            }
+        // Let the Cleaner do the actual freeing
+        if (cleanable != null) {
+            cleanable.clean();
+            cleanable = null;
         }
-
-        if (read_buf != null) {
-            Buffer.Free(read_buf);
-            read_buf = null;
-        }
-
-        if (write_buf != null) {
-            Buffer.Free(write_buf);
-            write_buf = null;
-        }
+        // Null our own references (resources already freed by Cleaner above)
+        ssl_fd = null;
+        read_buf = null;
+        write_buf = null;
     }
 
     // During testing with Tomcat 8.5, most instances did not call
@@ -1769,12 +1840,27 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     // (and its global ref), read_buf, and write_buf.
     @Override
     protected void finalize() {
-        cleanup();
+        // Intentionally empty — prevents NativeProxy.finalize() from racing
+        // with the Cleaner. Resource cleanup is handled by cleanup() or the
+        // Cleaner's EngineCleanup.run(). See cleanupSSLFD() and EngineCleanup.
     }
 
-    private class CertValidationTask extends CertAuthHandler {
-        public CertValidationTask(SSLFDProxy fd) {
+    private static class CertValidationTask extends CertAuthHandler {
+        private final java.lang.ref.WeakReference<JSSEngineReferenceImpl> engineRef;
+        private final boolean as_server;
+        private final boolean need_client_auth;
+        private final X509TrustManager[] trust_managers;
+
+        public CertValidationTask(SSLFDProxy fd, boolean asServer,
+                  boolean needClientAuth, X509TrustManager[] trustManagers,
+                  JSSEngineReferenceImpl engine) {
+
             super(fd);
+            this.as_server = asServer;
+            this.need_client_auth = needClientAuth;
+            this.trust_managers = trustManagers;
+            this.engineRef = new java.lang.ref.WeakReference<>(engine);
+
         }
 
         public String findAuthType(SSLFDProxy ssl_fd, PK11Cert[] chain) throws Exception {
@@ -1851,13 +1937,18 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         @Override
         public int check(SSLFDProxy fd) {
             // Needs to be available for assignException() below.
+
+            JSSEngineReferenceImpl engine = engineRef.get();
+
             PK11Cert[] chain = null;
             String authType;
 
             try {
                 chain = SSL.PeerCertificateChain(fd);
                 authType = findAuthType(fd, chain);
-                debug("CertAuthType: " + authType);
+                if (engine != null) {
+                    engine.debug("CertAuthType: " + authType);
+                }
 
                 if (chain == null || chain.length == 0) {
                     // When the chain is NULL, we'd always fail in the
@@ -1869,12 +1960,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                         // Since we're a server validating the client's
                         // chain (and they didn't provide one), we should
                         // ignore it instead of forcing the problem.
-                        debug("No client certificate chain and client cert not needed.");
+                        if (engine != null) {
+                            engine.debug("No client certificate chain and client cert not needed.");
+                        }
                         return 0;
                     }
                 }
             } catch (Exception excpt) {
-                return assignException(excpt, chain);
+                return assignException(excpt, chain, engine);
             }
 
             try {
@@ -1886,9 +1979,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                     if (tm instanceof X509ExtendedTrustManager) {
                         X509ExtendedTrustManager etm = (X509ExtendedTrustManager) tm;
                         if (as_server) {
-                            etm.checkClientTrusted(chain, authType, JSSEngineReferenceImpl.this);
+                            etm.checkClientTrusted(chain, authType, engine);
                         } else {
-                            etm.checkServerTrusted(chain, authType, JSSEngineReferenceImpl.this);
+                            etm.checkServerTrusted(chain, authType, engine);
                         }
                     } else {
                         if (as_server) {
@@ -1899,16 +1992,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                     }
                 }
             } catch (CertificateException excpt) {
-                return handleCertificateException(excpt, chain);
+                return handleCertificateException(excpt, chain, engine);
             }
 
             return 0;
         }
 
-        private int assignException(Exception excpt, PK11Cert[] chain) {
+        private int assignException(Exception excpt, PK11Cert[] chain, JSSEngineReferenceImpl engine) {
             int nss_code = Cert.MatchExceptionToNSSError(excpt);
 
-            if (seen_exception) {
+            if (engine == null || engine.isSeenException()) {
                 return nss_code;
             }
 
@@ -1935,15 +2028,15 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
             msg += "exception message: " + excpt.getMessage();
 
-            seen_exception = true;
-            ssl_exception = new SSLException(msg, excpt);
+            engine.setSeenException(true);
+            engine.setSslException(new SSLException(msg, excpt));
             return nss_code;
         }
 
-        private int handleCertificateException(Exception excpt, PK11Cert[] chain) {
+        private int handleCertificateException(Exception excpt, PK11Cert[] chain, JSSEngineReferenceImpl engine) {
             int nss_code = Cert.MatchExceptionToNSSError(excpt);
 
-            if (seen_exception) {
+            if (engine == null || engine.isSeenException()) {
                 return nss_code;
             }
 
@@ -1951,13 +2044,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                     + chain[0].getSubjectX500Principal() + ": "
                     + excpt.getMessage();
 
-            seen_exception = true;
-            ssl_exception = new SSLPeerUnverifiedException(msg);
+            engine.setSeenException(true);
+            engine.setSslException(new SSLPeerUnverifiedException(msg));
+
             return nss_code;
         }
     }
 
-    private class BypassBadHostname extends BadCertHandler {
+    private static class BypassBadHostname extends BadCertHandler {
         public BypassBadHostname(SSLFDProxy fd, int error) {
             super(fd, error);
         }
