@@ -101,25 +101,3 @@ things are of particular note:
    fails the script.
 
 For more information about this script, please refer to the comments therein.
-
-
-## Java Test
-
-Included in the test suite when run on a JDK8 machine is a test called
-[`TestPKCS11Constants`](../src/test/java/org/mozilla/jss/tests/TestPKCS11Constants.java).
-This uses reflection to compare the values of the PKCS11Constants.java
-provided by JSS and the version provided by Sun, reporting constants in
-four categories:
-
- 1. Those which are "OK", i.e., present in both Sun and JSS with the same
-    value.
- 2. Those which are "JSS only", i.e., the constant name does not exist in
-    the Sun distribution. These are not treated as errors.
- 3. Those which are "Sun only", i.e., the constant name does not exist in
-    the JSS distribution. These are not treated as errors.
- 4. Those which are "not OK", i.e., present in both Sun and JSS but with
-    different values associated to them. This is not an error.
-
-Information about all constants is written to stdout during testing; please
-manually review the "JSS only" and "Sun only" cases to see if any results
-are unexpected.

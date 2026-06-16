@@ -6,11 +6,10 @@
 #define JSSVER_H
 
 /*
- * JSS's major version, minor version, patch level, and whether
- * this is a beta release.
+ * JSS's major version, minor version, patch level.
  *
  * The format of the version string should be
- *     "<major version>.<minor version>[.<patch level>] [<Beta>]"
+ *     "<major version>.<minor version>[.<patch level>]"
  */
 
 /********************************************************************/
@@ -23,6 +22,5 @@
 #define JSS_VMAJOR   ${JSS_VERSION_MAJOR}
 #define JSS_VMINOR   ${JSS_VERSION_MINOR}
 #define JSS_VPATCH   ${JSS_VERSION_PATCH}
-#define JSS_BETA     ${JSS_VERSION_BETA}
 
 #endif

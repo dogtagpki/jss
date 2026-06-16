@@ -1,9 +1,7 @@
 macro(jss_config)
     # Set the current JSS release number. Arguments are:
-    #   MAJOR MINOR PATCH BETA
-    # When BETA is 1, it is a pre-release (it enables some tests).
-    # When BETA is 0, it is a final release.
-    jss_config_version(5 10 0 1)
+    #   MAJOR MINOR PATCH
+    jss_config_version(5 10 0)
 
     # Configure output directories
     jss_config_outputs()
@@ -27,7 +25,7 @@ macro(jss_config)
     jss_config_template()
 endmacro()
 
-macro(jss_config_version MAJOR MINOR PATCH BETA)
+macro(jss_config_version MAJOR MINOR PATCH)
     # This sets the JSS Version for use in CMake and propagates it to the
     # necessary source locations. These are:
     #
@@ -43,7 +41,6 @@ macro(jss_config_version MAJOR MINOR PATCH BETA)
     set(JSS_VERSION_MAJOR "${MAJOR}")
     set(JSS_VERSION_MINOR "${MINOR}")
     set(JSS_VERSION_PATCH "${PATCH}")
-    set(JSS_VERSION_BETA "${BETA}")
 
     set(JSS_VERSION "${JSS_VERSION_MAJOR}.${JSS_VERSION_MINOR}.${JSS_VERSION_PATCH}")
     set(JSS_VERSION_MANIFEST "${JSS_VERSION_MAJOR}.${JSS_VERSION_MINOR}")
@@ -52,10 +49,6 @@ macro(jss_config_version MAJOR MINOR PATCH BETA)
     if(${PATCH} GREATER 0)
         set(JSS_VERSION_MANIFEST "${JSS_VERSION_MANIFEST}.${JSS_VERSION_PATCH}")
         set(JSS_VERSION_STR "${JSS_VERSION_STR}_${JSS_VERSION_PATCH}")
-    endif()
-    if(${BETA} GREATER 0)
-        set(JSS_VERSION "${JSS_VERSION} beta ${JSS_VERSION_BETA}")
-        set(JSS_VERSION_STR "${JSS_VERSION_STR}_b${JSS_VERSION_BETA}")
     endif()
 endmacro()
 

@@ -87,22 +87,6 @@ environment variable:
 # export BUILD_OPT=1
 ```
 
-#### Beta vs. Non-Beta builds
-
-Finally, by default, JSS is not built as a "beta" release (as
-specified in 'org/mozilla/jss/util/jssver.h'):
-
-```
-#define JSS_BETA     PR_FALSE
-```
-
-If a "beta" version of JSS is desired, reset this #define (as
-specified in 'org/mozilla/jss/util/jssver.h') to:
-
-```
-#define JSS_BETA     PR_TRUE
-```
-
 ### 3. Build JSS
 
 To build JSS, execute the following commands:

@@ -62,12 +62,7 @@ change_spec_version() {
 }
 
 change_jss_config_version() {
-    if [ "$NEXT_PHASE" ] ; then
-        IS_BETA="1"
-    else
-        IS_BETA="0"
-    fi
-    JSS_CONFIG_VERSION="$NEXT_MAJOR $NEXT_MINOR $NEXT_UPDATE $IS_BETA"
+    JSS_CONFIG_VERSION="$NEXT_MAJOR $NEXT_MINOR $NEXT_UPDATE"
     echo "Updating jss_config_version to $JSS_CONFIG_VERSION"
     sed -i "/ jss_config_version/c\    jss_config_version($JSS_CONFIG_VERSION)" cmake/JSSConfig.cmake
 }
