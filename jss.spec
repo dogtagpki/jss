@@ -2,6 +2,7 @@
 Name:           jss
 ################################################################################
 
+# Don't use macros in these params since they need to be parsed by build.sh
 %global         vendor_id dogtag
 %global         product_name Java Security Services (JSS)
 %global         product_id dogtag-jss
