@@ -14,7 +14,7 @@ jobs:
       SHARED: /tmp/workdir/jss
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Retrieve JSS images
         uses: actions/cache@v5
