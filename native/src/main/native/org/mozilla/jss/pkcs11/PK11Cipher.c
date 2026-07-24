@@ -256,7 +256,20 @@ JSS_PK11_getCipherContext(JNIEnv *env, jobject proxy, PK11Context **pContext)
 
     PR_ASSERT(env!=NULL && proxy!=NULL && pContext!=NULL);
 
-    return JSS_getPtrFromProxy(env, proxy, (void**)pContext);
+    if( JSS_getPtrFromProxy(env, proxy, (void**)pContext) != PR_SUCCESS) {
+        return PR_FAILURE;
+    }
+
+    /* Make sure the pointer is OK. If the underlying context has already
+     * been released (or was never valid), fail cleanly here instead of
+     * letting a NULL PK11Context reach NSS. */
+    if( *pContext == NULL ) {
+        PR_ASSERT(PR_FALSE);
+        JSS_throwMsg(env, TOKEN_EXCEPTION, "Cipher context is no longer valid");
+        return PR_FAILURE;
+    }
+
+    return PR_SUCCESS;
 }
 
 /***********************************************************************
