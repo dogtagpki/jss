@@ -293,11 +293,6 @@ public final class PK11Cipher
     }
 
     @Override
-    public void finalize() throws Throwable {
-        close();
-    }
-
-    @Override
     public void close() throws Exception {
         if (contextProxy != null) {
             try {
