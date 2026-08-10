@@ -21,7 +21,7 @@ jobs:
 
       - name: Cache Docker layers
         id: cache-buildx
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           key: buildx-${{ hashFiles('jss.spec') }}
           path: /tmp/.buildx-cache
@@ -63,7 +63,7 @@ jobs:
           outputs: type=docker,dest=jss-builder.tar
 
       - name: Store jss-builder image
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           key: jss-builder-${{ github.sha }}
           path: jss-builder.tar
@@ -81,7 +81,7 @@ jobs:
           outputs: type=docker,dest=jss-dist.tar
 
       - name: Store jss-dist image
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           key: jss-dist-${{ github.sha }}
           path: jss-dist.tar
@@ -99,7 +99,7 @@ jobs:
           outputs: type=docker,dest=jss-runner.tar
 
       - name: Store jss-runner image
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           key: jss-runner-${{ github.sha }}
           path: jss-runner.tar
