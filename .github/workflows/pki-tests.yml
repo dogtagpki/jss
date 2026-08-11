@@ -57,6 +57,16 @@ jobs:
           HOSTNAME=pki.example.com \
           tests/bin/runner-init.sh
 
+      - name: Import Tomcat packages
+        run: |
+          # download Tomcat manually due to DNF issue on Fedora 34
+          mkdir /tmp/RPMS
+          curl -L --output-dir /tmp/RPMS -O https://kojipkgs.fedoraproject.org/packages/tomcat/9.0.39/1.fc34/noarch/tomcat-9.0.39-1.fc34.noarch.rpm
+          curl -L --output-dir /tmp/RPMS -O https://kojipkgs.fedoraproject.org/packages/tomcat/9.0.39/1.fc34/noarch/tomcat-lib-9.0.39-1.fc34.noarch.rpm
+          curl -L --output-dir /tmp/RPMS -O https://kojipkgs.fedoraproject.org/packages/tomcat/9.0.39/1.fc34/noarch/tomcat-el-3.0-api-9.0.39-1.fc34.noarch.rpm
+          curl -L --output-dir /tmp/RPMS -O https://kojipkgs.fedoraproject.org/packages/tomcat/9.0.39/1.fc34/noarch/tomcat-jsp-2.3-api-9.0.39-1.fc34.noarch.rpm
+          curl -L --output-dir /tmp/RPMS -O https://kojipkgs.fedoraproject.org/packages/tomcat/9.0.39/1.fc34/noarch/tomcat-servlet-4.0-api-9.0.39-1.fc34.noarch.rpm
+
       - name: Import Tomcat JSS packages
         run: |
           docker pull quay.io/dogtagpki/tomcatjss-dist:7.7
