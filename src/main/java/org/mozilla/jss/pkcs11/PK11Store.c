@@ -694,7 +694,7 @@ Java_org_mozilla_jss_pkcs11_PK11Store_getEncryptedPrivateKeyInfo(
                    slot,
         algTag,     /* PBE algorithm to encrypt the  key with */
         SEC_OID_UNKNOWN,     /* Encryption algorithm to Encrypt the key with */
-        SEC_OID_UNKNOWN,     /* Hash algorithm for PRF */
+        SEC_OID_HMAC_SHA256,     /* Use SHA-256 for PRF, not default */
         pwItem,      /* password for PBE encryption */
         privk, /* encrypt this private key */
         iterations,        /* interations for PBE alg */
