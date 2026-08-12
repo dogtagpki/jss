@@ -208,6 +208,16 @@ JSS_RegisterDynamicOids(void)
             newOIDTags[i] = tag;
         }
     }
+
+    /* Update JSS_AlgTable with runtime-resolved OID tags so that
+     * JSS_getOidTagFromAlg returns the correct tag regardless of
+     * which NSS version JSS was compiled against. */
+    if (rv == SECSuccess) {
+        JSS_AlgTable[81].val = newOIDTags[0];  /* AES_128_KEY_WRAP_KWP */
+        JSS_AlgTable[82].val = newOIDTags[1];  /* AES_192_KEY_WRAP_KWP */
+        JSS_AlgTable[83].val = newOIDTags[2];  /* AES_256_KEY_WRAP_KWP */
+    }
+
     return rv;
 }
 
