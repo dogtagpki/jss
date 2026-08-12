@@ -11,11 +11,11 @@ jobs:
           - 'fedora_34'
           - 'fedora_34_jdk11'
           - 'symbolcheck'
-          - 'debian_jdk11'
-          - 'ubuntu_jdk11'
           # Disable tests due to missing dependencies
           # - 'centos_7'
           # - 'centos_8'
+          # 'debian_jdk11'
+          # 'ubuntu_jdk11'
 
     steps:
     - name: Clone the repository
