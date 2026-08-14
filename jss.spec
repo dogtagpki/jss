@@ -4,7 +4,7 @@ Name:           jss
 
 %global         major_version 4
 %global         minor_version 9
-%global         update_version 10
+%global         update_version 11
 
 Summary:        Java Security Services (JSS)
 URL:            http://www.dogtagpki.org/wiki/JSS
@@ -107,7 +107,7 @@ This only works with gcj. Other JREs require that JCE providers be signed.
 
 Summary:        Java Security Services (JSS) Javadocs
 
-Provides:       javadoc = %{major_version}.%{minor_version}
+Provides:       jss-javadoc = %{major_version}.%{minor_version}
 
 %description javadoc
 This package contains the API documentation for JSS.
