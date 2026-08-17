@@ -47,6 +47,7 @@ public class JSSSocketChannel extends SocketChannel {
     private ByteBuffer writeBuffer;
 
     private boolean handshakeCompleted = false;
+    private boolean pendingPostHandshake = false;
 
     public JSSSocketChannel(JSSSocket sslSocket, SocketChannel parent, Socket parentSocket, ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
         super(null);
@@ -251,6 +252,10 @@ public class JSSSocketChannel extends SocketChannel {
             return -1;
         }
 
+        if (pendingPostHandshake) {
+            flushPostHandshake();
+        }
+
         long unwrapped = 0;
         long decrypted = 0;
 
@@ -298,6 +303,12 @@ public class JSSSocketChannel extends SocketChannel {
 
                 readBuffer.compact();
 
+                // Handle TLS 1.3 post-handshake auth (CertificateRequest)
+                if (result.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP
+                    && handshakeCompleted) {
+                    flushPostHandshake();
+                }
+
                 // If we consumed bytes, there is now room in readBuffer for some
                 // more.  Even if dsts are full, we may be able to consume more
                 // bytes in another call to unwrap().
@@ -316,12 +327,39 @@ public class JSSSocketChannel extends SocketChannel {
         return (int) write(new ByteBuffer[] { src });
     }
 
+    private void flushPostHandshake() throws IOException {
+        if (!pendingPostHandshake) {
+            writeBuffer.clear();
+        }
+        SSLEngineResult wr;
+        do {
+            wr = engine.wrap(new ByteBuffer[0], 0, 0, writeBuffer);
+            writeBuffer.flip();
+            while (writeBuffer.hasRemaining()) {
+                int n = writeChannel.write(writeBuffer);
+                if (n == 0) {
+                    writeBuffer.compact();
+                    pendingPostHandshake = true;
+                    return;
+                }
+            }
+            writeBuffer.compact();
+        } while (wr.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP);
+        pendingPostHandshake = false;
+    }
+
     @Override
     public synchronized long write(ByteBuffer[] srcs, int offset, int length) throws IOException {
         if (outboundClosed) {
             return -1;
         }
 
+        if (pendingPostHandshake) {
+            flushPostHandshake();
+            if (pendingPostHandshake) {
+                return 0;
+            }
+        }
         writeBuffer.clear();
 
         ByteBuffer dst = writeBuffer;

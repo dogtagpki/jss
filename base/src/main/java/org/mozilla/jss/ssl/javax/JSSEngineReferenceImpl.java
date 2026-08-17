@@ -1382,6 +1382,16 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                     seen_exception = true;
                 }
             }
+
+            // TLS 1.3 post-handshake auth: PR.Read() may have processed a
+            // CertificateRequest, putting the Certificate response in write_buf.
+            // Break so the caller can call wrap() to send it.
+            if (handshake_already_complete && !seen_exception
+                && Buffer.ReadCapacity(write_buf) > 0) {
+                handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
+                break;
+            }
+
         } while (this_src_write != 0 || this_dst_write != 0);
 
         SSLException checkException = checkSSLAlerts();
