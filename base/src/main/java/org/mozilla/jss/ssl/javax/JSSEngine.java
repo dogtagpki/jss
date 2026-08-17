@@ -201,6 +201,13 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected boolean is_inbound_closed;
 
     /**
+     * Whether PR.Read() inside unwrap() detected a TLS 1.3 post-handshake
+     * auth event (e.g. CertificateRequest) that produced new data in
+     * write_buf. Cleared after wrap() drains the response.
+     */
+    protected boolean post_handshake_auth_pending;
+
+    /**
      * Set of configuration options to enable via SSL_OptionSet(...).
      */
     protected HashMap<Integer, Integer> config;
@@ -1064,6 +1071,10 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     public boolean isOutboundDone() {
         logger.debug("JSSEngine.isOutboundDone()? " + is_outbound_closed);
         return is_outbound_closed;
+    }
+
+    public boolean isPostHandshakeAuthPending() {
+        return post_handshake_auth_pending;
     }
 
     /**
