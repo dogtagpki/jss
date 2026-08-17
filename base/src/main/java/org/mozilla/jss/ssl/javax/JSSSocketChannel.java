@@ -47,7 +47,7 @@ public class JSSSocketChannel extends SocketChannel {
     private ByteBuffer writeBuffer;
 
     private boolean handshakeCompleted = false;
-    private boolean pendingPostHandshake = false;
+    private boolean postHandshakePending = false;
 
     public JSSSocketChannel(JSSSocket sslSocket, SocketChannel parent, Socket parentSocket, ReadableByteChannel readChannel, WritableByteChannel writeChannel, JSSEngine engine) throws IOException {
         super(null);
@@ -252,14 +252,18 @@ public class JSSSocketChannel extends SocketChannel {
             return -1;
         }
 
-        if (pendingPostHandshake) {
-            flushPostHandshake();
-        }
-
         long unwrapped = 0;
         long decrypted = 0;
+        int postHandshakeOps = 0;
 
         try {
+            if (postHandshakePending) {
+                flushPostHandshake();
+                if (postHandshakePending) {
+                    return 0;
+                }
+            }
+
             SSLEngineResult result;
             do {
                 int n = remoteRead();
@@ -303,10 +307,39 @@ public class JSSSocketChannel extends SocketChannel {
 
                 readBuffer.compact();
 
-                // Handle TLS 1.3 post-handshake auth (CertificateRequest)
-                if (result.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP
-                    && handshakeCompleted) {
-                    flushPostHandshake();
+                // Handle NEED_WRAP and NEED_TASK after handshake completion.
+                // NEED_WRAP may come from post-handshake auth (CertificateRequest)
+                // or from leftover ciphertext in write_buf; both need flushing,
+                // but only genuine post-handshake auth counts toward the safety limit.
+                if (handshakeCompleted) {
+                    SSLEngineResult.HandshakeStatus hsStatus = result.getHandshakeStatus();
+                    if (hsStatus == SSLEngineResult.HandshakeStatus.NEED_WRAP) {
+                        boolean isPostHandshake = engine.isPostHandshakeAuthPending();
+                        flushPostHandshake();
+                        if (postHandshakePending) {
+                            return decrypted;
+                        }
+                        if (isPostHandshake) {
+                            postHandshakeOps++;
+                        }
+                    } else if (hsStatus == SSLEngineResult.HandshakeStatus.NEED_TASK) {
+                        Runnable task = engine.getDelegatedTask();
+                        if (task != null) {
+                            task.run();
+                        }
+                        postHandshakeOps++;
+                        // After task, a NEED_WRAP may follow (e.g. to send
+                        // the auth result). Flush it now like finishConnect().
+                        if (engine.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP) {
+                            flushPostHandshake();
+                            if (postHandshakePending) {
+                                return decrypted;
+                            }
+                        }
+                    }
+                    if (postHandshakeOps > 10) {
+                        throw new IOException("Exceeded maximum post-handshake operations during read");
+                    }
                 }
 
                 // If we consumed bytes, there is now room in readBuffer for some
@@ -322,30 +355,56 @@ public class JSSSocketChannel extends SocketChannel {
         return decrypted;
     }
 
-    @Override
-    public int write(ByteBuffer src) throws IOException {
-        return (int) write(new ByteBuffer[] { src });
-    }
-
     private void flushPostHandshake() throws IOException {
-        if (!pendingPostHandshake) {
+        if (!postHandshakePending) {
             writeBuffer.clear();
         }
+
         SSLEngineResult wr;
+        SSLEngineResult.HandshakeStatus hsStatus;
         do {
             wr = engine.wrap(new ByteBuffer[0], 0, 0, writeBuffer);
+
+            if (wr.getStatus() != SSLEngineResult.Status.OK
+                && wr.getStatus() != SSLEngineResult.Status.CLOSED) {
+                postHandshakePending = false;
+                throw new IOException("Unexpected status from post-handshake wrap: " + wr);
+            }
+
             writeBuffer.flip();
             while (writeBuffer.hasRemaining()) {
                 int n = writeChannel.write(writeBuffer);
                 if (n == 0) {
                     writeBuffer.compact();
-                    pendingPostHandshake = true;
+                    postHandshakePending = true;
                     return;
                 }
             }
+
+            if (wr.bytesProduced() == 0
+                && wr.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP) {
+                postHandshakePending = false;
+                throw new IOException("Post-handshake wrap stalled, producing no data");
+            }
+
+            hsStatus = wr.getHandshakeStatus();
+            if (hsStatus == SSLEngineResult.HandshakeStatus.NEED_TASK) {
+                Runnable task = engine.getDelegatedTask();
+                if (task != null) {
+                    task.run();
+                }
+                hsStatus = engine.getHandshakeStatus();
+            }
+
             writeBuffer.compact();
-        } while (wr.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP);
-        pendingPostHandshake = false;
+        } while (hsStatus == SSLEngineResult.HandshakeStatus.NEED_WRAP);
+
+        postHandshakePending = false;
+    }
+
+    @Override
+    public int write(ByteBuffer src) throws IOException {
+        return (int) write(new ByteBuffer[] { src });
     }
 
     @Override
@@ -354,12 +413,13 @@ public class JSSSocketChannel extends SocketChannel {
             return -1;
         }
 
-        if (pendingPostHandshake) {
+        if (postHandshakePending) {
             flushPostHandshake();
-            if (pendingPostHandshake) {
+            if (postHandshakePending) {
                 return 0;
             }
         }
+
         writeBuffer.clear();
 
         ByteBuffer dst = writeBuffer;

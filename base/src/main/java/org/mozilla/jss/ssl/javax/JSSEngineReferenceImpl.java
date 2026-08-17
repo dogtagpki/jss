@@ -1126,6 +1126,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             ssl_exception = checkSSLAlerts();
             seen_exception = (ssl_exception != null);
+
+            // TLS 1.3 post-handshake: NSS may have queued response data
+            // (e.g. Certificate for a CertificateRequest).
+            if (!seen_exception && Buffer.ReadCapacity(write_buf) > 0) {
+                debug("JSSEngine.updateHandshakeState() - post-handshake NEED_WRAP");
+                handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
+            }
+
             return;
         }
 
@@ -1149,6 +1157,26 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
             ssl_exception = checkSSLAlerts();
             seen_exception = (ssl_exception != null);
+            return;
+        }
+
+        // Post-handshake state: the initial handshake completed but
+        // handshake_state is not NOT_HANDSHAKING or FINISHED (e.g. set to
+        // NEED_WRAP by the write_buf check above). Transition back to
+        // NOT_HANDSHAKING once write_buf is drained; do NOT fall through
+        // to ForceHandshake/fireHandshakeComplete.
+        if (!step_handshake && ssl_fd.handshakeComplete) {
+            debug("JSSEngine.updateHandshakeState() - post-handshake, write_buf.read=" + Buffer.ReadCapacity(write_buf));
+            unknown_state_count = 0;
+
+            ssl_exception = checkSSLAlerts();
+            seen_exception = (ssl_exception != null);
+
+            if (!seen_exception && Buffer.ReadCapacity(write_buf) > 0) {
+                handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
+            } else {
+                handshake_state = SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
+            }
             return;
         }
 
@@ -1363,6 +1391,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             updateHandshakeState();
 
             int max_dst_size = computeSize(dsts, offset, length);
+            long write_buf_before = Buffer.ReadCapacity(write_buf);
             byte[] app_buffer = PR.Read(ssl_fd, max_dst_size);
             int error = PR.GetError();
             debug("JSSEngine.unwrap() - " + app_buffer + " error=" + errorText(error));
@@ -1383,12 +1412,22 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 }
             }
 
+            // TLS 1.3 post-handshake auth: PR.Read() may have triggered the
+            // async cert-auth callback (e.g. validating a client's
+            // post-handshake certificate) without producing any write_buf
+            // output. Report NEED_TASK here since result.getHandshakeStatus()
+            // (unlike engine.getHandshakeStatus()) won't otherwise reflect it.
+            if (checkNeedCertValidation()) {
+                break;
+            }
+
             // TLS 1.3 post-handshake auth: PR.Read() may have processed a
             // CertificateRequest, putting the Certificate response in write_buf.
-            // Break so the caller can call wrap() to send it.
+            // Detect this by checking if PR.Read() increased write_buf.
             if (handshake_already_complete && !seen_exception
-                && Buffer.ReadCapacity(write_buf) > 0) {
+                && Buffer.ReadCapacity(write_buf) > write_buf_before) {
                 handshake_state = SSLEngineResult.HandshakeStatus.NEED_WRAP;
+                post_handshake_auth_pending = true;
                 break;
             }
 
@@ -1417,7 +1456,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (is_inbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
-        } else if (handshake_already_complete && src_capacity > 0 && app_data == 0) {
+        } else if (handshake_already_complete && src_capacity > 0 && app_data == 0
+                   && handshake_state != SSLEngineResult.HandshakeStatus.NEED_WRAP) {
             debug("Underflowed: produced no application data when we expected to.");
             handshake_status = SSLEngineResult.Status.BUFFER_UNDERFLOW;
         }
@@ -1705,6 +1745,10 @@ public class JSSEngineReferenceImpl extends JSSEngine {
                 debug("JSSEngine.wrap(): not writing from write_buf into NULL dst");
             }
         } while (this_src_write != 0 || this_dst_write != 0);
+
+        if (post_handshake_auth_pending && Buffer.ReadCapacity(write_buf) == 0) {
+            post_handshake_auth_pending = false;
+        }
 
         // Check for new outbound alerts to the peer and fire the related events
         SSLException newSSLException = checkSSLAlerts();
