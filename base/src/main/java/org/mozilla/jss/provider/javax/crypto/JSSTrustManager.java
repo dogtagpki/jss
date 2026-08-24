@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,8 +37,12 @@ import javax.security.auth.x500.X500Principal;
 import org.mozilla.jss.CertificateUsage;
 
 import org.mozilla.jss.CryptoManager;
+import org.mozilla.jss.NoSuchTokenException;
 import org.mozilla.jss.NotInitializedException;
+import org.mozilla.jss.crypto.CryptoStore;
+import org.mozilla.jss.crypto.CryptoToken;
 import org.mozilla.jss.crypto.ObjectNotFoundException;
+import org.mozilla.jss.crypto.TokenException;
 import org.mozilla.jss.netscape.security.util.Cert;
 import org.mozilla.jss.netscape.security.x509.CertificateSubjectName;
 import org.mozilla.jss.netscape.security.x509.DNSName;
@@ -63,7 +68,11 @@ public class JSSTrustManager implements X509TrustManager {
     public static final String SERVER_AUTH_OID = "1.3.6.1.5.5.7.3.1";
     public static final String CLIENT_AUTH_OID = "1.3.6.1.5.5.7.3.2";
 
+    public static final String INTERNAL_TOKEN_NAME = "internal";
+    public static final String INTERNAL_TOKEN_FULL_NAME = "Internal Key Storage Token";
+
     private String hostname;
+    private String tokenName = null;
     private boolean allowMissingExtendedKeyUsage = false;
     private boolean enableCertRevokeVerify = false;
 
@@ -82,6 +91,14 @@ public class JSSTrustManager implements X509TrustManager {
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    public String getTokenName() {
+        return tokenName;
+    }
+
+    public void setTokenName(String tokenName) {
+        this.tokenName = tokenName;
     }
 
     public void configureAllowMissingExtendedKeyUsage(boolean allow) {
@@ -427,6 +444,15 @@ public class JSSTrustManager implements X509TrustManager {
 
         logger.debug("JSSTrustManager: getAcceptedIssuers():");
 
+        if (tokenName == null || tokenName.isEmpty()) {
+            return getAcceptedIssuersFromCACerts();
+        }
+
+        return getAcceptedIssuersFromToken();
+    }
+
+    private X509Certificate[] getAcceptedIssuersFromCACerts() {
+
         Collection<X509Certificate> caCerts = new ArrayList<>();
 
         try {
@@ -450,6 +476,118 @@ public class JSSTrustManager implements X509TrustManager {
         }
 
         return caCerts.toArray(new X509Certificate[caCerts.size()]);
+    }
+
+    private X509Certificate[] getAcceptedIssuersFromToken() {
+
+        Set<X509Certificate> caCerts = new LinkedHashSet<>();
+
+        try {
+            CryptoManager manager = CryptoManager.getInstance();
+
+            for (CryptoToken token : getTrustAnchorTokens(manager)) {
+                String name = null;
+                try {
+                    name = token.getName();
+                    logger.debug("JSSTrustManager: listing trust anchors on " + name);
+                    addTrustAnchors(caCerts, token);
+
+                } catch (TokenException e) {
+                    if (!isInternalTokenName(tokenName) && !isInternalTokenName(name)) {
+                        logger.error("JSSTrustManager: unable to access configured token "
+                                + name, e);
+                        throw new RuntimeException(
+                                "Unable to access configured token: " + name, e);
+                    }
+                    logger.debug("JSSTrustManager: unable to access token "
+                            + name + ": " + e.getMessage());
+                }
+            }
+
+        } catch (NotInitializedException e) {
+            logger.error("JSSTrustManager: Unable to get CryptoManager: " + e, e);
+            throw new RuntimeException(e);
+
+        } catch (NoSuchTokenException e) {
+            logger.error("JSSTrustManager: Token not found: " + tokenName, e);
+            throw new RuntimeException(e);
+
+        } catch (TokenException e) {
+            logger.error("JSSTrustManager: Unable to access token: " + e, e);
+            throw new RuntimeException(e);
+
+        } catch (Exception e) {
+            logger.error("JSSTrustManager: Unable to list trust anchors: " + e, e);
+            throw new RuntimeException(e);
+        }
+
+        return caCerts.toArray(new X509Certificate[0]);
+    }
+
+    private Collection<CryptoToken> getTrustAnchorTokens(CryptoManager manager)
+            throws NotInitializedException, NoSuchTokenException, TokenException {
+
+        CryptoToken internalToken = manager.getInternalKeyStorageToken();
+        Set<CryptoToken> tokens = new LinkedHashSet<>();
+        tokens.add(internalToken);
+        logger.debug("JSSTrustManager: including token " + internalToken.getName());
+
+        if (!isInternalTokenName(tokenName)) {
+            CryptoToken configuredToken = manager.getTokenByName(tokenName);
+            tokens.add(configuredToken);
+            logger.debug("JSSTrustManager: including token " + configuredToken.getName());
+        }
+
+        return tokens;
+    }
+
+    private static boolean isInternalTokenName(String name) {
+
+        if (name == null || name.isEmpty()) {
+            return true;
+        }
+
+        return INTERNAL_TOKEN_NAME.equalsIgnoreCase(name)
+                || INTERNAL_TOKEN_FULL_NAME.equalsIgnoreCase(name);
+    }
+
+    private void addTrustAnchors(Collection<X509Certificate> caCerts, CryptoToken token)
+            throws TokenException {
+
+        CryptoStore store = token.getCryptoStore();
+
+        for (org.mozilla.jss.crypto.X509Certificate cert : store.getCertificates()) {
+
+            if (!isTrustAnchor(cert)) {
+                continue;
+            }
+
+            logger.debug("JSSTrustManager:  - " + cert.getSubjectDN());
+
+            try {
+                PK11Cert caCert = (PK11Cert) cert;
+                caCert.checkValidity();
+                caCerts.add(caCert);
+
+            } catch (Exception e) {
+                logger.debug("JSSTrustManager: " + e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+    }
+
+    private static boolean isTrustAnchor(org.mozilla.jss.crypto.X509Certificate cert) {
+
+        return isCATrust(cert.getSSLTrust());
+    }
+
+    private static boolean isCATrust(int trust) {
+
+        return org.mozilla.jss.crypto.X509Certificate.isTrustFlagEnabled(
+                org.mozilla.jss.crypto.X509Certificate.TRUSTED_CA, trust)
+            || org.mozilla.jss.crypto.X509Certificate.isTrustFlagEnabled(
+                org.mozilla.jss.crypto.X509Certificate.TRUSTED_CLIENT_CA, trust)
+            || org.mozilla.jss.crypto.X509Certificate.isTrustFlagEnabled(
+                org.mozilla.jss.crypto.X509Certificate.NS_TRUSTED_CA, trust);
     }
 
     private void certChainRevokeVerify(X509Certificate[] certChain, String KeyUsage, ValidityStatus status) {
