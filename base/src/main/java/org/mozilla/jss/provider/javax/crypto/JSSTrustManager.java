@@ -458,15 +458,15 @@ public class JSSTrustManager implements X509TrustManager {
         try {
             CryptoManager manager = CryptoManager.getInstance();
             for (org.mozilla.jss.crypto.X509Certificate cert : manager.getCACerts()) {
-                logger.debug("JSSTrustManager:  - " + cert.getSubjectDN());
-
-                try {
-                    PK11Cert caCert = (PK11Cert) cert;
-                    caCert.checkValidity();
-                    caCerts.add(caCert);
-
-                } catch (Exception e) {
-                    logger.debug("JSSTrustManager: " + e.getClass().getName() + ": " + e.getMessage());
+                if (isTrustAnchor(cert)) {
+                    try {
+                        PK11Cert caCert = (PK11Cert) cert;
+                        caCert.checkValidity();
+                        caCerts.add(caCert);
+                        logger.debug("JSSTrustManager:  - " + cert.getSubjectDN());
+                    } catch (Exception e) {
+                        logger.debug("JSSTrustManager: " + e.getClass().getName() + ": " + e.getMessage());
+                    }
                 }
             }
 
