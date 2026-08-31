@@ -54,8 +54,10 @@ import org.mozilla.jss.ssl.SSLAlertEvent;
 import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
 import org.mozilla.jss.ssl.SSLServerSocket;
 import org.mozilla.jss.ssl.SSLSocketListener;
+import org.mozilla.jss.util.ConsolePasswordCallback;
 import org.mozilla.jss.util.IncorrectPasswordException;
 import org.mozilla.jss.util.Password;
+import org.mozilla.jss.util.PasswordCallbackInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -437,10 +439,32 @@ public class TomcatJSS implements SSLSocketListener {
             logger.debug("TomcatJSS: serverCertNickFile: {}", serverCertNickFile);
         }
 
+        // create password store from password class configured in server.xml or jss.conf
+        passwordStore = (PasswordStore) Class.forName(passwordClass).getDeclaredConstructor().newInstance();
+        passwordStore.init(passwordFile);
+
+        // InitializationValues use ConsolePasswordCallback by default
         InitializationValues vals = new InitializationValues(certdbDir);
 
         vals.removeSunProvider = false;
         vals.installJSSProvider = true;
+
+        // create password callback that use password store with fallback to console
+        vals.passwordCallback = new ConsolePasswordCallback() {
+            @Override
+            public Password getPasswordFirstAttempt(PasswordCallbackInfo info) throws GiveUpException {
+                String name = info.getName();
+
+                // get password from password store
+                String password = passwordStore.getPassword(name);
+                if (password != null) {
+                    return new Password(password.toCharArray());
+                }
+
+                // if not available get password from console
+                return super.getPasswordFirstAttempt(info);
+            }
+        };
 
         try {
             CryptoManager.initialize(vals);
@@ -450,9 +474,6 @@ public class TomcatJSS implements SSLSocketListener {
         }
 
         manager = CryptoManager.getInstance();
-
-        passwordStore = (PasswordStore) Class.forName(passwordClass).getDeclaredConstructor().newInstance();
-        passwordStore.init(passwordFile);
 
         login();
 
