@@ -327,6 +327,11 @@ macro(jss_tests)
         DEPENDS "Generate_known_RSA_cert_pair"
     )
 
+    jss_test_java(
+        NAME "JSSSocketChannel_PostHandshakeAuth"
+        COMMAND "org.mozilla.jss.tests.TestJSSSocketChannel" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
+        DEPENDS "SSLEngine_RSA"
+    )
 
     if(NOT FIPS_ENABLED)
         jss_test_java(
