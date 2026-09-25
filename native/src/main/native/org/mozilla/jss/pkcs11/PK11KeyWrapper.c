@@ -429,11 +429,22 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
     /* Workaround: NSS PK11_GetKeyType() doesn't map PKCS#11 v3.2 PQC mechanisms
      * Without this, it returns CKK_GENERIC_SECRET (0x10) which also works,
      * but using the proper key types is clearer and more correct */
+
+    // Use CK_UNAVAILABLE_INFORMATION as the initial value of keyType
+    // so we can conditionally compile
+    keyType = CK_UNAVAILABLE_INFORMATION;
+#ifdef JSS_MLKEM_ENABLED
     if (keyTypeMech == CKM_ML_KEM_KEY_PAIR_GEN || keyTypeMech == CKM_ML_KEM) {
         keyType = CKK_ML_KEM;  /* 0x49 from PKCS#11 v3.2 */
-    } else if (keyTypeMech == CKM_ML_DSA_KEY_PAIR_GEN || keyTypeMech == CKM_ML_DSA) {
+    }
+#endif
+#ifdef JSS_MLDSA_ENABLED
+    if (keyTypeMech == CKM_ML_DSA_KEY_PAIR_GEN || keyTypeMech == CKM_ML_DSA) {
         keyType = CKK_ML_DSA;  /* 0x48 from PKCS#11 v3.2 */
-    } else {
+    }
+#endif
+
+    if (keyType == CK_UNAVAILABLE_INFORMATION) {
         keyType = PK11_GetKeyType(keyTypeMech, 0);
     }
 
@@ -476,6 +487,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
         attribs[0] = CKA_DERIVE;
         numAttribs = 1;
 	break;
+#ifdef JSS_MLKEM_ENABLED
     case CKK_ML_KEM:
         /* ML-KEM is a KEM (Key Encapsulation Mechanism), not a signature key
          * Set CKA_DECAPSULATE to indicate intended usage per PKCS#11 v3.2 */
@@ -486,6 +498,8 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
             numAttribs = 2;
         }
 	break;
+#endif
+#ifdef JSS_MLDSA_ENABLED
     case CKK_ML_DSA:
         /* ML-DSA is a digital signature algorithm
          * Set CKA_SIGN to indicate intended usage per PKCS#11 v3.2 */
@@ -496,6 +510,7 @@ Java_org_mozilla_jss_pkcs11_PK11KeyWrapper_nativeUnwrapPrivWithSym
             numAttribs = 2;
         }
 	break;
+#endif
     default:
         /* unknown key type */
         PR_ASSERT(PR_FALSE);
