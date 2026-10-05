@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.SSLEngineResult;
@@ -13,9 +16,6 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import org.mozilla.jss.crypto.Policy;
 import org.mozilla.jss.nss.PR;
 import org.mozilla.jss.nss.PRFDProxy;
@@ -96,13 +96,18 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected List<String> certAliases;
 
     /**
-     * Collection of certificates and related keys used by this JSSEngine instance.
+     * Ordered collection of certificates used by this JSSEngine instance.
      *
      * Selected and inferred from the KeyManagers passed, when not passed
      * explicitly (either during construction or with a call to
      * setKeyMaterials(...)).
      */
-    protected List<Pair<PK11Cert, PK11PrivKey>> certs;
+    protected List<PK11Cert> certs;
+
+    /**
+     * Private key associated with each certificate in {@link #certs}.
+     */
+    protected HashMap<PK11Cert, PK11PrivKey> keys;
 
     /**
      * A list of all KeyManagers available to this JSSEngine instance.
@@ -213,10 +218,18 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     protected HashMap<Integer, Integer> config;
 
     /**
-     * Set of cached server sockets based on the PK11Cert they were
-     * initialized with.
+     * Growth safeguard checked when inserting server templates. Configured
+     * connectors and certificates should keep the cache well below this limit.
      */
-    protected static HashMap<List<Pair<PK11Cert, PK11PrivKey>>, SSLFDProxy> serverTemplates = new HashMap<>();
+    private static final int SERVER_TEMPLATE_CACHE_SIZE = 48;
+
+    /**
+     * Server templates keyed by their ordered certificates. The configured
+     * server certificates should keep this map small; an unexpected increase
+     * clears the cache so a faulty caller cannot retain templates indefinitely.
+     */
+    protected static final ConcurrentMap<List<PK11Cert>, SSLFDProxy> serverTemplates =
+            new ConcurrentHashMap<>();
 
     /**
      * Whether or not the session cache has been initialized already.
@@ -275,9 +288,12 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
                      org.mozilla.jss.crypto.PrivateKey localKey) {
         super(peerHost, peerPort);
         certs = new ArrayList<>();
+        keys = new HashMap<>();
+        PK11Cert pk11Cert = (PK11Cert) localCert;
         PK11PrivKey pk11Key = (PK11PrivKey) localKey;
-        
-        certs.add(ImmutablePair.of((PK11Cert) localCert, pk11Key));
+
+        certs.add(pk11Cert);
+        keys.put(pk11Cert, pk11Key);
         updateBufferSizeForPQCKeys(pk11Key);
 
         session = new JSSSession(this, bufferSize);
@@ -487,11 +503,13 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
             // might have.
             certAliases = null;
             certs = null;
+            keys = null;
             return;
         }
 
         certAliases = aliases;
         certs = new ArrayList<>();
+        keys = new HashMap<>();
 
         if (key_managers == null || key_managers.length == 0) {
             String msg = "Missing or null KeyManagers; refusing to search ";
@@ -526,7 +544,8 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
                 if (cert != null && key != null) {
                     // Found a cert and key matching our alias; exit.
-                    certs.add(ImmutablePair.of(cert, key));
+                    certs.add(cert);
+                    keys.put(cert, key);
                     updateBufferSizeForPQCKeys(key);
                     break;
                 }
@@ -806,8 +825,10 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
 
         if (certs == null) {
             certs = new ArrayList<>();
+            keys = new HashMap<>();
         }
-        certs.add(ImmutablePair.of(our_cert, our_key));
+        certs.add(our_cert);
+        keys.put(our_cert, our_key);
         updateBufferSizeForPQCKeys(our_key);
     }
 
@@ -1131,30 +1152,126 @@ public abstract class JSSEngine extends javax.net.ssl.SSLEngine {
     }
 
     /**
-     * Returns the templated server certificate, if one exists.
+     * Returns a reusable model configured with the ordered server certificates.
+     *
+     * A hit only reads the cache. A miss coordinates model creation and checks
+     * the cache size after insertion. If the size exceeds 48 entries, a warning
+     * is logged and the cache is cleared. The current template is then cached
+     * again so subsequent lookups can reuse it. Other templates are rebuilt as
+     * needed.
+     *
+     * Clearing only drops the cache's references; the returned model and any
+     * models already held by callers remain usable. Callers must not close a
+     * shared model.
      */
-    protected static SSLFDProxy getServerTemplate(List<Pair<PK11Cert, PK11PrivKey>> lstCerts) {
-        if (lstCerts == null || lstCerts.isEmpty()) {
+    protected static SSLFDProxy getServerTemplate(
+            List<PK11Cert> certs,
+            Map<PK11Cert, PK11PrivKey> keys) {
+
+        return getServerTemplate(certs, keys, SERVER_TEMPLATE_CACHE_SIZE);
+    }
+
+    /** Internal lookup with an explicit limit so tests can exercise overflow. */
+    static SSLFDProxy getServerTemplate(
+            List<PK11Cert> certs,
+            Map<PK11Cert, PK11PrivKey> keys,
+            int cacheLimit) {
+
+        if (certs == null || certs.isEmpty()) {
             return null;
         }
 
-        SSLFDProxy fd = serverTemplates.get(lstCerts);
-        if (fd == null) {
-            PRFDProxy base = PR.NewTCPSocket();
-            fd = SSL.ImportFD(null, base);
-            for(Pair<PK11Cert, PK11PrivKey> pairKey: lstCerts) {
-                if (SSL.ConfigServerCert(fd, pairKey.getLeft(), pairKey.getRight()) != SSL.SECSuccess) {
+        // PK11Cert compares encoded bytes, so fresh proxies can hit the cache.
+        // Keep the normal lookup free of creation and cache maintenance work.
+        SSLFDProxy model = serverTemplates.get(certs);
+        if (model != null) {
+            return model;
+        }
+
+        // Only copy the certificate list when it may become a retained key.
+        List<PK11Cert> cacheKey = new ArrayList<>(certs);
+
+        // Coordinate creation, insertion, and any reset as one operation after
+        // a miss. Cache hits do not acquire this lock.
+        synchronized (serverTemplates) {
+            model = serverTemplates.computeIfAbsent(
+                    cacheKey, key -> createServerTemplate(key, keys));
+
+            int size = serverTemplates.size();
+            if (size > cacheLimit) {
+                logger.warn("Server template cache grew to {} entries (limit {}); "
+                        + "clearing it and retaining the current template",
+                        size, cacheLimit);
+                serverTemplates.clear();
+                serverTemplates.put(cacheKey, model);
+            }
+        }
+
+        return model;
+    }
+
+    private static SSLFDProxy createServerTemplate(
+            List<PK11Cert> cacheKey,
+            Map<PK11Cert, PK11PrivKey> keys) {
+
+        PRFDProxy base = PR.NewTCPSocket();
+        try {
+            return configureServerTemplate(SSL.ImportFD(null, base), cacheKey, keys);
+        } finally {
+            // ImportFD clears base on success; otherwise it still owns the socket.
+            PR.Close(base);
+        }
+    }
+
+    /** Configures an owned model, closing it if initialization fails. */
+    static SSLFDProxy configureServerTemplate(
+            SSLFDProxy model,
+            List<PK11Cert> certs,
+            Map<PK11Cert, PK11PrivKey> keys) {
+
+        boolean initialized = false;
+        try {
+            for (PK11Cert cert : certs) {
+                PK11PrivKey key = keys.get(cert);
+                if (cert == null || key == null) {
+                    throw new IllegalArgumentException(
+                            "Server certificate and private key must not be null");
+                }
+
+                if (SSL.ConfigServerCert(model, cert, key) != SSL.SECSuccess) {
                     String msg = "Unable to configure certificate and key on ";
                     msg += "model SSL PRFileDesc proxy: ";
                     msg += errorText(PR.GetError());
                     throw new RuntimeException(msg);
                 }
             }
- 
-            serverTemplates.put(lstCerts, fd);
+
+            // Models have no callbacks, so they do not need a JNI reference
+            // back to themselves. Keeping that reference would prevent GC
+            // even after clearing the cache. Without it, NativeProxy's finalizer closes
+            // the model once neither the cache nor an importing caller holds it.
+            model.globalRef.close();
+            model.globalRef = null;
+            initialized = true;
+
+        } catch (Exception e) {
+            if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            }
+            throw new RuntimeException("Unable to create server template", e);
+
+        } finally {
+            // Also close a failed model when an Error interrupts initialization.
+            if (!initialized && model != null) {
+                try {
+                    model.close();
+                } catch (Exception closeError) {
+                    logger.warn("Unable to close server template", closeError);
+                }
+            }
         }
 
-        return fd;
+        return model;
     }
 
     /**

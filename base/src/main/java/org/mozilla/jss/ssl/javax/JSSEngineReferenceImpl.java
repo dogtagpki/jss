@@ -10,7 +10,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,8 +20,6 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.X509ExtendedTrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.commons.lang3.tuple.Pair;
-
 import org.mozilla.jss.nss.BadCertHandler;
 import org.mozilla.jss.nss.Buffer;
 import org.mozilla.jss.nss.BufferProxy;
@@ -412,7 +409,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             // re-creating it from scratch. This saves a significant amount of
             // time during construction. The implementation lives in JSSEngine,
             // to be shared by all other JSSEngine implementations.
-            model = getServerTemplate(certs);
+            model = getServerTemplate(certs, keys);
         }
 
         // Initialize ssl_fd from the model Buffer-backed PRFileDesc.
@@ -462,7 +459,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             
             // For the clients only the first certificate is used.
             // Multiple certificate could be configure if it is needed.
-            PK11Cert cert = certs.iterator().next().getLeft();
+            PK11Cert cert = certs.iterator().next();
             debug("JSSEngine.initClient(): Enabling client auth: " + cert);
             ssl_fd.SetClientCert(cert);
             if (SSL.AttachClientCertCallback(ssl_fd) != SSL.SECSuccess) {
@@ -496,10 +493,8 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
         debug("JSSEngine.initServer(): " + certs);
 
-        List<PK11Cert> lstCerts = new ArrayList<>();
-        for (Pair<PK11Cert, PK11PrivKey> pairKeys: certs) {
-            lstCerts.add(pairKeys.getLeft());
-            PK11PrivKey key = pairKeys.getRight();
+        for (PK11Cert cert : certs) {
+            PK11PrivKey key = keys.get(cert);
  
             // Workaround to account for NSS giving us a copy of the actual SSL Server private key.
             // This is to keep calls to SECKEY_DestroyPrivateKey from blowing the long lived SSL cert
@@ -510,7 +505,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             }
         }
  
-        session.setLocalCertificates(lstCerts.toArray(new PK11Cert[0]));
+        session.setLocalCertificates(certs.toArray(new PK11Cert[0]));
 
         // Create a small server session cache.
         //
