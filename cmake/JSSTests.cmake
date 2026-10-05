@@ -296,6 +296,13 @@ macro(jss_tests)
         DEPENDS "SSLEngine_RSA"
     )
     jss_test_java(
+        NAME "SSLEngine_Server_Template_Cache"
+        COMMAND "org.mozilla.jss.ssl.javax.TestJSSEngineServerTemplate" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Server_RSA" "Server_ECDSA"
+        DEPENDS "Generate_known_ECDSA_cert_pair"
+        MODE "NONE"
+    )
+    set_tests_properties(SSLEngine_Server_Template_Cache PROPERTIES TIMEOUT 60)
+    jss_test_java(
 	NAME "SSLEngine_Multi_Cert_RSA_ECDSA"
 	COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_RSA,Server_ECDSA"
         DEPENDS "SSLEngine_RSA"
