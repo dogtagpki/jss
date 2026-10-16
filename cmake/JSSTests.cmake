@@ -288,6 +288,11 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
         DEPENDS "SSLEngine_RSA"
     )
+    jss_test_java(
+        NAME "SSLEngine_ServerInitiatedClose"
+        COMMAND "org.mozilla.jss.tests.TestServerInitiatedClose" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
+        DEPENDS "List_CA_certs"
+    )
 
     if(NOT FIPS_ENABLED)
         jss_test_java(

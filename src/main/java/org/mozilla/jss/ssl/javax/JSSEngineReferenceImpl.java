@@ -715,7 +715,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     @Override
-    public void closeInbound() {
+    public synchronized void closeInbound() {
         debug("JSSEngine: closeInbound()");
 
         if (!is_inbound_closed && ssl_fd != null && !closed_fd) {
@@ -729,7 +729,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
     }
 
     @Override
-    public void closeOutbound() {
+    public synchronized void closeOutbound() {
         debug("JSSEngine: closeOutbound()");
 
         if (!is_outbound_closed && ssl_fd != null && !closed_fd) {
@@ -1596,6 +1596,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         if (is_outbound_closed) {
             debug("Socket is currently closed.");
             handshake_status = SSLEngineResult.Status.CLOSED;
+            if (as_server) {
+                // If is_outbound_closed is true there is no need to wait
+                // for receipt of the peer's close_notify message.
+                closeInbound();
+            }
         }
 
         debug("JSSEngine.wrap() - Finished");
@@ -1620,7 +1625,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * connection.
      */
     @Override
-    public void tryCleanup() {
+    public synchronized void tryCleanup() {
         debug("JSSEngine: tryCleanup()");
         if (is_inbound_closed && is_outbound_closed) {
             // throw new RuntimeException("Probably shouldn't be here!");
@@ -1633,7 +1638,7 @@ public class JSSEngineReferenceImpl extends JSSEngine {
      * data streams if still open.
      */
     @Override
-    public void cleanup() {
+    public synchronized void cleanup() {
         debug("JSSEngine: cleanup()");
 
         if (!is_inbound_closed) {
@@ -1677,14 +1682,14 @@ public class JSSEngineReferenceImpl extends JSSEngine {
 
     private void cleanupSSLFD() {
         if (!closed_fd && ssl_fd != null) {
+            // Set closed_fd early to avoid TOCTOU races with closeInbound/closeOutbound.
+            closed_fd = true;
             try {
                 SSL.RemoveCallbacks(ssl_fd);
                 ssl_fd.close();
                 ssl_fd = null;
             } catch (Exception e) {
                 logger.error("Got exception trying to cleanup SSLFD", e);
-            } finally {
-                closed_fd = true;
             }
         }
 
