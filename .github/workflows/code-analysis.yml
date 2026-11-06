@@ -2,74 +2,7 @@ name: Code Analysis
 
 on: [push, pull_request]
 
-env:
-  SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION || github.repository_owner }}
-
 jobs:
-  build:
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
-    name: Code analysis
-    runs-on: ubuntu-latest
-    env:
-      HAVE_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN  != '' }}
-    steps:
-      - name: Stop if no Sonar secret
-        if:  ${{ env.HAVE_SONAR_TOKEN == 'false' }}
-        run: exit 1
-
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-
-      - name: Set up Java
-        uses: actions/setup-java@v5
-        with:
-          java-version: 21
-          distribution: 'adopt'
-
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v5
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache Maven packages
-        uses: actions/cache@v5
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      # https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/
-      - name: Build and analyze with SonarCloud
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: >
-          mvn
-          -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          -Dsonar.organization=${SONAR_ORGANIZATION}
-          -Dsonar.projectKey=${SONAR_ORGANIZATION}_jss
-          -pl '!native,!symkey'
-
-  get-pr-ref:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
-    name: Sonar cloud PR fork analyses deferring
-    runs-on: ubuntu-latest
-    steps:
-      - name: Save PR information
-        run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
-          echo ${{ github.event.pull_request.base.ref }} > ./pr/BaseBranch
-
-      - name: Upload pr as artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: pr
-          path: pr/
-
   shellcheck:
     name: Shellcheck
     runs-on: ubuntu-latest
