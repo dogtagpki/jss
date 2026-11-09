@@ -298,11 +298,19 @@ macro(jss_tests)
         COMMAND "org.mozilla.jss.tests.JSSProvider" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}"
         DEPENDS "List_CA_certs" "X509CertTest" "Secret_Key_Generation" "Symmetric_Key_Deriving" "SSLClientAuth"
     )
+
     jss_test_java(
-        NAME "SSLEngine_RSA"
-        COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
-        DEPENDS "List_CA_certs"
+          NAME "SSLEngine_RSA"
+          COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_RSA" "Server_RSA"
+          DEPENDS "List_CA_certs"
     )
+
+    jss_test_java(
+         NAME "ALPN_Subscriber_Demo"
+         COMMAND "org.mozilla.jss.tests.TestALPNSubscriber" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "localhost"
+         DEPENDS "List_CA_certs"
+    )
+
     jss_test_java(
         NAME "SSLEngine_ECDSA"
         COMMAND "org.mozilla.jss.tests.TestSSLEngine" "${RESULTS_NSSDB_OUTPUT_DIR}" "${PASSWORD_FILE}" "Client_ECDSA" "Server_ECDSA"
