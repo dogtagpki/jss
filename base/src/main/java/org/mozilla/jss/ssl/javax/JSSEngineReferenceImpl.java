@@ -10,6 +10,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,6 +26,7 @@ import org.mozilla.jss.nss.Buffer;
 import org.mozilla.jss.nss.BufferProxy;
 import org.mozilla.jss.nss.Cert;
 import org.mozilla.jss.nss.CertAuthHandler;
+import org.mozilla.jss.nss.NextProtoResult;
 import org.mozilla.jss.nss.PR;
 import org.mozilla.jss.nss.PRErrors;
 import org.mozilla.jss.nss.PRFDProxy;
@@ -41,6 +43,7 @@ import org.mozilla.jss.ssl.SSLAlertEvent;
 import org.mozilla.jss.ssl.SSLAlertLevel;
 import org.mozilla.jss.ssl.SSLCipher;
 import org.mozilla.jss.ssl.SSLHandshakeCompletedEvent;
+import org.mozilla.jss.ssl.SSLNextProtoState;
 import org.mozilla.jss.ssl.SSLVersion;
 import org.mozilla.jss.ssl.SSLVersionRange;
 
@@ -442,8 +445,21 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             throw new SSLException("Unable to enable SSL Handshake Callback on this SSLFDProxy instance.");
         }
 
-        // Pass this ssl_fd to the session object so that we can use
-        // SSL methods to invalidate the session.
+        if (alpn_protocols != null) {
+            byte[] wire_data = getALPNWireData();
+            if (wire_data == null) {
+                throw new RuntimeException("JSSEngine.init(): ALPN wire data is NULL but alpn_protocols is non-NULL.");
+            }
+
+            debug("JSSEngine: offering ALPN wire data: " + Arrays.toString(wire_data));
+
+            ret = SSL.SetNextProtoNego(ssl_fd, wire_data);
+            if (ret != SSL.SECSuccess) {
+                throw new RuntimeException("JSSEngine.init(): Unable to set ALPN protocol list: " + errorText(PR.GetError()) + " " + ret);
+            }
+
+            debug("JSSEngine: SSL_SetNextProtoNego() returned success");
+        }
     }
 
     private void initClient() throws SSLException {
@@ -864,6 +880,29 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         return task;
     }
 
+    @Override
+    public String getApplicationProtocol() {
+        if (session == null) {
+            return null;
+        }
+        return session.getNextProtocol();
+    }
+
+    @Override
+    public String getHandshakeApplicationProtocol() {
+        if (ssl_fd == null) {
+            return null;
+        }
+
+        NextProtoResult ret = SSL.GetNextProto(ssl_fd);
+        if (ret == null ||
+            ret.state == SSLNextProtoState.SSL_NEXT_PROTO_NO_SUPPORT ||
+            ret.state == SSLNextProtoState.SSL_NEXT_PROTO_NO_OVERLAP) {
+            return "";
+        }
+        return ret.getProtocol();
+    }
+
     private boolean checkNeedCertValidation() {
         debug("JSSEngine: checkNeedCertValidation()");
         if (task != null) {
@@ -1008,6 +1047,37 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         return result;
     }
 
+    private void updateSession() {
+        if (ssl_fd == null) {
+            return;
+        }
+
+        try {
+            PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
+            session.setPeerCertificates(peer_chain);
+
+            // session.refreshData() already fetches SSLChannelInfo and
+            // updates the session ID internally.
+            session.refreshData();
+
+            NextProtoResult ret = SSL.GetNextProto(ssl_fd);
+            debug("JSSEngine: SSL_GetNextProto() returned: " + ret);
+            if (ret != null) {
+                // Only advertise the resulting protocol if we have one.
+                if (ret.state != SSLNextProtoState.SSL_NEXT_PROTO_NO_SUPPORT &&
+                    ret.state != SSLNextProtoState.SSL_NEXT_PROTO_NO_OVERLAP)
+                {
+                    session.setNextProtocol(ret.getProtocol());
+                } else {
+                    session.setNextProtocol("");
+                }
+            }
+        } catch (Exception e) {
+            ssl_exception = new SSLException("Unable to update session after handshake: " + e.getMessage(), e);
+            seen_exception = true;
+        }
+    }
+
     private int putData(byte[] data, ByteBuffer[] buffers, int offset, int length) {
         debug("JSSEngine: putData()");
         // Handle the rather unreasonable task of moving data into the buffers.
@@ -1112,6 +1182,11 @@ public class JSSEngineReferenceImpl extends JSSEngine {
         // already failed.
         if (seen_exception) {
             return;
+        }
+
+        if (logger.isDebugEnabled()) {
+            debug("JSSEngine: updateHandshakeState() - current handshake application protocol: ["
+                + getHandshakeApplicationProtocol() + "]");
         }
 
         // If we're already done, we should check for SSL ALerts.
@@ -1226,21 +1301,9 @@ public class JSSEngineReferenceImpl extends JSSEngine {
             handshake_state = SSLEngineResult.HandshakeStatus.FINISHED;
             unknown_state_count = 0;
 
-            // Only update peer certificate chain when we've finished
-            // handshaking.
-            try {
-                PK11Cert[] peer_chain = SSL.PeerCertificateChain(ssl_fd);
-                session.setPeerCertificates(peer_chain);
-            } catch (Exception e) {
-                String msg = "Unable to get peer's certificate chain: ";
-                msg += e.getMessage();
-
-                seen_exception = true;
-                ssl_exception = new SSLException(msg, e);
-            }
-
-            // Also update our session information here.
-            session.refreshData();
+            // Only update peer certificate chain and session info (including
+            // negotiated ALPN protocol) when we've finished handshaking.
+            updateSession();
 
             // Finally, fire any handshake completed event listeners now.
             fireHandshakeComplete(new SSLHandshakeCompletedEvent(this));

@@ -51,6 +51,8 @@ public class JSSSession implements SSLSession, AutoCloseable {
 
     private boolean closed;
 
+    private String nextProtocol;
+
     protected JSSSession(JSSEngine engine, int buffer_size) {
         this.parent = engine;
 
@@ -344,6 +346,14 @@ public class JSSSession implements SSLSession, AutoCloseable {
 
     public void setRemoteAddr(String remoteAddr) {
         this.remoteAddr = remoteAddr;
+    }
+
+    public void setNextProtocol(String protocol) {
+        nextProtocol = protocol;
+    }
+
+    public String getNextProtocol() {
+        return nextProtocol;
     }
 
 }
