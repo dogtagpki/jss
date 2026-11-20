@@ -140,10 +140,24 @@ ExcludeArch: i686
 
 %bcond_without tests
 
-# By default XMvn will be used for building Java code unless --without xmvn
-# option is specified. If XMvn is disabled, CMake will build everything.
+# Builder for Java code (can be changed with build.sh --builder=<name>
+# or rpmbuild --define "builder <name>"):
+# - xmvn (default): Build Java code with XMvn using Java dependencies
+#   provided by RPM packages.
+# - cmake: Build everything with CMake using Java dependencies
+#   provided by RPM packages.
 
-%bcond_without xmvn
+%if ! %{defined builder}
+%global builder xmvn
+%endif
+
+%if "%{builder}" == "xmvn"
+%global with_xmvn 1
+%else
+%if "%{builder}" != "cmake"
+%{error:Invalid builder: %{builder}}
+%endif
+%endif
 
 ################################################################################
 # Build Dependencies

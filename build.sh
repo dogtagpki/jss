@@ -34,6 +34,7 @@ INSTALL_DIR=
 SOURCE_TAG=
 SPEC_TEMPLATE="$SRC_DIR/jss.spec"
 SPEC_FILE=
+BUILDER=xmvn
 
 VERSION=
 
@@ -71,6 +72,7 @@ usage() {
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
+    echo "    --builder=<name>       Builder used in RPM spec: xmvn, cmake (default: $BUILDER)."
     echo "    --with-timestamp       Append timestamp to RPM version number."
     echo "    --with-commit-id       Append commit ID to RPM version number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
@@ -164,6 +166,9 @@ generate_rpm_spec() {
     # hard-code package name
     sed -i "s/^\(Name: *\).*\$/\1${NAME}/g" "$SPEC_FILE"
 
+    # hard-code builder
+    sed -i "s/^\(%global *builder\) .*\$/\1 $BUILDER/g" "$SPEC_FILE"
+
     # hard-code timestamp
     if [ "$TIMESTAMP" != "" ] ; then
         sed -i "s/%undefine *timestamp/%global timestamp $TIMESTAMP/g" "$SPEC_FILE"
@@ -248,6 +253,9 @@ while getopts v-: arg ; do
         spec=?*)
             SPEC_TEMPLATE="$LONG_OPTARG"
             ;;
+        builder=?*)
+            BUILDER="$LONG_OPTARG"
+            ;;
         with-timestamp)
             WITH_TIMESTAMP=true
             ;;
@@ -292,7 +300,7 @@ while getopts v-: arg ; do
             ;;
         name* | work-dir* | prefix-dir* | include-dir* | lib-dir* | sbin-dir* | sysconf-dir* | share-dir* | \
         cmake* | java-home* | jni-dir* | java-lib-dir* | install-dir* | \
-        source-tag* | spec* | dist*)
+        source-tag* | spec* | builder* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -335,7 +343,14 @@ if [ "$DEBUG" = true ] ; then
     echo "JNI_DIR: $JNI_DIR"
     echo "JAVA_LIB_DIR: $JAVA_LIB_DIR"
     echo "INSTALL_DIR: $INSTALL_DIR"
+    echo "BUILDER: $BUILDER"
     echo "BUILD_TARGET: $BUILD_TARGET"
+fi
+
+if [ "$BUILDER" != "xmvn" ] &&
+        [ "$BUILDER" != "cmake" ] ; then
+    echo "ERROR: Invalid builder: $BUILDER" >&2
+    exit 1
 fi
 
 if [ "$BUILD_TARGET" != "dist" ] &&
