@@ -216,17 +216,35 @@ macro(jss_config_ldflags)
     message(STATUS "JSS LIBRARY FLAGS: ${JSS_LIBRARY_FLAGS}")
 endmacro()
 
+# Find a JAR file. If JAVA_LIB_DIR is defined, it will be searched
+# before the default locations.
+macro(jss_find_jar VARIABLE NAMES_KEYWORD)
+    if(DEFINED JAVA_LIB_DIR)
+        set(_JSS_JAR_FILES)
+        foreach(_JSS_JAR_NAME ${ARGN})
+            list(APPEND _JSS_JAR_FILES "${_JSS_JAR_NAME}.jar")
+        endforeach()
+        find_file(
+            ${VARIABLE}
+            NAMES ${_JSS_JAR_FILES}
+            PATHS ${JAVA_LIB_DIR}
+            NO_DEFAULT_PATH
+        )
+    endif()
+    find_jar(${VARIABLE} ${NAMES_KEYWORD} ${ARGN})
+endmacro()
+
 macro(jss_config_java)
     # Find various JARs required by JSS build and test suite
-    find_jar(
+    jss_find_jar(
         SLF4J_API_JAR
         NAMES api slf4j/api slf4j-api
     )
-    find_jar(
+    jss_find_jar(
         LANG_JAR
         NAMES apache-commons-lang3 commons-lang3
     )
-    find_jar(
+    jss_find_jar(
         SLF4J_JDK14_JAR
         NAMES jdk14 slf4j/jdk14 slf4j-jdk14
     )
@@ -424,31 +442,31 @@ endmacro()
 
 macro(jss_config_tests)
 
-    find_jar(
+    jss_find_jar(
         JUNIT5_API_JAR
         NAMES junit-jupiter-api junit5/junit-jupiter-api
     )
-    find_jar(
+    jss_find_jar(
 	    JUNIT5_ENGINE_JAR
         NAMES junit-jupiter-engine junit5/junit-jupiter-engine
     )
-    find_jar(
+    jss_find_jar(
 	    JUNIT5_PLATFORM_COMMONS_JAR
         NAMES junit-platform-commons junit5/junit-platform-commons
     )
-    find_jar(
+    jss_find_jar(
 	    JUNIT5_PLATFORM_ENGINE_JAR
         NAMES junit-platform-engine junit5/junit-platform-engine
     )
-    find_jar(
+    jss_find_jar(
 	    JUNIT5_PLATFORM_LAUNCHER_JAR
         NAMES junit-platform-launcher junit5/junit-platform-launcher
     )
-    find_jar(
+    jss_find_jar(
 	    OPENTEST4J_JAR
         NAMES opentest4j opentest4j/opentest4j
     )
-    find_jar(
+    jss_find_jar(
         HAMCREST_JAR
         NAMES hamcrest/core hamcrest-core hamcrest/hamcrest
     )

@@ -28,6 +28,7 @@ SHARE_DIR="/usr/share"
 CMAKE="cmake"
 
 JNI_DIR="/usr/lib/java"
+JAVA_LIB_DIR=
 INSTALL_DIR=
 
 SOURCE_TAG=
@@ -66,6 +67,7 @@ usage() {
     echo "    --cmake=<path>         Path to CMake executable"
     echo "    --java-home=<path>     Java home"
     echo "    --jni-dir=<path>       JNI directory (default: $JNI_DIR)."
+    echo "    --java-lib-dir=<path>  Directory containing Java dependencies."
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
@@ -234,6 +236,9 @@ while getopts v-: arg ; do
         jni-dir=?*)
             JNI_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
+        java-lib-dir=?*)
+            JAVA_LIB_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
         install-dir=?*)
             INSTALL_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
@@ -286,7 +291,7 @@ while getopts v-: arg ; do
             break # "--" terminates argument processing
             ;;
         name* | work-dir* | prefix-dir* | include-dir* | lib-dir* | sbin-dir* | sysconf-dir* | share-dir* | \
-        cmake* | java-home* | jni-dir* | install-dir* | \
+        cmake* | java-home* | jni-dir* | java-lib-dir* | install-dir* | \
         source-tag* | spec* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
@@ -328,6 +333,7 @@ if [ "$DEBUG" = true ] ; then
     echo "CMAKE: $CMAKE"
     echo "JAVA_HOME: $JAVA_HOME"
     echo "JNI_DIR: $JNI_DIR"
+    echo "JAVA_LIB_DIR: $JAVA_LIB_DIR"
     echo "INSTALL_DIR: $INSTALL_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi
@@ -459,6 +465,10 @@ if [ "$BUILD_TARGET" = "dist" ] ; then
 
     OPTIONS+=(-DLIB_DIR="$LIB_DIR")
     OPTIONS+=(-DJNI_DIR="$JNI_DIR" )
+
+    if [ "$JAVA_LIB_DIR" != "" ] ; then
+        OPTIONS+=(-DJAVA_LIB_DIR="$JAVA_LIB_DIR")
+    fi
 
     OPTIONS+=(-DVERSION="$VERSION")
 
