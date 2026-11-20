@@ -1,18 +1,3 @@
-# Provide docker in container for installing dependencies as root.
-# https://github.com/Microsoft/azure-pipelines-agent/issues/2043#issuecomment-687983301
-resources:
-  containers:
-  # This no longer works for Fedora
-  # - container: fedora_latest
-  #   image: fedora:latest
-  #   options: '--name runner -v /usr/bin/docker:/usr/bin/docker:ro'
-  - container: debian_testing
-    image: debian:testing
-    options: '--name runner -v /usr/bin/docker:/usr/bin/docker:ro'
-  - container: ubuntu_rolling
-    image: ubuntu:rolling
-    options: '--name runner -v /usr/bin/docker:/usr/bin/docker:ro'
-
 jobs:
 - job: BuildTest_dnf
   pool:
@@ -75,16 +60,31 @@ jobs:
   strategy:
     matrix:
       debian_testing:
-        image: debian_testing
+        image: debian:testing
       ubuntu_rolling:
-        image: ubuntu_rolling
-  container: $[variables['image']]
+        image: ubuntu:rolling
   steps:
   - script: |
-      docker exec -u 0 runner apt-get update
+      docker run \
+          --name runner \
+          --detach \
+          $(image) \
+          sleep infinity
+
+      while :
+      do
+          docker exec runner echo "Runner is ready" && break
+          echo "Waiting for runner..."
+          sleep 1
+          [ $((++i)) -ge 10 ] && exit 1
+      done
+    displayName: Create runner container
+
+  - script: |
+      docker exec runner apt-get update
 
       # https://salsa.debian.org/freeipa-team/jss/-/blob/master/debian/control
-      docker exec -u 0 runner apt-get install -y \
+      docker exec runner apt-get install -y \
           cmake \
           g++ \
           junit5 \
@@ -96,16 +96,20 @@ jobs:
           openjdk-21-jdk \
           unzip \
           zip
+
+      docker cp . runner:/root/src
     displayName: Install build dependencies
 
   - script: |
       # the current NSS on Debian/Ubuntu does not support ML-DSA nor ML-KEM
       # https://wiki.debian.org/DebianReleases
       # https://packages.debian.org/source/trixie/nss
-      ./build.sh --without-mldsa --without-mlkem
+      docker exec \
+          -w /root/src \
+          -e JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 \
+          runner \
+          ./build.sh --without-mldsa --without-mlkem
     displayName: Build JSS binaries, Javadoc, and run tests
-    env:
-      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
 
 - job: SymbolTest
   pool:
