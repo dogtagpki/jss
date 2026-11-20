@@ -72,7 +72,7 @@ usage() {
     echo "    --install-dir=<path>   Installation directory."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
-    echo "    --builder=<name>       Builder used in RPM spec: xmvn, cmake (default: $BUILDER)."
+    echo "    --builder=<name>       Builder used in RPM spec: xmvn, mvn, cmake (default: $BUILDER)."
     echo "    --with-timestamp       Append timestamp to RPM version number."
     echo "    --with-commit-id       Append commit ID to RPM version number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
@@ -348,6 +348,7 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 if [ "$BUILDER" != "xmvn" ] &&
+        [ "$BUILDER" != "mvn" ] &&
         [ "$BUILDER" != "cmake" ] ; then
     echo "ERROR: Invalid builder: $BUILDER" >&2
     exit 1

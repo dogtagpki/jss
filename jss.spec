@@ -107,6 +107,7 @@ ExcludeArch: i686
 %define java_headless java-21-openjdk-headless
 %define java_home %{_jvmdir}/jre-21-openjdk
 %define maven_local maven-local-openjdk21
+%define maven maven-openjdk21
 
 %else
 
@@ -114,6 +115,7 @@ ExcludeArch: i686
 %define java_headless java-25-openjdk-headless
 %define java_home %{_jvmdir}/jre-25-openjdk
 %define maven_local maven-local-openjdk25
+%define maven maven-openjdk25
 
 %endif
 
@@ -125,6 +127,14 @@ ExcludeArch: i686
 
 %global         fedora_tomcat9_cutoff 43
 %global         rhel_tomcat9_cutoff 10
+
+%if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat9_cutoff} || 0%{?rhel} && 0%{?rhel} < %{rhel_tomcat9_cutoff}
+%global         tomcat_module tomcat-9.0
+%global         excluded_tomcat_module tomcat-10.1
+%else
+%global         tomcat_module tomcat-10.1
+%global         excluded_tomcat_module tomcat-9.0
+%endif
 
 ################################################################################
 # Build Options
@@ -144,6 +154,9 @@ ExcludeArch: i686
 # or rpmbuild --define "builder <name>"):
 # - xmvn (default): Build Java code with XMvn using Java dependencies
 #   provided by RPM packages.
+# - mvn: Build Java code with Maven using Java dependencies downloaded
+#   from Maven repository (requires network access during build).
+#   The runtime dependencies will be bundled in the RPM packages.
 # - cmake: Build everything with CMake using Java dependencies
 #   provided by RPM packages.
 
@@ -154,10 +167,17 @@ ExcludeArch: i686
 %if "%{builder}" == "xmvn"
 %global with_xmvn 1
 %else
+%if "%{builder}" == "mvn"
+%global with_mvn 1
+%else
 %if "%{builder}" != "cmake"
 %{error:Invalid builder: %{builder}}
 %endif
 %endif
+%endif
+
+# Location of bundled Java dependencies (mvn builder only)
+%global         bundled_lib_dir %{_datadir}/jss/lib
 
 ################################################################################
 # Build Dependencies
@@ -174,9 +194,15 @@ BuildRequires:  nss-devel >= %{nss_version}
 BuildRequires:  nss-tools >= %{nss_version}
 
 BuildRequires:  %{java_devel}
+
+%if %{with mvn}
+# Java dependencies will be downloaded from Maven repository
+BuildRequires:  %{maven}
+%else
 BuildRequires:  mvn(org.apache.commons:commons-lang3)
 BuildRequires:  mvn(org.slf4j:slf4j-api)
 BuildRequires:  mvn(org.slf4j:slf4j-jdk14)
+%endif
 
 %if %{with xmvn}
 BuildRequires:  %{maven_local}
@@ -196,9 +222,17 @@ Summary:        %{product_name}
 Requires:       nss >= %{nss_version}
 
 Requires:       %{java_headless}
+
+%if %{with mvn}
+# Keep the versions in sync with base/pom.xml.
+Provides:       bundled(mvn(org.apache.commons:commons-lang3)) = 3.12.0
+Provides:       bundled(mvn(org.slf4j:slf4j-api)) = 1.7.32
+Provides:       bundled(mvn(org.slf4j:slf4j-jdk14)) = 1.7.32
+%else
 Requires:       mvn(org.apache.commons:commons-lang3)
 Requires:       mvn(org.slf4j:slf4j-api)
 Requires:       mvn(org.slf4j:slf4j-jdk14)
+%endif
 
 Obsoletes:      jss < %{version}-%{release}
 Provides:       jss = %{version}-%{release}
@@ -222,9 +256,11 @@ Summary:        %{product_name} Connector for Tomcat
 
 %if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat9_cutoff} || 0%{?rhel} && 0%{?rhel} < %{rhel_tomcat9_cutoff}
 
+%if ! %{with mvn}
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 9.0.62
 BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
+%endif
 
 Requires:       %{product_id} = %{version}-%{release}
 Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 9.0.62
@@ -233,9 +269,11 @@ Requires:       mvn(org.apache.tomcat:tomcat-juli) >= 9.0.62
 
 %else
 
+%if ! %{with mvn}
 BuildRequires:  mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
 BuildRequires:  mvn(org.apache.tomcat:tomcat-coyote) >= 10.1.36
 BuildRequires:  mvn(org.apache.tomcat:tomcat-juli) >= 10.1.36
+%endif
 
 Requires:       %{product_id} = %{version}-%{release}
 Requires:       mvn(org.apache.tomcat:tomcat-catalina) >= 10.1.36
@@ -303,8 +341,10 @@ This package contains the API documentation for JSS.
 
 Summary:        %{product_name} Tests
 
+%if ! %{with mvn}
 BuildRequires:  mvn(org.junit.jupiter:junit-jupiter)
 BuildRequires:  mvn(org.opentest4j:opentest4j)
+%endif
 
 %description -n %{product_id}-tests
 This package provides test suite for JSS.
@@ -384,7 +424,56 @@ modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENA
 # build Java code, run Java tests, and build Javadoc with XMvn
 %mvn_build %{!?with_tests:-f} %{!?with_javadoc:-j}
 
-# create links to XMvn-built classes for CMake
+%if %{with javadoc}
+# mark XMvn-built Javadoc so that CMake will not rebuild it
+mkdir -p %{_vpath_builddir}/.targets
+touch %{_vpath_builddir}/.targets/finished_generate_javadocs
+%endif
+
+# with xmvn
+%endif
+
+%if %{with mvn}
+
+# build Java code and run Java tests with Maven using dependencies
+# downloaded from Maven repository into a private local repository
+mvn \
+    --batch-mode \
+    -Dmaven.repo.local=$PWD/.m2/repository \
+    -pl '!native,!symkey,!examples,!%{excluded_tomcat_module}' \
+    %{!?with_tests:-Dmaven.test.skip=true} \
+    package
+
+# copy all dependencies (including test dependencies) for CMake
+mvn \
+    --batch-mode \
+    -Dmaven.repo.local=$PWD/.m2/repository \
+    -pl base \
+    -DincludeScope=test \
+    -Dmdep.stripVersion=true \
+    -DoutputDirectory=$PWD/base/target/deps \
+    org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies
+
+ls -l base/target/deps
+
+# copy runtime dependencies to be bundled in RPM
+mvn \
+    --batch-mode \
+    -Dmaven.repo.local=$PWD/.m2/repository \
+    -pl base \
+    -DincludeScope=runtime \
+    -Dmdep.stripVersion=true \
+    -DoutputDirectory=$PWD/base/target/lib \
+    org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies
+
+ls -l base/target/lib
+
+# with mvn
+%endif
+
+%if %{with xmvn} || %{with mvn}
+
+# create links to Maven-built classes for CMake
 mkdir -p %{_vpath_builddir}/classes/jss
 ln -sf ../../../base/target/classes/org %{_vpath_builddir}/classes/jss
 %if %{with tests}
@@ -392,27 +481,23 @@ mkdir -p %{_vpath_builddir}/classes/tests
 ln -sf ../../../base/target/test-classes/org %{_vpath_builddir}/classes/tests
 %endif
 
-# create links to XMvn-built JAR files for CMake
+# create links to Maven-built JAR files for CMake
 ln -sf ../base/target/jss.jar %{_vpath_builddir}
 %if %{with tests}
 ln -sf ../base/target/jss-tests.jar %{_vpath_builddir}
 %endif
 
-# create links to XMvn-built headers for CMake
+# create links to Maven-built headers for CMake
 mkdir -p %{_vpath_builddir}/include/jss
 ln -sf ../../../base/target/include/_jni %{_vpath_builddir}/include/jss/_jni
 
-# mark XMvn-built targets so that CMake will not rebuild them
+# mark Maven-built targets so that CMake will not rebuild them
 mkdir -p %{_vpath_builddir}/.targets
 touch %{_vpath_builddir}/.targets/finished_generate_java
 %if %{with tests}
 touch %{_vpath_builddir}/.targets/finished_tests_generate_java
 %endif
-%if %{with javadoc}
-touch %{_vpath_builddir}/.targets/finished_generate_javadocs
-%endif
 
-# with xmvn
 %endif
 
 # build native code and run native tests with CMake
@@ -427,9 +512,11 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --cmake="%{__cmake}" \
     --java-home=%{java_home} \
     --jni-dir=%{_jnidir} \
+    %{?with_mvn:--java-lib-dir=base/target/deps} \
     %{!?with_mldsa:--without-mldsa} \
     %{!?with_mlkem:--without-mlkem} \
     %{?with_xmvn:--without-java} \
+    %{?with_mvn:--without-java} \
     %{?with_xmvn:--without-javadoc} \
     %{!?with_tests:--without-tests} \
     dist
@@ -457,15 +544,38 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
 # with xmvn
 %endif
 
+%if %{with mvn}
+
+# install Java binaries
+mkdir -p %{buildroot}%{_javadir}/jss
+cp base/target/jss.jar %{buildroot}%{_javadir}/jss/jss.jar
+cp tomcat/target/jss-tomcat.jar %{buildroot}%{_javadir}/jss/jss-tomcat.jar
+cp %{tomcat_module}/target/jss-%{tomcat_module}.jar %{buildroot}%{_javadir}/jss/jss-%{tomcat_module}.jar
+
+# create links for backward compatibility
+mkdir -p %{buildroot}%{_jnidir}
+ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_jnidir}/jss.jar
+
+mkdir -p %{buildroot}%{_libdir}/jss
+ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
+
+# install bundled runtime dependencies
+mkdir -p %{buildroot}%{bundled_lib_dir}
+cp base/target/lib/*.jar %{buildroot}%{bundled_lib_dir}
+
+# with mvn
+%endif
+
 # install native binaries
 ./build.sh \
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
     --install-dir=%{buildroot} \
     %{?with_xmvn:--without-java} \
+    %{?with_mvn:--without-java} \
     install
 
-%if %{with xmvn}
+%if %{with xmvn} || %{with mvn}
 
 # install tests binaries
 %if %{with tests}
@@ -473,7 +583,7 @@ mkdir -p %{buildroot}%{_datadir}/jss/tests/lib
 cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %endif
 
-# with xmvn
+# with xmvn || with mvn
 %endif
 
 ################################################################################
@@ -483,8 +593,12 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %doc jss.html
 %license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
 
-%if %{with xmvn}
+%if %{with xmvn} || %{with mvn}
 %{_javadir}/jss/jss.jar
+%endif
+
+%if %{with mvn}
+%{bundled_lib_dir}/
 %endif
 
 %{_jnidir}/jss.jar
@@ -495,6 +609,11 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 ################################################################################
 %files -n %{product_id}-tomcat %{?with_xmvn:-f .mfiles-jss-tomcat}
 ################################################################################
+
+%if %{with mvn}
+%{_javadir}/jss/jss-tomcat.jar
+%{_javadir}/jss/jss-%{tomcat_module}.jar
+%endif
 
 ################################################################################
 %files -n %{product_id}-tools
