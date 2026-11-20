@@ -12,15 +12,15 @@ URL:            https://github.com/dogtagpki/jss
 License:        (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later) AND Apache-2.0
 
 # Upstream version number:
-%global         major_version 5
-%global         minor_version 10
-%global         update_version 1
+%global         major_version 6
+%global         minor_version 0
+%global         update_version 0
 
 # Development phase:
 # - development (unsupported): alpha<n> where n >= 1
 # - stabilization (supported): beta<n> where n >= 1
 # - GA/update (supported): <none>
-%undefine       phase
+%global         phase alpha1
 
 # Full version number:
 # - development/stabilization: <major>.<minor>.<update>-<phase>

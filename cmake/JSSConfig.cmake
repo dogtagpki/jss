@@ -1,7 +1,7 @@
 macro(jss_config)
     # Set the current JSS release number. Arguments are:
     #   MAJOR MINOR PATCH
-    jss_config_version(5 10 1)
+    jss_config_version(6 0 0)
 
     # Configure output directories
     jss_config_outputs()
