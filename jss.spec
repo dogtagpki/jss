@@ -140,10 +140,10 @@ ExcludeArch: i686
 
 %bcond_without tests
 
-# By default Maven will be used for building Java code unless --without maven
-# option is specified. When Maven is disabled, CMake will build everything.
+# By default XMvn will be used for building Java code unless --without xmvn
+# option is specified. If XMvn is disabled, CMake will build everything.
 
-%bcond_without maven
+%bcond_without xmvn
 
 ################################################################################
 # Build Dependencies
@@ -164,7 +164,7 @@ BuildRequires:  mvn(org.apache.commons:commons-lang3)
 BuildRequires:  mvn(org.slf4j:slf4j-api)
 BuildRequires:  mvn(org.slf4j:slf4j-jdk14)
 
-%if %{with maven}
+%if %{with xmvn}
 BuildRequires:  %{maven_local}
 %endif
 
@@ -304,7 +304,7 @@ This package provides test suite for JSS.
 
 %autosetup -n jss-%{full_version} -p 1
 
-%if %{with maven}
+%if %{with xmvn}
 
 # disable native modules since they will be built by CMake
 %pom_disable_module native
@@ -318,11 +318,11 @@ This package provides test suite for JSS.
 
 %if 0%{?fedora} && 0%{?fedora} < %{fedora_tomcat9_cutoff} || 0%{?rhel} && 0%{?rhel} < %{rhel_tomcat9_cutoff}
 
-# specify Maven artifact locations
+# specify XMvn artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
 %mvn_file org.dogtagpki.jss:jss-tomcat-9.0     jss/jss-tomcat-9.0
 
-# specify Maven artifact packages
+# specify XMvn artifact packages
 %mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
 %mvn_package org.dogtagpki.jss:jss-tomcat-9.0  jss-tomcat
 
@@ -330,11 +330,11 @@ This package provides test suite for JSS.
 
 %else
 
-# specify Maven artifact locations
+# specify XMvn artifact locations
 %mvn_file org.dogtagpki.jss:jss-tomcat         jss/jss-tomcat
 %mvn_file org.dogtagpki.jss:jss-tomcat-10.1    jss/jss-tomcat-10.1
 
-# specify Maven artifact packages
+# specify XMvn artifact packages
 %mvn_package org.dogtagpki.jss:jss-tomcat      jss-tomcat
 %mvn_package org.dogtagpki.jss:jss-tomcat-10.1 jss-tomcat
 
@@ -342,7 +342,7 @@ This package provides test suite for JSS.
 
 %endif
 
-# with maven
+# with xmvn
 %endif
 
 ################################################################################
@@ -365,12 +365,12 @@ export CFLAGS
 # Check if we're in FIPS mode
 modutil -dbdir /etc/pki/nssdb -chkfips true | grep -q enabled && export FIPS_ENABLED=1
 
-%if %{with maven}
+%if %{with xmvn}
 
-# build Java code, run Java tests, and build Javadoc with Maven
+# build Java code, run Java tests, and build Javadoc with XMvn
 %mvn_build %{!?with_tests:-f} %{!?with_javadoc:-j}
 
-# create links to Maven-built classes for CMake
+# create links to XMvn-built classes for CMake
 mkdir -p %{_vpath_builddir}/classes/jss
 ln -sf ../../../base/target/classes/org %{_vpath_builddir}/classes/jss
 %if %{with tests}
@@ -378,17 +378,17 @@ mkdir -p %{_vpath_builddir}/classes/tests
 ln -sf ../../../base/target/test-classes/org %{_vpath_builddir}/classes/tests
 %endif
 
-# create links to Maven-built JAR files for CMake
+# create links to XMvn-built JAR files for CMake
 ln -sf ../base/target/jss.jar %{_vpath_builddir}
 %if %{with tests}
 ln -sf ../base/target/jss-tests.jar %{_vpath_builddir}
 %endif
 
-# create links to Maven-built headers for CMake
+# create links to XMvn-built headers for CMake
 mkdir -p %{_vpath_builddir}/include/jss
 ln -sf ../../../base/target/include/_jni %{_vpath_builddir}/include/jss/_jni
 
-# mark Maven-built targets so that CMake will not rebuild them
+# mark XMvn-built targets so that CMake will not rebuild them
 mkdir -p %{_vpath_builddir}/.targets
 touch %{_vpath_builddir}/.targets/finished_generate_java
 %if %{with tests}
@@ -398,7 +398,7 @@ touch %{_vpath_builddir}/.targets/finished_tests_generate_java
 touch %{_vpath_builddir}/.targets/finished_generate_javadocs
 %endif
 
-# with maven
+# with xmvn
 %endif
 
 # build native code and run native tests with CMake
@@ -415,8 +415,8 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
     --jni-dir=%{_jnidir} \
     %{!?with_mldsa:--without-mldsa} \
     %{!?with_mlkem:--without-mlkem} \
-    %{?with_maven:--without-java} \
-    %{?with_maven:--without-javadoc} \
+    %{?with_xmvn:--without-java} \
+    %{?with_xmvn:--without-javadoc} \
     %{!?with_tests:--without-tests} \
     dist
 
@@ -424,7 +424,7 @@ touch %{_vpath_builddir}/.targets/finished_generate_javadocs
 %install
 ################################################################################
 
-%if %{with maven}
+%if %{with xmvn}
 
 # install Java binaries and Javadoc
 %mvn_install
@@ -440,7 +440,7 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_jnidir}/jss.jar
 mkdir -p %{buildroot}%{_libdir}/jss
 ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
 
-# with maven
+# with xmvn
 %endif
 
 # install native binaries
@@ -448,10 +448,10 @@ ln -sf ../../..%{_javadir}/jss/jss.jar %{buildroot}%{_libdir}/jss/jss.jar
     %{?_verbose:-v} \
     --work-dir=%{_vpath_builddir} \
     --install-dir=%{buildroot} \
-    %{?with_maven:--without-java} \
+    %{?with_xmvn:--without-java} \
     install
 
-%if %{with maven}
+%if %{with xmvn}
 
 # install tests binaries
 %if %{with tests}
@@ -459,17 +459,17 @@ mkdir -p %{buildroot}%{_datadir}/jss/tests/lib
 cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %endif
 
-# with maven
+# with xmvn
 %endif
 
 ################################################################################
-%files -n %{product_id} %{?with_maven:-f .mfiles}
+%files -n %{product_id} %{?with_xmvn:-f .mfiles}
 ################################################################################
 
 %doc jss.html
 %license MPL-1.1.txt gpl.txt lgpl.txt symkey/LICENSE
 
-%if %{with maven}
+%if %{with xmvn}
 %{_javadir}/jss/jss.jar
 %endif
 
@@ -479,7 +479,7 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 %{_libdir}/jss/libjss-symkey.so
 
 ################################################################################
-%files -n %{product_id}-tomcat %{?with_maven:-f .mfiles-jss-tomcat}
+%files -n %{product_id}-tomcat %{?with_xmvn:-f .mfiles-jss-tomcat}
 ################################################################################
 
 ################################################################################
@@ -492,10 +492,10 @@ cp base/target/jss-tests.jar %{buildroot}%{_datadir}/jss/tests/lib
 
 %if %{with javadoc}
 ################################################################################
-%files -n %{product_id}-javadoc %{?with_maven:-f .mfiles-javadoc}
+%files -n %{product_id}-javadoc %{?with_xmvn:-f .mfiles-javadoc}
 ################################################################################
 
-%if ! %{with maven}
+%if ! %{with xmvn}
 %{_javadocdir}/jss/
 %endif
 
