@@ -1047,7 +1047,15 @@ public class TestSSLEngine {
         testAllHandshakes(ctx, client_alias, server_alias, true);
         testPostHandshakeAuth(ctx, client_alias, server_alias);
         testJSSEToJSSHandshakes(ctx, server_alias);
-        testALPNHandshake(ctx, server_alias);
+
+        // Keep generic ALPN testing independent of ML-DSA TLS availability.
+        if (!server_alias.contains("MLDSA")) {
+            testALPNHandshake(ctx, server_alias);
+        } else {
+            System.err.println(
+                "Skipping ALPN handshake for " + server_alias
+                + ": this test excludes ML-DSA certificates regardless of platform support.");
+        }
     }
 
     public static void testALPNEncoding() throws Exception {
