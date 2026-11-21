@@ -1047,7 +1047,21 @@ public class TestSSLEngine {
         testAllHandshakes(ctx, client_alias, server_alias, true);
         testPostHandshakeAuth(ctx, client_alias, server_alias);
         testJSSEToJSSHandshakes(ctx, server_alias);
-        testALPNHandshake(ctx, server_alias);
+
+        // Keep generic ALPN testing independent of ML-DSA TLS availability.
+        // Sample invocation:   TestSSLEngine <nssdb> <password-file> Client_MLDSA Server_MLDSA
+        // server_alias comes from args[3], supplied by cmake/JSSTests.cmake.
+        // The ML-DSA test variants pass "Server_MLDSA"; other variants pass
+        // RSA/ECDSA aliases. Skip the ALPN handshake for ML-DSA because TLS
+        // support is not available on all supported platforms.
+
+        if (!server_alias.contains("MLDSA")) {
+            testALPNHandshake(ctx, server_alias);
+        } else {
+            System.err.println(
+                "Skipping ALPN handshake for " + server_alias
+                + ": this test excludes ML-DSA certificates regardless of platform support.");
+        }
     }
 
     public static void testALPNEncoding() throws Exception {
